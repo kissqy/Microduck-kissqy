@@ -1,0 +1,13 @@
+{
+  "official_0151": {
+    "title": "官方训练 · 适配固件 0.15.1 / HD1910",
+    "url": "https://github.com/pollen-robotics/microduck_rl.git",
+    "revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "subdir": "",
+    "repo": "~/microduck-training-studio/engines/official_0151",
+    "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+    "motor": "HD1910 / BAM M6 · 官方骨架 820g",
+    "target_runtime": "0.15.1",
+    "runtime_revision": "1fa84386f07884e27866411bc1ba166977bced95"
+  }
+}

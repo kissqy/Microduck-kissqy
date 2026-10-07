@@ -1,0 +1,49 @@
+{
+  "version": "R1.5.13",
+  "source_archive": "新行走老师_14000_3072.zip",
+  "source_archive_sha256": "e6ed57a2ac6610fc13ef0d7bf8da15a18c39ce2a62bf4045c59660237fd948e8",
+  "source_iteration": 13999,
+  "policy_sha256": "9e3ff8bde021be28a728c02dbd8e7aaf9b447dd75545dacaa72ccec8e9ec7e6c",
+  "checkpoint_sha256": "de2cdcaad8506979905364aa51f3f2c3fb7c92398868e279b1d34c118ce44ee3",
+  "policy_and_checkpoint_bytes_unchanged": true,
+  "onnx_metadata_not_rewritten": true,
+  "training_parameters_from_original_yaml": true,
+  "required_policy_settings": {
+    "head_lowpass": 0.5,
+    "legs_lowpass": 0.7,
+    "action_scale": 0.7
+  },
+  "runtime_only_settings": {
+    "voltage_adapt": {
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "training_action_compensation": "not_present_in_training_action_term",
+      "note": "供电随机化/负载掉压属于BAM训练物理；不等于运行端动态动作倍率补偿。导出不强制开启或关闭。"
+    },
+    "gain_and_gain_ratios": {
+      "keys": [
+        "gain",
+        "standing_gain_ratio",
+        "ground_pick_gain_ratio",
+        "roulade_gain_ratio"
+      ],
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "note": "训练BAM的实际kp_fw见hardware_command和training_physics；不能凭空推导固件增益或翻译层寄存器映射。"
+    }
+  },
+  "training_snapshot_sha256": "fbd5e7bd3a4e88ff1199884d3c598585a91ca65f6689300968a8f97563b14a81",
+  "validation_checks": {
+    "zip_crc": true,
+    "policy_unchanged": true,
+    "checkpoint_unchanged": true,
+    "request_unchanged": true,
+    "env_yaml_unchanged": true,
+    "agent_yaml_unchanged": true,
+    "settings_match": true,
+    "snapshot_sha_match": true,
+    "num_envs_match": true,
+    "env_snapshot_matches_yaml_json": true,
+    "agent_snapshot_matches_yaml_json": true,
+    "gear_joint_count": true,
+    "no_forced_voltage": true
+  }
+}

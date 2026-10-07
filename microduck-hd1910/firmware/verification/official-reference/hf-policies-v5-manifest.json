@@ -1,0 +1,35 @@
+{
+  "schema_version": 2,
+  "model_api": 1,
+  "obs_len": 61,
+  "action_len": 14,
+  "robot": {
+    "model": "microduck",
+    "hw_rev": 1,
+    "servos": "xl330",
+    "control_hz": 50
+  },
+  "description": "The policy set a microduck ships with: walking, standing, and the one-shots its buttons run.",
+  "policies": [
+    { "file": "alpha_walking.onnx", "kind": "perpetual" },
+    { "file": "velstand.onnx",      "kind": "perpetual", "slot": "walk", "entry_pose": "standing",
+      "description": "Walking gait that also stands still at zero command; the default walk policy since v5, with no separate standing network.",
+      "training": { "repo": "pollen-robotics/microduck_rl", "branch": "protective_fall", "source_file": "velstand_best.onnx", "exported": "2026-09-14T00:00:00Z" } },
+    { "file": "alpha_stand.onnx",   "kind": "perpetual" },
+    { "file": "roller.onnx",        "kind": "perpetual", "mode": "roller", "action_scale": 0.8 },
+
+    { "file": "alpha_sitstand.onnx", "name": "sitstand", "kind": "scripted",
+      "command": { "encoding": "posture_flag", "slot": "twist.vx", "sit": 1.0, "stand": 0.0, "idle": [0.0, 0.0, 0.0] },
+      "ramp_s": 2.0, "unwind_s": 1.0 },
+
+    { "file": "alpha_ground_pick.onnx", "name": "ground_pick", "kind": "episodic", "duration_s": 2.8,
+      "command": { "encoding": "phase", "slots": "twist.vx,twist.vy", "period_s": 4.0, "end_phase": 0.7 } },
+
+    { "file": "roller_crouch.onnx", "name": "crouch", "kind": "episodic", "duration_s": 3.5, "mode": "roller", "action_scale": 0.8,
+      "command": { "encoding": "phase", "slots": "twist.vx,twist.vy", "period_s": 5.0, "end_phase": 0.7 } },
+
+    { "file": "roulade.onnx",         "kind": "episodic", "duration_s": 1.0, "chain": true },
+    { "file": "ball_kick_left.onnx",  "name": "kick_left",  "kind": "episodic", "duration_s": 0.5 },
+    { "file": "ball_kick_right.onnx", "name": "kick_right", "kind": "episodic", "duration_s": 0.5 }
+  ]
+}

@@ -1,0 +1,57 @@
+# R17 self-trained HD1910: native HAT transport stays unchanged.
+[bus]
+port = "/dev/ttyS2"
+protocol = "feetech"
+feetech_calibration = "/etc/robot/feetech-ft5/hd1910-calibration.toml"
+[control]
+hz = 50
+[policy]
+custom_only = true
+enabled = true
+mode = "walk"
+walk = "/opt/robot/feetech-ft5-r5/models/1cbf8730eadd75a5704332c9f3c10f60/policy.onnx"
+sitstand = "/opt/robot/feetech-ft5-r5/models/1c94934c6421ec72ed48079cea749668/policy.onnx"
+stand = "none"
+ground_pick = "/opt/robot/feetech-ft5-r5/models/2b69fa681ed06f7ded9e2a2d12ba5c67/policy.onnx"
+kick_left = "none"
+kick_right = "none"
+roulade = "/opt/robot/feetech-ft5-r5/models/8fdaf12c7478a8314a63647a466bfa34/policy.onnx"
+gain = 5
+# Policy defaults are generated from config/r17-management.json.
+action_scale = 0.7
+standing_action_scale = 1.0
+ground_pick_period = 4.0
+ground_pick_action_scale = 1.0
+ground_pick_gain_ratio = 1.0
+[safety]
+limp_fall = false
+battery_empty_shutdown = false
+
+[[policy.skill]]
+name = "roulade"
+duration = 1.0
+chain = true
+command = [0.0, 0.0, 0.0]
+unwind = [0.0, 0.0, 0.0]
+unwind_s = 0.0
+[policy.skill.params]
+action_scale = 1.0
+gain_ratio = 1.0
+
+[[policy.skill]]
+name = "stand_test"
+path = "/opt/robot/feetech-ft5-r5/models/a481d9f211f31d9476ab1a319fe362a2/policy.onnx"
+duration = 6.0
+chain = false
+command = [0.0, 0.0, 0.0]
+unwind = [0.0, 0.0, 0.0]
+unwind_s = 0.0
+[policy.skill.params]
+action_scale = 1.0
+
+[pad]
+a = "ground_pick"
+x = "roulade"
+lb = "stand_test"
+rb = ""
+dpad_down = "sit_toggle"

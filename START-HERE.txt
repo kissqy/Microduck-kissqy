@@ -1,0 +1,10 @@
+Microduck 全套发布资料 — 2026-10-07
+
+1. microduck-hd1910：用 VS Code 打开这个目录，上传 GitHub。
+   固件源码与机器人中控在 firmware；训练中控源码在 training-console。
+2. release-assets：里面的三个 ZIP 与 SHA256SUMS.txt 上传 GitHub Releases。
+3. GitHub 最短操作见 microduck-hd1910/docs/PUBLISH.md。
+
+版本：R17 v1.0.146 / control.29 / API40；训练中控 R1.5.17。
+个人非商业授权仅覆盖作者有权授权的原创部分；上游保持原许可。
+编译好的固件已经提供，普通使用无需先编译源码。

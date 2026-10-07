@@ -1,0 +1,42 @@
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const {spawn}=require('node:child_process');
+const path=require('node:path'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..');
+(async()=>{
+ const fixture=spawn(process.env.TEST_PYTHON||'python3',[path.join(__dirname,'browser_remote_fixture.py')]);
+ fixture.stderr.on('data',b=>process.stderr.write(b));
+ const port=await new Promise((resolve,reject)=>{fixture.stdout.on('data',b=>{const m=b.toString().match(/FIXTURE_READY (\d+)/);if(m)resolve(Number(m[1]));});fixture.on('exit',c=>reject(Error('Fixture exited '+c)));});
+ let browser;
+ try{
+  browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH,args:['--no-sandbox']});
+  const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[],starts=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  page.on('request',r=>{if(r.method()==='POST'&&/\/api\/(train|setup|probe|queue\/control)$/.test(r.url()))starts.push(r.url());});
+  await page.goto('http://127.0.0.1:'+port);
+  await page.waitForFunction(()=>remoteState&&state&&token);
+  assert.equal(await page.locator('#training-target').inputValue(),'local');
+  assert.equal(await page.locator('#server-model-upload').isDisabled(),true);
+  await page.selectOption('#training-target','ssh');
+  await page.waitForFunction(()=>remoteState?.target==='ssh'&&token);
+  await page.selectOption('#ssh-auth','key');
+  await page.locator('#ssh-host').fill('seoul.example.org');
+  await page.locator('#ssh-user').fill('ubuntu');
+  await page.locator('#ssh-port').fill('2222');
+  await page.locator('#ssh-save').click();
+  await page.waitForFunction(()=>remoteState.connection.host==='seoul.example.org');
+  await page.reload();
+  await page.waitForFunction(()=>remoteState?.connection.host==='seoul.example.org');
+  assert.equal(await page.locator('#ssh-port').inputValue(),'2222');
+  assert.match(await page.locator('#ssh-login-command').textContent(),/ssh -p 2222 ubuntu@seoul.example.org/);
+  await page.locator('#ssh-connect').click();
+  await page.waitForFunction(()=>remoteState?.status==='failed');
+  assert.equal(await page.locator('#training-target').inputValue(),'ssh');
+  assert.equal(await page.locator('#train-start').isDisabled(),true);
+  await page.locator('#training-server').screenshot({path:path.join(root,'docs','R1.5.15-ssh-server.png')});
+  await page.selectOption('#training-target','local');
+  await page.waitForFunction(()=>remoteState?.target==='local'&&state&&online);
+  assert.equal(await page.locator('#ssh-section').isHidden(),true);
+  assert.deepEqual(starts,[]);assert.deepEqual(errors,[]);
+  console.log('REMOTE_BROWSER_OK: server selector + save/reload + custom SSH port + connection failure remains remote + no local fallback or spontaneous training + return to local + no JS errors');
+ }finally{if(browser)await browser.close();fixture.kill();}
+})().catch(e=>{console.error(e);process.exitCode=1;});

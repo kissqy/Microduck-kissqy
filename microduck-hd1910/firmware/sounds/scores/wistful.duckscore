@@ -1,0 +1,84 @@
+# wistful — the duck chorale's default piece.
+#
+# Original, and that is a licensing fact as much as a musical one: the close-harmony records
+# this is meant to evoke are all in copyright, so the idiom is the reference and the notes are
+# not. What it borrows is the grammar — a slow homophonic tread, chords in inversion so the
+# bass line moves by step, common tones held rather than re-attacked, suspensions that resolve
+# late, and one borrowed minor chord, which is where the ache in this kind of writing always
+# comes from.
+#
+# This file is embedded in the binary as `Score::wistful()`, so it is both the shipped piece
+# and the worked example of the format. Copy it and edit.
+#
+# ── The format ───────────────────────────────────────────────────────────────
+#
+#   name: <text>              the piece's name
+#   bpm: <number>             tempo
+#
+#   dynamic <mark>            sets the dynamic for what follows (ppp pp p mp mf f ff).
+#                             It applies to notes that *start* after it: a mark over a note
+#                             already sounding is a crescendo, and a tied note keeps the
+#                             dynamic it began on rather than being sung again.
+#   vowel <name>              sets the vowel for what follows (ah eh ee oh oo mm)
+#
+#   chord <beats>  B T A S            everyone together
+#   build <beats> stagger <b> [top]  B T A S
+#                                     voices enter <b> beats apart and hold to the end;
+#                                     `top` enters from the soprano down instead of the bass up
+#   solo <part> under B T A S [hum <vowel>] sing <note>[:beats][/vowel] ...
+#                                     one voice moves over what the others hold. The others
+#                                     hum (`mm`) unless `hum <vowel>` says otherwise; the
+#                                     soloist uses the running vowel unless a note says
+#                                     otherwise with `/vowel`. Beats default to 1.
+#   rest <beats>                      a breath
+#
+# Notes are scientific pitch names — C4 is middle C, so C3 G3 C4 E4 is a C major chord with
+# the bass an octave below middle C. Sharps and flats are `F#4` and `Ab3`. A `-` means that
+# voice does not sing here. Voices are always written low to high: bass, tenor, alto, soprano.
+#
+# Ranges a duck can sing and a small speaker can reproduce:
+#   bass A2..A3   tenor E3..E4   alto A3..A4   soprano D4..D5
+# A duck's voice bottoms out around 110 Hz. A chorale whose bass is inaudible is a trio.
+
+name: wistful
+bpm: 58
+
+dynamic mf
+vowel oo
+
+# The chord assembles from the bass up, on a dark vowel, and holds.
+build 6 stagger 0.75      C3  G3  C4  E4
+
+# The tread. The alto's C4 is the thread these hang on and is never re-attacked; the bass
+# walks underneath it. Opening onto `ah` as the harmony starts to move.
+vowel ah
+chord 2                   A2  G3  C4  E4      # Am7
+chord 2                   F3  A3  C4  F4      # F
+dynamic f
+chord 3                   F3  Ab3 C4  F4      # Fm — the borrowed chord, and the point
+dynamic mf
+chord 3                   E3  G3  C4  E4      # C/E, so the bass keeps moving
+
+# One voice over a held triad: the choir hums, the soprano sings.
+solo soprano under C3 G3 C4 - sing E4:1 F4:1 G4:2 F4:1 E4:3
+
+chord 2                   D3  A3  C4  F4      # Dm7
+chord 2                   G3  B3  D4  F4      # G7
+chord 2                   C3  G3  C4  F4      # Csus4 — resolution deferred
+chord 4                   C3  G3  C4  E4      # C, arrived at and held
+
+# The same trick from the other end: the soprano is in first, the bass last.
+build 5 stagger 0.5 top   A2  A3  C4  E4      # Am
+
+chord 2                   F3  A3  C4  F4      # F
+dynamic f
+chord 3                   F3  Ab3 C4  F4      # Fm, on the way home
+chord 2                   G3  C4  D4  F4      # G7sus4
+chord 2                   G3  B3  D4  F4      # G7
+
+# The breath. Short, and it is what makes the last chord land.
+rest 0.75
+
+dynamic mf
+vowel ah
+build 8 stagger 0.6       C3  G3  C4  E4

@@ -1,0 +1,22 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/develop/docs/velstand_policy.md",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-develop-velstand_policy.md",
+    "bytes": 7050,
+    "sha256": "e2ab07da06d2086bc6e09422a4f3ef06290aa0f3347350d0cb045d1c537e7ab5"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/53fb7d115b1be79c6d07e8fd4eab311285e16f2a/pyproject.toml",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-53fb7d1-pyproject.toml",
+    "bytes": 5239,
+    "sha256": "e4f73a9f9aff14826463aee558f53900307ba973a287fb3bfc27a8954a131026",
+    "resolved_git_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/53fb7d115b1be79c6d07e8fd4eab311285e16f2a/src/mjlab_microduck/tasks/mdp.py",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-53fb7d1-mdp.py",
+    "bytes": 325793,
+    "sha256": "ef9ff35bf3161fccc3e34fee2f9234a6cfec518846568881e16254cba3fb2f17",
+    "resolved_git_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a"
+  }
+]

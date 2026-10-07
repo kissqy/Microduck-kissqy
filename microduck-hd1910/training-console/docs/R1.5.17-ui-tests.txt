@@ -1,0 +1,2 @@
+RECOVERY_UI_OK: 4 official stand variants × PT/ONNX; selected-model role and resolved_task; normal/recovery payloads; no automatic POST/train; offline/pending/in-flight guards.
+SCOPE: Node DOM/HTTP fixture only; no real browser rendering, 4K screenshots, WebGL, training, or policy inference.

@@ -1,0 +1,1754 @@
+<!doctype html>
+<!--
+  **The `<html>`/`<head>`/`<body>` skeleton is load-bearing, however tempting it is to drop.**
+  This page was a bare doctype plus content for most of its life, which browsers parse into the
+  same tree — and the Space that serves it remotely writes `window.huggingface.variables` (the
+  OAuth client id and scopes a remote sign-in needs) into `<head>` as it serves. With no `<head>`
+  there is nothing to write into, no client id, and a console that cannot sign anybody in with
+  nothing anywhere saying why. `docs/design/remote-access-design.md` §5.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>duck console</title>
+<!--
+  The robot's console. One file, no build step, no dependencies — `mediad` embeds this page and
+  serves it, so reaching it is an address and not a command:
+
+      http://<robot>:8080/          — or `duckctl open`, which finds the robot for you
+
+  **The robot serves it, and that is what makes the signalling target derivable.** The page was
+  served by the robot it is about to talk to, so the host is `location.hostname` and the port is
+  filled in by mediad as it serves (see SERVED_PORT below). Nothing is typed, and nothing here
+  holds a second copy of the port — or of the API version the skew banner compares against.
+
+  It speaks gst-plugins-rs's signalling protocol directly rather than using its gstwebrtc-api
+  JS library, for one reason: a client that needs npm is a client nobody runs. The protocol is
+  small and the exact shapes are below, read off net/webrtc/protocol at 0.15.3.
+
+  **One file is a constraint, not an accident** — it is what makes this runnable at all. If it
+  outgrows one file it becomes three (index.html, app.js, app.css, three `include_str!`s), still
+  with no build step and still with no npm.
+
+  Served over http, never https: ws:// from an https page is mixed content and blocked outright,
+  and a robot on a LAN has no certificate to offer wss. docs/design/webrtc-console.md §1.3 says
+  what that costs — a microphone, and on some browsers a gamepad — and when it changes.
+
+  Opening this file from a checkout still works for development: with no port substituted it
+  falls back to 8443, and the host comes from wherever it is served. A file:// page cannot reach
+  a robot at all — Chrome's Private Network Access blocks requests from an opaque origin to a
+  private address — so serve it, or let the robot serve it.
+
+  What it drives is what `mediad/src/route.rs` permits, and no more. The two calls it refuses are
+  in the console drawer at the bottom, because they prove the route table is consulted rather than
+  drive the robot.
+-->
+<style>
+  :root {
+    color-scheme: light dark;
+    --line: color-mix(in srgb, currentColor 15%, transparent);
+    --fill: color-mix(in srgb, currentColor 8%, transparent);
+    /* The four accents, as tokens rather than literals in six rules. Tuned for a dark
+       background, which is what `color-scheme` picks by default here. */
+    --in: #2a7; --out: #59f; --bad: #e55; --warn: #d90;
+  }
+  /* **The same four, darker, on light.** `#d90` and `#59f` are thin on white — a warning banner
+     whose border you have to look for is a warning that failed — and the skew banner is exactly
+     where that matters. Only the light branch is overridden, so the dark values above stay the
+     ones that were chosen against the palette they were chosen for. */
+  @media (prefers-color-scheme: light) {
+    :root { --in: #0a6b45; --out: #1c4ed8; --bad: #b91c1c; --warn: #92600e; }
+  }
+  * { box-sizing: border-box; }
+  /* One visible focus ring for every control, because there was a `:hover` style and no focus
+     style at all: a keyboard user got the browser default drawn over a custom background. */
+  :focus-visible { outline: 2px solid var(--out); outline-offset: 2px; }
+  body { font: 14px/1.5 ui-sans-serif, system-ui, sans-serif; margin: 0; padding: 1rem;
+         display: grid; gap: 1rem; }
+  h1 { font-size: 1rem; margin: 0; font-weight: 600; }
+  h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; opacity: .55;
+       margin: 0 0 .5rem; }
+  button, select, input, textarea { font: inherit; padding: .3rem .55rem; border-radius: 4px;
+       border: 1px solid var(--line); background: var(--fill); color: inherit; }
+  button { cursor: pointer; }
+  button:hover:not(:disabled) { background: color-mix(in srgb, currentColor 16%, transparent); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+
+  header { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+  header .grow { flex: 1; }
+  .pill { padding: .1rem .5rem; border-radius: 99px; font-size: 12px; background: var(--fill);
+          white-space: nowrap; }
+  .in { color: var(--in); } .out { color: var(--out); } .bad { color: var(--bad); }
+  .warn { color: var(--warn); }
+  .dim { opacity: .55; }
+
+  #banner { padding: .5rem .75rem; border-radius: 4px; border: 1px solid var(--warn);
+            background: color-mix(in srgb, var(--warn) 12%, transparent); }
+
+  /* **The last thing that went wrong, where somebody is looking.** Every failure on this page is
+     explained in the log — and the log is a collapsed drawer, so "nothing happened" was the whole
+     user-visible story. `log("bad", …)` is the one funnel every error already goes through,
+     including the two window handlers, so routing it here catches all of them with one hook.
+     Separate from `#banner`, which is the API-skew notice: one is a standing condition, the other
+     is an event, and a red box replacing an amber one loses the standing condition. */
+  /* **`display: flex` beats the `hidden` attribute, and that is not obvious.** `hidden` works by
+     way of `display: none` in the UA stylesheet, so any author `display` on the same element wins
+     and the box is visible from page load — empty, red, and above the fold. `#banner` sets no
+     `display` and so never had the problem, which is exactly why this was easy to miss. */
+  #alert[hidden] { display: none; }
+  #alert { display: flex; gap: .5rem; align-items: flex-start; padding: .5rem .75rem;
+           border-radius: 4px; border: 1px solid var(--bad);
+           background: color-mix(in srgb, var(--bad) 12%, transparent); }
+  /* `min-width: 0` and a break-anywhere rule, because these two boxes are the only places on the
+     page that render text this page did not write. Several of the messages carry a URL — a
+     redirect URI, a signalling address — and one unbreakable token in a flex item takes its
+     min-content width from that token: at phone width the whole page then scrolled sideways and
+     the connect button went off the edge. An error that breaks the layout is worse than the
+     error. */
+  #alert > span { flex: 1; min-width: 0; }
+  #alert, #banner { overflow-wrap: anywhere; }
+  #alert button { border: 0; background: none; padding: 0 .25rem; opacity: .7; }
+
+  /* **Named areas, because five sections flowing into two columns is arbitrary.** `video` and
+     `drive` are what a person came to use and belong together; `telemetry` is a nine-row table
+     you glance at, and it used to be able to land beside the video and size the whole left column
+     to itself. Spelling the placement out is also what makes the one-column fallback a reorder
+     rather than whatever the source order happened to be. */
+  main { display: grid; gap: 1rem; align-items: start;
+         grid-template-columns: minmax(340px, 1.3fr) minmax(300px, 1fr);
+         grid-template-areas: "video rail" "drive rail"; }
+  #s-video { grid-area: video; } #s-drive { grid-area: drive; }
+  .rail { grid-area: rail; display: grid; gap: 1rem; align-content: start; }
+  @media (max-width: 800px) {
+    main { grid-template-columns: 1fr; grid-template-areas: "video" "drive" "rail"; }
+  }
+
+  /* **Nothing that needs the robot is pressable before there is one.** Every button in `posture`
+     and `do · sound` used to be live from page load, so pressing `init` on a page with no session
+     did nothing and said so only in the drawer. "I pressed it and nothing happened" is the least
+     debuggable sentence in software and this page had already produced it once. */
+  /* The controls dim, not the section: the line explaining *why* they are unavailable lives in
+     the same box, and fading it out with them is the one thing that must not happen. */
+  body:not([data-live]) #s-posture .row, body:not([data-live]) #s-do .row,
+  body:not([data-live]) .pads { opacity: .45; }
+  body:not([data-live]) .pad { cursor: not-allowed; }
+  /* And it reads as a statement rather than a footnote — `.hint` is 60% opacity by design. */
+  .gate-hint { display: none; }
+  body:not([data-live]) .gate-hint { display: block; opacity: 1; color: var(--warn);
+                                     font-weight: 600; margin-bottom: .35rem; }
+  section { border: 1px solid var(--line); border-radius: 6px; padding: .75rem; }
+  .row { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; }
+  .hint { margin: .5rem 0 0; font-size: 12px; opacity: .6; }
+
+  /* 16/9 is the placeholder, held until the robot says what the video is. The camera is mounted a
+     quarter turn off and nothing on the robot rotates the picture — so this does, on the GPU.
+
+     **The wrapper is the only box in flow.** A rotated element still takes up its *pre-transform*
+     box, so the turned video — landscape, inside a portrait wrapper — used to be the widest thing in
+     the grid cell and sized it: the wrapper came out landscape, the video fitted its picture back
+     into that with `object-fit: contain`, and anything drawn over the wrapper (the detector's boxes)
+     landed below and wider than the picture it described. Absolutely positioned, the video cannot
+     size anything, and the wrapper is exactly the upright picture. */
+  #videobox { position: relative; width: 100%; max-width: 100%; line-height: 0;
+              container-type: size; aspect-ratio: 16/9; }
+  #videobox > video { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                      width: 100%; height: 100%; background: #111;
+                      border-radius: 4px; display: block; touch-action: none; cursor: crosshair; }
+  /* `100cqh`/`100cqw` are the wrapper's own height and width — the quarter turn's axis swap, done by
+     the browser, and it survives a resize with no JavaScript. */
+  #videobox > video.turn90, #videobox > video.turn270 { width: 100cqh; height: 100cqw; }
+  #videobox > video.turn90  { transform: translate(-50%, -50%) rotate(90deg); }
+  #videobox > video.turn270 { transform: translate(-50%, -50%) rotate(-90deg); }
+  #videobox > video.turn180 { transform: translate(-50%, -50%) rotate(180deg); }
+  /* `inset: 0` on the wrapper, which *is* the upright picture — and the viewBox is the upright
+     frame's own pixels, so a box lands where the duck is with no arithmetic on this side. */
+  #videobox > svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  #boxes rect { fill: none; stroke: #00e676; stroke-width: 2; vector-effect: non-scaling-stroke; }
+  #boxes text { fill: #00e676; font: 600 11px ui-monospace, monospace; }
+  .stats { margin-top: .5rem; font: 12px/1.4 ui-monospace, monospace; gap: .75rem; }
+  .stats b { font-weight: 600; opacity: .55; font-size: 11px; text-transform: uppercase; }
+
+  .pads { display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap; }
+  .pad { position: relative; background: var(--fill); border: 1px solid var(--line);
+         border-radius: 8px; touch-action: none; }
+  #pad-move { width: 150px; height: 150px; }
+  #pad-turn { width: 150px; height: 44px; }
+  .knob { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; left: 50%;
+          top: 50%; border-radius: 50%; background: currentColor; opacity: .5;
+          pointer-events: none; }
+  .pad-label { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; opacity: .5;
+               margin-bottom: .25rem; }
+
+  table { border-collapse: collapse; width: 100%; font: 12px/1.6 ui-monospace, monospace; }
+  th { text-align: left; font-weight: 600; opacity: .55; text-transform: uppercase;
+       font-size: 11px; letter-spacing: .04em; padding-right: .75rem; white-space: nowrap; }
+  td { text-align: right; }
+
+  details { border: 1px solid var(--line); border-radius: 6px; padding: .5rem .75rem; }
+  summary { cursor: pointer; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em;
+            opacity: .55; }
+  details > *:not(summary) { margin-top: .75rem; }
+  #raw { flex: 1; min-width: 18rem; font: 12px ui-monospace, monospace; }
+  pre { margin: 0; padding: .5rem; background: var(--fill); border-radius: 4px; height: 16rem;
+        overflow: auto; white-space: pre-wrap; font: 12px/1.45 ui-monospace, monospace; }
+</style>
+
+</head>
+<body>
+
+<!--
+  **Status, and nothing that merely is the case.** This header carried nine elements and wrapped
+  into three rows of near-identical grey lozenges on any narrow window. `state` and `dcstate`
+  change and are why somebody looks here; `release`, `api` and `signalling` are facts you check
+  once, so they moved to the drawer's own row. Their ids are unchanged — the code that fills them
+  does not know or care where they are.
+-->
+<header>
+  <h1 id="robot">duck console</h1>
+  <span class="grow"></span>
+  <span id="state" class="pill">idle</span>
+  <span id="dcstate" class="pill dim">no control channel</span>
+  <select id="robots" hidden></select>
+  <span id="account" class="pill dim" hidden></span>
+  <button id="connect">connect</button>
+</header>
+
+<div id="banner" hidden></div>
+<div id="alert" hidden><span id="alert-text"></span><button id="alert-close"
+  title="dismiss" aria-label="dismiss this message">&times;</button></div>
+
+<main>
+  <section id="s-video">
+    <h2>video</h2>
+    <!-- The wrapper is the *upright* picture and the video is turned inside it, because the robot
+         no longer rotates pixels: doing that in the pipeline cost the encoder its zero-copy path to
+         the 2D engine, and the board 22 fps. Everything that reads coordinates off this — the
+         drag-to-look below — keeps working, because the wrapper is the space it always was. -->
+    <div id="videobox">
+      <video id="video" autoplay muted playsinline></video>
+      <!-- The boxes, on an SVG whose viewBox is the *upright frame's* own pixels — so the browser
+           does the scaling, and neither a resize nor a change of mount rotation needs any code. -->
+      <svg id="boxes" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </div>
+    <div class="row stats">
+      <span><b>bitrate</b> <span id="bitrate">–</span></span>
+      <span><b>ducks</b> <span id="detections">–</span></span>
+      <span><b>fps</b> <span id="fps">–</span></span>
+      <span><b>loss</b> <span id="loss">–</span></span>
+      <span><b>rtt</b> <span id="rtt">–</span></span>
+      <span id="gaze" class="pill dim" hidden>gaze clamped</span>
+    </div>
+    <p class="hint">Drag on the picture to look at a point. The robot solves the IK and says when a
+      point is out of reach.</p>
+  </section>
+
+  <section id="s-drive">
+    <h2>drive</h2>
+    <div class="pads">
+      <div>
+        <div class="pad-label">forward · strafe</div>
+        <div class="pad" id="pad-move"><div class="knob" id="knob-move"></div></div>
+      </div>
+      <div>
+        <div class="pad-label">turn</div>
+        <div class="pad" id="pad-turn"><div class="knob" id="knob-turn"></div></div>
+      </div>
+    </div>
+    <p class="hint">
+      <b class="gate-hint">Connect to a robot to drive it.</b>
+      <b>W</b>/<b>S</b> forward and back, <b>A</b>/<b>D</b> strafe, <b>Q</b>/<b>E</b> turn — arrows
+      drive and turn. Full deflection is 0.3 m/s and 1.5 rad/s, the same as a gamepad's.
+      Intents are resent at 10 Hz while anything is held: the robot stops on its own 500 ms after
+      they stop arriving.
+    </p>
+  </section>
+
+
+
+  <!--
+    **The right rail is one column, not three grid cells.** As five sections in a two-column grid,
+    the row holding `video` was as tall as the video and the panel beside it was not, which left a
+    void under it — and on a wide window `telemetry` could land there and size the left column to a
+    nine-row table. Wrapped, the rail flows: each panel is as tall as its contents and the next one
+    starts underneath. Actions first, reference last, because the table is a thing you glance at.
+  -->
+  <div class="rail">
+    <section id="s-posture">
+      <h2>posture</h2>
+      <div class="row">
+        <button data-needs-channel data-call="robot.enable" data-params='{"on":true,"toggle":true}'>enable ⇄</button>
+        <button data-needs-channel data-call="robot.init">init</button>
+        <button data-needs-channel data-call="robot.relax">relax</button>
+        <button data-needs-channel data-call="robot.stop" data-confirm="Zero the robot's intents?">stop</button>
+        <button data-needs-channel data-call="robot.shutdown" data-confirm="Power the robot off?">shutdown</button>
+      </div>
+      <p class="hint">
+        <b class="gate-hint">Connect to a robot to use these.</b>
+        <b>stop</b> zeroes the intents this session is sending. It is not a physical emergency stop —
+        nothing here cuts power to the servos — and it is a plain button for that reason.
+        <b>enable</b> toggles, so it always means "the other one" and cannot go stale.
+      </p>
+    </section>
+    <section id="s-do">
+      <h2>do · sound</h2>
+      <div class="row">
+        <!-- Filled from `robot.policies` when the channel opens. Which skills a robot has is
+             config, so a list written here would be five guesses: wrong on a robot that has been
+             given a bow, and offering a dead entry on one that has had a kick taken away. -->
+        <select id="skill" data-needs-channel>
+          <option value="">asking the robot…</option>
+        </select>
+        <button id="do" data-needs-channel>do</button>
+        <span class="grow"></span>
+        <select id="sound" data-needs-channel>
+          <option value="chirp">chirp</option>
+          <option value="greet">greet</option>
+          <option value="inquire">inquire</option>
+          <option value="alarm">alarm</option>
+          <option value="peck">peck</option>
+          <option value="coo">coo</option>
+          <option value="wheee">wheee (hold)</option>
+        </select>
+        <button id="play" data-needs-channel>play</button>
+      </div>
+      <p class="hint"><b class="gate-hint">Connect to a robot to use these.</b>
+        One request is one skill; holding <b>play</b> on <b>wheee</b> keeps the ride
+        going, and letting go releases it.</p>
+    </section>
+    <section id="s-telemetry">
+      <h2>telemetry</h2>
+      <table>
+        <tr><th>mode</th><td id="t-mode">–</td></tr>
+        <tr><th>policy</th><td id="t-policy">–</td></tr>
+        <tr><th>loop</th><td id="t-loop">–</td></tr>
+        <tr><th>safety</th><td id="t-safety">–</td></tr>
+        <tr><th>requested</th><td id="t-requested">–</td></tr>
+        <tr><th>applied</th><td id="t-applied">–</td></tr>
+        <tr><th>health</th><td id="t-health">–</td></tr>
+        <tr><th>battery</th><td id="t-battery">–</td></tr>
+        <tr><th>temperatures</th><td id="t-temps">–</td></tr>
+      </table>
+      <p class="hint">The frame is <code>robot.subscribe</code> at 2 Hz; the last three rows are
+        <code>robot.health</code>, polled, because none of it is on that stream.</p>
+    </section>
+  </div>
+</main>
+
+<details>
+  <summary>console — raw calls, refusals, and the log</summary>
+
+  <div class="row stats">
+    <span id="release" class="pill dim">release unknown</span>
+    <span id="api" class="pill dim">api unknown</span>
+    <span id="signalling" class="pill dim"></span>
+  </div>
+
+  <div class="row">
+    <!-- Permitted over BLE and refused here, because reconfiguring wifi would take this session
+         with it. The interesting buttons: they prove the route table is being consulted. -->
+    <button data-needs-channel data-call="net.connect" data-params='{"ssid":"x","psk":"y"}'>net.connect
+      <span class="dim">(refused)</span></button>
+    <button data-needs-channel data-call="system.pairingPin">system.pairingPin <span class="dim">(refused)</span></button>
+  </div>
+
+  <div class="row">
+    <input id="raw" type="text" spellcheck="false" data-needs-channel
+           value='{"jsonrpc":"2.0","id":99,"method":"robot.health"}'>
+    <button id="send" data-needs-channel>send</button>
+  </div>
+
+  <pre id="log"></pre>
+</details>
+
+<script>
+"use strict";
+
+// ── what the robot filled in ───────────────────────────────────────────────────
+//
+// mediad replaces both tokens as it serves this page (`web.rs`), so neither the port nor the API
+// version has a second home. NaN means nobody substituted them — this page was opened from a
+// checkout rather than served by a robot — and that fact is load-bearing twice below: it picks the
+// right diagnosis for a signalling port that does not answer, and it is the only case in which the
+// version banner can fire at all, since a page served by a robot ships with that robot's release.
+const SERVED_PORT = Number("{{SIGNALLING_PORT}}");
+const SERVED_API = Number("{{API_VERSION}}");
+const SERVED_BY_ROBOT = Number.isFinite(SERVED_PORT);
+const SIGNALLING_PORT = SERVED_BY_ROBOT ? SERVED_PORT : 8443;
+const SIGNALLING_URL = `ws://${location.hostname || "localhost"}:${SIGNALLING_PORT}`;
+
+// ── which transport, and it is forced rather than chosen ──────────────────────
+//
+// One page, two ways in. On a LAN it opens a WebSocket to the robot's own signalling server, which
+// is everything below `ws`. From off the LAN there is no such socket to open — the robot is behind
+// somebody's router — so it goes through the rendezvous service the robot registered with: SSE in,
+// `POST /send` out, the same envelopes. `remote-access-design.md` §5.
+//
+// **A page served over https cannot open `ws://` at all**, so this is not a heuristic: a browser
+// refuses the mixed-content connection, which means an https page that was not served by a robot
+// has exactly one transport available to it. A page opened from a checkout over `file://` keeps
+// the LAN behaviour, which is what it is for. `?mode=lan` and `?mode=remote` override, for testing
+// one from where the other would be picked.
+// Which build of this page is in front of you.
+//
+// Substituted by `scripts/publish-console.sh` at deploy time and logged as the first line, because
+// a static host caches and a browser caches harder: an hour was spent on a fix that was never
+// being loaded, and the only way to know is for the page to say so itself.
+const BUILD = "{{CONSOLE_BUILD}}";
+const BUILD_LABEL = BUILD.startsWith("{{") ? "unpublished (served by a robot or a checkout)" : BUILD;
+
+const PARAMS = new URLSearchParams(location.search);
+const REMOTE = PARAMS.get("mode")
+  ? PARAMS.get("mode") === "remote"
+  : !SERVED_BY_ROBOT && location.protocol === "https:";
+
+// Where this page mints its own relay credentials, addressed as the Space it is rather than
+// through `turn.fastrtc.org` — that alias is a dangling delegation and answers nothing
+// (`remote-access-design.md` §6). `?turn=` points this at a local copy or a fake.
+const TURN_CREDENTIALS_URL = PARAMS.get("turn")
+  || "https://fastrtc-turn-service.hf.space/credentials";
+const TURN_TTL_SECONDS = 600;
+
+// The Space the robot's relay registers with. `?rendezvous=` points this at a local copy.
+const RENDEZVOUS = (PARAMS.get("rendezvous")
+  || "https://pollen-robotics-reachy-mini-central.hf.space").replace(/\/$/, "");
+
+// What this page will drive. The rendezvous lists every robot an account owns, and the mini's
+// producers are on it too — `meta.kind` is what tells the families apart, and driving a mini from
+// here would send it method names it does not serve. §5.1.
+const KIND = "microduck";
+
+// The sign-in library, pinned to the version a Space that works pins. `@1` resolved to something
+// whose `oauthHandleRedirectIfPresent` returned nothing on a page holding a fresh `?code=`, which
+// turns a sign-in into a redirect loop — and `reachy_mini`'s own app guide warns that mixing
+// versions across the SDK and the shell "causes silent protocol drift". Pinned, therefore, rather
+// than tracking a major.
+const HUB_ESM = "https://cdn.jsdelivr.net/npm/@huggingface/hub@2.11.2/+esm";
+
+/// What the Space injected: the object a `sdk: static` Space is served with.
+///
+/// **Read when it is needed, not when this file is parsed.** This page's script is inline in the
+/// body, so anything read at parse time is read before a `<head>` script has run. A bundled app
+/// (`reachy_mini_website`, the SDK's host shell) never notices, because a module bundle executes
+/// after the document. Read late and it is there; read early and a Space with a perfectly good
+/// OAuth app looks like a Space with none, which is exactly what this page reported for a day.
+///
+/// **And the injection is the Space's own**, written by its `entrypoint.sh` out of the
+/// environment `hf_oauth: true` provides — the same move `telepresence`'s `server.mjs` makes, and
+/// the reason its sign-in works from the Hugging Face page. Hugging Face's own injection is for
+/// static Spaces and never reached this one; waiting for it was the day above. Served by a robot
+/// or opened from a checkout there is no object at all, which is correct: signing in to a
+/// rendezvous is not a thing anybody is doing there.
+function hfVariables() {
+  return (window.huggingface && window.huggingface.variables) || {};
+}
+
+/// The OAuth app this page signs in with. `?client_id=` overrides, which is how a new one is
+/// tried before it is registered anywhere.
+function oauthClientId() {
+  return PARAMS.get("client_id") || hfVariables().OAUTH_CLIENT_ID || "";
+}
+
+/// The scopes to ask for.
+///
+/// `openid profile` is all this needs — the token's whole job is proving an identity to the
+/// rendezvous, and the argument for keeping it that narrow is `remote-access-design.md` §2.4's.
+/// It is read from the Space rather than written here anyway, because the Space's app is
+/// provisioned from its README and `OAUTH_SCOPES` is Hugging Face reporting back what it
+/// provisioned. A page asking for scopes its app does not have is a refusal nobody can read.
+function oauthScopes() {
+  return hfVariables().OAUTH_SCOPES || "openid profile";
+}
+
+// Where Hugging Face sends the browser back to. This page, without its query string — and it has
+// to match the app's registered redirect URI exactly, trailing slash included.
+const OAUTH_REDIRECT = location.origin + location.pathname;
+
+// Where the sign-in is remembered. `localStorage`, not `sessionStorage`: the OAuth redirect can
+// land in a new tab, and a session store is per-tab.
+const OAUTH_KEY = "duck-console-oauth-v2";
+
+/// The remembered sign-in, if it is still one.
+///
+/// **The expiry was remembered and never read.** An `hf_oauth` access token lives for
+/// `hf_oauth_expiration_minutes` — a day, per the Space's card — and this page stored the whole
+/// OAuth result, expiry included, then handed the token to the rendezvous forever after without
+/// ever looking at it. A day later the header still said who you were, because a name is all a
+/// stored blob has to offer, and the rendezvous answered a token it could not resolve the only
+/// way it can: with no duck. Which reads as the duck being off.
+///
+/// The SDK behind `telepresence` has always enforced this (`lib/token-store.ts`), and that is why
+/// signing in there kept working. A token past its expiry is treated as absent, so the page asks
+/// for a new one instead of explaining a robot's absence.
+function rememberedSignIn() {
+  const raw = localStorage.getItem(OAUTH_KEY);
+  if (!raw) return null;
+  let stored;
+  try {
+    stored = JSON.parse(raw);
+  } catch {
+    localStorage.removeItem(OAUTH_KEY);
+    return null;
+  }
+  if (!stored || !stored.accessToken) {
+    localStorage.removeItem(OAUTH_KEY);
+    return null;
+  }
+  // `JSON.stringify` turned the library's `Date` into an ISO string on the way in. A blob written
+  // before this check existed has no expiry to read: treated as usable rather than dropped,
+  // because the rendezvous is the one that decides and a deploy should not sign everybody out.
+  if (stored.accessTokenExpiresAt) {
+    const expires = new Date(stored.accessTokenExpiresAt).getTime();
+    if (!Number.isFinite(expires) || expires <= Date.now()) {
+      log("dim", "the remembered sign-in expired; signing in again");
+      localStorage.removeItem(OAUTH_KEY);
+      return null;
+    }
+  }
+  return stored;
+}
+
+// How long any step of the sign-in gets before the page says so and moves on.
+//
+// **A promise that never settles is the worst failure this page can have**, because every line it
+// would have logged is after the `await`. A spent `?code=` left in the address bar by an earlier
+// attempt produces exactly that: the library takes the code, tries to exchange it, and the page
+// goes quiet with "asking Hugging Face who you are…" as its last word. So every await here races
+// a timer, and the timer's message names the code in the URL as the thing to get rid of.
+const SIGN_IN_TIMEOUT = 10000;
+
+/// `promise`, or an error naming `what` if it takes longer than [`SIGN_IN_TIMEOUT`].
+function within(what, promise) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(
+      () => reject(new Error(`${what} did not answer within ${SIGN_IN_TIMEOUT / 1000}s`)),
+      SIGN_IN_TIMEOUT,
+    )),
+  ]);
+}
+
+// Full deflection, matching `padd`'s defaults rather than inventing a second set of numbers:
+// 0.3 m/s and 1.5 rad/s. The robot clamps what it must; these are what a stick at the stop means.
+const MAX_LINEAR = 0.3;
+const MAX_ANGULAR = 1.5;
+// Continuous intents are resent, not latched. `safety.deadman_ms` is 500, so 10 Hz has margin for
+// a link that hiccups without the robot deciding the client is gone.
+const INTENT_HZ = 10;
+// Where a drag on the picture aims: a point a metre in front of the trunk, moved within about a
+// half-metre box. The IK clamps and reports it, which is why this can be a generous guess rather
+// than a calibration.
+const LOOK = { x: 1.0, y: 0.7, z: 0.2, dz: 0.45 };
+
+const $ = (id) => document.getElementById(id);
+const logEl = $("log");
+
+function log(cls, ...parts) {
+  const line = document.createElement("div");
+  line.className = cls;
+  line.textContent = parts.join(" ");
+  logEl.append(line);
+  while (logEl.childElementCount > 400) logEl.firstElementChild.remove();
+  logEl.scrollTop = logEl.scrollHeight;
+  // **Every failure this page has already comes through here**, including the two `window`
+  // handlers at the bottom, so this one hook puts all of them where somebody is looking. The
+  // drawer keeps the whole record; it just stops being the only copy.
+  if (cls === "bad") alert_(parts.join(" ").replace(/^!!\s*/, ""));
+}
+
+/// The last thing that went wrong, on the page.
+///
+/// Named with a trailing underscore because `alert` is a global this page would otherwise
+/// shadow — and shadowing it inside one function while the rest of the file still sees the
+/// browser's is the kind of difference nobody spots twice.
+function alert_(text) {
+  // **An empty red box is worse than no box**, and it is reachable: a `log("bad", …)` whose parts
+  // are only the `!!` marker strips to nothing. Nothing to say, nothing to show — the drawer still
+  // has the line either way.
+  if (!text.trim()) return;
+  $("alert-text").textContent = text;
+  $("alert").hidden = false;
+}
+function clearAlert() { $("alert").hidden = true; }
+
+function setState(text, cls = "pill") { $("state").textContent = text; $("state").className = cls + " pill"; }
+
+/// What the one button on this page does next, which is not always "connect".
+///
+/// **A signed-out remote console used to say so only in the log**, which is a collapsed drawer
+/// nobody opens before they have a reason to. So the first visit offered `connect`, the press
+/// went to Hugging Face, and the round trip was the explanation. Now the button names the step.
+/// It matters more since a remembered sign-in expires on its own: landing on a page that has just
+/// dropped one is the same first visit, and it should read like one.
+function connectLabel() { return REMOTE && !token ? "sign in with Hugging Face" : "connect"; }
+function setConnectLabel() { $("connect").textContent = connectLabel(); }
+function setDc(text, cls = "dim") { $("dcstate").textContent = text; $("dcstate").className = cls + " pill"; }
+
+/// Whether the controls that need a robot are usable, and the one place that is decided.
+///
+/// **Driven off the control channel, not off "connected".** A session whose ICE is up but whose
+/// datachannel has not opened cannot carry a command, and `call` would refuse it — so the gate
+/// asks the same question `call` asks. `data-needs-channel` in the markup is the list, which
+/// keeps it next to the controls rather than in a query nobody updates.
+function setLive(live) {
+  if (live) document.body.dataset.live = "1";
+  else delete document.body.dataset.live;
+  for (const el of document.querySelectorAll("[data-needs-channel]")) el.disabled = !live;
+}
+setLive(false);
+
+function banner(html) { $("banner").innerHTML = html; $("banner").hidden = false; }
+
+log("dim", "console build", BUILD_LABEL);
+
+// ── signalling ─────────────────────────────────────────────────────────────────
+
+let ws = null, pc = null, sessionId = null, control = null;
+// The rendezvous half: the account token, a handle on the open event stream, and which robot of
+// the account's this page is driving.
+let token = null, stream = null, chosen = null;
+// The relay servers this page holds for itself, in the `{urls, username, credential}` shape
+// `RTCPeerConnection` takes. Empty until `refreshRelays` has run, and empty forever on a LAN.
+let relays = [];
+// Whether a session is wanted. Set by a person — the connect button, or picking another robot —
+// and cleared when the robot ends one.
+//
+// **This is what stops a refusal loop.** The rendezvous pushes a `peerStatusChanged` whenever a
+// producer's state changes, which this page answers with a fresh `list` so the picker cannot go
+// stale — and a robot ending a session *is* such a change. Without a flag, that listing walks
+// straight back into `startSession`, gets refused, and the refusal produces the next listing.
+let wanted = false;
+// Whether a `startSession` is already out. The service answers a `list` twice over — once as a
+// push after the welcome, once as the reply to our own — so without this the second listing opens
+// a second session against a robot that is about to accept the first.
+let starting = false;
+
+function send(msg) {
+  log("out", "→", JSON.stringify(msg));
+  if (REMOTE) {
+    // **The reply to a `POST /send` can be a message, and dropping it costs the session.**
+    // On a WebSocket every answer comes back on the socket; here `startSession` is answered in
+    // the HTTP response body — `{"type":"sessionStarted","sessionId":…}` — and so is `list`,
+    // while everything else arrives on the event stream. A page that treated this as
+    // fire-and-forget got the robot's offer for a session it had never been told the id of, and
+    // failed on a null peer connection. So the body goes through the same handler as the stream.
+    fetch(`${RENDEZVOUS}/send`, {
+      method: "POST",
+      headers: { "authorization": `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify(msg),
+    }).then(async (response) => {
+      if (!response.ok) {
+        log("bad", `!! POST /send: HTTP ${response.status}`);
+        return;
+      }
+      const answer = await response.json().catch(() => null);
+      // `{"status":"ok"}` is the answer to everything the service handles on the stream.
+      if (answer && answer.type) {
+        await onSignalling(JSON.stringify(answer));
+      }
+    }).catch((e) => log("bad", "!! POST /send:", e.message));
+    return;
+  }
+  ws.send(JSON.stringify(msg));
+}
+
+$("signalling").textContent = REMOTE ? RENDEZVOUS.replace(/^https:\/\//, "") : SIGNALLING_URL;
+
+// ── the rendezvous transport ──────────────────────────────────────────────────
+//
+// **`fetch`, not `EventSource`.** The stream needs an `Authorization` header and `EventSource`
+// cannot set one. The service does accept `?token=` as a transitional fallback and is removing it,
+// which is right — a bearer token in a query string is a bearer token in the Space's access log
+// and in every proxy between. So the framing is a few lines here: split on a blank line, keep the
+// `data:` payloads, ignore the comment-only pings the service sends to hold the connection open
+// through its own proxy.
+async function openRendezvous(onMessage, onClosed) {
+  const response = await fetch(`${RENDEZVOUS}/events`, {
+    headers: { "authorization": `Bearer ${token}`, "accept": "text/event-stream" },
+  });
+  if (response.status === 401) throw new Error("Hugging Face refused this sign-in");
+  if (!response.ok) throw new Error(`the rendezvous answered HTTP ${response.status}`);
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let chunks = 0;
+  (async () => {
+    try {
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        // **CRLF, because the framing is not ours.** SSE permits `\r\n` line endings and a
+        // proxy is free to rewrite them; splitting on `\n\n` alone then matches nothing and
+        // every message is swallowed in silence — a stream that looks connected and says
+        // nothing, which is the worst shape a bug can take here. Normalised once, on arrival.
+        buffer += decoder.decode(value, { stream: true }).replace(/\r\n/g, "\n");
+        if (chunks++ === 0) {
+          // The first thing off the wire, verbatim and bounded. If the frames are not what this
+          // parser expects, this line is what says so instead of a silent stream.
+          log("dim", "first bytes from the stream:", JSON.stringify(buffer.slice(0, 200)));
+        }
+        // Events are separated by a blank line; a single event may carry several `data:` lines.
+        let split;
+        while ((split = buffer.indexOf("\n\n")) !== -1) {
+          const frame = buffer.slice(0, split);
+          buffer = buffer.slice(split + 2);
+          const data = frame
+            .split("\n")
+            .filter((line) => line.startsWith("data:"))
+            .map((line) => line.slice(5).trim())
+            .join("");
+          if (data) onMessage(data);
+        }
+      }
+    } catch (e) {
+      log("bad", "!! the event stream failed:", e.message);
+    }
+    log("dim", "the event stream ended");
+    onClosed();
+  })();
+  return reader;
+}
+
+/// Consume an OAuth redirect the moment the page loads, before anything else can.
+///
+/// **This is what a sign-in loop is made of.** Hugging Face sends the browser back here with a
+/// `?code=` in the URL, and that code has to be exchanged by whatever loads next. Doing it only
+/// when somebody clicks connect means the code is never spent: the click builds a *fresh* login
+/// URL, Hugging Face — already signed in — bounces straight back, and the page returns to idle
+/// having logged two lines that the reload then wiped. Handled here, the page comes back signed
+/// in and says so.
+async function resumeSignIn() {
+  if (!REMOTE) return;
+  log("dim", `remote mode: rendezvous ${RENDEZVOUS}`);
+
+  const returning = PARAMS.has("code") || location.hash.includes("code=");
+  const stored = rememberedSignIn();
+  const clientId = oauthClientId();
+  if (!clientId) {
+    log("bad", "!! no OAuth client id. On the Space it arrives as",
+               "`window.huggingface.variables.OAUTH_CLIENT_ID`, written into this page's `<head>`",
+               "by `entrypoint.sh` from what `hf_oauth: true` puts in its environment — if the",
+               "Space is serving this and the object is missing, that is the injection to look",
+               "at. Otherwise register an app with", OAUTH_REDIRECT, "as its redirect URI, and",
+               "pass `?client_id=` to use it.");
+    setState("no sign-in", "bad");
+    return;
+  }
+  log("dim", `oauth client ${clientId.slice(0, 8)}…, redirect ${OAUTH_REDIRECT}`);
+  if (!returning && !stored) {
+    setState("not signed in");
+    setConnectLabel();
+    log("dim", "not signed in. The button signs in with Hugging Face.");
+    return;
+  }
+
+  try {
+    if (returning) log("dim", "Hugging Face sent this page back with a sign-in code; spending it…");
+    const hub = await within("the sign-in library", import(HUB_ESM));
+    let result = returning
+      ? await within("the sign-in code exchange", hub.oauthHandleRedirectIfPresent())
+      : null;
+    if (returning && !result) {
+      log("bad", "!! Hugging Face sent this page a sign-in code and the library would not take",
+                 "it. That is a redirect loop waiting to happen, so the code is being dropped;",
+                 "click connect to start again.");
+      // Out of the URL either way: a spent or unusable code that stays in the address bar is
+      // re-read on every reload.
+      history.replaceState(null, "", location.pathname);
+      return;
+    }
+    if (result) {
+      localStorage.setItem(OAUTH_KEY, JSON.stringify(result));
+      history.replaceState(null, "", location.pathname);
+    } else {
+      result = stored;
+    }
+    token = result.accessToken;
+    const who = result.userInfo && (result.userInfo.preferred_username || result.userInfo.name);
+    $("account").textContent = who || "signed in";
+    $("account").hidden = false;
+    log("dim", `signed in as ${who || "somebody"}; \`connect\` opens the session`);
+    setState("signed in");
+    setConnectLabel();
+  } catch (e) {
+    log("bad", "!! the sign-in did not complete:", e.message || String(e));
+    if (returning) {
+      log("dim", "dropping the code from the address bar; `connect` starts a fresh sign-in");
+      history.replaceState(null, "", location.pathname);
+    }
+    localStorage.removeItem(OAUTH_KEY);
+    token = null;
+    setState("no sign-in", "bad");
+    setConnectLabel();
+  }
+}
+
+// **After the document, not during it.** Everything above is safe to define at parse time; only
+// this reads what the platform injected, and that script is not guaranteed to have run until the
+// page has loaded.
+if (document.readyState === "complete") {
+  resumeSignIn();
+} else {
+  window.addEventListener("load", () => resumeSignIn());
+}
+
+/// Sign in, and remember who with. `openid profile` only — this token's whole job is proving an
+/// identity to the rendezvous, and the argument for keeping it that narrow is §2.4's.
+///
+/// **Every step says what it was doing.** This is the one part of the page nothing on the robot can
+/// test, and the failures it has are all somebody else's configuration: a CDN a Space's policy
+/// will not load, OAuth metadata that has not taken effect yet, a token that has expired. A red
+/// pill and an empty log would send whoever hits one of those reading this source, so each step
+/// logs before it runs and names itself when it throws.
+async function signIn() {
+  log("dim", "loading the Hugging Face sign-in library…");
+  let hub;
+  try {
+    hub = await within("the sign-in library", import(HUB_ESM));
+  } catch (e) {
+    throw new Error(`could not load @huggingface/hub from cdn.jsdelivr.net (${e.message || e}). `
+      + `A Content-Security-Policy on this host would do that, and the fix is to vendor the `
+      + `library into this page rather than import it.`);
+  }
+
+  if (!oauthClientId()) {
+    throw new Error("this page has no OAuth client id, so it cannot sign anybody in. On the "
+      + "Space it arrives from `hf_oauth: true` in the README, which `entrypoint.sh` writes into "
+      + "the page as `window.huggingface.variables`. Anywhere else, register an app at "
+      + `huggingface.co/settings/applications/new with ${OAUTH_REDIRECT} as its redirect URI and `
+      + "the scopes `openid profile`, then pass it as `?client_id=`.");
+  }
+
+  const stored = rememberedSignIn();
+  log("dim", "asking Hugging Face who you are…");
+  let result;
+  try {
+    result = (await within("the sign-in code exchange", hub.oauthHandleRedirectIfPresent()))
+      || stored;
+  } catch (e) {
+    localStorage.removeItem(OAUTH_KEY);
+    throw new Error(`the sign-in did not complete (${e.message || e})`);
+  }
+
+  if (!result) {
+    log("dim", "not signed in yet; going to Hugging Face");
+    let url;
+    try {
+      url = await hub.oauthLoginUrl({
+        clientId: oauthClientId(),
+        redirectUrl: OAUTH_REDIRECT,
+        scopes: oauthScopes(),
+      });
+    } catch (e) {
+      throw new Error(`this page cannot build a sign-in URL (${e.message || e}). The client id it `
+        + `used is ${oauthClientId().slice(0, 8)}… and the redirect it asks for is `
+        + `${OAUTH_REDIRECT}; an app whose registered redirect URI is not exactly that is the `
+        + `usual cause.`);
+    }
+    window.location.href = url;
+    return null;
+  }
+  localStorage.setItem(OAUTH_KEY, JSON.stringify(result));
+  return result;
+}
+
+$("robots").onchange = () => {
+  if (!stream) return;
+  chosen = $("robots").value;
+  wanted = true;
+  if (sessionId) {
+    send({ type: "endSession", sessionId });
+    sessionId = null;
+    if (pc) { pc.close(); pc = null; }
+    setDc("no control channel"); setLive(false);
+    stopTelemetry();
+  }
+  send({ type: "list" });
+};
+
+/// Everything that has to be forgotten when a link goes away, whichever link it was.
+function teardown() {
+  setState("closed", "bad"); setDc("no control channel");
+  setLive(false);
+  setConnectLabel();
+  ws = null; stream = null; sessionId = null; control = null;
+  wanted = false; starting = false;
+  stopTelemetry();
+  if (pc) { pc.close(); pc = null; }
+}
+
+$("connect").onclick = async () => {
+  if (ws || stream) {
+    if (ws) ws.close();
+    // Cancelling the read closes the connection, which is what takes the *consumer* off the
+    // rendezvous. The robot's own producer registration is not ours to end.
+    if (stream) { stream.cancel().catch(() => {}); teardown(); }
+    return;
+  }
+
+  if (REMOTE) {
+    wanted = true;
+    try {
+      if (!token) {
+        setState("signing in…");
+        const oauth = await signIn();
+        if (!oauth) return; // redirected to Hugging Face; this page is about to be replaced
+        token = oauth.accessToken;
+        const who = oauth.userInfo && (oauth.userInfo.preferred_username || oauth.userInfo.name);
+        $("account").textContent = who || "signed in";
+        $("account").hidden = false;
+      }
+      setState("connecting…");
+      // Before the session rather than during it: `newPeerConnection` runs in a message handler
+      // that cannot wait, and credentials are short-lived enough that minting them per connect
+      // is simpler than keeping a fresh set around.
+      await refreshRelays();
+      log("dim", "opening the rendezvous event stream…");
+      let spoke = false;
+      stream = await openRendezvous((data) => {
+        spoke = true;
+        onSignalling(data).catch((e) => log("bad", "!!", e.message));
+      }, teardown);
+      setState("signalling");
+      $("connect").textContent = "disconnect";
+      // The welcome is the first thing on a healthy stream and it arrives at once. A stream that
+      // is open and mute for this long is a parser or a proxy, not a slow server, and saying so
+      // beats a page that sits on "signalling" forever.
+      setTimeout(() => {
+        if (!spoke && stream) {
+          log("bad", "!! the stream is open and has said nothing for 10s.",
+                     "The welcome should arrive immediately — so this is the framing being read",
+                     "wrongly, or something between here and the Space buffering it.");
+        }
+      }, 10000);
+    } catch (e) {
+      // `e.message` alone can be empty — a rejected dynamic import in some browsers is one — and
+      // a red pill with an empty log is the worst thing this page can do to somebody.
+      log("bad", "!!", e.message || String(e) || e.name || "no reason given");
+      if (e.stack) log("dim", e.stack.split("\n")[0]);
+      setState(token ? "no rendezvous" : "no sign-in", "bad");
+      // A refused token is a stale sign-in far more often than a revoked one, and the fix is the
+      // same either way: forget it so the next click signs in again rather than failing again.
+      localStorage.removeItem(OAUTH_KEY);
+    }
+    return;
+  }
+
+  wanted = true;
+  ws = new WebSocket(SIGNALLING_URL);
+  setState("connecting…");
+
+  ws.onopen = () => { setState("signalling"); $("connect").textContent = "disconnect"; };
+  // The one failure two ports can produce, named in words rather than as `websocket error`. If this
+  // page arrived from the robot, the robot is up and reachable and one of its two ports is not —
+  // which is a firewall between them far more often than it is mediad, since mediad serves both.
+  ws.onerror = () => log("bad", SERVED_BY_ROBOT
+    ? `!! this page came from this robot, but its signalling port (${SIGNALLING_PORT}) did not `
+      + `answer. mediad serves both ports, so it is running — check for a firewall between you `
+      + `and ${SIGNALLING_PORT}, and \`journalctl -u mediad -b\` for a pipeline that stopped.`
+    : `!! no answer from ${SIGNALLING_URL} — wrong host, or mediad is not running. This page was `
+      + `opened from a file rather than served by a robot; \`duckctl open\` serves it from the `
+      + `robot instead.`);
+  ws.onclose = teardown;
+
+  ws.onmessage = (event) => {
+    onSignalling(event.data).catch((e) => log("bad", "!!", e.message));
+  };
+};
+
+// ── one protocol, whichever transport carried it ───────────────────────────────
+//
+// The envelopes are the same on both sides — that is the whole reason the bridge in `mediad` is a
+// translator with an opaque payload rather than a parser (§3.2). So this switch is shared, and the
+// two cases below it that only the rendezvous ever sends are the exceptions worth naming.
+async function onSignalling(raw) {
+    const msg = JSON.parse(raw);
+    // Skip the noisy ones so the log stays readable.
+    if (msg.type !== "peerStatusChanged") log("in", "←", raw.slice(0, 400));
+
+    switch (msg.type) {
+      case "welcome":
+        // The server assigns us an id, then we ask who is producing. `list` takes no fields.
+        send({ type: "list" });
+        break;
+
+      case "list": {
+        // The rendezvous lists every robot the signed-in account owns, and the mini's producers
+        // are on the same service — so this filters on `meta.kind`. On a LAN there is exactly one
+        // producer and it is this robot, whose local `meta` carries no `kind` at all, so the
+        // filter would remove the only candidate. §5.1.
+        let producers = msg.producers || [];
+        if (REMOTE) producers = producers.filter((p) => (p.meta || {}).kind === KIND);
+
+        if (!producers.length) {
+          log("bad", REMOTE
+            ? "!! no duck is registered with this account. A robot appears here about thirty "
+              + "seconds after `robotctl account login`, and only while it has a network."
+            : "!! no producers. mediad registers as one when its pipeline reaches PLAYING — "
+              + "check its journal for a pipeline that would not start.");
+          setState("no producer", "bad");
+          return;
+        }
+
+        // More than one duck is the ordinary case for an account that owns two, so the picker
+        // appears rather than the first one silently winning.
+        if (REMOTE && producers.length > 1) {
+          const picker = $("robots");
+          picker.innerHTML = "";
+          for (const candidate of producers) {
+            const option = document.createElement("option");
+            option.value = candidate.id;
+            option.textContent = (candidate.meta || {}).name || candidate.id.slice(0, 8);
+            picker.append(option);
+          }
+          if (chosen && producers.some((p) => p.id === chosen)) picker.value = chosen;
+          picker.hidden = false;
+        }
+
+        // A session already exists, or nobody asked for one: this listing is a robot appearing
+        // or going away, not an invitation to open a session. Two consumers on one robot is
+        // `remote-webrtc.md` §9's interleaving bug, and the service refuses it anyway.
+        if (sessionId || starting || !wanted) break;
+
+        chosen = (REMOTE && producers.length > 1 && $("robots").value) || producers[0].id;
+        const producer = producers.find((p) => p.id === chosen) || producers[0];
+        // The producer's `meta` names the robot before a session exists — `mediad/src/producer.rs`
+        // is what puts it there. Shown straight away, so the header is filled in before the
+        // datachannel opens and re-filled from `system.info` and `hello` when it does.
+        const meta = producer.meta || {};
+        log("dim", "producer:", producer.id, JSON.stringify(meta));
+        if (meta.name) $("robot").textContent = meta.name;
+        if (meta.release) $("release").textContent = meta.release;
+        if (meta.api_version) $("api").textContent = `api v${meta.api_version}`;
+        // No `offer`, so the producer offers and we answer. That is the direction webrtcsink
+        // wants: it knows what it is sending.
+        starting = true;
+        send({ type: "startSession", peerId: producer.id });
+        break;
+      }
+
+      case "sessionStarted":
+        starting = false;
+        sessionId = msg.sessionId;
+        setState("negotiating");
+        newPeerConnection();
+        break;
+
+      // `peer` carries either an sdp or an ice, flattened alongside sessionId — the shapes are
+      // `{type:"peer", sessionId, sdp:{type:"offer"|"answer", sdp}}` and
+      // `{type:"peer", sessionId, ice:{candidate, sdpMLineIndex}}`. Getting these wrong is the
+      // one mistake that produces silence rather than an error, so they are read off
+      // net/webrtc/protocol rather than guessed.
+      case "peer":
+        if (!pc) {
+          log("bad", "!! a peer message arrived before this page had a session to put it in",
+                     `(sessionId ${msg.sessionId}).`,
+                     "That is `sessionStarted` having been missed, not the robot misbehaving.");
+          break;
+        }
+        if (msg.sdp) {
+          await pc.setRemoteDescription(msg.sdp);
+          const answer = await pc.createAnswer();
+          await pc.setLocalDescription(answer);
+          send({ type: "peer", sessionId, sdp: { type: "answer", sdp: answer.sdp } });
+        } else if (msg.ice) {
+          await pc.addIceCandidate({
+            candidate: msg.ice.candidate,
+            sdpMLineIndex: msg.ice.sdpMLineIndex,
+          });
+        }
+        break;
+
+      case "endSession":
+        log("dim", "session ended by the robot", msg.reason ? `— ${msg.reason}` : "");
+        // Both, and both matter: a stale `sessionId` would be sent on the next `peer` message,
+        // and leaving `wanted` set turns the next listing into another request the robot has
+        // just declined.
+        sessionId = null;
+        wanted = false;
+        starting = false;
+        if (pc) { pc.close(); pc = null; }
+        setState("signalling"); setDc("no control channel"); setLive(false);
+        stopTelemetry();
+        break;
+
+      // Only the rendezvous sends these two. The robot's own signalling server has no notion of
+      // another consumer holding the robot, and no producer to refuse on behalf of.
+      case "sessionRejected":
+        log("bad", `!! the robot refused a session (${msg.reason || "no reason given"})`,
+                   msg.activeApp ? `— ${msg.activeApp} is driving it` : "");
+        setState(msg.reason === "robot_busy" ? "robot busy" : "refused", "bad");
+        break;
+
+      case "peerStatusChanged":
+        // A robot appearing or going away while this page is open. Cheap to redraw, and the
+        // alternative is a listing that goes stale the moment somebody unplugs a duck. Only
+        // remotely: on a LAN the one producer is the robot serving this page.
+        if (REMOTE) send({ type: "list" });
+        break;
+
+      case "error":
+        log("bad", "!! server error:", msg.details);
+        break;
+    }
+}
+
+/// Mint relay credentials for **this visitor**, so the page can offer a relay of its own.
+///
+/// §6 of `remote-access-design.md` argued only the robot needs to offer one: a connection needs
+/// one relay candidate and not two, and `aiortc`'s TURN client does not work, so a Python
+/// consumer could never be the side that relays. Both halves are still true, and the conclusion
+/// was still wrong for a browser — because it assumed the two ends can address each other at all.
+///
+/// **An iPhone on a mobile network has no IPv4 socket.** It reaches a *hostname* through
+/// DNS64/NAT64 and the STUN server reports an IPv4 reflexive address back, so it looks like it
+/// has IPv4 and gathers a candidate saying so. But an ICE candidate is a bare literal, and the
+/// robot's relay candidate is a bare IPv4 literal, which that phone cannot send a packet to.
+/// Six sessions negotiated perfectly and carried nothing, which is the same symptom a missing
+/// relay gives and a different cause.
+///
+/// Its own allocation is what bridges the two, and only its own can: `turn.cloudflare.com` is a
+/// name, so it resolves over IPv6, and the relayed address Cloudflare hands back is IPv4 — which
+/// the robot can reach. One relay candidate is still enough. It just has to be this end's.
+///
+/// Metered against the visitor's account rather than the robot owner's, which is the right way
+/// round: a robot's allowance should go on being watched, not on watching.
+async function refreshRelays() {
+  relays = [];
+  if (!REMOTE || !token) return;
+  try {
+    const response = await fetch(`${TURN_CREDENTIALS_URL}?ttl=${TURN_TTL_SECONDS}`, {
+      headers: { authorization: `Bearer ${token}` },
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const offered = (await response.json()).iceServers || [];
+    // A `stun:` entry has no credentials and is not a relay; the STUN server is set below.
+    relays = offered.filter((server) => server.username && server.credential);
+    log("dim", `relay credentials: ${relays.length} server(s)`);
+  } catch (e) {
+    // Best effort, always. Without a relay this page still reaches every robot it could reach
+    // before, which is most of them — so this is a line in the log and not a failed connect.
+    log("bad", "!! no relay credentials:", e.message || String(e),
+               "— a session from a mobile network may negotiate and carry nothing");
+  }
+}
+
+function newPeerConnection() {
+  // **STUN only when it is needed, which is when this page is not on the robot's network.**
+  //
+  // On a LAN both ends offer host candidates and they pair immediately; asking a public STUN
+  // server about a robot two metres away would add a round trip to somebody else's service for a
+  // candidate nothing will use. Remotely there are no host candidates in common, so the browser
+  // has to learn its own reflexive address — and until it did, this page offered only
+  // `192.168.…` to a robot on another network and the session negotiated perfectly and carried
+  // nothing.
+  //
+  // `stun.l.google.com` is what `webrtcsink` already defaults to on the robot side, so the two
+  // ends use one server rather than two.
+  //
+  // **And this page's own relay servers, when `refreshRelays` got any.** Reading them here rather
+  // than fetching is the same rule the robot follows in its `consumer-added` handler: this runs
+  // inside a signalling message handler, and an HTTP request in it would delay the answer to
+  // every session, including the LAN ones that will never use a relay. `relays` is filled on the
+  // connect path, which is already asynchronous and already says "connecting…".
+  pc = new RTCPeerConnection(REMOTE
+    ? { iceServers: [{ urls: "stun:stun.l.google.com:19302" }, ...relays] }
+    : undefined);
+
+  pc.ontrack = (event) => {
+    log("dim", "track:", event.track.kind);
+    $("video").srcObject = event.streams[0];
+  };
+
+  // Take the box's shape from the stream rather than assuming landscape. `loadedmetadata` is the
+  // first point the dimensions are known, and `resize` covers a stream that changes shape while
+  // playing — which a `--rotate` change on the robot does, without the page reloading.
+  const fitVideoBox = () => {
+    // `onVideoInfo` owns the sizing when the camera is mounted off upright.
+    if (mountRotation) return;
+    const { videoWidth: w, videoHeight: h } = $("video");
+    sizeVideoBox(w, h);
+  };
+  $("video").addEventListener("loadedmetadata", fitVideoBox);
+  $("video").addEventListener("resize", fitVideoBox);
+
+  pc.onicecandidate = (event) => {
+    if (!event.candidate) return;
+    send({
+      type: "peer",
+      sessionId,
+      ice: {
+        candidate: event.candidate.candidate,
+        sdpMLineIndex: event.candidate.sdpMLineIndex,
+      },
+    });
+  };
+
+  pc.onconnectionstatechange = () => {
+    setState(pc.connectionState, pc.connectionState === "failed" ? "bad" : "pill");
+  };
+
+  // **The robot creates the datachannel, so we receive it.** mediad calls
+  // `create-data-channel` on each consumer's webrtcbin rather than waiting for the peer, so a
+  // client that opens nothing still gets a control surface — and a client that opens its own
+  // would get a second, unrouted channel.
+  pc.ondatachannel = (event) => {
+    control = event.channel;
+    log("dim", "datachannel:", control.label);
+    control.onopen = () => {
+      setDc("control open", "in");
+      // The session got where it was going, so whatever failed on the way there is no longer
+      // the most useful thing on the screen.
+      setLive(true); clearAlert();
+      startTelemetry();
+    };
+    control.onclose = () => {
+      setDc("control closed", "bad");
+      setLive(false);
+      stopTelemetry();
+      // The detector's boxes came down this channel; with it gone they are stale by definition.
+      clearDetections("–");
+    };
+    control.onmessage = (e) => onControl(e.data);
+  };
+}
+
+// ── JSON-RPC over the control channel ──────────────────────────────────────────
+//
+// Ids are handed out here and answers are matched to them, which is what lets a caller `await` one.
+// A line with no id is a notification — `robot.state` is the only one that streams today — and it
+// goes to the telemetry panel rather than to a pending promise.
+
+let nextId = 1;
+const inflight = new Map();
+
+function open() { return control && control.readyState === "open"; }
+
+// **`quiet` is what keeps the log readable.** A twist at 10 Hz and a health poll every two seconds
+// are the page working, not something a person did — logging their requests and their answers would
+// bury the one line anybody opens this drawer to read. Errors are logged whatever `quiet` says.
+function call(method, params = {}, quiet = false) {
+  if (!open()) {
+    log("bad", "!! no control channel yet");
+    return Promise.reject(new Error("no control channel"));
+  }
+  const id = nextId++;
+  const line = JSON.stringify({ jsonrpc: "2.0", id, method, params });
+  if (!quiet) log("out", "control →", line);
+  control.send(line);
+  return new Promise((resolve, reject) => {
+    inflight.set(id, { resolve, reject, quiet });
+    // Not a budget on the robot's behalf — a promise nobody settles is a leak, and a method that
+    // never answers is worth seeing rather than a panel that quietly stopped updating.
+    setTimeout(() => {
+      if (inflight.delete(id)) reject(new Error(`${method} did not answer`));
+    }, 10_000);
+  });
+}
+
+// Fire-and-forget, for the continuous intents: a twist resent at 10 Hz does not want a promise per
+// frame, and its answer carries nothing a knob can show. The id is still registered, so the reply it
+// produces is recognised as this rather than logged as an answer to something nobody asked.
+function tell(method, params) {
+  if (!open()) return;
+  const id = nextId++;
+  inflight.set(id, { quiet: true });
+  setTimeout(() => inflight.delete(id), 10_000);
+  control.send(JSON.stringify({ jsonrpc: "2.0", id, method, params }));
+}
+
+function onControl(data) {
+  let msg;
+  try { msg = JSON.parse(data); } catch { log("bad", "control ← unparseable:", data); return; }
+
+  // No id is a notification, and `robot.state` is the only one that streams today. Anything else
+  // arriving this way is worth seeing in full rather than summarised.
+  if (msg.id === undefined || msg.id === null) {
+    if (msg.method === "robot.state") { onState(msg.params); return; }
+    // How far the camera is mounted from upright. Sent once when the channel opens.
+    if (msg.method === "media.video") { onVideoInfo(msg.params); return; }
+    // The duck detector, a couple of times a second. Not logged: it streams, and a line per
+    // sighting would bury everything a person opened the drawer to read.
+    if (msg.method === "media.detections") { onDetections(msg.params); return; }
+    log("in", "control ←", data.slice(0, 400));
+    return;
+  }
+
+  const waiting = inflight.get(msg.id);
+  if (!waiting) { log("in", "control ←", data.slice(0, 400)); return; }
+  inflight.delete(msg.id);
+
+  if (msg.error) {
+    log("bad", "control ←", data.slice(0, 400));
+    if (waiting.reject) waiting.reject(msg.error);
+    return;
+  }
+  if (!waiting.quiet) log("in", "control ←", data.slice(0, 400));
+  if (waiting.resolve) waiting.resolve(msg.result);
+}
+
+// ── who this robot is, and whether we agree about the API ──────────────────────
+//
+// Sent when the channel opens rather than clicked: a header that needs a button pressed to fill in
+// is a header nobody reads.
+
+async function identify() {
+  try {
+    // `0` when this page was not served by a robot: it genuinely does not know which version it
+    // speaks, and claiming the robot's own would make the comparison below meaningless. A
+    // difference is reported and served either way — a robot refuses a call it does not know, not a
+    // version it does not share.
+    const hello = await call("hello", { api_version: SERVED_API || 0 });
+    $("api").textContent = `api v${hello.api_version}`;
+    if (hello.daemon_version) {
+      $("release").textContent = hello.revision
+        ? `${hello.daemon_version} (${hello.revision.slice(0, 7)})`
+        : `${hello.daemon_version}`;
+    }
+    // **A version difference is a banner, not a locked door.** Everything below keeps working, and
+    // the calls that a difference actually breaks fail with a message naming the method. A page
+    // served by a robot ships with that robot's release, so this can only fire for a page opened
+    // from a checkout — which is exactly the case worth saying out loud.
+    if (SERVED_API && hello.api_version !== SERVED_API) {
+      banner(`This page speaks API v${SERVED_API} and the robot speaks v${hello.api_version}. `
+        + `Everything still works; a call this robot does not know will say so. `
+        + `<code>duckctl open</code> serves the page from the robot itself, which cannot differ.`);
+    } else if (!SERVED_BY_ROBOT && !REMOTE) {
+      banner(`This page was opened from a checkout rather than served by the robot, so it cannot `
+        + `say whether the two agree about the API. <code>duckctl open</code> serves it from the `
+        + `robot.`);
+    }
+  } catch (e) {
+    log("bad", "!! hello failed:", e.message || JSON.stringify(e));
+  }
+
+  try {
+    const info = await call("system.info");
+    if (info.name) $("robot").textContent = info.name;
+    $("robot").title = info.serial ? `serial ${info.serial}` : "no serial on this board";
+  } catch (e) {
+    log("bad", "!! system.info failed:", e.message || JSON.stringify(e));
+  }
+}
+
+// ── telemetry ──────────────────────────────────────────────────────────────────
+
+let healthTimer = null, statsTimer = null;
+
+function startTelemetry() {
+  identify();
+  // **Asked, not waited for.** The robot also pushes this when the channel appears, which races
+  // this page's datachannel and loses — the picture then stays sideways with nothing in the log to
+  // say why. Asking once the channel is open cannot arrive too early.
+  call("media.video", {}, true).then(onVideoInfo).catch(() => {});
+  // 2 Hz: enough to watch a robot, and decimation is server-side and per-subscriber, so this costs
+  // the robot a twenty-fifth of what a digital twin at 50 Hz would.
+  call("robot.subscribe", { hz: 2 }, true).catch(() => {});
+  call("robot.policies", {}, true).then(onPolicies).catch(() => {});
+  poll();
+  healthTimer = setInterval(poll, 2000);
+  statsTimer = setInterval(readStats, 1000);
+}
+
+function stopTelemetry() {
+  clearInterval(healthTimer); healthTimer = null;
+  clearInterval(statsTimer); statsTimer = null;
+  // Rejected rather than dropped: a promise that is merely forgotten leaves its awaiting caller
+  // hanging for the life of the page, which is how a reconnect ends up with two of everything.
+  for (const [id, waiting] of inflight) {
+    if (waiting.reject) waiting.reject(new Error("the control channel closed"));
+    inflight.delete(id);
+  }
+  lastStats = null;
+}
+
+// `robot.health` and `robot.mode` are calls rather than stream fields, and neither is on the frame:
+// the mode is what the loop is running (walk or roller) and the health row is where anything wrong
+// gets named — a hot servo, a flat pack, a bus that stopped answering.
+async function poll() {
+  if (!open()) return;
+  try {
+    const mode = await call("robot.mode", {}, true);
+    $("t-mode").textContent = mode.mode || "–";
+  } catch { /* logged by `call` */ }
+  try {
+    const health = await call("robot.health", {}, true);
+    const verdict = health.healthy ? "healthy" : (health.degraded ? "degraded" : "unhealthy");
+    $("t-health").textContent = health.reason ? `${verdict} — ${health.reason}` : verdict;
+    $("t-health").className = health.healthy ? "" : (health.degraded ? "warn" : "bad");
+    // Absent is *not known yet* — the first second after startup, or a bus that cannot answer —
+    // and rendering it as an empty pack would be a lie a reader acts on.
+    $("t-battery").textContent = health.battery
+      ? `${health.battery.volts.toFixed(2)} V · ${Math.round(health.battery.percent)}%`
+      : "not read";
+    const motors = health.motors
+      ? `${health.motors.max_c.toFixed(0)} °C ${health.motors.hottest}` : null;
+    const cpu = health.cpu_temp_c !== undefined && health.cpu_temp_c !== null
+      ? `${health.cpu_temp_c.toFixed(0)} °C board` : null;
+    $("t-temps").textContent = [motors, cpu].filter(Boolean).join(" · ") || "not read";
+  } catch { /* logged by `call` */ }
+}
+
+// **The skills a robot has are config**, so the menu is the robot's answer rather than this
+// page's assumption. A build that shipped the five names would be wrong in both directions on any
+// robot somebody has configured — missing the bow they added, offering the kick they removed.
+//
+// An empty list means the robot did not say, which is an older daemon rather than a robot with no
+// skills; the five it certainly has are better than an empty menu, and the distinction matters
+// because one of those is a robot to update and the other is a robot to leave alone.
+function onPolicies(policies) {
+  const menu = $("skill");
+  const names = (policies && policies.skills) || [];
+  const pretty = { sit_toggle: "sit ⇄ stand", ground_pick: "ground pick",
+                   kick_left: "kick left", kick_right: "kick right" };
+  const list = names.length ? names
+    : ["sit_toggle", "ground_pick", "kick_left", "kick_right", "roulade"];
+  menu.textContent = "";
+  for (const name of list) {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = pretty[name] || name.replace(/[-_]/g, " ");
+    menu.append(option);
+  }
+  log("in", names.length
+    ? `${names.length} skill(s): ${names.join(", ")}`
+    : "this robot did not name its skills — an older daemon; offering the built-in five");
+}
+
+function onState(state) {
+  if (!state) return;
+  $("t-policy").textContent = state.policy || "–";
+  const loop = state.loop || {};
+  $("t-loop").textContent = `${(loop.hz || 0).toFixed(1)} Hz · ${loop.missed || 0} missed`;
+
+  const safety = state.safety || {};
+  const flags = [safety.fallen ? "fallen" : null, safety.limp ? "limp" : null].filter(Boolean);
+  $("t-safety").textContent = flags.length ? flags.join(" · ") : "upright";
+  $("t-safety").className = flags.length ? "bad" : "";
+
+  const twist = (v) => v ? `${v[0].toFixed(2)} ${v[1].toFixed(2)} ${v[2].toFixed(2)}` : "–";
+  const move = state.move || {};
+  $("t-requested").textContent = twist(move.requested);
+  // The reason a limit applied, named rather than left to be inferred from two rows that differ:
+  // "the stick is forward and the robot is still" is unreadable without it.
+  const limited = (move.limited_by || []).join(", ");
+  $("t-applied").textContent = limited ? `${twist(move.applied)} — ${limited}` : twist(move.applied);
+  $("t-applied").className = limited ? "warn" : "";
+}
+
+// ── link quality ───────────────────────────────────────────────────────────────
+//
+// A stream that degrades is otherwise a picture that looks worse and a log that says nothing.
+
+let lastStats = null;
+
+async function readStats() {
+  if (!pc) return;
+  const report = await pc.getStats();
+  let inbound = null, pair = null;
+  report.forEach((s) => {
+    if (s.type === "inbound-rtp" && s.kind === "video") inbound = s;
+    if (s.type === "candidate-pair" && s.nominated) pair = s;
+  });
+  if (inbound) {
+    if (lastStats && inbound.timestamp > lastStats.timestamp) {
+      const seconds = (inbound.timestamp - lastStats.timestamp) / 1000;
+      const bits = (inbound.bytesReceived - lastStats.bytesReceived) * 8;
+      $("bitrate").textContent = `${Math.round(bits / seconds / 1000)} kbps`;
+      const lost = (inbound.packetsLost ?? 0) - (lastStats.packetsLost ?? 0);
+      const got = (inbound.packetsReceived ?? 0) - (lastStats.packetsReceived ?? 0);
+      const share = got + lost > 0 ? (100 * lost) / (got + lost) : 0;
+      $("loss").textContent = `${share.toFixed(1)}%`;
+      $("loss").className = share > 2 ? "bad" : "";
+    }
+    $("fps").textContent = inbound.framesPerSecond !== undefined
+      ? `${Math.round(inbound.framesPerSecond)}` : "–";
+    lastStats = inbound;
+  }
+  if (pair && pair.currentRoundTripTime !== undefined) {
+    $("rtt").textContent = `${Math.round(pair.currentRoundTripTime * 1000)} ms`;
+  }
+}
+
+// ── driving ────────────────────────────────────────────────────────────────────
+//
+// One twist, written by the keys and by both pads, resent at a fixed rate while it is non-zero and
+// once more when it returns to zero. The robot's deadman stops it if the sending stops — that is
+// what makes a dropped link safe — but an explicit zero stops it now rather than in half a second.
+
+const twist = { vx: 0, vy: 0, vyaw: 0 };
+const keys = new Set();
+let sending = false;
+
+function keyTwist() {
+  const held = (...names) => names.some((name) => keys.has(name));
+  const axis = (positive, negative) => (held(...positive) ? 1 : 0) - (held(...negative) ? 1 : 0);
+  return {
+    vx: axis(["w", "arrowup"], ["s", "arrowdown"]) * MAX_LINEAR,
+    vy: axis(["a"], ["d"]) * MAX_LINEAR,
+    vyaw: axis(["q", "arrowleft"], ["e", "arrowright"]) * MAX_ANGULAR,
+  };
+}
+
+const padTwist = { vx: 0, vy: 0, vyaw: 0 };
+
+function refreshTwist() {
+  const fromKeys = keyTwist();
+  // The pads win where they are held, because a pad at rest is 0 and adding the two would make a
+  // key held while a pad is pushed produce a velocity neither asked for.
+  twist.vx = padTwist.vx || fromKeys.vx;
+  twist.vy = padTwist.vy || fromKeys.vy;
+  twist.vyaw = padTwist.vyaw || fromKeys.vyaw;
+
+  const moving = twist.vx || twist.vy || twist.vyaw;
+  if (moving) { sending = true; return; }
+  if (sending) { sending = false; tell("robot.move", { vx: 0, vy: 0, vyaw: 0 }); }
+}
+
+setInterval(() => {
+  if (sending) tell("robot.move", { vx: twist.vx, vy: twist.vy, vyaw: twist.vyaw });
+}, 1000 / INTENT_HZ);
+
+addEventListener("keydown", (event) => {
+  // Keys are the robot's while nothing text-shaped has focus — the raw box in the drawer is a
+  // text field, and typing `robot.mode` into it should not walk the robot across the room. The
+  // optional call is for a keydown whose target is the document itself, which has no `matches`.
+  if (event.target?.matches?.("input, textarea, select")) return;
+  const key = event.key.toLowerCase();
+  if (!["w", "a", "s", "d", "q", "e", "arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key)) return;
+  event.preventDefault();
+  if (!open()) { log("bad", "!! no control channel — connect to a robot first"); return; }
+  keys.add(key);
+  refreshTwist();
+});
+addEventListener("keyup", (event) => { keys.delete(event.key.toLowerCase()); refreshTwist(); });
+// A key held while the page loses focus would otherwise stay held for as long as the tab is away.
+addEventListener("blur", () => { keys.clear(); refreshTwist(); });
+
+// A pad is a pointer inside a box: the fraction of the way from the centre to each edge, clamped,
+// with the knob drawn where the finger is so a stick that is not centred is visible rather than
+// inferred from the robot moving.
+function wirePad(pad, knob, onMove) {
+  const clamp = (v) => Math.max(-1, Math.min(1, v));
+  const read = (event) => {
+    const box = pad.getBoundingClientRect();
+    return {
+      x: clamp((2 * (event.clientX - box.left)) / box.width - 1),
+      y: clamp((2 * (event.clientY - box.top)) / box.height - 1),
+    };
+  };
+  const draw = (x, y) => {
+    knob.style.left = `${50 + 50 * x}%`;
+    knob.style.top = `${50 + 50 * y}%`;
+  };
+  pad.addEventListener("pointerdown", (event) => {
+    // A knob that slides under your thumb and moves nothing is worse than one that will not
+    // move: it says the robot is being driven. The section is dimmed for the same reason.
+    if (!open()) { log("bad", "!! no control channel — connect to a robot first"); return; }
+    pad.setPointerCapture(event.pointerId);
+    const at = read(event);
+    draw(at.x, at.y); onMove(at);
+  });
+  pad.addEventListener("pointermove", (event) => {
+    if (!pad.hasPointerCapture(event.pointerId)) return;
+    const at = read(event);
+    draw(at.x, at.y); onMove(at);
+  });
+  const release = () => { draw(0, 0); onMove({ x: 0, y: 0 }); };
+  pad.addEventListener("pointerup", release);
+  pad.addEventListener("pointercancel", release);
+}
+
+wirePad($("pad-move"), $("knob-move"), (at) => {
+  // Up is forward, and `vy` is positive to the left — the trunk frame the protocol fixes, stated
+  // once in `duck-ipc-proto` so no consumer has to rediscover it.
+  padTwist.vx = -at.y * MAX_LINEAR;
+  padTwist.vy = -at.x * MAX_LINEAR;
+  refreshTwist();
+});
+
+wirePad($("pad-turn"), $("knob-turn"), (at) => {
+  padTwist.vyaw = -at.x * MAX_ANGULAR;
+  refreshTwist();
+});
+
+// ── looking ────────────────────────────────────────────────────────────────────
+//
+// A drag on the picture is a point in the trunk frame, and `robot.look` solves the IK for it — so
+// this page never has to know which way a positive head yaw turns. `clamped` in the reply is the
+// robot saying the point is beyond the head's reach; shown, because a gaze that stopped following
+// the pointer with nothing said reads as a broken page.
+
+const video = $("video");
+let looking = false;
+let lookAt = null;
+
+video.addEventListener("pointerdown", (event) => {
+  video.setPointerCapture(event.pointerId);
+  looking = true;
+  aim(event);
+});
+video.addEventListener("pointermove", (event) => { if (looking) aim(event); });
+const stopLooking = () => { looking = false; lookAt = null; $("gaze").hidden = true; };
+video.addEventListener("pointerup", stopLooking);
+video.addEventListener("pointercancel", stopLooking);
+
+// ── the camera is mounted sideways, and the robot does not rotate the pixels ───────────────────
+//
+// Rotating in the pipeline cost 145% of a core: `videoflip`'s buffers are ones the SoC's 2D engine
+// refuses, so the encoder converted every frame in software — 97 °C, the CPU throttled to 408 MHz,
+// 8 fps out of a 30 fps camera. Here the turn is a GPU transform and costs nothing.
+//
+// **The wrapper stays upright.** It is the space `aim` maps a drag from, and the space anything drawn
+// over the video would be in; only the <video> inside it turns. So nothing else on this page has to
+// know about the mount.
+let mountRotation = 0;
+
+function onVideoInfo({ width, height, rotate }) {
+  mountRotation = ((rotate % 360) + 360) % 360;
+  log("dim", `video ${width}x${height}, camera mounted ${mountRotation}° off upright`);
+
+  const quarter = mountRotation === 90 || mountRotation === 270;
+  const [uw, uh] = quarter ? [height, width] : [width, height];
+  sizeVideoBox(uw, uh);
+  $("video").className = mountRotation ? `turn${mountRotation}` : "";
+}
+
+// The wrapper's size, and the only place it is set. Its **width is always definite** so that
+// `aspect-ratio` can derive the height from it: a block box with `width: auto` fills its column and
+// ignores the ratio entirely, which is how a 9:16 picture used to end up in a 16:9 box. Portrait is
+// capped by height instead of filling the column, or a tall picture pushes the rest of the page off
+// the screen.
+const PORTRAIT_HEIGHT = "min(70vh, 80vw)";
+
+function sizeVideoBox(uw, uh) {
+  if (!uw || !uh) return;
+  const box = $("videobox");
+  box.style.aspectRatio = `${uw} / ${uh}`;
+  box.style.width = uh > uw ? `calc(${PORTRAIT_HEIGHT} * ${uw} / ${uh})` : "100%";
+}
+
+// ── the duck detector's boxes ──────────────────────────────────────────────────
+//
+// Coordinates arrive in the *upright* frame, which is the wrapper's own space — so these boxes need
+// to know nothing about the mount rotation, and neither does `aim` below.
+let detectionsStale = null;
+
+// **Boxes expire.** At 2 Hz, two and a half seconds of silence means the detector stopped — turned
+// off in `robotctl configure`, or mediad restarted — and the alternative to clearing is the last
+// duck it saw painted on the video for ever, which looks exactly like a duck that is still there.
+const DETECTION_TIMEOUT_MS = 2500;
+
+function clearDetections(reason) {
+  $("boxes").replaceChildren();
+  const detail = $("detections");
+  if (detail) detail.textContent = reason;
+}
+
+function onDetections({ width, height, boxes, took_ms }) {
+  clearTimeout(detectionsStale);
+  detectionsStale = setTimeout(() => clearDetections("–"), DETECTION_TIMEOUT_MS);
+
+  const svg = $("boxes");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+  // Rebuilt rather than diffed: two frames a second, a handful of boxes, and a diff would be more
+  // code than it saves.
+  svg.replaceChildren();
+  for (const b of boxes || []) {
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("x", b.x0);
+    rect.setAttribute("y", b.y0);
+    rect.setAttribute("width", Math.max(0, b.x1 - b.x0));
+    rect.setAttribute("height", Math.max(0, b.y1 - b.y0));
+    svg.appendChild(rect);
+
+    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    label.setAttribute("x", b.x0);
+    // Above the box, unless the box is at the top of the frame — a label off-screen is a label
+    // nobody reads.
+    label.setAttribute("y", b.y0 > 16 ? b.y0 - 4 : b.y1 + 14);
+    // **No number.** The quantised model's output tensor shares one scale with the box
+    // coordinates, so every real detection reads about 1.3 and a "confidence" of 1.3 is worse than
+    // no confidence at all. The count and the time are in the stats row, where they mean something.
+    label.textContent = "duck";
+    svg.appendChild(label);
+  }
+
+  const detail = $("detections");
+  if (detail) {
+    detail.textContent = boxes.length
+      ? `${boxes.length} (${took_ms.toFixed(0)} ms)`
+      : `none (${took_ms.toFixed(0)} ms)`;
+  }
+}
+
+function aim(event) {
+  const box = video.getBoundingClientRect();
+  const x = (2 * (event.clientX - box.left)) / box.width - 1;
+  const y = (2 * (event.clientY - box.top)) / box.height - 1;
+  lookAt = { x: LOOK.x, y: -x * LOOK.y, z: LOOK.z - y * LOOK.dz, neck_pitch: 0 };
+}
+
+// Its own timer rather than the twist's: a gaze and a velocity are separate intents, and one
+// stopping must not stop the other.
+setInterval(async () => {
+  if (!looking || !lookAt || !open()) return;
+  const point = lookAt;
+  try {
+    const result = await call("robot.look", point, true);
+    $("gaze").hidden = !result.clamped;
+  } catch { /* logged by `call` */ }
+}, 1000 / INTENT_HZ);
+
+// ── posture, skills, sounds ────────────────────────────────────────────────────
+
+for (const button of document.querySelectorAll("button[data-call]")) {
+  button.onclick = () => {
+    const confirmation = button.dataset.confirm;
+    // On `stop` and `shutdown` only. A confirm on either is what keeps `stop` from reading as an
+    // emergency stop: an e-stop is a thing you hit, and this is a request the robot may refuse.
+    if (confirmation && !confirm(confirmation)) return;
+    const params = button.dataset.params ? JSON.parse(button.dataset.params) : {};
+    call(button.dataset.call, params).catch(() => {});
+  };
+}
+
+$("do").onclick = () => call("robot.do", { skill: $("skill").value }).catch(() => {});
+
+// `wheee` is the held ride: `hold: true` keeps it going and the hold decays on its own if the trues
+// stop arriving, so a page that is closed mid-ride does not leave the robot going "wheee" forever.
+let riding = null;
+$("play").addEventListener("pointerdown", () => {
+  const tag = $("sound").value;
+  if (tag !== "wheee") { call("robot.sound", { tag }).catch(() => {}); return; }
+  call("robot.sound", { tag, hold: true }).catch(() => {});
+  riding = setInterval(() => tell("robot.sound", { tag: "wheee", hold: true }), 200);
+});
+const endRide = () => {
+  if (!riding) return;
+  clearInterval(riding); riding = null;
+  tell("robot.sound", { tag: "wheee", hold: false });
+};
+$("play").addEventListener("pointerup", endRide);
+$("play").addEventListener("pointercancel", endRide);
+addEventListener("blur", endRide);
+
+// ── the raw box ────────────────────────────────────────────────────────────────
+//
+// A whole line rather than a method and params, because what it is for is sending something this
+// page has no button for — including something malformed, to see what the robot says about it.
+
+$("alert-close").onclick = clearAlert;
+
+$("send").onclick = () => {
+  if (!open()) { log("bad", "!! no control channel yet"); return; }
+  const line = $("raw").value;
+  log("out", "control →", line);
+  control.send(line);
+};
+</script>
+
+</body>
+</html>

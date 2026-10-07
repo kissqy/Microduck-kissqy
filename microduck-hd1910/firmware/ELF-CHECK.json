@@ -1,0 +1,93 @@
+{
+  "robotd": {
+    "sha256": "1c4e77c640dcbb8fa402566c39fb20306457e421a40ab6639974fb1c239fc56c",
+    "machine": "AArch64",
+    "needed": [
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.27",
+      "2.28",
+      "2.29",
+      "2.30"
+    ],
+    "bytes": 6741016
+  },
+  "robotctl": {
+    "sha256": "05ebae696ed12e8824088ddd4e7833110bf045ca9416f027481e333e4d12f00c",
+    "machine": "AArch64",
+    "needed": [
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.28",
+      "2.29",
+      "2.30"
+    ],
+    "bytes": 4356488
+  },
+  "padd": {
+    "sha256": "78b456e7c19e720330c325fe16719e291d36373c0879911d59f77700d52f79a3",
+    "machine": "AArch64",
+    "needed": [
+      "libudev.so.1",
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.27",
+      "2.28",
+      "2.30"
+    ],
+    "bytes": 3402888
+  },
+  "sounds": {
+    "sha256": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103",
+    "machine": "AArch64",
+    "needed": [
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.27",
+      "2.28",
+      "2.29",
+      "2.30"
+    ],
+    "bytes": 1152920
+  },
+  "gamepad-r7/gamesir-xboxd": {
+    "sha256": "6f8d78d2bdcb85c2e216013c66e1af25b38813cb86d0e88a7722ef98df5d4b30",
+    "machine": "AArch64",
+    "needed": [
+      "libpthread.so.0",
+      "libc.so.6"
+    ],
+    "glibc_versions": [
+      "2.17"
+    ],
+    "bytes": 43664
+  }
+}

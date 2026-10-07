@@ -1,0 +1,187 @@
+# /etc/robot/updater.toml — the config a client robot ships with.
+#
+# Installed by `scripts/install.sh`. This is the *production* file; keep
+# `updater/updater.example.toml` as the annotated reference — it documents every option,
+# including the ones deliberately not set here.
+#
+# The difference from the example is the point: the example shows what is possible, this
+# shows what is true of a shipped robot. Every value below is either a decision or a
+# fact, and where the two files disagree the example's comments explain the option while
+# this file's comment explains the choice.
+
+# The trust anchor. All three release public keys go in here at install time, even
+# though only `release-1` signs today: a robot can verify only against the set baked
+# into it, so shipping the spares is the one chance to make key rotation possible
+# without physically re-flashing (docs/project/ci-setup.md).
+trusted_keys_dir = "/etc/robot/trusted_keys"
+
+hw_rev = 1
+
+# Outside every `install_dir`, so the record of what happened survives the swap or
+# rollback it is recording (§5.7).
+state_dir = "/var/lib/robot/updater"
+
+robot_socket = "/run/robotd.sock"
+
+# Both false, and this is the file that makes them false on a client robot. `allow_dev_keys`
+# would let anything a teammate builds install itself; `allow_fault_injection` would let the
+# updater be told to fail on purpose. Developer boards override these locally — they are not
+# overridden by an update, because updates do not touch /etc.
+allow_dev_keys        = false
+allow_fault_injection = false
+
+# What makes `min_supported` mean anything. Without a poll a robot only learns a floor
+# exists when someone opens the app, so "we shipped a bad release" would be unfixable on
+# any robot whose owner is away (§8.1).
+check_interval = "6h"
+
+# What the periodic check may install with no client attached: "off", "mandatory", "all".
+#
+# `mandatory` — a release whose manifest carries `min_supported` above the running version
+# — because the alternative is a fleet stuck on a release we have already withdrawn.
+# Ordinary releases still wait for a client: when a robot restarts is its owner's
+# decision, and the app-driven update flow exists to give them that decision.
+#
+# `all` is for canary and bench robots (§16.2 Tier 2): they track a channel and install
+# every candidate. Setting it here would opt every client robot into unattended restarts.
+#
+# Whichever is set, an unattended apply is an ordinary apply — same preflight, so a robot
+# that is walking or streaming refuses and retries at the next interval; same health gate,
+# so a release that does not come up is rolled back.
+auto_apply = "mandatory"
+
+# Who may apply, roll back, select or pin. Read-only calls — status, log, listInstalled,
+# check, subscribe — are never gated by this: reaching the socket already requires its group
+# (mode 0660), and support must be able to inspect a robot it may not change.
+#
+# `btd` is listed because an owner updating the robot from their phone is what M6 exists to
+# deliver, and without this `update.apply` over Bluetooth returns PERMISSION_DENIED. Note how
+# narrow the claim is: "btd may relay an update request from the app", not "anything in the
+# robot group may replace the firmware".
+#
+# `mediad` is listed for the mutating calls its route table permits: `account.login` and
+# `account.logout` — a console page is where somebody signs a robot in — and `policy.install` and
+# `policy.fetch`, which were routed to WebRTC without this line and therefore answered
+# PERMISSION_DENIED, so the console could offer a Hub browser whose install button could not work. The claim is exactly as narrow, and it is held narrow by
+# a test rather than by this comment: `mediad::route`'s
+# `only_these_mutating_calls_are_reachable_over_webrtc` names every mutating method that
+# transport may carry, so routing a new one has to change that list deliberately. Nothing here
+# grants `mediad` the update path — `update.apply` is refused on that side.
+#
+# By NAME, not by uid: systemd-sysusers allocates dynamically, so a number written here would
+# be right on one board and wrong on the next. `allow_uids`/`allow_gids` still exist for a
+# bench override, and a test asserts the shipped config uses neither.
+#
+# What must never appear here is `allow_groups = ["robot"]`. Membership of `robot` is what gets
+# a process as far as *talking* to updaterd; granting it change authority too would collapse
+# the two layers into one, and anything that could read status could replace the firmware.
+# There is a test for that as well.
+allow_users = ["btd", "mediad"]
+
+
+# ── daemon ────────────────────────────────────────────────────────────────────
+[component.daemon]
+install_dir   = "/opt/robot/daemon"
+keep_previous = 1
+
+# Include tools with no systemd unit, too: orphan checks cannot catch their absence.
+# xtask's packaging tests keep this list aligned with every release recipe.
+required_files = [
+    "bin/updaterd", "bin/robotctl", "bin/robotd", "bin/configd", "bin/btd",
+    "bin/padd", "bin/mediad", "bin/sounds", "bin/pet-detect", "bin/pet-features",
+    "bin/tofd",
+]
+
+# `golden` is deliberately unset until 1.0.0 exists.
+#
+# It names a never-pruned known-good release, and `robotctl update reset-to-golden` is
+# the last link in the never-brick chain (§8.2). Naming a version the robot has never
+# installed would make that command fail at exactly the moment it is needed, which is
+# worse than it reporting honestly that no golden is configured. Set it in the same
+# change that ships 1.0.0.
+# golden = "1.0.0"
+
+# The stable channel. `daemon-v*` tags only: staging publishes `daemon-staging-v*` and
+# marks it prerelease, so it is excluded twice over and a client robot cannot drift onto
+# a candidate build.
+[component.daemon.source]
+type           = "github_releases"
+repo           = "ORG/duck-daemon"
+tag_prefix     = "daemon-v"
+manifest_asset = "manifest.json"
+# Tag prefix for per-branch dev builds, so `--ref my-branch` resolves to
+# `daemon-dev-my-branch`. Shown for completeness — this is the default.
+#
+# Separate from tag_prefix because the two streams must never be confusable: a dev tag
+# *moves* (it points at whatever that branch last built) while a release tag is immutable,
+# and `latest` for the fleet must never consider a dev tag. Installing one also requires
+# allow_dev_keys and the dev public key, so a client robot cannot take a branch build even
+# if it somehow resolved the tag.
+# ref_tag_prefix = "daemon-dev-"
+
+# Where `--staging` looks: the tags `release.yml` pushes for release candidates. Shown for
+# completeness — this is the default, and a robot needs no configuration to reach a candidate.
+#
+# Reaching one still takes a person with root typing `--staging`. A candidate is flagged as a
+# prerelease, which `latest` skips, so nothing here makes this robot *track* candidates.
+# staging_tag_prefix = "daemon-staging-v"
+
+# `updaterd` restarts neither itself nor `btd`, both of which ship in this same artifact:
+# restarting itself would kill the executor mid-update, and restarting `btd` would drop
+# the connection reporting progress to the app. Both pick up the new binary at the next
+# boot. `mediad` needs no entry: the restart set is derived from the units the release ships,
+# and `mediad.service` has an `[Install]` section, so an apply restarts it like the rest.
+[component.daemon.on_apply]
+action = "restart"
+# The daemons whose binaries an update replaces and which are safe to interrupt while it runs.
+# Without this an update swaps the binaries and the board keeps running the old ones until
+# somebody reboots, which looks like an update that did nothing.
+#
+# TWO deliberate absences, both for the same reason — a service must not be restarted by the
+# operation it is carrying:
+#
+#   updaterd, because it is the process performing the update (updater-design.md §4.1).
+#   btd, because it may be the *transport* the update was requested over. Restarting it drops
+#     the BLE connection carrying `update.subscribe`, so the phone that started the update loses
+#     the progress stream and never learns the outcome. That is the whole app-driven flow, and
+#     it is why `updater/src/config.rs` has a test refusing to let btd appear here.
+#
+# Neither waits for a reboot. Both are restarted 5s after the update replies, and the next updaterd
+# start checks that happened and fixes what did not (docs/design/restart-order.md §1 and §5).
+#
+# configd *is* restarted: it holds no long-lived session state, the progress stream a client
+# watches comes from updaterd rather than from it, and a config change that never takes effect
+# until reboot would be its own kind of surprise.
+#
+# **The list is additive, not authoritative.** Since the restart set is derived from the units a
+# release actually ships, this only needs to name units the release does *not* ship. Both entries
+# below are therefore redundant, and kept because a config that names what it expects is easier to
+# read than an empty list that quietly means "work it out".
+#
+# It used to be authoritative, and that is the bug this replaced: the file belongs to the operator
+# and `install.sh` preserves it, so a board provisioned before `configd` existed kept
+# `units = ["robotd"]` forever and every release swapped configd's binary while leaving the old
+# process running. See `docs/project/install-path-gap.md` §4.
+units  = ["robotd", "configd"]
+
+# The gate that makes auto-rollback real. 30s is still the placeholder M4 is meant to
+# replace with a measured boot time plus margin; too short reverts a healthy release that
+# merely starts slowly.
+#
+# The gate rolls back on *unhealthy*, not on *degraded*. A robot that cannot see its servos
+# reports degraded, and passes: it said the same thing before the swap, so reverting cannot
+# fix it and would revert every release ever shipped to a bench board. A release that broke
+# the control loop still reverts. `robotctl health` prints which one it is.
+[component.daemon.health]
+probe   = "socket"
+timeout = "30s"
+
+
+# ── models ────────────────────────────────────────────────────────────────────
+# Absent on purpose, and this is not an oversight to be fixed by copying the example.
+#
+# `updater.example.toml` configures `model-walk` and `model-jump` against HF repos that
+# do not exist yet. A component whose source 404s makes every `check` — including the
+# periodic one above — report a failure for a component nobody has shipped, which trains
+# whoever reads robot status to ignore failures. Each model component lands in the change
+# that first publishes its bundle.

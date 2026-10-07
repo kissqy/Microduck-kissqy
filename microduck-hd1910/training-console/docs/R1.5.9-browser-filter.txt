@@ -1,0 +1,1 @@
+4K SCALE_SELECTOR_OK: .7/.9/1 selectable, polls/task switches preserve selection, request .7 persisted, saved resume mapping retained, no probes/JS errors

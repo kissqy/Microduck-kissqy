@@ -1,0 +1,33 @@
+# Promote a validated staging release to STABLE, by hand.
+#
+# The ordinary way is to create a release for `daemon-v<version>` — in the UI or by pushing the tag —
+# and let `release.yml` notice the staging release and promote it. This is the same thing without a
+# release object to create first, which is what a script wants, and it is where `min_supported` lives
+# because that flag belongs to a deliberate remediation rather than to a routine release.
+#
+# Both entry points call `_promote-release.yml`, so there is one promotion recipe and no second copy
+# to drift.
+name: promote
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to promote (e.g. 1.2.3)'
+        required: true
+      min_supported:
+        description: >
+          Optional: force robots below this version to update without waiting for a
+          client. Use only when remediating a bad release (§8.1).
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    uses: ./.github/workflows/_promote-release.yml
+    with:
+      version: ${{ inputs.version }}
+      min_supported: ${{ inputs.min_supported }}
+    secrets: inherit

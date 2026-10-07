@@ -1,0 +1,49 @@
+R1.5.17 验证记录
+日期：2026-10-06
+
+1. Python 回归（系统 Python 3.12.14，无训练依赖）
+命令：python3 -m unittest tests.test_recovery_api tests.test_eval_push_dependencies tests.test_recovery_evaluation.RecoveryResultsTests tests.test_viewer_lifecycle tests.test_training_api tests.test_remote_training tests.test_durable_training -v
+结果：57 项，54 通过，3 跳过；8.505 秒。
+跳过均为既有 durable 进程所有权测试：执行环境的 PID namespace 与 /proc 不对应。
+覆盖：所选模型来源绑定、PT/ONNX专项请求、禁止错角色和训练入口、重置不能冒充成功、推扰课程依赖、仿真替换生命周期、训练API与传输、远程部署版本及bundle、durable监控。
+原始输出：R1.5.17-portable-tests.txt
+
+2. 冻结官方源 CPU / Viser 集成
+官方提交：8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec
+依赖：Python 3.12.14，Torch 2.9.1+cu128（实际 device=cpu），MuJoCo 3.10.0，mjlab 1.3.0，Viser 1.0.30，ONNX Runtime 1.24.4，BAM 1.0.1。
+命令：MICRODUCK_OFFICIAL_SOURCE=/path/to/frozen/source <eval-python> -m unittest tests.test_recovery_evaluation.RecoveryUpstreamTests -v
+结果：最终模块 8 项全部通过（3项portable已计入第1组，5项真实官方源/CPU/Viser）；26.067 秒。
+覆盖：普通Rough地形保留；train/preflight/preview/export/describe不改变配置；PT/ONNX配置一致；实际EventManager中的最终混合；恢复不同counter不再改评估课程；背/左/右/趴重力方向；零速度与指令；地面碰撞体最低点1mm；动作及滤波历史重置；真实Viser服务启动、姿态切换、状态与关闭。
+原始输出：R1.5.17-cpu-tests.txt
+
+3. 原生速度GUI隔离回归
+独立复核发现原生Twist GUI可在command.compute尾部覆盖零范围。专项增加原计算后的归零hook，并复跑真实Viser目标测试。
+结果：1 项通过；18.625 秒。实际启用原生joystick，给非零速度后，actor观测最后13个命令槽仍为零。
+这是对上面Viser逻辑项的补强复跑，不增加独立通过项计数。
+原始输出：R1.5.17-viser-tests.txt
+
+4. 前端脚本行为
+命令：node tests/test_recovery_ui.cjs
+结果：退出0。实际tasks.js + training.js，DOM/HTTP fixture。
+覆盖：4个官方stand变体×PT/ONNX；按所选模型resolved_task/request.task决定角色；当前训练动作不改变资格；普通与专项请求区分；专项强制关闭推扰；离线、等待viewer与重复提交锁；初始化与选模型不自动POST或开始训练。
+未使用真实浏览器，没有4K/CSS/WebGL渲染验证。
+原始输出：R1.5.17-ui-tests.txt
+
+5. 语法与发布范围
+Python修改文件通过py_compile，training.js通过node --check。
+本版的训练配方、固定官方提交、硬件数据、动作/P/滤波默认值与已有模型保持原内容；新增逻辑仅在倒地老师评估中执行。SSH两端版本同步升为R1.5.17。
+本次未运行GPU训练、续训或真实机器人。四姿态通过指标只检查躯干高度与倾角保持，不核验脚底接触。1mm初始化是几何定位，不是物理落稳状态库。
+
+6. 原11000 ONNX两条短回放（关键新证据）
+模型SHA256：a481d9f211f31d9476ab1a319fe362a21ef0879d9fa59442a122845af598268c
+机器人/动作/观测合同与训练读回匹配；原P5、scale1、无滤波。专项平地、零初速度、13维命令全零；1mm初始几何间隙。
+背朝地：初始重力[-1,0,0]，1.48秒达到并完成连续1秒的站高/倾角检查；末高度115.60mm、倾角0.983度。
+趴地：初始重力约[1,0,0]，1.36秒完成同一检查；末高度116.08mm、倾角0.387度。
+每类仅1个抽样回合，环境seed未固定，yaw/物理随机化保留；不是成功率估计。没有脚底接触核验，没有视频或逐帧关节轨迹。接口预检只有一次无状态ONNX前向，没有预先env.step；计数从viewer重置后第一步开始，结束前没有回合reset。
+含义：不能说该模型从任何完全背朝地姿态均不会起身。下一步需要记录并复现用户实际卡脚/卡颈状态，从该失败状态补课。
+结构化记录：recovery-teacher11000-check.json
+
+7. 普通与专项姿态记录（已包含最终第2组）
+普通Rough查看中的非零命令 .23/- .11/.31 保留；记录前后qpos、qvel、回合步数不变，真实接触缓冲可读，关节到qpos地址对应，JSON可解析。专项同样验证记录入口。
+初始尚未step时，reset flags按null记录；自动重置后的状态明确标为可能post-reset。
+记录只含姿态/速度/命令/接触诊断和模型指纹，不宣称可恢复执行器内部滞回、求解器和随机数状态。

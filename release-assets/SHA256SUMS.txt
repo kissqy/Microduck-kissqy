@@ -1,0 +1,3 @@
+1dd86de763320afcce54e6d195e35f148b440d1fdee67da9d1525cd86a0c6f93  Microduck-Firmware-R17-v1.0.146-Public.zip
+cd1503a456c224ce9d570966bcf28855d24fd6e22438edfc559eee6bf37e05f7  Microduck-Console-R17-v1.0.146-Public.zip
+f1c577f2e9683fc59b1231844584a399c1ee288263a05bfad9bc4b9533a1f78e  Microduck-Training-Studio-R1.5.17-Public.zip

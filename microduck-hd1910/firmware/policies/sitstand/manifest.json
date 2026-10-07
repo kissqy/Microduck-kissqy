@@ -1,0 +1,7 @@
+{
+  "source_revision": "25791f0bd260fd869ed841578785fa8d7e14396d",
+  "onnx_sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+  "task": "Mjlab-SitStand-Flat-MicroDuck",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/hd1910/software/training/logs/rsl_rl/microduck_sitstand/2026-10-01_23-51-57_console_20261001_235147_771504/model_10000.pt",
+  "deployment_verified": false
+}

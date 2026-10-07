@@ -1,0 +1,31 @@
+# Did the release that just booted actually come up? If not, fall back to golden.
+#
+# The last uncovered failure in the update path. `updaterd` cannot watch its own replacement start,
+# and its boot counter only advances when `updaterd` itself starts — so a release whose daemons do
+# not come up at boot leaves a board with a good release on disk, a trial armed to revert to it, and
+# nothing running that can act on either. See `docs/design/boot-recovery-net.md`.
+#
+# Started by `robot-boot-check.timer` and by nothing else. **There is deliberately no `[Install]`
+# section**: `scripts/install.sh` and `hooks/postinstall` `enable --now` every unit with one, and
+# doing that here would run a rollback check in the middle of the update that installed it — with
+# daemons legitimately mid-restart, which is exactly what this reads as a broken release.
+
+[Unit]
+Description=Fall back to the golden release if this one did not come up
+
+# Never on the way down. A daemon killed during shutdown can be recorded as `failed`, and without
+# this a `systemctl poweroff` at the wrong moment eventually reboots a robot into golden.
+Conflicts=shutdown.target
+Before=shutdown.target
+
+[Service]
+Type=oneshot
+
+# /usr/local/sbin, not the release. This runs when the release cannot, so reading it through
+# `current` would route the recovery through the thing being recovered. `install.sh` and
+# `hooks/postinstall` copy it out of the artifact, the way they already copy this unit file.
+ExecStart=/usr/local/sbin/robot-boot-check
+
+# Nothing here is fatal to anything: the script decides, and its own refusals are exit 0 or 2.
+# A non-zero exit is a bug in it, worth seeing in `systemctl status` rather than retrying.
+Restart=no

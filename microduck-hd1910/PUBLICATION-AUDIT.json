@@ -1,0 +1,161 @@
+{
+  "schema": "microduck-publication-audit/v1",
+  "date": "2026-10-07",
+  "source_comparison": {
+    "firmware": {
+      "original_files_checked": 772,
+      "changed_original_files": [
+        "R17-SOURCE-MANIFEST.json",
+        "SHA256SUMS",
+        "console/BUILD_MANIFEST.json"
+      ],
+      "all_runtime_source_and_model_bytes_preserved": true
+    },
+    "training": {
+      "original_files_checked": 255,
+      "changed_original_files": [
+        "MANIFEST.sha256.json",
+        "data/hardware.json",
+        "examples/recipe-official-0151.json"
+      ],
+      "all_runtime_source_and_model_bytes_preserved": true
+    }
+  },
+  "calibration_values_unchanged": true,
+  "release_binary_checks": [
+    {
+      "name": "robotd",
+      "bytes": 6741016,
+      "sha256": "1c4e77c640dcbb8fa402566c39fb20306457e421a40ab6639974fb1c239fc56c",
+      "machine": "AArch64"
+    },
+    {
+      "name": "robotctl",
+      "bytes": 4356488,
+      "sha256": "05ebae696ed12e8824088ddd4e7833110bf045ca9416f027481e333e4d12f00c",
+      "machine": "AArch64"
+    },
+    {
+      "name": "padd",
+      "bytes": 3402888,
+      "sha256": "78b456e7c19e720330c325fe16719e291d36373c0879911d59f77700d52f79a3",
+      "machine": "AArch64"
+    },
+    {
+      "name": "sounds",
+      "bytes": 1152920,
+      "sha256": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103",
+      "machine": "AArch64"
+    },
+    {
+      "name": "gamepad-r7/gamesir-xboxd",
+      "bytes": 43664,
+      "sha256": "6f8d78d2bdcb85c2e216013c66e1af25b38813cb86d0e88a7722ef98df5d4b30",
+      "machine": "AArch64"
+    }
+  ],
+  "firmware_payload_sha256": "9cecf03286c608d750cee402d6a977870ba1d92a97b37cb5274abcdefd6c459a",
+  "production_firmware_import_checks": [
+    {
+      "package": "Microduck-Firmware-R17-v1.0.146-Public.zip",
+      "production_importer_passed": true,
+      "installed": false
+    },
+    {
+      "package": "Microduck-Console-R17-v1.0.146-Public.zip",
+      "production_importer_passed": true,
+      "installed": false
+    }
+  ],
+  "http_startup_checks": [
+    {
+      "component": "robot-console",
+      "requests": [
+        {
+          "path": "/",
+          "status": 200,
+          "bytes": 26630
+        },
+        {
+          "path": "/api/config",
+          "status": 200,
+          "bytes": 1012,
+          "version": "1.0.146"
+        },
+        {
+          "path": "/api/snapshot",
+          "status": 200,
+          "bytes": 12000
+        }
+      ],
+      "no_robot_connection_requested": true,
+      "passed": true
+    },
+    {
+      "component": "training-console",
+      "requests": [
+        {
+          "path": "/",
+          "status": 200,
+          "bytes": 31767
+        },
+        {
+          "path": "/api/config",
+          "status": 200,
+          "bytes": 184,
+          "version": "Studio R1.5.17 · 固件0.15.1 · 翻身检查"
+        },
+        {
+          "path": "/api/studio",
+          "status": 200,
+          "bytes": 832409
+        }
+      ],
+      "no_robot_connection_requested": true,
+      "passed": true
+    }
+  ],
+  "current_five_policy_hashes_matched": true,
+  "credential_pattern_scan": {
+    "kinds": [
+      "private_key",
+      "github_token",
+      "openai_token",
+      "aws_access_key",
+      "signed_download_url"
+    ],
+    "findings": 0,
+    "scope": "text files; not a guarantee of absence of all sensitive content"
+  },
+  "build_wrapper_checks": {
+    "shell_syntax": "passed",
+    "help": "passed",
+    "embedded_python_ast": "passed",
+    "actual_compilation_performed": false,
+    "dependency_check": "expected missing-tools failure in this environment; fixed dependency record passed"
+  },
+  "release_assets": [
+    {
+      "name": "Microduck-Firmware-R17-v1.0.146-Public.zip",
+      "bytes": 18929336,
+      "sha256": "1dd86de763320afcce54e6d195e35f148b440d1fdee67da9d1525cd86a0c6f93"
+    },
+    {
+      "name": "Microduck-Console-R17-v1.0.146-Public.zip",
+      "bytes": 24435137,
+      "sha256": "cd1503a456c224ce9d570966bcf28855d24fd6e22438edfc559eee6bf37e05f7"
+    },
+    {
+      "name": "Microduck-Training-Studio-R1.5.17-Public.zip",
+      "bytes": 20499694,
+      "sha256": "f1c577f2e9683fc59b1231844584a399c1ee288263a05bfad9bc4b9533a1f78e"
+    }
+  ],
+  "hardware_actions_performed": false,
+  "gpu_training_performed": false,
+  "browser_render_test_performed": false,
+  "git_file_selection": {
+    "upload_candidates": 1047,
+    "ignored_existing_files": []
+  }
+}

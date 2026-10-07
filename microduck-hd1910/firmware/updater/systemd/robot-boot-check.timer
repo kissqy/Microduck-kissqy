@@ -1,0 +1,28 @@
+# When to ask whether the release came up.
+#
+# A deadline rather than `OnFailure=` on each daemon, and that is a decision worth keeping written
+# down. `OnFailure=` fires when a unit enters `failed`, which these units are configured to avoid:
+# all four use `Restart=always` for reasons argued in their own unit files, and none overrides
+# systemd's default start limit — so a `btd` restarting every 5s crash-loops indefinitely without
+# ever entering `failed`. Making `OnFailure=` fire would mean retuning those units so the daemons
+# give up, which degrades the normal case to enable the rescue case.
+#
+# Asking at a deadline needs no unit changes, catches the forever-restarter, and asks the question
+# that matters — did this release come up? — rather than "did systemd give up on something?".
+
+[Unit]
+Description=Deadline for deciding whether the booted release came up
+
+[Timer]
+# 180s because the board is slower than it looks: `hci0` does not exist until roughly 73 seconds
+# after power-on, of which `bluetooth.service` spends 26 blocked behind `dbus`. The daemons wait for
+# their hardware rather than exiting, so a slow boot is not a failed one — but the check must not run
+# while it is still ordinary for a daemon to be waiting.
+OnBootSec=180
+
+# This is a once-per-boot decision with a 3-minute deadline; a few seconds either way is noise, and
+# a loose timer costs no wakeups.
+AccuracySec=10s
+
+[Install]
+WantedBy=timers.target

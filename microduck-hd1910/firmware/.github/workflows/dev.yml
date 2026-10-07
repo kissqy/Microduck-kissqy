@@ -1,0 +1,247 @@
+# Publish a signed build for every branch push, so a teammate's work can be installed on a
+# board with `robotctl update apply daemon --ref <branch>`.
+#
+# This is the dev channel from docs/project/roadmap.md M2. Two properties make it safe to run on
+# every push, and both are enforced somewhere other than this file:
+#
+#   1. **Signed with `team.dev`, not `release-1`.** A customer robot refuses these outright:
+#      `allow_dev_keys = false` in the shipped config, *and* a trusted key is only usable as
+#      a dev key if its filename ends `.dev.pub`. Two independent conditions.
+#   2. **The version is a semver prerelease** (`0.1.0-dev.42.abc1234`), so it sorts *below*
+#      the release it precedes and can never be what `latest` resolves to for the fleet.
+#      GitHub's prerelease flag below is the second, independent guard.
+#
+# Deliberately does NOT run the board tests or publish a bootstrap asset. This is for boards
+# that already have a robot on them; `ci.yml` is what gates correctness, and a dev build that
+# fails on the board is a five-minute discovery, not a fleet incident.
+name: dev
+
+on:
+  push:
+    branches: ['**']
+
+permissions:
+  contents: write   # create/replace the per-branch prerelease
+
+# One build per branch. A second push while the first is still building makes the first
+# obsolete — the tag would move to the newer build anyway.
+concurrency:
+  group: dev-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  publish:
+    # Not in a fork. A contributor's push runs this in their fork, where the dev key does not
+    # exist, so every run ended red at the signing step — a failure that says nothing about the
+    # change and hides one that does. `ci.yml` on the pull request is what checks their work.
+    if: ${{ !github.event.repository.fork }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # `targets:` is not optional here — without it the aarch64 std is absent and the build
+      # fails at "can't find crate for `core`", which reads like a broken toolchain rather
+      # than a missing target. Same line as ci.yml's board job and release.yml.
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-unknown-linux-gnu
+      - uses: Swatinem/rust-cache@v2
+      # GStreamer and libudev for the *target*, unpacked from the robot's own Debian packages.
+      #
+      # This replaced Ubuntu multiarch from ports.ubuntu.com, which served libudev alone and could
+      # not serve GStreamer honestly: it would give Ubuntu's while the robot runs Debian trixie's.
+      # One sysroot covers both, because PKG_CONFIG_LIBDIR *replaces* pkg-config's search path
+      # rather than adding to it — so a sysroot carrying only GStreamer would break `padd`, inside
+      # libudev-sys, nowhere near anything about media.
+      #
+      # Cached on the script, because the package list lives in it: edit the list and the cache
+      # misses, which is exactly when it should.
+      - name: Cache the aarch64 sysroot
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/duck-sysroot
+          key: duck-sysroot-${{ hashFiles('scripts/cross-sysroot.sh') }}
+
+      - name: Target GStreamer and libudev, as a sysroot
+        run: |
+          set -eu
+          export DUCK_SYSROOT="$HOME/.cache/duck-sysroot"
+          sh scripts/cross-sysroot.sh | tee /tmp/sysroot.log
+
+          # Expanded in this shell before being written, because GITHUB_ENV does no shell
+          # expansion: the script emits RUSTFLAGS="${RUSTFLAGS:+$RUSTFLAGS }-L ...", and writing
+          # that verbatim would put the literal braces into RUSTFLAGS.
+          eval "$(grep '^export' /tmp/sysroot.log)"
+          {
+            echo "PKG_CONFIG_SYSROOT_DIR=$PKG_CONFIG_SYSROOT_DIR"
+            echo "PKG_CONFIG_LIBDIR=$PKG_CONFIG_LIBDIR"
+            echo "PKG_CONFIG_ALLOW_CROSS=$PKG_CONFIG_ALLOW_CROSS"
+            echo "RUSTFLAGS=$RUSTFLAGS"
+          } >> "$GITHUB_ENV"
+
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: 0.14.1
+      - run: cargo install cargo-zigbuild --locked
+
+      # `<crate version>-dev.<run>.<sha7>`.
+      #
+      # Valid semver, unique per build (the run number always advances, even for a rebuild of
+      # the same commit), and it carries the commit so two builds of the same version are
+      # distinguishable — which is the whole reason `DUCK_REVISION` exists.
+      #
+      # `xtask package` accepts a prerelease of the crate version without
+      # `--allow-version-drift`, so the release-triple check still catches the mistake it is
+      # there for: tagging a release without bumping Cargo.toml.
+      - name: Derive the dev version and tag
+        id: v
+        run: |
+          crate="$(cargo metadata --format-version 1 --no-deps | python3 -c 'import json,sys; print(next(p["version"] for p in json.load(sys.stdin)["packages"] if p["name"] == "updater"))')"
+          sha7="$(git rev-parse --short=7 HEAD)"
+          version="${crate}-dev.${GITHUB_RUN_NUMBER}.${sha7}"
+          # The branch name is the ref, verbatim: slashes are legal in both branch and tag
+          # names, and `--ref feature/foo` must resolve to the tag this publishes.
+          tag="daemon-dev-${GITHUB_REF_NAME}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "publishing $version as $tag"
+
+      - name: Build for the board
+        env:
+          DUCK_REVISION: ${{ github.sha }}
+        run: |
+          export DUCK_BUILD_TIME="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          cargo board --bins
+
+      - name: Package
+        run: |
+          mkdir -p staged
+          cp target/aarch64-unknown-linux-gnu/release/updaterd staged/
+          cp target/aarch64-unknown-linux-gnu/release/robotctl staged/
+          cp target/aarch64-unknown-linux-gnu/release/robotd staged/
+          # configd (wifi, identity) and btd (the BLE front door). Their units are packaged
+          # alongside; a unit whose ExecStart binary is missing fails with 203/EXEC, which
+          # reads as a broken daemon rather than an incomplete artifact.
+          cp target/aarch64-unknown-linux-gnu/release/configd staged/
+          cp target/aarch64-unknown-linux-gnu/release/btd staged/
+          # padd is the gamepad intent client. Shipped because a dev board is where
+          # anyone drives the robot from, and the intent API only stays honest if the
+          # thing exercising it daily is actually on the robot.
+          cp target/aarch64-unknown-linux-gnu/release/padd staged/
+          # mediad is the WebRTC gateway. Shipped so a board *can* run it; its unit has no
+          # [Install], so nothing starts it until someone does. See mediad/systemd/mediad.service.
+          cp target/aarch64-unknown-linux-gnu/release/mediad staged/
+          # The voice generator (postinstall renders the per-robot bank with it) and the
+          # mic classifier pair — pet-detect for live listening, pet-features for training.
+          cp target/aarch64-unknown-linux-gnu/release/sounds staged/
+          cp target/aarch64-unknown-linux-gnu/release/pet-detect staged/
+          cp target/aarch64-unknown-linux-gnu/release/pet-features staged/
+          # The head ToF daemon. Its unit is packaged below; a board with no sensor
+          # fitted runs it anyway and says so, which is cheaper than a special case.
+          cp target/aarch64-unknown-linux-gnu/release/tofd staged/
+
+          # Same contents as a real release: a dev build that omitted the units or robotd
+          # would fail its own restart step on the board and roll itself back, which is a
+          # confusing way to learn that the packaging differed.
+          cargo run -p xtask -- package \
+            --version "${{ steps.v.outputs.version }}" \
+            --channel daemon \
+            --bin-dir staged \
+            --out dist \
+            --base-url "https://github.com/${{ github.repository }}/releases/download/${{ steps.v.outputs.tag }}" \
+            --revision "${GITHUB_SHA}" \
+            --include "updater/systemd/updaterd.service=systemd/updaterd.service" \
+            --include "updater/systemd/sysusers.d/robot.conf=systemd/sysusers.d/robot.conf" \
+            --include "robotd/systemd/robotd.service=systemd/robotd.service" \
+            --include "hooks/postinstall=hooks/postinstall" \
+            --include "scripts/setup-gstreamer.sh=scripts/setup-gstreamer.sh" \
+            --include "scripts/setup-npu.sh=scripts/setup-npu.sh" \
+            --include "deploy/overlays/rk3568-npu-enable.dts=deploy/overlays/rk3568-npu-enable.dts" \
+            --include "scripts/setup-rkaiq.sh=scripts/setup-rkaiq.sh" \
+            --include "scripts/rkaiq-modinfo-shim.c=scripts/rkaiq-modinfo-shim.c" \
+            --include "scripts/setup-login.sh=scripts/setup-login.sh" \
+            --include "scripts/setup-quiet-boot.sh=scripts/setup-quiet-boot.sh" \
+            --include "scripts/seed-policies.sh=scripts/seed-policies.sh" \
+            --include "scripts/seed-detector.sh=scripts/seed-detector.sh" \
+            --include "scripts/robot-rescue=scripts/robot-rescue" \
+            --include "scripts/robot-boot-check=scripts/robot-boot-check" \
+            --include "updater/systemd/robot-boot-check.service=systemd/robot-boot-check.service" \
+            --include "updater/systemd/robot-boot-check.timer=systemd/robot-boot-check.timer" \
+            --include "configd/systemd/configd.service=systemd/configd.service" \
+            --include "btd/systemd/btd.service=systemd/btd.service" \
+            --include "btd/systemd/sysusers.d/btd.conf=systemd/sysusers.d/btd.conf" \
+            --include "padd/systemd/padd.service=systemd/padd.service" \
+            --include "padd/systemd/sysusers.d/padd.conf=systemd/sysusers.d/padd.conf" \
+            --include "mediad/systemd/mediad.service=systemd/mediad.service" \
+            --include "mediad/systemd/sysusers.d/mediad.conf=systemd/sysusers.d/mediad.conf" \
+            --include "tof/systemd/tofd.service=systemd/tofd.service" \
+            --include "tof/systemd/sysusers.d/tofd.conf=systemd/sysusers.d/tofd.conf" \
+            --include "deploy/journald.conf.d/10-robot.conf=deploy/journald.conf.d/10-robot.conf" \
+            --include "docs/design/architecture.md=docs/architecture.md" \
+            --include "docs/design/updater-design.md=docs/updater-design.md" \
+            --include "deploy/README.md=docs/deploy.md" \
+            --include "pet-detect/models/pet_detect.onnx=models/pet_detect.onnx"
+
+
+          # `--ref` resolves a *tag*, and the manifest it fetches is the asset named
+          # `manifest.json`. The versioned copy is uploaded too, so `--version` also works on
+          # a dev build.
+          ls -l dist
+
+      # `team.dev`, never `release-1`. Written to a file rather than passed as an argument: a
+      # key on a command line is visible in the process list to anything else on the runner.
+      - name: Sign with the dev key
+        env:
+          MINISIGN_DEV_SECRET_KEY: ${{ secrets.MINISIGN_DEV_SECRET_KEY }}
+        run: |
+          # Lengths, not values — see the same guard in release.yml for why an empty secret
+          # is a real failure mode and "is not set" could not distinguish it.
+          echo "dev key length: ${#MINISIGN_DEV_SECRET_KEY}"
+          if [ -z "$MINISIGN_DEV_SECRET_KEY" ]; then
+            echo "::error::MINISIGN_DEV_SECRET_KEY is empty or unset — refusing to publish unsigned artifacts"
+            exit 1
+          fi
+          umask 077
+          printf '%s' "$MINISIGN_DEV_SECRET_KEY" > "$RUNNER_TEMP/dev.key"
+          # No MINISIGN_PASSWORD: a dev key is unencrypted so CI can sign non-interactively,
+          # which `xtask keycheck` reports as correct for a dev key and wrong for a release
+          # key.
+          cargo run -p xtask -- sign --dir dist --key "$RUNNER_TEMP/dev.key"
+          shred -u "$RUNNER_TEMP/dev.key" 2>/dev/null || rm -f "$RUNNER_TEMP/dev.key"
+
+      # The tag moves; the version inside never repeats. That is what makes `--ref` mean
+      # "whatever this branch last built" while every build stays individually addressable by
+      # `--version`.
+      #
+      # Delete-then-create rather than an edit: `gh release edit` cannot repoint a tag at a
+      # new commit, and a release whose tag still points at an old commit would serve assets
+      # that disagree with the version in its own manifest.
+      - name: Publish the moving per-branch prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ steps.v.outputs.tag }}"
+          gh release delete "$tag" --yes --cleanup-tag 2>/dev/null || true
+
+          gh release create "$tag" \
+            --prerelease \
+            --target "${GITHUB_SHA}" \
+            --title "daemon ${{ steps.v.outputs.version }} (${GITHUB_REF_NAME})" \
+            --notes "Dev build of \`${GITHUB_REF_NAME}\` at \`${GITHUB_SHA}\`.
+
+          Install on a **dev board**:
+
+          \`\`\`
+          sudo robotctl update apply daemon --ref ${GITHUB_REF_NAME}
+          \`\`\`
+
+          Signed with \`team.dev\`, so a customer robot refuses it. The board needs
+          \`team.dev.pub\` in its trusted keys and \`allow_dev_keys = true\` — see
+          docs/deploy.md.
+
+          This tag moves on every push to the branch; the version inside does not.
+          " \
+            dist/*

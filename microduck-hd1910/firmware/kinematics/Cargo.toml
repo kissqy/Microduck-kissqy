@@ -1,0 +1,23 @@
+# Forward kinematics for the duck, driven by the MJCF itself.
+#
+# The kinematic tree is parsed out of the same `robot_walk.xml` the policies are
+# trained against, so a mechanical revision means updating one XML file, not
+# transcribing joint offsets into Rust by hand. Absorbed from the
+# `microduck_kinematics_rs` satellite repo, reworked for the control-loop hot
+# path: joints are indices into a slice rather than names in a `HashMap`, and a
+# site query walks its own precompiled chain instead of recomputing every body
+# in the tree. Validated against MuJoCo's `mj_kinematics` by fixture.
+[package]
+name = "kinematics"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+roxmltree = "0.21"
+thiserror.workspace = true
+
+[dev-dependencies]
+serde = { workspace = true }
+serde_json.workspace = true

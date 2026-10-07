@@ -1,0 +1,37 @@
+Microduck HD1910 — 许可范围 / License Scope
+
+本仓库采用分项许可。源码公开不代表所有内容都采用同一许可证。
+
+1. 个人非商业许可（LICENSES/Personal-NonCommercial.txt）仅适用于作者
+   拥有并有权单独授权的原创部分：
+   - firmware/console/ 中的本项目原创 Python、JavaScript、CSS 与启动工具；
+   - training-console/ 中的本项目原创中控界面、调度、适配代码与测试；
+   - 本仓库新增的 README.md、docs/、tools/ 发布资料与工具；
+   - firmware/policies/ 中由作者自训练并有权授权的权重及自有记录。
+
+2. 明确排除于个人条款之外的内容：
+   - firmware/ 的原固件/Rust工作区及相关上游代码，继续依 firmware/LICENSE
+     和 Cargo.toml 声明的 Apache-2.0 使用；不把整份固件改为禁止商用。
+   - firmware/console/static/vendor/、static/assets/、licenses/、updates/；
+   - training-console/training/_vendor/、training/hd1910_m6.json、
+     training/hd1910_actuator.py、data/ 中的上游参数/配置和 docs/licenses/；
+   - 一切上游模型、几何、第三方驱动、依赖、复制的官方参考源码与已有明确
+     许可证的内容。它们继续适用原许可，详见 docs/THIRD-PARTY.md。
+
+3. 路径仅帮助定位，不扩大作者拥有的权利。文件内的第三方版权头和上游
+   许可证优先适用于相应第三方内容；个人许可不覆盖、缩减、撤销这些权利，
+   也不撤销此前已经有效授予的许可。
+
+4. 对个人许可范围内的内容，允许自然人个人非商业学习、使用、修改及免费
+   分享；公司/组织用途、产品销售和收费服务需事先取得相关权利人书面许可。
+   申请授权请联系本仓库维护者；维护者只能授权其拥有的权利。
+
+5. 本仓库不是 OSI 定义下统一采用自由开源许可的项目。请对外使用
+   “源码公开 / Source-available，原创部分仅限个人非商业”这一表述。
+
+English: This is a mixed-license repository. Personal non-commercial terms
+apply only to the authors' own, separately licensable original material in
+the scopes above. The firmware Rust workspace remains Apache-2.0. Third-party
+code, configurations, drivers, dependencies, models and assets retain their
+original licenses. No third-party or previously granted rights are revoked.
+See LICENSES/Personal-NonCommercial.txt and docs/THIRD-PARTY.md.

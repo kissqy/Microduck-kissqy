@@ -1,0 +1,15 @@
+[Unit]
+Description=Microduck R17 browser Xbox input socket
+After=systemd-udevd.service
+
+[Socket]
+ListenStream=/run/microduck-webpad/input.sock
+SocketUser=root
+SocketGroup=robot
+SocketMode=0660
+DirectoryMode=0755
+RemoveOnStop=yes
+Service=microduck-webpad.service
+
+[Install]
+WantedBy=sockets.target

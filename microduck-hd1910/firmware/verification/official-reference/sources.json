@@ -1,0 +1,209 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/robotd/src/control.rs",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-robotd_src_control.rs",
+    "bytes": 31749,
+    "sha256": "2913f61ce9d755d7d92e67f7cab79c09bf0bf82f7f1c28a962f1cb15b27a668a",
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/deploy/robotd.toml",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-deploy_robotd.toml",
+    "bytes": 28325,
+    "sha256": "1b9ddb2010405812df195d825c5765f3d2ace7360e7c7846af43ffe507fac742",
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec/AGENTS.md",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-AGENTS.md",
+    "bytes": 17752,
+    "sha256": "4493d2d72d83c2f9c8486e195c3e3f903406b41046549f8d34dbf561572f2414",
+    "resolved_git_commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec/src/mjlab_microduck/tasks/microduck_velstand_env_cfg.py",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-src_mjlab_microduck_tasks_microduck_velstand_env_cfg.py",
+    "bytes": 40494,
+    "sha256": "ae8b73add46197b9888a3d60dc44f14946524b2658894b2603d4a229f6cc9d39",
+    "resolved_git_commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec/src/mjlab_microduck/tasks/microduck_velocity_env_cfg.py",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-src_mjlab_microduck_tasks_microduck_velocity_env_cfg.py",
+    "bytes": 44971,
+    "sha256": "75a0430b814ac7495eb237ab806fbd4dd10309b9fd3027ac3eee3c2e3c5a944a",
+    "resolved_git_commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/duck-control/src/policy.rs",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-duck-control_src_policy.rs",
+    "bytes": 33338,
+    "sha256": "ffdc144a97ccec60a725ebae5a534b054af4f4e8b2f1d247f648fcf00cde8014",
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec/src/mjlab_microduck/tasks/distill.py",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-src_mjlab_microduck_tasks_distill.py",
+    "bytes": 11001,
+    "sha256": "bd736e28f3324a109a52c3414ea0a7017cd89c5e6d27583540107f3a34549f1f",
+    "resolved_git_commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/scripts/seed-policies.sh",
+    "resolved": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/scripts/seed-policies.sh",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-scripts_seed-policies.sh",
+    "bytes": 11733,
+    "sha256": "52eb9d573359a280999091d01c46a17097436bd395f2f3c582f2fb5d903c0ab6",
+    "x_repo_commit": null,
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/docs/policy-manifest.md",
+    "resolved": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/docs/policy-manifest.md",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-docs_policy-manifest.md",
+    "bytes": 9270,
+    "sha256": "936d6c5b6fa4f09fc09d4808d39b926486239916a82f6c312f123531c387f34a",
+    "x_repo_commit": null,
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/docs/design/policy-channel-design.md",
+    "resolved": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/docs/design/policy-channel-design.md",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-docs_design_policy-channel-design.md",
+    "bytes": 52077,
+    "sha256": "5ce2e2d06720f3aebb663092abd7d4a363e9f9cbece96afa353bae4f3e48f0df",
+    "x_repo_commit": null,
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/docs/recurrent-policies.md",
+    "resolved": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/docs/recurrent-policies.md",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-docs_recurrent-policies.md",
+    "bytes": 4461,
+    "sha256": "863cebeb5cf98fbb13ee5458b8460bf0962e8a732904d8b07021e2365fa00beb",
+    "x_repo_commit": null,
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/robotd-params/src/lib.rs",
+    "resolved": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/robotd-params/src/lib.rs",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-robotd-params_src_lib.rs",
+    "bytes": 155174,
+    "sha256": "c2a4cf9cb101b094c644764a063c6fb206f18a91105b98ccef484311bb8f06be",
+    "x_repo_commit": null,
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://huggingface.co/pollen-robotics/microduck-policies/resolve/main/manifest.json",
+    "resolved": "https://huggingface.co/api/resolve-cache/models/pollen-robotics/microduck-policies/6677ec007142bbaf05123a468f6ae58d13808786/manifest.json",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/hf-policies-main-manifest.json",
+    "bytes": 2638,
+    "sha256": "5c6a73f95f388f131aaef570f6113f0d36b84a72d5755662cd57e67adf7fd24c",
+    "x_repo_commit": null,
+    "resolved_hf_commit": "6677ec007142bbaf05123a468f6ae58d13808786"
+  },
+  {
+    "url": "https://api.github.com/repos/pollen-robotics/microduck/git/trees/1fa84386f07884e27866411bc1ba166977bced95?recursive=1",
+    "resolved": "https://api.github.com/repos/pollen-robotics/microduck/git/trees/1fa84386f07884e27866411bc1ba166977bced95",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-fixed-tree.json",
+    "bytes": 113885,
+    "sha256": "f9c1f6dccc3819cbe98ba0610cec46161f8db92e1fba73dcb09edbcf910ac1cb",
+    "x_repo_commit": null,
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://huggingface.co/pollen-robotics/microduck-policies/resolve/v5/manifest.json",
+    "resolved": "https://huggingface.co/api/resolve-cache/models/pollen-robotics/microduck-policies/1b56c396825c052a4e26e95cf2b8d8298af9e9b4/manifest.json",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/hf-policies-v5-manifest.json",
+    "bytes": 1935,
+    "sha256": "622048c2c23ea58942023f66fd16b189a875fd169e88d85beb16ebbe63b20c94",
+    "resolved_hf_commit": "1b56c396825c052a4e26e95cf2b8d8298af9e9b4"
+  },
+  {
+    "url": "https://huggingface.co/pollen-robotics/microduck-policies/resolve/v5/velstand.onnx",
+    "resolved": "https://us.aws.cdn.hf.co/xet-bridge-us/6a9574871b9e0afc08eedd29/b91cdc1ebc8f84ec0eff81439925fde0eb5d9bf6c227c8aca484828ff6ce24dc",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/hf-policies-v5-velstand.onnx",
+    "bytes": 793705,
+    "sha256": "1c659be55da94bc5753b707de5c6a3e7c49931e05ca3b6991615cef1a8ba9a45",
+    "resolved_hf_commit": "1b56c396825c052a4e26e95cf2b8d8298af9e9b4"
+  },
+  {
+    "url": "https://huggingface.co/pollen-robotics/microduck-policies/resolve/v5/README.md",
+    "resolved": "https://huggingface.co/api/resolve-cache/models/pollen-robotics/microduck-policies/1b56c396825c052a4e26e95cf2b8d8298af9e9b4/README.md",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/hf-policies-v5-README.md",
+    "bytes": 28,
+    "sha256": "98b45ea81164d1e1a1dd82255207053b15cd6c69d922a1c5cf3387ce604d4b74",
+    "resolved_hf_commit": "1b56c396825c052a4e26e95cf2b8d8298af9e9b4"
+  },
+  {
+    "url": "https://huggingface.co/api/models/pollen-robotics/microduck-policies/revision/v5",
+    "resolved": "https://huggingface.co/api/models/pollen-robotics/microduck-policies/revision/v5",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/hf-policies-v5-api.json",
+    "bytes": 1113,
+    "sha256": "7671ad9f0e6fc55061874f75c50d6a7fc7df148c4cc14f25bca44862bc94429e",
+    "resolved_hf_commit": "1b56c396825c052a4e26e95cf2b8d8298af9e9b4"
+  },
+  {
+    "url": "https://api.github.com/repos/pollen-robotics/microduck_rl/git/trees/8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec?recursive=1",
+    "resolved": "https://api.github.com/repos/pollen-robotics/microduck_rl/git/trees/8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-fixed-tree.json",
+    "bytes": 69601,
+    "sha256": "9891ca5a17bfcde6da634096da5a75461cd024bbe7e8d186f19b9ff34e6325f7",
+    "resolved_git_commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/53fb7d1/src/mjlab_microduck/tasks/microduck_velocity_env_cfg.py",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-53fb7d1-velocity.py",
+    "bytes": 44971,
+    "sha256": "75a0430b814ac7495eb237ab806fbd4dd10309b9fd3027ac3eee3c2e3c5a944a",
+    "resolved_git_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/53fb7d1/src/mjlab_microduck/tasks/microduck_velstand_env_cfg.py",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-53fb7d1-velstand.py",
+    "bytes": 45167,
+    "sha256": "6cb9e702b9f9049a816bd079731e54d7c7818200194be5bbd4c2fe5e95063e39",
+    "resolved_git_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/53fb7d1/AGENTS.md",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-53fb7d1-AGENTS.md",
+    "bytes": 17752,
+    "sha256": "4493d2d72d83c2f9c8486e195c3e3f903406b41046549f8d34dbf561572f2414",
+    "resolved_git_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a"
+  },
+  {
+    "url": "https://api.github.com/repos/pollen-robotics/microduck_rl/commits/53fb7d1",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-53fb7d1-commit.json",
+    "bytes": 29424,
+    "sha256": "987208f983050cfb0738868f673684939a7210cfb1fdad21435822491bc95c9b",
+    "resolved_git_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a"
+  },
+  {
+    "url": "https://huggingface.co/pollen-robotics/microduck-policies/resolve/6677ec007142bbaf05123a468f6ae58d13808786/velstand.onnx",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/hf-policies-current-velstand.onnx",
+    "bytes": 793705,
+    "sha256": "ce894d30b3343036d499bfac1102bdaa58d59a21c1b58401ecb70fb6a2f63e0a",
+    "resolved_hf_commit": "6677ec007142bbaf05123a468f6ae58d13808786"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/develop/docs/velstand_policy.md",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-develop-velstand_policy.md",
+    "bytes": 7050,
+    "sha256": "e2ab07da06d2086bc6e09422a4f3ef06290aa0f3347350d0cb045d1c537e7ab5"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/53fb7d115b1be79c6d07e8fd4eab311285e16f2a/pyproject.toml",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-53fb7d1-pyproject.toml",
+    "bytes": 5239,
+    "sha256": "e4f73a9f9aff14826463aee558f53900307ba973a287fb3bfc27a8954a131026",
+    "resolved_git_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/53fb7d115b1be79c6d07e8fd4eab311285e16f2a/src/mjlab_microduck/tasks/mdp.py",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-53fb7d1-mdp.py",
+    "bytes": 325793,
+    "sha256": "ef9ff35bf3161fccc3e34fee2f9234a6cfec518846568881e16254cba3fb2f17",
+    "resolved_git_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a"
+  }
+]

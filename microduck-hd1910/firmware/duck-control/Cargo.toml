@@ -1,0 +1,48 @@
+[package]
+name = "duck-control"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Robot control core: model, bus, sensing"
+
+[dependencies]
+# For `JOINT_NAMES` alone. The joint *order* is protocol — the state stream carries
+# `joints` and `targets` as bare arrays — so the table lives in the crate every client
+# already links, and this crate re-exports it rather than keeping a second copy in step by
+# hand. Not a door onto IPC: nothing here speaks to a socket, and `robotd` already links
+# both crates, so no binary gains a dependency from this edge.
+duck-ipc-proto = { path = "../duck-ipc-proto" }
+serde = { workspace = true }
+# The simulator link speaks newline-delimited JSON — see `sim` for why a packed struct shared
+# between two repositories in two languages is the worse trade.
+serde_json = { workspace = true }
+thiserror.workspace = true
+tracing.workspace = true
+# `load-dynamic` dlopens libonnxruntime at first use instead of linking it. Two
+# consequences, both wanted: the aarch64 cross-build needs no target-arch ONNX Runtime at
+# build time, and a laptop with no libonnxruntime still compiles and runs every test that
+# does not create a session. Pinned to the version microduck_runtime runs today, so the
+# board keeps the ABI it already works against.
+# Used to probe for the ONNX Runtime dylib before touching `ort`. Same loader `ort` uses
+# internally, so a successful probe means its own load will succeed too — see
+# `policy::ensure_runtime` for why that matters.
+libloading = "0.8"
+# Identify unchanged networks when a different slot is hot-swapped.
+sha2 = "0.11.0"
+ort = { version = "=2.0.0-rc.11", default-features = false, features = ["load-dynamic"] }
+
+# 1.7.0 is a floor, not a preference: it adds fast sync read (protocol 2.0 instruction
+# 0x8A), which `bus` enables and the tick budget depends on. 1.6.0 was the previous floor
+# for the same kind of reason — it de-stuffs protocol 2.0 status packets whose payload
+# contains `FF FF FD`, and before it such a read came back oversized and every fixed-size
+# sync read in `bus` decoded garbage. A present current of -1 is enough to trigger that.
+rustypot = "1.8.0"
+# `default-features = false` drops serialport's `libudev` feature, which exists only for
+# enumerating ports (`available_ports`). We open one by path from the params file and never
+# enumerate — and libudev-sys needs a pkg-config sysroot that the board's cross-build does
+# not have, so leaving it on breaks the aarch64 build outright. rustypot disables it for the
+# same reason; this crate has to as well, or cargo's feature unification turns it back on.
+serialport = { version = "4.8", default-features = false }
+
+[dev-dependencies]
+serde_json.workspace = true

@@ -1,0 +1,18 @@
+# The robot's voice: a tiny seedable synth for pet vocalisations.
+#
+# Ported from `apirrone/microduck_sounds` (Python/numpy) so a release carries its own voice
+# generator instead of a pip install — the bank renders on-device in a few seconds of Rust
+# rather than minutes of numpy on a venv nobody provisioned. See src/lib.rs for what changed
+# in the port and why every robot's voice shifts once.
+[package]
+name = "sounds"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow = "1"
+clap = { workspace = true, features = ["derive"] }
+hound.workspace = true
+sha2 = "0.11"

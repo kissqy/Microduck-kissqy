@@ -1,0 +1,174 @@
+{
+  "schema_version": 2,
+  "model_api": 1,
+  "obs_len": 61,
+  "action_len": 14,
+  "robot": {
+    "model": "microduck",
+    "hw_rev": 1,
+    "servos": "hd1910",
+    "control_hz": 50
+  },
+  "name": "standup-teacher",
+  "kind": "perpetual",
+  "description": "联合训练的起身老师；不是旧版单独原地站立模型。两位老师的动作系数和滤波需一致。",
+  "entry_pose": "fallen",
+  "command": {
+    "encoding": "constant",
+    "idle": [
+      0,
+      0,
+      0
+    ],
+    "twist": "zeros",
+    "head": "zeros",
+    "body": "zeros"
+  },
+  "action_scale": 1.0,
+  "action_filter": {
+    "enabled": false,
+    "head_alpha": 1.0,
+    "legs_alpha": 1.0,
+    "version": 1,
+    "control_hz": 50.0,
+    "stage": "joint_position_target_after_home_and_scale",
+    "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+    "head_joints": [
+      "neck_pitch",
+      "head_pitch",
+      "head_yaw",
+      "head_roll"
+    ],
+    "leg_joints": [
+      "left_hip_yaw",
+      "left_hip_roll",
+      "left_hip_pitch",
+      "left_knee",
+      "left_ankle",
+      "right_hip_yaw",
+      "right_hip_roll",
+      "right_hip_pitch",
+      "right_knee",
+      "right_ankle"
+    ],
+    "update": "once_per_policy_step",
+    "reset": "first_target_passthrough_per_environment",
+    "previous_action_observation": "raw_policy_output",
+    "onnx": "external_filter_not_baked_into_graph"
+  },
+  "required_policy_settings": {
+    "head_lowpass": 1.0,
+    "legs_lowpass": 1.0,
+    "action_scale": 1.0
+  },
+  "runtime_only_settings": {
+    "voltage_adapt": {
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "training_action_compensation": "not_present_in_training_action_term",
+      "note": "供电随机化/负载掉压属于BAM训练物理；不等于运行端动态动作倍率补偿。导出不强制开启或关闭。"
+    },
+    "gain_and_gain_ratios": {
+      "keys": [
+        "gain",
+        "standing_gain_ratio",
+        "ground_pick_gain_ratio",
+        "roulade_gain_ratio"
+      ],
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "note": "训练BAM的实际kp_fw见hardware_command和training_physics；不能凭空推导固件增益或翻译层寄存器映射。"
+    }
+  },
+  "normalization": "embedded_in_onnx_once",
+  "export_contract_revision": 2,
+  "training_snapshot_sha256": "11ba5c1c0f522ea6571df9a4280c1a9d19a3cf94237eb898f92af9e77f4f3681",
+  "training": {
+    "task_id": "Mjlab-StandUp-Rough-Backlash-MicroDuck",
+    "repo": "pollen-robotics/microduck_rl",
+    "commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "checkpoint": 11000,
+    "source_file": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/microduck_stand/2026-10-05_22-55-23_console_20261005_225509_6f3d86/model_11000.pt"
+  },
+  "target_firmware": "0.15.1",
+  "teacher_only": true,
+  "source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "task": "Mjlab-StandUp-Rough-Backlash-MicroDuck",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/microduck_stand/2026-10-05_22-55-23_console_20261005_225509_6f3d86/model_11000.pt",
+  "model_origin": {
+    "engine": "official_0151",
+    "task": "Mjlab-StandUp-Rough-Backlash-MicroDuck",
+    "baseline_pin": {
+      "revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+    },
+    "training_adapter_revision": "R1.5.9-current-actions-backlash",
+    "friction_randomization": "official"
+  },
+  "export_source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "onnx_sha256": "a481d9f211f31d9476ab1a319fe362a21ef0879d9fa59442a122845af598268c",
+  "deployment_verified": false,
+  "gear_backlash": {
+    "enabled": true,
+    "joint_count": 14,
+    "ranges_rad": {
+      "passive_left_hip_yaw_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_left_hip_roll_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_left_hip_pitch_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_left_knee_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_left_ankle_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_neck_pitch_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_head_pitch_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_head_yaw_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_head_roll_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_hip_yaw_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_hip_roll_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_hip_pitch_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_knee_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_ankle_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ]
+    },
+    "encoder_position": "motor + passive backlash",
+    "motor_velocity": "motor-side for friction and back-EMF",
+    "policy_joint_velocity": "motor + passive backlash"
+  },
+  "duration_s": null
+}

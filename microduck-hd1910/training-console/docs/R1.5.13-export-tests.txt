@@ -1,0 +1,11 @@
+test_all_tasks_archive_enabled_physics_without_overriding_runtime_only_knobs (test_export_contract.ExportContractTests.test_all_tasks_archive_enabled_physics_without_overriding_runtime_only_knobs) ... ok
+test_conflicting_export_mapping_is_not_silently_relabelled (test_export_contract.ExportContractTests.test_conflicting_export_mapping_is_not_silently_relabelled) ... ok
+test_manager_export_binds_original_readback_instead_of_page (test_export_contract.ExportContractTests.test_manager_export_binds_original_readback_instead_of_page) ... ok
+test_normalization_and_missing_history_are_reported_honestly (test_export_contract.ExportContractTests.test_normalization_and_missing_history_are_reported_honestly) ... ok
+test_original_bc_events_and_curricula_survive_export_only_differences (test_export_contract.ExportContractTests.test_original_bc_events_and_curricula_survive_export_only_differences) ... ok
+test_sidecars_manifest_and_repacked_archive_share_one_training_receipt (test_export_contract.ExportContractTests.test_sidecars_manifest_and_repacked_archive_share_one_training_receipt) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.116s
+
+OK

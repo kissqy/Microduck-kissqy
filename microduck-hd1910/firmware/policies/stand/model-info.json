@@ -1,0 +1,33 @@
+{
+  "id": "a481d9f211f31d9476ab1a319fe362a2",
+  "sha256": "a481d9f211f31d9476ab1a319fe362a21ef0879d9fa59442a122845af598268c",
+  "task": "Mjlab-StandUp-Rough-Backlash-MicroDuck",
+  "slot": "stand",
+  "label": "独立起身 / Stand",
+  "home": {
+    "left_hip_yaw": 0.0,
+    "left_hip_roll": -0.0873,
+    "left_hip_pitch": -0.4579,
+    "left_knee": -0.0049,
+    "left_ankle": 0.453,
+    "neck_pitch": 0.3491,
+    "head_pitch": 0.3491,
+    "head_yaw": 0.0,
+    "head_roll": 0.0,
+    "right_hip_yaw": 0.0,
+    "right_hip_roll": 0.0873,
+    "right_hip_pitch": 0.4579,
+    "right_knee": 0.0049,
+    "right_ankle": -0.453
+  },
+  "firmware_p": 5,
+  "source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "deployment_verified": false,
+  "policy_settings": {
+    "action_scale": 1.0,
+    "head_lowpass": 1.0,
+    "legs_lowpass": 1.0
+  },
+  "name": "粗糙地面倒地起身老师 11000 轮 · 无缩放滤波 / Stand",
+  "teacher_only": true
+}

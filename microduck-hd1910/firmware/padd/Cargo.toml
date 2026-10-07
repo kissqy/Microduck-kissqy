@@ -1,0 +1,48 @@
+[package]
+name = "padd"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Gamepad → robot intents"
+
+# Its own crate so a gamepad stack stays out of `robotctl`, which has to work on a broken
+# robot and is part of the recovery path. Nothing here is on that path.
+#
+# gilrs depends on libudev-sys unconditionally on Linux — no feature disables it — so both
+# CI and the board cross-build install libudev. That is a real cost, paid to keep gilrs's
+# SDL controller database: without it we would hand-map each pad's raw evdev codes, and the
+# same Xbox controller reports different codes over USB and Bluetooth.
+#
+# The same expense returns for the next C dependency that has to reach the board, which is
+# an argument for preferring pure-Rust crates anywhere else on that path. `evdev` below is one:
+# it reads the same device node gilrs reads, for `src/tap.rs`, and brings no C with it.
+
+[dependencies]
+duck-ipc-proto = { path = "../duck-ipc-proto" }
+# Which button runs which skill, from the same `robotd.toml` everything else is configured in —
+# so `robotctl configure` stays the one editor, and a robot's configuration is one file to back
+# up. Pure serde and toml, and read once at startup: this daemon still holds no privileged access
+# and still knows nothing about what a skill *is*, only that a button names one.
+robotd-params = { path = "../robotd-params" }
+# The pad's IMU as an attitude — the same filter `robotctl monitor` draws from, so the head goes
+# where the picture says the pad is.
+pad-imu = { path = "../pad-imu" }
+clap = { workspace = true, features = ["derive"] }
+gilrs = "0.11"
+# Only to serialise the tap's own lines; the wire types themselves live in duck-ipc-proto.
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+
+# The raw input tap (`src/tap.rs`) is evdev, and evdev is Linux. Nothing else in `padd` is
+# platform-specific, so a Mac still builds and still drives a pad — it serves no tap.
+[target.'cfg(target_os = "linux")'.dependencies]
+# The raw event stream, unfiltered: `raw_stream::RawDevice` is the one that does *not* resync on
+# SYN_DROPPED, which is the event a link investigation most needs to see.
+evdev = "0.13"
+# `getgrnam`/`chown`, to hand the tap's socket to the `robot` group. Bindings only, no C to build.
+libc = "0.2"
+
+[dev-dependencies]
+tempfile = "3.27.0"

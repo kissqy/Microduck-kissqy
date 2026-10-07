@@ -1,0 +1,8 @@
+{
+  "schema": "microduck-runtime-execution/v1",
+  "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+  "mode": "uniform",
+  "action_scale": 0.9,
+  "head_lowpass": 0.5,
+  "legs_lowpass": 0.7
+}

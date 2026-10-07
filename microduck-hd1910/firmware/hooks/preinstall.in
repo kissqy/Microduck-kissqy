@@ -1,0 +1,231 @@
+#!/bin/sh
+# Make sure this board can actually run the release being installed.
+#
+# TEMPLATE. `xtask package` substitutes @ONNX_FLOOR@ and @ONNX_TARGET@ from
+# [workspace.metadata.onnxruntime] in Cargo.toml and ships the result as `hooks/preinstall`.
+# Edit this file, never the generated one — and there is no copy of the version to keep in
+# step, because the hook is built from the same constant the release is.
+#
+# Runs after the artifact is downloaded, verified and extracted, but *before* the swap. That
+# placement is the whole value: failing here aborts the update with the old release still
+# live, no rollback, and no boot-counter churn. Compare the alternative, which is what
+# actually happened on a board — full download, swap, restart, a 30s health gate, a rollback,
+# and `control loop has not completed a cycle yet` as the only explanation.
+#
+# The environment is cleared by the updater apart from PATH and the hook context, so there is
+# no token here. That is fine, and it is why both things this hook fetches are public:
+# ONNX Runtime from microsoft/onnxruntime, and the GStreamer plugins from
+# pollen-robotics/microduck-gst-plugins.
+#
+# Two dependencies, and they fail the update differently on purpose:
+#
+#   ONNX Runtime is fatal. A release that cannot load a policy is a robot that cannot stand,
+#   and aborting here leaves the old release live with no rollback and no boot-counter churn.
+#
+#   The GStreamer stack is not. A board with no camera stack loses `mediad` — video and the
+#   WebRTC console — and still walks, still pairs, still updates. Refusing the update over it
+#   would mean a board that cannot be fixed by the mechanism that fixes boards.
+set -eu
+
+ONNX_FLOOR="@ONNX_FLOOR@"
+ONNX_TARGET="@ONNX_TARGET@"
+ONNX_LIB_DIR=/usr/local/lib
+
+# Below the updater's 120s ceiling on a hook, so a slow network produces our message naming
+# the fix rather than a bare "timed out after 120s".
+CURL_MAX_TIME=90
+
+say() { printf 'preinstall: %s\n' "$*"; }
+die() { printf 'preinstall: %s\n' "$*" >&2; exit 1; }
+
+# The version ONNX Runtime is installed at, or empty.
+#
+# The tarball lays down `libonnxruntime.so.<version>` with the bare name as a symlink, so the
+# resolved target names the version without running anything. Asking the library itself would
+# mean dlopening it, which is what we are trying to avoid doing unsafely.
+installed_onnx() {
+    resolved="$(readlink -f "${ONNX_LIB_DIR}/libonnxruntime.so" 2>/dev/null || true)"
+    case "$resolved" in
+        */libonnxruntime.so.*) printf '%s' "${resolved##*/libonnxruntime.so.}" ;;
+        *) printf '' ;;
+    esac
+}
+
+# Is $1 at least $2, comparing major.minor numerically?
+#
+# Numeric rather than string: "1.9" sorts above "1.23" lexically, which would pass a board
+# that cannot run the release. Patch is ignored — `ort` cares about the API version, which
+# moves with the minor.
+at_least() {
+    [ -n "$1" ] || return 1
+
+    have_major="${1%%.*}"
+    have_rest="${1#*.}"
+    have_minor="${have_rest%%.*}"
+    want_major="${2%%.*}"
+    want_rest="${2#*.}"
+    want_minor="${want_rest%%.*}"
+
+    # Guard against a version that is not numeric at all, rather than letting `test` fail
+    # noisily on it.
+    case "${have_major}${have_minor}${want_major}${want_minor}" in
+        *[!0-9]*) return 1 ;;
+    esac
+
+    if [ "$have_major" -gt "$want_major" ]; then
+        return 0
+    elif [ "$have_major" -lt "$want_major" ]; then
+        return 1
+    elif [ "$have_minor" -ge "$want_minor" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Install ONNX Runtime, replacing whatever is there.
+#
+# This writes to /usr/local/lib before the swap, so the change outlives an aborted update.
+# Deliberate and safe in this direction: `ort` asks the dylib for *at least* its
+# ORT_API_VERSION and ONNX Runtime keeps the C API backward compatible, so the release we are
+# about to abandon still works against the newer runtime.
+install_onnx() {
+    url="https://github.com/microsoft/onnxruntime/releases/download/v${ONNX_TARGET}/onnxruntime-linux-aarch64-${ONNX_TARGET}.tgz"
+    tmp="$(mktemp -d)"
+    # shellcheck disable=SC2064 # expand $tmp now, deliberately
+    trap "rm -rf '$tmp'" EXIT INT TERM
+
+    say "fetching ONNX Runtime ${ONNX_TARGET}"
+    curl -fsSL --max-time "$CURL_MAX_TIME" -o "${tmp}/ort.tgz" "$url" \
+        || die "cannot download ONNX Runtime ${ONNX_TARGET} from ${url}
+  This board needs it to run a policy, and this release cannot start without one. With
+  network access, re-running the update will retry. Otherwise install it by hand, or run
+  scripts/setup-board.sh."
+
+    tar -xzf "${tmp}/ort.tgz" -C "$tmp" || die "cannot unpack ONNX Runtime"
+
+    found="$(find "$tmp" -name 'libonnxruntime.so.*' -type f | head -1)"
+    [ -n "$found" ] || die "no libonnxruntime.so.* in the ONNX Runtime tarball"
+
+    install -m 0644 "$found" "${ONNX_LIB_DIR}/$(basename "$found")"
+    ln -sf "$(basename "$found")" "${ONNX_LIB_DIR}/libonnxruntime.so"
+
+    # ldconfig lives in /usr/sbin, which a hook's minimal PATH does include — but check
+    # anyway, because a freshly copied library that dlopen cannot find is the same failure
+    # this hook exists to prevent.
+    if command -v ldconfig >/dev/null 2>&1; then
+        ldconfig
+    elif [ -x /usr/sbin/ldconfig ]; then
+        /usr/sbin/ldconfig
+    else
+        say "no ldconfig; robotd may need ORT_DYLIB_PATH=${ONNX_LIB_DIR}/libonnxruntime.so"
+    fi
+}
+
+# The GStreamer stack `mediad` needs, by running the release's own copy of the script that
+# installs it.
+#
+# **The script, not a copy of what it does.** It owns the pinned plugins version, the Debian
+# package list, the Rockchip MPP and RGA debs, the udev rule for `/dev/mpp_service`, and the
+# encoder report — six things that would otherwise exist twice and drift, which is the class of
+# bug this repo keeps writing down. It is idempotent by design: a provisioned board pays a stamp
+# file comparison and two `dpkg -s` calls, and a board that has never had the stack gets it here.
+#
+# This is what the split between provisioning and updating is for. `provision.sh` installs the
+# stack on a new board; every board provisioned before that existed, and every board whose
+# plugins are older than the version this release was built against, is fixed by an ordinary
+# update instead of by somebody remembering a command. `docs/design/updater-design.md` §9.1
+# owns that rule and the four times it has been broken.
+#
+# Never fatal, for the reason in the header. Its report goes to the update log either way, which
+# is where "this board cannot encode H.264 in hardware" belongs.
+install_gstreamer() {
+    script=scripts/setup-gstreamer.sh
+    if [ ! -f "$script" ]; then
+        say "no ${script} in this release; skipping the camera stack"
+        return 0
+    fi
+
+    say "checking the GStreamer stack"
+    if sh "$script"; then
+        say "GStreamer stack ready"
+    else
+        say "the GStreamer stack did not finish installing — this release will run without a
+  camera or a WebRTC console, and everything else is unaffected. To retry by hand:
+    sudo /usr/local/sbin/robot-setup-gstreamer"
+    fi
+}
+
+# The camera's 3A engine, for the same reason and on the same terms as the GStreamer stack
+# above: it is what gives the camera auto exposure and white balance, a board provisioned
+# before it existed should get it from an ordinary update, and a board that cannot install it
+# still has a robot — with a green, fixed-exposure camera.
+install_rkaiq() {
+    script=scripts/setup-rkaiq.sh
+    if [ ! -f "$script" ]; then
+        say "no ${script} in this release; skipping the camera 3A engine"
+        return 0
+    fi
+
+    say "checking the camera 3A engine"
+    if sh "$script"; then
+        say "camera 3A engine ready"
+    else
+        say "the camera 3A engine did not finish installing — the camera will run on raw ISP
+  defaults, which is green, noisy and fixed-exposure. Everything else is unaffected. To retry:
+    sudo /usr/local/sbin/robot-setup-rkaiq"
+    fi
+}
+
+# The NPU: the runtime `duck-detect` dlopens, and the device-tree node it needs to reach one.
+#
+# Same terms as the two above, and here for the same reason they are: the script owns the pinned
+# runtime tag, the overlay, and the driver report, and a robot should not need somebody to remember
+# a command before the model in this very release can run. A board provisioned before the NPU
+# existed is fixed by an ordinary update.
+#
+# **It can ask for a reboot, and that is why this says so rather than doing it.** Armbian ships
+# `npu@fde40000` disabled on every Radxa Zero 3, so the first update carrying this enables the node
+# and the NPU binds on the next boot. Until then the detector runs on the CPU via the `.onnx`, which
+# is the whole reason `DetectParams::models()` is a list rather than a choice.
+#
+# Never fatal, for the reason in the header: a board with no NPU still walks, still streams, and
+# still sees — just on its CPU.
+install_npu() {
+    script=scripts/setup-npu.sh
+    if [ ! -f "$script" ]; then
+        say "no ${script} in this release; skipping the NPU"
+        return 0
+    fi
+
+    say "checking the NPU runtime"
+    if sh "$script"; then
+        say "NPU runtime ready"
+    else
+        say "the NPU did not finish setting up — the duck detector will run on the CPU, which is
+  slower and warmer but works, and everything else is unaffected. To retry:
+    sudo sh /opt/robot/daemon/current/scripts/setup-npu.sh"
+    fi
+}
+
+have="$(installed_onnx)"
+
+if at_least "$have" "$ONNX_FLOOR"; then
+    say "ONNX Runtime ${have} satisfies >= ${ONNX_FLOOR}"
+else
+    say "ONNX Runtime ${have:-absent} is below ${ONNX_FLOOR}, which this release requires"
+    install_onnx
+
+    # Verified rather than assumed: an install that reported success but left the symlink wrong
+    # would otherwise be discovered by robotd's control thread panicking, which is the failure
+    # mode this hook was written to remove.
+    have="$(installed_onnx)"
+    at_least "$have" "$ONNX_FLOOR" \
+        || die "installed ONNX Runtime ${have:-none}, still below ${ONNX_FLOOR}"
+
+    say "ONNX Runtime now ${have}"
+fi
+
+install_gstreamer
+install_rkaiq
+install_npu

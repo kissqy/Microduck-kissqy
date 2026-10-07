@@ -1,0 +1,146 @@
+# Actual per-robot calibration. Motion still requires explicit init.
+motion_enabled = true
+imu_mount_verified = true
+imu_mount_quat = [
+    0.037577263,
+    0.701353391,
+    -0.035866967,
+    0.710918372,
+]
+current_ma_per_count = 0.0
+units_verified = false
+
+[[joints]]
+name = "left_hip_yaw"
+id = 20
+zero_raw = 2035
+direction = 1
+calibrated = true
+min_rad = -0.4363323129985824
+max_rad = 0.5235987755982988
+
+[[joints]]
+name = "left_hip_roll"
+id = 21
+zero_raw = 2176
+direction = -1
+calibrated = true
+min_rad = -0.3839724354387525
+max_rad = 0.3839724354387525
+
+[[joints]]
+name = "left_hip_pitch"
+id = 22
+zero_raw = 1977
+direction = -1
+calibrated = true
+min_rad = -1.5707963267948966
+max_rad = 1.5707963267948966
+
+[[joints]]
+name = "left_knee"
+id = 23
+zero_raw = 1392
+direction = -1
+calibrated = true
+min_rad = -1.5707963267948966
+max_rad = 1.5707963267948966
+
+[[joints]]
+name = "left_ankle"
+id = 24
+zero_raw = 1893
+direction = -1
+calibrated = true
+min_rad = -1.2217304763960306
+max_rad = 1.2217304763960306
+
+[[joints]]
+name = "neck_pitch"
+id = 30
+zero_raw = 2100
+direction = 1
+calibrated = true
+min_rad = -1.5707963267948966
+max_rad = 1.2217304763960306
+
+[[joints]]
+name = "head_pitch"
+id = 31
+zero_raw = 1742
+direction = 1
+calibrated = true
+min_rad = -1.5707963267948966
+max_rad = 1.5707963267948966
+
+[[joints]]
+name = "head_yaw"
+id = 32
+zero_raw = 1952
+direction = -1
+calibrated = true
+min_rad = -2.9670597283903604
+max_rad = 2.9670597283903604
+
+[[joints]]
+name = "head_roll"
+id = 33
+zero_raw = 568
+direction = 1
+calibrated = true
+min_rad = -0.3490658503988659
+max_rad = 0.3490658503988659
+
+[[joints]]
+name = "mouth"
+id = 34
+zero_raw = 1372
+direction = -1
+calibrated = true
+min_rad = -0.08726646259971647
+max_rad = 0.5235987755982988
+
+[[joints]]
+name = "right_hip_yaw"
+id = 10
+zero_raw = 1974
+direction = 1
+calibrated = true
+min_rad = -0.5235987755982988
+max_rad = 0.4363323129985824
+
+[[joints]]
+name = "right_hip_roll"
+id = 11
+zero_raw = 1760
+direction = -1
+calibrated = true
+min_rad = -0.3839724354387525
+max_rad = 0.3839724354387525
+
+[[joints]]
+name = "right_hip_pitch"
+id = 12
+zero_raw = 1799
+direction = -1
+calibrated = true
+min_rad = -1.5707963267948966
+max_rad = 1.5707963267948966
+
+[[joints]]
+name = "right_knee"
+id = 13
+zero_raw = 1908
+direction = -1
+calibrated = true
+min_rad = -1.5707963267948966
+max_rad = 1.5707963267948966
+
+[[joints]]
+name = "right_ankle"
+id = 14
+zero_raw = 1611
+direction = -1
+calibrated = true
+min_rad = -1.2217304763960306
+max_rad = 1.2217304763960306

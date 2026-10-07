@@ -1,0 +1,29 @@
+[package]
+name = "duck-ipc-proto"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "IPC contracts between the robot's services and their clients"
+
+# Deliberately near-dependency-free. Every service and client speaks these types, so
+# anything added here is added to all of them — including `btd`, which must stay small
+# because it is part of the recovery path (architecture.md §1.1).
+#
+# In particular: no http, no tar, no crypto, no tokio. If a type needs one of those,
+# it belongs in the crate that owns the behaviour, not here.
+[dependencies]
+serde.workspace = true
+# `clock`: CLOCK_MONOTONIC / CLOCK_REALTIME, which std does not expose as raw nanoseconds.
+libc = "0.2"
+serde_json.workspace = true
+semver.workspace = true
+
+# `tempfile` only for the identity round-trip test: it needs a writable runtime root, and a
+# test cannot have /run.
+[dev-dependencies]
+tempfile = "3.27.0"
+
+# Fixtures for tests, in this crate and in its consumers. Adds no dependencies; see
+# `src/lib.rs::test_support` for why it is shared rather than copied per crate.
+[features]
+test-support = []

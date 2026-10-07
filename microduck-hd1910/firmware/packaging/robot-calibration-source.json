@@ -1,0 +1,27 @@
+{
+  "source": "radxa@192.168.6.151:/etc/robot/feetech-ft5/hd1910-calibration.toml",
+  "source_sha256": "b56de58938860fa066737caa987cc0aec68a6b903ce3c74887d039c1308385aa",
+  "provenance": "从 ZERO SSH 读取已保存的完整标定",
+  "imported_at": 1790956669.5204604,
+  "note": "只保存到训练台；不写入实机。机械限位与模型限位分别保留，不静默相互覆盖。",
+  "zero_target": "radxa@192.168.6.151",
+  "changes": {
+    "joints": [
+      {
+        "name": "head_roll",
+        "id": 33,
+        "fields": {
+          "zero_raw": {
+            "before": 568,
+            "after": 1599
+          }
+        }
+      }
+    ],
+    "imu_changed": false
+  },
+  "sync": {
+    "simulation_unchanged": true,
+    "environment_rechecked": false
+  }
+}

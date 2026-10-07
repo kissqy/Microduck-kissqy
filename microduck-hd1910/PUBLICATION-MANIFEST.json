@@ -1,0 +1,116 @@
+{
+  "schema": "microduck-publication/v1",
+  "publication_revision": "public1",
+  "date": "2026-10-07",
+  "firmware_console_version": "1.0.146",
+  "firmware_build": "1fa8438-feetech-ft6-control.29",
+  "api_version": 40,
+  "training_console_version": "1.5.17",
+  "upstream_firmware": {
+    "repository": "https://github.com/pollen-robotics/microduck",
+    "tag": "daemon-v0.15.1",
+    "commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  "upstream_training": {
+    "repository": "https://github.com/pollen-robotics/microduck_rl",
+    "commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "included_in_source_bundle": false,
+    "retrieval": "first environment preparation uses pinned git checkout and uv sync --frozen --python 3.12"
+  },
+  "models": {
+    "walk": {
+      "id": "1cbf8730eadd75a5704332c9f3c10f60",
+      "sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+      "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+      "epochs": 9600,
+      "source_iteration": 9599,
+      "num_envs": 2560,
+      "source_policy_directory": "policies/walk",
+      "trained_action_scale": 1.0,
+      "trained_head_alpha": 1.0,
+      "trained_legs_alpha": 1.0,
+      "execution_profile": {
+        "schema": "microduck-runtime-execution/v1",
+        "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+        "mode": "uniform",
+        "action_scale": 0.9,
+        "head_lowpass": 0.5,
+        "legs_lowpass": 0.7
+      },
+      "deployment_verified": false
+    },
+    "sitstand": {
+      "id": "1c94934c6421ec72ed48079cea749668",
+      "sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+      "task": "Mjlab-SitStand-Flat-MicroDuck"
+    },
+    "ground_pick": {
+      "id": "2b69fa681ed06f7ded9e2a2d12ba5c67",
+      "sha256": "2b69fa681ed06f7ded9e2a2d12ba5c6776ec87308ac4a299e4b8196199c17f24",
+      "task": "Mjlab-GroundPick-Flat-MicroDuck"
+    },
+    "roulade": {
+      "id": "8fdaf12c7478a8314a63647a466bfa34",
+      "sha256": "8fdaf12c7478a8314a63647a466bfa34ba1f15a7d9a5cb3b6ffa242719666168",
+      "task": "Mjlab-Roulade-Flat-MicroDuck"
+    },
+    "stand": {
+      "id": "a481d9f211f31d9476ab1a319fe362a2",
+      "sha256": "a481d9f211f31d9476ab1a319fe362a21ef0879d9fa59442a122845af598268c",
+      "task": "Mjlab-StandUp-Rough-Backlash-MicroDuck",
+      "teacher_only": true,
+      "bound_by_default": false,
+      "epochs": 11000,
+      "num_envs": 4096,
+      "manual_lb_bound": true,
+      "base_action_scale": 1.0,
+      "target_filter": "passthrough",
+      "head_alpha": 1.0,
+      "legs_alpha": 1.0
+    }
+  },
+  "binary_sha256": {
+    "robotd": "1c4e77c640dcbb8fa402566c39fb20306457e421a40ab6639974fb1c239fc56c",
+    "robotctl": "05ebae696ed12e8824088ddd4e7833110bf045ca9416f027481e333e4d12f00c",
+    "padd": "78b456e7c19e720330c325fe16719e291d36373c0879911d59f77700d52f79a3",
+    "sounds": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103",
+    "gamepad-r7/gamesir-xboxd": "6f8d78d2bdcb85c2e216013c66e1af25b38813cb86d0e88a7722ef98df5d4b30"
+  },
+  "firmware_payload_sha256": "9cecf03286c608d750cee402d6a977870ba1d92a97b37cb5274abcdefd6c459a",
+  "original_inputs": [
+    {
+      "name": "Microduck-Console-R17-v1.0.146.zip",
+      "bytes": 24386755,
+      "sha256": "a59ed3852e7d6db1f8aa59ba582b18cf9eaa096af00188e4227bbe0915bc9e6f"
+    },
+    {
+      "name": "Microduck-Firmware-R17-v1.0.146.zip",
+      "bytes": 18884444,
+      "sha256": "928bb10c96daf82899c8633d9ac7474fd0fdfb21f849f71331354d45c417fb8d"
+    },
+    {
+      "name": "Microduck-R17-v1.0.146-Changes-and-Verification.txt",
+      "bytes": 12571,
+      "sha256": "e2744c8f900f667a4bc032b56d4cbc046e12e11cd399097abd98aaeaf55dc908"
+    },
+    {
+      "name": "Microduck-Source-R17-v1.0.146.tar.gz",
+      "bytes": 43887020,
+      "sha256": "7fb47afedbc3f3704d157ecedc6e779545d000f9edf2c374fcd3fef4eb93df18"
+    },
+    {
+      "name": "Microduck-Training-Studio-R1.5.17.zip",
+      "bytes": 20493532,
+      "sha256": "fa96a8e4cd757c88d4473acbb31a17dad3b6a0f424c0df5727e46cb1294e6b0d"
+    }
+  ],
+  "publication_changes": [
+    "Add a repository directory, short README, VS Code publishing guide, portable build entry and explicit license scope.",
+    "Preserve all shipped runtime source logic, compiled ELF files, embedded firmware payload and ONNX model bytes.",
+    "Correct stale Walk metadata in the two source/console inventory manifests from original BUILD.json and actual policy SHA256; refresh inventories.",
+    "Remove personal SSH source/target and import-history metadata from two training example configurations; keep all numeric calibration and model parameters unchanged.",
+    "Preserve upstream licenses and original nested upstream workflow examples; no root auto-publish workflow is enabled."
+  ],
+  "hardware_verified": false,
+  "hardware_verified_note": "No new Zero, motor, gamepad, camera or GPU long-training acceptance run was performed during publication preparation."
+}

@@ -1,0 +1,69 @@
+/dts-v1/;
+/plugin/;
+
+/*
+ * Hardware I2C3 (M0 pinmux) on header pins 3/5 — Radxa Zero 3W only.
+ *
+ * Replaces the bit-banged i2c-gpio-pihat overlay: header pins 3/5
+ * (GPIO1_A0 = SDA, GPIO1_A1 = SCL) are ALSO the RK3566's i2c3 controller
+ * in its M0 pin mux — the earlier claim that these pins have no hardware
+ * I2C function was wrong. Same physical wiring as the Robot HAT expects
+ * (codec 0x18, dormant BMI088 0x19/0x68, ToF via Stemma J5), but the
+ * controller clocks the bus itself: interrupt-driven transfers instead
+ * of the i2c-gpio driver's udelay() busy-wait, i.e. ~zero CPU while
+ * transferring. This is what makes 15 Hz ToF streaming affordable.
+ *
+ * THE CATCH — i2c3 is not free in the vendor DTB: it runs in its M1 mux
+ * (GPIO3_B5/B6, by the USB-C port) serving the FUSB302 USB-C PD
+ * controller. This overlay re-muxes the controller to M0 and disables
+ * the fusb302 node. Consequences (checked on a live duck, vendor
+ * 6.1.115 DTB):
+ *   - Nothing else references the fusb302 (no extcon consumers), so
+ *     only USB-C PD *negotiation* is lost.
+ *   - The FUSB302 chip's power-on register defaults already present Rd
+ *     on both CC lines (SWITCHES0 = PDWN1|PDWN2), so USB-C chargers —
+ *     PD or dumb — still deliver their default 5 V without any driver.
+ *     The board is a 5 V device; nothing ever negotiated higher.
+ *   - In-robot power comes from the battery via the HAT regardless.
+ *   - maskrom flashing over USB-C is ROM-code, unaffected.
+ *
+ * Bus speed: 400 kHz — the ceiling of the TLV320AIC3104 codec and the
+ * (unused but still connected) BMI088. The VL53L5CX would take 1 MHz,
+ * but not its bus-mates. If transfers prove flaky (the HAT has a single
+ * 10k pull-up pair, R12/R13; the head-cable capacitance can stretch
+ * rise times), drop clock-frequency to 200000 — still plenty.
+ *
+ * The bus keeps its fixed alias /dev/i2c-3. The udev rule installed by
+ * install.sh points the stable /dev/i2c-pihat symlink at it, so
+ * consumers (runtime env, tof_streamer) work unchanged in both modes.
+ *
+ * MUTUALLY EXCLUSIVE with i2c-gpio-pihat: both claim GPIO1_A0/A1.
+ * install.sh guarantees only one is in armbianEnv.txt's overlays= line
+ * (MICRODUCK_I2C_MODE=hw|bitbang; bitbang restores the fusb302).
+ */
+
+/ {
+    compatible = "radxa,zero-3w", "rockchip,rk3566";
+
+    fragment@0 {
+        target = <&i2c3>;
+        __overlay__ {
+            status = "okay";
+            clock-frequency = <400000>;
+            pinctrl-names = "default";
+            pinctrl-0 = <&i2c3m0_xfer>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+        };
+    };
+
+    /* The fusb302 is wired to the M1 pins we just un-muxed; without
+     * this it would probe (and fail) against whatever sits on the HAT
+     * bus. Disable it explicitly. */
+    fragment@1 {
+        target-path = "/i2c@fe5c0000/fusb302@22";
+        __overlay__ {
+            status = "disabled";
+        };
+    };
+};

@@ -1,0 +1,34 @@
+   Compiling cfg_aliases v0.2.2
+   Compiling duck-ipc-proto v0.15.1 (/workspace/scratch/155bfcc94f4f/work-r17-146/source/Microduck-Source-R17-v1.0.146/duck-ipc-proto)
+   Compiling pkg-config v0.3.33
+   Compiling inotify-sys v0.1.8
+   Compiling radium v0.7.0
+   Compiling tap v1.0.1
+   Compiling vec_map v0.8.2
+   Compiling funty v2.0.0
+   Compiling nix v0.31.3
+   Compiling nix v0.29.0
+   Compiling wyz v0.5.1
+   Compiling inotify v0.11.4
+   Compiling gilrs v0.11.2
+   Compiling uuid v1.26.1
+   Compiling libudev-sys v0.1.4
+   Compiling bitvec v1.1.1
+   Compiling fnv v1.0.7
+   Compiling gilrs-core v0.6.8
+   Compiling evdev v0.13.2
+   Compiling robotd-params v0.15.1 (/workspace/scratch/155bfcc94f4f/work-r17-146/source/Microduck-Source-R17-v1.0.146/robotd-params)
+   Compiling pad-imu v0.15.1 (/workspace/scratch/155bfcc94f4f/work-r17-146/source/Microduck-Source-R17-v1.0.146/pad-imu)
+   Compiling duck-control v0.15.1 (/workspace/scratch/155bfcc94f4f/work-r17-146/source/Microduck-Source-R17-v1.0.146/duck-control)
+   Compiling odometry v0.15.1 (/workspace/scratch/155bfcc94f4f/work-r17-146/source/Microduck-Source-R17-v1.0.146/odometry)
+   Compiling robotctl v0.15.1 (/workspace/scratch/155bfcc94f4f/work-r17-146/source/Microduck-Source-R17-v1.0.146/robotctl)
+   Compiling padd v0.15.1 (/workspace/scratch/155bfcc94f4f/work-r17-146/source/Microduck-Source-R17-v1.0.146/padd)
+   Compiling robotd v0.15.1 (/workspace/scratch/155bfcc94f4f/work-r17-146/source/Microduck-Source-R17-v1.0.146/robotd)
+warning: linker stderr: ignoring deprecated linker optimization setting '1'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `padd` (bin "padd") generated 1 warning
+warning: `robotctl` (bin "robotctl") generated 1 warning (1 duplicate)
+warning: `robotd` (bin "robotd") generated 1 warning (1 duplicate)
+    Finished `release` profile [optimized] target(s) in 19.19s

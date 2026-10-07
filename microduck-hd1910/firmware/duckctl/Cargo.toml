@@ -1,0 +1,74 @@
+[package]
+name = "duckctl"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "The robot from a laptop — over BLE today, over whatever reaches it next"
+
+# **The client half, and it runs nowhere near the robot.** `robotctl` is the tool that ships and
+# it speaks unix sockets on the board; this one reaches a robot from the outside, so it carries a
+# Bluetooth stack, a scanner, and every laptop-side concern the daemons must not have.
+#
+# It was an example of `btd` until it was not. An example's dependencies are dev-dependencies, so
+# `btleplug` could never reach the shipped artifact — a real guarantee, obtained as a side effect
+# of which directory the file sat in. Its own crate keeps the guarantee and states it directly:
+# **nothing on the robot depends on `duckctl`**, so nothing here is in a release. Two things
+# stopped being awkward on the way — `cargo install --path duckctl` rather than
+# `cargo install --path btd --example duck-btctl`, which `dev-push.sh` carried a fallback for,
+# and a name that no longer says `bt` when the robot is about to have a second transport.
+#
+# It is **excluded from `default-members`** in the workspace root, which is what keeps it off the
+# board: `cargo board --bins` builds every default member for aarch64, and this is a tool for the
+# machine the developer is sitting at. `--workspace` still lints and tests it.
+
+[dependencies]
+# The robot's own halves of the wire, used rather than reimplemented. `framing` in particular is
+# the *client* side of the module the robot chunks with, so an asymmetry between them would show
+# up as this tool not working — which makes it a test of the protocol rather than a second
+# implementation free to agree with itself.
+#
+# `duck-ble` rather than `btd`, since a second consumer arrived and the split
+# became worth making: this tool wanted three platform-independent modules and
+# was pulling a Linux daemon — and on Linux, `bluer` and a vendored libdbus with
+# it — to reach them.
+duck-ble = { path = "../duck-ble" }
+
+# `API_VERSION`, and the `semver` re-export it is compared with. The version handshake is a
+# contract between this client and every daemon, so it is read from the crate that defines it
+# rather than kept as a number here that could drift.
+duck-ipc-proto = { path = "../duck-ipc-proto" }
+
+# `btleplug` rather than `bluer`, because this runs on a developer's machine: CoreBluetooth on
+# macOS, BlueZ on Linux, WinRT on Windows. `bluer` would make the client Linux-only, which defeats
+# the point of having one.
+#
+# **0.13 or newer, and the floor is deliberate.** Every 0.11 has three `.expect()`s in the
+# CoreBluetooth backend that abort the BLE event loop rather than fail a call:
+# `set_characteristics` panics on a service it does not know, and `update_descriptors` panics twice
+# more on an unknown service or characteristic. The second pair fires on a discovery-callback
+# ordering that CoreBluetooth produces in practice — deviceplug/btleplug#397 — and it takes down
+# the whole client, not the connection.
+#
+# 0.13 fixed all three: characteristics are merged rather than replaced, so descriptor state from an
+# earlier callback survives, and the descriptor handlers warn and return. The phone app would
+# otherwise have had to carry a vendored, patched copy of this crate the way
+# `reachy_mini_mobile_app` does, and it does not.
+#
+# We have not seen the panic here, and that is not evidence of much: `duckctl` connects briefly and
+# a developer re-runs it without filing anything. The reason to move is that the failure is a
+# process abort in a tool people reach for when a board is already misbehaving.
+btleplug = "0.13"
+clap = { workspace = true, features = ["derive"] }
+futures = "0.3"
+# `open` launches a browser, and which command does that is per-platform: `open` on macOS,
+# `xdg-open` or one of five fallbacks on Linux, `cmd /c start` on Windows. A crate rather than a
+# match on `target_os`, for the same reason `btleplug` is one — this tool runs on whatever the
+# developer sits at, and the interesting part of `open` is finding the robot, not spawning a process.
+webbrowser = "1.2.4"
+serde_json.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "time"] }
+
+# `advwatch` measures how often an advertisement actually arrives. It lives here rather than with
+# `btd` for the same reason the client does: it is a scanner, and scanners run on laptops.
+[[example]]
+name = "advwatch"

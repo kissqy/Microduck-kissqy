@@ -1,0 +1,22 @@
+Use Rust 1.99 and ONNX Runtime 1.28 via ORT_DYLIB_PATH.
+PYTHONPATH="$PWD/packaging:$PWD/console" python3 -m unittest discover -s packaging -p 'test_*.py' -v
+cargo test -p robotd --bin robotd --locked
+cargo test -p duck-control --lib --locked
+cargo test -p robotd-params -p duck-ipc-proto --lib --bins --locked
+cargo test -p padd --bins --locked
+Cross-build: cargo zigbuild -p robotd -p robotctl -p padd --release --target aarch64-unknown-linux-gnu.2.31 --locked
+build_native146.py records exact versions, dependency paths and source/binary SHA256.
+prepare_build_deps146.py unpacks real Debian host/ARM libudev and pkgconf locally;
+it does not install system packages or change the firmware's runtime libraries.
+See focused-verification146.json for frontend commands and original logs.
+package146.py expects work-r17-145 as the preceding source/payload, work-r17-146
+with model-input and the current logs; source files are hashed before/after build.
+It installs the real payload twice over v145, with/without the same model already
+imported, then imports both ZIP formats through the production PreparedFirmware.
+The model audit's original paths describe this audit workspace. To reproduce
+elsewhere point INPUT at policies/walk and BASE at this source (old walk teacher
+fixture is retained only in test-data/walk-teacher14000), with its output ROOT
+in a temporary working directory. checkpoint.pt is never deserialized.
+No real Zero, Chromium rendering, systemd/uinput activation or live GameSir test.
+Existing listener-dependent system integration is not claimed; this host has
+previously denied AF_UNIX listener creation.

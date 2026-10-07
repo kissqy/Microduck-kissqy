@@ -1,0 +1,9 @@
+4K Mjlab-Velocity-Flat-MicroDuck: 16 complete rewards visible, 920px list, bottom gap 13px
+4K Mjlab-StandUp-Flat-MicroDuck: 18 complete rewards visible, 920px list, bottom gap 13px
+4K Mjlab-VelStand-Flat-MicroDuck: 21 complete rewards visible, 1060px list, bottom gap 13px
+All rewards already fit without scrolling
+1920px: reward list 986px; controls remain visible
+1280px: reward list 1133px; controls remain visible
+1024px: reward list 986px; controls remain visible
+390px: reward list 360px; controls remain visible
+R17 palette + reward/course scrolling OK; task changes make no preflight or training POSTs.

@@ -1,0 +1,144 @@
+#!/bin/sh
+# Did the release that just booted actually come up? If not, hand over to `robot-rescue`.
+#
+# Run once per boot by `robot-boot-check.timer`, three minutes in. See
+# `docs/design/boot-recovery-net.md` for why this exists at all and why it is a deadline rather
+# than `OnFailure=` on each daemon.
+#
+# WHAT COUNTS AS "DID NOT COME UP". Two conditions, both positive evidence that systemd tried to run
+# a daemon and could not keep it running:
+#
+#   - the unit is `failed`;
+#   - the unit has restarted at least 3 times this boot, whatever it happens to be doing right now.
+#
+# Everything else is left alone, and that asymmetry is the point. A unit an operator stopped by hand
+# is `inactive` with no restarts, and must not cost the board its release. A unit a release predates
+# is not loaded, which reads the same way. A daemon still waiting for hardware is `active` — all four
+# members wait rather than exit, which is what makes them members at all — and a single crash that
+# recovered leaves one or two restarts, not three. A false negative here costs an operator a
+# diagnosis; a false positive costs a good release.
+#
+# WHY THESE FOUR. A unit may join only if it waits for its hardware rather than exiting, so that a
+# unit which is down means the *binary* is broken — which is what a rollback fixes. `padd` is
+# excluded because it exits cleanly when robotd's socket is absent, by design. `btd` is included on
+# merit rather than symmetry: with no network, BLE is the only way in, so a robot that boots with no
+# `btd` and no known wifi cannot be reached at all.
+#
+# Usage:  robot-boot-check [--dry-run]
+#
+# Exit: 0 nothing to do, or the rescue was handed the decision; 2 declined; 1 something went wrong.
+set -eu
+
+MEMBERS="updaterd.service robotd.service configd.service btd.service"
+
+# Three, not one. `Restart=always` plus a 2-5s `RestartSec` means a genuine loop passes three within
+# the deadline several times over, while a daemon that died once on a transient and came back does
+# not. One would fire on the latter.
+MAX_RESTARTS=3
+
+# This is a *boot* check. Being invoked well after boot means something other than the timer started
+# it — a hand-typed `systemctl start`, or an installer enabling units — and the honest answer then is
+# that the question is not this script's business. Without this guard, `hooks/postinstall` running
+# `enable --now` over the units it installs would run a rollback check in the middle of an update,
+# with daemons legitimately mid-restart.
+MAX_UPTIME=600
+
+RESCUE="${ROBOT_RESCUE:-/usr/local/sbin/robot-rescue}"
+UPTIME_FILE="${ROBOT_UPTIME_FILE:-/proc/uptime}"
+
+DRY_RUN=
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --dry-run) DRY_RUN=1 ;;
+        -h|--help)
+            cat <<'USAGE'
+usage: robot-boot-check [--dry-run]
+
+Decide whether the booted release brought its daemons up, and hand over to robot-rescue if not.
+Run once per boot by robot-boot-check.timer. See docs/design/boot-recovery-net.md.
+
+  --dry-run   report the verdict, and do not invoke robot-rescue
+
+Exit: 0 nothing to do or handed over, 2 declined, 1 something went wrong.
+USAGE
+            exit 0
+            ;;
+        *)
+            echo "robot-boot-check: unknown argument: $1" >&2
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+say() {
+    echo "robot-boot-check: $*" >&2
+    command -v logger >/dev/null 2>&1 && logger -t robot-boot-check "$*"
+    return 0
+}
+
+# Seconds since boot, or empty when there is nothing to read it from — which is not a reason to
+# refuse to run, only a reason not to enforce the guard.
+uptime_secs() {
+    [ -r "$UPTIME_FILE" ] || return 0
+    cut -d' ' -f1 < "$UPTIME_FILE" | cut -d. -f1
+}
+
+up="$(uptime_secs)"
+if [ -n "$up" ] && [ "$up" -gt "$MAX_UPTIME" ]; then
+    say "up for ${up}s, which is well past the boot deadline; this is not a boot check.
+  Nothing done. To act anyway, decide for yourself and run: robot-rescue --dry-run"
+    exit 2
+fi
+
+# One property per call. `systemctl show -p A -p B` prints them in systemd's own order rather than
+# the order asked for, which makes a two-line parse quietly wrong the day that order changes.
+property() {
+    # $1 property, $2 unit
+    systemctl show -p "$1" --value "$2" 2>/dev/null || true
+}
+
+failed=""
+for unit in $MEMBERS; do
+    state="$(property ActiveState "$unit")"
+    restarts="$(property NRestarts "$unit")"
+
+    # An unloaded unit answers with an empty string for both. Treated as zero rather than special
+    # cased: it then fails both conditions below, which is the answer we want anyway.
+    case "$restarts" in
+        ''|*[!0-9]*) restarts=0 ;;
+    esac
+
+    if [ "$state" = failed ] || [ "$restarts" -ge "$MAX_RESTARTS" ]; then
+        say "${unit} did not come up (state=${state:-unknown} restarts=${restarts})"
+        failed="${failed}${failed:+, }${unit} (${state:-unknown}, ${restarts} restarts)"
+    else
+        say "${unit} ok (state=${state:-unloaded} restarts=${restarts})"
+    fi
+done
+
+if [ -z "$failed" ]; then
+    say "every daemon came up; nothing to do"
+    exit 0
+fi
+
+if [ -n "$DRY_RUN" ]; then
+    say "would hand over to robot-rescue because: ${failed}"
+    exit 0
+fi
+
+[ -x "$RESCUE" ] || {
+    say "no rescue at ${RESCUE}, so there is nothing to hand over to.
+  The board is running a release whose daemons did not start: ${failed}"
+    exit 1
+}
+
+# The rescue owns every remaining decision — whether a golden exists, whether `current` is already
+# golden, whether a previous attempt already tried this. It exits 2 when it declines, which is not a
+# failure of this check: the question was asked and answered.
+say "handing over to robot-rescue: ${failed}"
+"$RESCUE" --reboot --because "boot check: ${failed}" || {
+    status=$?
+    [ "$status" = 2 ] && exit 0
+    exit "$status"
+}

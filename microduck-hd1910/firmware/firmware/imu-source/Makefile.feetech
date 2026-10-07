@@ -1,0 +1,56 @@
+# Independent native build: NO Dynamixel objects, build directory or targets.
+PROJECT := imu_to_feetech_ReVA_FT6_SYNC15_UART_IRQ_v1
+BUILD := build-feetech-ft6
+TOOLCHAIN ?= arm-none-eabi-
+CUBE ?= ../third_party/STM32CubeG0
+CMSIS_CORE ?= $(CUBE)/Drivers/CMSIS/Core/Include
+CMSIS_DEVICE ?= $(CUBE)/Drivers/CMSIS/Device/ST/STM32G0xx
+CC := $(TOOLCHAIN)gcc
+OBJCOPY := $(TOOLCHAIN)objcopy
+SIZE := $(TOOLCHAIN)size
+HOST_CC ?= cc
+CPU_FLAGS := -mcpu=cortex-m0plus -mthumb
+CFLAGS := $(CPU_FLAGS) -std=c11 -Os -g3 -ffunction-sections -fdata-sections \
+          -Wall -Wextra -Werror -DSTM32G031xx -DFEETECH_NATIVE \
+          -Iinclude -Ivendor/lsm6dsv16x -I$(CMSIS_CORE) -I$(CMSIS_DEVICE)/Include
+APP_SOURCES := src/ft_protocol.c src/ft_imu.c src/ft_fast_sync.c src/ft_led_status.c src/main.c vendor/lsm6dsv16x/lsm6dsv16x_reg.c
+STARTUP := $(CMSIS_DEVICE)/Source/Templates/gcc/startup_stm32g031xx.s
+SYSTEM := $(CMSIS_DEVICE)/Source/Templates/system_stm32g0xx.c
+OBJECTS := $(patsubst %.c,$(BUILD)/%.o,$(APP_SOURCES)) $(BUILD)/system_stm32g0xx.o $(BUILD)/startup_stm32g031xx.o
+LDFLAGS := $(CPU_FLAGS) -Tlinker/STM32G031F8PX_FLASH.ld -Wl,--gc-sections,-Map=$(BUILD)/$(PROJECT).map --specs=nano.specs --specs=nosys.specs
+.DEFAULT_GOAL := feetech
+.PHONY: all feetech test-feetech
+all: feetech
+feetech: test-feetech $(BUILD)/$(PROJECT).bin
+
+$(BUILD)/test_feetech: tests/test_feetech.c src/ft_protocol.c src/ft_imu.c
+	@mkdir -p $(dir $@)
+	$(HOST_CC) -std=c11 -O2 -Wall -Wextra -Werror -Iinclude $^ -o $@
+
+$(BUILD)/test_led_status: tests/test_led_status.c src/ft_led_status.c
+	@mkdir -p $(dir $@)
+	$(HOST_CC) -std=c11 -O2 -Wall -Wextra -Werror -Iinclude $^ -o $@
+
+$(BUILD)/test_fast_sync: tests/test_fast_sync.c src/ft_protocol.c src/ft_imu.c src/ft_fast_sync.c
+	@mkdir -p $(dir $@)
+	$(HOST_CC) -std=c11 -O2 -Wall -Wextra -Werror -Iinclude $^ -o $@
+
+test-feetech: $(BUILD)/test_feetech $(BUILD)/test_led_status $(BUILD)/test_fast_sync
+	./$(BUILD)/test_feetech
+	./$(BUILD)/test_led_status
+	./$(BUILD)/test_fast_sync
+
+$(BUILD)/$(PROJECT).elf: $(OBJECTS) linker/STM32G031F8PX_FLASH.ld
+	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	$(SIZE) $@
+$(BUILD)/$(PROJECT).bin: $(BUILD)/$(PROJECT).elf
+	$(OBJCOPY) -O binary $< $@
+$(BUILD)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+$(BUILD)/system_stm32g0xx.o: $(SYSTEM)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+$(BUILD)/startup_stm32g031xx.o: $(STARTUP)
+	@mkdir -p $(dir $@)
+	$(CC) $(CPU_FLAGS) -x assembler-with-cpp -c $< -o $@

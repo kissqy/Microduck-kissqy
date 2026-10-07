@@ -1,0 +1,55 @@
+# Build outputs and local environments
+target/
+.venv/
+venv/
+node_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+/.cache/
+.build/
+/out/
+/dist/
+/release-assets/
+
+# Local credentials and private configuration
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+id_rsa
+id_ed25519
+known_hosts
+credentials.json
+connection.json
+zero_connection.json
+remote_connection.json
+remote_server_connection.json
+server.json
+server.log
+
+# Training state; keep shipped JSON specifications and example recipes
+/training-console/computer.json
+/training-console/profile.json
+/training-console/presets.json
+/training-console/environments.json
+/training-console/recipe.json
+/training-console/recipes.json
+/training-console/recipe-before-*.json
+/training-console/training-queue.json
+/training-console/runs/
+/training-console/logs/
+/training-console/exports/
+/training-console/ssh-password-client/
+/training-console/wsl-ssh-test/
+*.pt
+*.pth
+*.ckpt
+
+# Editor/OS local state
+.DS_Store
+Thumbs.db
+*.swp

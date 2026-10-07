@@ -1,0 +1,498 @@
+# robotd — per-robot parameters.
+#
+# Installed to /etc/robot/robotd.toml. Mostly read once at startup and not watched, so
+# mostly a change needs a restart — of the daemon that reads the section, which is not
+# always robotd: [media] and [duck_detector] are mediad's and [head_imu] is tofd's. The two
+# exceptions: padd re-reads [pad_imu_head_control] a second after the file changes, and robotd
+# re-reads [policy] when asked. `robotctl configure` knows which is which and offers it
+# (docs/design/robotd-design.md §4.2).
+#
+# It lives here, and not under /opt/robot/daemon/releases/<ver>/, on purpose: this is
+# per-robot configuration rather than a shipped default, so it must survive an update
+# *and* a rollback (docs/design/architecture.md §3). The installer never overwrites it.
+#
+# Every value below is the built-in default. The file may be deleted entirely — an
+# unprovisioned board comes up on these same numbers rather than refusing to start, which
+# is far easier to diagnose remotely than a daemon that will not run.
+
+[bus]
+# Serial port the 15 servos and the imu_to_dxl board share. /dev/ttyS2 is the Radxa
+# Zero 3W's wiring; a board wired differently can also be overridden per-invocation with
+# `robotd --port`, which is the dev escape hatch rather than the thing to edit here.
+port = "/dev/ttyS2"
+
+# Read the bus with fast sync read (protocol 2.0 instruction 0x8A) instead of a plain sync
+# read. The 16 devices append their answers to one status packet rather than each sending
+# its own, so the bus turns around once per tick instead of 16 times.
+#
+# Turn it OFF for a board whose firmware predates the instruction: XL330 needs v46 or newer,
+# and the imu_to_dxl board has to implement it too. There is no half-working version of
+# getting this wrong — a device that does not implement 0x8A does not answer, so every read
+# fails and the journal fills with `bus read failed`. That is the symptom to match against
+# this line. Needs a robotd restart.
+# fast_sync_read = true
+
+# Every value below that is commented out shows the built-in default. LEAVE IT COMMENTED
+# unless this robot genuinely needs a different value: install.sh copies this file to
+# /etc/robot/robotd.toml once and never overwrites it, so an uncommented value is frozen on
+# the board forever while releases move on. That is exactly how a fleet ended up standing at
+# kP 120 while the release default said 160.
+
+[control]
+# Control loop rate, Hz.
+#
+# 50 is inherited from the prototype, where it was chosen on a Raspberry Pi Zero 2W. It
+# has never been re-derived on the Radxa. Before trusting it, measure: `bench_dynamixel_bus`
+# in microduck_runtime reports achieved rate, jitter, bus utilisation and error counts at a
+# given rate, and the loop's own five-minute summary reports the same from inside robotd.
+hz = 50
+
+# Per-tick EMA smoothing on incoming commands: `cmd += alpha * (target - cmd)`. The
+# prototype's `--cmd-alpha` / `--head-alpha` — a stick snap becomes a ramp the gait can
+# follow. 1.0 is pass-through. `cmd_alpha` covers the velocity twist; `head_alpha` covers
+# head targets and the body pose.
+# cmd_alpha = 0.2
+# head_alpha = 0.2
+
+# Whether the state stream carries measured joint velocity and load — `velocities` and
+# `currents_ma` on `robot.state`. The servos report both in the same twelve-byte read as
+# position, so the bus cost is zero; what it costs is frame size, about 10-12%, or +15 to
+# +19 KB/s at 50 Hz to a subscriber taking every tick.
+#
+# Turn it off and both blocks are absent from the frame — which is exactly what a daemon
+# predating them sends, and is not the same as reporting zero. Nothing in this daemon reads
+# them back, so off costs the robot nothing but the information.
+# publish_velocity_and_load = true
+
+[update_gate]
+# What decides `healthy`, and therefore what the update system rolls back on.
+#
+# This is the whole point of the daemon in its current form: the updater's auto-rollback is
+# only meaningful if that verdict is a real measurement. A loop running at 60% of target is
+# alive, answers every request, and is badly broken — these three thresholds are what
+# distinguish that from a working robot.
+#
+# Named `update_gate` rather than `health` because `robot.health` reports much more than
+# this: battery, motor temperature, loop and bus counters. None of those may reach a verdict
+# — a release must never be rolled back for the state of the board it landed on — so none of
+# them is configured here.
+
+# Achieved rate floor. Below this, unhealthy. 45 is 90% of the default 50 Hz: loose enough
+# not to trip on one slow tick, tight enough that a loop dropping every tenth cycle is not
+# called healthy. Raise it in step with `control.hz`.
+# min_achieved_hz = 45.0
+
+# How many periods may pass with no tick at all before the loop counts as WEDGED. This is
+# what turns a hung control thread into an honest "unhealthy" instead of a socket that
+# keeps answering "healthy" on the strength of one tick it managed an hour ago.
+#
+# It detects a dead loop, not a slow one — min_achieved_hz above owns degradation. Keep the
+# two apart. This was originally 3 (60 ms at 50 Hz), which ordinary scheduler jitter on a
+# busy board exceeds routinely; a health check that trips on jitter rolls back good
+# releases. 25 periods is 500 ms: a loop silent that long is genuinely gone.
+# stall_periods = 25
+
+# Consecutive failed bus reads tolerated. One dropped transaction is ordinary on a serial
+# bus; a run of them means the bus is gone, and a robot that cannot read its own joints is
+# not healthy whatever rate the loop is spinning at.
+# max_consecutive_errors = 10
+
+[policy]
+# Whether to load a policy at all.
+#
+# `false` runs the loop and holds whatever pose the robot started in, and stays healthy
+# doing it. That is a legitimate configuration, not a degraded one: it is the safest thing
+# to be doing while hammering install / rollback / power-cut cycles at a bench, because
+# nothing falls over when a deliberately broken release lands.
+#
+# It is deliberately distinct from a policy that was wanted and could not be loaded — that
+# reports unhealthy, so the updater rolls the release back. `robotd --no-policy` sets this
+# from the command line.
+enabled = true
+
+# Drive mode: "walk" (legs, the default) or "roller". The mode changes which policies load
+# AND the tuning defaults below — every value left unset resolves per mode, so switching a
+# robot to the roller is this one line plus `systemctl restart robotd`. The roller preset
+# is the prototype launcher's, rebased on the alpha defaults as its installer now is:
+# roller.onnx as the locomotion policy, the crouch on the ground-pick trigger (3.0 s, 0.8),
+# action_scale 0.8 — and everything else as walking has it: sit/stand, kicks, roulade, the
+# trained low-pass. Only the standing network stays out: the prototype loads it in roller
+# mode and then never runs it, standing transitions being skipped on wheels.
+mode = "walk"
+
+# Policy files. Unset means the mode's default in /opt/robot/policies/current, which is
+# deliberately *outside* the release: a gait retrain should not need a daemon release, and a
+# daemon fix should not re-ship six megabytes of unchanged weights. Until something publishes a
+# policy bundle, the release still carries the files and seeds that directory from them
+# (scripts/seed-policies.sh) — a bootstrap that stops the moment anything installs a real set.
+#
+# You do not have to edit these by hand. `robotctl policy load <slot> <file>` writes the key and
+# swaps the network live; `robotctl policy reset [slot]` removes it again. The literal "none"
+# disables an optional slot outright.
+#
+# All must be 61-input, 14-output: every alpha policy is obs[1,61] -> actions[1,14], and
+# robotd checks that at load rather than discovering it mid-stride. (microduck_runtime also
+# ships a 51-D family — legacy 3-value command — which robotd refuses at load with
+# "observation width is 51, expected 61".)
+#
+# Walk-mode defaults, spelled out, all under /opt/robot/policies/current/:
+# walk        = "velstand.onnx"          walks on a twist, stands still at zero command
+# stand       = "none"                   velstand stands on its own; "alpha_stand.onnx" is
+#                                        the old standing + body-pose network, still in the set
+# sitstand    = "alpha_sitstand.onnx"    sit <-> stand, posture flag
+# ground_pick = "alpha_ground_pick.onnx" A-button pick
+# kick_left   = "ball_kick_left.onnx"
+# kick_right  = "ball_kick_right.onnx"
+# roulade     = "roulade.onnx"           X-button forward roll
+
+# Requires ONNX Runtime on the board. It is dlopened, not linked, so a missing library is
+# a startup failure rather than a build one — robotd reports it through robot.health and
+# holds its pose. scripts/install.sh installs it; ORT_DYLIB_PATH overrides where to look.
+
+# Scales raw policy output into a joint offset. Unset resolves per mode: 0.9 walking (the
+# prototype's current alpha default), 0.8 roller.
+# action_scale = 0.9
+
+# The standing policy is trained to be applied whole.
+# standing_action_scale = 1.0
+# Standing runs softer, at this fraction of `gain`. The prototype's --standing-kp-ratio.
+# standing_gain_ratio = 0.8
+# Position P gain while running.
+# gain = 200
+
+# First-order low-pass on the head and leg joint targets, as a blend factor in (0, 1].
+# 1.0 is pass-through (off). Unset resolves per mode: 0.5 / 0.7 walking — the values the
+# alpha policies are TRAINED with (mjlab ACTION_LOW_PASS_{HEAD,LEG}_ALPHA); they must match
+# training or transfer degrades. Both modes: the rebased roller preset keeps them too.
+# head_lowpass = 0.5
+# legs_lowpass = 0.7
+
+# The ground pick: one cycle length in seconds, its action scale, and a gain multiplier while
+# it runs. Unset period/scale come from the installed set's manifest — the phase-encoded entry
+# tagged with this mode (4.0 / 1.0 for the walking pick, 5.0 / 0.8 for the roller crouch, as
+# they are trained) — and, on a board whose set predates the manifest, from the prototype's
+# 4.0 / 1.0 walking, 3.0 / 0.8 roller. The move hands back at the manifest's `end_phase`
+# (70% of the cycle); there is no key for that. The sitstand's rise and settle times come from
+# the set the same way.
+# ground_pick_period = 4.0
+# ground_pick_action_scale = 1.0
+# ground_pick_gain_ratio = 1.0
+
+# How long a kick window stays on the kick network, seconds.
+# kick_duration = 0.5
+
+# One roulade — one forward roll, seconds (the prototype's measured single-roll time).
+# Holding X chains rolls of this length; the roll in flight always completes. The scale
+# and gain multiplier apply while a roll runs — 1.0 means full walking values, which is
+# what the roll is trained against.
+# roulade_duration = 1.0
+# roulade_action_scale = 1.0
+# roulade_gain_ratio = 1.0
+
+# Scale actions with battery voltage: effective scale = action_scale * (nominal / measured
+# EMA, clamped 6.0..9.5 V). The servos' effective kP tracks their supply, so this holds the
+# robot's response steady as the pack sags. On by default.
+# voltage_adapt = true
+# nominal_voltage = 7.4
+
+[safety]
+# The fall verdict: is the robot down? On projected gravity in the trunk frame — upright
+# reads about -1.0 on z, a robot on its side reads near 0. Debounced, because the impulse
+# from a firm footfall would otherwise read as a fall.
+#
+# It is a REPORT and nothing else. It shows in `robotctl monitor` and the state stream, and
+# it refuses nothing: a fallen robot can still be enabled, init'd, driven and sent skills,
+# because being down is exactly when someone needs to do those things. What the daemon
+# *does* about a fall is limp_fall, further down, and that runs off its own detector.
+# fall_gravity_z = -0.5
+# fall_debounce_ms = 200
+
+# How long the robot goes without a velocity intent before it stops.
+#
+# Stop, not limp: losing contact with a client should leave a biped standing, because
+# standing is its safe state. Losing balance is the other event, and limp_fall below is
+# what answers it — this one only ever zeroes the velocity.
+# deadman_ms = 500
+
+# The gain limp-fall yields at — low enough to give way rather than fight the floor.
+# gain_limp = 50
+
+# Land soft, then stand up from a still robot instead of a thrashing one.
+#
+# The standing policy is a good stand-up-er and a bad faller: from a still robot, face down
+# or face up, it gets back on its feet cleanly; out of a dynamic fall it tries and fails and
+# tries again, at walking gain, against the floor, and the motors pay for every attempt.
+#
+# With this on, a fall is taken away from the policy entirely. The moment the robot is seen
+# to be going down — before it lands — the gains drop to `gain_limp` and the joints follow
+# wherever they are pushed, so the robot arrives limp. Once it has stopped moving it is
+# ramped back to the standing pose over `limp_fall_pose_ms`, and only then handed back: what
+# the standing policy sees is a still robot in a known posture, which is the case it is good
+# at. The hand-back is a hand-back and nothing more — with nobody driving, command magnitude
+# selects the standing network, and that is the stand-up.
+#
+# The only thing the daemon does about a fall. With it off, a fall changes nothing: the
+# policy keeps driving and the humans stay in charge, which is the prototype's behaviour.
+# OFF by default: the hand-back at the end is to the standing network, and the default
+# configuration (velstand as `walk`, `stand` unset) loads none. Set it to true on a robot
+# that runs a standing policy.
+# limp_fall = false
+
+# When a fall counts as started. This is the whole feature, and both ways of getting it
+# wrong are real: too early and the robot limps out of leans it would have walked off —
+# every false positive is a fall the robot *caused*, strictly worse than a stiff landing —
+# and too late and it lands stiff anyway and the mode bought nothing.
+#
+# The test is not a position, because by the time gravity reaches the `fall_gravity_z`
+# above, the robot is on the floor. It is a projection: projected gravity rotates with the
+# trunk, so its rate is exactly `-(w x g)` from the gyro in the same 12-byte IMU block, and
+# extrapolating that says where gravity will be `limp_fall_lookahead_ms` from now. Trigger
+# when the robot is *already* tilted past `limp_fall_tilt_z` (about 26° — ordinary walking
+# does not reach it, which is what keeps footfalls and shoves out), is still tipping over
+# rather than recovering, and the extrapolation lands past `limp_fall_predict_z`.
+#
+# The debounce is three ticks at 50 Hz: longer than a footfall impulse, short enough to
+# leave most of the fall to limp through. `robotctl monitor` shows gravity live, and the
+# state stream's `safety.limp` and the `limp_fall` / `limp_pose` policy labels are what
+# tuning is read from.
+# limp_fall_tilt_z = -0.90
+# limp_fall_predict_z = -0.5
+# limp_fall_lookahead_ms = 300
+# limp_fall_debounce_ms = 60
+
+# The landing, and what happens after it. The limp ends when the robot has gone still —
+# read from the gyro rather than timed, because a stumble and a fall off a table take very
+# different times to finish — or at `limp_fall_max_ms` whatever the gyro says, so a robot
+# held in someone's hands does not stay limp forever.
+#
+# The pose ramp then travels the joints back to standing. Its gain is not the limp gain:
+# they have to actually move across the floor. 160 is the softened standing gain. 0.6 s was
+# settled on at the robot: a full second is mostly dead time before the stand-up, since the
+# joints travel unloaded rather than lifting the robot, and 0.3 also worked — this keeps
+# some margin over it.
+# limp_fall_still_rate = 1.0
+# limp_fall_still_ms = 200
+# limp_fall_max_ms = 1500
+# limp_fall_pose_ms = 600
+# limp_fall_pose_gain = 160
+
+# Sit down gracefully and power the machine off when the battery EMA reaches the empty
+# floor (6.6 V — the same value the battery percentage maps to 0%). The EMA moves over
+# ~10 s, so a load sag cannot trip it; reaching 6.6 requires a genuinely spent pack.
+# battery_empty_shutdown = true
+
+[audio]
+# The robot's voice (the seeded synth bank under /var/lib/robot/sounds — rendered by the
+# release's postinstall, `sounds ensure-bank`) and its ear (the petting classifier on the
+# onboard mic). All optional equipment: a board without the codec walks identically and
+# stays quiet, and nothing here reaches a health verdict.
+# enabled = true
+
+# ALSA playback device — the TLV320AIC3104 codec that setup-board.sh brings up. The mic
+# worker captures from "<device>,0".
+# device = "plughw:aic3104"
+
+# Where the voice bank lives.
+# bank = "/var/lib/robot/sounds"
+
+# Quack once as the control loop comes up — on a headless board that greet is the audible
+# "robotd is running". Turn it off (and keep the triggers, and the mic) if you restart the
+# daemon often enough to be tired of it.
+# greet = true
+
+# Listen for petting on the onboard mic and coo about it. Unset means off — the always-on
+# coo wore thin — so this is an opt-in. The model ships in the release
+# (models/pet_detect.onnx); thresholds are the classifier's hysteresis (enter above, leave
+# below).
+#
+# The mic is read whenever [audio] is on, but the classifier only runs on audio that stands
+# out from the room: in a quiet one this costs nothing beyond the envelope the ambient-sound
+# watcher is measuring anyway.
+# pet_detect = true
+# pet_model = ".../current/models/pet_detect.onnx"
+# pet_enter_threshold = 0.95
+# pet_exit_threshold = 0.85
+
+[theremin]
+# The ToF theremin: a hand's distance in front of the beak becomes a note, and the mouth
+# opens with the pitch. Picked up with `robotctl theremin` (or `robot.theremin`) — this
+# switch is only whether it *can* be, so a duck with a known-bad ToF can refuse outright.
+#
+# **Off by default.** It is a party trick, and a duck nobody asked to play one has no
+# business holding a subscription to the depth stream; `robotctl theremin` on a duck that has
+# not opted in says so and names this key. Turning it on does not start anything by itself.
+#
+# Nothing else changes with it: `tofd` runs and polls the sensor either way, so
+# `robotctl monitor`'s ToF grid works the same whichever way this is set.
+#
+# Needs [audio] on: a theremin with no voice is a mouth opening for no reason.
+# enabled = false
+
+# tofd's depth stream.
+# socket = "/run/tofd/tof.sock"
+
+# The playable band, metres. Below near_m the sensor's own cover-glass crosstalk invents
+# short returns; past far_m the returns are the noisy ones, and they would be the low notes.
+# near_m = 0.10
+# far_m = 0.70
+
+# Fewest zones that make a hand. Two, because at the far end of the band a hand is a handful
+# of zones and only some of them will carry a usable status.
+# min_zones = 2
+
+# **The field that decides how far the instrument reaches.** ST documents 5 and 9 as "range
+# valid", and a build believing only those stops seeing a hand at about 30 cm: past that a
+# moving hand comes back as 4 or 13 — consistency failed, sigma too high — carrying a
+# distance that is perfectly good for a pitch. 6, 10 and 12 are the other usable-in-practice
+# codes (12 is "blurred by a sharp edge", which is what the edge of a hand is). 255 is the
+# sensor saying it looked and found nothing, and is never in this list.
+#
+# Add codes if the reach is short; remove them if it plays phantom notes at empty air.
+# `robotctl theremin`'s last column is the per-code count for the live frame, with a * on the
+# ones this list believes — that is how you tune it.
+# statuses = [4, 5, 6, 9, 10, 12, 13]
+
+# How long a note is held through a sensor dropout, milliseconds. This is what keeps a zone
+# flickering between usable and not from chopping a note into gravel. Too long and a hand you
+# withdrew keeps sounding.
+# hold_ms = 250
+
+[duck_detector]
+# Finding other Microducks in the head camera. Read by `mediad`, not `robotd` — the frames are on
+# `mediad`'s pipeline and perception belongs next to the sensor — but the switch lives here because
+# this is the file `robotctl configure` edits and a robot has one place for its settings.
+#
+# **Off by default.** A robot nobody has asked to look for ducks should not pay ~60 ms of work
+# every half second for it.
+# enabled = true
+
+# Which model, and therefore which processor: a `.rknn` runs on the NPU, an `.onnx` on the CPU.
+# Unset means the installed set — /opt/robot/detector/current/duck_detect.rknn for the NPU,
+# duck_detect.onnx for the CPU — NPU first, falling through to the CPU on a board whose NPU is
+# switched off in its device tree, which is how Armbian ships the Radxa Zero 3. `sudo sh
+# /opt/robot/daemon/current/scripts/setup-npu.sh` turns it on, and needs a reboot.
+#
+# That set comes from the Hub (pollen-robotics/microduck-duck-detector, trained in
+# pollen-robotics/duck_detector), the way the official policy set does: the release's postinstall
+# hook seeds it once, `robotctl duck-detector check` asks whether a newer one exists, and
+# `sudo robotctl duck-detector update` installs it and restarts mediad onto it. A retrain is a tag
+# there, not a daemon release. This key is for a model of your own.
+# model = "/home/microduck/my_detector.rknn"
+
+# Looks per second. **2 is a thermal limit, not a preference**: flat out this reaches 95 °C on a
+# Radxa Zero 3 and the CPU throttles to 408 MHz, which is a robot that walks badly to see well.
+# hz = 2.0
+
+# Confidence a detection needs, on this model's own scale. The shipped model is quantised to INT8
+# and its scores are not probabilities — every real detection reads about 1.3, and nothing else
+# reads anything at all, because the output tensor shares one quantisation scale with the box
+# coordinates. So this is a yes/no threshold rather than a dial.
+# threshold = 0.35
+
+[head_imu]
+# The BMI088 on the head module, read by tofd and served as `head_imu.stream` — gyro,
+# acceleration and a Madgwick orientation, for the mapping work.
+#
+# **Off by default, and this is the whole section.** Reading it at 100 Hz costs ~3.5-4.5% of a
+# core on this SoC, and a bench that takes the loop apart says none of that is fixable: the
+# wakeups are 0.7 points of it, the fusion 0.3, and the rest is the two I²C transactions a
+# sample takes — which is what a gyro and an accelerometer sample *is*. Nothing subscribes to
+# the stream yet, so every duck was paying it from boot for nobody.
+#
+# Turn it on when something reads it. `tofd --imu-hz 50` is the other lever: the cost is linear
+# in the rate. Depth is unaffected either way — tofd ranges the ToF regardless, so
+# `robotctl monitor`'s grid does not depend on this.
+#
+# A subscriber to `head_imu.stream` while this is off gets the reason, naming this key, rather
+# than the silence a board with no sensor fitted gives.
+# enabled = false
+
+[chorale]
+# Several ducks singing one piece in four parts, found over Bluetooth with no shared clock: the
+# conducting duck's beat counter is the timebase, and the parts are worked out from each duck's own
+# vocal register. `robotctl chorale` starts it looking for company.
+#
+# **Off by default, and this is the whole section.** A chorale is not only a sound — it moves the
+# mouth and it moves the head. A robot that started animating because another robot walked into the
+# room would be doing motion nobody asked for, in someone's living room, and two people's ducks in a
+# café have no business pairing up. Off also means *invisible* rather than politely declining: a
+# duck that has not opted in puts nothing on the air at all.
+#
+# Needs [audio] on, since a duck with no voice has nothing to sing with.
+# accept = false
+
+[media]
+# What mediad streams: the camera, and at what quality. Read by mediad at startup, so a change
+# here needs `systemctl restart mediad` — not robotd. `robotctl configure` offers the right one.
+#
+# These were flags on mediad.service's ExecStart line, which the release installer rewrites: the
+# only supported way to change one was a systemd drop-in, and nobody reaches for a drop-in to
+# answer "why is the video soft?".
+
+# Where the video comes from: "camera" or "test".
+#
+# "test" streams a test pattern, which is what a board with no camera wants — the pipeline still
+# starts, so the WebRTC *control* channel still exists. It is bundled with the video track, so a
+# pipeline that will not start costs both. A name rather than a boolean because "camera = false"
+# does not mean "no video", it means "synthetic video", and nothing in the old key said so.
+#
+# The pattern ignores `quality` and runs at 256x144@5: it exists to make the session reachable,
+# and drawing a 720p30 one in software cost five times what the camera it stands in for does.
+# source = "camera"
+
+# Frame size and rate, as one name: 1080p30, 720p30, 720p15 or 360p30.
+#
+# One key rather than a width, a height and an fps, because they do not vary independently — a
+# rung the capture path cannot produce is a mediad that will not start, and every rung here is
+# 16:9 so that "smaller" never means "cropped".
+#
+# 720p30 is the rung every measurement in mediad was taken at: 29.3 fps off the ISP main path,
+# with a capture format and a buffer depth that took three bench sessions to find. The sensor is
+# pinned to a 1920x1080 mode that runs at 30 and the ISP scales down from it, so 1080p30 asks for
+# no scaling at all — what is unmeasured is whether the capture path and the encoder hold 30 fps
+# at 2.25x the pixels. A rung that does not hold runs slower rather than failing.
+# quality = "720p30"
+
+# Starting video bitrate, bits per second. Unset follows the quality — 4 Mb/s at 1080p30,
+# 2 Mb/s at 720p30, 1 Mb/s at 720p15, 800 kb/s at 360p30 — which is what almost every robot
+# wants. webrtcsink's congestion control moves from here, so it is a starting point rather than
+# a ceiling. The unit is bits: 2 Mb/s is 2000000, and a value below 100000 is refused as
+# somebody who meant kilobits.
+# bitrate = 2000000
+
+# Whether the send rate adapts to the link, and by what: gcc, homegrown or disabled.
+#
+# **A CPU setting as much as a network one.** The estimator is the largest single consumer in
+# mediad: with one peer connected, `rtpgccbwe` measures 7.6% of a core against v4l2src's 0.3% —
+# it works per packet, where capture works per DMABuf handle. `disabled` deletes that thread.
+#
+# What that costs is adaptivity, and it is not small: adapting the rate to the link is the whole
+# reason webrtcsink is handed raw video rather than pre-encoded H.264. On a link that stays good —
+# a robot one hop away on its own LAN — the estimator spends CPU discovering a ceiling it never
+# hits. On a link that degrades, it is what keeps a picture instead of a stall.
+#
+# `disabled` is also what makes `bitrate` above mean what it says: nothing moves it, so it is the
+# rate rather than a starting point. `homegrown` is webrtcsink's own sender-side heuristic —
+# cheaper than gcc, blunter than it.
+#
+# gcc is webrtcsink's own default, so this line changes nothing; it is here to be found.
+# congestion_control = "gcc"
+
+# ── Controller-IMU head control ─────────────────────────────────────────────────────────────
+#
+# Read by `padd`, not by `robotd`. Some pads carry an inertial unit — the "Pro Controller" Switch
+# clones do, an Xbox pad does not. With this on and such a pad connected, Y stops meaning "the
+# sticks pose the head" and means "the pad's tilt poses the head": the sticks keep driving, and
+# turning the pad in your hands turns the robot's head. Y again holds the head where it is, still
+# driving. A third press hands the head back to the pad from where the pad is *now* — its yaw is
+# a gyro's word alone and drifts, and re-centring on every re-entry is how you beat that without
+# a magnetometer. Off, or on a pad with no IMU, Y is what it always was.
+#
+# Not [head_imu], which is the IMU in the robot's head. This section was [imu_head] once; a file
+# still saying that loads, and `robotctl configure` renames it on its next save.
+# [pad_imu_head_control]
+# enabled = false
+
+# Head radians per pad radian. 1 follows the pad exactly; more turns a small wrist movement into
+# a large head movement. The head's own travel limit still applies.
+# gain = 1.0

@@ -1,0 +1,91 @@
+# robotd — the robot control daemon.
+#
+# Install to /etc/systemd/system/robotd.service.
+#
+# This is the unit `on_apply = { action = "restart", units = ["robotd"] }` restarts, and
+# whose readiness the update health gate waits on (docs/updater-design.md §8). Two
+# properties follow from that and must be preserved:
+#
+#   1. NO dependency on updaterd, in either direction. updaterd is the recovery path and
+#      must run when robotd cannot (docs/architecture.md §1.1); robotd must not wait on
+#      the updater to start controlling the robot.
+#   2. The socket must be group-readable by `robot`, because that is how updaterd — and
+#      later btd and the SDK — reach it. See `Group=` below.
+
+[Unit]
+Description=Robot control daemon
+# Target: Radxa Zero 3 (aarch64) running Armbian 26.2.x with the Debian 13 (Trixie)
+# userland. Nothing here needs anything newer than systemd 240.
+Documentation=file:///opt/robot/daemon/current/docs/architecture.md
+# No network dependency on purpose: the robot must stand up, hold its joints and answer
+# health with no connectivity at all. Only mediad's remote gateway needs the network.
+After=local-fs.target
+
+[Service]
+Type=exec
+ExecStart=/opt/robot/daemon/current/bin/robotd --socket /run/robotd.sock
+
+# Parameters come from /etc/robot/robotd.toml, which is robotd's default path and is not
+# named here on purpose: the file is optional, and a missing one means built-in defaults
+# rather than a daemon that refuses to start. Naming it with --params would make it
+# mandatory. See deploy/robotd.toml.
+
+# --unhealthy and --busy are deliberately absent. They exist to exercise the updater's
+# rollback path on a bench robot and are added by hand for that, never shipped: a robot
+# started with --unhealthy reverts every update it is offered.
+
+# Root for now, because motor control needs the i2c/spi/gpio character devices. This
+# should tighten to a dedicated user plus device ACLs once M4 establishes which devices
+# are actually touched — a narrower user written today would be a guess.
+#
+# `Group=robot` is load-bearing: the socket inherits the process's primary group, so this
+# is what makes robotd's 0660 socket mean "the robot group" rather than "root only".
+# Without it, updaterd (running as root) would still reach it but btd and the SDK would
+# not, and the failure would look like an unhealthy robot rather than a permission error.
+#
+# The `robot` group must exist or the unit fails to start — see
+# updater/systemd/sysusers.d/robot.conf, installed alongside.
+User=root
+Group=robot
+
+# Restart=always, not on-failure: a control daemon that exited cleanly still leaves the
+# robot uncontrolled, so there is no exit status that should mean "stay down".
+#
+# RestartSec is short because the update health gate is waiting on this process to come
+# back; a long delay would eat the gate's budget and revert a healthy release. It is not
+# zero, so a robotd that cannot start does not spin.
+#
+# A robotd that crash-loops through an update is caught by the boot counter rather than
+# by systemd (§8.3): the in-process gate cannot see a process that dies after passing it.
+Restart=always
+RestartSec=2s
+
+# Modest hardening. Deliberately NOT ProtectSystem=strict or PrivateDevices: this process
+# exists to talk to hardware.
+NoNewPrivileges=yes
+ProtectKernelTunables=yes
+RestrictSUIDSGID=yes
+
+# stderr → journal; level via RUST_LOG.
+#
+# `info` is safe to ship: the control loop logs one summary line every five minutes and
+# nothing per tick. At 50 Hz a per-tick line would be ~4.3M entries a day, which under
+# journald's size cap is what *evicts* the logs support actually needs.
+#
+# The startup identity line (version, revision, exe path) is at `warn`, so it survives even
+# RUST_LOG=warn. See deploy/README.md for log retention.
+Environment=RUST_LOG=info
+StandardOutput=journal
+StandardError=journal
+
+# Where this daemon publishes what it is running: /run/robotd/identity.json, read by
+# `robotctl health` and by updaterd's startup check.
+#
+# `RuntimeDirectory=` rather than a path this unit is granted: it is the only mechanism that both
+# creates the directory owned by this unit's User= *and* survives ProtectSystem=strict, which
+# otherwise leaves the whole filesystem read-only. systemd also removes it when the unit stops, so a
+# stopped daemon cannot leave behind an identity claiming to be running.
+RuntimeDirectory=robotd
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,20 @@
+联合模型审计（仅输入文件及源码读取；未执行 checkpoint.pt）
+
+模型：Mjlab-VelStand-Rough-Backlash-MicroDuck，2560 并行，9600 次训练上限，导出 model_9599，50 Hz。
+ONNX SHA256：1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f
+接口：obs[1,61] -> actions[1,14]，单一无状态 MLP。图结构为一次 Sub/Div 观测归一化、4 个 Gemm、3 个 Elu。无老师身份、模式或起身完成标签，也没有图内动作缩放/滤波。26 个合成倾角探针均输出有限值，仅验证接口和推理可执行。
+
+训练动作：q_target = HOME + 1.0 * raw_action；头腿 EMA 禁用。下一帧 previous_action 是原始 ONNX 输出，不能用缩放/滤波后的目标替换。
+训练专家配置：bc_cfg.gate_tilt_deg=35.0；anchor_tilt_deg=25.0；gravity_slice=[3,6]。包内没有该专家适配类实现和两个老师权重，老师缓存路径不等于可验证的老师版本。恢复成功奖励还要求 up_z=0.09 m；这是仿真真实高度，实机脚支撑里程计不能冒充该测量。
+
+兼容性：新模型与 v145 当前 Walk 及 LB 老师的实际 HOME、14 动作关节顺序、29 关节定义/限位、观测定义、硬件标定来源数据、BAM 参数、P=5 和电气参数一致；BAM 只有临时路径不同。总质量仍0.82 kg。jaw_soft 惯量约1e-9量级数值差，其他身体定义相同；新包比旧包额外记录15个舵机碰撞几何。Walk 命令定义也完全相同。
+
+本版最终部署选择：按用户最终授权，联合模型在所有姿态下统一使用基础动作缩放0.9、头滤波0.5、腿滤波0.7。没有运行期老师身份判断，也没有35°/25°或其他倒地切档。参数放到与 ONNX SHA256 绑定的独立 deployment-execution.json（mode=uniform），原 ONNX、manifest、deployment-contract.json、deployment-profile.toml 等训练记录仍逐字节保留全1事实。若没有独立执行配置，联合模型用原训练1/1/1，不受旧全局0.7干扰。保留 raw previous_action，既有50 Hz内一次推理，无新增采集或网络任务。电压补偿沿用保存设置，因此这里的0.9是基础缩放，不保证最终有效倍率永远等于0.9。
+
+发布模型：新联合模型在 policies/walk 替换唯一 Walk，ID 为 1cbf8730eadd75a5704332c9f3c10f60。旧14000轮 Walk 移到 test-data/walk-teacher14000 仅作数值回归资料，不在固件模型列表；独立 LB11000 和其他动作保留。Python 导入适配已接受精确任务 Mjlab-VelStand-Rough-Backlash-MicroDuck 与 Walk 槽，执行配置拒绝错 SHA、错任务、错槽、未知或重复字段、非有限及越界数字。原训练 ZIP 重导入时保留已安装的独立执行参数。
+
+来源和边界：包中记录本地训练台 model_9599.pt 与 HD1910 适配版本R1.5.9；这是按固定官方训练配方自训的联合学生，不能把这份权重称为官方发布 velstand 原模型。上传包的 required_policy_settings 及 deployment-profile.toml 均为1/1/1；没有官方部署阶段切换记录。训练35°/25°仅决定BC损失的老师掩码，不能据此推导运行输出档位。本版统一0.9/0.5/0.7是明确的用户运行试验，不能保证实机步态不变。本审计没有真实Zero、真实Chromium或闭环物理仿真测试。
+
+详细证据、原文件哈希和字段位置见 joint-model-audit.json。
+
+补充：已读取与训练提交一致的官方 distill.py。其函数 fallen_mask_from_obs 先归一化重力，再以 -g.z < cos(门限) 判断；训练中起身专家作用于大于35°、行走老师作用于不大于25°、中间区域无BC老师约束。仅老师输入的twist被置零，联合学生部署指令不因此改写。本包的本地CheckpointedExpertPpo适配实现未附带，不能额外断言其实现细节。

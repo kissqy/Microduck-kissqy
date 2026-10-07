@@ -1,0 +1,45 @@
+本目录中当前五个自训练策略的许可
+
+仅相关作者对自训练权重和自有训练记录拥有并有权授权的部分适用下列条款。
+上游代码、配置、模型、几何及第三方权利均不受本条覆盖。此许可不撤销
+此前已经有效授予的权利；官方参考模型位于其他目录，不在此范围。
+
+个人非商业使用许可 / Personal Non-Commercial License
+版本 1.0 — 2026-10-07
+
+权利归本项目相应作者所有。本许可仅适用于本仓库 LICENSE 范围文件中
+明确列出的、由相关作者拥有并有权单独授权的原创内容。
+
+允许自然人以个人非商业目的学习、使用、修改及免费分享这些内容。
+分享源码、修改版或相应编译形式时，须附本许可、适用范围、作者署名、
+第三方声明及修改说明；不得移除本许可对这些原创内容的限制。
+公司或其他组织使用、商业使用、收费服务、随收费产品分发等用途，
+须事先取得相关权利人的书面许可。
+
+第三方代码、配置、模型、素材及其他已有明确许可的内容，继续适用
+各自原许可证。本许可不覆盖、缩减或撤销第三方权利，也不撤销此前
+已经有效授予的权利。对不拥有的权利，本项目不作授权承诺。
+
+内容按现状提供，在适用法律允许范围内不提供保证；相关作者不承担
+因使用这些内容造成的责任。本许可不授予商标权或官方背书。
+
+Rights remain with the respective authors. This license applies only to
+original material expressly identified in the repository's LICENSE scope
+and only to rights the authors are entitled to license separately.
+
+Natural persons may study, use, modify and share that material free of
+charge for personal, non-commercial purposes. Redistribution of source,
+modifications or corresponding compiled forms must retain this license,
+its scope, author attribution, third-party notices and notices of changes.
+Do not remove these restrictions from the covered original material.
+Organizational use, commercial use, paid services and distribution with
+paid products require prior written permission from the relevant holders.
+
+Third-party code, configurations, models, assets and material already
+subject to an express license remain governed by their original licenses.
+This license does not override, restrict or revoke third-party rights or
+rights previously validly granted. No rights not owned are purported granted.
+
+The material is provided AS IS, without warranties or liability to the
+extent permitted by applicable law. No trademark rights or endorsement
+are granted.

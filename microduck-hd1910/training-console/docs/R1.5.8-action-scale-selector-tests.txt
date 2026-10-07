@@ -1,0 +1,6 @@
+Request/API regression: 9 tests passed.
+Browser: 4K SCALE_SELECTOR_OK: .7/.9/1 selectable, polls/task switches preserve selection, request .7 persisted, saved resume mapping retained, no probes/JS errors
+
+Real CPU targets/deployment: SELECTED_07_09_10_REACH_REAL_TARGETS_AND_DEPLOYMENT_OK
+Ran 1 test in 11.803s
+OK

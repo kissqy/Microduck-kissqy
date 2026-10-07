@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "model_api": 1,
+  "obs_len": 61,
+  "action_len": 14,
+  "robot": {
+    "model": "microduck",
+    "hw_rev": 1,
+    "servos": "hd1910",
+    "control_hz": 50
+  },
+  "name": "velstand",
+  "kind": "perpetual",
+  "description": "沿用官方行走热启动、双教师和倒地课程；部署到 walk 槽统一控制。",
+  "entry_pose": "standing",
+  "command": {
+    "encoding": "constant",
+    "idle": [
+      0,
+      0,
+      0
+    ],
+    "twist": "vx / vy / yaw velocity",
+    "head": "neck pitch / head pitch / yaw / roll",
+    "body": "body pose command in official observation order"
+  },
+  "action_scale": 1.0,
+  "training": {
+    "task_id": "Mjlab-VelStand-Flat-MicroDuck",
+    "repo": "pollen-robotics/microduck_rl",
+    "commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "checkpoint": 17999,
+    "source_file": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/velstand/2026-10-03_23-01-52_console_20261003_230140_930925/model_17999.pt"
+  },
+  "target_firmware": "0.15.1",
+  "teacher_only": false,
+  "source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "task": "Mjlab-VelStand-Flat-MicroDuck",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/velstand/2026-10-03_23-01-52_console_20261003_230140_930925/model_17999.pt",
+  "model_origin": {
+    "engine": "official_0151",
+    "task": "Mjlab-VelStand-Flat-MicroDuck",
+    "baseline_pin": {
+      "revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+    },
+    "training_adapter_revision": "R1.5.4-viewer-policy-fix",
+    "friction_randomization": "official"
+  },
+  "export_source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "onnx_sha256": "5c019c3d3d2c490947f21974f394750671b0ec7b7a2d1e36734e82c8a3c9225b",
+  "deployment_verified": false,
+  "slot": "walk",
+  "duration_s": null
+}

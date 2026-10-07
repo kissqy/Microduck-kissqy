@@ -1,0 +1,14 @@
+[Unit]
+Description=GameSir Nova 2 Lite Bluetooth to Xbox input bridge
+After=bluetooth.service
+Before=padd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/gamesir-xboxd
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target
+

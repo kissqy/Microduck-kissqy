@@ -1,0 +1,57 @@
+[package]
+name = "robotctl"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Local CLI for the robot — currently the `update` namespace only"
+
+# Its own crate rather than a binary of `updater`, because its role is broader:
+# it will front `robotd` and other services too. Today it only implements
+# `robotctl update …`.
+#
+# Depends on `duck-ipc-proto` alone, not on `updater`. That was the point of extracting the
+# protocol: a support tool on the recovery path should not link the update engine's
+# http/tar/zstd/crypto tree, and structurally cannot now reach into engine internals
+# instead of going through the socket.
+[dependencies]
+duck-ipc-proto = { path = "../duck-ipc-proto" }
+semver.workspace = true
+clap = { version = "4.6.4", features = ["derive"] }
+# Shell completions, generated from the same `Cli` the parser uses, so they cannot
+# describe commands this binary does not have. Pure codegen over clap's own model —
+# no runtime, and nothing on the recovery path depends on it.
+clap_complete = "4.6.4"
+serde_json.workspace = true
+serde.workspace = true
+libc = "0.2.189"
+# Pure geometry (the ToF reprojection the monitor overlays) — deliberately NOT the `tof`
+# crate, whose vendored C driver would drag a cross C toolchain into every robotctl build.
+kinematics = { path = "../kinematics" }
+# The camera's pixels, for `monitor`'s camera block: the mount turn and the UYVY sampler, shared
+# with `mediad` and `duck-detect`. Deliberately NOT `duck-detect` itself, for the reason above —
+# that crate carries the NPU and ONNX runtimes, and this one has no dependencies at all.
+uyvy = { path = "../uyvy" }
+pad-imu = { path = "../pad-imu" }
+# `robotctl configure`'s schema, defaults and validation — the same crate `robotd` parses
+# its config with, which is what makes the editor unable to disagree with the daemon. Pure
+# serde + toml, so the recovery-path rule above still holds.
+robotd-params = { path = "../robotd-params" }
+toml = "0.9"
+# Edits `robotd.toml` losslessly: comments, ordering and unknown keys survive. The plain
+# `toml` crate would re-serialize the file and destroy every comment in it.
+toml_edit = "0.23"
+# `robotctl monitor`'s live view, and nothing else. Terminal only — no http, no crypto, no
+# async runtime, so the rule this file opens with still holds: none of the update engine's
+# tree comes in with it. Default features off because the widget set we do not draw (calendar,
+# canvas) is not worth compiling, and `crossterm` is the one backend that matters.
+#
+# Not hand-rolled escape codes: the parts that go wrong are the parts a crate has already
+# solved — restoring the terminal when the process panics mid-frame, a resize during a
+# redraw, and clipping a line to a width nobody checked.
+ratatui = { version = "0.30.2", default-features = false, features = [
+    "crossterm",
+    "layout-cache",
+] }
+
+[dev-dependencies]
+tempfile = "3.27.0"

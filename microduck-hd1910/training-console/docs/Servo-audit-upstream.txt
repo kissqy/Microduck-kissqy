@@ -1,0 +1,13 @@
+test_describe_retains_all_teacher_fields_but_evaluation_loads_only_student (test_servo_audit.RealBamLoadingTests.test_describe_retains_all_teacher_fields_but_evaluation_loads_only_student) ... ok
+test_loaded_model_and_compiled_inertia_follow_edits (test_servo_audit.RealBamLoadingTests.test_loaded_model_and_compiled_inertia_follow_edits) ... ok
+test_every_reference_field_has_bilingual_help_and_usage (test_servo_audit.ServoAuditTests.test_every_reference_field_has_bilingual_help_and_usage) ... ok
+test_new_edits_are_preserved_and_other_revisions_not_guessed (test_servo_audit.ServoAuditTests.test_new_edits_are_preserved_and_other_revisions_not_guessed) ... ok
+test_old_recorded_bam_edits_do_not_change_historical_physics (test_servo_audit.ServoAuditTests.test_old_recorded_bam_edits_do_not_change_historical_physics) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 7.856s
+
+OK
+[mdp] Patches 1-2 active: NaN-safe reward/advantage
+[mdp] Patch 4 active: ONNX export filters passive_* joints
+[mdp] Patch 5 active: MICRODUCK_WARM_START=1 restarts curricula after checkpoint load

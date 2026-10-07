@@ -1,0 +1,57 @@
+{
+  "schema": "microduck-runtime-commands/v1",
+  "model_sha256": "5c019c3d3d2c490947f21974f394750671b0ec7b7a2d1e36734e82c8a3c9225b",
+  "source_iteration": 17999,
+  "num_steps_per_env": 24,
+  "training_step": 431976,
+  "source_parameters_sha256": {
+    "upstream-params/env.yaml": "e04c53dbf6a521fea69a3f49d697a7b3b8d1af75f89207e392e8247818ed5ea5",
+    "upstream-params/agent.yaml": "87c8ac5b7d0d018ff90b43e6e89ff787408b29a41585864fed154f8c19e2aeb9"
+  },
+  "commands": {
+    "head_pose": [
+      [
+        -1.1,
+        1.1
+      ],
+      [
+        -1.1,
+        1.1
+      ],
+      [
+        -1.4,
+        1.4
+      ],
+      [
+        -0.31,
+        0.31
+      ]
+    ],
+    "body_pose": [
+      [
+        -0.005,
+        0.005
+      ],
+      [
+        -0.005,
+        0.005
+      ],
+      [
+        -0.005,
+        0.005
+      ],
+      [
+        -0.05,
+        0.05
+      ],
+      [
+        -0.05,
+        0.05
+      ],
+      [
+        -0.05,
+        0.05
+      ]
+    ]
+  }
+}

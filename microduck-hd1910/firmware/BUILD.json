@@ -1,0 +1,589 @@
+{
+  "build": "1fa8438-feetech-ft6-control.29",
+  "console_version": "1.0.146",
+  "official_version": "0.15.1",
+  "official_revision": "1fa84386f07884e27866411bc1ba166977bced95",
+  "hardware_base": "R17 v1.0.95",
+  "hardware_verified": false,
+  "models": {
+    "walk": {
+      "id": "1cbf8730eadd75a5704332c9f3c10f60",
+      "sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+      "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+      "epochs": 9600,
+      "source_iteration": 9599,
+      "num_envs": 2560,
+      "source_policy_directory": "policies/walk",
+      "trained_action_scale": 1.0,
+      "trained_head_alpha": 1.0,
+      "trained_legs_alpha": 1.0,
+      "execution_profile": {
+        "schema": "microduck-runtime-execution/v1",
+        "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+        "mode": "uniform",
+        "action_scale": 0.9,
+        "head_lowpass": 0.5,
+        "legs_lowpass": 0.7
+      },
+      "deployment_verified": false
+    },
+    "sitstand": {
+      "id": "1c94934c6421ec72ed48079cea749668",
+      "sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+      "task": "Mjlab-SitStand-Flat-MicroDuck"
+    },
+    "ground_pick": {
+      "id": "2b69fa681ed06f7ded9e2a2d12ba5c67",
+      "sha256": "2b69fa681ed06f7ded9e2a2d12ba5c6776ec87308ac4a299e4b8196199c17f24",
+      "task": "Mjlab-GroundPick-Flat-MicroDuck"
+    },
+    "roulade": {
+      "id": "8fdaf12c7478a8314a63647a466bfa34",
+      "sha256": "8fdaf12c7478a8314a63647a466bfa34ba1f15a7d9a5cb3b6ffa242719666168",
+      "task": "Mjlab-Roulade-Flat-MicroDuck"
+    },
+    "stand": {
+      "id": "a481d9f211f31d9476ab1a319fe362a2",
+      "sha256": "a481d9f211f31d9476ab1a319fe362a21ef0879d9fa59442a122845af598268c",
+      "task": "Mjlab-StandUp-Rough-Backlash-MicroDuck",
+      "teacher_only": true,
+      "bound_by_default": false,
+      "epochs": 11000,
+      "num_envs": 4096,
+      "manual_lb_bound": true,
+      "base_action_scale": 1.0,
+      "target_filter": "passthrough",
+      "head_alpha": 1.0,
+      "legs_alpha": 1.0
+    }
+  },
+  "default_global_settings": {
+    "action_scale": 0.7
+  },
+  "default_servo_test_draft": {
+    "kp": 3,
+    "kd": 0,
+    "torque_limit": 681
+  },
+  "servo_test_enabled_on_upgrade": false,
+  "servo_test_config": "/etc/robot/feetech-ft5/servo-test-parameters.json",
+  "parameter_apply": {
+    "fields": [
+      "policy.action_scale",
+      "kp",
+      "kd",
+      "torque_limit"
+    ],
+    "one_submit": true,
+    "input_changes_write": false,
+    "flow": "existing maintenance SSH -> saved configuration -> robotd restart -> explicit HOME arm -> native register write and readback",
+    "servo_scope": "all 15, including mouth",
+    "registers": [
+      48,
+      49,
+      50,
+      51
+    ],
+    "eeprom_written": false,
+    "restores_on_relax": true,
+    "persists_after_restart": true
+  },
+  "temporary_modules": [
+    "console/static/advanced-parameters.js",
+    "console/static/advanced-parameters.css",
+    "packaging/advanced_parameters.py",
+    "duck-control/src/hd1910_test.rs"
+  ],
+  "source_distribution": "Microduck-Source-R17-v1.0.146.tar.gz",
+  "built_binaries": {
+    "robotd": {
+      "sha256": "1c4e77c640dcbb8fa402566c39fb20306457e421a40ab6639974fb1c239fc56c",
+      "machine": "AArch64",
+      "needed": [
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.27",
+        "2.28",
+        "2.29",
+        "2.30"
+      ],
+      "bytes": 6741016
+    },
+    "robotctl": {
+      "sha256": "05ebae696ed12e8824088ddd4e7833110bf045ca9416f027481e333e4d12f00c",
+      "machine": "AArch64",
+      "needed": [
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.28",
+        "2.29",
+        "2.30"
+      ],
+      "bytes": 4356488
+    },
+    "padd": {
+      "sha256": "78b456e7c19e720330c325fe16719e291d36373c0879911d59f77700d52f79a3",
+      "machine": "AArch64",
+      "needed": [
+        "libudev.so.1",
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.27",
+        "2.28",
+        "2.30"
+      ],
+      "bytes": 3402888
+    },
+    "sounds": {
+      "sha256": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103",
+      "machine": "AArch64",
+      "needed": [
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.27",
+        "2.28",
+        "2.29",
+        "2.30"
+      ],
+      "bytes": 1152920
+    },
+    "gamepad-r7/gamesir-xboxd": {
+      "sha256": "6f8d78d2bdcb85c2e216013c66e1af25b38813cb86d0e88a7722ef98df5d4b30",
+      "machine": "AArch64",
+      "needed": [
+        "libpthread.so.0",
+        "libc.so.6"
+      ],
+      "glibc_versions": [
+        "2.17"
+      ],
+      "bytes": 43664
+    }
+  },
+  "reused_binaries": [
+    "sounds",
+    "gamepad-r7/gamesir-xboxd"
+  ],
+  "gamepad_binary_sha256": "6f8d78d2bdcb85c2e216013c66e1af25b38813cb86d0e88a7722ef98df5d4b30",
+  "gamepad_revision": "R7-Canonical-Xbox with auxiliary disconnect lifecycle fix",
+  "padd_source_sha256": "118e2219f84481538676c050a45110c3ecf0f8e2b5e51bf5ca4e0439361e649f",
+  "onnxruntime": "1.28.0",
+  "toolchain": "Rust 1.99.0, cargo-zigbuild 0.23.4 and Zig 0.14.1; aarch64-unknown-linux-gnu.2.31",
+  "hat_firmware_unchanged": true,
+  "uart_telemetry_unchanged": true,
+  "official_filter_algorithm_unchanged": true,
+  "voltage_adapt": "official native configuration; no R17 assignment",
+  "calibration_policy": "preserve current mounted calibration; never overwrite with training zeros",
+  "manual_recovery_test": {
+    "button": "lb",
+    "name": "stand_test",
+    "seconds": 6,
+    "stand_slot": "none",
+    "base_action_scale": 1.0,
+    "standing_action_scale": 1.0,
+    "existing_walk_preserved": false,
+    "model_id": "a481d9f211f31d9476ab1a319fe362a2",
+    "requested_replacement": false,
+    "head_alpha": 1.0,
+    "legs_alpha": 1.0,
+    "existing_duration_preserved": true,
+    "direct_from_home": true,
+    "home_origin_returns": "home",
+    "walk_origin_returns": "walk",
+    "pending_cancel": true,
+    "start_cancel": true,
+    "no_intermediate_walk": true,
+    "model_unchanged": true,
+    "fallen_limp_supported": true,
+    "fallen_homing_supported": true,
+    "no_home_before_fallen_recovery": true,
+    "start_init_and_toggle_cancel": true,
+    "walk_replacement_in_this_release": "1cbf8730eadd75a5704332c9f3c10f60"
+  },
+  "tests": {
+    "python": 272,
+    "python_run": 272,
+    "python_skipped": 0,
+    "native_suites": {
+      "duck_control": {
+        "passed": 130,
+        "failed": 0,
+        "ignored": 0
+      },
+      "duck_ipc_proto": {
+        "passed": 53,
+        "failed": 0,
+        "ignored": 0
+      },
+      "robotd": {
+        "passed": 247,
+        "failed": 0,
+        "ignored": 2
+      },
+      "robotd_params": {
+        "passed": 97,
+        "failed": 0,
+        "ignored": 0
+      },
+      "padd": {
+        "passed": 25,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    "focused": {
+      "all_passed": true,
+      "checks": [
+        {
+          "command": [
+            "node",
+            "packaging/test_joint_execution_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "stdout": "PASS uniform model metadata, posture-independent UI, actual output/null/stale readback, catalog binding, preserved global scale and servo editing, ordinary/LB restoration",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "packaging/test_manual_recovery_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "stdout": "PASS startup fallen + limp: explicit LB press/release only; no automatic enable or synthesized HOME\nPASS fallen HOME, homing, holding and walking use the same production pad event path\nPASS missing model disables only its action; upright HOME remains; native refusal displays without replay\nPASS recovery readback shows current pose, actual scale/filters and HOME versus Walk return\nPASS physical controller takeover releases held web LB and disables browser actions\nPASS replay, pause, offline and disconnected protections remain",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "packaging/test_settings_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "stdout": "PASS newer device settings replace receipts; mouth updates preserve saved head amplitude; missing values stay unknown",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "packaging/test_advanced_parameters_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "stdout": "PASS drafts have no writes; single apply carries all four; saved/live values are distinct; empty input cannot apply",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "packaging/test_walk_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "stdout": "PASS official global scale capability, active walk dispatch, stale telemetry configuration and explicit missing capability reason",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "--check",
+            "console/static/execution-profile.js"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "--check",
+            "console/static/control.js"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "--check",
+            "console/static/advanced-parameters.js"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "--check",
+            "console/static/service-management.js"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "python3",
+            "-m",
+            "unittest",
+            "test_raw_telemetry.RawTelemetryTests.test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording",
+            "-v"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": "test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording (test_raw_telemetry.RawTelemetryTests.test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.064s\n\nOK"
+        }
+      ],
+      "independent_native_review": "uniform-ui-and-native-independent-review146.json",
+      "reviewed_source_sha256_unchanged": true,
+      "evidence_files": [
+        "ui-uniform-tests146.log",
+        "uniform-ui-and-native-independent-review146.json",
+        "model-packages-uniform-tests146.log",
+        "model-install-crosscheck146.log"
+      ],
+      "scope": "DOM event tests and binary stream roundtrip; no Chromium rendering, systemd/uinput, real GameSir, or physical Zero.",
+      "review_sha256": "cfe287ac3ad035b9206fe46cecd52409d957435a5f365ca69ed8d6bd003ba6d5"
+    },
+    "robotd_rebuilt": true,
+    "robotctl_rebuilt": true,
+    "padd_rebuilt": true,
+    "reused_binary_payload_from": "1.0.145",
+    "hardware_tested": false,
+    "windows_hardware_tested": false,
+    "full_system_integration_verified": false,
+    "integration_scope": "Real ONNX control/formula tests with fake hardware, execution profile tests, import/configuration and frontend/input regressions. No physical Zero, systemd/uinput or GameSir activation."
+  },
+  "generated_at_utc": "2026-10-07T02:29:20.218793+00:00",
+  "release_changes": "Replace the sole Walk with the 9600-iteration joint model; retire the old 14000 Walk. Uniform SHA-bound output settings 0.9/0.5/0.7 in all postures; preserve raw action history, independent LB and low-overhead telemetry.",
+  "native_production_changes": [
+    "duck-control/src/deployment.rs",
+    "duck-control/src/lib.rs",
+    "duck-control/src/hd1910.rs",
+    "duck-control/src/hd1910_test.rs",
+    "duck-control/src/feetech.rs",
+    "robotd/src/main.rs",
+    "robotd/src/feetech_commissioning.rs",
+    "robotd/src/control.rs",
+    "robotd/src/intents.rs"
+  ],
+  "install_flow": {
+    "systemd_reload_count": 1,
+    "startup_attempts": 1,
+    "retry_failed_start": false,
+    "rebuild_on_failure": false,
+    "copy_preserved_models": false,
+    "maintenance_ssh_reused": true
+  },
+  "audio_volume": {
+    "backend": "native ALSA PCM Playback Volume + Line Playback Switch",
+    "state": "/var/lib/alsa/asound.state",
+    "save": "alsactl store aic3104",
+    "restore": "system ALSA after aic3104-init.service",
+    "robotd_startup_audio_hook": false,
+    "custom_volume_state": false
+  },
+  "retired_model_ids": [
+    "d11f8430712c35cb2416ce3948e9f8b7",
+    "388461feb3f4cd24071197ffc30d63e2",
+    "5c019c3d3d2c490947f21974f3947506"
+  ],
+  "native_position_fix": {
+    "encoding": "signed magnitude bit15",
+    "feedback_modulo": false,
+    "goal_turn_offset": false,
+    "observations": "signed native minus saved calibration zero",
+    "preload": "fresh signed native coordinate",
+    "home_goals": {
+      "12": 1500,
+      "22": 2276
+    },
+    "all_15_joints": true,
+    "eeprom_or_calibration_reset": false,
+    "shortest_path_guaranteed": false,
+    "hardware_tested": false
+  },
+  "rebuilt_binaries": [
+    "robotd",
+    "robotctl",
+    "padd"
+  ],
+  "mechanism_docs": [
+    "docs/design/robotd-design.md",
+    "docs/design/r17-settings-design.md",
+    "docs/design/r17-connection-design.md"
+  ],
+  "runtime_maintenance_fix": {
+    "control_hz": 50,
+    "dynamic_diagnostics_hz": 50,
+    "complete_diagnostics_per_tick": 1,
+    "home_guard_before_apply": true,
+    "full_diagnostics_after_apply": true,
+    "communication_statistics_preserved": true,
+    "immutable_register_snapshot_shared": true,
+    "model_metadata_refreshes_on_load": true,
+    "auxiliary_retry_max_hz": 1,
+    "webpad_address_families": [
+      "AF_UNIX",
+      "AF_NETLINK"
+    ],
+    "temperature_reduction_measured": false,
+    "introduced_in": "1.0.142"
+  },
+  "release_native_production_changes": [
+    "duck-control/src/deployment.rs",
+    "duck-control/src/policy.rs",
+    "duck-ipc-proto/src/lib.rs",
+    "robotd/src/control.rs",
+    "robotd/src/feetech_commissioning.rs",
+    "robotd/src/main.rs",
+    "robotd/src/raw_stream.rs",
+    "robotd/src/selftrained_checks.rs",
+    "robotd-params/src/lib.rs"
+  ],
+  "runtime_telemetry_copy_fix": {
+    "introduced_in": "1.0.143",
+    "control_hz": 50,
+    "dynamic_diagnostics_hz": 50,
+    "full_diagnostics_after_apply": true,
+    "state_subscription_frequency_unchanged": true,
+    "owned_native_json_moved": true,
+    "bus_status_response_borrowed": true,
+    "state_snapshot_shared": true,
+    "remote_json_validation_preserved": true,
+    "remote_json_reencoding_avoided": true,
+    "desktop_reconstruction": true,
+    "telemetry_fields_and_timestamps_preserved": true,
+    "recording_json_format_unchanged": true,
+    "recording_compression_added": false,
+    "cpu_reduction_measured_on_robot": false,
+    "temperature_reduction_measured": false,
+    "superseded_by_raw_stream": "1.0.144"
+  },
+  "startup_identity_fix": {
+    "introduced_in": "1.0.143",
+    "daemon_identity_published_after_socket_claim": true,
+    "init_identity_published_after_lock_claim": true,
+    "client_subcommands_publish_identity": false,
+    "refused_second_process_publishes_identity": false,
+    "original_lock_and_startup_flow_preserved": true
+  },
+  "release_native_test_changes": [
+    "robotd/src/feetech_recovery_tests.rs",
+    "robotd/src/joint_uniform_tests.rs"
+  ],
+  "api_version": 40,
+  "raw_telemetry": {
+    "introduced_in": "1.0.144",
+    "control_hz": 50,
+    "raw_schema": "r17.raw.v1",
+    "original_bytes_to_browser": true,
+    "pc_compatibility_mirror_hz": 10,
+    "browser_display_record_hz": 10,
+    "browser_record_limit": 1200,
+    "recording_storage": "per-page memory; export before closing or reloading",
+    "system_interval_seconds": 2,
+    "remote_collector_python": false,
+    "full_bus_json_on_request": true,
+    "unchanged_official_state_subscription": true,
+    "communication_stats_while_disconnected": true,
+    "no_unconditional_broadcast": true,
+    "raw_connection_owner": "explicit connected PC session",
+    "cpu_reduction_measured_on_robot": false,
+    "temperature_reduction_measured": false
+  },
+  "raw_browser_input": {
+    "introduced_in": "1.0.144",
+    "remote_input_relay_python": false,
+    "path": [
+      "browser",
+      "PC",
+      "SSH Unix socket forward",
+      "webpad virtual Xbox",
+      "official padd",
+      "robotd"
+    ],
+    "socket_activation": true,
+    "physical_controller_priority": true,
+    "input_lease_ms": 600,
+    "start_attach_handshake_preserved": true,
+    "no_expired_action_replay": true,
+    "audio": "finite maintenance request, independent of input",
+    "global_robotctl_path": "unchanged; paired CLI is installed under /opt/robot/feetech-ft5-r5"
+  },
+  "manual_lb_recovery": {
+    "introduced_in": "1.0.145",
+    "skill": "stand_test",
+    "button": "lb",
+    "fallen_limp_supported": true,
+    "fallen_homing_supported": true,
+    "startup_remains_limp": true,
+    "initial_pose": "fresh measured pose, protected torque-enable preload, no HOME ramp before inference",
+    "non_policy_return": "HOME",
+    "policy_return": "Walk",
+    "start_cancels": true,
+    "select_relaxes": true,
+    "model_bytes_unchanged": true,
+    "inference_hz": 50,
+    "schema_unchanged": true
+  },
+  "retired_walk_model_id": "9e3ff8bde021be28a728c02dbd8e7aaf",
+  "runtime_model_count": 5,
+  "joint_execution": {
+    "introduced_in": "1.0.146",
+    "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+    "profile_file": "deployment-execution.json",
+    "profile_sha256": "c5d7b224db9c7c85c9b4aca58f418dc30d8fccab9b37070c8f22b5cb84590053",
+    "experimental": true,
+    "trained_with_this_profile": false,
+    "profile": {
+      "schema": "microduck-runtime-execution/v1",
+      "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+      "mode": "uniform",
+      "action_scale": 0.9,
+      "head_lowpass": 0.5,
+      "legs_lowpass": 0.7
+    },
+    "unchanged_voltage_compensation": true,
+    "inference_hz": 50,
+    "additional_network_inference": false,
+    "uniform_all_postures": true,
+    "additional_posture_detection": false,
+    "raw_previous_action": true,
+    "no_profile_uses_training_1_1_1": true,
+    "ordinary_upgrade_preserves_other_models_and_calibration": true,
+    "physical_tested": false
+  },
+  "model_specific_filter_selection_changed": true
+}

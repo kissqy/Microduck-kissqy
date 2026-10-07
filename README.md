@@ -12,6 +12,8 @@
   </tr>
 </table>
 
+
+
 ## 关于这个项目
 
 首先，我不是专业的，仅接受过九年义务教育，代码全部由我通过 **ChatGPT** 协作完成。
@@ -27,3 +29,6 @@
 <p align="center">
   <img width="240" alt="支持项目的收款二维码" src="https://github.com/user-attachments/assets/49054608-65ba-41d6-b3f1-a97941976c4b" />
 </p>
+
+<img width="3830" height="6269" alt="ea8403f87fa6f61c51faaadc5dda8433" src="https://github.com/user-attachments/assets/8cf2a2e7-6874-4b20-ae8a-855d927fd3c5" />
+<img width="3825" height="4341" alt="f94828891fc077771d66243a5bae1b77" src="https://github.com/user-attachments/assets/0473f3a4-3483-4466-aa60-3b6e6dee304f" />

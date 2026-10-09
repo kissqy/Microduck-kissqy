@@ -28,6 +28,10 @@
 <img width="3830" height="6269" alt="ea8403f87fa6f61c51faaadc5dda8433" src="https://github.com/user-attachments/assets/8cf2a2e7-6874-4b20-ae8a-855d927fd3c5" />
 <img width="3825" height="4341" alt="f94828891fc077771d66243a5bae1b77" src="https://github.com/user-attachments/assets/0473f3a4-3483-4466-aa60-3b6e6dee304f" />
 
+## 在线体验
+
+👉 [打开 Microduck 机器人中控在线演示](https://kissqy.github.io/Microduck-kissqy/)
+
 ## 鼓励一下
 
 如果这个项目有帮助到你，可以鼓励一下我。

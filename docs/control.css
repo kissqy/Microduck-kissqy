@@ -1,0 +1,13 @@
+/* Compact RT/LT voice and continuous head controls. */
+.official-pad{margin:0;padding:8px;border:1px solid #577a69;border-radius:10px;background:#142b28;container-type:inline-size}
+.pad-title{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#d4fc98;font-size:12px}.pad-title .button{padding:6px 8px;font-size:11px;white-space:nowrap}
+.pad-triggers{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}.pad-triggers button{padding:6px;border:1px solid #699f8a;border-radius:7px;background:#243b35;color:#edf9e7;touch-action:none;user-select:none;font-size:12px}.pad-triggers button small{display:block;margin-top:3px;font-size:10px}.pad-triggers button.held{background:#d4fc98;color:#10211d}
+.pad-layout{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}.pad-stick-wrap{display:grid;align-content:start;gap:6px;text-align:center;font-size:11px}
+.pad-stick{position:relative;width:100%;max-width:80px;aspect-ratio:1;border:1px solid #709886;border-radius:50%;background:radial-gradient(circle,#263e39,#10201e);touch-action:none;user-select:none;justify-self:center;cursor:grab}.pad-stick[aria-disabled=true]{opacity:.4;cursor:default}.pad-stick:focus-visible{outline:2px solid #d4fc98}.pad-stick i{position:absolute;left:calc(50% - 13px);top:calc(50% - 13px);width:26px;height:26px;border-radius:50%;background:#d4fc98;box-shadow:0 0 12px #c8f38a55;z-index:1;pointer-events:none}.pad-stick b{position:absolute;inset:0;display:grid;place-items:center;color:#7a9486;font-size:45px;pointer-events:none}
+.pad-settings{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center}.pad-settings label{font-size:11px;min-width:0}.pad-settings select{display:block;width:100%;margin-top:5px;font-size:11px;padding:5px}.pad-mouth-level{display:block;width:100%;margin:8px 0 0;accent-color:#d4fc98}.pad-settings output{float:right;font-variant-numeric:tabular-nums}
+.pad-reason{margin:7px 0 0;line-height:1.6}.pad-status{margin-top:8px!important;padding:7px 9px!important;font-size:11px;line-height:1.5}.pad-status:empty{display:none}
+
+.pad-volume{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:4px 8px;font-size:11px;margin:8px 0}.pad-volume-value{grid-column:3;grid-row:1;font-variant-numeric:tabular-nums}.pad-volume-level{grid-column:2;grid-row:1;min-width:0;width:100%;accent-color:#d4fc98}.pad-volume-status{grid-column:1/-1;color:var(--muted);font-size:10px}.pad-volume-status.error{color:#ff9cac}
+.official-pad .control-actions{margin-top:9px}.control-action-status:empty{display:none}
+
+.pad-voices{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}.pad-voices .button{min-height:28px;padding:4px 8px;font-size:12px}

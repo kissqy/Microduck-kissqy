@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Microduck R17 Console · Online Demo</title>
+<style>
+:root{--bg:#0d1113;--panel:#151c1f;--panel2:#101719;--line:#283135;--text:#edf4f2;--muted:#81918f;--accent:#c1f577;--blue:#7cc7ff;--warn:#f2c66d;--danger:#ff7b72}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif}
+a{color:var(--accent)}button{font:inherit}
+.shell{max-width:1880px;margin:0 auto;padding:18px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--line);background:#111719;padding:16px 18px;border-radius:12px;position:sticky;top:0;z-index:10}
+.brand h1{margin:0;font-size:22px}.brand small{color:var(--muted)}.demo{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid #435239;border-radius:999px;color:var(--accent);font-weight:700;font-size:12px}.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#11191b;color:var(--text);padding:9px 12px;border-radius:8px;cursor:pointer}.btn:hover{border-color:#4a5a5e}.btn.accent{background:var(--accent);color:#101510;border-color:var(--accent);font-weight:700}.btn.danger{color:var(--danger)}
+.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:12px 0}.metric{border:1px solid var(--line);background:var(--panel);padding:12px;border-radius:10px}.metric span{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;margin-top:5px;font-size:19px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.panel{border:1px solid var(--line);background:var(--panel);border-radius:12px;min-height:420px;overflow:hidden}.head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:12px 14px}.head h2{margin:0;font-size:15px}.head small{color:var(--muted)}.body{padding:14px}
+.stage{height:325px;border:1px solid var(--line);border-radius:10px;background:radial-gradient(circle at 50% 65%,#1f2c2d 0,#101618 52%,#0a0e10 100%);position:relative;overflow:hidden}
+.floor{position:absolute;left:-10%;right:-10%;bottom:58px;height:1px;background:#334145;box-shadow:0 28px 0 #1b2427}
+.duck{position:absolute;left:50%;bottom:70px;transform:translateX(-50%);width:150px;height:210px;transition:transform .25s ease}
+.headduck{position:absolute;left:31px;top:0;width:88px;height:88px;background:#f4d65e;border-radius:48% 52% 46% 54%;box-shadow:inset -12px -10px 0 #e8c94e}
+.eye{position:absolute;top:29px;width:9px;height:13px;background:#111;border-radius:50%}.eye.l{left:53px}.eye.r{right:53px}.beak{position:absolute;left:55px;top:57px;width:40px;height:18px;background:#ef9c3e;border-radius:60% 60% 55% 55%}
+.bodyduck{position:absolute;left:42px;top:78px;width:66px;height:78px;background:#e8eef0;border-radius:45% 45% 35% 35%}.leg{position:absolute;top:145px;width:18px;height:57px;background:#c8d2d4;border-radius:9px;transform-origin:top}.leg.l{left:48px}.leg.r{right:48px}.foot{position:absolute;bottom:0;width:42px;height:12px;background:#ef9c3e;border-radius:10px}.leg.l .foot{left:-22px}.leg.r .foot{right:-22px}
+.overlay{position:absolute;left:10px;top:10px;padding:6px 8px;background:#0a0d0ecc;border:1px solid var(--line);border-radius:7px;color:var(--muted);font-size:11px}
+.pad{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:14px;align-items:center;height:325px}.dpad,.abxy{display:grid;grid-template-columns:repeat(3,46px);grid-template-rows:repeat(3,46px);gap:4px;justify-content:center}.key{border:1px solid #415055;background:#11191b;color:#cbd7d5;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none}.key:hover,.key.active{background:#243034;border-color:var(--accent);color:var(--accent)}.center{text-align:center}.stick{margin:0 auto 14px;width:115px;height:115px;border:1px solid #405055;border-radius:50%;background:#0f1517;position:relative}.nub{position:absolute;left:38px;top:38px;width:38px;height:38px;border-radius:50%;background:#263337;border:1px solid #53676d;transition:.15s}.center p{color:var(--muted);font-size:12px}
+.camera{height:325px;border-radius:10px;border:1px solid var(--line);overflow:hidden;position:relative;background:linear-gradient(160deg,#263b43,#0b1216 60%)}.camera:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 27px,#ffffff0a 28px),repeating-linear-gradient(90deg,transparent 0 40px,#ffffff08 41px)}.horizon{position:absolute;left:0;right:0;top:52%;height:2px;background:#c1f57766}.target{position:absolute;left:50%;top:50%;width:52px;height:52px;border:1px solid var(--accent);transform:translate(-50%,-50%);border-radius:50%}.target:before,.target:after{content:"";position:absolute;background:var(--accent)}.target:before{width:22px;height:1px;left:14px;top:25px}.target:after{width:1px;height:22px;left:25px;top:14px}
+.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{padding:7px 8px;border-bottom:1px solid #222d30;text-align:right}.table th:first-child,.table td:first-child{text-align:left}.table th{color:var(--muted);font-weight:600}.good{color:var(--accent)}.blue{color:var(--blue)}.warn{color:var(--warn)}
+.bars{display:grid;gap:9px}.barrow{display:grid;grid-template-columns:120px 1fr 54px;gap:10px;align-items:center;font-size:12px}.track{height:7px;background:#0d1315;border-radius:8px;overflow:hidden}.fill{height:100%;background:var(--accent);width:50%;transition:width .4s}.model-card{border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:11px;margin-bottom:10px}.model-card b{display:block;margin-bottom:5px}.model-card small{color:var(--muted)}
+.notice{margin-top:12px;padding:10px 12px;border:1px solid #66572d;background:#251f10;color:#efdca8;border-radius:8px;font-size:12px}.footer{padding:22px 4px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between}
+@media(max-width:1100px){.grid3,.grid2{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.panel{min-height:auto}.header{position:static;align-items:flex-start;flex-direction:column}.actions{width:100%}}
+@media(max-width:650px){.shell{padding:8px}.metrics{grid-template-columns:1fr 1fr}.pad{grid-template-columns:1fr}.dpad,.abxy{display:none}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="header">
+  <div class="brand"><h1>MICRODUCK / R17 ROBOT CONSOLE</h1><small>v1.0.146 · control.29 · API40 · Online Demo</small></div>
+  <div class="actions">
+    <span class="demo"><span class="dot"></span>DEMO / FAKE ROBOT</span>
+    <button class="btn" onclick="toast('演示模式：不会向机器人发送指令')">松开扭矩</button>
+    <button class="btn" onclick="toast('演示模式：不会重启 Zero')">重启 Zero</button>
+    <button class="btn danger" onclick="toast('演示模式：不会关闭 Zero')">关闭 Zero</button>
+    <a class="btn accent" href="https://github.com/kissqy/Microduck-kissqy">查看源码 ↗</a>
+  </div>
+</header>
+
+<section class="metrics">
+  <div class="metric"><span>机器人</span><strong class="good">Fake Robot · 在线</strong></div>
+  <div class="metric"><span>Zero 温度</span><strong id="temp">63.1 °C</strong></div>
+  <div class="metric"><span>总线电压</span><strong id="voltage">7.23 V</strong></div>
+  <div class="metric"><span>循环频率</span><strong id="hz">99.8 Hz</strong></div>
+  <div class="metric"><span>IMU</span><strong class="good">READY</strong></div>
+</section>
+
+<section class="grid3">
+  <article class="panel">
+    <div class="head"><div><small>01</small><h2>鸭子 3D / 实时姿态</h2></div><small id="pose">roll +0.3° · pitch -1.1°</small></div>
+    <div class="body">
+      <div class="stage">
+        <div class="overlay">Fake Robot · HD1910 ×15</div>
+        <div class="floor"></div>
+        <div class="duck" id="duck"><div class="headduck"></div><div class="eye l"></div><div class="eye r"></div><div class="beak"></div><div class="bodyduck"></div><div class="leg l"><div class="foot"></div></div><div class="leg r"><div class="foot"></div></div></div>
+      </div>
+      <div class="notice">这是 GitHub Pages 静态演示。3D 姿态和遥测为模拟数据，不连接真实舵机。</div>
+    </div>
+  </article>
+
+  <article class="panel">
+    <div class="head"><div><small>02</small><h2>行走实验 / 模拟手柄</h2></div><small>官方 HOME → 保持 → 行走</small></div>
+    <div class="body">
+      <div class="pad">
+        <div class="dpad">
+          <div></div><div class="key" data-move="fwd">▲</div><div></div>
+          <div class="key" data-move="left">◀</div><div class="key" data-move="stop">●</div><div class="key" data-move="right">▶</div>
+          <div></div><div class="key" data-move="back">▼</div><div></div>
+        </div>
+        <div class="center"><div class="stick"><div class="nub" id="nub"></div></div><button class="btn accent" onclick="toast('Demo：HOME')">HOME</button> <button class="btn" onclick="toast('Demo：保持')">保持</button><p id="request">请求速度：0.00 / 0.00 / 0.00</p></div>
+        <div class="abxy">
+          <div></div><div class="key">Y</div><div></div>
+          <div class="key">X</div><div></div><div class="key">B</div>
+          <div></div><div class="key">A</div><div></div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="panel">
+    <div class="head"><div><small>03</small><h2>头部视野 / IMX219</h2></div><small>720p30 · Demo Feed</small></div>
+    <div class="body">
+      <div class="camera"><div class="horizon"></div><div class="target"></div><div class="overlay">CAMERA DEMO · WebRTC 未连接</div></div>
+      <div class="bars" style="margin-top:14px">
+        <div class="barrow"><span>头部幅度</span><div class="track"><div class="fill" style="width:58%"></div></div><b>58%</b></div>
+        <div class="barrow"><span>音量</span><div class="track"><div class="fill" style="width:72%"></div></div><b>72%</b></div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<section class="grid2">
+  <article class="panel">
+    <div class="head"><div><small>04</small><h2>关节工作台 / IMU</h2></div><small>实际角度 / 目标角度</small></div>
+    <div class="body">
+      <table class="table"><thead><tr><th>关节</th><th>ID</th><th>目标</th><th>实际</th><th>电压</th><th>状态</th></tr></thead><tbody id="servoRows"></tbody></table>
+    </div>
+  </article>
+  <article class="panel">
+    <div class="head"><div><small>05</small><h2>模型与验证</h2></div><small>自训模型</small></div>
+    <div class="body">
+      <div class="model-card"><b>行走老师 · 10000</b><small>Mjlab-Velocity-Flat-MicroDuck-V2-HD1910 · 动作缩放 0.7</small></div>
+      <div class="model-card"><b>起坐老师 · 10000</b><small>正面 / 侧躺恢复 · Demo</small></div>
+      <div class="model-card"><b>联合行走起身</b><small>在线页只展示 UI，不加载 ONNX，不执行机器人策略。</small></div>
+      <div class="bars">
+        <div class="barrow"><span>总线通信</span><div class="track"><div class="fill" id="busbar" style="width:96%"></div></div><b id="busv">96%</b></div>
+        <div class="barrow"><span>IMU 健康</span><div class="track"><div class="fill" style="width:100%"></div></div><b>OK</b></div>
+        <div class="barrow"><span>策略状态</span><div class="track"><div class="fill" style="width:78%"></div></div><b>DEMO</b></div>
+      </div>
+      <div class="notice">真实版本需要本地 Python 后端连接 Zero、robotd、padd 和 WebRTC。GitHub Pages 不运行这些后端服务。</div>
+    </div>
+  </article>
+</section>
+
+<footer class="footer"><span>MICRODUCK / HARDWARE CONSOLE · ONLINE DEMO</span><span>kissqy / ChatGPT 协作开发</span></footer>
+</div>
+<script>
+const joints=[['右髋Yaw',10],['右髋Roll',11],['右髋Pitch',12],['右膝',13],['右踝',14],['左髋Yaw',20],['左髋Roll',21],['左髋Pitch',22],['左膝',23],['左踝',24],['颈Yaw',30],['颈Pitch',31],['头',32],['嘴',33],['颈',34]];
+const tbody=document.getElementById('servoRows');
+function renderServos(t){
+  tbody.innerHTML=joints.map((j,i)=>{const base=Math.sin(t/950+i*.63)*((i<10)?5:3);const target=base+(i%3-1)*.7;const actual=target+Math.sin(t/420+i)*.35;const volt=7.18+Math.sin(t/1100+i*.4)*.08;return `<tr><td>${j[0]}</td><td>${j[1]}</td><td class="blue">${target.toFixed(1)}°</td><td class="good">${actual.toFixed(1)}°</td><td>${volt.toFixed(2)}V</td><td class="good">OK</td></tr>`}).join('');
+}
+function tick(){
+  const t=Date.now();document.getElementById('temp').textContent=(63+Math.sin(t/5000)*1.6).toFixed(1)+' °C';document.getElementById('voltage').textContent=(7.23+Math.sin(t/3300)*.07).toFixed(2)+' V';document.getElementById('hz').textContent=(99.8+Math.sin(t/1700)*.4).toFixed(1)+' Hz';
+  const roll=Math.sin(t/1700)*1.8,pitch=Math.sin(t/2200)*1.3;document.getElementById('pose').textContent=`roll ${roll>=0?'+':''}${roll.toFixed(1)}° · pitch ${pitch>=0?'+':''}${pitch.toFixed(1)}°`;document.getElementById('duck').style.transform=`translateX(-50%) rotate(${roll*.45}deg)`;
+  const bus=95+Math.round((Math.sin(t/1400)+1)*2);document.getElementById('busbar').style.width=bus+'%';document.getElementById('busv').textContent=bus+'%';renderServos(t);
+}
+setInterval(tick,450);tick();
+function toast(msg){let el=document.getElementById('toast');if(!el){el=document.createElement('div');el.id='toast';el.style='position:fixed;right:18px;bottom:18px;background:#11191b;border:1px solid #c1f577;color:#edf4f2;padding:12px 14px;border-radius:9px;z-index:50;box-shadow:0 8px 28px #0008';document.body.appendChild(el)}el.textContent=msg;el.style.opacity='1';clearTimeout(window._toast);window._toast=setTimeout(()=>el.style.opacity='0',2200)}
+document.querySelectorAll('[data-move]').forEach(k=>k.addEventListener('click',()=>{document.querySelectorAll('[data-move]').forEach(x=>x.classList.remove('active'));k.classList.add('active');let v='0.00 / 0.00 / 0.00',x=38,y=38;const m=k.dataset.move;if(m==='fwd'){v='0.25 / 0.00 / 0.00';y=16}else if(m==='back'){v='-0.18 / 0.00 / 0.00';y=60}else if(m==='left'){v='0.00 / 0.00 / +0.45';x=16}else if(m==='right'){v='0.00 / 0.00 / -0.45';x=60}else{k.classList.remove('active')}document.getElementById('request').textContent='请求速度：'+v;document.getElementById('nub').style.left=x+'px';document.getElementById('nub').style.top=y+'px';toast('Demo 输入：'+m)}));
+</script>
+</body></html>

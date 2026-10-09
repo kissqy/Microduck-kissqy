@@ -1,0 +1,16 @@
+/* One draft and one apply button for all advanced settings. */
+#control-panel .servo-parameter-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+#control-panel .servo-parameter-row label{display:grid;gap:3px;font-size:10px;color:#a7b7a1;min-width:0}
+#control-panel .servo-parameter-row input{width:100%;min-width:0;padding:6px 8px;color:#d8ecc0;background:#19231d;border:1px solid #3d4d3c;border-radius:6px;font:600 14px ui-monospace,monospace}
+#control-panel .servo-parameter-row small{font-size:9px;color:#899986;line-height:1.4}
+#control-panel .runtime-parameters .global-scale-row #management-scale-apply{font-size:12px;padding:7px 13px;min-height:32px}
+
+#control-panel .advanced-parameter-editor{container-type:inline-size;min-width:0}
+#control-panel .advanced-parameter-editor .global-scale-row{min-width:0}
+@container(max-width:210px){
+ #control-panel .advanced-parameter-editor .servo-parameter-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #control-panel .advanced-parameter-editor .servo-parameter-row label:last-child{grid-column:1/-1}
+ #control-panel .advanced-parameter-editor .global-scale-row{display:grid;grid-template-columns:minmax(0,1fr) 30px auto}
+ #control-panel .advanced-parameter-editor .global-scale-row label{grid-column:1/-1}
+ #control-panel .advanced-parameter-editor .global-scale-row input{min-width:0;width:100%}
+}

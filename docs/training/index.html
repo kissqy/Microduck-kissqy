@@ -1,0 +1,307 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Microduck · 独立训练台</title>
+<link rel="stylesheet" href="./training.css">
+<link rel="stylesheet" href="./studio.css">
+<script src="./demo-api.js"></script><script src="./tasks.js" defer=""></script><script src="./sample_alignment.js" defer=""></script><script src="./training.js" defer=""></script><script src="./studio.js" defer=""></script><link rel="stylesheet" href="./workflow.css">
+<script src="./workflow.js" defer=""></script><script src="./teachers.js" defer=""></script><script src="./queue.js" defer=""></script><link rel="stylesheet" href="./queue.css">
+<link rel="stylesheet" href="./remote.css"><script src="./remote.js" defer></script>
+</head>
+<body>
+<aside class="train-sidebar"><div>
+<a class="train-brand" href="#workspace">microduck<span>TRAINING STUDIO</span></a><p class="nav-label">训练工作台</p>
+<nav><a href="#training-server">训练服务器</a><a href="#workspace" class="active">训练监控</a><a href="#training-queue">训练队列</a><a href="#history">任务与日志</a><a href="#results-details">训练成果</a><a href="#parameters">本次训练设置</a><a href="#reference-details">高级参数</a></nav>
+</div>
+<div class="sidebar-foot">
+<span class="status-dot"></span>独立训练系统<small>本机仿真 · 无需连接机器人</small><small id="version" data-ui-revision="R1.5.17">Studio R1.5.17 · 固件 0.15.1</small>
+</div></aside><main id="workspace">
+<header class="train-top"><div>
+<h1>训练中控台</h1>
+<span class="hint" id="workspace-name">目标固件 0.15.1 · 官方训练 + HD1910</span>
+</div>
+<div>
+<span id="env-badge" class="pill muted">本机检查缓存</span><a class="text-button" href="#parameters">修改设置 ↓</a>
+</div></header><div id="connection-error" class="notice bad" hidden="">训练台后台已断开。当前内容为最后一次收到的记录，请检查独立启动窗口。</div>
+<div id="render-error" class="notice bad" role="status" hidden=""></div>
+<section id="training-server" class="panel remote-panel" aria-label="训练位置与SSH服务器">
+<div class="remote-top"><h2>训练位置 <small>Training server</small></h2><label class="remote-target">执行位置<select id="training-target"><option value="local">本机 / WSL</option><option value="ssh">SSH 服务器</option></select></label><strong id="execution-location">本机 / WSL</strong></div>
+<div class="wsl-test-row"><label>测试 WSL 发行版<input id="wsl-test-distro" value="Ubuntu" autocomplete="off"></label><button id="wsl-test" class="train-button action-blue" type="button">本机 WSL 测试</button><button id="ssh-restore" class="text-button" type="button" hidden>返回服务器连接</button><span id="wsl-test-note" class="hint">用 SSH 测试服务器通道；原本机 / WSL 训练继续使用原通道。</span></div>
+<div id="ssh-section" hidden><div class="remote-grid">
+<label>服务器 IP / 主机名<input id="ssh-host" placeholder="首尔服务器IP或SSH别名" autocomplete="off"></label>
+<label>SSH 用户名<input id="ssh-user" value="ubuntu" autocomplete="off"></label><label>SSH 端口<input id="ssh-port" type="number" min="1" max="65535" value="22"></label>
+<label>SSH 登录方式<select id="ssh-auth"><option value="password">密码登录</option><option value="key">密钥 / ssh-agent</option></select></label><label id="ssh-password-row" class="remote-wide">SSH 登录密码<input id="ssh-password" type="password" autocomplete="current-password" placeholder="输入服务器登录密码"></label>
+<label class="remote-wide">本机 SSH 密钥路径（可留空）<input id="ssh-identity" placeholder="留空使用系统密钥 / ssh-agent" autocomplete="off"></label>
+<label>远程工作目录<input id="ssh-workspace" value="~/microduck-training-ssh"></label></div>
+<div class="remote-actions"><button id="ssh-save" class="train-button" type="button">保存连接</button><button id="ssh-deploy" class="train-button primary" type="button">部署并准备环境</button><button id="ssh-connect" class="train-button action-blue" type="button">连接 / 重连</button><button id="ssh-disconnect" class="text-button" type="button">断开 SSH</button></div>
+<div id="ssh-host-verification" class="remote-help" hidden><p>首次连接，请核对服务器 SSH 指纹：</p><code id="ssh-host-fingerprint"></code><button id="ssh-trust-host" class="train-button action-blue" type="button">确认指纹并继续</button></div><p id="ssh-password-note" class="hint">密码仅保留在本次中控运行期间；重启中控后重新输入。</p>
+<p id="ssh-status" class="remote-status" role="status">尚未连接服务器。</p><p id="ssh-gpu" class="hint remote-status">连接后显示服务器 GPU、显存和驱动。</p>
+<p class="hint">连接后，本页队列、训练、评估、曲线和模型下载使用服务器。关闭本地中控或断开SSH后，服务器训练与队列继续；服务器重启后需重连，并从保存的模型续训。</p>
+<details class="remote-help"><summary>首次连接 / 登录说明</summary><p>服务器使用 Linux + NVIDIA GPU，需要 Python 3.10+、git 和 python3-venv。选择“密码登录”后填写服务器用户名和密码即可；首次连接显示服务器指纹，核对后确认并继续。选择密钥登录时使用系统OpenSSH或ssh-agent，加密密钥需先加入ssh-agent。</p><code id="ssh-login-command">ssh -p 22 ubuntu@服务器IP</code><p>密码不写入连接配置，也不会在状态和日志中回显；页面刷新后本次连接仍可使用，关闭并重启中控需要再次输入。密钥路径仅保存于本机。首次部署会上传本版中控、初始化本机机器人物理配方，并准备固定版本训练环境。已有服务器配方和训练记录会保留。</p></details></div>
+<div class="model-transfer"><label>上传老师 / 续训模型 ZIP <input id="server-model-upload" type="file" accept=".zip,application/zip"></label><span id="model-transfer-status" class="hint" role="status">上传原中控导出的完整ZIP；支持当前0.15.1训练源的独立动作模型，最多30MB。</span></div>
+</section>
+<section class="workflow-bar" aria-label="训练流程"><ol id="workflow-steps"><li>训练</li><li>验证与导出</li></ol>
+<span id="workflow-message">正在读取当前状态…</span></section>
+<section id="training-queue" class="panel training-queue" aria-label="训练任务队列">
+<div class="panel-head"><div class="queue-title"><div class="queue-heading"><h2>训练任务队列 <small>Training queue</small></h2><strong id="selected-action" class="queue-plan">等待加入任务</strong></div><span id="training-summary" class="hint"></span><span id="queue-summary" class="hint">等待添加任务</span></div>
+<div class="queue-controls"><button id="train-start" class="train-button primary" type="button" disabled="" title="按队列顺序使用每项加入时的参数训练">开始训练 ▶</button><button id="train-stop" class="train-button danger" type="button" disabled="">停止训练</button><button id="workflow-cancel" class="train-button danger" type="button" hidden="">取消安装</button><label>失败后<select id="queue-failure-policy"><option value="pause">停止后续</option><option value="continue">跳过并继续</option></select></label><button id="queue-clear" class="text-button" type="button">清理已结束记录</button></div></div>
+<p id="queue-message" class="queue-message" role="status">选择参数 → 加入队列 → 开始训练。</p><div id="queue-list" class="queue-list"><p class="hint">每项保存加入时的训练参数、机器人和标定；按列表顺序训练。</p></div><p class="queue-footnote hint">关闭网页不影响队列，请保持启动窗口运行。关闭启动窗口后当前后台训练继续，后续任务在重新打开中控后接着执行。</p></section><section id="run-alert" class="notice bad run-alert" hidden=""><div>
+<strong id="run-alert-title">任务失败</strong><p id="run-alert-message"></p>
+</div>
+<a class="train-button" href="#logs">查看完整日志</a></section><section class="summary-grid" aria-label="当前训练状态"><article><span>所选训练</span><strong id="run-state">尚未开始</strong><small id="run-name">等待选择训练任务</small></article><article><span>本次已完成 / 计划轮数</span><strong id="run-iteration">— / —</strong><small id="raw-iteration">尚无迭代记录</small></article><article><span>平均奖励</span><strong id="run-reward">—</strong><small>结合动作与评估结果判断效果</small></article><article><span>训练采样速度</span><strong id="run-fps">— <em>steps/s</em></strong><small id="run-time">运行时间 —</small></article></section>
+<div class="progress-band">
+<div class="progress-label">
+<span id="progress-text">等待训练开始</span><span id="run-eta">预计剩余 —</span>
+</div>
+<progress id="run-progress" max="100" value="0" aria-label="本次训练完成进度"></progress><div class="resource-strip training-status-line">
+<span id="gpu-live">GPU 占用 —</span><span id="gpu-used">显存使用 —</span><span id="gpu-temp">GPU 温度 —</span><span id="run-config-summary">等待训练参数</span><span id="gpu-stamp" class="hint">运行任务时每 3 秒采样</span>
+</div></div>
+<div class="training-setup-row"><section class="panel" id="parameters"><div class="panel-head">
+<div class="parameter-heading"><h2>本次训练参数</h2><button id="queue-add" class="train-button primary" type="button">＋ 加入队列</button></div>
+
+<span id="studio-status" class="hint" role="status"></span></div>
+
+<form id="train-form" novalidate=""><div class="parameter-settings" aria-label="训练与网络设置"><p id="task-budget" class="form-note"></p><p id="task-description" class="form-note"></p><p id="sample-alignment-note" class="form-note sample-alignment-note"></p><p id="runtime-alignment" class="form-note runtime-alignment">动作系数 0.9 · 头颈滤波 0.5 · 腿部滤波 0.7 · 本次滤波实验</p>
+
+<div class="form-grid primary-training-fields">
+<label class="wide task-primary">训练动作 / Action<select id="task"></select></label><label>训练地形 / Terrain<select id="task-terrain"></select></label><label>舵机齿隙 / Gear backlash<select id="task-backlash"></select></label><p id="task-physics-note" class="form-note wide"></p><label class="wide">本次运行名称<input id="run-label" maxlength="60" placeholder="例如：行走老师 / 官方默认参数"></label><label>并行环境数<input id="num-envs" type="number" min="1" max="8192" value="4096" required=""></label><label class="iterations-primary">本次实际轮数（可修改）<input id="iterations" type="number" min="1" max="409600000" value="6000" required=""></label><label>开始方式<select id="resume"><option value="">新建训练</option></select></label>
+<section id="joint-training-panel" class="joint-training-panel" hidden=""><h3 class="section-heading">联合训练前置条件</h3><div id="joint-training-teachers" class="joint-training-teachers">
+<label>行走老师 PT<select id="walk-teacher"><option value="">选择已验证能走的 HD1910 检查点</option></select></label>
+<label>起身老师 PT<select id="stand-teacher"><option value="">选择已验证能起身的 HD1910 检查点</option></select></label>
+</div><p id="joint-training-note" class="form-note" role="status"></p><div id="joint-training-runtime" class="joint-training-runtime" hidden=""></div></section></div>
+<section class="action-filter-settings" aria-label="舵机P、动作系数与滤波">
+<div class="filter-title"><h3 class="section-heading">舵机 P 与动作映射</h3><label class="inline-check"><input id="action-filter-enabled" type="checkbox" checked>启用头腿滤波 / Filter</label></div>
+<div class="filter-fields"><label class="servo-p-field"><span>舵机 P<small>Servo P · 原始整数</small></span><input id="training-firmware-p" type="number" min="1" max="32" step="1" value="3" aria-label="训练舵机P增益"></label><label class="action-scale-field"><span>动作系数<small>Action scale</small></span><select id="training-action-scale" aria-label="当前训练动作系数"><option value="1.0">1.0</option><option value="0.9" selected>0.9</option><option value="0.8">0.8</option><option value="0.7">0.7</option><option value="0.6">0.6</option><option value="0.5">0.5</option><option value="0.4">0.4</option><option value="0.3">0.3</option><option value="0.2">0.2</option><option value="0.1">0.1</option></select></label><label><span>头颈滤波 α<small>Head filter</small></span><input id="head-filter-alpha" type="number" min="0.01" max="1" step="0.01" value="0.5"></label><label><span>腿部滤波 α<small>Leg filter</small></span><input id="legs-filter-alpha" type="number" min="0.01" max="1" step="0.01" value="0.7"></label></div>
+<p id="action-filter-note" class="form-note">50Hz · 新目标×α＋上次滤波目标×(1−α) · 1 为直通。仿真与导出沿用训练记录。</p>
+</section><section id="contact-settings" class="contact-settings" aria-label="接触面与物理训练参数"><h3 class="section-heading">接触面与物理参数 <small>Contact & physics</small></h3><p id="contact-settings-source" class="form-note"></p><div id="contact-settings-table"></div></section>
+<section class="advanced network-settings"><h3 class="section-heading">学习算法与网络 <span>留空使用官方默认值</span></h3><div class="form-grid">
+<label>学习率<input id="learning-rate" type="number" min="0.000001" max="0.01" step="any" placeholder="官方默认"></label><label>随机种子<input id="seed" type="number" min="0" max="2147483647" placeholder="官方默认"></label><label>折扣系数 γ<input id="gamma" type="number" min="0.5" max="0.99999" step="any" placeholder="官方默认"></label><label>探索强度<input id="entropy" type="number" min="0" max="0.5" step="any" placeholder="官方默认"></label><label>PPO 裁剪范围<input id="clip" type="number" min="0.01" max="0.5" step="any" placeholder="官方默认"></label><label>激活函数<select id="activation"><option value="">沿用官方</option>
+<option value="elu">ELU</option>
+<option value="relu">ReLU</option>
+<option value="tanh">Tanh</option>
+<option value="selu">SELU</option>
+<option value="lrelu">Leaky ReLU</option></select></label><label>策略网络隐藏层<input id="actor-dims" placeholder="读取所选任务默认结构" inputmode="text"></label><label>价值网络隐藏层<input id="critic-dims" placeholder="读取所选任务默认结构" inputmode="text"></label>
+</div>
+<p class="form-note">隐藏层用逗号分隔，例如 512, 256, 128。继续训练沿用原模型结构；修改结构请新建训练。</p></section></div>
+<section class="advanced reward-settings"><div class="reward-settings-head"><h3 class="section-heading">奖励权重与训练扰动</h3><button id="task-config-refresh" type="button" class="train-button action-blue">读取官方默认参数</button></div><label class="field">随机速度推扰<select id="training-pushes"><option value="default">沿用官方任务设置</option>
+<option value="off">关闭随机推扰</option></select></label>
+<div id="reward-fields" class="reward-fields"></div></section>
+
+</form></section>
+<section class="panel curriculum-panel" aria-label="当前训练课程"><div class="panel-head"><h2>当前训练课程 <small>Curriculum</small></h2><span id="curriculum-source" class="hint">等待任务配置</span></div><div class="curriculum-content"><div class="curriculum-current"><strong id="curriculum-task">等待训练任务</strong><p id="curriculum-alignment" class="course-alignment"></p><p id="curriculum-live">等待运行读回</p><p id="curriculum-note" class="hint">比例表示每回合开始时抽取的姿态，不是画面中的姿态占比。</p></div><div class="curriculum-table-wrap"><table class="curriculum-table"><thead><tr><th>本机等效轮 / Local</th><th>4096基准轮 / Reference</th><th>回合起始姿态 / Reset pose</th><th>阶段状态 / Stage</th></tr></thead><tbody id="curriculum-rows"><tr><td colspan="4">等待任务配置</td></tr></tbody></table></div><div id="curriculum-other" hidden=""></div></div></section></div>
+<div class="training-stage-grid"><div class="training-monitor-column"><section class="panel charts-panel"><div class="panel-head">
+<h2>学习曲线</h2>
+<label class="inline-check"><input id="chart-smooth" type="checkbox">显示平滑趋势</label>
+</div>
+<div class="chart-title">
+<span>平均奖励</span><span id="chart-run-label" class="hint">等待训练记录</span>
+</div>
+<div class="chart-wrap">
+<canvas id="training-chart" aria-label="所选训练平均奖励曲线"></canvas><p id="chart-empty">收到真实训练指标后绘制曲线。</p>
+</div>
+<div class="chart-caption">
+<span id="chart-unit">横轴：日志迭代编号 · 纵轴：平均奖励</span><span>淡线为原始数据</span>
+</div>
+<div class="chart-title">
+<span>训练细节</span><select id="chart-series" aria-label="第二幅训练曲线指标"><option value="value_loss">价值损失</option>
+<option value="policy_loss">策略损失</option>
+<option value="episode_length">平均回合长度</option>
+<option value="fps">采样速度 / steps/s</option><option value="expert_bc">新版 · 双教师模仿损失</option><option value="expert_bc_fallen_frac">新版 · 倒地样本占比</option><option value="expert_bc_anchor_frac">新版 · 行走老师样本占比</option></select>
+</div>
+<div class="chart-wrap secondary-chart"><canvas id="detail-chart" aria-label="所选训练细节曲线"></canvas></div>
+<div id="chart-legend" class="chart-legend"></div>
+<section class="reward-breakdown"><div class="reward-head">分项奖励 <span>所选训练 · 最新日志</span>
+</div><div id="reward-terms" class="reward-terms"><span class="hint">等待官方任务输出</span></div></section>
+</section><section class="panel" id="history"><div class="panel-head">
+<h2>运行记录</h2>
+<span class="hint">最近10次训练 · 自动轮换</span>
+</div>
+<div id="run-list" class="run-list"><p class="empty">尚无运行记录。</p></div></section><section class="panel" id="logs"><div class="panel-head">
+<h2 id="log-title">实时日志 · 最近160行</h2>
+<button id="show-full-log" class="text-button action-amber" type="button">查看完整日志</button><button id="show-live-log" class="text-button" type="button" hidden="">返回实时日志</button>
+<a class="text-button action-teal" id="download-run" href="/api/report.zip" download="">导出运行记录 ↓</a><button id="show-config" class="text-button">查看配置</button><button id="copy-log" class="text-button" type="button">复制错误与日志</button>
+</div>
+<p id="job-message" class="job-message" role="status">等待任务。</p>
+<pre id="job-log" aria-label="当前任务日志">尚无日志。</pre></section></div>
+
+<section class="panel simulation-panel" id="models">
+<div class="panel-head">
+<h2>鸭子 · 物理仿真</h2>
+<div class="sim-head-actions">
+<span id="sim-mode" class="pill muted">尚未启动</span><button id="training-live" class="train-button action-teal" type="button" disabled>观看当前训练</button><button id="viewer-fullscreen" class="text-button" type="button" disabled="">放大画面 ⛶</button>
+</div>
+</div>
+<div class="sim-stage" id="sim-stage">
+<iframe id="viewer-frame" title="官方 Microduck 物理仿真" sandbox="allow-scripts allow-same-origin allow-downloads" allow="fullscreen" referrerpolicy="no-referrer" hidden=""></iframe><div id="sim-empty" class="sim-empty">
+<span class="eyebrow">MICRODUCK · PHYSICS</span><h3 id="sim-empty-title">等待加载仿真</h3>
+<p id="sim-empty-note">训练产生检查点后，可加载策略看动作；勾选“自动查看新检查点”可周期观察训练效果。</p>
+<span class="sim-engine">MuJoCo / mjlab · Viser</span>
+</div>
+<span id="sim-performance" class="sim-performance" hidden=""></span>
+</div>
+<div class="sim-source">
+<span>当前画面</span><strong id="sim-source">尚未加载</strong>
+</div>
+<div class="sim-workbench"><div class="sim-controls control-card"><h3 class="section-heading">模型与验证</h3>
+<label class="sim-picker">选择模型<select id="checkpoint"><option value="">请选择模型存档或 ONNX</option></select></label><small id="selected-action-scale" class="model-action-scale"></small><button id="delete-model" type="button" class="train-button danger" disabled="">删除所选模型</button>
+<div class="form-actions">
+<button id="preview-start" class="train-button action-blue" type="button" disabled="">查看初始模型</button><button id="play-start" class="train-button primary action-blue" type="button" disabled="">查看所选策略</button><button id="recovery-eval-start" class="train-button action-amber" type="button" title="选择倒地起身老师，在平地检查背朝地、左右侧躺和趴地起身" disabled="">翻身检查</button><button id="export-model" class="train-button action-teal" type="button" disabled="">导出 ONNX</button><button id="play-stop" class="train-button danger" type="button" disabled="">停止仿真</button><a id="viewer-link" class="text-button" href="#" target="_blank" rel="noopener" hidden="">单独打开 ↗</a>
+</div>
+<p id="recovery-eval-note" class="hint" hidden="">翻身检查从完全背朝地开始；在仿真内切换左右侧躺、趴地或训练最终混合，查看各姿态的起身记录。</p>
+<label class="inline-check eval-push"><input id="follow-latest" type="checkbox">自动查看新检查点（周期评估）</label><label class="inline-check eval-push"><input id="eval-pushes" type="checkbox">启动时开启官方随机推扰 <span class="hint">默认关闭，便于比较动作</span></label><p id="viewer-state" class="viewer-state">尚未启动物理仿真。</p>
+
+</div><section class="drive-details control-card"><h3 class="section-heading">仿真遥控</h3><div class="remote-column"><div class="simulation-drive" id="sim-drive" tabindex="0" aria-label="仿真遥控区，WASD 移动，QE 转向，空格停止">
+<div class="drive-main">
+
+<p id="drive-status">加载行走策略后启用遥控。</p>
+<div class="form-actions">
+<button id="sim-pause" class="train-button action-amber" type="button" disabled="">暂停仿真</button><button id="sim-reset" class="train-button action-blue" type="button" disabled="">重置姿态</button>
+</div>
+<p id="drive-speed-note" class="drive-speed-note">仿真目标速度沿用任务默认指令范围。</p>
+</div>
+<div class="direction-pad">
+<button data-direction="turn_left" disabled="">↶<small>左转 Q</small></button><button data-direction="forward" disabled="">↑<small>前进 W</small></button><button data-direction="turn_right" disabled="">↷<small>右转 E</small></button><button data-direction="left" disabled="">←<small>左移 A</small></button><button id="sim-zero" class="stop-key" disabled="">■<small>归零</small></button><button data-direction="right" disabled="">→<small>右移 D</small></button><span></span><button data-direction="back" disabled="">↓<small>后退 S</small></button><span></span>
+</div>
+</div><p id="drive-feedback" class="drive-feedback" role="status">尚未发送移动指令。</p><p class="drive-note">按住屏幕箭头，或点击遥控区后用 ↑ ↓ ← → / WASD 移动，QE 转向；松开归零，空格停止移动。</p></div></section><section class="telemetry-card control-card"><h3 class="section-heading">实时姿态</h3><div class="sim-readouts">
+<div>
+<span>仿真收到 · 前 / 左 / 转</span><strong id="sim-command">— / — / —</strong><small>m/s · m/s · rad/s</small>
+</div>
+<div>
+<span>实际速度 · 前 / 左 / 转</span><strong id="sim-actual">— / — / —</strong><small>机器人自身坐标</small>
+</div>
+<div>
+<span>横滚 / 俯仰</span><strong id="sim-tilt">— / —</strong><small>实时物理姿态</small>
+</div>
+<div>
+<span>连续直立 / 非超时结束</span><strong id="sim-outcome">— / —</strong><small title="连续直立按机身倾角小于 45° 计时；非超时结束按官方任务终止条件计数，重置清零。">倾角 &lt;45° · 重置清零</small>
+</div>
+</div>
+</section></div>
+</section>
+</div>
+
+<section id="results-details" class="workspace-drawer"><section class="panel model-library" id="model-library"><div class="panel-head">
+<h2>训练成果</h2>
+<span id="model-count" class="hint">尚无模型</span>
+</div>
+
+
+<div class="model-table-wrap"><table class="model-table">
+<thead><tr>
+<th>训练</th>
+<th>已训练</th>
+<th>保存时间</th>
+<th>模型文件</th>
+<th>操作</th>
+</tr></thead>
+<tbody id="model-table"><tr><td colspan="5" class="empty">训练保存检查点后，模型会出现在这里。</td></tr></tbody>
+</table></div></section>
+</section><section id="training-settings" class="workspace-drawer"><div class="training-settings-grid">
+
+<section class="panel" id="robot-data">
+ <div class="panel-head">
+<h2>机器人与舵机参数</h2>
+<div>
+<span class="pill" id="body-mass">质量 —</span>
+</div>
+</div>
+ 
+
+ 
+ 
+<div class="robot-card-scroll"><div class="panel-body">
+<div class="model-tabs"><button class="train-button" data-studio-tab="servo-mass">重量与部件</button><button class="train-button" data-studio-tab="joints">关节</button><button class="train-button" data-studio-tab="actuators">舵机</button></div>
+ 
+ </div><div class="studio-table-wrap" id="robot-table"></div><div class="panel-body" id="body-editor" hidden="">
+<h3 id="body-edit-title">编辑刚体</h3>
+<div class="form-grid" id="body-edit-fields"></div>
+<div class="form-actions">
+<button class="text-button" id="body-edit-cancel">关闭编辑</button>
+</div>
+</div></div></section><section class="panel" id="calibration">
+ <div class="panel-head">
+<h2>本机标定</h2>
+<label class="train-button">导入标定 / 中控录制<input id="calibration-file" type="file" accept=".toml,.json" hidden=""></label>
+
+</div>
+ 
+ 
+ 
+<div class="robot-card-scroll"><div class="panel-body">
+<div class="zero-calibration-row"><label for="zero-target">ZERO 地址 / SSH<input id="zero-target" type="text" placeholder="radxa@机器人IP" autocomplete="off" spellcheck="false" maxlength="320"></label><button id="calibration-zero" class="train-button calibration-action" type="button">从 ZERO 获取</button></div>
+<p id="calibration-zero-status" class="hint" role="status" aria-live="polite"></p>
+<div class="calibration-shortcut"><button id="calibration-bundled" class="train-button calibration-action" type="button">使用随包标定</button><span id="calibration-quick-status" class="hint" role="status">正在读取当前实验标定…</span></div>
+<p id="calibration-source" class="hint"></p>
+
+<div class="hardware-summary" id="hardware-summary"></div>
+</div><div class="studio-table-wrap" id="calibration-table"></div></div></section><section class="panel" id="environment"><div class="panel-head">
+<h2>执行环境</h2>
+<span class="hint">Windows 页面 · Linux 训练</span>
+</div>
+<form id="env-form">
+<div class="form-grid">
+<label>执行环境<select id="engine-mode"><option value="wsl">Windows / WSL2</option>
+<option value="local">Linux 本机</option></select></label><label>WSL 发行版<input id="distro" value="Ubuntu" maxlength="80"></label><label class="wide">官方 0.15.1 对应训练源码路径<input id="repo" value="~/microduck-training-studio/engines/official_0151" spellcheck="false" maxlength="1024"></label>
+</div>
+<div class="form-actions">
+<button id="environment-setup" class="train-button" type="button">安装训练环境</button><button id="probe" class="train-button primary" type="submit">环境诊断（可选）</button>
+</div>
+<p id="environment-setup-note" class="form-note" hidden="">使用本栏的环境安装按钮准备源码和依赖；训练使用本机检查缓存。</p>
+<p id="env-message" class="env-message" role="status">本机检查一次后，所有训练项目共用缓存。</p>
+<dl class="environment-values">
+<div>
+<dt>实际 GPU</dt>
+<dd id="gpu-name">—</dd>
+</div>
+<div>
+<dt>显存容量</dt>
+<dd id="gpu-memory">—</dd>
+</div>
+<div>
+<dt>训练源码版本</dt>
+<dd id="engine-revision">—</dd>
+</div>
+</dl>
+</form>
+</section>
+</div></section><section id="reference-details" class="workspace-drawer"><h3 class="section-heading"><strong>高级参数</strong><span>需要修改模型或训练算法时再打开</span></h3><p class="advanced-entry"><button id="open-advanced-settings" type="button" class="train-button action-blue">打开高级参数</button></p><div class="settings-mode"><span>设置视图</span><button id="settings-basic" type="button" class="train-button selected" aria-pressed="true">常用设置</button><button id="settings-expert" type="button" class="train-button" aria-pressed="false">高级参数</button><span id="settings-view-note" class="hint"></span></div><div class="reference-layout"><details class="secondary-details"><summary>自定义骨架 / 原始模型参数</summary><section class="setup"><h3 class="section-heading">自定义模型与参数覆盖</h3>
+<label class="field">新MJCF路径（空白沿用冻结模型）<input id="custom-mjcf" placeholder="/home/radxa/my-duck/robot_walk.xml"></label><label class="field">模型覆盖JSON（bodies / joints / geoms / actuator_parameters，SI单位）<textarea id="robot-overrides" rows="5" spellcheck="false"></textarea></label></section></details>
+
+
+
+<section class="panel expert-only" id="all-config">
+ <div class="panel-head">
+<h2>高级训练参数 · 可修改项</h2>
+<span id="config-count" class="hint"></span>
+</div>
+ <div class="config-toolbar">
+<select id="config-category"><option value="">全部参数</option>
+<option value="agent">PPO / 网络 / 归一化</option>
+<option value="env.sim">仿真步长 / 求解器</option>
+<option value="env.scene">机器人 / 地形 / 执行器</option>
+<option value="env.observations">观测 / 噪声 / 延迟</option>
+<option value="env.actions">动作 / 缩放</option>
+<option value="env.commands">指令范围 / 采样</option>
+<option value="env.rewards">奖励函数 / 权重</option>
+<option value="env.events">随机化 / 推扰 / 复位</option>
+<option value="env.curriculum">课程学习</option>
+<option value="env.terminations">终止条件</option></select><select id="config-status" aria-label="配置确认状态"><option value="pending">待核对（先看）</option>
+<option value="all">全部（待核对在前）</option>
+<option value="known">源码已确认（先沿用）</option></select><label class="inline-check config-reference"><input id="config-show-reference" type="checkbox">包含无需填写的源码项</label><input id="config-search" placeholder="搜索中文含义、路径或数值…"><button class="train-button" id="config-reset">清除参数覆盖</button>
+</div>
+ <p class="form-note config-help">默认只列可修改的参数，待核对项排在前面。无需填写的函数入口、选择器等源码定义可勾选查看，也保留在完整资料包。</p>
+ <div class="studio-table-wrap" id="config-table"></div>
+<div class="config-pager">
+<button class="train-button" id="config-prev">上一页</button><span id="config-page"></span><button class="train-button" id="config-next">下一页</button>
+</div>
+ 
+</section>
+
+</div></section><footer>Microduck 独立训练台 · 本地记录 · 官方训练与导出接口<span>独立进程 · 独立配置 · localhost:8092</span></footer>
+</main><div id="toast" role="status" hidden=""></div>
+
+
+
+
+</body></html>

@@ -30,7 +30,11 @@
 
 ## 在线体验
 
-👉 [打开 Microduck 机器人中控在线演示](https://kissqy.github.io/Microduck-kissqy/)
+👉 [机器人中控在线演示（R17）](https://kissqy.github.io/Microduck-kissqy/)
+
+👉 [训练中控在线演示（R1.5.17）](https://kissqy.github.io/Microduck-kissqy/training/)
+
+*两个页面均为原版界面与模拟数据，不会连接实际机器人或执行训练。*
 
 ## 鼓励一下
 

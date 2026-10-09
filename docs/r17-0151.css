@@ -1,0 +1,340 @@
+/* Local R17 layout changes; original palette and remaining cards stay in styles.css. */
+.service-hero.r17-three-columns{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:18px;align-items:stretch}
+.r17-three-columns>.panel{grid-column:auto!important;height:1120px;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.r17-three-columns .panel-head{flex-shrink:0}
+.r17-three-columns .twin-stage,.r17-three-columns .camera-stage{height:auto!important;min-height:0;flex:1}
+.r17-three-columns .twin-footer,.r17-three-columns .camera-stats,.r17-three-columns .panel-note{flex-shrink:0}
+.r17-three-columns .camera-stage video{width:100%;height:100%;object-fit:contain}
+.webpad-content{padding:12px 16px;flex:1;min-height:0;overflow:auto}
+.official-pad{border:0!important;padding:0!important;margin:0!important;background:transparent!important}
+.official-pad button{border:1px solid #40513e;background:#202d25;color:#cbdac1;border-radius:9px;min-height:32px;padding:5px 10px;touch-action:none}
+.official-pad button.held{border-color:var(--green);background:#374c2c;color:#e8ffd7}
+.official-pad button:disabled{opacity:.38;cursor:default}
+.pad-shoulders{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:12px;align-items:center}
+.pad-shoulders label{display:grid;gap:5px;text-align:center;font-size:12px;color:var(--muted)}
+.pad-shoulders input{width:100%;padding:0;accent-color:var(--green);touch-action:none}
+.xbox-body{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;justify-items:center;gap:18px 10px;border:1px solid #344338;border-radius:32px 32px 52px 52px;background:#19251e;padding:20px 12px;margin-top:14px}
+.pad-stick{position:relative;width:96px;height:96px;border-radius:50%;background:#101b15;border:2px solid #3b4d3c;touch-action:none;cursor:grab}
+.pad-stick i{position:absolute;left:calc(50% - 21px);top:calc(50% - 21px);width:42px;height:42px;border:2px solid #7e9b68;background:#33452a;border-radius:50%;pointer-events:none}
+.pad-stick span{position:absolute;left:0;right:0;bottom:5px;text-align:center;font:11px monospace;color:#738669;pointer-events:none}
+.pad-stick[aria-disabled=true]{opacity:.35;cursor:default}
+.pad-center{display:flex;flex-direction:column;align-items:center;gap:10px}.pad-center button{font-size:11px;min-width:60px}.xbox-mark{color:var(--green);font-size:25px}
+.pad-abxy,.pad-dpad{display:grid;grid-template-columns:repeat(3,32px);grid-template-rows:repeat(3,32px);gap:3px}
+.pad-abxy button,.pad-dpad button{padding:0;min-height:0}
+.pad-y,.pad-dpad button:nth-child(1){grid-column:2;grid-row:1}.pad-x,.pad-dpad button:nth-child(2){grid-column:1;grid-row:2}.pad-b,.pad-dpad button:nth-child(3){grid-column:3;grid-row:2}.pad-a,.pad-dpad button:nth-child(4){grid-column:2;grid-row:3}
+.pad-abxy button{border-radius:50%;font-weight:700}.pad-abxy .pad-y{color:#dfcc78}.pad-abxy .pad-b{color:#d99890}.pad-abxy .pad-a{color:#acd580}.pad-abxy .pad-x{color:#90bad9}
+.pad-stick-clicks{display:grid;gap:7px}.pad-stick-clicks button{font-size:11px}
+.webpad-content>p{min-height:18px;margin:10px 0 0;line-height:1.5;overflow-wrap:anywhere}
+.webpad-content #control-feedback{padding:7px 0;margin:0;white-space:pre-wrap}
+.model-management-anchor{margin-top:10px}.model-management-anchor .service-management{padding:10px 0 0;border-top:1px solid var(--line);margin:0}
+.management-model-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.management-model-actions select{min-width:0;max-width:100%;font-size:12px}.management-model-actions .management-model-select{flex:1}
+.management-tools{margin-top:8px;font-size:12px;color:var(--muted)}.management-tools>summary{cursor:pointer}.management-tools .service-action-row{margin-top:8px}
+#management-hat-status{white-space:pre-wrap;max-height:180px;overflow:auto}
+@media(min-width:1800px){.r17-three-columns>.panel{height:1180px}.pad-stick{width:120px;height:120px}.xbox-body{gap:24px 15px;padding:25px}.pad-abxy,.pad-dpad{grid-template-columns:repeat(3,38px);grid-template-rows:repeat(3,38px)}}
+@media(max-width:1100px){.service-hero.r17-three-columns{grid-template-columns:1fr!important}.r17-three-columns>.panel{height:1140px}}
+
+/* R17 v1.0.97: textured controller, Chinese reference and measured parameters. */
+.pad-official-tag{font-size:10px;color:#b7d694;border:1px solid #42543b;padding:3px 6px;border-radius:5px}
+.webpad-content{padding:14px 16px;background:radial-gradient(ellipse at 50% 8%,#23352b66,transparent 45%)}
+.pad-brand{display:flex;align-items:center;gap:9px;margin:0 0 12px;color:#83958c}.pad-brand>span{letter-spacing:.12em;font-size:12px;font-weight:800}.pad-brand>small{font-size:10px}.pad-brand>i{margin-left:auto;width:5px;height:5px;border-radius:50%;background:#a6ca75;box-shadow:0 0 7px #9eba60}
+.official-pad .pad-shoulders{gap:9px;padding:0 14px}.official-pad .pad-shoulders>button{border-radius:13px 13px 5px 5px;box-shadow:inset 0 1px #7b8c7a66,0 3px 0 #0e1712;min-width:36px}.pad-shoulders label{font-size:11px;gap:6px}
+.official-pad .xbox-body{position:relative;grid-template-columns:1fr .8fr 1fr;gap:14px 4px;padding:19px 10px 24px;border-radius:36% 36% 27% 27% / 18% 18% 42% 42%;border:1px solid #526157;background:radial-gradient(ellipse at 50% -20%,#54695b,transparent 60%),repeating-linear-gradient(125deg,#ffffff03 0 1px,transparent 1px 4px),linear-gradient(165deg,#2c3831,#161e1a 70%);box-shadow:inset 0 2px 1px #95a99744,inset 0 -9px 12px #070b0988,0 10px 18px #0005;margin:12px 0 18px}
+.official-pad .pad-stick{width:clamp(64px,6.3vw,104px);height:clamp(64px,6.3vw,104px);background:radial-gradient(circle,#202924 42%,#060d0a 62%,#3e4b42 66%,#161e19 71%);border:1px solid #58695b;box-shadow:inset 0 4px 8px #0008,0 2px 3px #0009}
+.official-pad .pad-stick i{width:43%;height:43%;left:28.5%;top:28.5%;border:2px solid #71846e;background:radial-gradient(circle,#435040 40%,#253327 65%,#0b130e 69%,#6c7d6455 71%,#263729 80%);box-shadow:0 4px 8px #0009,inset 0 1px 1px #d4e1c055}
+.official-pad .pad-stick span{font:9px sans-serif;bottom:5px;color:#9aaa95}
+.official-pad .pad-center{gap:7px}.official-pad .pad-center button{min-width:54px;padding:5px 6px;min-height:30px;font-size:10px;border-radius:7px;background:linear-gradient(#334439,#1b271f);box-shadow:inset 0 1px #81967944,0 2px 2px #0008}.pad-center small{display:block;font-size:8px;color:#a7b39f;line-height:1.6}.official-pad .pad-center .xbox-mark{border-radius:50%;min-width:30px;width:30px;padding:0;color:#b7d390;box-shadow:0 0 10px #b4d68310}
+.official-pad .pad-abxy button{border-color:#697366;background:radial-gradient(circle at 35% 22%,#5b675a,#18231b 65%);box-shadow:inset 0 1px 1px #c9d2a55a,0 3px 0 #070e0a,0 5px 7px #0005;font-size:14px}.official-pad .pad-dpad button{border-radius:5px;background:linear-gradient(145deg,#3b4a40,#141c16);box-shadow:inset 0 1px #7c8a7155,0 2px 0 #09100b;color:#bbc9ae}.official-pad .pad-stick-clicks{gap:6px}.official-pad .pad-stick-clicks button{font-size:9px;min-height:26px;padding:3px 6px}.official-pad button.held{background:#456334;box-shadow:inset 0 2px 5px #0008;border-color:#b4dd81;transform:translateY(2px)}
+.official-pad button:disabled{opacity:.38;filter:saturate(.3)}
+.runtime-parameters{margin:12px 0;border:1px solid #35433a;border-radius:9px;overflow:hidden;background:#101a1588}.parameter-heading{display:flex;justify-content:space-between;gap:8px;padding:9px 10px;border-bottom:1px solid #304036;font-size:12px}.parameter-heading span{font-size:10px;color:#91a47e}
+.parameter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.parameter-grid>div{padding:9px 10px;border-bottom:1px solid #2d3930}.parameter-grid>div:nth-child(odd){border-right:1px solid #2d3930}.parameter-grid span{display:block;color:#a7b7a1;font-size:11px}.parameter-grid b{display:block;color:#d8ecc0;font:600 20px/1.7 ui-monospace,monospace;letter-spacing:-.02em}.parameter-grid small{display:block;line-height:1.4;color:#899986;font-size:10px}.parameter-actual{background:#bbda7610}.runtime-parameters>p{padding:6px 10px;margin:0;font-size:10px;line-height:1.5;color:#90a08a}
+.pad-help{margin:12px 0 0;font-size:11px;border-top:1px solid #334338;padding-top:10px}.pad-help summary{font-weight:600;color:#cbdac0;cursor:pointer}.pad-help-grid{display:grid;gap:0;margin-top:6px}.pad-help-grid>div{display:grid;grid-template-columns:98px 1fr;gap:8px;border-bottom:1px solid #2c382e;padding:6px 0;line-height:1.5}.pad-help-grid b{color:#b7cf9a;font-size:10px}.pad-help-grid span,.pad-help>p{color:#a4b19f;font-size:10px;line-height:1.5}.pad-help p{margin:8px 0}
+.firmware-card{margin-top:18px}.firmware-body{padding:18px;display:grid;gap:12px}.firmware-body .field{gap:7px;margin:0}.firmware-body input,.firmware-body select{width:100%;min-width:0;font-size:12px}.firmware-body p{margin:0;line-height:1.7}.firmware-log-details summary{font-size:12px;cursor:pointer;padding:3px 0 8px}.firmware-log-details pre{background:#101714;border:1px solid #354338;border-radius:6px;padding:12px;min-height:120px;max-height:280px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.65 ui-monospace,monospace;color:#b6cca1;margin:0 0 9px}.firmware-power{padding-top:14px;border-top:1px solid var(--line);display:grid;gap:10px}.firmware-card .service-job{font-size:12px}
+@media(max-width:1400px) and (min-width:1101px){.official-pad .pad-abxy,.official-pad .pad-dpad{grid-template-columns:repeat(3,26px);grid-template-rows:repeat(3,26px)}.official-pad .pad-center button{min-width:46px;font-size:9px}.pad-center small{font-size:7px}}
+@media(max-width:1100px){.official-pad .pad-stick{width:100px;height:100px}.official-pad .xbox-body{max-width:440px;margin:12px auto 18px}.pad-shoulders,.pad-brand{max-width:440px;margin-left:auto;margin-right:auto}}
+.firmware-upload{display:flex;align-items:center;gap:12px;padding:8px;border:1px solid #354044;border-radius:6px;background:#101719}.firmware-upload #firmware-filename{overflow-wrap:anywhere;min-width:0}.firmware-upload .button{flex-shrink:0}
+/* v1.0.98: compact console; desktop cards share rows and heights. */
+.metrics{grid-template-columns:repeat(5,minmax(0,1fr))}
+.r17-three-columns>.panel{height:980px;min-height:0}
+.webpad-content{padding:10px 12px;overflow:visible;font-size:11px}
+#control-panel .panel-head{padding:10px 12px;min-height:46px}
+#control-panel .panel-head>div{flex-wrap:wrap;gap:5px}
+#control-panel .button{padding:5px 8px;font-size:11px;min-height:28px}
+#control-panel .tiny,#control-panel .service-job{font-size:10px;line-height:1.5}
+#control-panel .service-mode-switch{border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;margin:0 0 9px}
+#control-panel .service-mode-switch .panel-head{padding:0 0 5px;min-height:26px;border:0}
+#control-panel .service-mode-switch h2{font-size:11px}
+#control-panel .service-mode-indicator{font-size:10px;white-space:nowrap}
+#control-panel .service-mode-body{padding:0;display:grid;gap:5px}
+#control-panel .service-mode-body>p{font-size:10px;line-height:1.4;margin:0}
+#control-panel .service-check{font-size:10px;min-height:17px}
+#control-panel .service-action-row{display:flex;flex-wrap:wrap;gap:6px;margin:0}
+.compact-row{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+#control-panel .service-credentials input{flex:1;min-width:115px;width:100px;font-size:10px;padding:5px 7px;height:28px}
+#control-panel .service-credentials span{width:100%;min-height:15px}
+#control-panel .service-mode-job:empty,#management-status:empty{display:none}
+#control-panel .service-mode-job{border:0;padding:2px 0;max-height:70px;overflow:auto}
+.official-pad .pad-shoulders{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:0}
+.official-pad .pad-shoulders>button{min-width:0;font-size:10px;padding:4px}
+.pad-brand{margin:6px 0 4px;gap:6px}.pad-brand>span{font-size:10px}.pad-brand>small{font-size:9px}
+.official-pad .xbox-body{padding:12px 8px 15px;margin:6px 0 9px;gap:8px 4px}
+.official-pad .pad-stick{width:clamp(62px,5vw,92px);height:clamp(62px,5vw,92px)}
+.official-pad .pad-abxy,.official-pad .pad-dpad{grid-template-columns:repeat(3,27px);grid-template-rows:repeat(3,27px);gap:2px}
+.official-pad .pad-center{gap:4px}.official-pad .pad-center button{font-size:9px;min-height:25px;min-width:46px;padding:3px 5px}.pad-center small{font-size:8px}
+.official-pad .pad-stick-clicks{gap:4px}.official-pad .pad-stick-clicks button{padding:2px 4px;font-size:9px;min-height:22px}
+.pad-sliders{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:4px}
+.pad-sliders label{display:grid;grid-template-columns:1fr auto;gap:3px;color:#b1c3a8;font-size:11px}
+.pad-sliders input{grid-column:1/-1;padding:0;width:100%;height:18px;min-width:0;touch-action:pan-y}
+.pad-sliders output{font:11px ui-monospace,monospace;color:#d7ecc1}
+.webpad-content>p{margin:4px 0 0;min-height:14px;line-height:1.4}
+.runtime-parameters{margin:7px 0;border-radius:6px}.parameter-heading{padding:5px 7px;font-size:11px}.parameter-heading span{font-size:9px}
+.parameter-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.parameter-grid>div{padding:5px 7px;border-right:1px solid #2d3930}.parameter-grid>div:nth-child(3n){border-right:0}
+.parameter-grid span{font-size:10px;line-height:1.4}.parameter-grid b{font-size:15px;line-height:1.6}.parameter-grid small{font-size:9px;line-height:1.35}.runtime-parameters>p{font-size:9px;line-height:1.4;padding:4px 7px}
+.model-management-anchor{margin-top:5px}.model-management-anchor .service-management{padding:5px 0 0}.management-model-actions{display:flex;gap:5px;flex-wrap:wrap}.model-buttons{display:flex;gap:5px;min-width:0;flex:1;flex-wrap:wrap}
+.model-choice.selected,.firmware-sources .selected{border-color:#98b96f;background:#293b23;color:#c7ec9b}.model-choice{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.global-scale-row{display:grid;grid-template-columns:auto minmax(55px,1fr) 32px auto;gap:6px;align-items:center;margin:6px 0;font-size:11px}
+.global-scale-row input{padding:0;height:18px}.global-scale-row output{font:11px ui-monospace,monospace;color:#d3e9bb}.management-tools{margin-top:3px;font-size:10px}.management-tools .text-button{font-size:10px}.management-tools .service-action-row{margin:4px 0}
+#management-tools-body{padding:5px;border:1px solid #364134;background:#121b15}#management-live-scale{display:block;font-size:9px;line-height:1.4}
+.pad-help{margin:7px 0 0;padding-top:5px;font-size:10px}.pad-help h3{font-size:11px;color:#cbdac0}
+.pad-help-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:9px;margin-top:4px}.pad-help-grid>div{display:block;padding:4px 0;line-height:1.4}.pad-help-grid b{display:block;font-size:10px;line-height:1.4}.pad-help-grid span,.pad-help>p{font-size:9px;line-height:1.45}.pad-help p{margin:5px 0}
+#control-feedback{font-size:10px;max-height:52px;overflow:auto;padding:3px 0!important}
+#service-joint-row{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
+#service-observation{display:flex;min-width:0}#service-observation>.service-joint-chart{width:100%;display:flex;flex-direction:column;margin:0}
+#service-workbench-stack{display:flex;min-width:0}#service-editor{width:100%;height:100%}
+.service-joint-chart .joint-chart{flex:1;height:auto;min-height:240px}.service-joint-chart .legend{flex:none}
+#service-editor .service-imu{border:0;border-radius:0;border-top:1px solid var(--line);background:transparent;margin-top:8px}
+#service-editor .service-imu .panel-head{padding:8px 0;min-height:28px;border:0}#service-editor .service-imu .service-setup-body{padding:0;gap:7px;display:grid;grid-template-columns:minmax(0,1fr) auto}
+#service-editor .service-imu .field{grid-column:1/-1}#service-editor .service-imu .service-job{padding:6px 0;border:0}
+#diagnostics{grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch}
+#diagnostics>.panel{min-height:500px}.firmware-card{margin:0}.firmware-body{padding:12px;gap:7px;font-size:11px}.firmware-body p,.firmware-card .service-job{font-size:10px;line-height:1.5}.firmware-body .button{padding:5px 8px;font-size:11px}.firmware-sources{display:flex;flex-wrap:wrap;gap:6px}
+.firmware-body .field{font-size:10px;gap:4px}.firmware-upload{padding:5px;gap:7px}.firmware-upload #firmware-filename{font-size:10px}.firmware-log-details summary{font-size:11px;padding:3px 0}.firmware-log-details pre{min-height:90px;height:100px;max-height:180px;padding:7px;font-size:10px;margin:0 0 4px}
+.firmware-power{padding-top:7px;gap:5px}.firmware-power .service-hat{border:0;padding:0;margin:0}.firmware-power .service-hat .service-action-row{display:none}.firmware-power .service-hat p{font-size:10px;margin:0}.firmware-power .service-job{padding:4px 0;border:0;max-height:90px;overflow:auto}
+.service-power-actions{display:flex!important;flex-direction:row!important;flex-wrap:wrap;gap:6px!important}.service-power-actions>.service-action-row{display:contents!important}
+#diagnostics .panel-head{padding:12px;min-height:48px}#diagnostics .events,#diagnostics>section>pre{height:420px}.firmware-body>.service-action-row{gap:6px;flex-wrap:wrap}
+@media(min-width:1800px){.r17-three-columns>.panel{height:920px}.official-pad .pad-stick{width:94px;height:94px}.official-pad .xbox-body{padding:12px 14px}.official-pad .pad-abxy,.official-pad .pad-dpad{grid-template-columns:repeat(3,29px);grid-template-rows:repeat(3,29px)}}
+@media(min-width:1101px) and (max-width:1400px){.r17-three-columns>.panel{height:1090px}.parameter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.parameter-grid>div:nth-child(3n){border-right:1px solid #2d3930}.parameter-grid>div:nth-child(2n){border-right:0}.pad-help-grid{column-gap:6px}.global-scale-row{grid-template-columns:auto minmax(45px,1fr) 30px auto;font-size:10px}}
+@media(max-width:1100px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}#diagnostics{grid-template-columns:1fr}.r17-three-columns>.panel{height:1040px}#service-joint-row{grid-template-columns:1fr}.service-joint-chart{min-height:420px}.official-pad .pad-stick{width:86px;height:86px}}
+@media(max-width:500px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{padding:12px}.metric-title{font-size:11px}.metric-value{font-size:28px}.parameter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.parameter-grid>div:nth-child(2n){border-right:0}.global-scale-row{font-size:10px}.pad-help-grid{column-gap:7px}.official-pad .pad-abxy,.official-pad .pad-dpad{grid-template-columns:repeat(3,24px);grid-template-rows:repeat(3,24px)}}
+#control-panel .official-pad{width:min(100%,440px);margin:0 auto!important}
+#control-panel .pad-control-column>p{margin:4px 0 0;font-size:10px;line-height:1.4}
+#control-panel .pad-configuration-column{min-width:0}
+#control-panel .parameter-grid>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 4px;align-items:start}
+#control-panel .parameter-grid b{grid-column:2;grid-row:1;font-size:14px;line-height:1.4}
+#control-panel .parameter-grid span{font-size:10px;line-height:1.4}
+#control-panel .parameter-grid small{grid-column:1/-1;font-size:9px;line-height:1.3}
+#control-panel .service-management{gap:4px}
+#control-panel .service-credentials span{width:auto;flex:1;min-width:120px}
+#control-panel .pad-help-grid>div{padding:3px 0}
+@media(min-width:1800px){
+ .r17-three-columns>.panel{height:780px}
+ .webpad-content{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-content:start}
+ .mode-management-anchor{grid-column:1/-1}
+ #control-panel .official-pad .pad-stick{width:78px;height:78px}
+ #control-panel .parameter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #control-panel .parameter-grid>div:nth-child(3n){border-right:1px solid #2d3930}
+ #control-panel .parameter-grid>div:nth-child(2n){border-right:0}
+ #control-panel .pad-help-grid{grid-template-columns:1fr}
+ #control-panel .pad-help-grid>div{display:grid;grid-template-columns:75px minmax(0,1fr);gap:5px}
+ .runtime-parameters{margin-top:0}
+}
+@media(min-width:1401px) and (max-width:1799px){.r17-three-columns>.panel{height:1120px}}
+@media(min-width:1101px) and (max-width:1400px){.r17-three-columns>.panel{height:1250px}}
+@media(max-width:1100px){.r17-three-columns>.panel{height:1210px}}
+@media(min-width:1800px){.r17-three-columns>.panel{height:840px}}
+#control-panel .service-mode-indicator{padding:3px 6px}
+#control-panel .service-mode-body .service-action-row{align-items:center}
+#control-panel .service-mode-body .service-action-row .service-check{margin-right:auto}
+#control-panel .official-pad .pad-stick{width:68px;height:68px}
+#control-panel .official-pad .xbox-body{padding:9px 8px 12px;gap:6px 4px}
+#control-panel .official-pad .pad-abxy,#control-panel .official-pad .pad-dpad{grid-template-columns:repeat(3,24px);grid-template-rows:repeat(3,24px);gap:2px}
+#control-panel .official-pad .pad-brand .xbox-mark{width:18px;min-height:18px;font-size:10px;padding:0;border-radius:50%}
+#control-panel .global-scale-row{margin:3px 0}
+#control-panel #management-live-scale{display:none}
+#control-panel #control-feedback.completed{display:none}
+@media(min-width:1800px){#control-panel .official-pad .pad-stick{width:82px;height:82px}}
+/* Canvas pixel buffers must not set the grid row's intrinsic height. */
+.service-joint-chart .joint-chart{height:0!important;flex:1 1 0;min-height:240px}
+/* v1.0.99: controller above two references; actions beside their own fields. */
+#control-panel .webpad-content{display:flex;flex-direction:column;gap:8px;overflow:visible}
+#control-panel .service-mode-switch{display:grid;grid-template-columns:auto 1fr;margin:0;padding-bottom:6px;gap:3px 8px}
+#control-panel .service-mode-switch .panel-head{padding:0;min-height:28px;gap:6px}
+#control-panel .service-mode-switch h2{display:none}
+#control-panel .service-mode-body{display:contents}
+#control-panel .service-mode-body>.service-action-row{grid-column:2;grid-row:1;justify-content:flex-end}
+#control-panel #service-mode-check,#control-panel #service-mode-job{grid-column:1/-1;margin:0}
+#control-panel .official-pad{width:min(100%,620px);margin:auto!important}
+#control-panel .official-pad .xbox-body{padding:20px 13px 25px;gap:14px 7px;margin:9px 0 15px}
+#control-panel .official-pad .pad-stick{width:clamp(78px,7vw,130px);height:clamp(78px,7vw,130px)}
+#control-panel .official-pad .pad-abxy,#control-panel .official-pad .pad-dpad{grid-template-columns:repeat(3,clamp(26px,2.2vw,38px));grid-template-rows:repeat(3,clamp(26px,2.2vw,38px));gap:3px}
+#control-panel .official-pad .pad-center button{font-size:11px;min-height:33px;min-width:58px}
+#control-panel .official-pad .pad-stick-clicks button{min-height:26px;font-size:10px}
+#control-panel .pad-sliders{margin-top:4px}
+#control-panel .pad-configuration-column{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:start}
+#control-panel .runtime-parameters{margin:0}
+#control-panel .pad-help{margin:0;padding:6px 8px;border:1px solid #35433a;border-radius:6px;background:#101a1588}
+#control-panel .pad-help h3{margin:0 0 4px;font-size:11px}
+#control-panel .parameter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#control-panel .parameter-grid>div{border-right:1px solid #2d3930}
+#control-panel .parameter-grid>div:nth-child(2n){border-right:0}
+#control-panel .pad-help-grid{grid-template-columns:1fr}
+#control-panel .pad-help-grid>div{display:grid;grid-template-columns:60px minmax(0,1fr);gap:5px;padding:3px 0}
+#control-panel .pad-help-grid b,#control-panel .pad-help-grid span{font-size:10px;line-height:1.4}
+#control-panel .model-management-anchor{margin:0}
+#control-panel .management-tools{display:grid;gap:3px;margin:0}
+#control-panel .management-tools .service-action-row{margin:0}
+#control-panel .management-tools button{font-size:10px;padding:4px 6px}
+#management-filename{overflow-wrap:anywhere;line-height:1.4}
+#control-panel .service-management{gap:5px;padding-top:7px}
+#control-panel .global-scale-row{margin:2px 0}
+.firmware-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.firmware-toolbar .firmware-sources{flex:0 0 auto;flex-wrap:nowrap}
+.firmware-toolbar .firmware-upload{flex:1;min-width:160px;padding:0;border:0;background:transparent;gap:6px}
+.firmware-toolbar #firmware-filename{font-size:9px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.firmware-toolbar .firmware-install-actions{margin:0;gap:6px;flex-wrap:nowrap}
+.firmware-authorization{font-size:10px;color:var(--muted)}
+.firmware-authorization summary{cursor:pointer;padding:2px 0}
+.firmware-authorization .service-credentials{padding:5px 0}
+.firmware-authorization input{width:170px;max-width:100%;font-size:11px}
+.firmware-authorization .service-credentials span{font-size:10px;flex:1;min-width:130px}
+.firmware-body{gap:6px}
+#service-editor .service-confirm-row{justify-content:flex-start;gap:8px;flex-wrap:wrap;margin:6px 0}
+#service-editor .service-confirm-row h3{margin:0}
+#service-editor .service-center{padding-top:6px;margin-top:6px}
+#service-editor .service-center>p{display:inline;margin:0 8px 0 0;font-size:10px;line-height:1.5}
+#service-editor .service-center #service-center-progress:empty{display:none}
+#service-editor .service-target-row{grid-template-columns:130px minmax(80px,1fr) 95px auto;align-items:end;gap:8px}
+#service-editor .service-target-row>.service-action-row{margin:0;gap:6px}
+#service-editor .service-movement>.service-action-row{margin-top:6px}
+#service-editor .service-imu{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding-top:6px}
+#service-editor .service-imu .panel-head{padding:0;min-height:28px;flex:0 0 auto}
+#service-editor .service-imu h2{font-size:12px}
+#service-editor .service-imu .service-setup-body{display:contents}
+#service-editor .service-imu .field{flex:1;min-width:190px;grid-column:auto;display:flex;align-items:center;gap:6px;font-size:11px;margin:0}
+#service-editor .service-imu .field input{flex:1;min-width:100px;width:190px;font-size:12px}
+#service-editor .service-imu .service-check{font-size:11px;margin:0}
+#service-editor .service-imu .service-job{flex-basis:100%;margin:0;padding:0}
+#service-editor .service-imu .service-job:empty{display:none}
+@media(min-width:1800px){.r17-three-columns>.panel{height:940px}}
+@media(min-width:1401px) and (max-width:1799px){.r17-three-columns>.panel{height:1150px}}
+@media(min-width:1101px) and (max-width:1400px){.r17-three-columns>.panel{height:1290px}}
+@media(max-width:1100px){.r17-three-columns>.panel{height:1130px}.firmware-toolbar{gap:8px}}
+@media(max-width:650px){#service-editor .service-target-row{grid-template-columns:110px minmax(55px,1fr) 80px}#control-panel .pad-help-grid>div{display:block}.firmware-toolbar .firmware-upload{flex-basis:100%}}
+/* The longest card sets the shared height; imported models cannot be clipped. */
+.r17-three-columns>.panel{height:auto;min-height:940px}
+@media(min-width:1401px) and (max-width:1799px){.r17-three-columns>.panel{min-height:1150px}}
+@media(min-width:1101px) and (max-width:1400px){.r17-three-columns>.panel{min-height:1290px}}
+@media(max-width:1100px){.r17-three-columns>.panel{min-height:1130px}}
+#control-panel .official-pad .pad-stick{max-width:none;flex-shrink:0}
+#service-editor .service-movement{display:block}
+#service-editor .service-center button{margin-left:0}
+#service-editor .service-imu{flex-direction:row}
+#service-editor .service-imu .button{align-self:center}
+@container joint-workbench (max-width:600px){#service-editor .service-target-row{grid-template-columns:110px minmax(55px,1fr) 80px}#service-editor .service-target-row>.service-action-row{grid-column:1/-1}}
+/* v1.0.100: keep related settings and status on shared rows. */
+#control-panel .official-pad{width:min(100%,760px)}
+#control-panel .official-pad .xbox-body{padding:25px 20px 30px;gap:18px 9px}
+#control-panel .official-pad .pad-stick{width:clamp(78px,7.6vw,148px);height:clamp(78px,7.6vw,148px)}
+#control-panel .pad-status-row{display:flex;align-items:center;flex-wrap:wrap;gap:3px 12px;margin-top:5px}
+#control-panel .pad-status-row>p{margin:0;font-size:10px;line-height:1.45;min-width:0}
+#control-panel .pad-status-row #control-model{margin-left:auto}
+#control-panel .service-management{display:flex;align-items:center;flex-wrap:wrap;gap:5px 12px}
+#control-panel .management-model-actions{flex:0 1 auto;align-items:center}
+#control-panel .model-buttons{flex:0 1 auto}
+#control-panel .global-scale-row{flex:1;min-width:230px;margin:0}
+#control-panel .management-tools{flex:1 1 100%;display:flex;align-items:center;flex-wrap:wrap;gap:5px 10px}
+#control-panel #management-status{flex-basis:100%}
+#control-panel .management-tools .service-action-row{align-items:center}
+#service-editor .service-calibration{display:flex;flex-wrap:wrap;align-items:center;gap:5px 10px}
+#service-editor .service-calibration>h3{margin:0}
+#service-editor .service-calibration>p{margin:0;font-size:10px}
+#service-editor .service-fields{flex-basis:100%;margin:0}
+#service-editor .service-confirm-row{margin:0;gap:6px}
+#service-editor #service-calibration-detail{flex:1;min-width:160px;overflow-wrap:anywhere}
+#service-editor .service-center{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px}
+#service-editor .service-center>.service-confirm-row{margin:0}
+@media(max-width:500px){#control-panel .official-pad .xbox-body{padding:16px 6px 22px;gap:12px 4px}#control-panel .pad-status-row #control-model{margin-left:0}}
+.pad-head-amplitude{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px}
+.pad-head-amplitude>div{display:flex;gap:5px;flex-wrap:wrap}
+.pad-head-amplitude .selected{background:#293b23;border-color:#98b96f;color:#c7ec9b}
+@media(min-width:1800px){#control-panel .pad-sliders{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;align-items:center}}
+/* v1.0.102: saved limits, Xbox layout and one session-wide system log. */
+#motors tr.old-sample td.saved-limit{opacity:1}
+#service-joint-row{align-items:stretch}
+#service-workbench-stack,#service-observation{align-items:stretch}
+#service-editor,.service-joint-chart{height:100%}
+#service-editor .service-workbench-bottom{display:flex;align-items:center;flex-wrap:wrap;gap:7px 12px;border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+#service-editor .service-workbench-bottom>.service-confirm-row{display:flex;flex-wrap:wrap;gap:6px;margin:0;align-items:center}
+#service-editor .service-workbench-bottom>#service-calibration-detail{flex:1;min-width:160px;margin:0;font-size:10px}
+#service-editor .service-workbench-bottom>.service-center{border:0;padding:0;margin:0;gap:5px 8px}
+#service-editor .service-workbench-bottom>.service-center .service-confirm-row{gap:6px;margin:0}
+#service-editor .service-workbench-bottom>.service-imu{flex:1 1 690px;display:flex;align-items:center;flex-wrap:wrap;gap:5px 8px;border:0;margin:0;padding:0}
+#service-editor .service-workbench-bottom .service-imu .field{min-width:230px}
+#service-editor .service-workbench-bottom .service-imu .service-check{font-size:10px}
+#service-editor .service-job:empty,#service-editor .service-imu-job:empty{display:none}
+.system-log-card{display:flex;flex-direction:column;min-width:0}
+.system-log-tools{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:10px 12px 4px}
+.system-log-tools .button{padding:4px 8px;font-size:11px}.system-log-tools label{margin-left:auto;font-size:10px;color:var(--muted)}
+#system-log-status{padding:4px 12px;min-height:35px;font-size:10px;line-height:1.4}
+#diagnostics #system-log-output{flex:1;height:400px;min-height:300px;max-height:520px;overflow:auto;margin:4px 12px 12px;padding:10px;border:1px solid var(--line);border-radius:6px;background:#0f1712;color:#bcd3ac;white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.6 ui-monospace,Consolas,monospace}
+#diagnostics .maintenance-events{border-top:1px solid var(--line);padding-top:8px;margin-top:8px;color:var(--muted);font-size:11px}
+.maintenance-events summary{cursor:pointer;font-size:11px;color:#b7cbaa}
+#diagnostics .maintenance-events .events,#diagnostics .maintenance-events #raw-json{height:240px;max-height:360px;overflow:auto;margin:6px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.firmware-toolbar #firmware-bundled.selected{border-color:#98b96f;background:#293b23;color:#c7ec9b}
+@media(min-width:1800px){.r17-three-columns>.panel{min-height:960px}}
+@media(max-width:1100px){.service-joint-chart{height:460px!important}}
+@media(max-width:600px){.system-log-tools label{margin-left:0}#service-editor .service-workbench-bottom .service-imu .field{min-width:190px}}
+
+#control-panel .official-pad .pad-stick span{font-family:inherit;font-size:10px}
+#service-editor .service-workbench-bottom{align-items:flex-start}
+#service-editor .service-workbench-bottom>.service-saved-controls{flex:1 1 330px;min-width:240px}
+#service-editor .service-saved-controls>.service-confirm-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0}
+#service-editor .service-saved-controls>#service-calibration-detail{font-size:9px;line-height:1.45;overflow-wrap:anywhere;margin:5px 0 0}
+#service-editor .service-workbench-bottom>.service-center{flex:1 1 370px;min-width:280px;align-items:flex-start}
+#service-editor .service-workbench-bottom>.service-imu{flex:1.4 1 520px;min-width:280px}
+#service-editor .service-workbench-bottom .service-imu .field{min-width:220px}
+
+/* v1.0.103: visible event/JSON panes with scrollbars bounded by the card. */
+#diagnostics>.panel{height:clamp(620px,72vh,900px);min-height:0;display:flex;flex-direction:column}
+#diagnostics #service-firmware .firmware-body{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
+#diagnostics #system-log-output{flex:1;height:0;min-height:0;max-height:none}
+#diagnostics .maintenance-events{display:flex;flex-direction:column;flex:1;min-height:180px;overflow:hidden}
+.maintenance-events h3,.maintenance-events h4{font-size:11px;font-weight:500;color:#b7cbaa;margin:0 0 7px}
+.maintenance-streams{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;flex:1;min-height:0;min-width:0}
+.maintenance-streams>div{display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden}
+#diagnostics .maintenance-events .events,#diagnostics .maintenance-events #raw-json{flex:1;height:0;min-height:0;max-height:none;overflow:auto;margin:0;padding:8px;border:1px solid var(--line);border-radius:5px;white-space:pre-wrap;overflow-wrap:anywhere;scrollbar-color:#667b55 #18221c;scrollbar-gutter:stable;font-size:10px;line-height:1.5}
+@media(max-width:600px){.maintenance-streams{grid-template-columns:1fr}.maintenance-streams>div{min-height:100px}#diagnostics>.panel{height:720px}}
+
+/* Official action slots share one import entry; empty slots remain selectable. */
+#control-panel #management-model{display:contents}
+#control-panel .action-slot{font-size:10px;padding:5px 7px}
+#control-panel .action-slot.empty{background:#1b2223;border-color:#384146;color:#8b9698}
+#control-panel .action-slot.configured{color:#c7ec9b}
+#control-panel .action-slot.selected{border-color:#b9db80;background:#293b23}
+#control-panel .action-slot.empty.selected{color:#bac4c6}
+#control-panel #management-import{font-size:11px;padding:5px 8px}
+#control-panel #management-target{font-size:10px;display:block}
+.service-console #motors th.model-limit,.service-console #motors th.saved-limit,.service-console #motors th.target-angle{color:#7c977e;font-weight:500}
+.service-console #motors td.model-limit,.service-console #motors td.saved-limit,.service-console #motors td.target-angle{color:#d8e8bd;font-weight:600}
+.service-console #motors tr.old-sample td.model-limit,.service-console #motors tr.old-sample td.target-angle{opacity:1}
+
+#control-panel .runtime-parameters .global-scale-row{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:10px}
+#control-panel .runtime-parameters .global-scale-row input{flex:1;min-width:40px}
+#control-panel .runtime-parameters .global-scale-row button{font-size:10px;padding:4px 7px}
+#control-panel .runtime-parameters #management-live-scale,#control-panel .runtime-parameters #management-scale-status{display:block;font-size:9px}
+
+/* Dashboard SSH connection sits directly above the camera, beside notifications. */
+.connection-toolbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:0 0 12px;align-items:start}
+#connection-notices{grid-column:span 2;min-width:0}
+#connection-notices .service-status{margin:0 0 4px;padding:8px 10px;min-height:0;font-size:11px}
+#connection-notices .service-status h2{font-size:12px}
+#connection-notices .banner{margin:4px 0 0;padding:7px 10px;font-size:11px}
+#connection-notices .service-gait-preflight{margin:4px 0 0;padding:7px 10px;min-height:0;font-size:11px}
+#connection-notices .service-gait-preflight strong{font-size:12px}
+#connection-notices .service-gait-preflight .button{padding:4px 7px;min-height:0;font-size:10px}
+.ssh-form{display:grid;grid-template-columns:minmax(95px,1.3fr) minmax(90px,1fr) auto auto;gap:6px;align-items:end;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);min-width:0}
+.ssh-form label{font-size:11px;color:var(--muted);min-width:0}
+.ssh-form input{display:block;width:100%;min-width:0;padding:6px 7px;font-size:11px;margin-top:3px}
+.ssh-form>.button{padding:6px 8px;font-size:11px;min-height:30px}
+.ssh-status-row{grid-column:1/-1;display:flex;align-items:center;flex-wrap:wrap;gap:3px 8px;color:var(--muted);font-size:10px;line-height:1.4;overflow-wrap:anywhere}
+.ssh-status-row .text-button{margin-left:auto;white-space:nowrap;font-size:10px;padding:0}
+@media(max-width:1300px){.connection-toolbar{grid-template-columns:minmax(0,1fr) minmax(350px,1fr)}#connection-notices{grid-column:auto}}
+@media(max-width:800px){.connection-toolbar{grid-template-columns:minmax(0,1fr)}.ssh-form{grid-template-columns:minmax(95px,1.3fr) minmax(90px,1fr) auto auto}}

@@ -1,3 +1,5 @@
+[Русский](simulation.ru.md)
+
 # The simulated duck
 
 A duck in MuJoCo, driven by the real daemons. You develop against it exactly as you develop against

@@ -1,3 +1,5 @@
+[Русский](architecture.ru.md)
+
 # Robot Daemon — Overall Architecture
 
 Status: draft · Date: 2026-07-22 · Owner: pierre

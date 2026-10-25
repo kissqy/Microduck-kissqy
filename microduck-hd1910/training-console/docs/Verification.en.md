@@ -1,4 +1,4 @@
-[简体中文](Verification.md) | **English**
+[简体中文](Verification.md) | **English** | [Русский](Verification.ru.md)
 
 # R1.5.15 remote-training verification record
 

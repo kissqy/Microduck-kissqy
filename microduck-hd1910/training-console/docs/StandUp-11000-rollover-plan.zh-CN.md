@@ -1,4 +1,4 @@
-**简体中文** | [English](StandUp-11000-rollover-plan.en.md)
+**简体中文** | [English](StandUp-11000-rollover-plan.en.md) | [Русский](StandUp-11000-rollover-plan.ru.md)
 
 # 11000 轮倒地老师：翻身补课方案
 

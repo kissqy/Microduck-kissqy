@@ -1,3 +1,5 @@
+[Русский](webrtc-console.ru.md)
+
 # The WebRTC client: from a test page to the robot's console
 
 Status: landed · Date: 2026-08-25 · Owner: pierre

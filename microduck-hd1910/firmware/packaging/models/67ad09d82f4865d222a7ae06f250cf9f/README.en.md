@@ -1,4 +1,4 @@
-[简体中文](使用说明.md) | **English**
+[简体中文](使用说明.md) | **English** | [Русский](README.ru.md)
 
 # HD1910 self-trained model · Target firmware 0.15.1
 

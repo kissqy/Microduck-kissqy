@@ -1,4 +1,4 @@
-[简体中文](official-roller-audit.zh-CN.md) | **English**
+[简体中文](official-roller-audit.zh-CN.md) | **English** | [Русский](official-roller-audit.ru.md)
 
 # Official six-family roller parameter audit (October 7, 2026)
 

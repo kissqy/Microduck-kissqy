@@ -1,4 +1,4 @@
-**原文 / Original** | [English](r17-connection-design.en.md)
+**原文 / Original** | [English](r17-connection-design.en.md) | [Русский](r17-connection-design.ru.md)
 
 ## 当前 R17 v1.0.157-Fix9 / control.36
 

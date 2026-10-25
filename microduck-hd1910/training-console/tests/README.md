@@ -1,3 +1,5 @@
+[Русский](README.ru.md)
+
 # Microduck Training Studio R1.5.27 tests
 
 Full Python tests (CPU/fixture paths run locally, external dependencies may skip):

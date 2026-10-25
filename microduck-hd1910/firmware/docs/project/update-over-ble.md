@@ -1,3 +1,5 @@
+[Русский](update-over-ble.ru.md)
+
 # Updating a robot from a phone
 
 Status: shipped, not yet run on a board · Date: 2026-08-19 · Owner: pierre

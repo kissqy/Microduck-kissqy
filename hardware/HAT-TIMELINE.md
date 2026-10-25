@@ -1,4 +1,4 @@
-**简体中文** | [English](HAT-TIMELINE.en.md)
+**简体中文** | [English](HAT-TIMELINE.en.md) | [Русский](HAT-TIMELINE.ru.md)
 
 # HAT 制作时间线
 
@@ -44,5 +44,3 @@
 - **R33** 在工程中已标为 0Ω，网络为 `DXL_DATA_INT → DXL_DATA_CLAMPED`。
 - **TH1** 在工程中仍标为 **100R PTC**，网络为 `DXL_DATA_CLAMPED → DXL_DATA`；时间线里的 **22Ω** 是实板调试记录，尚未同步成该工程的 BOM 值。
 - R33 和 TH1 属于舵机数据线路。
-
-

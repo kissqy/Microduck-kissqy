@@ -1,4 +1,4 @@
-[简体中文](BUILD.md) | **English**
+[简体中文](BUILD.md) | **English** | [Русский](BUILD.ru.md)
 
 # Build control.43 from source
 

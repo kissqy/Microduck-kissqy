@@ -1,3 +1,5 @@
+[Русский](r17-connection-design.ru.md)
+
 [原文 / Original](r17-connection-design.md) | **English**
 
 ## R17 v1.0.157-Fix 9 / control.36 baseline

@@ -1,4 +1,4 @@
-[简体中文](README.md) | **English**
+[简体中文](README.md) | **English** | [Русский](README.ru.md)
 
 # Compiled Feetech HD1910 firmware · control.43
 

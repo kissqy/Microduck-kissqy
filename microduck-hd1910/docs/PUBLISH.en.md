@@ -1,4 +1,4 @@
-[简体中文](PUBLISH.md) | **English**
+[简体中文](PUBLISH.md) | **English** | [Русский](PUBLISH.ru.md)
 
 # Publishing this repository
 

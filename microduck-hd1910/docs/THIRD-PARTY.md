@@ -1,4 +1,4 @@
-**简体中文** | [English](THIRD-PARTY.en.md)
+**简体中文** | [English](THIRD-PARTY.en.md) | [Русский](THIRD-PARTY.ru.md)
 
 # 第三方来源与授权范围
 

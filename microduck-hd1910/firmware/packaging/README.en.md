@@ -1,4 +1,4 @@
-[简体中文](README.zh-CN.md) | **English**
+[简体中文](README.zh-CN.md) | **English** | [Русский](README.ru.md)
 
 # Microduck R17 V167 / control.43 bundled firmware
 

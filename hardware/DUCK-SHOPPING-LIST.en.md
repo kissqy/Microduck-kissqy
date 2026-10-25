@@ -1,4 +1,4 @@
-[简体中文](DUCK-SHOPPING-LIST.md) | **English**
+[简体中文](DUCK-SHOPPING-LIST.md) | **English** | [Русский](DUCK-SHOPPING-LIST.ru.md)
 
 # 🦆 Duck shopping guide
 

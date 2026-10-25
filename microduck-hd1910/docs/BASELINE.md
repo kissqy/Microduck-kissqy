@@ -1,4 +1,4 @@
-**简体中文** | [English](BASELINE.en.md)
+**简体中文** | [English](BASELINE.en.md) | [Русский](BASELINE.ru.md)
 
 # 发布基线与验证范围
 

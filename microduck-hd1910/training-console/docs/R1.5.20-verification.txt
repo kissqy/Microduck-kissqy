@@ -1,3 +1,5 @@
+Русская версия: https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/training-console/docs/R1.5.20-verification.ru.md
+
 Microduck Training Studio R1.5.20 verification — 2026-10-07
 
 Scope: source implementation and portable tests only.

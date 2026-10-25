@@ -1,3 +1,5 @@
+[Русский](pad-minimal-pairing.ru.md)
+
 # The minimal setup a gamepad bonds under
 
 Recorded 2026-08-18, on Radxa Zero 3W `50:37:CD:16:2A:39`, with an Xbox Wireless Controller

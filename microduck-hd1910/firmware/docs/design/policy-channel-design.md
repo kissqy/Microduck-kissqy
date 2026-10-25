@@ -1,3 +1,5 @@
+[Русский](policy-channel-design.ru.md)
+
 # The Policy Channel — policies from the Hub
 
 Status: draft · Date: 2026-08-31 · Owner: pierre

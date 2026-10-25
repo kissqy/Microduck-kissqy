@@ -1,3 +1,5 @@
+[Русский](pair-a-gamepad.ru.md)
+
 # Pair a gamepad
 
 Once per pad. After this, `padd.service` drives whatever pad is connected, from boot — nothing to

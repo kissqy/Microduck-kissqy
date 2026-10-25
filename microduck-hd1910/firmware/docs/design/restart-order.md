@@ -1,3 +1,5 @@
+[Русский](restart-order.ru.md)
+
 # What restarts, and when
 
 The authoritative sequence for every path that moves the `current` symlink, and for boot. Written

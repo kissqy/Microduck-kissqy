@@ -1,4 +1,4 @@
-**简体中文** | [English](OFFICIAL-GAMEPAD.en.md)
+**简体中文** | [English](OFFICIAL-GAMEPAD.en.md) | [Русский](OFFICIAL-GAMEPAD.ru.md)
 
 R17 v1.0.97 / 官方 0.15.1 手柄
 

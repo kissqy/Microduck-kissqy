@@ -1,4 +1,4 @@
-**简体中文** | [English](README.en.md)
+**简体中文** | [English](README.en.md) | [Русский](README.ru.md)
 
 # 独立躯干 IMU 固件源码 · 当前 FT6
 

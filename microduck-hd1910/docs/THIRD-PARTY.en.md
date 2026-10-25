@@ -1,4 +1,4 @@
-[简体中文](THIRD-PARTY.md) | **English**
+[简体中文](THIRD-PARTY.md) | **English** | [Русский](THIRD-PARTY.ru.md)
 
 # Third-party sources and licensing scope
 

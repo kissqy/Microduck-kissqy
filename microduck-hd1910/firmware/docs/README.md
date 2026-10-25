@@ -1,3 +1,5 @@
+[Русский](README.ru.md)
+
 # Microduck R17 V164 / control.40 documentation
 
 The [R17 README](../README-R17.zh-CN.md) is the current package overview. For this robot's

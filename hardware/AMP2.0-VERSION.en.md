@@ -1,4 +1,4 @@
-[简体中文](AMP2.0-VERSION.md) | **English**
+[简体中文](AMP2.0-VERSION.md) | **English** | [Русский](AMP2.0-VERSION.ru.md)
 
 # HAT / IMU · AMP2.0 connector version
 

@@ -1,4 +1,4 @@
-**简体中文** | [English](THIRD_PARTY_NOTICES.en.md)
+**简体中文** | [English](THIRD_PARTY_NOTICES.en.md) | [Русский](THIRD_PARTY_NOTICES.ru.md)
 
 R17 v1.0.97：运行程序基线为 Pollen Robotics microduck 0.15.1 / 1fa84386f07884e27866411bc1ba166977bced95，Apache-2.0。源码修改清单见完整源码包 OFFICIAL-CHANGES.zh-CN.md；许可见 licenses/MICRODUCK-APACHE-2.0.txt。
 旧 R17 三维鸭子、Three.js、STLLoader 和训练模型素材的原始许可记录继续保留如下。用户训练权重不因本软件许可而重新授权。

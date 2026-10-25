@@ -1,4 +1,4 @@
-[简体中文](joint-scale-design148.md) | **English**
+[简体中文](joint-scale-design148.md) | **English** | [Русский](joint-scale-design148.ru.md)
 
 # R17 console parameter provenance — v148 design record
 

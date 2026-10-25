@@ -1,4 +1,4 @@
-[简体中文](HAT-TIMELINE.md) | **English**
+[简体中文](HAT-TIMELINE.md) | **English** | [Русский](HAT-TIMELINE.ru.md)
 
 # HAT build timeline
 
@@ -44,4 +44,3 @@ Source-data review on October 12, 2026 found:
 - **R33** is already marked 0Ω in the project, on `DXL_DATA_INT → DXL_DATA_CLAMPED`.
 - **TH1** is still marked **100 R PTC** in the project, on `DXL_DATA_CLAMPED → DXL_DATA`. The **22Ω** value in the timeline describes physical-board tuning and has not been copied into that project's BOM.
 - R33 and TH1 are on the servo data line.
-

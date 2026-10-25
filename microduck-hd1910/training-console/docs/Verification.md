@@ -1,4 +1,4 @@
-**简体中文** | [English](Verification.en.md)
+**简体中文** | [English](Verification.en.md) | [Русский](Verification.ru.md)
 
 # R1.5.15 远程训练增量验证
 

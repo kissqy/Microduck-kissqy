@@ -1,3 +1,5 @@
+[Русский](CONTRIBUTING.ru.md)
+
 # Contributing
 
 For working on the daemons themselves. To use a robot rather than change it, see the

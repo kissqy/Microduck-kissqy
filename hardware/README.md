@@ -1,4 +1,4 @@
-**简体中文** | [English](README.en.md)
+**简体中文** | [English](README.en.md) | [Русский](README.ru.md)
 
 # HAT 与 IMU 自制硬件
 

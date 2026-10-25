@@ -1,3 +1,5 @@
+Русская версия: https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/firmware/verification/MERGE-149.ru.md
+
 R17 v1.0.149 merge verification
 - Product baseline: Microduck-Console-R17-v1.0.148.
 - v148 behavior retained: sole Walk is 1cbf8730eadd75a5704332c9f3c10f60; model-bound execution = 1.00 / 0.50 / 0.70. The old policy.action_scale=0.70 remains a legacy/global field and does not override this Walk profile.

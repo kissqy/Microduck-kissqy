@@ -1,3 +1,5 @@
+[Русский](cheatsheet-dev.ru.md)
+
 # Cheat sheet — dev board
 
 The commands that only make sense on a board set up by

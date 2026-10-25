@@ -1,4 +1,4 @@
-[简体中文](StandUp-11000-rollover-plan.zh-CN.md) | **English**
+[简体中文](StandUp-11000-rollover-plan.zh-CN.md) | **English** | [Русский](StandUp-11000-rollover-plan.ru.md)
 
 # 11000-iteration recovery teacher: rollover curriculum proposal
 

@@ -1,3 +1,5 @@
+[Русский](slice-2-bringup.ru.md)
+
 # Slice 2 bring-up on hardware
 
 Notes from running slice 2 on a real robot. Everything below was observed on a Radxa Zero 3W,

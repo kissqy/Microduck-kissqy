@@ -1,3 +1,5 @@
+[Русский](install-path-gap.ru.md)
+
 # The install path had no test
 
 Status: closed · Date: 2026-08-05, revised 2026-08-07 and 2026-08-11 · Owner: pierre

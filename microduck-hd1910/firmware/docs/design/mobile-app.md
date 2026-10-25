@@ -1,3 +1,5 @@
+[Русский](mobile-app.ru.md)
+
 # The phone app — what it is built from
 
 Status: built · Date: 2026-09-17 · Owner: pierre

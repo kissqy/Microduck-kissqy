@@ -1,3 +1,5 @@
+[Русский](FILES.ru.md)
+
 # 包内文件清单 / Package file list
 
 原始压缩包内容；文件数量不等于装配数量。 / Original archive contents; file counts are not assembly quantities.

@@ -1,3 +1,5 @@
+[Русский](install-by-hand.ru.md)
+
 # Installing by hand, step by step
 
 What `scripts/provision-board.sh` does, as separate commands. Use this when a step needs to be

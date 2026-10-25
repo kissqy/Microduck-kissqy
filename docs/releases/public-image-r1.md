@@ -1,4 +1,4 @@
-**简体中文** | [English](public-image-r1.en.md)
+**简体中文** | [English](public-image-r1.en.md) | [Русский](public-image-r1.ru.md)
 
 # 🦆 Microduck 一键系统镜像 R1
 

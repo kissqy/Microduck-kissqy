@@ -1,4 +1,4 @@
-**简体中文** | [English](MICRODUCK-FAQ.en.md)
+**简体中文** | [English](MICRODUCK-FAQ.en.md) | [Русский](MICRODUCK-FAQ.ru.md)
 
 # Microduck 飞特版复刻常见问题：刷机、标定、IMU、手柄断网与供电重启
 

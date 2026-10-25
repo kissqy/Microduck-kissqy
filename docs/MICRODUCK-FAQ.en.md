@@ -1,4 +1,4 @@
-[简体中文](MICRODUCK-FAQ.md) | **English**
+[简体中文](MICRODUCK-FAQ.md) | **English** | [Русский](MICRODUCK-FAQ.ru.md)
 
 # Microduck Feetech replica FAQ: setup, calibration, IMU, gamepad Wi-Fi interference and power reboots
 

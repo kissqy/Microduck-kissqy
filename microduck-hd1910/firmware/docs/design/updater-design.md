@@ -1,3 +1,5 @@
+[Русский](updater-design.ru.md)
+
 # Robot Daemon Update System — Design
 
 Status: draft · Date: 2026-07-22 · Owner: pierre

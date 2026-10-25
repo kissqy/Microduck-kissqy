@@ -1,4 +1,4 @@
-[简体中文](OFFICIAL-CHANGES.zh-CN.md) | **English**
+[简体中文](OFFICIAL-CHANGES.zh-CN.md) | **English** | [Русский](OFFICIAL-CHANGES.ru.md)
 
 # R17 v1.0.137 / official 0.15.1 changes
 

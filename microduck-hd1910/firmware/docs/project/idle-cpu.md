@@ -1,3 +1,5 @@
+[Русский](idle-cpu.ru.md)
+
 # What the robot does when nobody is asking it to
 
 A duck sitting on a desk with no pad connected, no viewer, and nothing driving it still runs

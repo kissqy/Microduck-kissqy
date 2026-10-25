@@ -1,4 +1,4 @@
-[简体中文](ASSEMBLY-NOTES.md) | **English**
+[简体中文](ASSEMBLY-NOTES.md) | **English** | [Русский](ASSEMBLY-NOTES.ru.md)
 
 # 🔧 Assembly and operating notes
 

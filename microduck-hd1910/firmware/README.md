@@ -1,4 +1,4 @@
-**原文 / Original** | [English](README.en.md)
+**原文 / Original** | [English](README.en.md) | [Русский](README.ru.md)
 
 > **独立 IMU 固件 FT6（STM32）：** [下载、接线与烧录](../../hardware/IMU-FIRMWARE.md) · [源码](firmware/imu-source/)。下述 control.43 安装到 ZERO；IMU 单独使用 ST-LINK 烧录。
 

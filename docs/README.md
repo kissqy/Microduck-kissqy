@@ -1,4 +1,4 @@
-**简体中文** | [English](README.en.md)
+**简体中文** | [English](README.en.md) | [Русский](README.ru.md)
 
 # Microduck 飞特版复刻教程与说明文档
 

@@ -1,4 +1,4 @@
-[简体中文](IMU-TIMELINE.md) | **English**
+[简体中文](IMU-TIMELINE.md) | **English** | [Русский](IMU-TIMELINE.ru.md)
 
 # IMU build timeline
 

@@ -1,3 +1,5 @@
+[Русский](boot-recovery-net.ru.md)
+
 # The boot recovery net
 
 What puts a robot back on a known-good release when the one it booted cannot start its daemons.

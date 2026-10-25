@@ -1,3 +1,5 @@
+[Русский](faq.ru.md)
+
 # FAQ
 
 Questions that come up when you want a duck to do something it does not do out of the box. The

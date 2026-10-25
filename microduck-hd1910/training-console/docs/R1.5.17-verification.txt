@@ -1,3 +1,5 @@
+Русская версия: https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/training-console/docs/R1.5.17-verification.ru.md
+
 R1.5.17 验证记录
 日期：2026-10-06
 

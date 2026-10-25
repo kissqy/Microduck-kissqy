@@ -1,4 +1,4 @@
-**简体中文** | [English](REPOSITORY-LAYOUT.en.md)
+**简体中文** | [English](REPOSITORY-LAYOUT.en.md) | [Русский](REPOSITORY-LAYOUT.ru.md)
 
 # 仓库目录与重复资源
 

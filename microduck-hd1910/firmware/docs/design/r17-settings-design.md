@@ -1,4 +1,4 @@
-**简体中文** | [English](r17-settings-design.en.md)
+**简体中文** | [English](r17-settings-design.en.md) | [Русский](r17-settings-design.ru.md)
 
 # R17 中控参数来源
 

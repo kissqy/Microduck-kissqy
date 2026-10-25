@@ -1,3 +1,5 @@
+Русская версия: https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/firmware/configd/systemd/sysusers.d/README.ru.md
+
 configd runs as root, so it needs no user of its own — see the justification in
 configd.service. It does need the `robot` group to exist, which
 updater/systemd/sysusers.d/robot.conf already creates.

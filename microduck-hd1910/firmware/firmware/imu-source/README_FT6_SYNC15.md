@@ -1,4 +1,4 @@
-**简体中文** | [English](README_FT6_SYNC15.en.md)
+**简体中文** | [English](README_FT6_SYNC15.en.md) | [Русский](README_FT6_SYNC15.ru.md)
 
 **当前 IMU 固件：FT6_SYNC15_UART_IRQ_v1。** [下载、接线、烧录与检查](../../../../hardware/IMU-FIRMWARE.md) · [源码目录说明](README.md)。本页维护协议和主控兼容约定。
 

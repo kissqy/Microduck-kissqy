@@ -1,3 +1,5 @@
+[Русский](runtime-audit.ru.md)
+
 # Frozen robotd 0.15.1 action compatibility audit
 
 Date: 2026-10-07. This audit uses official runtime commit **1fa84386f07884e27866411bc1ba166977bced95**, not current main. Training configuration is the studio's frozen **8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec** source. The separate task audit compares 273afe0b31c4ab365b9ff806a927b63ac92b5ddd; it does not extend the frozen daemon's capabilities. R148 is separately inspected as an HD1910 adaptation. No hardware was connected and no runtime/firmware was changed.

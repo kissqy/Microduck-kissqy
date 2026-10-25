@@ -1,4 +1,4 @@
-[简体中文](official-task-parameter-audit.zh-CN.md) | **English**
+[简体中文](official-task-parameter-audit.zh-CN.md) | **English** | [Русский](official-task-parameter-audit.ru.md)
 
 # Official per-task parameter audit (October 7, 2026)
 

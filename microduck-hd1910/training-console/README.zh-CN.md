@@ -1,4 +1,4 @@
-**简体中文** | [English](USER-GUIDE.en.md)
+**简体中文** | [English](USER-GUIDE.en.md) | [Русский](USER-GUIDE.ru.md)
 
 # Microduck Training Studio R1.5.27
 

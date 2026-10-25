@@ -1,3 +1,5 @@
+[Русский](remote-access-design.ru.md)
+
 # Remote access — an account, and a rendezvous behind it
 
 Status: draft · Date: 2026-09-02 · Owner: pierre

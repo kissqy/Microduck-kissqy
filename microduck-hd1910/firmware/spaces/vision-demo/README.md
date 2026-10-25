@@ -10,6 +10,8 @@ hf_oauth: true
 short_description: A duck's camera, processed on Hugging Face hardware.
 ---
 
+[Русский](README.ru.md)
+
 # microduck vision demo
 
 A robot on somebody's home network streams its camera to this Space as H.264, and OpenCV runs

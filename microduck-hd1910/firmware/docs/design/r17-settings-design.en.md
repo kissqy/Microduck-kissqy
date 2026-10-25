@@ -1,4 +1,4 @@
-[简体中文](r17-settings-design.md) | **English**
+[简体中文](r17-settings-design.md) | **English** | [Русский](r17-settings-design.ru.md)
 
 # R17 console parameter provenance
 

@@ -1,3 +1,5 @@
+[Русский](policy-manifest.ru.md)
+
 # The policy manifest, schema 2
 
 What a `manifest.json` beside a microduck `.onnx` says, and what the robot does with each field.

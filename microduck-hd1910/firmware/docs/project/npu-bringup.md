@@ -1,3 +1,5 @@
+[Русский](npu-bringup.ru.md)
+
 # The NPU, and the duck detector on it
 
 The RK3566 has a small INT8 NPU — 0.8 TOPS, one core. This is the record of putting a trained duck

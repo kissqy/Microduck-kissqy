@@ -1,3 +1,5 @@
+[Русский](duckctl.ru.md)
+
 # `duckctl` — every command
 
 Talk to a robot from a laptop, with no network and no ssh. It is the phone app's stand-in, and the

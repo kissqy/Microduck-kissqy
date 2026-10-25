@@ -1,4 +1,4 @@
-**简体中文** | [English](MICRODUCK-BUILD-GUIDE.en.md)
+**简体中文** | [English](MICRODUCK-BUILD-GUIDE.en.md) | [Русский](MICRODUCK-BUILD-GUIDE.ru.md)
 
 # Microduck 飞特版从零复刻教程：材料清单、3D 打印、刷机、标定与训练
 

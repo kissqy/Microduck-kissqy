@@ -1,3 +1,5 @@
+[Русский](roadmap.ru.md)
+
 # Roadmap
 
 Status: rewritten · Date: 2026-08-26 (first written 2026-08-05) · Owner: pierre

@@ -1,3 +1,5 @@
+[Русский](simulation.ru.md)
+
 # Simulation: the same daemons, a body in MuJoCo
 
 **Status:** built and in use. `robotd --sim`, `tofd --sim` and `mediad --sim-camera` are here, with

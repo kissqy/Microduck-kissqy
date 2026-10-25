@@ -1,4 +1,4 @@
-**简体中文** | [English](AMP2.0-VERSION.en.md)
+**简体中文** | [English](AMP2.0-VERSION.en.md) | [Русский](AMP2.0-VERSION.ru.md)
 
 # HAT / IMU · AMP2.0 接口版
 

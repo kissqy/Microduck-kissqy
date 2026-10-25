@@ -1,3 +1,5 @@
+[Русский](cheatsheet.ru.md)
+
 # Cheat sheet
 
 `robotctl`, which runs on the robot. Every command here was taken from `--help` on the branch that
@@ -1188,4 +1190,3 @@ eval "$(robotctl completions bash)"
 ```
 
 `zsh`, `fish`, `elvish` and `powershell` work in place of `bash`.
-

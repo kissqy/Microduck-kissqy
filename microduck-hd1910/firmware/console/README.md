@@ -1,4 +1,4 @@
-**简体中文** | [English](README.en.md)
+**简体中文** | [English](README.en.md) | [Русский](README.ru.md)
 
 # 🎮 Microduck 机器人中控 · R17 V167
 

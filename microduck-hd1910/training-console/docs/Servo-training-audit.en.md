@@ -1,4 +1,4 @@
-[简体中文](Servo-training-audit.zh-CN.md) | **English**
+[简体中文](Servo-training-audit.zh-CN.md) | **English** | [Русский](Servo-training-audit.ru.md)
 
 # Feetech servos, upstream configuration, and joint-training review
 

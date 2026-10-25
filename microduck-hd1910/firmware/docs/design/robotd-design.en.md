@@ -1,3 +1,5 @@
+[Русский](robotd-design.ru.md)
+
 [原文 / Original](robotd-design.md) | **English**
 
 ## R17 v1.0.157-Fix 6 / control.36 baseline

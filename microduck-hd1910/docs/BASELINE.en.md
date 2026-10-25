@@ -1,4 +1,4 @@
-[简体中文](BASELINE.md) | **English**
+[简体中文](BASELINE.md) | **English** | [Русский](BASELINE.ru.md)
 
 # Release baseline and verification scope
 

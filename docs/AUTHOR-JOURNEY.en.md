@@ -1,4 +1,4 @@
-[简体中文](AUTHOR-JOURNEY.md) | **English**
+[简体中文](AUTHOR-JOURNEY.md) | **English** | [Русский](AUTHOR-JOURNEY.ru.md)
 
 [Back to the homepage](../README.en.md) · [Documentation](README.en.md)
 

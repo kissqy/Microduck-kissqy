@@ -1,4 +1,4 @@
-**简体中文** | [English](joint-scale-design148.en.md)
+**简体中文** | [English](joint-scale-design148.en.md) | [Русский](joint-scale-design148.ru.md)
 
 # R17 中控参数来源
 

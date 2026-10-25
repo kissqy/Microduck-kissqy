@@ -1,4 +1,4 @@
-[简体中文](THIRD_PARTY_NOTICES.md) | **English**
+[简体中文](THIRD_PARTY_NOTICES.md) | **English** | [Русский](THIRD_PARTY_NOTICES.ru.md)
 
 R17 v1.0.97 runtime baseline: Pollen Robotics microduck 0.15.1 / `1fa84386f07884e27866411bc1ba166977bced95`, Apache-2.0. Source changes are listed in `OFFICIAL-CHANGES.zh-CN.md` in the complete source package; license: `licenses/MICRODUCK-APACHE-2.0.txt`.
 

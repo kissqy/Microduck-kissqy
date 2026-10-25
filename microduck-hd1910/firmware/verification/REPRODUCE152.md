@@ -1,3 +1,5 @@
+[Русский](REPRODUCE152.ru.md)
+
 # R152 verification
 
 Native compiler: Rust 1.99.0, cargo-zigbuild 0.23.4 and Zig 0.14.1. Download hashes and observed versions are in `toolchain-provenance152.json`; the pinned download references remain in `toolchain-provenance150.json`. Cargo.lock is unchanged from R150.

@@ -1,4 +1,4 @@
-[简体中文](BUILD-TOOLS.md) | **English**
+[简体中文](BUILD-TOOLS.md) | **English** | [Русский](BUILD-TOOLS.ru.md)
 
 # 🧰 Build tools and consumables
 

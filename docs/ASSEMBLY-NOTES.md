@@ -1,4 +1,4 @@
-**简体中文** | [English](ASSEMBLY-NOTES.en.md)
+**简体中文** | [English](ASSEMBLY-NOTES.en.md) | [Русский](ASSEMBLY-NOTES.ru.md)
 
 # 🔧 装机与使用注意事项
 

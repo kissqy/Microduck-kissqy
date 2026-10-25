@@ -1,3 +1,5 @@
+[Русский](app-path-design.ru.md)
+
 # The App Path — `btd` and `configd`
 
 Status: draft · Date: 2026-08-04 · Owner: pierre

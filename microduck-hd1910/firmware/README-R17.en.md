@@ -1,4 +1,4 @@
-[简体中文](README-R17.zh-CN.md) | **English**
+[简体中文](README-R17.zh-CN.md) | **English** | [Русский](README-R17.ru.md)
 
 # Microduck control.43 firmware and R17 V167 console
 

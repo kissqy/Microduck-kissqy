@@ -1,4 +1,4 @@
-**简体中文** | [English](official-roller-audit.en.md)
+**简体中文** | [English](official-roller-audit.en.md) | [Русский](official-roller-audit.ru.md)
 
 # 官方轮滑六族参数审计（2026-10-07）
 

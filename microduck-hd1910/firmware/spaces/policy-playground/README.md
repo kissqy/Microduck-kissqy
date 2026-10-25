@@ -13,6 +13,8 @@ tags:
  - microduck
 ---
 
+[Русский](README.ru.md)
+
 # microduck policy playground
 
 Sign in, wake your duck up, press a trick. The trick is downloaded from the Hub onto the duck and

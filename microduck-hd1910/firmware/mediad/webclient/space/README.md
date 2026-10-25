@@ -14,6 +14,8 @@ tags:
  - webrtc
 ---
 
+[Русский](README.ru.md)
+
 # microduck console
 
 Drives a duck that is not on your network. Sign in with Hugging Face, and the robots your account

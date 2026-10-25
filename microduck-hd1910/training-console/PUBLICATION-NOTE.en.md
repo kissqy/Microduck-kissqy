@@ -1,4 +1,4 @@
-[简体中文](PUBLICATION-NOTE.txt) | **English**
+[简体中文](PUBLICATION-NOTE.txt) | **English** | [Русский](PUBLICATION-NOTE.ru.md)
 
 # Microduck Training Studio R1.5.27 publication note
 

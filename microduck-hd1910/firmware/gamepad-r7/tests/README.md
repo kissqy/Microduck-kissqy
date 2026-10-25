@@ -1,3 +1,5 @@
+[Русский](README.ru.md)
+
 # GameSir disconnect regression
 
 Run on Linux from the source root. This includes the production C event/error and

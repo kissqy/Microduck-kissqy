@@ -1,3 +1,5 @@
+[Русский](media-bringup.ru.md)
+
 # Media bring-up on hardware
 
 What a Radxa Zero 3W does about video. Everything below was observed on a board, not inferred —

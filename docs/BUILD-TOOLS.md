@@ -1,4 +1,4 @@
-**简体中文** | [English](BUILD-TOOLS.en.md)
+**简体中文** | [English](BUILD-TOOLS.en.md) | [Русский](BUILD-TOOLS.ru.md)
 
 # 🧰 鸭子制作工具与耗材
 

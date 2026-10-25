@@ -1,3 +1,5 @@
+[Русский](README.ru.md)
+
 # Trusted public keys
 
 The robot's trust anchor. `scripts/install.sh` copies these into

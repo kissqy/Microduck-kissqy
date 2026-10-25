@@ -1,4 +1,4 @@
-[简体中文](BUILDING-V167.md) | **English**
+[简体中文](BUILDING-V167.md) | **English** | [Русский](BUILDING-V167.ru.md)
 
 # R17 V167 / control.43 build guide
 

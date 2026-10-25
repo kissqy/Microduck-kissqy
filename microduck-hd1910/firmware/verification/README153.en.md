@@ -1,4 +1,4 @@
-[简体中文](README153.md) | **English**
+[简体中文](README153.md) | **English** | [Русский](README153.ru.md)
 
 # v153 verification records
 

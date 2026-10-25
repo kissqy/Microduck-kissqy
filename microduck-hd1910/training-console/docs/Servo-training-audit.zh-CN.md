@@ -1,4 +1,4 @@
-**简体中文** | [English](Servo-training-audit.en.md)
+**简体中文** | [English](Servo-training-audit.en.md) | [Русский](Servo-training-audit.ru.md)
 
 # 飞特舵机、官方配置与联合训练核对
 

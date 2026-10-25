@@ -1,3 +1,5 @@
+[Русский](README.ru.md)
+
 # The team dev key
 
 `team.dev.pub` — the public half of the key CI signs branch builds with, so

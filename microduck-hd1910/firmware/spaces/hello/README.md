@@ -9,6 +9,8 @@ pinned: false
 short_description: Smallest Docker Space that has a WebSocket route and Gradio.
 ---
 
+[Русский](README.ru.md)
+
 # hello duck
 
 A deliberately minimal Docker Space, published to find out which of four things breaks the real

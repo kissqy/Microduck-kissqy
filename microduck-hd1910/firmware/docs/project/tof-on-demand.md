@@ -1,3 +1,5 @@
+[Русский](tof-on-demand.ru.md)
+
 # The head sensors when nobody is looking
 
 `tofd` ranged a laser and read an IMU from boot to shutdown on every duck with the head module

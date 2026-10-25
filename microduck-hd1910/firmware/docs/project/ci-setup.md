@@ -1,3 +1,5 @@
+[Русский](ci-setup.ru.md)
+
 # CI setup
 
 Status: draft · Date: 2026-07-28 · Owner: pierre

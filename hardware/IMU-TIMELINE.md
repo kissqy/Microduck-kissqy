@@ -1,4 +1,4 @@
-**简体中文** | [English](IMU-TIMELINE.en.md)
+**简体中文** | [English](IMU-TIMELINE.en.md) | [Русский](IMU-TIMELINE.ru.md)
 
 # IMU 制作时间线
 

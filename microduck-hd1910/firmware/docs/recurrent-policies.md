@@ -1,3 +1,5 @@
+[Русский](recurrent-policies.ru.md)
+
 # Recurrent ONNX policies
 
 The runtime accepts feed-forward policies and the explicit-state LSTM export produced by

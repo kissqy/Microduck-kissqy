@@ -1,3 +1,5 @@
+[Русский](README.ru.md)
+
 # pet-detect
 
 A tiny audio classifier that hears when the robot's head is being scratched (the onboard

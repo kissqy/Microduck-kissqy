@@ -1,3 +1,5 @@
+[Русский](autonomous_behavior.ru.md)
+
 # The autonomous behavior stack — what it inherits, and ideas waiting for it
 
 The brain is the biggest untracked gap in the [parity audit] (§03): the runtime's

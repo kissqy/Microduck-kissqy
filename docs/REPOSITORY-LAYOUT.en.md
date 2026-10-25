@@ -1,4 +1,4 @@
-[简体中文](REPOSITORY-LAYOUT.md) | **English**
+[简体中文](REPOSITORY-LAYOUT.md) | **English** | [Русский](REPOSITORY-LAYOUT.ru.md)
 
 # Repository layout and repeated resources
 

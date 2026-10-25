@@ -1,4 +1,4 @@
-**简体中文** | [English](official-task-parameter-audit.en.md)
+**简体中文** | [English](official-task-parameter-audit.en.md) | [Русский](official-task-parameter-audit.ru.md)
 
 # 官方动作逐任务参数核验（2026-10-07）
 

@@ -1,3 +1,5 @@
+Русская версия: https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/firmware/verification/v160/BUILD-REPORT.ru.md
+
 Microduck R17 V160 / control.37 编译与打包核对
 
 已完成真实 ARM64 编译。版本：中控 1.0.160，固件 control.37，官方系统 0.15.1。

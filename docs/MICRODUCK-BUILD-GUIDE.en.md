@@ -1,4 +1,4 @@
-[简体中文](MICRODUCK-BUILD-GUIDE.md) | **English**
+[简体中文](MICRODUCK-BUILD-GUIDE.md) | **English** | [Русский](MICRODUCK-BUILD-GUIDE.ru.md)
 
 # Microduck Feetech HD1910 replica guide: parts, 3D printing, firmware, calibration and training
 

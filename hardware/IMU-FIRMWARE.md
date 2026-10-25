@@ -1,4 +1,4 @@
-**简体中文** | [English](IMU-FIRMWARE.en.md)
+**简体中文** | [English](IMU-FIRMWARE.en.md) | [Русский](IMU-FIRMWARE.ru.md)
 
 # IMU 固件 FT6：下载、烧录与检查
 

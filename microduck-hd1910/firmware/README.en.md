@@ -1,3 +1,5 @@
+[Русский](README.ru.md)
+
 [原文 / Original](README.md) | **English**
 
 > **Independent IMU firmware FT6 (STM32):** [download, wiring, and flashing](../../hardware/IMU-FIRMWARE.en.md) · [source](firmware/imu-source/README.en.md). The control.43 package below installs on ZERO; the IMU is programmed separately with ST-LINK.

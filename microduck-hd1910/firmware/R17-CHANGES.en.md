@@ -1,4 +1,4 @@
-[简体中文](R17-CHANGES.zh-CN.md) | **English**
+[简体中文](R17-CHANGES.zh-CN.md) | **English** | [Русский](R17-CHANGES.ru.md)
 
 # R17 modification history
 

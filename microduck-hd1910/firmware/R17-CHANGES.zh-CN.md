@@ -1,4 +1,4 @@
-**简体中文** | [English](R17-CHANGES.en.md)
+**简体中文** | [English](R17-CHANGES.en.md) | [Русский](R17-CHANGES.ru.md)
 
 R17 v1.0.143：复用原生诊断 JSON 和状态快照，避免 Zero 采集器重复编码已解析的遥测，并修复客户端或被拒启动进程覆盖 daemon 身份的问题。控制与遥测频率、UI、记录格式、模型和参数保持 v142。机制见 [诊断与状态所有权](docs/design/r17-settings-design.md)、[SSH 遥测转发](docs/design/r17-connection-design.md) 和 [启动所有权](docs/design/robotd-design.md)，本轮验证及环境受限记录见 verification/。未测量新版实机 CPU 或温降。
 

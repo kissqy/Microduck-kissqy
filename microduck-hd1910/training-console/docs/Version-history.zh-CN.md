@@ -1,4 +1,4 @@
-**简体中文** | [English](Version-history.en.md)
+**简体中文** | [English](Version-history.en.md) | [Русский](Version-history.ru.md)
 
 ## R1.5.17 — 倒地老师评估与翻身检查
 

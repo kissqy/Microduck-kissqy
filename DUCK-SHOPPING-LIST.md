@@ -1,4 +1,4 @@
-**简体中文** | [English](DUCK-SHOPPING-LIST.en.md)
+**简体中文** | [English](DUCK-SHOPPING-LIST.en.md) | [Русский](DUCK-SHOPPING-LIST.ru.md)
 
 # 🦆 Microduck 鸭子采购总清单
 

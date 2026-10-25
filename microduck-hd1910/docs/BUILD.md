@@ -1,4 +1,4 @@
-**简体中文** | [English](BUILD.en.md)
+**简体中文** | [English](BUILD.en.md) | [Русский](BUILD.ru.md)
 
 # 从源码编译 control.43
 

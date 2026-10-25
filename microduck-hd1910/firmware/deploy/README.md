@@ -1,3 +1,5 @@
+[Русский](README.ru.md)
+
 # Deployment: OS-level configuration
 
 Status: draft · Date: 2026-07-28 · Owner: pierre

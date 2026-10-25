@@ -1,3 +1,5 @@
+[Русский](armbian-boot-config.ru.md)
+
 # 修复 Armbian 启动配置的重复写入
 
 `scripts/repair-armbian-env.py` 是独立维护工具，用于修补已确认的 Armbian 26.2.1

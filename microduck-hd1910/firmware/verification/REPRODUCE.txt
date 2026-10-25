@@ -1,3 +1,5 @@
+Русская версия: https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/firmware/verification/REPRODUCE.ru.md
+
 Use Rust 1.99.0, cargo-zigbuild 0.23.4, Zig 0.14.1 and ONNX Runtime 1.28.0.
 restore_toolchain147.py restores actual toolchains and records download SHA256.
 PYTHONPATH="$PWD/packaging:$PWD/console" python3 -m unittest discover -s packaging -p 'test_*.py' -v

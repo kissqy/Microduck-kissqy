@@ -165,6 +165,20 @@
     "firmware_programs_models_and_runtime_archives_unchanged": true,
     "history": "Removed documents remain available in Git history."
   },
+  "repository_documentation_translation_ru": {
+    "date": "2026-10-25",
+    "language": "ru",
+    "semantic_documents": 128,
+    "homepage": "../README.ru.md",
+    "documentation_index": "../docs/README.ru.md",
+    "html_guide": "../docs/guides/ru.html",
+    "scope": "Russian editions of explanatory user, hardware, firmware, architecture, development-history and verification documentation. Commands, technical identifiers, dates and historical results retained; original Chinese and English editions remain available.",
+    "excluded": "Raw logs, formal licenses and legal NOTICE, agent instructions, immutable upstream snapshots, application interfaces, source code, models and release archives",
+    "application_interfaces": "Existing Chinese interfaces unchanged",
+    "firmware_binaries_models_and_runtime_archives_unchanged": true,
+    "revalidated_hardware_in_translation": false,
+    "publication_state": "Russian documentation files added; GitHub Pages publication not asserted"
+  },
   "repository_documentation_translation": {
     "date": "2026-10-12",
     "english_guides": 59,

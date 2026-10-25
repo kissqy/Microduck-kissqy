@@ -1,4 +1,4 @@
-**简体中文** | [English](README-R17.en.md)
+**简体中文** | [English](README-R17.en.md) | [Русский](README-R17.ru.md)
 
 # Microduck control.43 固件与 R17 V167 中控
 

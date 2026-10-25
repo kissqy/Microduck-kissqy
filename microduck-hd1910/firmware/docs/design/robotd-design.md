@@ -1,4 +1,4 @@
-**原文 / Original** | [English](robotd-design.en.md)
+**原文 / Original** | [English](robotd-design.en.md) | [Русский](robotd-design.ru.md)
 
 ## 当前 R17 v1.0.157-Fix6 / control.36
 

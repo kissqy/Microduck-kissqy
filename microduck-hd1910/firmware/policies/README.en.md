@@ -1,4 +1,4 @@
-[简体中文](README.md) | **English**
+[简体中文](README.md) | **English** | [Русский](README.ru.md)
 
 # Policy baseline — R17 v1.0.146 / official 0.15.1
 

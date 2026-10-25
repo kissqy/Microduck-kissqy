@@ -1,4 +1,4 @@
-[简体中文](START-HERE.txt) | **English**
+[简体中文](START-HERE.txt) | **English** | [Русский](START-HERE.ru.md)
 
 # Current public Microduck release
 

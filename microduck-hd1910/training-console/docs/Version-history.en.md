@@ -1,4 +1,4 @@
-[简体中文](Version-history.zh-CN.md) | **English**
+[简体中文](Version-history.zh-CN.md) | **English** | [Русский](Version-history.ru.md)
 
 # Training Studio version history
 

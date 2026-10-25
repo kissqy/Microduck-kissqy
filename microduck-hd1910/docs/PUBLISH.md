@@ -1,4 +1,4 @@
-**简体中文** | [English](PUBLISH.en.md)
+**简体中文** | [English](PUBLISH.en.md) | [Русский](PUBLISH.ru.md)
 
 # 当前仓库的发布方式
 

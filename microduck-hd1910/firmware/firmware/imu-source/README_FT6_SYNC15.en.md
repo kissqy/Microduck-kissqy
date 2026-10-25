@@ -1,4 +1,4 @@
-[简体中文](README_FT6_SYNC15.md) | **English**
+[简体中文](README_FT6_SYNC15.md) | **English** | [Русский](README_FT6_SYNC15.ru.md)
 
 **Current IMU firmware: FT6_SYNC15_UART_IRQ_v1.** [Download, wiring, flashing, and checks](../../../../hardware/IMU-FIRMWARE.en.md) · [Source directory guide](README.en.md). This page owns the protocol and host compatibility contract.
 

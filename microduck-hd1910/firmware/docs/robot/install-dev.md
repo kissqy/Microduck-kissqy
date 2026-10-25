@@ -1,3 +1,5 @@
+[Русский](install-dev.ru.md)
+
 # Installing on a dev board
 
 Getting a board from nothing to a robot you can push branches to.

@@ -1,3 +1,5 @@
+Русская версия: https://github.com/kissqy/Microduck-kissqy/blob/main/START-HERE.ru.md
+
 中文：START-HERE.txt
 English: https://github.com/kissqy/Microduck-kissqy/blob/main/START-HERE.en.md
 

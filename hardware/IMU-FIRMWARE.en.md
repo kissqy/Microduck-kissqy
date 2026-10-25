@@ -1,4 +1,4 @@
-[简体中文](IMU-FIRMWARE.md) | **English**
+[简体中文](IMU-FIRMWARE.md) | **English** | [Русский](IMU-FIRMWARE.ru.md)
 
 # IMU firmware FT6: download, flash, and check
 

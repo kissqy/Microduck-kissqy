@@ -9,6 +9,8 @@
 >
 > **本仓库未授权任何商业组织。** 如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。
 >
+> **防骗提醒：不要相信除群主以外任何人的私聊推销，已有群友被骗。**
+>
 > [联系作者](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [查看分项许可](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE)。授权范围以本仓库现有分项许可为准。
 
 Microduck-kissqy 是 kissqy 基于 Pollen Robotics Microduck 0.15.1、已完成实机复刻的个人项目，面向 **Radxa ZERO 3W + 15 个飞特 HD1910 舵机 + 本仓库 HAT / IMU**。这里提供系统镜像、中文机器人中控、配套现成动作模型、自制电路板工程，以及全套打印件和摆盘。**日常使用直接用发布包里的模型，无须自己训练。**

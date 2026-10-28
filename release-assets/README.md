@@ -9,6 +9,8 @@
 >
 > **本仓库未授权任何商业组织。** 如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。
 >
+> **防骗提醒：不要相信除群主以外任何人的私聊推销，已有群友被骗。**
+>
 > [联系作者](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [查看分项许可](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE)。授权范围以本仓库现有分项许可为准。
 
 这是用于 **Radxa ZERO 3W 的 ARM64 机器人服务安装包**，基于官方 Microduck 0.15.1，配套 R17 V167 中控，IPC API40。包内已包含编译好的 `robotd`、`padd`、`robotctl`、摄像头服务、推理库、10 个运动模型及安装脚本，**普通使用不需要从源码编译**。

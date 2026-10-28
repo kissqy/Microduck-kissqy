@@ -9,6 +9,8 @@
 >
 > **This repository has not authorized any commercial organization.** If you find pirated copies, impersonation or unauthorized commercial use, please contact the author. Sharing this work takes effort; please do not misappropriate it.
 >
+> **Scam warning: Do not trust private sales messages from anyone other than the group owner. Group members have already been scammed.**
+>
 > [Contact the author](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [License scope](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE). The repository’s existing licenses determine the scope of this notice.
 
 An **ARM64 robot-service installation package for Radxa ZERO 3W**, based on official Microduck 0.15.1 and paired with Robot Console R17 V167, IPC API40. It includes compiled `robotd`, `padd`, `robotctl`, camera services, inference libraries, 10 movement models, and installation scripts. **No source compilation is required for ordinary use.**

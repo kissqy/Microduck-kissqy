@@ -8,6 +8,19 @@ From a collection of parts to a walking, forward-rolling robot duck. This workin
 
 **No training is required for a normal build. Use the supplied movement models after assembly, flashing and calibration.**
 
+</div>
+
+> [!WARNING]
+> **Hardware compatibility and commercial authorization**
+>
+> **HAT, IMU and HUB versions outside the designs published in this repository are incompatible with this repository’s system and may prevent it from operating normally.**
+>
+> **This repository has not authorized any commercial organization.** If you find pirated copies, impersonation or unauthorized commercial use, please contact the author. Sharing this work takes effort; please do not misappropriate it.
+>
+> [Contact the author](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [License scope](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE). The repository’s existing licenses determine the scope of this notice.
+
+<div align="center">
+
 <table>
   <tr>
     <td width="50%" align="left"><a href="https://kissqy.github.io/Microduck-kissqy/build/budget.html"><b>① Budget and shopping</b></a><br>Choose a budget, then follow its matching parts list.</td>

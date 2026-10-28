@@ -2,6 +2,15 @@
 
 # Microduck 飞特版从零复刻：从预算到第一次行走
 
+> [!WARNING]
+> **硬件兼容性与商业授权提示**
+>
+> **非本仓库开源版本的 HAT、IMU、HUB 无法适配本仓库系统，可能导致系统无法正常运行。**
+>
+> **本仓库未授权任何商业组织。**如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。
+>
+> [联系作者](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [查看分项许可](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE)。授权范围以本仓库现有分项许可为准。
+
 Microduck-kissqy 是 kissqy 基于 Pollen Robotics Microduck 0.15.1、已完成实机复刻的个人项目，面向 **Radxa ZERO 3W + 15 个飞特 HD1910 舵机 + 本仓库 HAT / IMU**。这里提供系统镜像、中文机器人中控、配套现成动作模型、自制电路板工程，以及全套打印件和摆盘。**日常使用直接用发布包里的模型，无须自己训练。**
 
 **当前稳定公开版本：机器人中控 R17 V167 / 固件 control.43。** 新手路线按预算、采购、装配和首次行走展开。版本及验证依据见[发布基线](../microduck-hd1910/docs/BASELINE.md)。源码可获取；作者原创部分采用个人非商业许可，官方和第三方部分保留各自许可，见[分项许可](../microduck-hd1910/LICENSE)。

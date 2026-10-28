@@ -9,6 +9,7 @@
 <script src="./workflow.js?demo=20261013" defer=""></script><script src="./teachers.js?demo=20261013" defer=""></script><script src="./queue.js?demo=20261013" defer=""></script><link rel="stylesheet" href="./queue.css?demo=20261013">
 <link rel="stylesheet" href="./remote.css?demo=20261013"><script src="./remote.js?demo=20261013" defer></script>
 <meta name="description" content="Microduck 飞特 HD1910 强化学习训练中控 R1.5.27 在线演示，预览任务管理、奖励曲线与模型导出；教程与源码由 kissqy 提供。">
+<link rel="stylesheet" href="../project-notice.css?v=20261028">
 </head>
 <body>
 <aside class="train-sidebar"><div>
@@ -24,7 +25,12 @@
 </div>
 <div>
 <a class="github-source-link" href="../guides/">📚 搭建指南与常见问题</a> <a class="github-source-link" href="https://github.com/kissqy/Microduck-kissqy" target="_blank" rel="noopener noreferrer" aria-label="在 GitHub 打开 Microduck-kissqy 开源项目">GitHub 开源项目 ↗</a><span id="env-badge" class="pill muted">本机检查缓存</span><a class="text-button" href="#parameters">修改设置 ↓</a>
-</div></header><div id="connection-error" class="notice bad" hidden="">训练台后台已断开。当前内容为最后一次收到的记录，请检查独立启动窗口。</div>
+</div></header><aside class="project-notice" role="note" aria-labelledby="project-notice-title" data-project-notice>
+<div class="project-notice__heading"><svg class="project-notice__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5m0 3v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><h2 class="project-notice__title" id="project-notice-title">硬件兼容性与商业授权提示</h2></div>
+<p><strong>非本仓库开源版本的 HAT、IMU、HUB 无法适配本仓库系统，可能导致系统无法正常运行。</strong></p>
+<p><strong>本仓库未授权任何商业组织。</strong>如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。</p>
+<div class="project-notice__footer"><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg">联系作者 →</a><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE">查看分项许可</a><span>授权范围以本仓库现有分项许可为准。</span></div>
+</aside><div id="connection-error" class="notice bad" hidden="">训练台后台已断开。当前内容为最后一次收到的记录，请检查独立启动窗口。</div>
 <div id="render-error" class="notice bad" role="status" hidden=""></div>
 <section id="training-server" class="panel remote-panel" aria-label="训练位置与SSH服务器">
 <div class="remote-top"><h2>训练位置 <small>Training server</small></h2><label class="remote-target">执行位置<select id="training-target"><option value="local">本机 / WSL</option><option value="ssh">SSH 服务器</option></select></label><strong id="execution-location">本机 / WSL</strong></div>

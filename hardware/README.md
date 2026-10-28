@@ -2,6 +2,15 @@
 
 # HAT 与 IMU 自制硬件
 
+> [!WARNING]
+> **硬件兼容性与商业授权提示**
+>
+> **非本仓库开源版本的 HAT、IMU、HUB 无法适配本仓库系统，可能导致系统无法正常运行。**
+>
+> **本仓库未授权任何商业组织。**如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。
+>
+> [联系作者](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [查看分项许可](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE)。授权范围以本仓库现有分项许可为准。
+
 > 🛒 **[购买 HAT 主板 / IMU 板（作者提供）](https://item.taobao.com/item.htm?id=1095121548583)**
 >
 > **作者成品 HAT／IMU：自行设计绘制，经长期真机使用与迭代验证，由嘉立创 SMT 贴片生产，注重稳定性与易复刻。**

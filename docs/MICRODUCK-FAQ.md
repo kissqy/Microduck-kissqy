@@ -2,6 +2,15 @@
 
 # Microduck 飞特版复刻常见问题：刷机、标定、IMU、手柄断网与供电重启
 
+> [!WARNING]
+> **硬件兼容性与商业授权提示**
+>
+> **非本仓库开源版本的 HAT、IMU、HUB 无法适配本仓库系统，可能导致系统无法正常运行。**
+>
+> **本仓库未授权任何商业组织。**如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。
+>
+> [联系作者](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [查看分项许可](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE)。授权范围以本仓库现有分项许可为准。
+
 适用：Microduck-kissqy，Radxa ZERO 3W、飞特 HD1910、机器人中控 V167 / control.43。作者：kissqy；更新：2026-10-23。[从零复刻总指南](MICRODUCK-BUILD-GUIDE.md)。
 
 ## Microduck 复刻需要多少钱？材料清单在哪里？

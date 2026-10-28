@@ -2,6 +2,15 @@
 
 # 🦆 Microduck shopping guide
 
+> [!WARNING]
+> **Hardware compatibility and commercial authorization**
+>
+> **HAT, IMU and HUB versions outside the designs published in this repository are incompatible with this repository’s system and may prevent it from operating normally.**
+>
+> **This repository has not authorized any commercial organization.** If you find pirated copies, impersonation or unauthorized commercial use, please contact the author. Sharing this work takes effort; please do not misappropriate it.
+>
+> [Contact the author](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [License scope](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE). The repository’s existing licenses determine the scope of this notice.
+
 [🏠 Project homepage](README.en.md)
 
 **Assembled-board reference subtotal: CNY 2823.80**, including the 32GB microSD card and card reader, before printing. The complete FrankenDuck printing service is listed at CNY 199, making the assembled-board plus printing reference subtotal **CNY 3022.80**. Unpriced HUB / battery-connection parts and shipping are extra.

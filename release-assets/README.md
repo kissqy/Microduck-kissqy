@@ -2,6 +2,15 @@
 
 # 飞特 HD1910 已编译固件 · control.43
 
+> [!WARNING]
+> **硬件兼容性与商业授权提示**
+>
+> **非本仓库开源版本的 HAT、IMU、HUB 无法适配本仓库系统，可能导致系统无法正常运行。**
+>
+> **本仓库未授权任何商业组织。**如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。
+>
+> [联系作者](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [查看分项许可](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE)。授权范围以本仓库现有分项许可为准。
+
 这是用于 **Radxa ZERO 3W 的 ARM64 机器人服务安装包**，基于官方 Microduck 0.15.1，配套 R17 V167 中控，IPC API40。包内已包含编译好的 `robotd`、`padd`、`robotctl`、摄像头服务、推理库、10 个运动模型及安装脚本，**普通使用不需要从源码编译**。
 
 [⬇️ 下载已编译固件 .tar.gz](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/microduck-hd1910/firmware/console/updates/Microduck-Robotd-FT6-R17.tar.gz) · [SHA256 校验文件](Microduck-Robotd-FT6-R17.sha256) · [包身份与核验记录](firmware-control43.json) · [项目首页](../README.md)

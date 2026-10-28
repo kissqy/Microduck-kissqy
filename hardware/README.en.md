@@ -2,6 +2,15 @@
 
 # DIY HAT and IMU hardware
 
+> [!WARNING]
+> **Hardware compatibility and commercial authorization**
+>
+> **HAT, IMU and HUB versions outside the designs published in this repository are incompatible with this repository’s system and may prevent it from operating normally.**
+>
+> **This repository has not authorized any commercial organization.** If you find pirated copies, impersonation or unauthorized commercial use, please contact the author. Sharing this work takes effort; please do not misappropriate it.
+>
+> [Contact the author](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [License scope](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE). The repository’s existing licenses determine the scope of this notice.
+
 > 🛒 **[Buy HAT / IMU boards from the author](https://item.taobao.com/item.htm?id=1095121548583)**
 >
 > **The author's assembled HAT / IMU boards are designed and laid out by the author, refined through extended real-robot use, and SMT assembled by JLCPCB, with a focus on stability and easier replication.**

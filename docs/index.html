@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="./styles.css?demo=20261013"><link rel="stylesheet" href="./control.css?demo=20261013"><link rel="stylesheet" href="./service.css?demo=20261013"><link rel="stylesheet" href="./r17-0151.css?demo=20261013"><link rel="stylesheet" href="./advanced-parameters.css?demo=20261013"><link rel="stylesheet" href="./calibration-view.css?demo=20261013"><script src="./demo-guard.js?demo=20261013"></script><script src="./demo-api.js?demo=20261013"></script><script type="module" src="./app.js?demo=20261013"></script>
 <meta name="description" content="Microduck 飞特 HD1910 中文机器人中控 V167 在线演示，预览姿态、关节标定、摄像头与固件管理；教程与源码由 kissqy 提供。">
 <link rel="stylesheet" href="./console-tour.css"><script defer src="./console-tour.js"></script>
+<link rel="stylesheet" href="./project-notice.css?v=20261028">
 </head>
 <body>
 <aside class="sidebar">
@@ -27,7 +28,12 @@
 <a class="console-guide-mobile" href="./console-guide.html" aria-label="打开机器人中控使用教程">使用教程</a>
 <div class="workspace">
   <header class="topbar"><div class="breadcrumb">我的 Microduck <span>/</span> 硬件观测台</div><div class="top-actions"><a class="github-source-link" href="./console-guide.html">📖 使用教程</a><button type="button" id="start-console-tour">跟着界面学</button> <a class="github-source-link" href="./guides/">📚 搭建指南与常见问题</a> <a class="github-source-link" href="https://github.com/kissqy/Microduck-kissqy" target="_blank" rel="noopener noreferrer" title="在 GitHub 查看 Microduck 项目源代码">★ GitHub 开源 ↗</a><span id="last-update" class="muted">等待第一帧</span><button id="export" class="button accent">↓ 导出记录</button><span class="chip" id="mode-chip">正在连接</span><span class="chip subtle" id="access-chip">◈ 本地中控</span><button id="settings-button" class="icon-button" title="连接与数据说明" aria-label="连接与数据说明">⚙</button></div></header>
-  <main id="overview">
+  <main id="overview"><aside class="project-notice" role="note" aria-labelledby="project-notice-title" data-project-notice>
+<div class="project-notice__heading"><svg class="project-notice__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5m0 3v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><h2 class="project-notice__title" id="project-notice-title">硬件兼容性与商业授权提示</h2></div>
+<p><strong>非本仓库开源版本的 HAT、IMU、HUB 无法适配本仓库系统，可能导致系统无法正常运行。</strong></p>
+<p><strong>本仓库未授权任何商业组织。</strong>如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。</p>
+<div class="project-notice__footer"><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg">联系作者 →</a><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE">查看分项许可</a><span>授权范围以本仓库现有分项许可为准。</span></div>
+</aside>
     <div class="page-heading"><div><div class="eyebrow">ROBOT OBSERVABILITY</div><h1>让每一个动作，都有据可查<span class="heading-dot">.</span></h1><p><span id="robot-name">duck-10e4</span> <span class="sep">/</span> 实时姿态 · 传感器 · 执行器诊断</p></div><div class="heading-actions">
       <form id="ssh-form" class="ssh-form" autocomplete="off">
         <label>SSH 地址<input id="ssh-target" type="text" aria-label="SSH 地址" placeholder="radxa@192.168.6.151" spellcheck="false"></label>

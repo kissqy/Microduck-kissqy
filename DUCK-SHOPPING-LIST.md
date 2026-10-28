@@ -7,7 +7,7 @@
 >
 > **非本仓库开源版本的 HAT、IMU、HUB 无法适配本仓库系统，可能导致系统无法正常运行。**
 >
-> **本仓库未授权任何商业组织。**如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。
+> **本仓库未授权任何商业组织。** 如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。
 >
 > [联系作者](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [查看分项许可](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE)。授权范围以本仓库现有分项许可为准。
 

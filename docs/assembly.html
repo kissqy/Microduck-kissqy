@@ -7,13 +7,13 @@
   <title>3D 装配参考 · Microduck 飞特版</title>
   <meta name="description" content="Microduck 3D 装配与接线参考：打开头盖，查看 HAT、IMU、HUB 和 ZERO 3W，核对接口及购买入口。">
   <link rel="canonical" href="https://kissqy.github.io/Microduck-kissqy/assembly.html">
-  <link rel="stylesheet" href="assembly.css?v=20261027-mounts">
+  <link rel="stylesheet" href="assembly.css?v=20261030-screen">
 <link rel="stylesheet" href="./project-notice.css?v=20261028">
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="https://github.com/kissqy/Microduck-kissqy" aria-label="Microduck 项目首页"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="12"/><path d="M9 23h9V11h12v11h-7v9H9z"/></svg>microduck <span class="header-caption">装配与接线参考</span></a>
-    <a class="back-link" href="build/assembly.html">装配步骤 <span aria-hidden="true">↗</span></a>
+    <div class="header-actions"><button class="expand-viewer" type="button" data-expand-viewer aria-haspopup="dialog" aria-controls="viewer-dialog">全屏查看 3D</button><a class="back-link" href="build/assembly.html">装配步骤 <span aria-hidden="true">↗</span></a></div>
   </header>
   <main><aside class="project-notice" role="note" aria-labelledby="project-notice-title" data-project-notice>
 <div class="project-notice__heading"><svg class="project-notice__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5m0 3v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><h2 class="project-notice__title" id="project-notice-title">硬件兼容性与商业授权提示</h2></div>
@@ -28,7 +28,8 @@
     </div>
     <div class="workspace">
       <section class="viewer-card" aria-label="3D 装配模型">
-        <div class="viewer-topline"><span class="viewer-title">3D 装配参考</span><div class="stage-actions"><span id="pose-label">模型零位 · 0°</span><button type="button" id="toggle-explosion" aria-pressed="false" title="逐件展开模型中的打印件，或收起复原">爆炸展开</button></div></div>
+        <div class="viewer-topline"><span class="viewer-title" id="viewer-title">3D 装配参考</span><div class="stage-actions"><span id="pose-label">模型零位 · 0°</span><button type="button" id="toggle-explosion" aria-pressed="false" title="逐件展开模型中的打印件，或收起复原">爆炸展开</button><button type="button" data-expand-viewer aria-haspopup="dialog" aria-controls="viewer-dialog">全屏查看</button></div></div>
+        <details class="viewer-options" open><summary>部位、板卡与显示设置 <span aria-hidden="true">⌄</span></summary>
         <div class="group-tabs" role="group" aria-label="选择要查看的部位">
           <button type="button" data-group="all" aria-pressed="true">整只小鸭</button>
           <button type="button" data-group="left" aria-pressed="false">左腿 <small>20–24</small></button>
@@ -46,6 +47,7 @@
         <div class="board-shortcuts" role="group" aria-label="查看内部板卡">
           <button type="button" data-component="zero">ZERO 3W</button><button type="button" data-component="hat">HAT</button><button type="button" data-component="imu">IMU</button><button type="button" data-component="hub">HUB</button><button type="button" id="focus-battery">电池仓</button>
         </div>
+        </details>
         <p id="explosion-status" class="explosion-status" role="status" aria-live="polite">可点“爆炸展开”查看每个打印件；舵机与轴承保留原位。</p>
         <div class="stage">
           <div id="assembly-canvas" aria-label="可旋转的 Microduck 三维模型"></div>
@@ -116,6 +118,8 @@
     </section>
     <footer><p>沿用中控的官方结构模型；新增板卡与线束是装配示意，飞特改件、走线和螺丝规格以打印件与硬件说明为准。34 号嘴部为固定外观。断电后接线，按接口编号与信号名核对，不按线色猜脚序。</p><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/duck-visual.json">模型来源与版本 ↗</a></footer>
   </main>
+  <dialog id="viewer-dialog" class="viewer-dialog" aria-labelledby="viewer-title"></dialog>
+  <script type="module" src="assembly-layout.js?v=20261030-screen"></script>
   <script type="module" src="assembly.js?v=20261027-printed-clearance"></script>
 </body>
 </html>

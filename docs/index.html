@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark"><title>Microduck · 机器人中控 V167 在线演示</title>
+  <meta name="color-scheme" content="dark"><title>Microduck · 机器人中控 V167 在线演示 · kissqy</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%23c1f577'/%3E%3Cpath d='M9 23h9V11h12v11h-7v9H9z' fill='%23131a17'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./styles.css?demo=20261013"><link rel="stylesheet" href="./control.css?demo=20261013"><link rel="stylesheet" href="./service.css?demo=20261013"><link rel="stylesheet" href="./r17-0151.css?demo=20261013"><link rel="stylesheet" href="./advanced-parameters.css?demo=20261013"><link rel="stylesheet" href="./calibration-view.css?demo=20261013"><script src="./demo-guard.js?demo=20261013"></script><script src="./demo-api.js?demo=20261013"></script><script type="module" src="./app.js?demo=20261013"></script>
 <meta name="description" content="Microduck 飞特 HD1910 中文机器人中控 V167 在线演示，预览姿态、关节标定、摄像头与固件管理；教程与源码由 kissqy 提供。">
@@ -11,7 +11,7 @@
 </head>
 <body>
 <aside class="sidebar">
-  <a class="brand" href="#overview" aria-label="Microduck 首页"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="12"/><path d="M9 23h9V11h12v11h-7v9H9z"/></svg><span>microduck<span class="brand-sub">HARDWARE CONSOLE</span></span></a>
+  <a class="brand" href="#overview" aria-label="Microduck · kissqy 首页"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="12"/><path d="M9 23h9V11h12v11h-7v9H9z"/></svg><span>microduck · kissqy<span class="brand-sub">HARDWARE CONSOLE</span></span></a>
   <div class="side-label">工作空间</div>
   <nav aria-label="中控台导航">
     <a class="active" href="#overview"><span class="nav-icon">▦</span>总览<span class="nav-tag">LIVE</span></a>
@@ -29,11 +29,9 @@
 <div class="workspace">
   <header class="topbar"><div class="breadcrumb">我的 Microduck <span>/</span> 硬件观测台</div><div class="top-actions"><a class="github-source-link" href="./console-guide.html">📖 使用教程</a><button type="button" id="start-console-tour">跟着界面学</button> <a class="github-source-link" href="./guides/">📚 搭建指南与常见问题</a> <a class="github-source-link" href="https://github.com/kissqy/Microduck-kissqy" target="_blank" rel="noopener noreferrer" title="在 GitHub 查看 Microduck 项目源代码">★ GitHub 开源 ↗</a><span id="last-update" class="muted">等待第一帧</span><button id="export" class="button accent">↓ 导出记录</button><span class="chip" id="mode-chip">正在连接</span><span class="chip subtle" id="access-chip">◈ 本地中控</span><button id="settings-button" class="icon-button" title="连接与数据说明" aria-label="连接与数据说明">⚙</button></div></header>
   <main id="overview"><aside class="project-notice" role="note" aria-labelledby="project-notice-title" data-project-notice>
-<div class="project-notice__heading"><svg class="project-notice__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5m0 3v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><h2 class="project-notice__title" id="project-notice-title">硬件兼容性与商业授权提示</h2></div>
-<p><strong>非本仓库开源版本的 HAT、IMU、HUB 无法适配本仓库系统，可能导致系统无法正常运行。</strong></p>
-<p><strong>本仓库未授权任何商业组织。</strong>如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。</p>
-<p><strong>防骗提醒：不要相信除群主以外任何人的私聊推销，已有群友遭受损失。</strong></p>
-<div class="project-notice__footer"><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg">联系作者 →</a><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE">查看分项许可</a><span>授权范围以本仓库现有分项许可为准。</span></div>
+<div class="project-notice__heading"><svg class="project-notice__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5m0 3v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><h2 class="project-notice__title" id="project-notice-title">硬件与授权</h2></div>
+<p>仅适配本仓库开源版本的 <strong>HAT、IMU、HUB</strong>。本仓库未授权任何商业组织。</p>
+<div class="project-notice__footer"><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg">商业授权请联系作者</a><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE">查看分项许可</a></div>
 </aside>
     <div class="page-heading"><div><div class="eyebrow">ROBOT OBSERVABILITY</div><h1>让每一个动作，都有据可查<span class="heading-dot">.</span></h1><p><span id="robot-name">duck-10e4</span> <span class="sep">/</span> 实时姿态 · 传感器 · 执行器诊断</p></div><div class="heading-actions">
       <form id="ssh-form" class="ssh-form" autocomplete="off">
@@ -104,7 +102,7 @@
       <div class="panel-note important">“电流占限值”＝|实测电流| / 读取到的 Current Limit，不是实测扭矩或机械负载百分比。逐颗电压、PWM、限值及故障寄存器在台架模式提供；原版未导出项显示「—」。</div>
     </section>
     <div class="diagnostics-grid" id="diagnostics"><section class="panel"><div class="panel-head"><div><span class="section-index">07</span><h2>链路与安全状态</h2></div><span id="health-badge" class="badge neutral">未知</span></div><div id="channel-list" class="channel-list"></div><div class="health-detail" id="health-detail">等待官方健康响应。</div><div class="intent-grid"><div><span>请求速度 · m/s, rad/s</span><code id="move-request">—</code></div><div><span>实际采用速度</span><code id="move-applied">—</code></div></div><div class="panel-note" id="move-limits">没有收到状态前，不判断安全限制。</div></section><section class="panel system-log-card" id="system-log"><div class="panel-head"><div><span class="section-index">08</span><h2>系统日志</h2></div><a class="text-button" href="/api/system-log/download" download>下载完整日志 ↓</a></div><div class="system-log-tools"><button class="button" id="system-log-copy">复制显示</button><label><input type="checkbox" id="system-log-follow" checked>自动滚动</label></div><p id="system-log-status" class="tiny muted" role="status">等待系统日志。</p><pre id="system-log-output" tabindex="0">尚无执行记录。</pre><section class="maintenance-events" id="maintenance-events"><h3>事件与原始报文</h3><div class="maintenance-streams"><div><h4>事件</h4><div id="events" class="events"><div class="muted">连接事件将在这里出现</div></div></div><div><h4>原始报文</h4><pre id="raw-json" tabindex="0"></pre></div></div></section></section></div>
-    <footer><span>MICRODUCK / HARDWARE CONSOLE</span><span>模型 © Pollen Robotics</span></footer>
+    <footer><span>MICRODUCK · kissqy / HARDWARE CONSOLE</span><span>模型 © Pollen Robotics</span></footer>
   </main>
 </div>
 <dialog id="settings-dialog"><form method="dialog"><button class="dialog-close" aria-label="关闭">×</button><span class="eyebrow">CONNECTION & CAPABILITIES</span><h2>连接和数据能力</h2><p>实机模式通过 Zero 的机器人服务观测与控制。当前模式：<strong id="settings-mode">—</strong></p><label class="field">摄像头主机<input id="camera-host" autocomplete="off" placeholder="duck-10e4.local"></label><label class="field">WebRTC 信令端口<input id="camera-port" type="number" min="1" max="65535" value="8443"></label><button type="button" id="camera-save" class="button accent">保存摄像头地址</button><div class="capabilities"><h3>实际数据能力</h3><p>原版：实测/目标角度、重力、运动意图、里程计、健康、总线电压、最高/平均温度、ToF。</p><p>舵机服务：15 颗舵机反馈与 IMU 姿态；运动循环运行时自动接入通信数据；未启动循环时可手动检测。</p><p>台架模式：逐颗电压、PWM、硬件错误、扭矩开关、PID、限值、零位偏移等；必须先停止 robotd，支撑好机器人。不写任何寄存器。</p><p>“负载”不是力传感器测量；界面仅报告可核实的电流及其限值占比。供电若已降压，官方电池百分比不适用。</p></div><button class="button">完成</button></form></dialog>

@@ -8,11 +8,9 @@
 <body><header><nav><a href="https://github.com/kissqy/Microduck-kissqy">🦆 Microduck-kissqy · GitHub</a><a href="en.html">English</a><a href="../assembly.html">3D 装配参考</a><a href="../">机器人中控演示</a><a href="../console-guide.html">📖 中控使用教程</a><a href="../training/">训练中控演示</a></nav>
 <h1>从零复刻你的 Microduck 飞特版</h1><p class="intro">Microduck 飞特版实机复刻教程：材料清单、复刻成本、3D 打印、HAT 与 IMU 制作、ZERO 3W 刷机、V167 中文中控、舵机标定与强化学习训练。</p><nav><a href="#build">从零搭建</a><a href="#faq">常见问题</a><a href="https://github.com/kissqy/Microduck-kissqy#下载与版本">下载稳定版 V167</a></nav></header>
 <main><aside class="project-notice" role="note" aria-labelledby="project-notice-title" data-project-notice>
-<div class="project-notice__heading"><svg class="project-notice__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5m0 3v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><h2 class="project-notice__title" id="project-notice-title">硬件兼容性与商业授权提示</h2></div>
-<p><strong>非本仓库开源版本的 HAT、IMU、HUB 无法适配本仓库系统，可能导致系统无法正常运行。</strong></p>
-<p><strong>本仓库未授权任何商业组织。</strong>如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。</p>
-<p><strong>防骗提醒：不要相信除群主以外任何人的私聊推销，已有群友遭受损失。</strong></p>
-<div class="project-notice__footer"><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg">联系作者 →</a><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE">查看分项许可</a><span>授权范围以本仓库现有分项许可为准。</span></div>
+<div class="project-notice__heading"><svg class="project-notice__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5m0 3v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><h2 class="project-notice__title" id="project-notice-title">硬件与授权</h2></div>
+<p>仅适配本仓库开源版本的 <strong>HAT、IMU、HUB</strong>。本仓库未授权任何商业组织。</p>
+<div class="project-notice__footer"><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg">商业授权请联系作者</a><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE">查看分项许可</a></div>
 </aside><section id="build"><p><strong>简体中文</strong> | <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-BUILD-GUIDE.en.md">English</a></p>
 <h2>Microduck 飞特版从零复刻教程：材料清单、3D 打印、刷机、标定与训练</h2>
 <p>Microduck-kissqy 是 kissqy 基于 Pollen Robotics Microduck 0.15.1、已完成实机复刻的个人项目，面向 <strong>Radxa ZERO 3W + 15 个飞特 HD1910 舵机 + 本仓库 HAT / IMU</strong>。这里提供系统镜像、中文机器人中控、独立强化学习训练中控、自制电路板工程，以及全套打印件和摆盘。</p>

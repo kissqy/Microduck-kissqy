@@ -3,15 +3,9 @@
 # Microduck Feetech HD1910 replica: from budget to first walking
 
 > [!WARNING]
-> **Hardware compatibility and commercial authorization**
+> Only the **HAT, IMU and HUB** versions published in this repository are supported.
 >
-> **HAT, IMU and HUB versions outside the designs published in this repository are incompatible with this repository’s system and may prevent it from operating normally.**
->
-> **This repository has not authorized any commercial organization.** If you find pirated copies, impersonation or unauthorized commercial use, please contact the author. Sharing this work takes effort; please do not misappropriate it.
->
-> **Scam warning: Do not trust private sales messages from anyone other than the group owner. Group members have already suffered losses.**
->
-> [Contact the author](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [License scope](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE). The repository’s existing licenses determine the scope of this notice.
+> No commercial organization has been authorized. For commercial use, [contact the author](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) and follow the [license terms](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE).
 
 Microduck-kissqy is kissqy's working physical replica project based on Pollen Robotics Microduck 0.15.1, for **Radxa ZERO 3W, 15 Feetech HD1910 servos and this repository's HAT / torso IMU**. It includes a system image, a Chinese-language Robot Console, ready-made motion models, PCB projects and printing files. **Ordinary use starts with the released models; training your own is optional.**
 

@@ -3,15 +3,9 @@
 # 🦆 Microduck 鸭子采购总清单
 
 > [!WARNING]
-> **硬件兼容性与商业授权提示**
+> 仅适配本仓库开源版本的 **HAT、IMU、HUB**。
 >
-> **非本仓库开源版本的 HAT、IMU、HUB 无法适配本仓库系统，可能导致系统无法正常运行。**
->
-> **本仓库未授权任何商业组织。** 如发现盗版、冒用或未经授权的商业使用，请联系作者。开源不易，请勿盗用。
->
-> **防骗提醒：不要相信除群主以外任何人的私聊推销，已有群友遭受损失。**
->
-> [联系作者](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) · [查看分项许可](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE)。授权范围以本仓库现有分项许可为准。
+> 本仓库未授权任何商业组织。商业使用请[联系作者](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg)，并遵守[分项许可](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE)。
 
 [🏠 返回项目首页](README.md)
 

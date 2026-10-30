@@ -64,13 +64,14 @@ export function attachServoModel(servo,id){
     const mouth=new T.Object3D();mouth.name='socket-mouth';root.add(mouth);
     const outward=new T.Object3D();outward.name='socket-exit';outward.position.fromArray(spec.normal).multiplyScalar(spec.exit_clearance_m);root.add(outward);
     const pins={},ordered=[];
-    // Three separate metallic tips at the CAD pin ends, 0.6 mm inside the
-    // keyed mouth. Colours describe the harness; this is not a pinout table.
+    // Keep insulation outside the official socket shell. Metallic contacts
+    // extend into the keyed cavity; their free tips sit 0.2 mm past its mouth.
+    // Colours describe the harness, not an electrical pinout table.
     for(const [i,signal]of ['gnd','power','data'].entries()){
       const pin=new T.Object3D();pin.name=`servo-${id}-${label}-${signal}`;
-      pin.position.set(spec.contact_depth_m,0,(i-1)*spec.contact_pitch_m);pin.userData.signal=signal;root.add(pin);
+      pin.position.set(-.0002,0,(i-1)*spec.contact_pitch_m);pin.userData.signal=signal;root.add(pin);
       const contact=new T.Mesh(new T.CylinderGeometry(.00030,.00030,.0015,10),metalMaterial);
-      contact.rotation.z=Math.PI/2;contact.position.copy(pin.position).add(new T.Vector3(.00072,0,0));
+      contact.rotation.z=Math.PI/2;contact.position.copy(pin.position).add(new T.Vector3(.00075,0,0));
       contact.name=`servo-${id}-${label}-${signal}-contact`;root.add(contact);
       pins[signal]=pin;ordered.push(pin);
     }

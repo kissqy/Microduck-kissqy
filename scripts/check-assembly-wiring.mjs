@@ -5,6 +5,7 @@ import * as T from '../docs/vendor/three.module.min.js?demo=20261013';
 import {parseDuck} from '../docs/pose.js?demo=20261013';
 import {DuckView} from '../docs/duck.js';
 import {attachElectronics} from '../docs/assembly-electronics.js';
+import {independentRayMesh} from './assembly-ray-audit.mjs';
 const dir=new URL('../docs/',import.meta.url).pathname;
 const buffer=readFileSync(dir+'assets/duck-visual.bin');
 const stl=readFileSync(dir+'assets/assembly-battery-holder.stl');
@@ -21,7 +22,7 @@ view.camera=new T.PerspectiveCamera(37,4/3,.005,20);view.camera.up.set(0,0,1);
 view.controls={target:new T.Vector3(0,0,.15),update(){view.camera.lookAt(this.target);view.camera.updateMatrixWorld(true);}};
 view.pose(view.actual,Array(15).fill(0),[0,0,-1],0);view.view('front');
 const rest=view.actual.parts.map(p=>p.position.clone());
-const api=await attachElectronics(view);assert.equal(api.batteryHolder.error,null);assert(api.batteryHolder.mesh);
+const api=await attachElectronics(view,()=>{},{useWireCache:!process.argv.includes('--fresh-cache')});assert.equal(api.batteryHolder.error,null);assert(api.batteryHolder.mesh);
 api.setWiringVisible(true);assert.equal(view.model.parts.length,64);assert.equal(api.explosion.count,34);
 
 const {meshCollider}=await import('../docs/assembly-mesh-clearance.js');
@@ -41,8 +42,9 @@ const ids=[20,21,22,23,24,30,31,32,33,34,10,11,12,13,14];
 const poses=[{name:'zero',joints:Array(15).fill(0)}];
 view.setReference('home');poses.push({name:'home',joints:[...view.referenceJoints]});
 if(process.argv.includes('--all'))for(let i=0;i<15;i++)for(const sign of[-1,1]){const joints=Array(15).fill(0);joints[i]=sign*Math.PI/18;poses.push({name:'servo'+ids[i]+(sign<0?'-10':'+10'),joints});}
-poses.push({name:'zero-exploded',joints:Array(15).fill(0),exploded:true},{name:'home-exploded',joints:poses[1].joints,exploded:true},{name:'home-open-lid',joints:poses[1].joints,open:true});
-const allMeshes=[...view.actual.servos,...api.explosion.printedParts.map(p=>p.mesh)];
+poses.push({name:'zero-open-lid',joints:poses[0].joints,open:true},{name:'zero-exploded-open-lid',joints:poses[0].joints,open:true,exploded:true},{name:'home-exploded-open-lid',joints:poses[1].joints,open:true,exploded:true},{name:'zero-exploded',joints:Array(15).fill(0),exploded:true},{name:'home-exploded',joints:poses[1].joints,exploded:true},{name:'home-open-lid',joints:poses[1].joints,open:true});
+if(process.argv.includes('--zero-only'))poses.splice(1);
+const allMeshes=api.collisionMeshes;
 const raycaster=new T.Raycaster(),results=[],started=performance.now();
 function assertAttached(){
  const root=view.actual.root;
@@ -59,14 +61,14 @@ function checkSegment(a,b,meshes,context){
  const length=a.distanceTo(b);if(length<1e-10)return;
  const segmentBounds=new T.Box3().setFromPoints([a,b]);raycaster.set(a,b.clone().sub(a).normalize());raycaster.near=1e-7;raycaster.far=length-1e-7;
  for(const obstacle of meshes){if(!segmentBounds.intersectsBox(obstacle.box))continue;
-  const hit=raycaster.intersectObject(obstacle.mesh,false)[0];
-  assert(!hit,`${context}: crosses ${obstacle.name} at ${hit?.point.toArray()}`);
+  const hit=independentRayMesh(a,b,obstacle.mesh);
+  assert(!hit,`${context}: crosses ${obstacle.name} at ${hit?.toArray()}`);
  }
 }
 for(const pose of poses){
  const began=performance.now();api.setExploded(false);api.setCoverOpen(false);view.referenceMode='measured';view.pose(view.actual,pose.joints,[0,0,-1],0);
  if(pose.open)api.setCoverOpen(true);if(pose.exploded)api.setExploded(true);api.update();view.actual.root.updateMatrixWorld(true);assertAttached();
- const obstacles=allMeshes.map(mesh=>{mesh.material.side=T.DoubleSide;return{mesh,name:mesh.userData.hd1910Assembly?.id??api.explosion.printedParts.find(p=>p.mesh===mesh)?.name,box:mesh.geometry.boundingBox.clone().applyMatrix4(mesh.matrixWorld)};});
+ const obstacles=allMeshes.map(mesh=>{mesh.material.side=T.DoubleSide;return{mesh,name:mesh.userData.hd1910Assembly?.id??api.explosion.printedParts.find(p=>p.mesh===mesh)?.name??mesh.name,box:mesh.geometry.boundingBox.clone().applyMatrix4(mesh.matrixWorld)};});
  let segments=0,cores=0;
  for(const route of api.routes){if(route.header)continue;
   for(const conductor of route.conductors){cores++;const curve=conductor.mesh.geometry.parameters.path;
@@ -91,10 +93,12 @@ for(const pose of poses){
  assert(boardRelative.distanceTo(globalThis.mountReference.board)<1e-8,'IMU left battery mount');
  assert(pinRelative.distanceTo(globalThis.mountReference.pin)<1e-8,'IMU socket left battery mount');
  assert(pinRelative.z>boardRelative.z+.005,'IMU socket not at top');
- results.push({pose:pose.name,cores,segments,unexemptedCrossings:0,timeMS:Math.round(performance.now()-began)});
+ results.push({pose:pose.name,cores,cachedCores:api.routes.filter(r=>!r.header).reduce((n,r)=>n+r.conductors.filter(c=>c.mesh.userData.cached).length,0),bundledCores:api.routes.filter(r=>!r.header).reduce((n,r)=>n+r.conductors.filter(c=>c.mesh.userData.bundled).length,0),segments,unexemptedCrossings:0,timeMS:Math.round(performance.now()-began)});
+ if(process.argv.includes('--generate-cache'))writeFileSync(dir+'assets/assembly-wire-cache.json',JSON.stringify(api.exportWireCache())+'\n');
  console.log(JSON.stringify(results.at(-1)));
 }
+if(process.argv.includes('--generate-cache'))writeFileSync(dir+'assets/assembly-wire-cache.json',JSON.stringify(api.exportWireCache())+'\n');
 api.setExploded(false);api.setCoverOpen(false);view.setReference('zero');assertAttached();
-const output={result:'PASS',poses:results.length,servoMeshes:15,printedMeshes:api.explosion.count,cores:53,headerContacts:40,segments:results.reduce((n,r)=>n+r.segments,0),crossings:0,IMU:'board and actual J1 contacts follow battery holder, including explosion/collapse',timeMS:Math.round(performance.now()-started),results};
+const output={result:'PASS',poses:results.length,servoMeshes:15,printedMeshes:api.explosion.count,electronicsAndSocketCollisionMeshes:api.collisionMeshes.length-15-api.explosion.count,cores:53,headerContacts:40,segments:results.reduce((n,r)=>n+r.segments,0),crossings:0,IMU:'board and actual J1 contacts follow battery holder, including explosion/collapse',timeMS:Math.round(performance.now()-started),results};
 if(process.env.ASSEMBLY_WIRING_REPORT)writeFileSync(process.env.ASSEMBLY_WIRING_REPORT,JSON.stringify(output,null,2)+'\n');
 console.log(JSON.stringify(output));api.dispose();

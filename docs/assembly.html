@@ -59,7 +59,7 @@
         <div class="view-toolbar" role="group" aria-label="模型观察方向">
           <button type="button" data-view="front">正面</button><button type="button" data-view="back">背面</button><button type="button" data-view="left">左侧</button><button type="button" data-view="side">右侧</button><button type="button" data-view="top">俯视</button><button type="button" id="reset-view">↺ 恢复全景</button>
         </div>
-        <p class="side-note">左右以鸭子自身为准：左腿 20–24，右腿 10–14。正面看时与屏幕左右相反。</p>
+        <p class="side-note">左右以鸭子自身为准：左腿 20–24，右腿 10–14。正面看时与屏幕左右相反。选中部位时淡化无关线束，恢复全景查看全部。</p>
         <p class="layout-note">HUB 平放在 10 / 20 舵机上方、长边沿机身前后方向；IMU 贴合电池仓背板、总线端子朝上；HAT / ZERO 在鸭脸内部。线束接入模型端子，路径与外形为装配参考。</p>
         <div class="wire-legend" aria-label="示意线颜色"><span><i class="wire-ground"></i>GND</span><span><i class="wire-power"></i>电源</span><span><i class="wire-data"></i>DATA</span><small>三芯线按信号名对应；图示颜色不替代实物针序。</small></div>
       </section>
@@ -67,7 +67,7 @@
         <div class="inspector-tabs" role="group" aria-label="选择说明内容"><button type="button" data-inspect="joints" aria-pressed="true">关节结构</button><button type="button" data-inspect="electronics" aria-pressed="false">板卡与接线</button></div>
         <div id="joints-panel">
         <div class="inspector-heading"><span class="eyebrow">看哪里，就选哪里</span><h2 id="part-title">整只小鸭</h2><p id="part-description">先看整体连接关系，再选择腿部或头颈放大查看。</p></div>
-        <label class="fade-option"><input type="checkbox" id="fade-others" checked> 淡化其他部位</label>
+        <label class="fade-option"><input type="checkbox" id="fade-others" checked> 淡化其他部位与线束</label>
         <div id="joint-list" class="joint-list" role="group" aria-label="关节位置"></div>
         <div id="joint-detail" class="joint-detail" aria-live="polite"><span>点选舵机外壳或上方关节，查看对应 ID。</span></div>
         <div class="reference-section">
@@ -120,6 +120,6 @@
   </main>
   <dialog id="viewer-dialog" class="viewer-dialog" aria-labelledby="viewer-title"></dialog>
   <script type="module" src="assembly-layout.js?v=20261030-screen"></script>
-  <script type="module" src="assembly.js?v=20261027-printed-clearance"></script>
+  <script type="module" src="assembly.js?v=20261030-harness"></script>
 </body>
 </html>

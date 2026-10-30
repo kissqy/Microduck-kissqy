@@ -1,8 +1,8 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
-import {PCB_LAYOUTS} from './assembly-board-layouts.js';
+import {PCB_LAYOUTS} from './assembly-board-layouts.js?v=20261030-harness';
 
 // HAT / IMU: actual board outlines, mounting holes, component XY / rotation and
-// copper routes from the repository's 2026-10-15 EasyEDA projects. Heights and
+// copper routes from the current HAT (2026-10-30) / IMU (2026-10-15) sources. Heights and
 // package shells are simplified visualization, not manufacturing / clearance CAD.
 // ZERO: official Radxa ZERO 3W product brief Rev1.8 (65 x 30 mm mechanical drawing
 // and front / back board photographs); component bodies are representative.
@@ -85,9 +85,9 @@ function addBusPort(parent,c,{name=c.ref,pitch=2,height=5.3,h=4.4}={}){
   // at the actual visible pin tips and follow the IMU's mounted board group.
   const z=THICK/2+height*.65;
   const pins={
-    gnd:portObject(root,`${name}-GND`,-pitch,.45,z),
-    power:portObject(root,`${name}-POWER`,0,.45,z),
-    data:portObject(root,`${name}-DATA`,pitch,.45,z),
+    gnd:portObject(root,`${name}-GND`,c.busPins?.gnd?.[0]??-pitch,.45,z),
+    power:portObject(root,`${name}-POWER`,c.busPins?.power?.[0]??0,.45,z),
+    data:portObject(root,`${name}-DATA`,c.busPins?.data?.[0]??pitch,.45,z),
   };
   for(const [signal,pin]of Object.entries(pins))pin.userData.signal=signal;
   const mouth=portObject(root,`${name}-mouth`,0,.45,THICK/2+height);

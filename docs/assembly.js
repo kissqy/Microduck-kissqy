@@ -2,8 +2,8 @@ import * as T from './vendor/three.module.min.js?demo=20261013';
 import {DuckView} from './duck.js?demo=20261013';
 import {REFERENCE_IDS,REFERENCE_LABELS} from './calibration-reference.js?demo=20261013';
 import {officialStandingDegrees,referenceAngle} from './joint-reference.js?demo=20261013';
-import {attachElectronics} from './assembly-electronics.js?v=20261027-printed-clearance';
-import {COMPONENTS,CONNECTIONS,WIRING_NOTE} from './assembly-components.js?v=20261027-ready-boards';
+import {attachElectronics} from './assembly-electronics.js?v=20261030-harness';
+import {COMPONENTS,CONNECTIONS,WIRING_NOTE} from './assembly-components.js?v=20261030-harness';
 
 const groups={
   all:{title:'整只小鸭',description:'先看整体连接关系，再选择腿部或头颈放大查看。',indexes:REFERENCE_IDS.map((_,i)=>i)},
@@ -90,12 +90,12 @@ function selectJoint(index){
   clearComponent();setInspector('joints');
   selected=index;
   if(scope!=='all'&&!groups[scope].indexes.includes(index))scope=index<5?'left':index<10?'head':'right';
-  view.selectJoint(index);view.focusJoint(index);drawInspector();
+  view.selectJoint(index);view.focusJoint(index);electronics?.setWireFocus($('fade-others').checked?'servo'+REFERENCE_IDS[index]:null);drawInspector();
 }
 function setScope(next){
   if(!view)return;
   clearComponent();setInspector('joints');
-  scope=next;selected=null;view.selected=-1;view.update({});view.focusScope();drawInspector();
+  scope=next;selected=null;view.selected=-1;view.update({});view.focusScope();electronics?.setWireFocus($('fade-others').checked?next:null);drawInspector();
 }
 function setPose(next){
   if(!view)return;
@@ -108,7 +108,7 @@ function setPose(next){
 document.querySelectorAll('[data-group]').forEach(button=>button.addEventListener('click',()=>setScope(button.dataset.group)));
 document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>view?.view(button.dataset.view)));
 document.querySelectorAll('[data-pose]').forEach(button=>button.addEventListener('click',()=>setPose(button.dataset.pose)));
-$('fade-others').addEventListener('change',()=>view?.update({}));
+$('fade-others').addEventListener('change',()=>{view?.update({});electronics?.setWireFocus($('fade-others').checked?(activeComponent||(selected!==null?'servo'+REFERENCE_IDS[selected]:scope)):null);});
 $('reset-view').addEventListener('click',()=>setScope('all'));
 $('retry').addEventListener('click',()=>location.reload());
 function setInspector(name){
@@ -117,7 +117,7 @@ function setInspector(name){
   document.querySelectorAll('[data-inspect]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.inspect===name)));
 }
 function clearComponent(){
-  activeComponent=null;electronics?.clearSelection();$('component-quick').hidden=true;
+  activeComponent=null;electronics?.setWireFocus(null);electronics?.clearSelection();$('component-quick').hidden=true;
   document.querySelectorAll('[data-component]').forEach(button=>button.setAttribute('aria-pressed','false'));
 }
 function drawComponent(){
@@ -146,7 +146,7 @@ function selectComponent(id){
     electronics.select(id);if(id==='hat'||id==='zero')$('open-cover').checked=true;
     $('component-quick').hidden=false;
   }
-  drawComponent();setInspector('electronics');
+  electronics?.setWireFocus($('fade-others').checked?id:null);drawComponent();setInspector('electronics');
 }
 document.querySelectorAll('[data-component]').forEach(button=>button.addEventListener('click',()=>selectComponent(button.dataset.component)));
 document.querySelectorAll('[data-inspect]').forEach(button=>button.addEventListener('click',()=>{setInspector(button.dataset.inspect);if(button.dataset.inspect==='electronics')drawComponent();}));

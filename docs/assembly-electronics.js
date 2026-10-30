@@ -1,11 +1,12 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
-import {createBoardModel} from './assembly-board-models.js?v=20261030-harness';
+import {createBoardModel} from './assembly-board-models.js?v=20261030-hub-arcs';
 import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261027-printed-clearance';
-import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261030-harness';
-import {createHubModel} from './assembly-hub-model.js?v=20261030-harness';
-import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261030-harness';
-import {parallelCablePaths} from './assembly-cable-bundles.js?v=20261030-harness';
-import {createWireRouter} from './assembly-wire-routing.js?v=20261030-harness';
+import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261030-hub-arcs';
+import {createHubModel} from './assembly-hub-model.js?v=20261030-hub-arcs';
+import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261030-hub-arcs';
+import {parallelCablePaths} from './assembly-cable-bundles.js?v=20261030-hub-arcs';
+import {softenCableCorners} from './assembly-wire-curves.js?v=20261030-hub-arcs';
+import {createWireRouter} from './assembly-wire-routing.js?v=20261030-hub-arcs';
 
 // Board footprints are documented; mounting offsets are assembly-reference
 // placements, not a mechanical clearance or connector pin-direction drawing.
@@ -158,7 +159,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
       component.group.position.copy(parent.worldToLocal(hubCenter.clone()));
       // Keep the PCB horizontal; turn its long axis into the front/back
       // direction, rather than across the two hip servos.
-      component.group.quaternion.copy(parent.getWorldQuaternion(new T.Quaternion()).invert()).multiply(new T.Quaternion().setFromAxisAngle(vector(0,0,1),Math.PI/2));
+      component.group.quaternion.copy(parent.getWorldQuaternion(new T.Quaternion()).invert()).multiply(new T.Quaternion().setFromAxisAngle(vector(0,0,1),-Math.PI/2));
     }else{
       // Lower backplate has the IMU's four through-hole region (raw Z16.6/36.2).
       component.group.position.set(0,0,.0264);
@@ -341,7 +342,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
           const bundle=bundles?.[index];
           routing=bundle&&!wireRouter.validate(bundle.curve,spec)?bundle:wireRouter.route({...spec,previous:bundle?.points||c.routePoints});
           if(!routing){c.mesh.visible=false;c.mesh.userData.routingError=wireRouter.lastFailure;return;}
-          curve=routing.curve;
+          curve=softenCableCorners(routing.curve,{accept:candidate=>!wireRouter.validate(candidate,spec)});
           c.routePoints=routing.points;
         }
         const segments=item.header?12:Math.max(48,Math.min(1024,Math.ceil(curve.getLength()/.0004))),geometry=new T.TubeGeometry(curve,segments,item.header?.000105:.00034,6,false);

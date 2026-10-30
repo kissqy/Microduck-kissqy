@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
-import {HUB_LAYOUT} from './assembly-hub-layout.js?v=20261030-harness';
+import {HUB_LAYOUT} from './assembly-hub-layout.js?v=20261030-hub-arcs';
 const MM=.001,HALF=.8;
 const mat=(color,metalness=.04)=>new T.MeshStandardMaterial({color,roughness:metalness>.5?.33:.65,metalness});
 const signal=net=>net==='GND'?'gnd':net==='VIN'?'power':'data';
@@ -22,13 +22,16 @@ export function createHubModel(){
  for(const[x,y,r]of holes)for(const side of[-1,1]){const ring=mesh(group,new T.RingGeometry(r*MM,(r+.32)*MM,20),gold,'HUB-plated-ring',x,y,side*.815);if(side<0)ring.rotation.x=Math.PI;ring.userData.hubSolid=false;}
  for(const[x1,y1,x2,y2,w,layer]of HUB_LAYOUT.traces){const a=new T.Vector3(x1*MM,y1*MM,layer===1?.00082:-.00082),b=new T.Vector3(x2*MM,y2*MM,a.z);const m=mesh(group,new T.BoxGeometry(a.distanceTo(b),w*MM,.000012),trace,'HUB-copper');m.position.copy(a.clone().add(b).multiplyScalar(.5));m.rotation.z=Math.atan2(y2-y1,x2-x1);m.userData.hubSolid=false;}
  for(const c of HUB_LAYOUT.components){
-  const part=new T.Group();part.name='HUB-'+c.ref;part.position.set(c.position[0]*MM,c.position[1]*MM,0);part.rotation.z=c.angle*Math.PI/180;if(c.bottom)part.rotateX(Math.PI);group.add(part);
+  // The author mounts C1 on the reverse side in the physical assembly.
+  // Keep the CAD's original pad coordinates and record the fitted-side override.
+  const bottom=HUB_LAYOUT.assemblyOverrides?.[c.ref]?.bottom??c.bottom;
+  const part=new T.Group();part.name='HUB-'+c.ref;part.position.set(c.position[0]*MM,c.position[1]*MM,0);part.rotation.z=c.angle*Math.PI/180;if(bottom)part.rotateX(Math.PI);group.add(part);
   if(c.ref==='C1'){
    const can=mesh(part,new T.CylinderGeometry(.004,.004,.008,40),mat(0x555e62,.45),'HUB-C1-can',0,0,HALF+4.1);can.rotation.x=Math.PI/2;
    const top=mesh(part,new T.CylinderGeometry(.0038,.0038,.0002,40),metal,'HUB-C1-top',0,0,HALF+8.15);top.rotation.x=Math.PI/2;
    for(const a of[-Math.PI/4,Math.PI/4]){const vent=box(part,4.2,.10,.035,mat(0x637174,.3),'HUB-C1-vent',0,0,HALF+8.27);vent.rotation.z=a;}
    const stripe=mesh(part,new T.CylinderGeometry(.00402,.00402,.0078,32,1,true,-Math.PI*.2,Math.PI*.32),mat(0xdce1df,.4),'HUB-C1-polarity',0,0,HALF+4.1);stripe.rotation.x=Math.PI/2;
-   c.pads.forEach(p=>pin(part,metal,'HUB-C1-leg-'+p.pin,[p.x,0,-1.8],[p.x,0,1.4],.25));label(group,'C1',...c.silk.position,.83,silk);continue;
+   c.pads.forEach(p=>pin(part,metal,'HUB-C1-leg-'+p.pin,[p.x,0,-1.8],[p.x,0,1.4],.25));label(group,'C1',...c.silk.position,bottom?-.83:.83,silk);continue;
   }
   const vertical=c.ref==='CN1';
   if(vertical){

@@ -24,6 +24,11 @@ view.pose(view.actual,Array(15).fill(0),[0,0,-1],0);view.view('front');
 const rest=view.actual.parts.map(p=>p.position.clone());
 const api=await attachElectronics(view,()=>{},{useWireCache:!process.argv.includes('--fresh-cache')});assert.equal(api.batteryHolder.error,null);assert(api.batteryHolder.mesh);
 api.setWiringVisible(true);assert.equal(view.model.parts.length,64);assert.equal(api.explosion.count,34);
+const hub=api.components.get('hub');view.actual.root.updateMatrixWorld(true);
+const hubForward=new T.Vector3(0,1,0).transformDirection(hub.group.matrixWorld);
+assert(hubForward.x>.999,'HUB front/back mounting direction reversed');
+const cap=hub.group.getObjectByName('HUB-C1-can');
+assert(hub.group.worldToLocal(cap.getWorldPosition(new T.Vector3())).z<0,'HUB capacitor must be mounted on reverse side');
 
 const {meshCollider}=await import('../docs/assembly-mesh-clearance.js');
 // Surface clearance must detect thin walls and preserve real openings.
@@ -93,7 +98,9 @@ for(const pose of poses){
  assert(boardRelative.distanceTo(globalThis.mountReference.board)<1e-8,'IMU left battery mount');
  assert(pinRelative.distanceTo(globalThis.mountReference.pin)<1e-8,'IMU socket left battery mount');
  assert(pinRelative.z>boardRelative.z+.005,'IMU socket not at top');
- results.push({pose:pose.name,cores,cachedCores:api.routes.filter(r=>!r.header).reduce((n,r)=>n+r.conductors.filter(c=>c.mesh.userData.cached).length,0),bundledCores:api.routes.filter(r=>!r.header).reduce((n,r)=>n+r.conductors.filter(c=>c.mesh.userData.bundled).length,0),segments,unexemptedCrossings:0,timeMS:Math.round(performance.now()-began)});
+ const roundedCores=api.routes.filter(r=>!r.header).reduce((n,r)=>n+r.conductors.filter(c=>c.mesh.geometry.parameters.path.curves?.some(piece=>piece.isQuadraticBezierCurve3)).length,0);
+ assert(roundedCores>=30,'rounded cable bends missing from rendered paths');
+ results.push({pose:pose.name,cores,roundedCores,cachedCores:api.routes.filter(r=>!r.header).reduce((n,r)=>n+r.conductors.filter(c=>c.mesh.userData.cached).length,0),bundledCores:api.routes.filter(r=>!r.header).reduce((n,r)=>n+r.conductors.filter(c=>c.mesh.userData.bundled).length,0),segments,unexemptedCrossings:0,timeMS:Math.round(performance.now()-began)});
  if(process.argv.includes('--generate-cache'))writeFileSync(dir+'assets/assembly-wire-cache.json',JSON.stringify(api.exportWireCache())+'\n');
  console.log(JSON.stringify(results.at(-1)));
 }

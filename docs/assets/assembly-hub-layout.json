@@ -495,5 +495,11 @@
       1
     ]
   ],
-  "note": "PCB outline, holes, component XY, side, rotation and pin nets from the author project. Package heights and plastic details follow the supplied views as visual approximations."
+  "note": "PCB outline, holes, component XY, side, rotation and pin nets from the author project. Package heights and plastic details follow the supplied views as visual approximations.",
+  "assemblyOverrides": {
+    "C1": {
+      "bottom": true,
+      "reason": "Author confirms capacitor is fitted on the reverse PCB side in the physical assembly."
+    }
+  }
 }

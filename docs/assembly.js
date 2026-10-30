@@ -2,8 +2,8 @@ import * as T from './vendor/three.module.min.js?demo=20261013';
 import {DuckView} from './duck.js?demo=20261013';
 import {REFERENCE_IDS,REFERENCE_LABELS} from './calibration-reference.js?demo=20261013';
 import {officialStandingDegrees,referenceAngle} from './joint-reference.js?demo=20261013';
-import {attachElectronics} from './assembly-electronics.js?v=20261030-harness';
-import {COMPONENTS,CONNECTIONS,WIRING_NOTE} from './assembly-components.js?v=20261030-harness';
+import {attachElectronics} from './assembly-electronics.js?v=20261030-hub-arcs';
+import {COMPONENTS,CONNECTIONS,WIRING_NOTE} from './assembly-components.js?v=20261030-hub-arcs';
 
 const groups={
   all:{title:'整只小鸭',description:'先看整体连接关系，再选择腿部或头颈放大查看。',indexes:REFERENCE_IDS.map((_,i)=>i)},

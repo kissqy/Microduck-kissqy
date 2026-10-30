@@ -15,7 +15,7 @@ for(const ref of ['J1','J2','J3','J4']){
  assert(Math.sign(port.pins.data.getWorldPosition(new T.Vector3()).z)===(c.bottom?-1:1));
 }
 assert.equal(ports.CN1.pins.gnd.userData.pin,'1');assert.equal(ports.CN1.pins.power.userData.pin,'2');
-assert(group.getObjectByName('HUB-C1-can').position.z>0,'capacitor on wrong PCB side');
+assert(group.getObjectByName('HUB-C1-can').getWorldPosition(new T.Vector3()).z<0,'capacitor must be fitted on the reverse PCB side');
 const collider=meshCollider(pcb.geometry);
 for(const [x,y,r]of HUB_LAYOUT.holes){assert(Math.abs(r-1.2)<1e-6);assert(!collider.hit(new T.Vector3(x/1000,y/1000,-.003),new T.Vector3(x/1000,y/1000,.003),.001),'mounting hole filled');}
 assert(!collider.hit(new T.Vector3(.010,0,-.003),new T.Vector3(.010,0,.003),0),'HUB notch filled by rectangular PCB');

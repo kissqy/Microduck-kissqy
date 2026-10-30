@@ -22,7 +22,7 @@ function roundedPath(points,radius){
  for(let i=1;i<points.length-1;i++){
   const previous=points[i-1],corner=points[i],next=points[i+1];
   const before=corner.distanceTo(previous),after=corner.distanceTo(next);
-  const trim=Math.min(radius,before*.24,after*.24,i===1||i===points.length-2?.0007:Infinity);
+  const trim=Math.min(radius,before*.42,after*.42,i===1||i===points.length-2?.0007:Infinity);
   if(trim<1e-9){addLine(corner);continue;}
   const entry=corner.clone().lerp(previous,trim/before),exit=corner.clone().lerp(next,trim/after);
   addLine(entry);curve.add(new T.QuadraticBezierCurve3(entry,corner.clone(),exit));current=exit;
@@ -233,7 +233,7 @@ export function createWireRouter(root,servoMeshes,printedMeshes=[],{clearance=CL
    const old=spec.previous,da=start.clone().sub(old[0]),db=end.clone().sub(old.at(-1));
    const points=old.map((point,i)=>point.clone().addScaledVector(da,1-i/(old.length-1)).addScaledVector(db,i/(old.length-1)));
    points[0]=start.clone();points[1]=leadA.clone();points[points.length-2]=leadB.clone();points[points.length-1]=end.clone();
-   for(const radius of[.0015,.0003,0]){const curve=roundedPath(points,radius);if(!validate(curve,spec))return{curve,points,clearance:margin,bendRadius:radius,length:curve.getLength(),signature};}
+   for(const radius of[.0035,.002,.001,.0003,0]){const curve=roundedPath(points,radius);if(!validate(curve,spec))return{curve,points,clearance:margin,bendRadius:radius,length:curve.getLength(),signature};}
   }
   const middle=middlePath(leadA,leadB,lane);
   if(!middle){lastFailure={reason:'no-clear-external-path'};return null;}
@@ -241,7 +241,7 @@ export function createWireRouter(root,servoMeshes,printedMeshes=[],{clearance=CL
   if(separated&&separated.length===0){lastFailure={reason:'no-separated-direct-path'};return null;}
   for(const candidate of separated||[middle]){
    const points=[start.clone(),...candidate,end.clone()];
-   for(const radius of[.0015,.00075,.0003,0]){
+   for(const radius of[.0035,.002,.001,.00075,.0003,0]){
     const curve=roundedPath(points,radius),hit=validate(curve,spec);
     if(!hit)return{curve,points,clearance:margin,bendRadius:radius,length:curve.getLength(),signature,laneSeparated:!!separated};
     lastFailure={reason:'terminal-or-bend-clearance',obstacle:hit.mesh.userData?.hd1910Assembly?.id??hit.mesh.name};

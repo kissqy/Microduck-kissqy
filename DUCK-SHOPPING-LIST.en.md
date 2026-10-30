@@ -15,7 +15,7 @@
 
 [🏠 Project homepage](README.en.md)
 
-**Assembled-board reference subtotal: CNY 2823.80**, including the 32GB microSD card and card reader, before printing. The complete FrankenDuck printing service is listed at CNY 199, making the assembled-board plus printing reference subtotal **CNY 3022.80**. Unpriced HUB / battery-connection parts and shipping are extra.
+**Assembled-board reference subtotal: CNY 2868.80**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. The complete FrankenDuck printing service is listed at CNY 199, making the assembled-board plus printing reference subtotal **CNY 3067.80**. Unpriced HUB / battery-connection parts and shipping are extra.
 
 **[Open the shopping checklist (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/shopping.html)** · [Compare budget totals (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
 
@@ -27,14 +27,14 @@ The online pages show totals first, then specifications, quantities and purchase
 
 | Item | Buy assembled boards | DIY boards, including tools |
 | --- | ---: | ---: |
-| Duck body, including gamepad and reference spare stock | ¥2605.80 | ¥2605.80 |
+| Duck body, including gamepad, URT2 and reference spare stock | ¥2650.80 | ¥2650.80 |
 | HAT + IMU | [HAT ¥119 + IMU ¥99](https://item.taobao.com/item.htm?id=1095121548583) | ¥94.22–134.22 · first component purchase |
 | Soldering / programming tools and consumables | No board-soldering tools; assembled IMU has FT6 preflashed | ¥800–1000 |
-| **Total without a printer** | **¥2823.80** | **¥3500.02–3740.02** |
+| **Total without a printer** | **¥2868.80** | **¥3545.02–3785.02** |
 | 3D printer allowance | +¥3500 | +¥3500 |
-| **Total including a printer** | **¥6323.80** | **¥7000.02–7240.02** |
+| **Total including a printer** | **¥6368.80** | **¥7045.02–7285.02** |
 
-**For the FrankenDuck printing service, add CNY 199: assembled boards CNY 3022.80; DIY boards with existing tools CNY 2899.02–2939.02; DIY boards with new tools CNY 3699.02–3939.02.** No printer purchase is needed. [Edition features and printing instructions](hardware/3d-print-frankenduck/README.en.md).
+**For the FrankenDuck printing service, add CNY 199: assembled boards CNY 3067.80; DIY boards with existing tools CNY 2944.02–2984.02; DIY boards with new tools CNY 3744.02–3984.02.** No printer purchase is needed. [Edition features and printing instructions](hardware/3d-print-frankenduck/README.en.md).
 
 - **The base table excludes printed parts or filament; the printing-service subtotals include CNY 199. Robot-assembly labor, a computer, unpriced HUB / battery-connection parts, new-order shipping and losses are extra.** The body includes 15 HD1910 servos at ¥119 each; the microSD card and card reader are priced and included.
 - The HUB includes the main-power buffer capacitor. Do not buy or budget for a separate capacitor.
@@ -51,6 +51,7 @@ The author supplied reference prices for the EAGET 32GB monitoring / dashcam mic
 | Item / exact variant | Unit | Reference quantity | Historical unit price | Subtotal | Shop / link |
 | --- | --- | ---: | ---: | ---: | --- |
 | **飞特 HD1910 串口总线舵机**<br>HD-1910-C001；HD-1910-C001 | 只 | 15 | ¥119.00 | ¥1785.00 | 深圳飞特舵机工厂店<br>[Product](https://item.taobao.com/item.htm?id=1078248851201) |
+| **Feetech URT2 servo programming board**<br>Used to set / change servo IDs; reuse one you already have | unit | 1 | ¥45.00 | ¥45.00 | Taobao<br>[Product](https://item.taobao.com/item.htm?abbucket=0&id=603181554943&skuId=4836538640319) |
 | **Radxa ZERO 3W**<br>2GB RAM 无 eMMC 带排针[【Microduck 原版主板】]；2GB RAM / 无eMMC / 带排针 | 个 | 1 | ¥309.00 | ¥309.00 | 瑞莎计算机(深圳)有限公司<br>[Product](https://item.taobao.com/item.htm?id=763812025816) |
 | **EAGET 32GB microSD / TF card**<br>Monitoring / dashcam variant; 32GB is sufficient; reference price supplied by the author | card | 1 | ¥39.90 | ¥39.90 | JD.com<br>[Product](https://3.cn/392wR-H7?jkl=@D1sNrEalQdG@) |
 | **SAMZHE dual-head high-speed card reader**<br>Simultaneous SD / TF card reading; reference price supplied by the author; reuse one you already have | unit | 1 | ¥22.90 | ¥22.90 | JD.com<br>[Product](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) |

@@ -1,7 +1,7 @@
 {
   "currency": "CNY",
-  "reviewed": "2026-10-28",
-  "priceBasis": "作者历史采购记录、成品板与缝合怪版代打定价，以及补充的京东 TF 卡与读卡器报价、作者更新的双头反向舵机线单价；商品价格以下单时为准。",
+  "reviewed": "2026-10-30",
+  "priceBasis": "作者历史采购记录、成品板与缝合怪版代打定价，以及补充的京东 TF 卡与读卡器报价、作者更新的双头反向舵机线单价、作者补充的飞特 URT2 报价；商品价格以下单时为准。",
   "items": [
     {
       "id": "part-01",
@@ -14,6 +14,18 @@
       "group": "electronics",
       "url": "https://item.taobao.com/item.htm?id=1078248851201",
       "note": "装机 15 只。型号选 HD-1910-C001。"
+    },
+    {
+      "id": "urt2",
+      "name": "飞特 URT2 舵机调试板",
+      "spec": "URT2；用于飞特舵机编号设置。",
+      "unit": "个",
+      "quantity": 1,
+      "unitQuote": "45.00",
+      "subtotalCents": 4500,
+      "group": "electronics",
+      "url": "https://item.taobao.com/item.htm?abbucket=0&id=603181554943&skuId=4836538640319",
+      "note": "用于设置／修改舵机编号（ID）；已有可复用。"
     },
     {
       "id": "part-02",

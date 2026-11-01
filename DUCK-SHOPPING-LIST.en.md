@@ -57,7 +57,7 @@ For battery power, use a banana board (not yet listed for sale), or the reposito
 
 | Item / exact variant | Unit | Reference quantity | Historical unit price | Subtotal | Shop / link |
 | --- | --- | ---: | ---: | ---: | --- |
-| **飞特 HD1910 串口总线舵机**<br>HD-1910-C001；HD-1910-C001 | 只 | 15 | ¥119.00 | ¥1785.00 | 深圳飞特舵机工厂店<br>[Purchase](https://item.taobao.com/item.htm?id=1078248851201)<br>[Group buy: CNY 95 each](https://kissqy.github.io/Microduck-kissqy/build/shopping.html#hd1910-group-buy) |
+| **飞特 HD1910 串口总线舵机**<br>HD-1910-C001；HD-1910-C001 | 只 | 15 | ¥119.00 | ¥1785.00 | 深圳飞特舵机工厂店<br>[Purchase](https://item.taobao.com/item.htm?id=1078248851201)<br>[Group buy: CNY 99 each](https://kissqy.github.io/Microduck-kissqy/build/shopping.html#hd1910-group-buy) |
 | **Feetech URT2 servo programming board**<br>Used to set / change servo IDs; reuse one you already have | unit | 1 | ¥45.00 | ¥45.00 | Taobao<br>[Product](https://item.taobao.com/item.htm?abbucket=0&id=603181554943&skuId=4836538640319) |
 | **Radxa ZERO 3W**<br>2GB RAM 无 eMMC 带排针[【Microduck 原版主板】]；2GB RAM / 无eMMC / 带排针 | 个 | 1 | ¥309.00 | ¥309.00 | 瑞莎计算机(深圳)有限公司<br>[Product](https://item.taobao.com/item.htm?id=763812025816) |
 | **EAGET 32GB microSD / TF card**<br>Monitoring / dashcam variant; 32GB is sufficient; reference price supplied by the author | card | 1 | ¥39.90 | ¥39.90 | JD.com<br>[Product](https://3.cn/392wR-H7?jkl=@D1sNrEalQdG@) |

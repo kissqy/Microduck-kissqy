@@ -15,10 +15,10 @@
       "url": "https://item.taobao.com/item.htm?id=1078248851201",
       "note": "装机 15 只。型号选 HD-1910-C001。",
       "groupBuy": {
-        "unitQuote": "95.00",
+        "unitQuote": "99.00",
         "url": "https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/hd1910-group-buy-qr.jpg",
         "qrImage": "../assets/hd1910-group-buy-qr.jpg",
-        "note": "团购 95 元/个；点击团购入口，在弹窗内扫码联系。",
+        "note": "团购 99 元/个；点击团购入口，在弹窗内扫码联系。",
         "id": "hd1910-group-buy",
         "pageUrl": "https://kissqy.github.io/Microduck-kissqy/build/shopping.html#hd1910-group-buy",
         "organizerName": "fanhao375",

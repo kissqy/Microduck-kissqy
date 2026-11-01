@@ -92,7 +92,11 @@ def purchase_row(item,optional=False):
  anchor=' id="optional"' if optional and item['id']=='rollers' else ''
  if item['group']=='boards':anchor+=f' data-board-id="{item["id"]}"'
  unit_price='以商品页为准' if item['unitQuote'] is None else '¥'+E(item['unitQuote'])
- return f'<tr{anchor}><td class="item-name">{body}</td><td class="quantity" data-label="参考采购量">{item["quantity"]} {E(item["unit"])}</td><td class="amount" data-label="历史单价">{unit_price}</td><td class="amount" data-label="小计">{money(item["subtotalCents"])}</td><td class="buy">'+link(item['url'],'购买 ↗')+'</td></tr>'
+ group=item.get('groupBuy')
+ purchase=link(item['url'],'原购买链接 ↗' if group else '购买 ↗')
+ if group:
+  purchase+='<div style="margin-top:10px">'+link(group['url'],'团购 ¥'+E(group['unitQuote'].removesuffix('.00'))+'／个 ↗')+'<details style="margin-top:6px"><summary>展开团购二维码</summary><a href="'+E(group['url'],quote=True)+'"><img src="'+E(group['qrImage'],quote=True)+'" alt="HD1910 舵机团购联系二维码，团购价每个 95 元" width="220" height="330" loading="lazy" style="display:block;max-width:100%;height:auto;margin-top:8px"></a><p class="small">点击二维码查看原图后扫码联系。</p></details></div>'
+ return f'<tr{anchor}><td class="item-name">{body}</td><td class="quantity" data-label="参考采购量">{item["quantity"]} {E(item["unit"])}</td><td class="amount" data-label="历史单价">{unit_price}</td><td class="amount" data-label="小计">{money(item["subtotalCents"])}</td><td class="buy">'+purchase+'</td></tr>'
 
 shop=head('01 / SHOPPING DETAILS','我要买什么？','下面就是成品板路线的采购清单：按型号、数量和购买入口准备。','完整参考配置 · 含备料')
 shop+='<section class="panel" id="printing-choice" hidden><span class="badge">当前采购路线</span><h2 id="printing-choice-title" style="margin-top:12px"></h2><p id="printing-choice-description"></p><ul id="printing-choice-items"></ul><div class="actions"><a class="btn primary" href="#boards">查看基础零件清单 ↓</a><a class="btn" href="'+FILE+'hardware/3d-print-frankenduck/README.md">查看打印文件与材料说明 ↗</a><a class="btn" id="printing-choice-quote" href="budget.html#calculator">返回预算 →</a></div></section>'

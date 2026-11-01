@@ -50,7 +50,11 @@
 <tr>
 <td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-04"><img width="90" alt="侧前方站立的白橙色 Microduck，背景是橙黄色大鸭子" src="docs/assets/showcase/outdoor-04-thumb.webp" /></a></td>
 <td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-07"><img width="90" alt="白橙色 Microduck 在蓝天下的乐园广场正面站立" src="docs/assets/showcase/outdoor-07-thumb.webp" /></a></td>
+<td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-03"><img width="90" alt="阳光下的白橙色 Microduck，完整展示头部、身体与双腿" src="docs/assets/showcase/outdoor-03-thumb.webp" /></a></td>
+<td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-05"><img width="90" alt="白橙色 Microduck 的侧面，展示躯干和腿部结构" src="docs/assets/showcase/outdoor-05-thumb.webp" /></a></td>
+<td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-02"><img width="90" alt="绿植和彩色建筑前站立的白橙色 Microduck" src="docs/assets/showcase/outdoor-02-thumb.webp" /></a></td>
 <td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-06"><img width="90" alt="白橙色 Microduck 坐在木质长椅上，双脚朝向镜头" src="docs/assets/showcase/outdoor-06-thumb.webp" /></a></td>
+<td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-01"><img width="90" alt="绿植和彩色建筑前坐着的白橙色 Microduck 正面合影" src="docs/assets/showcase/outdoor-01-thumb.webp" /></a></td>
 </tr>
 </table>
 

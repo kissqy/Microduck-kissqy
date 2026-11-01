@@ -50,7 +50,11 @@ The three build stages and optional advanced guide are in Chinese. [English buil
 <tr>
 <td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-04"><img width="90" alt="Microduck outdoor photo 4" src="docs/assets/showcase/outdoor-04-thumb.webp" /></a></td>
 <td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-07"><img width="90" alt="Microduck outdoor photo 7" src="docs/assets/showcase/outdoor-07-thumb.webp" /></a></td>
+<td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-03"><img width="90" alt="Microduck outdoor photo 3" src="docs/assets/showcase/outdoor-03-thumb.webp" /></a></td>
+<td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-05"><img width="90" alt="Microduck outdoor photo 5" src="docs/assets/showcase/outdoor-05-thumb.webp" /></a></td>
+<td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-02"><img width="90" alt="Microduck outdoor photo 2" src="docs/assets/showcase/outdoor-02-thumb.webp" /></a></td>
 <td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-06"><img width="90" alt="Microduck outdoor photo 6" src="docs/assets/showcase/outdoor-06-thumb.webp" /></a></td>
+<td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-01"><img width="90" alt="Microduck outdoor photo 1" src="docs/assets/showcase/outdoor-01-thumb.webp" /></a></td>
 </tr>
 </table>
 

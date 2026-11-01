@@ -26,9 +26,9 @@ An assembled robot can start at step 4. For finding the robot's IP after imaging
 
 ## 1. How much will it cost?
 
-**The assembled-board option has a priced reference subtotal of CNY 2937.80**: CNY 2650.80 for the reference body purchases (including the EAGET 32GB microSD card at CNY 39.90 and SAMZHE dual-head high-speed card reader at CNY 22.90), HAT CNY 119, IMU CNY 99 and HUB CNY 69. DIY board materials plus a basic tool allowance produce a reference range of CNY 3614.02–3854.02.
+**The assembled-board option has a priced reference subtotal of CNY 2936.62**: CNY 2649.62 for the reference body purchases (including the EAGET 32GB microSD card at CNY 39.90 and SAMZHE dual-head high-speed card reader at CNY 22.90), HAT CNY 119, IMU CNY 99 and HUB CNY 69. DIY board materials plus a basic tool allowance produce a reference range of CNY 3612.84–3854.02.
 
-A 32GB microSD card is sufficient. One [SAMZHE dual-head high-speed card reader with simultaneous SD / TF card reading](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) is included at the author's reference price of CNY 22.90; reuse an existing reader if available. The complete FrankenDuck printing service is listed at CNY 199; the assembled-board plus printing reference subtotal is **CNY 3136.80**, without buying a printer. The HUB is included at CNY 69; add battery-connection parts, other unpriced items and shipping. Historical quantities include spare stock. [Open the budget page to add your costs (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
+A 32GB microSD card is sufficient. One [SAMZHE dual-head high-speed card reader with simultaneous SD / TF card reading](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) is included at the author's reference price of CNY 22.90; reuse an existing reader if available. The complete FrankenDuck printing service is listed at CNY 199; the assembled-board plus printing reference subtotal is **CNY 3135.62**, without buying a printer. The HUB is included at CNY 69; add battery-connection parts, other unpriced items and shipping. Historical quantities include spare stock. [Open the budget page to add your costs (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
 
 ## 2. What should I buy?
 

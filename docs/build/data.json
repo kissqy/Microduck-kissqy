@@ -232,15 +232,15 @@
     },
     {
       "id": "part-19",
-      "name": "SH1.0 4P 转杜邦母线",
-      "spec": "0.2m;1.0-4P转杜邦母（5条）；SH1.0 4P / 20cm / 杜邦母",
-      "unit": "包（5个）",
+      "name": "SH1.0 4P TOF→HAT 连接线",
+      "spec": "SH1.0 / 4P / 100mm / 5条装",
+      "unit": "包（5条）",
       "quantity": 1,
-      "unitQuote": "4.56",
-      "subtotalCents": 456,
+      "unitQuote": "3.38",
+      "subtotalCents": 338,
       "group": "wiring",
-      "url": "https://item.taobao.com/item.htm?id=895049863252",
-      "note": "转接线脚序按模块与实板核对。"
+      "url": "https://detail.tmall.com/item.htm?id=624787779569&skuId=5070155728412",
+      "note": "TOF 模块接 HAT J5；3.38 元为每包 5 条的价格，插接前核对两端针序。"
     },
     {
       "id": "part-20",

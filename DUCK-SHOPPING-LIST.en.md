@@ -9,7 +9,7 @@
 
 [🏠 Project homepage](README.en.md)
 
-**Assembled-board reference subtotal: CNY 2937.80**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. The complete FrankenDuck printing service is listed at CNY 199, making the assembled-board plus printing reference subtotal **CNY 3136.80**. The HUB is included at CNY 69; battery-connection parts and shipping are extra.
+**Assembled-board reference subtotal: CNY 2936.62**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. The complete FrankenDuck printing service is listed at CNY 199, making the assembled-board plus printing reference subtotal **CNY 3135.62**. The HUB is included at CNY 69; battery-connection parts and shipping are extra.
 
 **[Open the shopping checklist (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/shopping.html)** · [Compare budget totals (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
 
@@ -19,15 +19,15 @@ The online pages show totals first, then specifications, quantities and purchase
 
 | Item | Buy assembled boards | DIY boards, including tools |
 | --- | ---: | ---: |
-| Duck body, including gamepad, URT2 and reference spare stock | ¥2650.80 | ¥2650.80 |
+| Duck body, including gamepad, URT2 and reference spare stock | ¥2649.62 | ¥2649.62 |
 | HAT + IMU | [HAT ¥119 + IMU ¥99](https://item.taobao.com/item.htm?id=1095121548583) | ¥94.22–134.22 · first component purchase |
 | Assembled HUB (buffer capacitor included) | ¥69 | ¥69 |
 | Soldering / programming tools and consumables | No board-soldering tools; assembled IMU has FT6 preflashed | ¥800–1000 |
-| **Total without a printer** | **¥2937.80** | **¥3614.02–3854.02** |
+| **Total without a printer** | **¥2936.62** | **¥3612.84–3852.84** |
 | 3D printer allowance | +¥3500 | +¥3500 |
-| **Total including a printer** | **¥6437.80** | **¥7114.02–7354.02** |
+| **Total including a printer** | **¥6436.62** | **¥7112.84–7352.84** |
 
-**For the FrankenDuck printing service, add CNY 199: assembled boards CNY 3136.80; DIY boards with existing tools CNY 3013.02–3053.02; DIY boards with new tools CNY 3813.02–4053.02.** No printer purchase is needed. [Edition features and printing instructions](hardware/3d-print-frankenduck/README.en.md).
+**For the FrankenDuck printing service, add CNY 199: assembled boards CNY 3135.62; DIY boards with existing tools CNY 3011.84–3051.84; DIY boards with new tools CNY 3811.84–4053.02.** No printer purchase is needed. [Edition features and printing instructions](hardware/3d-print-frankenduck/README.en.md).
 
 - **The base table excludes printed parts or filament; the printing-service subtotals include CNY 199. Robot-assembly labor, a computer, battery-connection parts, new-order shipping and losses are extra.** The body includes 15 HD1910 servos at ¥119 each; the microSD card and card reader are priced and included.
 - HAT, IMU and HUB are listed separately in the board purchasing table below. The HUB includes the main-power buffer capacitor; no separate capacitor purchase is needed.
@@ -91,7 +91,7 @@ For battery power, use a banana board (not yet listed for sale), or the reposito
 
 | Item / exact variant | Unit | Reference quantity | Historical unit price | Subtotal | Shop / link |
 | --- | --- | ---: | ---: | ---: | --- |
-| **SH1.0 4P 转杜邦母线**<br>0.2m;1.0-4P转杜邦母（5条）；SH1.0 4P / 20cm / 杜邦母 | 包（5个） | 1 | ¥4.56 | ¥4.56 | 信容芯旗舰店<br>[Product](https://item.taobao.com/item.htm?id=895049863252) |
+| **SH1.0 4P ToF-to-HAT cable**<br>SH1.0 / 4P / 100mm / 5 cables/pack | pack (5 cables) | 1 | ¥3.38 | ¥3.38 | [Product](https://detail.tmall.com/item.htm?id=624787779569&skuId=5070155728412) |
 | **AMP2.0 3P 舵机线 20cm（双头反向）**<br>200mm;1007/24#;3P;AMP2.0；200mm / 1007 / 24AWG / 3P / AMP2.0 | 条 | 30 | ¥1.50 | ¥45.00 | 永茂电子<br>[Product](https://item.taobao.com/item.htm?id=825340808235) |
 | **AMP2.0 3P 舵机线 10cm（双头反向）**<br>100mm;1007/24#;3P;AMP2.0；100mm / 1007 / 24AWG / 3P / AMP2.0 | 条 | 30 | ¥1.50 | ¥45.00 | 永茂电子<br>[Product](https://item.taobao.com/item.htm?id=825340808235) |
 | **彩色热缩管套装**<br>袋装 164片 彩色 【2倍收缩】；164片 / 彩色 / 2倍收缩 | 个 | 1 | ¥0.99 | ¥0.99 | 圣佰路旗舰店<br>[Product](https://item.taobao.com/item.htm?id=945215173380) |
@@ -116,7 +116,7 @@ NP-F550 is the original 2200mAh kit with two batteries and a standard dual charg
 - **M2×8 十字盘头平尾自攻螺丝**：每种买1包（200只），包含备料；按打印模型及对应安装位置选择长度；每包数量是备料数量。
 - **M2×12 十字盘头平尾自攻螺丝**：每种买1包（200只），包含备料；按打印模型及对应安装位置选择长度；每包数量是备料数量。
 - **M2.6×8 十字盘头平尾自攻螺丝**：每种买1包（200只），包含备料；按打印模型及对应安装位置选择长度；每包数量是备料数量。
-- **SH1.0 4P 转杜邦母线**：用于外部接口转接；每根线的脚序按 HAT J5 与模块核对，不按线色猜。
+- **SH1.0 4P ToF-to-HAT cable**: 100 mm, 5 cables per pack at CNY 3.38 per pack, connecting the ToF module to HAT J5. Check the pin order at both ends before connecting.
 - **AMP2.0 3P 舵机线 20cm（双头反向）**：按订单参考采购数量计入，包含备料；用于飞特舵机线束；10cm和20cm按实际走线位置选择。
 - **AMP2.0 3P 舵机线 10cm（双头反向）**：按订单参考采购数量计入，包含备料；与20cm线是不同长度选项，数量按实际线束方案准备。
 - **彩色热缩管套装**：用于接线处绝缘及整理。

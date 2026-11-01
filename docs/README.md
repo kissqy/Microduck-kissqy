@@ -19,7 +19,9 @@
 
 采购参考已含忆捷 32GB TF 卡 ¥39.90 与[山泽双头高速读卡器（SD／TF 卡同读）](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@)1 个 ¥22.90；成品板路线基础小计 ¥2787.80；[缝合怪版整套代打](../hardware/3d-print-frankenduck/README.md)标价 ¥199，合计 **¥2986.80**。HUB 按商品页价格另计，电池接入配件与运费另计。已有读卡器可复用；HUB 已带总电源缓冲电容，无需单独购买。
 
-**HUB 成品已上架，与 HAT、IMU 使用同一商品页：[购买 HUB 分线板](https://item.taobao.com/item.htm?id=1095121548583)。下单选择 HUB 款式，价格以商品页为准，另计入预算。**
+**HAT、IMU、HUB 为三块独立板卡，均在[同一商品页](https://item.taobao.com/item.htm?id=1095121548583)选择对应款式。HUB 已含总电源缓冲电容。**
+
+电池取电可使用香蕉板（暂未上架），也可以使用仓库配套电池仓，加 M2.6 螺丝作为取电触点；取出的正极接 HUB 电源输入 VIN（+），负极接 GND（−），按实板丝印核对极性。
 
 ## Start here / 入门
 
@@ -48,7 +50,7 @@
 | 鸭子全套打印件与摆盘 · 缝合怪版 | [中文](../hardware/3d-print-frankenduck/README.md) | [English](../hardware/3d-print-frankenduck/README.en.md) |
 | HAT 制作时间线 | [中文](../hardware/HAT-TIMELINE.md) | [English](../hardware/HAT-TIMELINE.en.md) |
 | IMU 制作全过程视频与时间线 | [中文](../hardware/IMU-TIMELINE.md) | [English](../hardware/IMU-TIMELINE.en.md) |
-| HAT 与 IMU 自制硬件 | [中文](../hardware/README.md) | [English](../hardware/README.en.md) |
+| HAT、IMU 与 HUB 板卡 | [中文](../hardware/README.md) | [English](../hardware/README.en.md) |
 | HAT / IMU AMP2.0 版：HP1.25 音频与新增 LED | [中文](../hardware/AMP2.0-VERSION.md) | [English](../hardware/AMP2.0-VERSION.en.md) |
 | IMU 固件 FT6 — 下载、接线、烧录与检查 | [中文](../hardware/IMU-FIRMWARE.md) | [English](../hardware/IMU-FIRMWARE.en.md) |
 | 当前 IMU FT6：协议与兼容 | [中文](../microduck-hd1910/firmware/firmware/imu-source/README_FT6_SYNC15.md) | [English](../microduck-hd1910/firmware/firmware/imu-source/README_FT6_SYNC15.en.md) |

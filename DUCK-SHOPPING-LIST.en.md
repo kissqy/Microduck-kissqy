@@ -31,10 +31,22 @@ The online pages show totals first, then specifications, quantities and purchase
 **For the FrankenDuck printing service, add CNY 199: assembled boards CNY 3067.80; DIY boards with existing tools CNY 2944.02–2984.02; DIY boards with new tools CNY 3744.02–3984.02.** No printer purchase is needed. [Edition features and printing instructions](hardware/3d-print-frankenduck/README.en.md).
 
 - **The base table excludes printed parts or filament; the printing-service subtotals include CNY 199. Robot-assembly labor, a computer, the HUB at its product-page price, battery-connection parts, new-order shipping and losses are extra.** The body includes 15 HD1910 servos at ¥119 each; the microSD card and card reader are priced and included.
-- [The assembled HUB is now available](https://item.taobao.com/item.htm?id=1095121548583) on the same product page as HAT and IMU. Select the HUB variant; its product-page price is extra. The HUB includes the main-power buffer capacitor. Do not buy or budget for a separate capacitor.
+- HAT, IMU and HUB are listed separately in the board purchasing table below. The HUB includes the main-power buffer capacitor; no separate capacitor purchase is needed.
 - DIY board materials use full component packs; the range covers free PCB coupons / no coupons. [Board cost breakdown](hardware/README.en.md#build-cost) · [Tool budget](docs/BUILD-TOOLS.en.md#budgeting-for-tools-from-scratch). Reuse existing tools; the assembled-board option assumes you have normal assembly hand tools.
 
 The author supplied reference prices for the EAGET 32GB monitoring / dashcam microSD card (CNY 39.90) and one SAMZHE dual-head high-speed card reader, supporting simultaneous SD / TF card reading (CNY 22.90). Both are included in the body and whole-duck subtotals; 32GB is sufficient, and an existing card reader may be reused.
+
+## Board purchasing details
+
+| Board | Quantity | Reference unit price | Purchase |
+| --- | ---: | --- | --- |
+| Assembled HAT | 1 | CNY 119 | [Select HAT](https://item.taobao.com/item.htm?id=1095121548583) |
+| Assembled IMU (FT6 preflashed) | 1 | CNY 99 | [Select IMU](https://item.taobao.com/item.htm?id=1095121548583) |
+| Assembled HUB (buffer capacitor included) | 1 | See product page | [Select HUB](https://item.taobao.com/item.htm?id=1095121548583) |
+
+### Battery power connection
+
+For battery power, use a banana board (not yet listed for sale), or the repository’s battery holder with M2.6 screws as power contacts. Connect battery positive to HUB VIN (+) and negative to GND (−), following the board markings.
 
 ## Duck body
 

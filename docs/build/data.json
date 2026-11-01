@@ -292,12 +292,25 @@
       "group": "boards",
       "url": "https://item.taobao.com/item.htm?id=1095121548583",
       "note": "到手无需另行烧录；固定在电池仓背面、端子朝上，安装后完成本机 IMU 标定。"
+    },
+    {
+      "id": "hub",
+      "name": "HUB 成品分线板",
+      "spec": "独立的舵机总线与电池供电分线板；已带 1000 µF 总电源缓冲电容，无需另购电容。",
+      "unit": "块",
+      "quantity": 1,
+      "unitQuote": null,
+      "subtotalCents": null,
+      "group": "boards",
+      "url": "https://item.taobao.com/item.htm?id=1095121548583",
+      "note": "与 HAT、IMU 在同一商品页选择对应款式；价格以商品页为准。",
+      "diyRequired": true
     }
   ],
   "groups": [
     {
       "id": "boards",
-      "name": "HAT 与 IMU 成品板"
+      "name": "HAT、IMU 与 HUB 成品板"
     },
     {
       "id": "electronics",
@@ -324,11 +337,11 @@
   "source": "https://github.com/kissqy/Microduck-kissqy/blob/main/DUCK-SHOPPING-LIST.md",
   "unpriced": [
     {
-      "id": "hub",
-      "name": "HUB 分线板与电池接入配件",
-      "spec": "HUB 成品已上架，与 HAT、IMU 使用同一商品页，选择 HUB 款式，价格以商品页为准。HUB 已带总电源缓冲电容，无需另购；按电池仓另备接线与电池触点。",
-      "url": "https://item.taobao.com/item.htm?id=1095121548583",
-      "purchaseLabel": "购买 HUB ↗"
+      "id": "battery-power",
+      "name": "电池接入",
+      "spec": "电池取电可使用香蕉板（暂未上架），也可以使用仓库配套电池仓，加 M2.6 螺丝作为取电触点；取出的正极接 HUB 电源输入 VIN（+），负极接 GND（−），按实板丝印核对极性。",
+      "url": "https://github.com/kissqy/Microduck-kissqy/blob/main/docs/ASSEMBLY-NOTES.md#电池取电与-hub-接入",
+      "purchaseLabel": "查看取电说明 ↗"
     },
     {
       "id": "hand-tools",

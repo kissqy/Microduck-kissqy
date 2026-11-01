@@ -1,6 +1,6 @@
 [简体中文](README.md) | **English**
 
-# DIY HAT and IMU hardware
+# HAT, IMU and HUB boards
 
 > [!WARNING]
 > Only the **HAT, IMU and HUB** versions published in this repository are supported.
@@ -15,7 +15,7 @@
 >
 > **The assembled IMU comes preflashed with FT6 firmware; no initial flashing is needed.** Each robot still requires its own servo and IMU calibration after installation.
 >
-> **The assembled HUB is now available on the same product page as HAT and IMU. Select the HUB variant; its price is shown on the product page. The HUB includes the main-power buffer capacitor, so no separate capacitor purchase is needed.**
+> **HAT, IMU and HUB are three separate boards. Select each board on the same product page. The HUB includes the main-power buffer capacitor.**
 >
 > Original designs and project files that the author has the right to license are provided for personal learning and noncommercial replication. Commercial use, mass production or reproduction for sale requires the author's prior written permission. Third-party material retains its original license; see the [board design license](LICENSE) · [component licenses](../LICENSE).
 
@@ -76,7 +76,8 @@ Minimum pack counts below apply to each row for one set. Rows with the same prod
 | --- | ---: | ---: | ---: |
 | HAT | ¥16.72 | ¥20.72 | [¥119](https://item.taobao.com/item.htm?id=1095121548583) |
 | IMU (assembled: FT6 preflashed) | ¥20.38 | ¥24.38 | [¥99](https://item.taobao.com/item.htm?id=1095121548583) |
-| **Both boards** | **¥37.11** | **¥45.11** | **¥218** |
+| **HAT + IMU subtotal** | **¥37.11** | **¥45.11** | **¥218** |
+| Assembled HUB (buffer capacitor included) | — | — | [See product page](https://item.taobao.com/item.htm?id=1095121548583) |
 
 DIY amounts above cover parts fitted to the boards, excluding tools and labor. For the first purchase, use full-pack amounts below and add **¥800–1000** for [tools and consumables](../docs/BUILD-TOOLS.en.md#budgeting-for-tools-from-scratch); assembled boards are ready to use.
 

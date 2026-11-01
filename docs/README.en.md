@@ -19,7 +19,9 @@ Normal replication takes the first three steps and uses the supplied motion mode
 
 The priced purchase reference includes an EAGET 32GB microSD card at CNY 39.90 and one [SAMZHE dual-head high-speed card reader with simultaneous SD / TF card reading](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) at CNY 22.90. The assembled-board base reference subtotal is CNY 2787.80. The [complete FrankenDuck printing service](../hardware/3d-print-frankenduck/README.en.md) is listed at CNY 199, making **CNY 2986.80** together. The HUB price shown on the product page, battery-connection parts and shipping are extra. Reuse an existing card reader if available. The HUB includes the main-power buffer capacitor; no separate purchase is needed.
 
-**The assembled HUB is now available on the same product page as HAT and IMU: [buy the HUB board](https://item.taobao.com/item.htm?id=1095121548583). Select the HUB variant and add its product-page price to your budget.**
+**HAT, IMU and HUB are three separate boards. Select each board on the [same product page](https://item.taobao.com/item.htm?id=1095121548583). The HUB includes the main-power buffer capacitor.**
+
+For battery power, use a banana board (not yet listed for sale), or the repository’s battery holder with M2.6 screws as power contacts. Connect battery positive to HUB VIN (+) and negative to GND (−), following the board markings.
 
 ## Start here / 入门
 
@@ -48,7 +50,7 @@ The priced purchase reference includes an EAGET 32GB microSD card at CNY 39.90 a
 | Complete printing set and plates · FrankenDuck | [中文](../hardware/3d-print-frankenduck/README.md) | [English](../hardware/3d-print-frankenduck/README.en.md) |
 | HAT build timeline | [中文](../hardware/HAT-TIMELINE.md) | [English](../hardware/HAT-TIMELINE.en.md) |
 | IMU full build video and timeline | [中文](../hardware/IMU-TIMELINE.md) | [English](../hardware/IMU-TIMELINE.en.md) |
-| DIY HAT and IMU hardware | [中文](../hardware/README.md) | [English](../hardware/README.en.md) |
+| HAT, IMU and HUB boards | [中文](../hardware/README.md) | [English](../hardware/README.en.md) |
 | HAT / IMU AMP2.0 variant: HP1.25 audio and added LED | [中文](../hardware/AMP2.0-VERSION.md) | [English](../hardware/AMP2.0-VERSION.en.md) |
 | IMU firmware FT6 — download, wiring, flash, and checks | [中文](../hardware/IMU-FIRMWARE.md) | [English](../hardware/IMU-FIRMWARE.en.md) |
 | Current IMU FT6: protocol and compatibility | [中文](../microduck-hd1910/firmware/firmware/imu-source/README_FT6_SYNC15.md) | [English](../microduck-hd1910/firmware/firmware/imu-source/README_FT6_SYNC15.en.md) |

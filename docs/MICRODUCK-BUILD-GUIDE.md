@@ -46,9 +46,11 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 
 ### 板卡与供电装配
 
-**HUB 成品已上架，与 HAT、IMU 使用同一商品页：[购买 HUB 分线板](https://item.taobao.com/item.htm?id=1095121548583)。下单选择 HUB 款式，价格以商品页为准，另计入预算。**
+**HAT、IMU、HUB 为三块独立板卡，均在[同一商品页](https://item.taobao.com/item.htm?id=1095121548583)选择对应款式。HUB 已含总电源缓冲电容。**
 
-[HAT / IMU 硬件页](../hardware/README.md)提供工程、采购表和两种接口版本。制作过程分别见[HAT 制作记录](../hardware/HAT-TIMELINE.md)和[IMU 制作记录及视频](../hardware/IMU-TIMELINE.md)。
+电池取电可使用香蕉板（暂未上架），也可以使用仓库配套电池仓，加 M2.6 螺丝作为取电触点；取出的正极接 HUB 电源输入 VIN（+），负极接 GND（−），按实板丝印核对极性。
+
+[HAT / IMU / HUB 板卡页](../hardware/README.md)提供工程、采购表和两种接口版本。制作过程分别见[HAT 制作记录](../hardware/HAT-TIMELINE.md)和[IMU 制作记录及视频](../hardware/IMU-TIMELINE.md)。
 
 **作者提供的成品 IMU 已烧录 FT6 固件，到手无需另行烧录；装配后仍需完成本机标定。** 只有自己焊制新板、换芯片或维护升级时，才按[IMU 烧录指南](../hardware/IMU-FIRMWARE.md)操作。给 ZERO 刷系统镜像或升级机器人服务不会烧录外置 IMU。
 

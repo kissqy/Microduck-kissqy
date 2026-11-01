@@ -9,30 +9,35 @@ export function configureShopping(data){
  const printing=hasPrinting?query.get('printing'):'own';
  const diy=query.get('boards')==='diy',buyTools=diy&&query.get('tools')==='new';
  const body=data.items.reduce((sum,item)=>sum+item.subtotalCents,0);
- const assembled=body+data.boards.reduce((sum,item)=>sum+item.subtotalCents,0);
+ const assembled=body+data.boards.reduce((sum,item)=>sum+(item.subtotalCents??0),0);
  const minimum=body+data.diyMaterialsMinCents+(buyTools?data.diyToolsMinCents:0);
  const maximum=body+data.diyMaterialsMaxCents+(buyTools?data.diyToolsMaxCents:0);
  const serviceFee=printing==='service'?data.printServiceReferenceCents:0;
  const baseLabel=diy||serviceFee?range((diy?minimum:assembled)+serviceFee,(diy?maximum:assembled)+serviceFee):null;
- const priced=diy?[...data.items]:[...data.boards,...data.items];
+ const routeBoards=diy?data.boards.filter(item=>item.diyRequired):data.boards;
+ const priced=[...routeBoards,...data.items].filter(item=>Number.isFinite(item.subtotalCents));
  const unpriced=data.unpriced.filter(item=>item.id!=='printing'&&(!buyTools||item.id!=='hand-tools'));
- const required=[...priced,...unpriced,...(data.printingEdition?[data.printingEdition]:[])];
+ const required=[...routeBoards,...data.items,...unpriced,...(data.printingEdition?[data.printingEdition]:[])];
  const route=new URLSearchParams();
  route.set('boards',diy?'diy':'assembled');
  if(diy)route.set('tools',buyTools?'new':'owned');
  route.set('printing',printing);
  const budget='budget.html'+(route.size?'?'+route.toString():'');
- const routeName=diy?'手工焊 HAT／IMU · '+(buyTools?'从零购买工具':'已有焊接工具'):'购买成品 HAT／IMU';
+ const routeName=diy?'手工焊 HAT／IMU · '+(buyTools?'从零购买工具':'已有焊接工具'):'购买成品 HAT／IMU／HUB';
  const printingNames={own:'有打印机 · 自己打印',service:'无打印机 · 找人代打','buy-printer':'无打印机 · 买机器自己打'};
  const byId=id=>document.getElementById(id);
  const text=(tag,value)=>{const element=document.createElement(tag);element.textContent=value;return element;};
  const setText=(id,value)=>{const element=byId(id);if(element)element.textContent=value;};
 
  if(diy){
-  const boards=byId('boards');if(boards)boards.hidden=true;
+  const boards=byId('boards');if(boards){
+   const retained=new Set(routeBoards.map(item=>item.id));
+   boards.querySelectorAll('[data-board-id]').forEach(row=>{row.hidden=!retained.has(row.dataset.boardId);});
+   const heading=boards.querySelector('h2');if(heading)heading.textContent='HUB 成品板（价格以商品页为准）';
+  }
   if(buyTools)document.querySelectorAll('[data-prepared="hand-tools"]').forEach(input=>{const item=input.closest('.unpriced-item');if(item)item.hidden=true;});
-  document.querySelectorAll('.toc a[href="#boards"]').forEach(link=>{link.href='#diy';link.textContent='自焊板卡材料与工具';});
-  const lead=document.querySelector('.page-head .lead');if(lead)lead.textContent='当前选择手工焊板卡：先备齐下方本体零件，再按详细 BOM 准备 HAT／IMU 的 PCB、元件与焊接工具。';
+  document.querySelectorAll('.toc a[href="#boards"]').forEach(link=>{link.href='#boards';link.textContent='HUB 成品板';});
+  const lead=document.querySelector('.page-head .lead');if(lead)lead.textContent='当前选择手工焊板卡：先备齐下方本体零件和 HUB 成品板，再按详细 BOM 准备 HAT／IMU 的 PCB、元件与焊接工具。';
   const badge=document.querySelector('.page-head .badge');if(badge)badge.textContent=buyTools?'自焊板卡 · 从零购买工具':'自焊板卡 · 已有焊接工具';
   const panel=byId('diy');
   if(panel){
@@ -73,11 +78,11 @@ export function configureShopping(data){
   if(printing==='service')items.push('缝合怪版代打参考 '+money(data.printServiceReferenceCents)+'；下单时核对整套硬质结构件、TPU 部件与电池仓版本，实际报价可在预算页调整。');
   if(printing==='buy-printer')items.push('打印机设备参考预算 '+money(data.printerReferenceCents)+'；按实际报价调整，并准备硬质件与 TPU 耗材。');
   if(printing==='own')items.push('核对打印包与材料配置，电池仓选择其中一份，按硬质件和 TPU 分别准备耗材。');
-  if(diy)items.push('不购买成品 HAT／IMU；按 PCB 详细 BOM 准备材料，完成自焊 IMU 固件烧录。');
+  if(diy)items.push('HUB 成品板仍需准备；HAT／IMU 按 PCB 详细 BOM 自焊，完成自焊 IMU 固件烧录。');
   items.push((diy?'本体＋自焊材料'+(buyTools?'＋工具预算':''):'基础采购')+(printing==='service'?'＋缝合怪版代打':'')+'参考 '+(baseLabel||money(assembled))+'；'+(printing==='service'?'':printing==='buy-printer'?'打印机设备、打印耗材、':'打印耗材、')+'HUB 按商品页价格、其他待补项目与运费另计，不是最终完工总价。');
   const list=byId('printing-choice-items');if(list)list.replaceChildren(...items.map(value=>text('li',value)));
   const quote=byId('printing-choice-quote');if(quote){quote.href=budget+'#calculator';quote.textContent=printing==='service'?'调整代打与补充预算 →':printing==='buy-printer'?'调整设备与耗材预算 →':'返回当前预算 →';}
-  const firstAction=document.querySelector('#printing-choice .actions a');if(firstAction)firstAction.href=diy?'#electronics':'#boards';
+  const firstAction=document.querySelector('#printing-choice .actions a');if(firstAction)firstAction.href='#boards';
   const panel=byId('printing-choice');if(panel)panel.hidden=false;
  }
  return {required,priced,baseLabel};

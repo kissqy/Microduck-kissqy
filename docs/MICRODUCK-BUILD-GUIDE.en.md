@@ -48,7 +48,9 @@ This page links the build stages; individual part instructions are on the printi
 
 ### Boards and power assembly
 
-**The assembled HUB is now available on the same product page as HAT and IMU: [buy the HUB board](https://item.taobao.com/item.htm?id=1095121548583). Select the HUB variant and add its product-page price to your budget.**
+**HAT, IMU and HUB are three separate boards. Select each board on the [same product page](https://item.taobao.com/item.htm?id=1095121548583). The HUB includes the main-power buffer capacitor.**
+
+For battery power, use a banana board (not yet listed for sale), or the repository’s battery holder with M2.6 screws as power contacts. Connect battery positive to HUB VIN (+) and negative to GND (−), following the board markings.
 
 The [hardware guide](../hardware/README.en.md) contains PCB projects, parts tables and two connector versions. See the [HAT build record](../hardware/HAT-TIMELINE.en.md) and [IMU build record and video](../hardware/IMU-TIMELINE.en.md).
 

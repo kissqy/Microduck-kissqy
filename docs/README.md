@@ -17,7 +17,9 @@
 
 [新手路线总入口](https://kissqy.github.io/Microduck-kissqy/build/) · [中控图文使用教程](https://kissqy.github.io/Microduck-kissqy/console-guide.html)
 
-采购参考已含忆捷 32GB TF 卡 ¥39.90 与[山泽双头高速读卡器（SD／TF 卡同读）](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@)1 个 ¥22.90；成品板路线基础小计 ¥2787.80；[缝合怪版整套代打](../hardware/3d-print-frankenduck/README.md)标价 ¥199，合计 **¥2986.80**。HUB 与电池接入等未报价费用和运费另计。已有读卡器可复用；HUB 已带总电源缓冲电容，无需单独购买。
+采购参考已含忆捷 32GB TF 卡 ¥39.90 与[山泽双头高速读卡器（SD／TF 卡同读）](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@)1 个 ¥22.90；成品板路线基础小计 ¥2787.80；[缝合怪版整套代打](../hardware/3d-print-frankenduck/README.md)标价 ¥199，合计 **¥2986.80**。HUB 按商品页价格另计，电池接入配件与运费另计。已有读卡器可复用；HUB 已带总电源缓冲电容，无需单独购买。
+
+**HUB 成品已上架，与 HAT、IMU 使用同一商品页：[购买 HUB 分线板](https://item.taobao.com/item.htm?id=1095121548583)。下单选择 HUB 款式，价格以商品页为准，另计入预算。**
 
 ## Start here / 入门
 

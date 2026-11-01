@@ -26,7 +26,7 @@ Microduck-kissqy 是 kissqy 基于 Pollen Robotics Microduck 0.15.1、已完成�
 
 **成品板路线已列价参考合计为 ¥2868.80**：本体参考采购 ¥2650.80（含忆捷 32GB TF 卡 ¥39.90、山泽双头高速读卡器 ¥22.90）＋HAT ¥119＋IMU ¥99。自焊并预留基础工具的已列价参考区间为 ¥3545.02～3785.02。
 
-TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@)按 1 个、作者参考价 ¥22.90 计入，已有可复用。缝合怪版整套代打标价 ¥199；成品板＋代打参考合计 **¥3067.80**，无需购买打印机。HUB 与电池接入等待报价项目、运费另计；历史采购数量含备料。[打开预算页，先看总额并补充自己的费用 →](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
+TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@)按 1 个、作者参考价 ¥22.90 计入，已有可复用。缝合怪版整套代打标价 ¥199；成品板＋代打参考合计 **¥3067.80**，无需购买打印机。HUB 按商品页价格、电池接入配件与运费另计；历史采购数量含备料。[打开预算页，先看总额并补充自己的费用 →](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
 
 ## 2. 我要买什么？
 
@@ -45,6 +45,8 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 本页是装配流程导航，零件说明见打印件页；不把文件数量当成实际装配数量。
 
 ### 板卡与供电装配
+
+**HUB 成品已上架，与 HAT、IMU 使用同一商品页：[购买 HUB 分线板](https://item.taobao.com/item.htm?id=1095121548583)。下单选择 HUB 款式，价格以商品页为准，另计入预算。**
 
 [HAT / IMU 硬件页](../hardware/README.md)提供工程、采购表和两种接口版本。制作过程分别见[HAT 制作记录](../hardware/HAT-TIMELINE.md)和[IMU 制作记录及视频](../hardware/IMU-TIMELINE.md)。
 

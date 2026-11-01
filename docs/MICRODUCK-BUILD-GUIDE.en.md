@@ -28,7 +28,7 @@ An assembled robot can start at step 4. For finding the robot's IP after imaging
 
 **The assembled-board option has a priced reference subtotal of CNY 2868.80**: CNY 2650.80 for the reference body purchases (including the EAGET 32GB microSD card at CNY 39.90 and SAMZHE dual-head high-speed card reader at CNY 22.90), HAT CNY 119 and IMU CNY 99. DIY board materials plus a basic tool allowance produce a reference range of CNY 3545.02–3785.02.
 
-A 32GB microSD card is sufficient. One [SAMZHE dual-head high-speed card reader with simultaneous SD / TF card reading](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) is included at the author's reference price of CNY 22.90; reuse an existing reader if available. The complete FrankenDuck printing service is listed at CNY 199; the assembled-board plus printing reference subtotal is **CNY 3067.80**, without buying a printer. HUB / battery-connection parts and other unpriced items still need quotes; shipping is extra. Historical quantities include spare stock. [Open the budget page to add your costs (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
+A 32GB microSD card is sufficient. One [SAMZHE dual-head high-speed card reader with simultaneous SD / TF card reading](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) is included at the author's reference price of CNY 22.90; reuse an existing reader if available. The complete FrankenDuck printing service is listed at CNY 199; the assembled-board plus printing reference subtotal is **CNY 3067.80**, without buying a printer. Add the HUB price shown on the product page, battery-connection parts, other unpriced items and shipping. Historical quantities include spare stock. [Open the budget page to add your costs (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
 
 ## 2. What should I buy?
 
@@ -47,6 +47,8 @@ Choose the HUB battery-holder variant or the official-style holder with thicker 
 This page links the build stages; individual part instructions are on the printing page. File counts are not assembly quantities.
 
 ### Boards and power assembly
+
+**The assembled HUB is now available on the same product page as HAT and IMU: [buy the HUB board](https://item.taobao.com/item.htm?id=1095121548583). Select the HUB variant and add its product-page price to your budget.**
 
 The [hardware guide](../hardware/README.en.md) contains PCB projects, parts tables and two connector versions. See the [HAT build record](../hardware/HAT-TIMELINE.en.md) and [IMU build record and video](../hardware/IMU-TIMELINE.en.md).
 

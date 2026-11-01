@@ -325,9 +325,10 @@
   "unpriced": [
     {
       "id": "hub",
-      "name": "HUB 与电池接入配件",
-      "spec": "按选用电池仓补齐 HUB、接线与电池触点；向作者确认供货与价格。",
-      "url": "https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg"
+      "name": "HUB 分线板与电池接入配件",
+      "spec": "HUB 成品已上架，与 HAT、IMU 使用同一商品页，选择 HUB 款式，价格以商品页为准。HUB 已带总电源缓冲电容，无需另购；按电池仓另备接线与电池触点。",
+      "url": "https://item.taobao.com/item.htm?id=1095121548583",
+      "purchaseLabel": "购买 HUB ↗"
     },
     {
       "id": "hand-tools",

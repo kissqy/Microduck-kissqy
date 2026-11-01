@@ -10,7 +10,7 @@ export const COMPONENTS=Object.freeze({
     description:'将电池电源与三线舵机总线集中分配，并在总电源网络上并联缓冲电容。',
     dimensionsMm:[23,34],
     locationNote:'HUB 平放在 10、20 舵机上方，长边沿机身前后方向。板卡保持水平，端子和线束跟随安装朝向。',
-    purchase:{label:'联系作者确认 HUB',url:repository+'docs/assets/purchase-wechat-qr.jpg'},
+    purchase:{label:'购买作者同款 HUB',url:authorBoards},
     source:{label:'HUB V2 模型与接口数据',url:repository+'docs/assets/assembly-hub-layout.json'},
     sourceNote:'HUB 外形、孔位、正反面布局与端子网络依据作者 2026-10-30 的 DXL_HUB_V2 工程；电容安装面按作者实物修正，插座塑料外形和器件高度为视觉近似。端子位号按本工程 J1–J4 / CN1 显示。',
     facts:[
@@ -20,7 +20,7 @@ export const COMPONENTS=Object.freeze({
       'C1 为 1000 µF / 16V，1 脚接 VIN，2 脚接 GND，按作者实物安装在 PCB 反面。',
       '可选打印件：电池仓_M2.5螺丝_HUB组合.stl。',
       '针号是各自工程编号，不代表照片左右或现成线束顺序；按 GND、电源、DATA 信号与实板丝印核对并确认导通，不因编号不同就直接交叉线束。',
-      '当前仓库未提供 HUB 独立购买链接，先向作者确认实际型号。',
+      'HUB 成品已上架，与 HAT、IMU 使用同一商品页；选择 HUB 款式，价格以商品页为准。',
     ],
   },
   imu:{

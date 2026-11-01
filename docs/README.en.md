@@ -17,7 +17,9 @@ Normal replication takes the first three steps and uses the supplied motion mode
 
 [Build-route overview (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/) · [Illustrated console guide (Chinese)](https://kissqy.github.io/Microduck-kissqy/console-guide.html)
 
-The priced purchase reference includes an EAGET 32GB microSD card at CNY 39.90 and one [SAMZHE dual-head high-speed card reader with simultaneous SD / TF card reading](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) at CNY 22.90. The assembled-board base reference subtotal is CNY 2787.80. The [complete FrankenDuck printing service](../hardware/3d-print-frankenduck/README.en.md) is listed at CNY 199, making **CNY 2986.80** together. Unpriced HUB / battery-connection parts and shipping are extra. Reuse an existing card reader if available. The HUB includes the main-power buffer capacitor; no separate purchase is needed.
+The priced purchase reference includes an EAGET 32GB microSD card at CNY 39.90 and one [SAMZHE dual-head high-speed card reader with simultaneous SD / TF card reading](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) at CNY 22.90. The assembled-board base reference subtotal is CNY 2787.80. The [complete FrankenDuck printing service](../hardware/3d-print-frankenduck/README.en.md) is listed at CNY 199, making **CNY 2986.80** together. The HUB price shown on the product page, battery-connection parts and shipping are extra. Reuse an existing card reader if available. The HUB includes the main-power buffer capacitor; no separate purchase is needed.
+
+**The assembled HUB is now available on the same product page as HAT and IMU: [buy the HUB board](https://item.taobao.com/item.htm?id=1095121548583). Select the HUB variant and add its product-page price to your budget.**
 
 ## Start here / 入门
 

@@ -90,7 +90,7 @@ The author designs and lays out the HAT and independent torso IMU, with extended
 
 **The assembled IMU comes with FT6 firmware pre-flashed; no additional flashing is needed on arrival. Calibrate it for your robot after installation.** The author's separately licensable original design material is for personal noncommercial replication; commercial reproduction, manufacture, sale or integration requires prior written permission. [Board design license](hardware/LICENSE)
 
-[Hardware projects and build guides](hardware/README.en.md) · [IMU build video](https://www.bilibili.com/video/BV1qapz6PERs/) · [Buy assembled boards](https://item.taobao.com/item.htm?id=1095121548583)
+[Hardware projects and build guides](hardware/README.en.md) · [IMU build video](https://www.bilibili.com/video/BV1qapz6PERs/) · [Buy assembled HAT / IMU / HUB boards](https://item.taobao.com/item.htm?id=1095121548583)
 
 ## ❤️ Sharing the project and crediting its creators
 

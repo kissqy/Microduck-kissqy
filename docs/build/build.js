@@ -1,4 +1,4 @@
-import {configureShopping} from './build-shopping-route.js?v=20261027-print199';
+import {configureShopping} from './build-shopping-route.js?v=20261101-hub-sale';
 const storageKey='microduck-build-v1';
 const boardModes=['assembled','diy-owned','diy-new'];
 const printingModes=['own','service','buy-printer'];
@@ -23,7 +23,7 @@ let state=readState();
 const save=field=>{try{const latest=readState();latest[field]=state[field];localStorage.setItem(storageKey,JSON.stringify(latest));}catch{}};
 const priceInput=key=>{const raw=state.costs[key];if(raw===undefined||raw==='')return null;const number=Number(raw);return Number.isFinite(number)&&number>=0&&number<=1000000?Math.round(number*100):null;};
 let data;
-try{const response=await fetch(new URL('./data.json?v=20261030-urt2',import.meta.url));if(response.ok)data=await response.json();}catch{}
+try{const response=await fetch(new URL('./data.json?v=20261101-hub-sale',import.meta.url));if(response.ok)data=await response.json();}catch{}
 if(data){
  const body=data.items.reduce((sum,item)=>sum+item.subtotalCents,0),boards=data.boards.reduce((sum,item)=>sum+item.subtotalCents,0),assembled=body+boards;
  const shopping=configureShopping(data);
@@ -70,7 +70,7 @@ if(data){
   const selected=plans.find(plan=>plan.id===state.route.printing);
   document.querySelectorAll('[data-cost]').forEach(input=>input.closest('label').hidden=!selected.fields.includes(input.dataset.cost));
   const note=document.getElementById('route-price-note');
-  if(note)note.textContent='当前按“'+boardNames[state.route.boards]+'”计算。'+(diy?'已用自焊材料替换成品板 '+money(boards)+'；'+(buyTools?'已加工具与耗材预算。':'已有焊接工具按复用计算，缺少耗材另补。'):'含成品 HAT '+money(data.boards.find(item=>item.id==='hat').subtotalCents)+' 与 IMU '+money(data.boards.find(item=>item.id==='imu').subtotalCents)+'。')+'均含作者参考本体配置、手柄、32GB TF 卡及读卡器；'+(state.route.printing==='service'?'代打按填写报价计入；':'自己打印耗材按填写预算计入；')+'HUB、运费等待补费用另计。HUB 自带缓冲电容，不单独购买。';
+  if(note)note.textContent='当前按“'+boardNames[state.route.boards]+'”计算。'+(diy?'已用自焊材料替换成品板 '+money(boards)+'；'+(buyTools?'已加工具与耗材预算。':'已有焊接工具按复用计算，缺少耗材另补。'):'含成品 HAT '+money(data.boards.find(item=>item.id==='hat').subtotalCents)+' 与 IMU '+money(data.boards.find(item=>item.id==='imu').subtotalCents)+'。')+'均含作者参考本体配置、手柄、32GB TF 卡及读卡器；'+(state.route.printing==='service'?'代打按填写报价计入；':'自己打印耗材按填写预算计入；')+'HUB 已上架，按商品页价格填入待补配件；运费等另计。HUB 自带缓冲电容，不单独购买。';
   document.querySelectorAll('[data-base-total]').forEach(el=>el.textContent=shopping?.baseLabel??money(assembled));
   const hint=document.getElementById('budget-state');
   if(hint)hint.textContent='当前选择：'+boardNames[state.route.boards]+' ／ '+printingNames[state.route.printing]+'。只显示这套方案需要填写的费用，其他方案的输入会保留。'+(buyTools?'自焊工具已计入，同一工具不要重复填入待补配件。':'已有可复用项目填 0，尚未报价的留空。');

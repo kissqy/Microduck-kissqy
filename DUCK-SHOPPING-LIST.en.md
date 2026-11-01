@@ -9,7 +9,7 @@
 
 [🏠 Project homepage](README.en.md)
 
-**Assembled-board reference subtotal: CNY 2868.80**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. The complete FrankenDuck printing service is listed at CNY 199, making the assembled-board plus printing reference subtotal **CNY 3067.80**. Unpriced HUB / battery-connection parts and shipping are extra.
+**Assembled-board reference subtotal: CNY 2868.80**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. The complete FrankenDuck printing service is listed at CNY 199, making the assembled-board plus printing reference subtotal **CNY 3067.80**. The HUB price shown on the product page, battery-connection parts and shipping are extra.
 
 **[Open the shopping checklist (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/shopping.html)** · [Compare budget totals (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
 
@@ -30,8 +30,8 @@ The online pages show totals first, then specifications, quantities and purchase
 
 **For the FrankenDuck printing service, add CNY 199: assembled boards CNY 3067.80; DIY boards with existing tools CNY 2944.02–2984.02; DIY boards with new tools CNY 3744.02–3984.02.** No printer purchase is needed. [Edition features and printing instructions](hardware/3d-print-frankenduck/README.en.md).
 
-- **The base table excludes printed parts or filament; the printing-service subtotals include CNY 199. Robot-assembly labor, a computer, unpriced HUB / battery-connection parts, new-order shipping and losses are extra.** The body includes 15 HD1910 servos at ¥119 each; the microSD card and card reader are priced and included.
-- The HUB includes the main-power buffer capacitor. Do not buy or budget for a separate capacitor.
+- **The base table excludes printed parts or filament; the printing-service subtotals include CNY 199. Robot-assembly labor, a computer, the HUB at its product-page price, battery-connection parts, new-order shipping and losses are extra.** The body includes 15 HD1910 servos at ¥119 each; the microSD card and card reader are priced and included.
+- [The assembled HUB is now available](https://item.taobao.com/item.htm?id=1095121548583) on the same product page as HAT and IMU. Select the HUB variant; its product-page price is extra. The HUB includes the main-power buffer capacitor. Do not buy or budget for a separate capacitor.
 - DIY board materials use full component packs; the range covers free PCB coupons / no coupons. [Board cost breakdown](hardware/README.en.md#build-cost) · [Tool budget](docs/BUILD-TOOLS.en.md#budgeting-for-tools-from-scratch). Reuse existing tools; the assembled-board option assumes you have normal assembly hand tools.
 
 The author supplied reference prices for the EAGET 32GB monitoring / dashcam microSD card (CNY 39.90) and one SAMZHE dual-head high-speed card reader, supporting simultaneous SD / TF card reading (CNY 22.90). Both are included in the body and whole-duck subtotals; 32GB is sufficient, and an existing card reader may be reused.

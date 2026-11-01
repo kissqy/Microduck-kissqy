@@ -7,13 +7,15 @@
 >
 > No commercial organization has been authorized. For commercial use, [contact the author](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) and follow the [license terms](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE).
 
-> 🛒 **[Buy HAT / IMU boards from the author](https://item.taobao.com/item.htm?id=1095121548583)**
+> 🛒 **[Buy HAT / IMU / HUB boards from the author](https://item.taobao.com/item.htm?id=1095121548583)**
 >
 > **The author's assembled HAT / IMU boards are designed and laid out by the author, refined through extended real-robot use, and SMT assembled by JLCPCB, with a focus on stability and easier replication.**
 >
 > They combine power, communication, audio and orientation-feedback requirements to reduce separate purchases and DIY fabrication costs.
 >
 > **The assembled IMU comes preflashed with FT6 firmware; no initial flashing is needed.** Each robot still requires its own servo and IMU calibration after installation.
+>
+> **The assembled HUB is now available on the same product page as HAT and IMU. Select the HUB variant; its price is shown on the product page. The HUB includes the main-power buffer capacitor, so no separate capacitor purchase is needed.**
 >
 > Original designs and project files that the author has the right to license are provided for personal learning and noncommercial replication. Commercial use, mass production or reproduction for sale requires the author's prior written permission. Third-party material retains its original license; see the [board design license](LICENSE) · [component licenses](../LICENSE).
 

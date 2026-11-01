@@ -7,13 +7,15 @@
 >
 > 本仓库未授权任何商业组织。商业使用请[联系作者](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg)，并遵守[分项许可](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE)。
 
-> 🛒 **[购买 HAT 主板 / IMU 板（作者提供）](https://item.taobao.com/item.htm?id=1095121548583)**
+> 🛒 **[购买 HAT / IMU / HUB 成品板（作者提供）](https://item.taobao.com/item.htm?id=1095121548583)**
 >
 > **作者成品 HAT／IMU：自行设计绘制，经长期真机使用与迭代验证，由嘉立创 SMT 贴片生产，注重稳定性与易复刻。**
 >
 > 将供电、通信、音频与姿态反馈等复刻需求整合，减少分散采购与自行制作的成本。
 >
 > **成品 IMU 已预烧录 FT6 固件，到手无需另行烧录。** 安装后仍需完成本机舵机与 IMU 标定。
+>
+> **HUB 成品已上架，与 HAT、IMU 共用上方商品页；选择 HUB 款式，价格以商品页为准。HUB 已带总电源缓冲电容，无需另购。**
 >
 > 作者享有权利的原创设计及工程资料仅供个人学习与非商业复刻；商业使用、批量生产或复制销售须事先取得作者书面授权。第三方内容遵循原许可，见[板卡设计许可](LICENSE) · [分项许可](../LICENSE)。
 

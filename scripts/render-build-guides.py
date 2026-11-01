@@ -50,8 +50,9 @@ PROJECT_NOTICE = "<aside class=\"project-notice\" role=\"note\" aria-labelledby=
 
 def shell(filename,title,description,content,index=-1):
  nav=''.join(f'<a href="{f}"'+(' aria-current="page"' if index==i else '')+f'><b>{i+1:02}</b><span>{label}</span></a>' for i,(f,label,_,_) in enumerate(ROUTES))
+ extra_style='<link rel="stylesheet" href="group-buy.css?v=20261101-hd95-dialog">' if filename=='shopping.html' else ''
  return f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d1113"><title>{E(title)} · Microduck 飞特版 · kissqy</title><meta name="description" content="{E(description,quote=True)}"><link rel="canonical" href="https://kissqy.github.io/Microduck-kissqy/build/{filename if filename!='index.html' else ''}"><link rel="stylesheet" href="build.css?v=20261030-screen"><link rel="stylesheet" href="../project-notice.css?v=20261028"></head>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d1113"><title>{E(title)} · Microduck 飞特版 · kissqy</title><meta name="description" content="{E(description,quote=True)}"><link rel="canonical" href="https://kissqy.github.io/Microduck-kissqy/build/{filename if filename!='index.html' else ''}"><link rel="stylesheet" href="build.css?v=20261030-screen"><link rel="stylesheet" href="../project-notice.css?v=20261028">{extra_style}</head>
 <body><header class="site-header"><div class="header-main"><a class="brand" href="./"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#c1f577"/><path d="M9 23h9V11h12v11h-7v9H9z" fill="#24311e"/></svg>microduck · kissqy <small>三步复刻 · 进阶可选</small></a><nav class="header-links" aria-label="其他入口"><a href="{REPO}">项目首页 ↗</a><a href="../console-guide.html">中控教程</a></nav></div><nav class="route-nav" aria-label="复刻三步与可选进阶">{nav}</nav></header>
 <main class="wrap">{PROJECT_NOTICE}{content}<footer class="site-footer"><div>Microduck 飞特版 · kissqy<br>使用配套现成动作模型，日常操作使用机器人中控。</div><div><a href="{FILE}docs/MICRODUCK-FAQ.md">常见问题</a> · <a href="{FILE}docs/assets/purchase-wechat-qr.jpg">联系作者</a> · <a href="{FILE}LICENSE">分项许可</a></div></footer></main><script type="module" src="build.js?v=20261101-hub69"></script></body></html>'''
 
@@ -93,10 +94,15 @@ def purchase_row(item,optional=False):
  if item['group']=='boards':anchor+=f' data-board-id="{item["id"]}"'
  unit_price='以商品页为准' if item['unitQuote'] is None else '¥'+E(item['unitQuote'])
  group=item.get('groupBuy')
- purchase=link(item['url'],'原购买链接 ↗' if group else '购买 ↗')
+ purchase=link(item['url'],'购买' if group else '购买 ↗')
  if group:
-  purchase+='<div style="margin-top:10px">'+link(group['url'],'团购 ¥'+E(group['unitQuote'].removesuffix('.00'))+'／个 ↗')+'<details style="margin-top:6px"><summary>展开团购二维码</summary><a href="'+E(group['url'],quote=True)+'"><img src="'+E(group['qrImage'],quote=True)+'" alt="HD1910 舵机团购联系二维码，团购价每个 95 元" width="220" height="330" loading="lazy" style="display:block;max-width:100%;height:auto;margin-top:8px"></a><p class="small">点击二维码查看原图后扫码联系。</p></details></div>'
+  identifier=E(group['id'],quote=True);amount=E(group['unitQuote'].removesuffix('.00'))
+  purchase='<div class="purchase-links">'+purchase+f'<button type="button" class="group-buy-link" data-group-buy-open="{identifier}" aria-haspopup="dialog" aria-controls="{identifier}">团购{amount}元/个</button></div>'
  return f'<tr{anchor}><td class="item-name">{body}</td><td class="quantity" data-label="参考采购量">{item["quantity"]} {E(item["unit"])}</td><td class="amount" data-label="历史单价">{unit_price}</td><td class="amount" data-label="小计">{money(item["subtotalCents"])}</td><td class="buy">'+purchase+'</td></tr>'
+
+def group_buy_dialog(item):
+ group=item['groupBuy'];identifier=E(group['id'],quote=True);amount=E(group['unitQuote'].removesuffix('.00'));image=E(group['qrImage'],quote=True)
+ return f'''<dialog class="group-buy-dialog" id="{identifier}" aria-labelledby="{identifier}-title" aria-describedby="{identifier}-copy" data-group-buy-dialog><header class="group-buy-header"><div><h2 id="{identifier}-title">HD1910 舵机团购</h2><span class="group-buy-price">团购价 {amount} 元/个</span></div><button type="button" class="group-buy-close" data-group-buy-close aria-label="关闭团购二维码" autofocus>×</button></header><div class="group-buy-body"><a class="group-buy-code" href="{image}" target="_blank" rel="noopener"><img src="{image}" alt="HD1910 团购联系微信二维码" width="1094" height="1642"></a><div class="group-buy-copy" id="{identifier}-copy"><p>此微信为 {link(group['organizerUrl'],'microduck-replica 开源作者 '+E(group['organizerName']))} 的团购联系微信。</p><p class="group-buy-recommendation"><strong>本仓库作者推荐</strong>{E(group['recommendation'])}</p><p class="group-buy-hint">扫描二维码添加微信，联系 HD1910 团购；点击图片可查看原图。</p></div></div></dialog>'''
 
 shop=head('01 / SHOPPING DETAILS','我要买什么？','下面就是成品板路线的采购清单：按型号、数量和购买入口准备。','完整参考配置 · 含备料')
 shop+='<section class="panel" id="printing-choice" hidden><span class="badge">当前采购路线</span><h2 id="printing-choice-title" style="margin-top:12px"></h2><p id="printing-choice-description"></p><ul id="printing-choice-items"></ul><div class="actions"><a class="btn primary" href="#boards">查看基础零件清单 ↓</a><a class="btn" href="'+FILE+'hardware/3d-print-frankenduck/README.md">查看打印文件与材料说明 ↗</a><a class="btn" id="printing-choice-quote" href="budget.html#calculator">返回预算 →</a></div></section>'
@@ -112,6 +118,9 @@ for group in D['groups']:
   shop+='<p>作者自行设计绘制的 HAT／IMU 成品板，由嘉立创 <strong>SMT 贴片生产</strong>，经长期真机使用与迭代验证。将供电、通信、音频与姿态反馈等需求整合，减少分散采购与自行制作的成本。</p><p class="note-box"><strong>成品 IMU 已预烧录 FT6，到手无需另行烧录。</strong> 安装后仍需完成本机标定；自焊、换芯片或维护升级时，再使用烧录指南。</p><p class="small">作者享有权利的原创设计及工程资料仅供个人学习与非商业复刻；商业复制生产、销售或商业项目集成须事先取得书面授权。第三方内容遵循原许可。'+link(FILE+'hardware/LICENSE','板卡设计许可 →')+'</p>'
   shop+='<p class="note-box"><strong>HAT、IMU、HUB 为三块独立板卡，按下表分别准备。</strong>HUB ¥69 已计入，含总电源缓冲电容，用于缓冲舵机瞬时负载，防止瞬时压降导致 ZERO 重启。</p>'
  shop+='<div class="table-wrap"><table class="shopping-table"><thead><tr><th>物品与指定规格</th><th>参考采购量</th><th class="amount">历史单价</th><th class="amount">小计</th><th>购买入口</th></tr></thead><tbody>'+''.join(purchase_row(item) for item in D['boards']+D['items'] if item['group']==group['id'])+''.join(purchase_row(item,True) for item in optional_items)+'</tbody></table></div></section>'
+for item in D['items']:
+ if item.get('groupBuy'):shop+=group_buy_dialog(item)
+shop+='<script type="module" src="group-buy.js?v=20261101-hd95-dialog"></script>'
 shop+=printing_panel('printing-kit',True)
 shop+='<section class="panel" id="unpriced"><h2>还要补齐这些项目</h2><p class="small">板卡已在上方采购表单列。电池接入可按下面两种取电方式任选其一，装配工具按需准备。已有并可复用的项目也可以勾选。</p><div class="unpriced-list">'
 for item in D['unpriced']:

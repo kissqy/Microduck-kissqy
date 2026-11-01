@@ -1,0 +1,18 @@
+.purchase-links{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.group-buy-link{appearance:none;border:0;padding:0;background:none;color:var(--green);font:inherit;text-decoration:underline;text-underline-offset:4px;white-space:nowrap}
+.group-buy-dialog{width:min(700px,calc(100vw - 32px));max-height:calc(100dvh - 32px);margin:auto;padding:0;border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--text);box-shadow:0 24px 90px #0009;overflow:auto}
+.group-buy-dialog::backdrop{background:#000b;backdrop-filter:blur(4px)}
+body.group-buy-open{overflow:hidden}
+.group-buy-header{position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;border-bottom:1px solid var(--line);background:var(--panel)}
+.group-buy-header h2{margin:0;font-size:21px}
+.group-buy-price{display:inline-block;margin-top:5px;color:var(--green);font-size:16px;font-weight:700}
+.group-buy-close{display:grid;place-items:center;flex-shrink:0;width:36px;height:36px;border:1px solid var(--line);border-radius:50%;background:var(--panel2);color:var(--text);font-size:25px;line-height:1}
+.group-buy-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;gap:24px;padding:22px}
+.group-buy-code{display:block;max-width:280px;margin:auto;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.group-buy-code img{display:block;width:100%;height:auto}
+.group-buy-copy{font-size:14px;line-height:1.9}
+.group-buy-copy p{margin:0 0 15px}
+.group-buy-copy .group-buy-recommendation{padding-top:14px;border-top:1px solid var(--line)}
+.group-buy-copy .group-buy-recommendation strong{display:block;margin-bottom:5px;color:var(--warm);font-size:12px}
+.group-buy-copy .group-buy-hint{margin-bottom:0;color:var(--muted);font-size:12px}
+@media(max-width:600px){.group-buy-header{padding:14px 16px}.group-buy-header h2{font-size:19px}.group-buy-body{grid-template-columns:1fr;gap:18px;padding:18px}.group-buy-code{width:220px;max-width:100%}.group-buy-copy{font-size:13px;line-height:1.85}.group-buy-copy p{margin-bottom:11px}}

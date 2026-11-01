@@ -100,16 +100,12 @@ Community improvements and the author's real-robot modifications are collected i
 
 [Printing files, plate previews and assembly notes →](hardware/3d-print-frankenduck/README.en.md)
 
-## 🔧 HAT and IMU board highlights
+## 🔧 DIY HAT and IMU
 
 Designed and laid out by the author, refined through extended real-robot use and **SMT assembled by JLCPCB**.
 
-| Assembled board | Key features |
-| --- | --- |
-| **HAT** | Plug-in speaker; AMP2.0 servo connectors; no manual jumpers; stable communication without packet loss. |
-| **IMU** | AMP2.0 interface; stable orientation without drift; use the author's IMU calibration with the matching repository battery holder to reduce walking problems caused by incorrect calibration. |
 
-**The assembled IMU comes preflashed with FT6; no initial flashing is needed.** Use the repository's battery holder and specified IMU mounting orientation; calibrate servo zero offsets for each robot. The author's separately licensable original design material is for personal noncommercial replication; commercial reproduction, manufacture, sale or integration requires prior written permission. [Board design license](hardware/LICENSE)
+**The assembled IMU comes preflashed with FT6; no initial flashing is needed.** The author's separately licensable original design material is for personal noncommercial replication; commercial reproduction, manufacture, sale or integration requires prior written permission. [Board design license](hardware/LICENSE)
 
 [Hardware projects and build guides](hardware/README.en.md) · [IMU build video](https://www.bilibili.com/video/BV1qapz6PERs/) · [Buy assembled HAT / IMU / HUB boards](https://item.taobao.com/item.htm?id=1095121548583)
 

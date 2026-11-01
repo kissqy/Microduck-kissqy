@@ -15,15 +15,6 @@
 
 The online pages show totals first, then specifications, quantities and purchase links. The tables below use the author's purchase references, filtered for the default assembled-board route. Normal use uses the released models and Robot Console.
 
-**Assembled board highlights**
-
-| Assembled board | Key features |
-| --- | --- |
-| **HAT** | Plug-in speaker; AMP2.0 servo connectors; no manual jumpers; stable communication without packet loss. |
-| **IMU** | AMP2.0 interface; stable orientation without drift; use the author's IMU calibration with the matching repository battery holder to reduce walking problems caused by incorrect calibration. |
-
-**The assembled IMU comes preflashed with FT6; no initial flashing is needed.** Use the repository's battery holder and specified IMU mounting orientation; calibrate servo zero offsets for each robot. The author's assembled HAT / IMU boards are SMT assembled by JLCPCB and validated through extended real-robot use. See the [board guide](hardware/README.en.md) for original-design noncommercial use and commercial-permission terms.
-
 ## Total cost comparison
 
 | Item | Buy assembled boards | DIY boards, including tools |
@@ -48,9 +39,9 @@ The author supplied reference prices for the EAGET 32GB monitoring / dashcam mic
 
 | Board | Quantity | Reference unit price | Purchase |
 | --- | ---: | --- | --- |
-| Assembled HAT | 1 | CNY 119 | [Select HAT](https://item.taobao.com/item.htm?id=1095121548583) |
-| Assembled IMU (FT6 preflashed) | 1 | CNY 99 | [Select IMU](https://item.taobao.com/item.htm?id=1095121548583) |
-| Assembled HUB (buffer capacitor included) | 1 | CNY 69 | [Select HUB](https://item.taobao.com/item.htm?id=1095121548583) |
+| Assembled HAT<br><sub><strong>AMP2.0 servo connectors</strong>; <strong>plug-in speaker</strong>; <strong>no manual jumpers</strong>; stable communication <strong>without packet loss</strong>.<br>Power, servo communication and audio connections for ZERO.</sub> | 1 | CNY 119 | [Select HAT](https://item.taobao.com/item.htm?id=1095121548583) |
+| Assembled IMU (FT6 preflashed)<br><sub><strong>AMP2.0 interface</strong>; stable orientation <strong>without drift</strong>; <strong>FT6 preflashed</strong>.<br>Mount against the repository battery holder backplate with J1 pointing up to <strong>use the author&#x27;s IMU calibration</strong>.</sub> | 1 | CNY 99 | [Select IMU](https://item.taobao.com/item.htm?id=1095121548583) |
+| Assembled HUB (buffer capacitor included)<br><sub>Servo and battery-power distribution; onboard <strong>1000 µF buffer capacitor</strong> <strong>helps prevent ZERO resets</strong> from transient supply dips.<br>Mount above servos 10 and 20; battery positive to VIN (+), negative to GND (−).</sub> | 1 | CNY 69 | [Select HUB](https://item.taobao.com/item.htm?id=1095121548583) |
 
 ### Battery power connection
 

@@ -32,3 +32,5 @@
  .header-main{padding-block:15px}.route-nav a{min-height:44px}
 }
 @media screen and (max-width:600px){.header-main,.route-nav,.wrap{padding-inline:12px}.shopping-table .spec{font-size:12px}.route-card p{font-size:12px}}
+
+.shopping-table .board-feature{color:var(--green);font-weight:700}

@@ -283,39 +283,55 @@
     {
       "id": "hat",
       "name": "HAT 成品板",
-      "spec": "作者自行设计绘制的成品板，嘉立创 SMT 贴片生产；采用 AMP2.0 舵机接口，喇叭直插即用，无需自行短接。",
+      "spec": "AMP2.0 舵机接口；喇叭直插即用，无需自行短接；通信稳定不丢包。",
       "unit": "块",
       "quantity": 1,
       "unitQuote": "119.00",
       "subtotalCents": 11900,
       "group": "boards",
       "url": "https://item.taobao.com/item.htm?id=1095121548583",
-      "note": "经长期真机使用与迭代验证，通信稳定不丢包；与 ZERO 配对，整合供电、通信与音频外围。"
+      "note": "配套 ZERO 使用，提供供电、舵机通信与音频连接。",
+      "highlights": [
+        "AMP2.0 舵机接口",
+        "喇叭直插即用",
+        "无需自行短接",
+        "不丢包"
+      ]
     },
     {
       "id": "imu",
       "name": "IMU 成品板",
-      "spec": "作者自行设计绘制的独立躯干 IMU，嘉立创 SMT 贴片生产；采用 AMP2.0 接口，姿态稳定不漂移；已预烧录飞特 FT6 固件。",
+      "spec": "AMP2.0 接口；姿态稳定不漂移；已预烧录 FT6，无需另行烧录。",
       "unit": "块",
       "quantity": 1,
       "unitQuote": "99.00",
       "subtotalCents": 9900,
       "group": "boards",
       "url": "https://item.taobao.com/item.htm?id=1095121548583",
-      "note": "到手无需另行烧录；搭配本仓库电池仓，贴合背部主安装板面、J1 端子朝上固定后，可直接使用作者的 IMU 标定参数，减少误标定导致的行走问题。"
+      "note": "配套仓库电池仓，贴合背部主安装板、J1 端子朝上固定，可直接使用作者 IMU 标定参数。",
+      "highlights": [
+        "AMP2.0 接口",
+        "不漂移",
+        "已预烧录 FT6",
+        "直接使用作者 IMU 标定参数"
+      ]
     },
     {
       "id": "hub",
       "name": "HUB 成品分线板",
-      "spec": "独立的舵机总线与电池供电分线板；已带 1000 µF 总电源缓冲电容，用于缓冲舵机瞬时负载，防止瞬时压降导致 ZERO 重启，无需另购电容。",
+      "spec": "舵机总线与电池供电分线；板载 1000 µF 缓冲电容，防止瞬时压降导致 ZERO 重启。",
       "unit": "块",
       "quantity": 1,
       "unitQuote": "69.00",
       "subtotalCents": 6900,
       "group": "boards",
       "url": "https://item.taobao.com/item.htm?id=1095121548583",
-      "note": "HUB 成品板 ¥69；与 HAT、IMU 在同一商品页选择对应款式。",
-      "diyRequired": true
+      "note": "安装在 10、20 舵机上方；电池正极接 VIN（+），负极接 GND（−）。",
+      "diyRequired": true,
+      "highlights": [
+        "1000 µF 缓冲电容",
+        "防止瞬时压降导致 ZERO 重启"
+      ]
     }
   ],
   "groups": [

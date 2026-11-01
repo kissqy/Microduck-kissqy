@@ -52,7 +52,7 @@ def shell(filename,title,description,content,index=-1):
  nav=''.join(f'<a href="{f}"'+(' aria-current="page"' if index==i else '')+f'><b>{i+1:02}</b><span>{label}</span></a>' for i,(f,label,_,_) in enumerate(ROUTES))
  extra_style='<link rel="stylesheet" href="group-buy.css?v=20261101-hd95-dialog">' if filename=='shopping.html' else ''
  return f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d1113"><title>{E(title)} · Microduck 飞特版 · kissqy</title><meta name="description" content="{E(description,quote=True)}"><link rel="canonical" href="https://kissqy.github.io/Microduck-kissqy/build/{filename if filename!='index.html' else ''}"><link rel="stylesheet" href="build.css?v=20261030-screen"><link rel="stylesheet" href="../project-notice.css?v=20261028">{extra_style}</head>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d1113"><title>{E(title)} · Microduck 飞特版 · kissqy</title><meta name="description" content="{E(description,quote=True)}"><link rel="canonical" href="https://kissqy.github.io/Microduck-kissqy/build/{filename if filename!='index.html' else ''}"><link rel="stylesheet" href="build.css?v={'20261101-board-highlights' if filename=='shopping.html' else '20261030-screen'}"><link rel="stylesheet" href="../project-notice.css?v=20261028">{extra_style}</head>
 <body><header class="site-header"><div class="header-main"><a class="brand" href="./"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#c1f577"/><path d="M9 23h9V11h12v11h-7v9H9z" fill="#24311e"/></svg>microduck · kissqy <small>三步复刻 · 进阶可选</small></a><nav class="header-links" aria-label="其他入口"><a href="{REPO}">项目首页 ↗</a><a href="../console-guide.html">中控教程</a></nav></div><nav class="route-nav" aria-label="复刻三步与可选进阶">{nav}</nav></header>
 <main class="wrap">{PROJECT_NOTICE}{content}<footer class="site-footer"><div>Microduck 飞特版 · kissqy<br>使用配套现成动作模型，日常操作使用机器人中控。</div><div><a href="{FILE}docs/MICRODUCK-FAQ.md">常见问题</a> · <a href="{FILE}docs/assets/purchase-wechat-qr.jpg">联系作者</a> · <a href="{FILE}LICENSE">分项许可</a></div></footer></main><script type="module" src="build.js?v=20261101-hub69"></script></body></html>'''
 
@@ -77,13 +77,20 @@ totals={g['id']:sum(i['subtotalCents'] for i in D['items']+D['boards'] if i['gro
 def group_price(group_id):
  return money(totals[group_id])
 rows=''.join('<tr><td'+(' id="board-cost-label"' if g["id"]=="boards" else "")+f'>{g["name"]}</td><td class="amount"'+(' id="board-cost-value"' if g["id"]=="boards" else "")+f'>{group_price(g["id"])}</td></tr>' for g in D['groups'])
-budget+='<div class="two-col"><section class="panel"><h2>当前方案，钱花在哪里</h2><div class="table-wrap"><table class="breakdown"><thead><tr><th>分类</th><th class="amount">参考小计</th></tr></thead><tbody>'+rows+f'<tr><td>基础参考合计</td><td class="amount" data-basis-total>{money(BASE)}</td></tr></tbody></table></div><p class="source-line">预算与采购明细共用同一份价格数据。</p></section><section class="panel"><h2>这些费用还要核对</h2><ul><li>打印件：缝合怪版代打 ¥199 已计入代打方案；自己打印填写耗材费。</li><li>电池接入和常规手工具：已有可复用；32GB TF 卡 ¥39.90、读卡器 ¥22.90 已计入。</li><li>HUB ¥69 为独立板卡，<a href="https://item.taobao.com/item.htm?id=1095121548583">与 HAT、IMU 同一商品页购买</a>，已计入各方案。</li><li>电池取电可使用香蕉板（暂未上架），也可以使用仓库配套电池仓，加 M2.6 螺丝作为取电触点；取出的正极接 HUB 电源输入 VIN（+），负极接 GND（−），按实板丝印核对极性。</li><li>HUB 自带缓冲电容，用于缓冲舵机瞬时负载，防止供电瞬时压降导致 ZERO 重启，无需另购。</li><li>普通电脑、人工、运费与损耗未包含在基础采购表内。</li></ul>'+link('shopping.html#unpriced','逐项看待补清单 →')+'</section></div>'
+budget+='<div class="two-col"><section class="panel"><h2>当前方案，钱花在哪里</h2><div class="table-wrap"><table class="breakdown"><thead><tr><th>分类</th><th class="amount">参考小计</th></tr></thead><tbody>'+rows+f'<tr><td>基础参考合计</td><td class="amount" data-basis-total>{money(BASE)}</td></tr></tbody></table></div><p class="source-line">预算与采购明细共用同一份价格数据。</p></section><section class="panel"><h2>电池取电与未计费用</h2><ul><li><strong>电池取电：</strong>可使用香蕉板（暂未上架），或使用仓库电池仓加 M2.6 螺丝作为触点；正极接 HUB VIN（+），负极接 GND（−）。</li><li><strong>未计费用：</strong>电池接入配件、常规装配手工具、电脑、整机装配人工、运费与损耗。</li></ul>'+link('shopping.html#unpriced','逐项看待补清单 →')+'</section></div>'
 budget+=f'<section class="panel" id="self-solder"><h2>手工焊的材料与工具怎么算？</h2><p>在上方选择手工焊，三张卡片会直接显示对应的整机参考合计，并扣除成品 HAT／IMU 的 {money(BOARDS)}。</p><div class="two-col"><div><h3>首批板卡材料</h3><p class="material-price">{money(D["diyMaterialsMinCents"])}–{money(D["diyMaterialsMaxCents"])}</p><p class="small">按首批整包采购，不按单套分摊用料计算。</p></div><div><h3>从零买工具与耗材</h3><p class="material-price">{money(D["diyToolsMinCents"])}–{money(D["diyToolsMaxCents"])}</p><p class="small">已有设备可复用；同一工具不要再填进待补配件。</p></div></div>'+actions(link('shopping.html?boards=diy&tools=owned#diy','看自焊材料与工具 →','btn'))+'</section><section class="page-next"><div><small>第一步 · 采购明细</small><strong>按当前方案买齐零件</strong><p>总预算看完后，打开对应的规格、数量和购买链接清单；备齐再进入第二步装配。</p></div><a class="btn primary" href="shopping.html" data-current-shopping>查看当前方案采购清单 →</a></section>'
 budget=budget.replace('value="3500"',f'value="{D["printerReferenceCents"]/100:g}"').replace('value="199"',f'value="{D["printServiceReferenceCents"]/100:g}"')
 (OUT/'budget.html').write_text(shell('budget.html','预算与采购','切换成品板或手工焊，再比较自己打印、找人代打、买机器自己打的费用，预算与采购清单按方案对应。',budget,0))
 
+def highlight_spec(value,item):
+ text=E(value)
+ for phrase in item.get('highlights',[]):
+  escaped=E(phrase)
+  text=text.replace(escaped,'<strong class="board-feature">'+escaped+'</strong>')
+ return text
+
 def purchase_row(item,optional=False):
- spec=E(item['spec']);note=E(item['note'])
+ spec=highlight_spec(item['spec'],item);note=highlight_spec(item['note'],item)
  name=f'<strong>{E(item["name"])}</strong>'
  if optional:
   name+=' <span class="badge">滑轮选配</span>'
@@ -114,9 +121,6 @@ for group in D['groups']:
  optional_items=[item for item in D['optional'] if item.get('group')==group['id']]
  subtotal_note='（必选小计，选配另计）' if optional_items else ''
  shop+=f'<section class="purchase-group" id="{group["id"]}"><h2>{group["name"]} <span class="small">{group_price(group["id"])}{subtotal_note}</span></h2>'
- if group['id']=='boards':
-  shop+='<p>作者自行设计绘制的 HAT／IMU 成品板，由嘉立创 <strong>SMT 贴片生产</strong>，经长期真机使用与迭代验证。</p><div class="table-wrap"><table><thead><tr><th>成品板</th><th>核心亮点</th></tr></thead><tbody><tr><td><strong>HAT</strong></td><td>喇叭直插即用；AMP2.0 舵机接口；无需自行短接，通信稳定不丢包。</td></tr><tr><td><strong>IMU</strong></td><td>AMP2.0 接口；姿态稳定不漂移；搭配本仓库电池仓，可直接使用作者 IMU 标定参数，减少误标定导致的行走问题。</td></tr></tbody></table></div><p class="note-box"><strong>成品 IMU 已预烧录 FT6，到手无需另行烧录。</strong> IMU 按本仓库电池仓规定方向安装；舵机零位仍按本机标定；自焊、换芯片或维护升级时，再使用烧录指南。</p><p class="small">作者享有权利的原创设计及工程资料仅供个人学习与非商业复刻；商业复制生产、销售或商业项目集成须事先取得书面授权。第三方内容遵循原许可。'+link(FILE+'hardware/LICENSE','板卡设计许可 →')+'</p>'
-  shop+='<p class="note-box"><strong>HAT、IMU、HUB 为三块独立板卡，按下表分别准备。</strong>HUB ¥69 已计入，含总电源缓冲电容，用于缓冲舵机瞬时负载，防止瞬时压降导致 ZERO 重启。</p>'
  shop+='<div class="table-wrap"><table class="shopping-table"><thead><tr><th>物品与指定规格</th><th>参考采购量</th><th class="amount">历史单价</th><th class="amount">小计</th><th>购买入口</th></tr></thead><tbody>'+''.join(purchase_row(item) for item in D['boards']+D['items'] if item['group']==group['id'])+''.join(purchase_row(item,True) for item in optional_items)+'</tbody></table></div></section>'
 for item in D['items']:
  if item.get('groupBuy'):shop+=group_buy_dialog(item)

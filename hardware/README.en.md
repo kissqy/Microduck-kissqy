@@ -25,8 +25,8 @@
 
 | Assembled board | Key features |
 | --- | --- |
-| **HAT** | Plug-in speaker; AMP2.0 servo connectors; no manual jumpers; stable communication without packet loss. |
-| **IMU** | AMP2.0 interface; stable orientation without drift; use the author's IMU calibration with the matching repository battery holder to reduce walking problems caused by incorrect calibration. |
+| **HAT** | **Plug-in speaker**; **AMP2.0 servo connectors**; **no manual jumpers**; stable communication **without packet loss**. |
+| **IMU** | **AMP2.0 interface**; stable orientation **without drift**; **use the author's IMU calibration** with the matching repository battery holder to reduce walking problems caused by incorrect calibration. |
 
 **[🔧 Assembly notes: 5 GHz Wi-Fi for ZERO; the HUB includes the 1000 µF main-power buffer capacitor, with no separate purchase needed; wiring and precautions](../docs/ASSEMBLY-NOTES.en.md)**
 

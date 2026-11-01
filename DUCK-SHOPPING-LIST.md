@@ -15,15 +15,6 @@
 
 在线页面先给金额，再给规格、数量和购买入口；下面是按成品板默认路线整理的参考采购明细。日常操作使用配套现成模型和机器人中控。
 
-**成品板亮点**
-
-| 成品板 | 核心亮点 |
-| --- | --- |
-| **HAT** | 喇叭直插即用；AMP2.0 舵机接口；无需自行短接，通信稳定不丢包。 |
-| **IMU** | AMP2.0 接口；姿态稳定不漂移；搭配本仓库电池仓，可直接使用作者 IMU 标定参数，减少误标定导致的行走问题。 |
-
-**成品 IMU 已预烧录 FT6，到手无需另行烧录。** IMU 按本仓库电池仓规定方向安装；舵机零位仍按本机标定。 作者成品 HAT／IMU 由嘉立创 SMT 贴片生产，经长期真机使用验证；原创设计的非商业使用与商业授权范围见[板卡说明](hardware/README.md)。
-
 ## 总价对比
 
 | 项目 | 购买成品板 | 自己手焊（含工具） |
@@ -46,9 +37,9 @@
 
 | 板卡 | 数量 | 参考单价 | 购买入口 |
 | --- | ---: | --- | --- |
-| HAT 成品板 | 1 块 | ¥119 | [选择 HAT 款式](https://item.taobao.com/item.htm?id=1095121548583) |
-| IMU 成品板（已烧录 FT6） | 1 块 | ¥99 | [选择 IMU 款式](https://item.taobao.com/item.htm?id=1095121548583) |
-| HUB 成品分线板（含缓冲电容） | 1 块 | ¥69 | [选择 HUB 款式](https://item.taobao.com/item.htm?id=1095121548583) |
+| HAT 成品板<br><sub><strong>AMP2.0 舵机接口</strong>；<strong>喇叭直插即用</strong>，<strong>无需自行短接</strong>；通信稳定<strong>不丢包</strong>。<br>配套 ZERO 使用，提供供电、舵机通信与音频连接。</sub> | 1 块 | ¥119 | [选择 HAT 款式](https://item.taobao.com/item.htm?id=1095121548583) |
+| IMU 成品板（已烧录 FT6）<br><sub><strong>AMP2.0 接口</strong>；姿态稳定<strong>不漂移</strong>；<strong>已预烧录 FT6</strong>，无需另行烧录。<br>配套仓库电池仓，贴合背部主安装板、J1 端子朝上固定，可<strong>直接使用作者 IMU 标定参数</strong>。</sub> | 1 块 | ¥99 | [选择 IMU 款式](https://item.taobao.com/item.htm?id=1095121548583) |
+| HUB 成品分线板（含缓冲电容）<br><sub>舵机总线与电池供电分线；板载 <strong>1000 µF 缓冲电容</strong>，<strong>防止瞬时压降导致 ZERO 重启</strong>。<br>安装在 10、20 舵机上方；电池正极接 VIN（+），负极接 GND（−）。</sub> | 1 块 | ¥69 | [选择 HUB 款式](https://item.taobao.com/item.htm?id=1095121548583) |
 
 ### 电池接入
 

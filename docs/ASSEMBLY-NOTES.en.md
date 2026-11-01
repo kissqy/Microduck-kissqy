@@ -24,7 +24,7 @@ For battery power, use a banana board (not yet listed for sale), or the reposito
 
 ## The HUB includes the main-power buffer capacitor
 
-**This repository’s HUB already includes the 1000 µF main-power buffer capacitor. No separate capacitor purchase or duplicate installation is needed.** Connect battery power to HUB VIN / GND.
+**This repository’s HUB costs CNY 69 and includes the 1000 µF main-power buffer capacitor to buffer transient servo loads and help prevent ZERO restarts caused by supply voltage dips. No separate capacitor purchase or duplicate installation is needed.** Connect battery power to HUB VIN / GND.
 
 - Check input polarity and capacitor polarity against the board markings.
 - The capacitor buffers transient servo loads; the battery, wires and power contacts still need reliable connections.

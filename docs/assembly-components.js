@@ -7,7 +7,7 @@ const authorBoards='https://item.taobao.com/item.htm?id=1095121548583';
 export const COMPONENTS=Object.freeze({
   hub:{
     id:'hub',label:'HUB 分线板',shortLabel:'HUB',
-    description:'将电池电源与三线舵机总线集中分配，并在总电源网络上并联缓冲电容。',
+    description:'HUB 成品板 ¥69，集中分配电池电源与舵机总线；已带缓冲电容，用于缓冲舵机瞬时负载，防止瞬时压降导致 ZERO 重启。',
     dimensionsMm:[23,34],
     locationNote:'HUB 平放在 10、20 舵机上方，长边沿机身前后方向。板卡保持水平，端子和线束跟随安装朝向。',
     purchase:{label:'购买作者同款 HUB',url:authorBoards},

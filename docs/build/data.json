@@ -1,6 +1,6 @@
 {
   "currency": "CNY",
-  "reviewed": "2026-10-30",
+  "reviewed": "2026-11-01",
   "priceBasis": "作者历史采购记录、成品板与缝合怪版代打定价，以及补充的京东 TF 卡与读卡器报价、作者更新的双头反向舵机线单价、作者补充的飞特 URT2 报价；商品价格以下单时为准。",
   "items": [
     {
@@ -296,14 +296,14 @@
     {
       "id": "hub",
       "name": "HUB 成品分线板",
-      "spec": "独立的舵机总线与电池供电分线板；已带 1000 µF 总电源缓冲电容，无需另购电容。",
+      "spec": "独立的舵机总线与电池供电分线板；已带 1000 µF 总电源缓冲电容，用于缓冲舵机瞬时负载，防止瞬时压降导致 ZERO 重启，无需另购电容。",
       "unit": "块",
       "quantity": 1,
-      "unitQuote": null,
-      "subtotalCents": null,
+      "unitQuote": "69.00",
+      "subtotalCents": 6900,
       "group": "boards",
       "url": "https://item.taobao.com/item.htm?id=1095121548583",
-      "note": "与 HAT、IMU 在同一商品页选择对应款式；价格以商品页为准。",
+      "note": "HUB 成品板 ¥69；与 HAT、IMU 在同一商品页选择对应款式。",
       "diyRequired": true
     }
   ],

@@ -44,6 +44,16 @@
 
 [🎬 查看全部实机视频 →](https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#more-videos)
 
+<p><b>📷 小鸭出游</b> · <a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-gallery">7 张照片 · 点击进入滑动相册 →</a></p>
+
+<table>
+<tr>
+<td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-04"><img width="90" alt="侧前方站立的白橙色 Microduck，背景是橙黄色大鸭子" src="docs/assets/showcase/outdoor-04-thumb.webp" /></a></td>
+<td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-07"><img width="90" alt="白橙色 Microduck 在蓝天下的乐园广场正面站立" src="docs/assets/showcase/outdoor-07-thumb.webp" /></a></td>
+<td><a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html#photo-06"><img width="90" alt="白橙色 Microduck 坐在木质长椅上，双脚朝向镜头" src="docs/assets/showcase/outdoor-06-thumb.webp" /></a></td>
+</tr>
+</table>
+
 <sub>以上为实机视频；下方中控在线演示使用模拟数据，不连接实机或真正训练。</sub>
 
 

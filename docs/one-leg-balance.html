@@ -75,6 +75,8 @@ h1{font-size:clamp(30px,8vw,38px);line-height:1.1;letter-spacing:-1px;margin:6px
 }
 </style>
 <link rel="stylesheet" href="./project-notice.css?v=20261028">
+<link rel="stylesheet" href="./photo-gallery.css?v=20261101">
+<script defer src="./photo-gallery.js?v=20261101"></script>
 </head>
 <body>
 <header class="topbar">
@@ -105,32 +107,82 @@ h1{font-size:clamp(30px,8vw,38px);line-height:1.1;letter-spacing:-1px;margin:6px
 <p id="status" class="status" role="status" aria-live="polite"></p>
 </section>
 </main>
+<section id="photo-gallery" class="photo-gallery" aria-labelledby="photo-gallery-title">
+<div class="photo-gallery__heading">
+<div><h2 id="photo-gallery-title">小鸭出游。</h2><p>7 张照片 · 左右滑动，点击放大。</p></div>
+<div class="photo-gallery__controls"><button id="photo-scroll-previous" class="photo-gallery__arrow" type="button" aria-label="向前浏览照片" aria-controls="photo-track">←</button><button id="photo-scroll-next" class="photo-gallery__arrow" type="button" aria-label="向后浏览照片" aria-controls="photo-track">→</button></div>
+</div>
+<div id="photo-track" class="photo-gallery__track" role="region" aria-label="小鸭出游相册，可左右滑动" tabindex="0">
+<a class="photo-card" id="photo-04" href="assets/showcase/outdoor-04.webp" data-gallery-photo data-title="遇见大鸭子" data-original="assets/showcase/original/outdoor-04.jpg" aria-label="放大查看：遇见大鸭子">
+<img src="assets/showcase/outdoor-04-thumb.webp" srcset="assets/showcase/outdoor-04-thumb.webp 360w, assets/showcase/outdoor-04.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="侧前方站立的白橙色 Microduck，背景是橙黄色大鸭子">
+<span class="photo-card__caption"><span>遇见大鸭子</span><span aria-hidden="true">↗</span></span>
+</a>
+<a class="photo-card" id="photo-07" href="assets/showcase/outdoor-07.webp" data-gallery-photo data-title="广场上的小鸭" data-original="assets/showcase/original/outdoor-07.jpg" aria-label="放大查看：广场上的小鸭">
+<img src="assets/showcase/outdoor-07-thumb.webp" srcset="assets/showcase/outdoor-07-thumb.webp 360w, assets/showcase/outdoor-07.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="白橙色 Microduck 在蓝天下的乐园广场正面站立">
+<span class="photo-card__caption"><span>广场上的小鸭</span><span aria-hidden="true">↗</span></span>
+</a>
+<a class="photo-card" id="photo-03" href="assets/showcase/outdoor-03.webp" data-gallery-photo data-title="阳光下站好" data-original="assets/showcase/original/outdoor-03.jpg" aria-label="放大查看：阳光下站好">
+<img src="assets/showcase/outdoor-03-thumb.webp" srcset="assets/showcase/outdoor-03-thumb.webp 360w, assets/showcase/outdoor-03.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="阳光下的白橙色 Microduck，完整展示头部、身体与双腿">
+<span class="photo-card__caption"><span>阳光下站好</span><span aria-hidden="true">↗</span></span>
+</a>
+<a class="photo-card" id="photo-05" href="assets/showcase/outdoor-05.webp" data-gallery-photo data-title="换个角度认识" data-original="assets/showcase/original/outdoor-05.jpg" aria-label="放大查看：换个角度认识">
+<img src="assets/showcase/outdoor-05-thumb.webp" srcset="assets/showcase/outdoor-05-thumb.webp 360w, assets/showcase/outdoor-05.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="白橙色 Microduck 的侧面，展示躯干和腿部结构">
+<span class="photo-card__caption"><span>换个角度认识</span><span aria-hidden="true">↗</span></span>
+</a>
+<a class="photo-card" id="photo-02" href="assets/showcase/outdoor-02.webp" data-gallery-photo data-title="准备出发" data-original="assets/showcase/original/outdoor-02.jpg" aria-label="放大查看：准备出发">
+<img src="assets/showcase/outdoor-02-thumb.webp" srcset="assets/showcase/outdoor-02-thumb.webp 360w, assets/showcase/outdoor-02.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="绿植和彩色建筑前站立的白橙色 Microduck">
+<span class="photo-card__caption"><span>准备出发</span><span aria-hidden="true">↗</span></span>
+</a>
+<a class="photo-card" id="photo-06" href="assets/showcase/outdoor-06.webp" data-gallery-photo data-title="坐下歇一会" data-original="assets/showcase/original/outdoor-06.jpg" aria-label="放大查看：坐下歇一会">
+<img src="assets/showcase/outdoor-06-thumb.webp" srcset="assets/showcase/outdoor-06-thumb.webp 360w, assets/showcase/outdoor-06.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="白橙色 Microduck 坐在木质长椅上，双脚朝向镜头">
+<span class="photo-card__caption"><span>坐下歇一会</span><span aria-hidden="true">↗</span></span>
+</a>
+<a class="photo-card" id="photo-01" href="assets/showcase/outdoor-01.webp" data-gallery-photo data-title="镜头前的合影" data-original="assets/showcase/original/outdoor-01.jpg" aria-label="放大查看：镜头前的合影">
+<img src="assets/showcase/outdoor-01-thumb.webp" srcset="assets/showcase/outdoor-01-thumb.webp 360w, assets/showcase/outdoor-01.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="绿植和彩色建筑前坐着的白橙色 Microduck 正面合影">
+<span class="photo-card__caption"><span>镜头前的合影</span><span aria-hidden="true">↗</span></span>
+</a>
+</div>
+<p class="photo-gallery__note">实拍照片经 AI 轻度美化，放大后可查看原图。</p>
+</section>
+<dialog id="photo-dialog" class="photo-dialog" aria-labelledby="photo-dialog-title">
+<header class="photo-dialog__header"><h2 id="photo-dialog-title">小鸭出游</h2><button id="photo-dialog-close" class="photo-dialog__close" type="button" aria-label="关闭照片" autofocus>×</button></header>
+<div class="photo-dialog__stage"><img id="photo-dialog-image" class="photo-dialog__image" alt="" draggable="false"><button id="photo-dialog-previous" class="photo-dialog__nav photo-dialog__nav--previous" type="button" aria-label="上一张照片">‹</button><button id="photo-dialog-next" class="photo-dialog__nav photo-dialog__nav--next" type="button" aria-label="下一张照片">›</button></div>
+<footer class="photo-dialog__footer"><span id="photo-dialog-count" role="status" aria-live="polite"></span><a id="photo-dialog-original" target="_blank" rel="noopener">查看实拍原图 ↗</a></footer>
+</dialog>
 <section id="more-videos" class="gallery" aria-labelledby="gallery-title">
 <div class="gallery-heading"><div><div class="eyebrow"><span class="dot" aria-hidden="true"></span>更多实机表现</div><h2 id="gallery-title">这只小鸭，还有更多可能。</h2><p>左右滑动，继续看小鸭的更多实机表现。</p></div></div>
 <div class="gallery-grid" role="region" aria-label="实机视频，左右滑动查看" tabindex="0">
 <article class="video-card">
 <div class="clip-heading"><span class="clip-number">01</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 1"><source src="https://github.com/user-attachments/assets/0ec5b46b-1ec0-483a-a95d-3b3f307e155f" type="video/mp4"></video>
+<video controls playsinline preload="metadata" aria-label="实机视频 1"><source src="https://github.com/user-attachments/assets/008bb58b-7bbd-4de7-9687-9b6ef2d42ed7" type="video/mp4"></video>
 </article>
 <article class="video-card">
 <div class="clip-heading"><span class="clip-number">02</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 2"><source src="https://github.com/user-attachments/assets/d09a6bfe-7a28-4266-ba90-de2b331472ad" type="video/mp4"></video>
+<video controls playsinline preload="metadata" aria-label="实机视频 2"><source src="https://github.com/user-attachments/assets/0a3edb38-0c25-429a-b552-94ea04881bf3" type="video/mp4"></video>
 </article>
 <article class="video-card">
 <div class="clip-heading"><span class="clip-number">03</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 3"><source src="https://github.com/user-attachments/assets/a604c0e0-af01-413f-ab00-99ccd26db8d5" type="video/mp4"></video>
+<video controls playsinline preload="metadata" aria-label="实机视频 3"><source src="https://github.com/user-attachments/assets/0ec5b46b-1ec0-483a-a95d-3b3f307e155f" type="video/mp4"></video>
 </article>
 <article class="video-card">
 <div class="clip-heading"><span class="clip-number">04</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 4"><source src="https://github.com/user-attachments/assets/4508d91c-e91c-40f4-8c3e-5ca5a3f959c3" type="video/mp4"></video>
+<video controls playsinline preload="metadata" aria-label="实机视频 4"><source src="https://github.com/user-attachments/assets/d09a6bfe-7a28-4266-ba90-de2b331472ad" type="video/mp4"></video>
 </article>
 <article class="video-card">
 <div class="clip-heading"><span class="clip-number">05</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 5"><source src="https://github.com/user-attachments/assets/fd0dfafd-dd02-4852-940c-33706c287e9d" type="video/mp4"></video>
+<video controls playsinline preload="metadata" aria-label="实机视频 5"><source src="https://github.com/user-attachments/assets/a604c0e0-af01-413f-ab00-99ccd26db8d5" type="video/mp4"></video>
 </article>
 <article class="video-card">
 <div class="clip-heading"><span class="clip-number">06</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 6"><source src="https://github.com/user-attachments/assets/693a3272-d814-42f6-86b3-be5cb3b35b0f" type="video/mp4"></video>
+<video controls playsinline preload="metadata" aria-label="实机视频 6"><source src="https://github.com/user-attachments/assets/4508d91c-e91c-40f4-8c3e-5ca5a3f959c3" type="video/mp4"></video>
+</article>
+<article class="video-card">
+<div class="clip-heading"><span class="clip-number">07</span><h3>实机记录</h3></div>
+<video controls playsinline preload="metadata" aria-label="实机视频 7"><source src="https://github.com/user-attachments/assets/fd0dfafd-dd02-4852-940c-33706c287e9d" type="video/mp4"></video>
+</article>
+<article class="video-card">
+<div class="clip-heading"><span class="clip-number">08</span><h3>实机记录</h3></div>
+<video controls playsinline preload="metadata" aria-label="实机视频 8"><source src="https://github.com/user-attachments/assets/693a3272-d814-42f6-86b3-be5cb3b35b0f" type="video/mp4"></video>
 </article>
 </div>
 <div class="gallery-footer"><a class="project-link" href="https://github.com/kissqy/Microduck-kissqy">回到项目，开始探索 <span aria-hidden="true">↗</span></a></div>

@@ -1,0 +1,59 @@
+{
+  "description": "Microduck outdoor photo gallery. Original photographs remain available beside AI-enhanced presentation versions.",
+  "method": "Built-in image generation: restrained lighting and natural-color enhancement. WebP derivatives resized and encoded for web delivery.",
+  "prompts": {
+    "photo04": "Use case: lighting-weather. Asset type: documentary robot photo for the Microduck open-source project's photo gallery. Input image 1 is the edit target. Make a very restrained photographic tonal enhancement only: gently recover highlights on the white shell and bright paving, subtly lift shadow detail in the black servo housings, keep warm white and orange accurate, reduce the slightly harsh midday contrast, leave the blue sky and greenery natural with no extra saturation. Keep the exact original composition, 3:4 portrait framing, pose, all robot parts, screws, wiring, printed labels, textures, background buildings and orange-yellow duck statue completely unchanged. No removal, no extra objects, no redesign, no artificial blur, no text overlay, no watermark. The result must still look like the same real, unretouched engineering photograph, only with balanced light and clean natural color.",
+    "others": "Use case: lighting-weather. Asset type: documentary robot photo for the Microduck open-source project's photo gallery. Input image 1 is the edit target. Make a very restrained photographic tonal enhancement only: gently recover highlights on the white shell and bright paving, subtly lift shadow detail in the black servo housings, keep warm white and orange accurate, reduce the slightly harsh midday contrast, leave the blue sky and greenery natural with no extra saturation. Keep the exact original composition, 3:4 portrait framing, pose, all robot parts, screws, wiring, printed labels, textures, background buildings completely unchanged. No removal, no extra objects, no redesign, no artificial blur, no text overlay, no watermark. The result must still look like the same real, unretouched engineering photograph, only with balanced light and clean natural color."
+  },
+  "photos": [
+    {
+      "photo": 1,
+      "enhanced": "outdoor-01.webp",
+      "thumbnail": "outdoor-01-thumb.webp",
+      "original": "original/outdoor-01.jpg",
+      "sourceFilename": "d121213a0332ce3015024b1e245bf5d3.jpg"
+    },
+    {
+      "photo": 2,
+      "enhanced": "outdoor-02.webp",
+      "thumbnail": "outdoor-02-thumb.webp",
+      "original": "original/outdoor-02.jpg",
+      "sourceFilename": "a6df6f73d8e936124eadae279b4d79a0.jpg"
+    },
+    {
+      "photo": 3,
+      "enhanced": "outdoor-03.webp",
+      "thumbnail": "outdoor-03-thumb.webp",
+      "original": "original/outdoor-03.jpg",
+      "sourceFilename": "b118694a223308730a7a6c19fb09d475.jpg"
+    },
+    {
+      "photo": 4,
+      "enhanced": "outdoor-04.webp",
+      "thumbnail": "outdoor-04-thumb.webp",
+      "original": "original/outdoor-04.jpg",
+      "sourceFilename": "342e03c5ea42b588cfe713a1bae32e11.jpg"
+    },
+    {
+      "photo": 5,
+      "enhanced": "outdoor-05.webp",
+      "thumbnail": "outdoor-05-thumb.webp",
+      "original": "original/outdoor-05.jpg",
+      "sourceFilename": "000d9cf7ee82ed9f4dc911966f22199f.jpg"
+    },
+    {
+      "photo": 6,
+      "enhanced": "outdoor-06.webp",
+      "thumbnail": "outdoor-06-thumb.webp",
+      "original": "original/outdoor-06.jpg",
+      "sourceFilename": "39be0f0a06517a0d348a270309bb3ea7.jpg"
+    },
+    {
+      "photo": 7,
+      "enhanced": "outdoor-07.webp",
+      "thumbnail": "outdoor-07-thumb.webp",
+      "original": "original/outdoor-07.jpg",
+      "sourceFilename": "e0c2c786627cb076fa04b819bed65f50.jpg"
+    }
+  ]
+}

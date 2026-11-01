@@ -283,19 +283,19 @@
     {
       "id": "hat",
       "name": "HAT 成品板",
-      "spec": "作者自行设计绘制的成品板，嘉立创 SMT 贴片生产；下单确认舵机总线、喇叭与麦克风接头版本。",
+      "spec": "作者自行设计绘制的成品板，嘉立创 SMT 贴片生产；采用 AMP2.0 舵机接口，喇叭直插即用，无需自行短接。",
       "unit": "块",
       "quantity": 1,
       "unitQuote": "119.00",
       "subtotalCents": 11900,
       "group": "boards",
       "url": "https://item.taobao.com/item.htm?id=1095121548583",
-      "note": "经长期真机使用与迭代验证；与 ZERO 配对，整合供电、通信与音频外围。"
+      "note": "经长期真机使用与迭代验证，通信稳定不丢包；与 ZERO 配对，整合供电、通信与音频外围。"
     },
     {
       "id": "imu",
       "name": "IMU 成品板",
-      "spec": "作者自行设计绘制的独立躯干 IMU，嘉立创 SMT 贴片生产；已预烧录飞特 FT6 固件。",
+      "spec": "作者自行设计绘制的独立躯干 IMU，嘉立创 SMT 贴片生产；采用 AMP2.0 接口，姿态稳定不漂移；已预烧录飞特 FT6 固件。",
       "unit": "块",
       "quantity": 1,
       "unitQuote": "99.00",

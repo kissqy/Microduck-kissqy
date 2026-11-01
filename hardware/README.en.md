@@ -15,11 +15,18 @@
 >
 > **The assembled IMU comes preflashed with FT6 firmware; no initial flashing is needed.**
 >
-> **Use the author's IMU calibration parameters directly:** With this repository's battery holder and the project's assembled IMU installed in the specified orientation, you can use the author's IMU calibration parameters directly, reducing walking problems caused by incorrect IMU calibration. Servo zero offsets still need calibration for each robot.
+> Use the repository's battery holder and specified IMU mounting orientation; calibrate servo zero offsets for each robot.
 >
 > **HAT, IMU and HUB are three separate boards. Select each board on the same product page. The HUB costs CNY 69 and includes the main-power buffer capacitor to buffer transient servo loads and help prevent ZERO restarts caused by supply voltage dips.**
 >
 > Original designs and project files that the author has the right to license are provided for personal learning and noncommercial replication. Commercial use, mass production or reproduction for sale requires the author's prior written permission. Third-party material retains its original license; see the [board design license](LICENSE) · [component licenses](../LICENSE).
+
+## Assembled board highlights
+
+| Assembled board | Key features |
+| --- | --- |
+| **HAT** | Plug-in speaker; AMP2.0 servo connectors; no manual jumpers; stable communication without packet loss. |
+| **IMU** | AMP2.0 interface; stable orientation without drift; use the author's IMU calibration with the matching repository battery holder to reduce walking problems caused by incorrect calibration. |
 
 **[🔧 Assembly notes: 5 GHz Wi-Fi for ZERO; the HUB includes the 1000 µF main-power buffer capacitor, with no separate purchase needed; wiring and precautions](../docs/ASSEMBLY-NOTES.en.md)**
 

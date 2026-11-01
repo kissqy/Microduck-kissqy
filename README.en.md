@@ -100,11 +100,16 @@ Community improvements and the author's real-robot modifications are collected i
 
 [Printing files, plate previews and assembly notes →](hardware/3d-print-frankenduck/README.en.md)
 
-## 🔧 DIY HAT and IMU
+## 🔧 HAT and IMU board highlights
 
-The author designs and lays out the HAT and independent torso IMU, with extended real-robot use and iterative validation. Assembled boards are **SMT-manufactured by JLCPCB**, integrating the functions needed for replication to reduce separate sourcing and DIY fabrication costs. PCB projects, parts lists and build records are provided for DIY assembly or the author's assembled boards.
+Designed and laid out by the author, refined through extended real-robot use and **SMT assembled by JLCPCB**.
 
-**The assembled IMU comes with FT6 firmware pre-flashed; no additional flashing is needed on arrival. With this repository's battery holder and the project's assembled IMU installed in the specified orientation, you can use the author's IMU calibration parameters directly, reducing walking problems caused by incorrect IMU calibration.** Servo zero offsets still need calibration for each robot. The author's separately licensable original design material is for personal noncommercial replication; commercial reproduction, manufacture, sale or integration requires prior written permission. [Board design license](hardware/LICENSE)
+| Assembled board | Key features |
+| --- | --- |
+| **HAT** | Plug-in speaker; AMP2.0 servo connectors; no manual jumpers; stable communication without packet loss. |
+| **IMU** | AMP2.0 interface; stable orientation without drift; use the author's IMU calibration with the matching repository battery holder to reduce walking problems caused by incorrect calibration. |
+
+**The assembled IMU comes preflashed with FT6; no initial flashing is needed.** Use the repository's battery holder and specified IMU mounting orientation; calibrate servo zero offsets for each robot. The author's separately licensable original design material is for personal noncommercial replication; commercial reproduction, manufacture, sale or integration requires prior written permission. [Board design license](hardware/LICENSE)
 
 [Hardware projects and build guides](hardware/README.en.md) · [IMU build video](https://www.bilibili.com/video/BV1qapz6PERs/) · [Buy assembled HAT / IMU / HUB boards](https://item.taobao.com/item.htm?id=1095121548583)
 

@@ -15,7 +15,14 @@
 
 The online pages show totals first, then specifications, quantities and purchase links. The tables below use the author's purchase references, filtered for the default assembled-board route. Normal use uses the released models and Robot Console.
 
-**The assembled IMU is preflashed with FT6 and needs no initial flashing. With this repository's battery holder and the project's assembled IMU installed in the specified orientation, you can use the author's IMU calibration parameters directly, reducing walking problems caused by incorrect IMU calibration.** Servo zero offsets still need calibration for each robot. The author's assembled HAT / IMU boards are SMT assembled by JLCPCB and validated through extended real-robot use. See the [board guide](hardware/README.en.md) for original-design noncommercial use and commercial-permission terms.
+**Assembled board highlights**
+
+| Assembled board | Key features |
+| --- | --- |
+| **HAT** | Plug-in speaker; AMP2.0 servo connectors; no manual jumpers; stable communication without packet loss. |
+| **IMU** | AMP2.0 interface; stable orientation without drift; use the author's IMU calibration with the matching repository battery holder to reduce walking problems caused by incorrect calibration. |
+
+**The assembled IMU comes preflashed with FT6; no initial flashing is needed.** Use the repository's battery holder and specified IMU mounting orientation; calibrate servo zero offsets for each robot. The author's assembled HAT / IMU boards are SMT assembled by JLCPCB and validated through extended real-robot use. See the [board guide](hardware/README.en.md) for original-design noncommercial use and commercial-permission terms.
 
 ## Total cost comparison
 

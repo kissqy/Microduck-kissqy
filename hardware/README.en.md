@@ -13,7 +13,9 @@
 >
 > They combine power, communication, audio and orientation-feedback requirements to reduce separate purchases and DIY fabrication costs.
 >
-> **The assembled IMU comes preflashed with FT6 firmware; no initial flashing is needed.** Each robot still requires its own servo and IMU calibration after installation.
+> **The assembled IMU comes preflashed with FT6 firmware; no initial flashing is needed.**
+>
+> **Use the author's IMU calibration parameters directly:** With this repository's battery holder and the project's assembled IMU installed in the specified orientation, you can use the author's IMU calibration parameters directly, reducing walking problems caused by incorrect IMU calibration. Servo zero offsets still need calibration for each robot.
 >
 > **HAT, IMU and HUB are three separate boards. Select each board on the same product page. The HUB costs CNY 69 and includes the main-power buffer capacitor to buffer transient servo loads and help prevent ZERO restarts caused by supply voltage dips.**
 >

@@ -104,7 +104,7 @@ Community improvements and the author's real-robot modifications are collected i
 
 The author designs and lays out the HAT and independent torso IMU, with extended real-robot use and iterative validation. Assembled boards are **SMT-manufactured by JLCPCB**, integrating the functions needed for replication to reduce separate sourcing and DIY fabrication costs. PCB projects, parts lists and build records are provided for DIY assembly or the author's assembled boards.
 
-**The assembled IMU comes with FT6 firmware pre-flashed; no additional flashing is needed on arrival. Calibrate it for your robot after installation.** The author's separately licensable original design material is for personal noncommercial replication; commercial reproduction, manufacture, sale or integration requires prior written permission. [Board design license](hardware/LICENSE)
+**The assembled IMU comes with FT6 firmware pre-flashed; no additional flashing is needed on arrival. With this repository's battery holder and the project's assembled IMU installed in the specified orientation, you can use the author's IMU calibration parameters directly, reducing walking problems caused by incorrect IMU calibration.** Servo zero offsets still need calibration for each robot. The author's separately licensable original design material is for personal noncommercial replication; commercial reproduction, manufacture, sale or integration requires prior written permission. [Board design license](hardware/LICENSE)
 
 [Hardware projects and build guides](hardware/README.en.md) · [IMU build video](https://www.bilibili.com/video/BV1qapz6PERs/) · [Buy assembled HAT / IMU / HUB boards](https://item.taobao.com/item.htm?id=1095121548583)
 

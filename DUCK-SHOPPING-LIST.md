@@ -123,6 +123,8 @@ NP-F550按原订单「2200mAh，2电＋标准双充」套装计费。M2×5螺丝
 
 </details>
 
+**[整机零件购买（淘宝）](https://e.tb.cn/h.jhmwoGCAcQbwZRt?tk=i4416azfdRS)**
+
 ## PCB
 
 自制板器件与位号明细：

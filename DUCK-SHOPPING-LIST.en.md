@@ -123,6 +123,8 @@ NP-F550 is the original 2200mAh kit with two batteries and a standard dual charg
 
 </details>
 
+**[Buy complete robot parts (Taobao)](https://e.tb.cn/h.jhmwoGCAcQbwZRt?tk=i4416azfdRS)**
+
 ## PCB
 
 Component lists and reference designators:

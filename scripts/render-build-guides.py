@@ -17,6 +17,7 @@ RAW=REPO+'/raw/refs/heads/main/'
 IMAGE=REPO+'/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz'
 CONSOLE=RAW+'release-assets/Microduck-Console-R17-V167.zip'
 PRINTS=RAW+'hardware/3d-print-frankenduck/Microduck-Print-FrankenDuck-20261015.rar'
+PARTS_PURCHASE='https://e.tb.cn/h.jhmwoGCAcQbwZRt?tk=i4416azfdRS'
 ROUTES=[('budget.html','预算采购','我要花多少钱、买什么？','先选方案看总额，再按采购清单备齐零件。'),('assembly.html','装配接线','我要怎么装？','跟着部位和步骤，装好结构与接线。'),('start.html','走起来','我要让鸭子走起来','使用现成模型，完成刷机、标定与行走。'),('advanced.html','进阶玩法','进阶玩法 · 可选','正常复刻无需训练；想自训新动作或学习训练流程时再进入。')]
 money=lambda cents:'以商品页为准' if cents is None else '¥'+f'{cents/100:,.2f}'
 BODY=sum(x['subtotalCents'] for x in D['items'])
@@ -131,7 +132,7 @@ for item in D['unpriced']:
  shop+=f'<article class="unpriced-item"><label><input type="checkbox" data-prepared="{item["id"]}"><span>{E(item["name"])}</span></label><p>{E(item["spec"])}</p>'+link(item['url'],E(item.get('purchaseLabel','看规格或联系入口 ↗')))+'</article>'
 shop+='</div></section>'
 shop+=f'<section class="panel" id="diy"><h2>手工焊 HAT／IMU：材料与工具</h2><p>上面的默认清单购买成品板。选择自焊时，去掉成品 HAT／IMU 的 {money(BOARDS)}，改购 PCB 与元件。首批材料参考 {money(D["diyMaterialsMinCents"])}–{money(D["diyMaterialsMaxCents"])}；从零配工具与耗材另预留 {money(D["diyToolsMinCents"])}–{money(D["diyToolsMaxCents"])}，已有设备可复用。</p><p class="small">材料价按首批整包采购计算；还需准备贴装、焊接与 IMU 烧录工具。同一工具或耗材不重复计入预算。</p>'+actions(link(FILE+'hardware/README.md#采购清单','PCB 详细 BOM 与采购表 ↗','btn primary'),link(FILE+'docs/BUILD-TOOLS.md','焊接工具与耗材 ↗','btn'),link(FILE+'hardware/IMU-FIRMWARE.md','自焊 IMU 烧录指南 ↗','btn'),link('budget.html#self-solder','返回自焊总价 →','btn'))+'</section>'
-shop+='<section class="panel"><h2>准备好了再开始装</h2><p>确认打印件、舵机、主控、HAT／IMU、电池接入、轴承螺丝和匹配线材都已到手。按电池仓方案补齐 HUB。</p><p class="small">未勾选的已列价项目参考合计：<strong id="remaining-total">'+money(BASE)+'</strong>；待报价项目另计。</p>'+actions('<button class="btn" id="print-list" type="button">打印这份清单</button>')+'</section>'+next_page(0)
+shop+='<section class="panel"><h2>准备好了再开始装</h2><p>确认打印件、舵机、主控、HAT／IMU、电池接入、轴承螺丝和匹配线材都已到手。按电池仓方案补齐 HUB。</p><p class="small">未勾选的已列价项目参考合计：<strong id="remaining-total">'+money(BASE)+'</strong>；待报价项目另计。</p>'+actions(link(PARTS_PURCHASE,'整机零件购买（淘宝） ↗','btn primary'),'<button class="btn" id="print-list" type="button">打印这份清单</button>')+'</section>'+next_page(0)
 (OUT/'shopping.html').write_text(shell('shopping.html','我要买什么','Microduck 成品板路线的完整参考采购清单：型号、数量、价格、购买链接和待补项目。',shop,0))
 
 assembly=head('02 / ASSEMBLY','我要怎么装？','先看整机结构，再按部位组装，最后接线和核对。','实物图＋按部位查看 3D')

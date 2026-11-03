@@ -23,7 +23,7 @@ V167 includes compiled **control.43** firmware. Update: **Fixed body jitter.** C
 
 ## Download and use
 
-**Orange Pi Zero 3W (Allwinner A733):** see the community [board support and flashing guide](https://github.com/lxm/microduck-maker/tree/6249d8aeca3841e5329f326b4c894853f478f4df/firmware/orangepi-zero3w) and download the full `.img.xz` from [MicroDuck Maker Actions](https://github.com/lxm/microduck-maker/actions/workflows/orangepi-image.yml). This experimental port targets the 1 GB V1.5 board. The R1 image below is for the Radxa ZERO 3W (RK3566).
+**Orange Pi Zero 3W (Allwinner A733):** [Download the experimental image (.img.xz)](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/Microduck_OrangePiZero3W_Experimental.img.xz) · [SHA-256 checksums](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/SHA256SUMS). This community port targets the 1 GB V1.5 board; see the [board support and flashing guide](https://github.com/lxm/microduck-maker/tree/c06eb6fac302c10678fc922dd264335d92b00668/firmware/orangepi-zero3w). The R1 image below is for the Radxa ZERO 3W (RK3566).
 
 1. [Download Image R1](https://github.com/kissqy/Microduck-kissqy/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz) and flash it to a microSD card with [Armbian Imager](https://imager.armbian.com/).
 2. On first boot, join `Microduck-kissqy` (password `12345678`), then configure home Wi-Fi and a new system login password. If the page does not open automatically, visit `http://10.42.0.1:8088`.

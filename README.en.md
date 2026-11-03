@@ -86,6 +86,8 @@ Follow the [first-walk guide (中文)](https://kissqy.github.io/Microduck-kissqy
 
 [📥 System Image R1](https://kissqy.github.io/Microduck-kissqy/build/start.html#flash) · [📥 Robot Console R17 V167](https://kissqy.github.io/Microduck-kissqy/build/start.html#connect) · [Firmware and DIY IMU flashing](release-assets/README.en.md)
 
+**Orange Pi Zero 3W (A733, 1 GB V1.5):** [Download the community image (.img.xz)](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/Microduck_OrangePiZero3W_Experimental.img.xz) · [SHA-256 checksums](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/SHA256SUMS).
+
 ## 🎮 Chinese Robot Console
 
 Connect and calibrate the robot, inspect live 3D pose, joint / IMU feedback and camera, operate with a physical gamepad or web controls, and maintain its firmware.

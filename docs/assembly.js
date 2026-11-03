@@ -2,7 +2,7 @@ import * as T from './vendor/three.module.min.js?demo=20261013';
 import {DuckView} from './duck.js?demo=20261013';
 import {REFERENCE_IDS,REFERENCE_LABELS} from './calibration-reference.js?demo=20261013';
 import {officialStandingDegrees,referenceAngle} from './joint-reference.js?demo=20261013';
-import {attachElectronics} from './assembly-electronics.js?v=20261103-hub-bottom';
+import {attachElectronics} from './assembly-electronics.js?v=20261103-hub-bottom-view';
 import {COMPONENTS,CONNECTIONS,WIRING_NOTE} from './assembly-components.js?v=20261103-hub-bottom';
 
 const groups={

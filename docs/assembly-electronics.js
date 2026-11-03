@@ -424,7 +424,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
       const box=id==='head'?new T.Box3().union(new T.Box3().setFromObject(components.get('hat').group)).union(new T.Box3().setFromObject(components.get('zero').group)):id==='battery'?new T.Box3().setFromObject(batteryMount):new T.Box3().setFromObject(c.group);
       const target=box.getCenter(new T.Vector3()),radius=box.getBoundingSphere(new T.Sphere()).radius;const vertical=T.MathUtils.degToRad(view.camera.fov),horizontal=2*Math.atan(Math.tan(vertical/2)*view.camera.aspect);const distance=Math.max((id==='head'||id==='battery')?.18:.12,radius/Math.sin(Math.min(vertical,horizontal)/2)*1.45);
       // Face boards are viewed from the opened interior, not through the face.
-      const direction=id==='head'||c?.spec.location==='face'?vector(-1,-.45,.9):id==='hub'?vector(1,0,-.4):id==='imu'?vector(1,-.30,.2):vector(-1,-.7,.4);
+      const direction=id==='head'||c?.spec.location==='face'?vector(-1,-.45,.9):id==='hub'?vector(1,0,-1):id==='imu'?vector(1,-.30,.2):vector(-1,-.7,.4);
       view.initialView=null;view.overviewName=null;view.focus={start:performance.now(),from:view.camera.position.clone(),fromTarget:view.controls.target.clone(),to:target.clone().addScaledVector(direction.normalize(),distance),target};return true;
     },
     update:frame,

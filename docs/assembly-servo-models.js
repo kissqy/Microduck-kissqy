@@ -51,8 +51,15 @@ export function attachServoModel(servo,id){
   if(!assets)throw Error('请先加载 HD1910 舵机模型');
   if(servo.userData.hd1910Assembly)throw Error('HD1910 舵机已安装');
   const originalGeometry=servo.geometry;
-  servo.geometry=assets.geometries[0]; // Preserve the Mesh, selection and pose.
+  // Author's physical build: both ankle sockets face the space between the
+  // legs. Turn only the displayed case and its details about local Z, keeping
+  // the tail upright and the two shaft planes on the same frozen hinge line.
+  // Leave the Mesh transform, parent links and joint directions untouched.
+  const inwardAnkle=id===14||id===24;
+  const caseGeometry=inwardAnkle?assets.geometries[0].clone().rotateZ(Math.PI):assets.geometries[0];
+  servo.geometry=caseGeometry;
   const group=new T.Group();group.name=`servo-${id}-identification-and-ports`;servo.add(group);
+  if(inwardAnkle)group.rotation.z=Math.PI;
   const shellMaterial=new T.MeshStandardMaterial({color:0xe7e4d9,roughness:.66,metalness:.02,side:T.DoubleSide});
   const metalMaterial=new T.MeshStandardMaterial({color:0xc9b26b,roughness:.32,metalness:.65});
   const ports={};
@@ -96,6 +103,7 @@ export function attachServoModel(servo,id){
     },
     dispose(){
       group.removeFromParent();servo.geometry=originalGeometry;delete servo.userData.hd1910Assembly;
+      if(inwardAnkle)caseGeometry.dispose();
       shellMaterial.dispose();metalMaterial.dispose();decalMaterial.dispose();texture?.dispose();
       group.traverse(object=>{if(object.isMesh&&object.geometry!==assets.geometries[1]&&object.geometry!==assets.geometries[2])object.geometry.dispose();});
     },

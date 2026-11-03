@@ -1,9 +1,9 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
 import {createBoardModel} from './assembly-board-models.js?v=20261030-hub-arcs';
 import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261027-printed-clearance';
-import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261030-hub-arcs';
+import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261103-ankle-inward';
 import {createHubModel} from './assembly-hub-model.js?v=20261030-hub-arcs';
-import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261030-hub-arcs';
+import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261103-ankle-inward';
 import {parallelCablePaths} from './assembly-cable-bundles.js?v=20261030-hub-arcs';
 import {softenCableCorners} from './assembly-wire-curves.js?v=20261030-hub-arcs';
 import {createWireRouter} from './assembly-wire-routing.js?v=20261030-hub-arcs';

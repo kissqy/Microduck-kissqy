@@ -22,8 +22,26 @@ view.camera=new T.PerspectiveCamera(37,4/3,.005,20);view.camera.up.set(0,0,1);
 view.controls={target:new T.Vector3(0,0,.15),update(){view.camera.lookAt(this.target);view.camera.updateMatrixWorld(true);}};
 view.pose(view.actual,Array(15).fill(0),[0,0,-1],0);view.view('front');
 const rest=view.actual.parts.map(p=>p.position.clone());
+const partRotations=view.actual.parts.map(p=>p.quaternion.clone());
 const api=await attachElectronics(view,()=>{},{useWireCache:!process.argv.includes('--fresh-cache')});assert.equal(api.batteryHolder.error,null);assert(api.batteryHolder.mesh);
 api.setWiringVisible(true);assert.equal(view.model.parts.length,64);assert.equal(api.explosion.count,34);
+// Physical-build regression: ankle sockets face the other leg in the zero
+// pose; the tail stays above the shaft, without changing any part transform.
+for(const [id,inwardY]of [[14,1],[24,-1]]){
+ const detail=api.servos.get(id),servo=detail.group.parent;
+ for(const port of Object.values(detail.ports)){
+  const mouth=port.mouth.getWorldPosition(new T.Vector3());
+  const exit=port.outward.getWorldPosition(new T.Vector3()).sub(mouth).normalize();
+  assert(exit.y*inwardY>.999999,`ankle ${id}: socket faces away from the other leg`);
+  assert(Math.abs(exit.x)<1e-6&&Math.abs(exit.z)<1e-6,`ankle ${id}: socket tilted off the shaft axis`);
+ }
+ const tail=detail.group.localToWorld(new T.Vector3(0,0,-.02)).sub(servo.getWorldPosition(new T.Vector3()));
+ assert(tail.z>.0199,`ankle ${id}: case tail no longer upright`);
+}
+view.actual.parts.forEach((part,index)=>{
+ assert(part.position.distanceTo(rest[index])<1e-12,`part ${index}: assembly changed its frozen position`);
+ assert(part.quaternion.angleTo(partRotations[index])<1e-7,`part ${index}: assembly changed its frozen rotation`);
+});
 const hub=api.components.get('hub');view.actual.root.updateMatrixWorld(true);
 const hubForward=new T.Vector3(0,1,0).transformDirection(hub.group.matrixWorld);
 assert(hubForward.x>.999,'HUB front/back mounting direction reversed');

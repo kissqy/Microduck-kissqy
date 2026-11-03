@@ -1,0 +1,3 @@
+[submodule "microduck-hd1910/boards/microduck-maker"]
+	path = microduck-hd1910/boards/microduck-maker
+	url = https://github.com/lxm/microduck-maker.git

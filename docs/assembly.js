@@ -2,8 +2,8 @@ import * as T from './vendor/three.module.min.js?demo=20261013';
 import {DuckView} from './duck.js?demo=20261013';
 import {REFERENCE_IDS,REFERENCE_LABELS} from './calibration-reference.js?demo=20261013';
 import {officialStandingDegrees,referenceAngle} from './joint-reference.js?demo=20261013';
-import {attachElectronics} from './assembly-electronics.js?v=20261103-knee-ids';
-import {COMPONENTS,CONNECTIONS,WIRING_NOTE} from './assembly-components.js?v=20261101-hub69';
+import {attachElectronics} from './assembly-electronics.js?v=20261103-hub-battery';
+import {COMPONENTS,CONNECTIONS,WIRING_NOTE} from './assembly-components.js?v=20261103-hub-battery';
 
 const groups={
   all:{title:'整只小鸭',description:'先看整体连接关系，再选择腿部或头颈放大查看。',indexes:REFERENCE_IDS.map((_,i)=>i)},
@@ -154,6 +154,7 @@ $('open-cover').addEventListener('change',()=>{electronics?.setCoverOpen($('open
 $('show-components').addEventListener('change',()=>{Object.keys(COMPONENTS).forEach(id=>electronics?.setVisible(id,$('show-components').checked));if(!$('show-components').checked)$('component-quick').hidden=true;});
 $('show-wires').addEventListener('change',()=>electronics?.setWiringVisible($('show-wires').checked));
 $('show-battery').addEventListener('change',()=>electronics?.setBatteryVisible($('show-battery').checked));
+$('show-battery-pack').addEventListener('change',()=>electronics?.setBatteryPackVisible($('show-battery-pack').checked));
 $('focus-battery').addEventListener('click',()=>{if(!electronics)return;$('show-battery').checked=true;electronics.setBatteryVisible(true);electronics.focus('battery');});
 $('show-servo-ids').addEventListener('change',()=>electronics?.setServoIdsVisible($('show-servo-ids').checked));
 $('toggle-explosion').addEventListener('click',()=>{
@@ -185,11 +186,11 @@ $('connection-list').replaceChildren(...CONNECTIONS.map(item=>{
 }));
 drawComponent();
 drawInspector();
-const modelControls='[data-group],[data-view],[data-pose],#reset-view,#fade-others,#open-cover,#show-components,#show-wires,#show-battery,#focus-battery,#show-servo-ids,#toggle-explosion';
+const modelControls='[data-group],[data-view],[data-pose],#reset-view,#fade-others,#open-cover,#show-components,#show-wires,#show-battery,#show-battery-pack,#focus-battery,#show-servo-ids,#toggle-explosion';
 document.querySelectorAll(modelControls).forEach(button=>button.disabled=true);
 try{
   const loaded=await new AssemblyView().init($('assembly-canvas'),selectJoint);view=loaded;
-  electronics=await attachElectronics(view,selectComponent);electronics.setWiringVisible($('show-wires').checked);electronics.setServoIdsVisible($('show-servo-ids').checked);
+  electronics=await attachElectronics(view,selectComponent);electronics.setWiringVisible($('show-wires').checked);electronics.setServoIdsVisible($('show-servo-ids').checked);electronics.setBatteryPackVisible($('show-battery-pack').checked);
   $('loading').hidden=true;
   document.querySelectorAll(modelControls).forEach(button=>button.disabled=false);
   view.update({});drawInspector();

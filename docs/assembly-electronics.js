@@ -2,8 +2,9 @@ import * as T from './vendor/three.module.min.js?demo=20261013';
 import {createBoardModel} from './assembly-board-models.js?v=20261030-hub-arcs';
 import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261027-printed-clearance';
 import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261103-ankle-inward';
-import {createHubModel} from './assembly-hub-model.js?v=20261030-hub-arcs';
-import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261103-ankle-inward';
+import {createHubModel} from './assembly-hub-model.js?v=20261103-hub-battery';
+import {createBatteryPack,createBatteryPickup} from './assembly-battery-model.js?v=20261103-hub-battery';
+import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261103-hub-battery';
 import {parallelCablePaths} from './assembly-cable-bundles.js?v=20261030-hub-arcs';
 import {softenCableCorners} from './assembly-wire-curves.js?v=20261030-hub-arcs';
 import {createWireRouter} from './assembly-wire-routing.js?v=20261030-hub-arcs';
@@ -27,7 +28,7 @@ export const ELECTRONICS_WIRES=Object.freeze([
   wire('hub-10','hub','servo10','HUB → 右腿 10','#7eadd7','right'),
   ...[[10,11],[11,12],[12,13],[13,14]].map(([a,b])=>wire(`servo-${a}-${b}`,`servo${a}`,`servo${b}`,`${a} → ${b}`,'#7eadd7','right')),
   wire('hub-imu','hub','imu','HUB → 电池仓背面 IMU','#78beb7','battery'),
-  wire('battery-hub','battery','hub','电池电源 → HUB CN1','#db8e83','battery'),
+  wire('battery-hub','battery','hub','电池仓取电螺丝 → HUB CN1','#db8e83','battery'),
 ]);
 
 const COVER_MESH_INDEX=21,FACE_MESH_INDEX=19,STL_URL=new URL('./assets/assembly-battery-holder.stl',import.meta.url);
@@ -53,26 +54,6 @@ export function parseBatterySTL(buffer){
 
 const WIRE_SIGNALS=['gnd','power','data'];
 const SIGNAL_COLORS={gnd:0x465054,power:0xd8756c,data:0xe3e4da};
-function makeTerminal(parent,name,{count=3,pitch=.002,position=vector(0,0,0),quaternion=new T.Quaternion(),kind=count===2?'power2':'bus3'}={}){
-  const root=new T.Group();root.name=name;root.position.copy(position);root.quaternion.copy(quaternion);parent.add(root);
-  const shellMaterial=new T.MeshStandardMaterial({color:0xe7e4d9,roughness:.66,metalness:.02});
-  const metalMaterial=new T.MeshStandardMaterial({color:0xc9b26b,roughness:.32,metalness:.65});
-  const width=(count-1)*pitch+.0032,depth=.0044,height=.0046;
-  const add=(w,h,d,x,y,z,material=shellMaterial)=>{const m=new T.Mesh(new T.BoxGeometry(w,h,d),material);m.position.set(x,y,z);root.add(m);return m;};
-  add(width,depth,.0007,0,0,-height/2);
-  add(width,.0007,height,0,depth/2-.00035,0);
-  for(const sign of[-1,1])add(.00065,depth,height,sign*(width/2-.000325),0,0);
-  add(width*.45,.00065,.001,0,-depth/2+.000325,-.0008);
-  const pins={},ordered=[];const signalNames=count===2?['gnd','power']:WIRE_SIGNALS;
-  signalNames.forEach((signal,i)=>{
-    const x=(i-(count-1)/2)*pitch;
-    add(.00055,.0008,.0027,x,.00045,-.00035,metalMaterial);
-    const pin=new T.Object3D();pin.name=name+'-'+signal;pin.position.set(x,.00045,.001);pin.userData.signal=signal;root.add(pin);pins[signal]=pin;ordered.push(pin);
-  });
-  const mouth=new T.Object3D();mouth.position.set(0,.00045,height/2);root.add(mouth);
-  const outward=new T.Object3D();outward.position.set(0,.00045,height/2+.0045);root.add(outward);
-  return{root,pins,ordered,mouth,outward,kind,pinCount:count};
-}
 function boundsInFrame(mesh,frame){
   const box=mesh.geometry.boundingBox||mesh.geometry.computeBoundingBox()||mesh.geometry.boundingBox;
   mesh.updateWorldMatrix(true,false);frame.updateWorldMatrix(true,false);const result=new T.Box3();
@@ -149,7 +130,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   const components=new Map(),boardTargets=[];
   const originalUpdate=view.update,originalAdvanceFocus=view.advanceFocus,originalPose=view.pose;
   let wireFocus=null;
-  let disposed=false,selected=null,wiringVisible=false,batteryVisible=true,coverOpen=false,coverAmount=0,coverFrom=0,coverTo=0,coverStarted=0;
+  let disposed=false,selected=null,wiringVisible=false,batteryVisible=true,batteryPackVisible=true,coverOpen=false,coverAmount=0,coverFrom=0,coverTo=0,coverStarted=0;
   let coverBaseOpacity=coverOpacity,coverBaseTransparent=cover.material.transparent,coverBaseDepthWrite=cover.material.depthWrite;
   const reducedMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const coverUp=vector(0,0,1).applyQuaternion(headParent.getWorldQuaternion(new T.Quaternion()).invert()).normalize();
@@ -191,8 +172,8 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     label.addEventListener('click',()=>{api.select(id);onSelect(id);});container.append(label);component.label=label;components.set(id,component);
   }
   root.updateMatrixWorld(true);
-  const batteryPort=makeTerminal(batteryMount,'BATTERY-POWER',{count:2,position:vector(0,.034,.011),quaternion:new T.Quaternion().setFromAxisAngle(vector(1,0,0),Math.PI/2)});
-  batteryPort.root.visible=false;
+  const batteryPack=createBatteryPack();batteryMount.add(batteryPack.group);
+  const batteryPort=createBatteryPickup();batteryMount.add(batteryPort.root);
   const wireRoot=new T.Group();wireRoot.name='assembly-wiring-route-reference';root.add(wireRoot);wireRoot.visible=false;
   const printedMeshes=view.model.parts.flatMap((part,index)=>PRINTED_MESH_NAMES[part.mesh]?[view.actual.parts[index]]:[]);
   if(batteryMesh)printedMeshes.push(batteryMesh);
@@ -214,11 +195,14 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   }
   components.forEach(component=>contactProxies.set(component.group,solidProxies(component.group)));
   servoDetails.forEach(detail=>contactProxies.set(detail.group,solidProxies(detail.group)));
+  contactProxies.set(batteryPort.root,solidProxies(batteryPort.root));
+  solidProxies(batteryPack.group);
   const collisionMeshes=[...printedMeshes,...electronicsSolids];
   const servoMeshes=[...servoDetails.values()].map(detail=>detail.group.parent);
   const wireRouter=createWireRouter(root,servoMeshes,collisionMeshes,{clearance:.00045});
   const bundleRouter=createWireRouter(root,servoMeshes,collisionMeshes,{clearance:.0010});
   const portContacts=port=>{
+    if(port===batteryPort)return[contactProxies.get(batteryPort.root)?.[1]].filter(Boolean);
     for(const component of components.values())if(Object.values(component.ports).includes(port))return[contactProxies.get(component.group)?.[1]].filter(Boolean);
     for(const detail of servoDetails.values())if(Object.values(detail.ports).includes(port))return[contactProxies.get(detail.group)?.[1]].filter(Boolean);
     return[];
@@ -246,16 +230,16 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     }
     ids.forEach((id,i)=>{const ports=servoDetails.get(id).ports,bit=(choice>>i)&1;incoming.set(id,ports[bit?'out':'in']);outgoing.set(id,ports[bit?'in':'out']);});
   };
-  chooseChain([34,33,32,31,30],components.get('hat').ports.J13,components.get('hub').ports.J1);
-  chooseChain([20,21,22,23,24],components.get('hub').ports.J3,null);
-  chooseChain([10,11,12,13,14],components.get('hub').ports.J4,null);
+  chooseChain([34,33,32,31,30],components.get('hat').ports.J13,components.get('hub').ports.CN2);
+  chooseChain([20,21,22,23,24],components.get('hub').ports.CN5,null);
+  chooseChain([10,11,12,13,14],components.get('hub').ports.CN4,null);
   const portPairs=spec=>{
     if(spec.id==='hat-zero')return[components.get('hat').ports.J4,components.get('zero').ports.gpio40];
     if(spec.id==='hat-34')return[components.get('hat').ports.J13,incoming.get(34)];
-    if(spec.id==='30-hub')return[outgoing.get(30),components.get('hub').ports.J1];
-    if(spec.id==='hub-20')return[components.get('hub').ports.J3,incoming.get(20)];
-    if(spec.id==='hub-10')return[components.get('hub').ports.J4,incoming.get(10)];
-    if(spec.id==='hub-imu')return[components.get('hub').ports.J2,components.get('imu').ports.J1];
+    if(spec.id==='30-hub')return[outgoing.get(30),components.get('hub').ports.CN2];
+    if(spec.id==='hub-20')return[components.get('hub').ports.CN5,incoming.get(20)];
+    if(spec.id==='hub-10')return[components.get('hub').ports.CN4,incoming.get(10)];
+    if(spec.id==='hub-imu')return[components.get('hub').ports.CN3,components.get('imu').ports.J1];
     if(spec.id==='battery-hub')return[batteryPort,components.get('hub').ports.CN1];
     return[outgoing.get(Number(spec.from.slice(5))),incoming.get(Number(spec.to.slice(5)))];
   };
@@ -274,7 +258,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     });
     return{...spec,group,mesh:group,fromPort,toPort,conductors,header,fromContacts:portContacts(fromPort),toContacts:portContacts(toPort),last:null};
   });
-  const explosion=attachPrintExplosion(view,{extraMeshes:batteryMesh?[batteryMesh]:[],followers:new Map(batteryMesh?[[batteryMesh,[components.get('imu').group,batteryPort.root]]]:[])});
+  const explosion=attachPrintExplosion(view,{extraMeshes:batteryMesh?[batteryMesh]:[],followers:new Map(batteryMesh?[[batteryMesh,[components.get('imu').group,batteryPort.root,batteryPack.group]]]:[])});
   const notice=document.createElement('span');notice.className='electronics-scene-note';notice.textContent=batteryError?'电池仓暂未加载；板卡位置按装配区显示':'端子接入 · 线束走向为装配示意';container.append(notice);
   const batteryLabel=document.createElement('button');batteryLabel.type='button';batteryLabel.className='electronics-label';batteryLabel.textContent='电池仓';batteryLabel.setAttribute('aria-label','查看电池仓');Object.assign(batteryLabel.style,{position:'absolute',zIndex:'3',transform:'translate(-50%,-50%)',font:'650 10px system-ui,sans-serif',whiteSpace:'nowrap',cursor:'pointer'});batteryLabel.addEventListener('click',()=>api.focus('battery'));container.append(batteryLabel);
 
@@ -300,7 +284,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     wireRouter.update();bundleRouter.update();
     if(!wireCache.has(wireRouter.signature))wireCache.set(wireRouter.signature,{obstacles:wireRouter.signature,routes:{}});
     const cacheState=wireCache.get(wireRouter.signature);
-    batteryPort.root.visible=components.get('hub').visible&&batteryVisible;
+    batteryPort.root.visible=batteryVisible;
     for(const item of wires){
       item.group.visible=endpointVisible(item.from)&&endpointVisible(item.to);
       const positions=item.conductors.flatMap(c=>[...c.start.getWorldPosition(new T.Vector3()).toArray(),...c.end.getWorldPosition(new T.Vector3()).toArray()]);
@@ -405,12 +389,13 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   };
   canvas.addEventListener('pointerdown',down,{capture:true});canvas.addEventListener('pointercancel',cancel,{capture:true});canvas.addEventListener('pointerup',up,{capture:true});
   const api={
-    exportWireCache(){return{revision:WIRE_CACHE_REVISION,states:[...wireCache.values()]};},components,wireRouter,bundleRouter,wires:ELECTRONICS_WIRES,routes:wires,collisionMeshes: [...servoMeshes,...collisionMeshes],servos:servoDetails,explosion,batteryHolder:{group:batteryMount,mesh:batteryMesh,error:batteryError},
+    exportWireCache(){return{revision:WIRE_CACHE_REVISION,states:[...wireCache.values()]};},components,wireRouter,bundleRouter,wires:ELECTRONICS_WIRES,routes:wires,collisionMeshes: [...servoMeshes,...collisionMeshes],servos:servoDetails,explosion,batteryHolder:{group:batteryMount,mesh:batteryMesh,error:batteryError,pickup:batteryPort,pack:batteryPack},
     setCoverOpen(open){coverOpen=!!open;coverFrom=coverAmount;coverTo=coverOpen?1:0;coverStarted=performance.now();frame();return coverOpen;},
     setVisible(id,visible){const c=components.get(id);if(!c)return false;c.visible=!!visible;c.group.visible=c.visible;frame();return c.visible;},
-    setBatteryVisible(visible){batteryVisible=!!visible;if(batteryMesh)batteryMesh.visible=batteryVisible;frame();return batteryVisible;},
+    setBatteryVisible(visible){batteryVisible=!!visible;if(batteryMesh)batteryMesh.visible=batteryVisible;batteryPack.group.visible=batteryVisible&&batteryPackVisible;frame();return batteryVisible;},
+    setBatteryPackVisible(visible){batteryPackVisible=!!visible;batteryPack.group.visible=batteryVisible&&batteryPackVisible;return batteryPackVisible;},
     setWireFocus(value){wireFocus=value&&value!=='all'?value:null;applyWireFocus();},
-    setWiringVisible(visible){wiringVisible=!!visible;wireRoot.visible=wiringVisible;batteryPort.root.visible=wiringVisible&&components.get('hub').visible&&batteryVisible;frame();return wiringVisible;},
+    setWiringVisible(visible){wiringVisible=!!visible;wireRoot.visible=wiringVisible;batteryPort.root.visible=batteryVisible;frame();return wiringVisible;},
     setServoIdsVisible(visible){servoIdsVisible=!!visible;servoDetails.forEach(s=>s.decals.forEach(d=>{d.visible=servoIdsVisible;}));updateLabels();return servoIdsVisible;},
     setExploded(expanded){
       explosion.setExpanded(expanded);frame();

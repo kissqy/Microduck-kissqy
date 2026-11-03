@@ -37,6 +37,7 @@
         <div class="electronics-tools" aria-label="内部结构显示">
           <label><input id="open-cover" type="checkbox"> 打开头盖</label>
           <label><input id="show-battery" type="checkbox" checked> 显示电池仓</label>
+        <label><input type="checkbox" id="show-battery-pack" checked disabled> 显示电池</label>
           <label><input id="show-components" type="checkbox" checked> 显示板卡</label>
           <label><input id="show-wires" type="checkbox" checked> 显示接线</label>
           <label><input id="show-servo-ids" type="checkbox" checked> 舵机编号</label>
@@ -114,10 +115,10 @@
       <a class="note-card" href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/ASSEMBLY-NOTES.md"><span class="note-number">02</span><div><h2>装机注意事项</h2><p>总电源缓冲电容与 5 GHz Wi-Fi 配置。</p></div><span aria-hidden="true">↗</span></a>
       <a class="note-card" href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/README.md"><span class="note-number">03</span><div><h2>HAT 与 IMU 硬件</h2><p>核对电路、接口、供电与 IMU 固件。</p></div><span aria-hidden="true">↗</span></a>
     </section>
-    <footer><p>沿用中控的官方结构模型；新增板卡与线束是装配示意，飞特改件、走线和螺丝规格以打印件与硬件说明为准。34 号嘴部为固定外观。断电后接线，按接口编号与信号名核对，不按线色猜脚序。</p><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/duck-visual.json">模型来源与版本 ↗</a></footer>
+    <footer><p>沿用中控的官方结构模型；新增板卡、电池与线束是装配示意，飞特改件、走线和螺丝规格以打印件与硬件说明为准。34 号嘴部为固定外观。断电后接线，按接口编号与信号名核对，不按线色猜脚序。</p><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/duck-visual.json">模型来源与版本 ↗</a></footer>
   </main>
   <dialog id="viewer-dialog" class="viewer-dialog" aria-labelledby="viewer-title"></dialog>
   <script type="module" src="assembly-layout.js?v=20261030-screen"></script>
-  <script type="module" src="assembly.js?v=20261103-knee-ids"></script>
+  <script type="module" src="assembly.js?v=20261103-hub-battery"></script>
 </body>
 </html>

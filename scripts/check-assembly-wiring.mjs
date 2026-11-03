@@ -46,7 +46,7 @@ const hub=api.components.get('hub');view.actual.root.updateMatrixWorld(true);
 const hubForward=new T.Vector3(0,1,0).transformDirection(hub.group.matrixWorld);
 assert(hubForward.x>.999,'HUB front/back mounting direction reversed');
 const cap=hub.group.getObjectByName('HUB-C1-can');
-assert(hub.group.worldToLocal(cap.getWorldPosition(new T.Vector3())).z<0,'HUB capacitor must be mounted on reverse side');
+assert(hub.group.worldToLocal(cap.getWorldPosition(new T.Vector3())).z>0,'HUB capacitor must share the four bus connectors side');
 
 const {meshCollider}=await import('../docs/assembly-mesh-clearance.js');
 // Surface clearance must detect thin walls and preserve real openings.
@@ -112,6 +112,14 @@ for(const pose of poses){
  const imu=api.components.get('imu'),holder=api.batteryHolder.mesh;
  const boardRelative=holder.worldToLocal(imu.group.getWorldPosition(new T.Vector3()));
  const pinRelative=holder.worldToLocal(imu.ports.J1.pins.power.getWorldPosition(new T.Vector3()));
+ const packRelative=holder.worldToLocal(api.batteryHolder.pack.group.getWorldPosition(new T.Vector3()));
+ const screwRelative=holder.worldToLocal(api.batteryHolder.pickup.pins.power.getWorldPosition(new T.Vector3()));
+ if(!results.length)globalThis.batteryMountReference={pack:packRelative.clone(),screw:screwRelative.clone()};
+ assert(packRelative.distanceTo(globalThis.batteryMountReference.pack)<1e-8,'battery left holder during explosion');
+ assert(screwRelative.distanceTo(globalThis.batteryMountReference.screw)<1e-8,'screw or power wire left holder during explosion');
+ const batteryRoute=api.routes.find(r=>r.id==='battery-hub');
+ for(const core of batteryRoute.conductors)assert.equal(core.start,api.batteryHolder.pickup.pins[core.signal]);
+
  if(!results.length){globalThis.mountReference={board:boardRelative.clone(),pin:pinRelative.clone()};}
  assert(boardRelative.distanceTo(globalThis.mountReference.board)<1e-8,'IMU left battery mount');
  assert(pinRelative.distanceTo(globalThis.mountReference.pin)<1e-8,'IMU socket left battery mount');

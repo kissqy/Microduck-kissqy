@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
-import {HUB_LAYOUT} from './assembly-hub-layout.js?v=20261103-hub-battery';
+import {HUB_LAYOUT} from './assembly-hub-layout.js?v=20261103-hub-bottom';
 const MM=.001,HALF=HUB_LAYOUT.thickness/2;
 const mat=(color,metalness=.04)=>new T.MeshStandardMaterial({color,roughness:metalness>.5?.33:.65,metalness});
 const signal=net=>net==='GND'?'gnd':net==='VIN'?'power':'data';
@@ -30,7 +30,7 @@ export function createHubModel(){
  for(const[x,y,r]of holes)for(const side of[-1,1]){const ring=mesh(group,new T.RingGeometry(r*MM,(r+.32)*MM,20),gold,'HUB-plated-ring',x,y,side*(HALF+.015));if(side<0)ring.rotation.x=Math.PI;ring.userData.hubSolid=false;}
  for(const[x1,y1,x2,y2,w,layer]of HUB_LAYOUT.traces){const a=new T.Vector3(x1*MM,y1*MM,(layer===1?1:-1)*(HALF+.02)*MM),b=new T.Vector3(x2*MM,y2*MM,a.z);const m=mesh(group,new T.BoxGeometry(a.distanceTo(b),w*MM,.000012),trace,'HUB-copper');m.position.copy(a.clone().add(b).multiplyScalar(.5));m.rotation.z=Math.atan2(y2-y1,x2-x1);m.userData.hubSolid=false;}
  for(const c of HUB_LAYOUT.components){
-  // The updated author views put C1 and CN2-CN5 together; CN1 is opposite.
+  // Installed underside: C1 and straight CN2-CN5; CN1 stays on top.
   const bottom=HUB_LAYOUT.assemblyOverrides?.[c.ref]?.bottom??c.bottom;
   const part=new T.Group();part.name='HUB-'+c.ref;part.position.set(c.position[0]*MM,c.position[1]*MM,0);part.rotation.z=c.angle*Math.PI/180;if(bottom)part.rotateX(Math.PI);group.add(part);
   if(c.ref==='C1'){
@@ -40,26 +40,21 @@ export function createHubModel(){
    const stripe=mesh(part,new T.CylinderGeometry(.00402,.00402,.0078,32,1,true,-Math.PI*.2,Math.PI*.32),mat(0xdce1df,.4),'HUB-C1-polarity',0,0,HALF+4.1);stripe.rotation.x=Math.PI/2;
    c.pads.forEach(p=>pin(part,metal,'HUB-C1-leg-'+p.pin,[p.x,0,-HALF-.6],[p.x,0,HALF+1],.25));label(group,'C1',...c.silk.position,bottom?-HALF-.03:HALF+.03,silk);continue;
   }
-  const vertical=c.ref==='CN1';
-  if(vertical){
-   box(part,7.5,5.8,.7,shell,'CN1-base',0,-.5,HALF+.35);box(part,7.5,.65,6,shell,'CN1-back',0,-3.05,HALF+3);
-   for(const sign of[-1,1])box(part,.65,5.8,6,shell,'CN1-side',sign*3.43,-.5,HALF+3);
-   box(part,2.4,.65,1.4,shell,'CN1-key',0,2.08,HALF+1.05);
-  }else{
-   box(part,7.6,7.0,.65,shell,c.ref+'-base',.15,2.5,HALF+.325);box(part,7.6,.6,4.9,shell,c.ref+'-back',.15,-.7,HALF+2.45);
-   for(const sign of[-1,1])box(part,.55,7.0,4.9,shell,c.ref+'-side',.15+sign*3.525,2.5,HALF+2.45);
-   // The supplied views show exposed right-angle pins, with an open top.
-   for(const x of[-1,1])box(part,.35,1.0,2.5,shell,c.ref+'-key',x,5.45,HALF+1.6);
-  }
+  const power=c.ref==='CN1',width=power?6.2:7.6;
+  // Every connector exits perpendicular to the PCB. The part's fitted-side
+  // rotation directs all four bus plugs downwards, and CN1 upwards.
+  box(part,width,5.8,.7,shell,c.ref+'-base',0,-.5,HALF+.35);
+  box(part,width,.65,6,shell,c.ref+'-back',0,-3.05,HALF+3);
+  for(const sign of[-1,1])box(part,.65,5.8,6,shell,c.ref+'-side',sign*(width/2-.325),-.5,HALF+3);
+  box(part,2.4,.65,1.4,shell,c.ref+'-key',0,2.08,HALF+1.05);
   const pins={},ordered=[];
   for(const p of c.pads){
-   const name=signal(p.net);pin(part,metal,c.ref+'-tail-'+p.pin,[p.x,0,-HALF-.8],[p.x,0,HALF+(vertical?4.2:2.2)],.25);
-   if(!vertical)pin(part,metal,c.ref+'-contact-'+p.pin,[p.x,0,HALF+2.2],[p.x,6.2,HALF+2.2],.25);
-   const contact=point(part,c.ref+'-'+name,p.x,vertical?0:6.2,HALF+(vertical?4.2:2.2));contact.userData={signal:name,pin:p.pin,net:p.net};pins[name]=contact;ordered.push(contact);
+   const name=signal(p.net);pin(part,metal,c.ref+'-tail-'+p.pin,[p.x,0,-HALF-.8],[p.x,0,HALF+4.2],.25);
+   const contact=point(part,c.ref+'-'+name,p.x,0,HALF+4.2);contact.userData={signal:name,pin:p.pin,net:p.net};pins[name]=contact;ordered.push(contact);
   }
-  const mouth=vertical?point(part,c.ref+'-mouth',0,0,HALF+6.0):point(part,c.ref+'-mouth',0,6.6,HALF+2.2);
-  const outward=vertical?point(part,c.ref+'-outward',0,0,HALF+10.0):point(part,c.ref+'-outward',0,10.6,HALF+2.2);
-  ports[c.ref]={root:part,pins,ordered,mouth,outward,kind:vertical?'power2':'bus3',pinCount:c.pads.length,sourceRef:c.ref};
+  const mouth=point(part,c.ref+'-mouth',0,0,HALF+6.0);
+  const outward=point(part,c.ref+'-outward',0,0,HALF+10.0);
+  ports[c.ref]={root:part,pins,ordered,mouth,outward,kind:power?'power2':'bus3',pinCount:c.pads.length,sourceRef:c.ref};
   label(group,c.ref,...c.silk.position,c.bottom?-HALF-.04:HALF+.04,silk);
  }
  group.userData.source=HUB_LAYOUT.source;group.userData.referenceImages=HUB_LAYOUT.referenceImages;

@@ -31,9 +31,24 @@ export function prepareServoModels(){
       }
       geometry.computeBoundingBox();geometry.computeBoundingSphere();return geometry;
     });
-    assets={manifest,geometries};return assets;
+    assets={manifest,geometries,hipGeometry:withoutPassiveHorn(geometries[0])};return assets;
   })();
   return prepared;
+}
+
+function withoutPassiveHorn(geometry){
+  // The pinned CAD's upper horn sits beyond the case face at local X=12 mm.
+  // Keep the central shaft and the complete lower output; omit its wide disc.
+  if(geometry.index.count!==29970)throw Error('HD1910 舵盘显示修正需要重新核对 CAD 版本');
+  const positions=geometry.getAttribute('position'),source=geometry.index.array,keep=[];let removed=0;
+  for(let i=0;i<source.length;i+=3){
+    const corners=[source[i],source[i+1],source[i+2]];
+    const horn=corners.every(index=>positions.getX(index)>.01195)&&corners.some(index=>Math.hypot(positions.getY(index),positions.getZ(index))>.0032);
+    if(horn)removed++;else keep.push(...corners);
+  }
+  if(!removed)throw Error('未找到待移除的 HD1910 副舵盘');
+  const staging=geometry.clone();staging.setIndex(keep);const trimmed=staging.toNonIndexed();staging.dispose();
+  trimmed.name='HD1910-case-without-upper-passive-horn';trimmed.computeBoundingBox();trimmed.computeBoundingSphere();return trimmed;
 }
 
 function idTexture(id){
@@ -56,7 +71,7 @@ export function attachServoModel(servo,id){
   // the tail upright and the two shaft planes on the same frozen hinge line.
   // Leave the Mesh transform, parent links and joint directions untouched.
   const inwardAnkle=id===14||id===24;
-  const caseGeometry=inwardAnkle?assets.geometries[0].clone().rotateZ(Math.PI):assets.geometries[0];
+  const caseGeometry=inwardAnkle?assets.geometries[0].clone().rotateZ(Math.PI):(id===10||id===20?assets.hipGeometry:assets.geometries[0]);
   servo.geometry=caseGeometry;
   const group=new T.Group();group.name=`servo-${id}-identification-and-ports`;servo.add(group);
   if(inwardAnkle)group.rotation.z=Math.PI;

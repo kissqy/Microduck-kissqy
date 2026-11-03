@@ -16,7 +16,7 @@ globalThis.window={matchMedia:()=>({matches:true})};
 globalThis.fetch=async url=>{const path=new URL(url).pathname;assert(path.startsWith(dir+'assets/'));const data=readFileSync(path);return{ok:true,arrayBuffer:async()=>arrayBuffer(data),json:async()=>JSON.parse(data.toString())};};
 const view=new DuckView();view.model=parseDuck(arrayBuffer(buffer));
 view.geometry=view.model.meshes.map(m=>{const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(m.vertices,3));g.setAttribute('normal',new T.BufferAttribute(m.normals,3));g.setIndex(new T.BufferAttribute(m.indices,1));g.computeBoundingBox();g.computeBoundingSphere();return g;});
-view.actual=view.build(false);view.ghost=view.build(true);view.scene=new T.Scene();view.scene.add(view.actual.root,view.ghost.root);
+view.actual=view.build(false);view.actual.parts.forEach((mesh,index)=>{mesh.name='reference-part-'+index;});view.ghost=view.build(true);view.scene=new T.Scene();view.scene.add(view.actual.root,view.ghost.root);
 view.container={...element(),clientWidth:800,clientHeight:600};view.renderer={domElement:element()};
 view.camera=new T.PerspectiveCamera(37,4/3,.005,20);view.camera.up.set(0,0,1);
 view.controls={target:new T.Vector3(0,0,.15),update(){view.camera.lookAt(this.target);view.camera.updateMatrixWorld(true);}};
@@ -43,10 +43,18 @@ view.actual.parts.forEach((part,index)=>{
  assert(part.quaternion.angleTo(partRotations[index])<1e-7,`part ${index}: assembly changed its frozen rotation`);
 });
 const hub=api.components.get('hub');view.actual.root.updateMatrixWorld(true);
+for(const [id,index]of [[20,0],[10,10]]){
+ const servo=view.actual.servos[index];
+ const a=servo.localToWorld(new T.Vector3(.013,.006,-.01)),b=servo.localToWorld(new T.Vector3(.013,.006,.01));
+ assert(!independentRayMesh(a,b,servo),`servo ${id}: upper passive horn still present`);
+ const lowerA=servo.localToWorld(new T.Vector3(-.013,.006,-.01)),lowerB=servo.localToWorld(new T.Vector3(-.013,.006,.01));
+ assert(independentRayMesh(lowerA,lowerB,servo),`servo ${id}: lower output horn was removed`);
+}
+
 const hubForward=new T.Vector3(0,1,0).transformDirection(hub.group.matrixWorld);
 assert(hubForward.x>.999,'HUB front/back mounting direction reversed');
 const cap=hub.group.getObjectByName('HUB-C1-can');
-assert(hub.group.worldToLocal(cap.getWorldPosition(new T.Vector3())).z>0,'HUB capacitor must share the four bus connectors side');
+assert(hub.group.worldToLocal(cap.getWorldPosition(new T.Vector3())).z<0,'HUB capacitor and four straight sockets must face down');
 
 const {meshCollider}=await import('../docs/assembly-mesh-clearance.js');
 // Surface clearance must detect thin walls and preserve real openings.

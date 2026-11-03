@@ -1,10 +1,10 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
 import {createBoardModel} from './assembly-board-models.js?v=20261030-hub-arcs';
 import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261027-printed-clearance';
-import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261103-ankle-inward';
-import {createHubModel} from './assembly-hub-model.js?v=20261103-hub-battery';
-import {createBatteryPack,createBatteryPickup} from './assembly-battery-model.js?v=20261103-hub-battery';
-import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261103-hub-battery';
+import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261103-hub-bottom';
+import {createHubModel} from './assembly-hub-model.js?v=20261103-hub-bottom';
+import {createBatteryPack,createBatteryPickup} from './assembly-battery-model.js?v=20261103-hub-bottom';
+import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261103-hub-bottom';
 import {parallelCablePaths} from './assembly-cable-bundles.js?v=20261030-hub-arcs';
 import {softenCableCorners} from './assembly-wire-curves.js?v=20261030-hub-arcs';
 import {createWireRouter} from './assembly-wire-routing.js?v=20261030-hub-arcs';
@@ -111,7 +111,12 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   // Actual STL axes: raw X = width, raw +Y = battery-rail side, raw Z = up.
   // Map raw X→robot Y, raw Y→robot -X; keep the holder at the rear mount.
   const batteryMount=new T.Group();batteryMount.name='assembly-battery-holder-mount';trunk.add(batteryMount);
-  const holderOffset=vector(holderReferenceX+.017,hipCenter.y,hipCenter.z-.055);
+  const batteryPack=createBatteryPack();batteryPack.group.updateMatrixWorld(true);
+  const packRailFaceY=new T.Box3().setFromObject(batteryPack.body).min.y;
+  const shellRearX=Math.min(...[1,5].map(index=>new T.Box3().setFromObject(view.actual.parts[index]).min.x));
+  // Seat the pack outside the frozen cover; keep the author-arrowed flange
+  // screw heads and their wire exits clear of that reference shell.
+  const holderOffset=vector(Math.min(holderReferenceX+.017,shellRearX+packRailFaceY-.0008),hipCenter.y,hipCenter.z-.055);
   batteryMount.position.copy(trunk.worldToLocal(holderOffset.clone()));
   batteryMount.quaternion.copy(trunk.getWorldQuaternion(new T.Quaternion()).invert()).multiply(new T.Quaternion().setFromAxisAngle(vector(0,0,1),Math.PI/2));
   let batteryMesh=null,batteryError=null;
@@ -172,7 +177,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     label.addEventListener('click',()=>{api.select(id);onSelect(id);});container.append(label);component.label=label;components.set(id,component);
   }
   root.updateMatrixWorld(true);
-  const batteryPack=createBatteryPack();batteryMount.add(batteryPack.group);
+  batteryMount.add(batteryPack.group);
   const batteryPort=createBatteryPickup();batteryMount.add(batteryPort.root);
   const wireRoot=new T.Group();wireRoot.name='assembly-wiring-route-reference';root.add(wireRoot);wireRoot.visible=false;
   const printedMeshes=view.model.parts.flatMap((part,index)=>PRINTED_MESH_NAMES[part.mesh]?[view.actual.parts[index]]:[]);
@@ -419,7 +424,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
       const box=id==='head'?new T.Box3().union(new T.Box3().setFromObject(components.get('hat').group)).union(new T.Box3().setFromObject(components.get('zero').group)):id==='battery'?new T.Box3().setFromObject(batteryMount):new T.Box3().setFromObject(c.group);
       const target=box.getCenter(new T.Vector3()),radius=box.getBoundingSphere(new T.Sphere()).radius;const vertical=T.MathUtils.degToRad(view.camera.fov),horizontal=2*Math.atan(Math.tan(vertical/2)*view.camera.aspect);const distance=Math.max((id==='head'||id==='battery')?.18:.12,radius/Math.sin(Math.min(vertical,horizontal)/2)*1.45);
       // Face boards are viewed from the opened interior, not through the face.
-      const direction=id==='head'||c?.spec.location==='face'?vector(-1,-.45,.9):id==='hub'?vector(-.9,-.65,.55):id==='imu'?vector(1,-.30,.2):vector(-1,-.7,.4);
+      const direction=id==='head'||c?.spec.location==='face'?vector(-1,-.45,.9):id==='hub'?vector(1,0,-.4):id==='imu'?vector(1,-.30,.2):vector(-1,-.7,.4);
       view.initialView=null;view.overviewName=null;view.focus={start:performance.now(),from:view.camera.position.clone(),fromTarget:view.controls.target.clone(),to:target.clone().addScaledVector(direction.normalize(),distance),target};return true;
     },
     update:frame,

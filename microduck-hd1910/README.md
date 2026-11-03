@@ -23,6 +23,8 @@ V167 中控配套已编译的 **control.43** 固件。更新：**修复鸭身抖
 
 ## 下载与使用
 
+**Orange Pi Zero 3W（Allwinner A733）**：使用社区维护的[板级适配与刷卡说明](https://github.com/lxm/microduck-maker/tree/6249d8aeca3841e5329f326b4c894853f478f4df/firmware/orangepi-zero3w)，从 [MicroDuck Maker 构建记录](https://github.com/lxm/microduck-maker/actions/workflows/orangepi-image.yml)下载完整的 `.img.xz`。该镜像为实验版，适配基于 1 GB、PCB V1.5。下方 R1 镜像用于 Radxa ZERO 3W（RK3566）。
+
 1. [下载系统镜像 R1](https://github.com/kissqy/Microduck-kissqy/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz)，用 [Armbian Imager](https://imager.armbian.com/) 刷入 TF 卡。
 2. 首次开机连接 `Microduck-kissqy` 热点（密码 `12345678`），设置家庭 Wi-Fi 和新的系统登录密码。未自动弹出页面时访问 `http://10.42.0.1:8088`。
 3. [下载机器人中控 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip)，完整解压后运行 `start.cmd`；macOS/Linux 运行 `bash start.command`。页面地址为 `http://127.0.0.1:8090`。

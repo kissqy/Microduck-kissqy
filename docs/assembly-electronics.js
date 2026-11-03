@@ -109,6 +109,15 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   await prepareServoModels();
   const servoDetails=new Map();
   for(const[id,index]of Object.entries(SERVO_INDEX))servoDetails.set(Number(id),attachServoModel(view.actual.servos[index],Number(id)));
+  // Knee case decals sit behind the printed leg plates in the assembled view.
+  // Keep their IDs readable with camera-facing labels at the actual hinges.
+  let servoIdsVisible=true;
+  const kneeLabels=[13,23].map(id=>{
+    const label=document.createElement('button');label.type='button';label.className='servo-id-callout';label.textContent=String(id);
+    label.setAttribute('aria-label',`定位${id===13?'右膝':'左膝'}，舵机 ID ${id}`);
+    label.addEventListener('click',()=>view.onSelect?.(SERVO_INDEX[id]));container.append(label);
+    return{id,label,servo:servoDetails.get(id).group.parent};
+  });
   root.updateMatrixWorld(true);
   const headParent=face.parent,coverRest=cover.position.clone(),coverOpacity=cover.material.opacity;
   const coverWorldBox=new T.Box3().setFromObject(cover),headSize=coverWorldBox.getSize(new T.Vector3()),faceBox=new T.Box3().setFromObject(face),faceCenter=faceBox.getCenter(new T.Vector3());
@@ -360,6 +369,10 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   function positionLabel(label,world,visible){const point=world.project(view.camera),width=container.clientWidth,height=container.clientHeight;label.hidden=!visible||point.z< -1||point.z>1||Math.abs(point.x)>1||Math.abs(point.y)>1;label.style.left=`${(point.x+1)*width/2}px`;label.style.top=`${(1-point.y)*height/2}px`;}
   function updateLabels(){
     view.camera.updateMatrixWorld(true);
+    kneeLabels.forEach(({id,label,servo})=>{
+      positionLabel(label,servo.getWorldPosition(vector()),servoIdsVisible&&servo.material.opacity>.5);
+      label.setAttribute('aria-pressed',String(view.selected===SERVO_INDEX[id]));
+    });
     components.forEach(component=>{positionLabel(component.label,component.group.localToWorld(vector(0,component.height*.55,.007)),component.visible&&(component.spec.location!=='face'||coverAmount>.5));component.label.setAttribute('aria-pressed',String(component.id===selected));});
     positionLabel(batteryLabel,(batteryMesh||batteryMount).localToWorld(vector(.026,.025,.050)),batteryVisible&&!!batteryMesh);
     notice.hidden=![...components.values()].some(c=>c.visible)&&!coverOpen&&!wiringVisible&&!batteryVisible;
@@ -398,7 +411,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     setBatteryVisible(visible){batteryVisible=!!visible;if(batteryMesh)batteryMesh.visible=batteryVisible;frame();return batteryVisible;},
     setWireFocus(value){wireFocus=value&&value!=='all'?value:null;applyWireFocus();},
     setWiringVisible(visible){wiringVisible=!!visible;wireRoot.visible=wiringVisible;batteryPort.root.visible=wiringVisible&&components.get('hub').visible&&batteryVisible;frame();return wiringVisible;},
-    setServoIdsVisible(visible){servoDetails.forEach(s=>s.decals.forEach(d=>{d.visible=!!visible;}));return !!visible;},
+    setServoIdsVisible(visible){servoIdsVisible=!!visible;servoDetails.forEach(s=>s.decals.forEach(d=>{d.visible=servoIdsVisible;}));updateLabels();return servoIdsVisible;},
     setExploded(expanded){
       explosion.setExpanded(expanded);frame();
       if(!expanded){view.update(view.lastSnapshot||{});view.view?.('front');}
@@ -426,7 +439,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     },
     update:frame,
     dispose(){
-      if(disposed)return;selected=null;applyCutaway();explosion.dispose();disposed=true;view.update=originalUpdate;view.advanceFocus=originalAdvanceFocus;if(originalPose)view.pose=originalPose;cover.position.copy(coverRest);cover.material.opacity=coverOpacity;cover.material.transparent=false;cover.material.depthWrite=true;
+      if(disposed)return;selected=null;applyCutaway();explosion.dispose();disposed=true;kneeLabels.forEach(({label})=>label.remove());view.update=originalUpdate;view.advanceFocus=originalAdvanceFocus;if(originalPose)view.pose=originalPose;cover.position.copy(coverRest);cover.material.opacity=coverOpacity;cover.material.transparent=false;cover.material.depthWrite=true;
       canvas.removeEventListener('pointerdown',down,{capture:true});canvas.removeEventListener('pointercancel',cancel,{capture:true});canvas.removeEventListener('pointerup',up,{capture:true});
       const geometries=new Set(),materials=new Set();const release=object=>object.traverse(o=>{if(o.isMesh){geometries.add(o.geometry);if(Array.isArray(o.material))o.material.forEach(m=>materials.add(m));else materials.add(o.material);}});
       components.forEach(c=>{c.label.remove();c.group.removeFromParent();release(c.group);});wires.forEach(w=>release(w.group));servoDetails.forEach(detail=>detail.dispose());release(batteryMount);geometries.forEach(g=>g.dispose());materials.forEach(m=>{m.map?.dispose();m.dispose();});wireRoot.removeFromParent();batteryMount.removeFromParent();Object.values(cableMaterials).forEach(material=>material.dispose());notice.remove();batteryLabel.remove();

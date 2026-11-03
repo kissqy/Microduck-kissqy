@@ -21,7 +21,7 @@ export const COMPONENTS=Object.freeze({
       '可选打印件：电池仓_M2.5螺丝_HUB组合.stl。',
       '针号是各自工程编号，不代表照片左右或现成线束顺序；按 GND、电源、DATA 信号与实板丝印核对并确认导通，不因编号不同就直接交叉线束。',
       'HUB 为独立板卡，与 HAT、IMU 在同一商品页分别选择款式。',
-      '电池仓的两颗取电螺丝分别接 HUB CN1 的 VIN（+）和 GND（−）；红线接正极，黑线接负极。可在显示设置中隐藏电池，查看螺丝和线头。',
+      '正对电池标签面、接触端朝上时：左负右正。两颗取电螺丝装在电池仓顶部横板的接触孔内，左侧黑线接 HUB CN1 的 GND（−），右侧红线接 VIN（+）。可隐藏电池查看孔位。',
     ],
   },
   imu:{
@@ -80,7 +80,7 @@ export const CONNECTIONS=Object.freeze([
   {
     id:'battery-hub',from:'battery',to:'hub',label:'电池 → HUB CN1',kind:'power',
     signals:[['负极 / GND','GND'],['正极 / 电源','VIN']],
-    detail:'电池仓两颗取电螺丝通过黑色负极线、红色正极线接入 CN1。CN1 的 1 脚接 GND，2 脚接 VIN。C1 为 1000 µF / 16V，正极网络为 VIN、负极为 GND；元件极性和安装方向按实板核对。',
+    detail:'正对电池标签面、接触端朝上时，左侧为负极（黑线），右侧为正极（红线）。取电螺丝从上往下装入顶部横板的两个接触孔，分别接 CN1 的 1 脚 GND、2 脚 VIN。C1 为 1000 µF / 16V，正极网络为 VIN、负极为 GND；元件极性按实板核对。',
     sourceUrl:hardware+'3d-print-frankenduck/README.md',
     sourceNote:'针序依据用户提供的 DXL_HUB_V2（2026-10-30）工程；链接为配套机械说明。',
     extraSourceUrl:repository+'docs/ASSEMBLY-NOTES.md',

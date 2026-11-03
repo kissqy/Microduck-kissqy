@@ -1,10 +1,10 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
 import {createBoardModel} from './assembly-board-models.js?v=20261030-hub-arcs';
 import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261027-printed-clearance';
-import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261103-hub-bottom';
+import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261103-contact-hip';
 import {createHubModel} from './assembly-hub-model.js?v=20261103-hub-bottom';
-import {createBatteryPack,createBatteryPickup} from './assembly-battery-model.js?v=20261103-hub-bottom';
-import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261103-hub-bottom';
+import {createBatteryPack,createBatteryPickup,BATTERY_PICKUP} from './assembly-battery-model.js?v=20261103-contact-hip';
+import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261103-contact-hip';
 import {parallelCablePaths} from './assembly-cable-bundles.js?v=20261030-hub-arcs';
 import {softenCableCorners} from './assembly-wire-curves.js?v=20261030-hub-arcs';
 import {createWireRouter} from './assembly-wire-routing.js?v=20261030-hub-arcs';
@@ -113,10 +113,11 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   const batteryMount=new T.Group();batteryMount.name='assembly-battery-holder-mount';trunk.add(batteryMount);
   const batteryPack=createBatteryPack();batteryPack.group.updateMatrixWorld(true);
   const packRailFaceY=new T.Box3().setFromObject(batteryPack.body).min.y;
+  const contactRailFaceY=BATTERY_PICKUP.y-.00265;
   const shellRearX=Math.min(...[1,5].map(index=>new T.Box3().setFromObject(view.actual.parts[index]).min.x));
-  // Seat the pack outside the frozen cover; keep the author-arrowed flange
-  // screw heads and their wire exits clear of that reference shell.
-  const holderOffset=vector(Math.min(holderReferenceX+.017,shellRearX+packRailFaceY-.0008),hipCenter.y,hipCenter.z-.055);
+  // Keep both the pack and the upward contact screws outside the reference
+  // cover; their source-STL coordinates remain fixed within the holder.
+  const holderOffset=vector(Math.min(holderReferenceX+.017,shellRearX+Math.min(packRailFaceY,contactRailFaceY)-.0008),hipCenter.y,hipCenter.z-.055);
   batteryMount.position.copy(trunk.worldToLocal(holderOffset.clone()));
   batteryMount.quaternion.copy(trunk.getWorldQuaternion(new T.Quaternion()).invert()).multiply(new T.Quaternion().setFromAxisAngle(vector(0,0,1),Math.PI/2));
   let batteryMesh=null,batteryError=null;

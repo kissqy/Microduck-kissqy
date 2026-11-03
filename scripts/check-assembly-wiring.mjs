@@ -45,6 +45,12 @@ view.actual.parts.forEach((part,index)=>{
 const hub=api.components.get('hub');view.actual.root.updateMatrixWorld(true);
 for(const [id,index]of [[20,0],[10,10]]){
  const servo=view.actual.servos[index];
+ const detail=api.servos.get(id);
+ for(const port of Object.values(detail.ports)){
+  const mouth=port.mouth.getWorldPosition(new T.Vector3());
+  assert(mouth.z>servo.getWorldPosition(new T.Vector3()).z+.0089,`servo ${id}: socket not on top`);
+  assert(port.outward.getWorldPosition(new T.Vector3()).sub(mouth).normalize().z>.999999,`servo ${id}: socket exit must face up`);
+ }
  const a=servo.localToWorld(new T.Vector3(.013,.006,-.01)),b=servo.localToWorld(new T.Vector3(.013,.006,.01));
  assert(!independentRayMesh(a,b,servo),`servo ${id}: upper passive horn still present`);
  const lowerA=servo.localToWorld(new T.Vector3(-.013,.006,-.01)),lowerB=servo.localToWorld(new T.Vector3(-.013,.006,.01));
@@ -126,7 +132,10 @@ for(const pose of poses){
  assert(packRelative.distanceTo(globalThis.batteryMountReference.pack)<1e-8,'battery left holder during explosion');
  assert(screwRelative.distanceTo(globalThis.batteryMountReference.screw)<1e-8,'screw or power wire left holder during explosion');
  const batteryRoute=api.routes.find(r=>r.id==='battery-hub');
- for(const core of batteryRoute.conductors)assert.equal(core.start,api.batteryHolder.pickup.pins[core.signal]);
+ for(const core of batteryRoute.conductors){
+  assert.equal(core.start,api.batteryHolder.pickup.pins[core.signal]);
+  assert.equal(core.end,api.components.get('hub').ports.CN1.pins[core.signal],'battery polarity must reach the matching HUB power terminal');
+ }
 
  if(!results.length){globalThis.mountReference={board:boardRelative.clone(),pin:pinRelative.clone()};}
  assert(boardRelative.distanceTo(globalThis.mountReference.board)<1e-8,'IMU left battery mount');

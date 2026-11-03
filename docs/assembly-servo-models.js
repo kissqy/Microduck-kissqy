@@ -31,7 +31,11 @@ export function prepareServoModels(){
       }
       geometry.computeBoundingBox();geometry.computeBoundingSphere();return geometry;
     });
-    assets={manifest,geometries,hipGeometry:withoutPassiveHorn(geometries[0])};return assets;
+    // Flip the complete 10/20 case first so its sockets are on top, then
+    // remove the upper passive disc while retaining the lower output.
+    const turnedHip=geometries[0].clone().rotateZ(Math.PI);
+    const hipGeometry=withoutPassiveHorn(turnedHip);turnedHip.dispose();
+    assets={manifest,geometries,hipGeometry};return assets;
   })();
   return prepared;
 }
@@ -70,11 +74,11 @@ export function attachServoModel(servo,id){
   // legs. Turn only the displayed case and its details about local Z, keeping
   // the tail upright and the two shaft planes on the same frozen hinge line.
   // Leave the Mesh transform, parent links and joint directions untouched.
-  const inwardAnkle=id===14||id===24;
-  const caseGeometry=inwardAnkle?assets.geometries[0].clone().rotateZ(Math.PI):(id===10||id===20?assets.hipGeometry:assets.geometries[0]);
+  const inwardAnkle=id===14||id===24,uprightHip=id===10||id===20;
+  const caseGeometry=inwardAnkle?assets.geometries[0].clone().rotateZ(Math.PI):(uprightHip?assets.hipGeometry:assets.geometries[0]);
   servo.geometry=caseGeometry;
   const group=new T.Group();group.name=`servo-${id}-identification-and-ports`;servo.add(group);
-  if(inwardAnkle)group.rotation.z=Math.PI;
+  if(inwardAnkle||uprightHip)group.rotation.z=Math.PI;
   const shellMaterial=new T.MeshStandardMaterial({color:0xe7e4d9,roughness:.66,metalness:.02,side:T.DoubleSide});
   const metalMaterial=new T.MeshStandardMaterial({color:0xc9b26b,roughness:.32,metalness:.65});
   const ports={};

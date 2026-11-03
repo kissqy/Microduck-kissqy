@@ -1,10 +1,11 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
 
 // Display geometry in the unmodified holder STL's raw XYZ frame (metres).
-// The author's arrows select the two end holes on the wide upper flange:
-// raw X=+/-25, Z=80.1461 mm; the outward mounting face is raw Y=34.8 mm.
-// Screw axes follow raw +Y, not the previous inner pillars' vertical bores.
-export const BATTERY_PICKUP=Object.freeze({x:[-.025,.025],y:.0348,z:.0801461});
+// The author's arrows select the upward contact holes in the top crossbar:
+// raw X=+/-16.9, Y=31.6 mm; surface Z is approximately 77.5 mm.
+// Viewed straight at the battery label, raw +X is left: GND left, VIN right.
+// Both screw axes are raw Z, not the sideways end-bracket bores.
+export const BATTERY_PICKUP=Object.freeze({x:[.0169,-.0169],y:.0316,z:.0775});
 export const NPF550=Object.freeze({width:.0384,depth:.0206,length:.0708,
   source:'https://www.sony.com.au/electronics/support/camera-camcorder-accessories-batteries-chargers/np-f550/specifications'});
 const material=(color,metalness=0)=>new T.MeshStandardMaterial({color,metalness,roughness:metalness?.35:.7});
@@ -34,18 +35,18 @@ export function createBatteryPack(){
   group.userData.dimensions=NPF550;return{group,body};
 }
 export function createBatteryPickup(){
-  const root=new T.Group();root.name='BATTERY-SCREW-PICKUP';root.position.set(0,BATTERY_PICKUP.y,BATTERY_PICKUP.z);root.rotation.x=-Math.PI/2;const pins={},ordered=[],screws={};
+  const root=new T.Group();root.name='BATTERY-SCREW-PICKUP';root.position.set(0,BATTERY_PICKUP.y,BATTERY_PICKUP.z);const pins={},ordered=[],screws={};
   const steel=material(0xbec5c5,.85),brass=material(0xb79850,.75),top=0;
   for(const [i,signal]of ['gnd','power'].entries()){
     const x=BATTERY_PICKUP.x[i],y=0;
     const shaft=cylinder(root,.0008,.008,steel,'battery-'+signal+'-M2.6-shaft',[x,y,top-.0035]);
-    const head=cylinder(root,.0022,.0014,steel,'battery-'+signal+'-screw-head',[x,y,top+.00125]);
-    const ring=part(root,new T.RingGeometry(.0013,.00265,28),brass,'battery-'+signal+'-wire-lug',[x,y,top+.00055]);
-    const slot=part(root,new T.BoxGeometry(.0027,.00038,.00005),material(0x3a4445),'battery-'+signal+'-screw-slot',[x,y,top+.00198]);slot.userData.hubSolid=false;
-    const pin=new T.Object3D();pin.name='battery-'+signal+'-lug-contact';pin.position.set(x,y,top+.00235);pin.userData={signal,target:head.name};root.add(pin);pins[signal]=pin;ordered.push(pin);
+    const head=cylinder(root,.0022,.0014,steel,'battery-'+signal+'-screw-head',[x,y,top+.00075]);
+    const ring=part(root,new T.RingGeometry(.0013,.00265,28),brass,'battery-'+signal+'-wire-lug',[x,y,top+.00005]);
+    const slot=part(root,new T.BoxGeometry(.0027,.00038,.00005),material(0x3a4445),'battery-'+signal+'-screw-slot',[x,y,top+.00148]);slot.userData.hubSolid=false;
+    const pin=new T.Object3D();pin.name='battery-'+signal+'-lug-contact';pin.position.set(x,y,top+.00165);pin.userData={signal,target:head.name,batterySide:signal==='gnd'?'left':'right'};root.add(pin);pins[signal]=pin;ordered.push(pin);
     screws[signal]={shaft,head,ring,pin,hole:[x,BATTERY_PICKUP.y,BATTERY_PICKUP.z]};
   }
-  const mouth=new T.Object3D();mouth.position.set(0,0,top+.00235);root.add(mouth);
+  const mouth=new T.Object3D();mouth.position.set(0,0,top+.00165);root.add(mouth);
   const outward=new T.Object3D();outward.position.copy(mouth.position).add(new T.Vector3(0,0,.004));root.add(outward);
   return{root,pins,ordered,mouth,outward,screws,kind:'power2',pinCount:2};
 }

@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
-export const WIRE_CACHE_REVISION='20261103-contact-hip-v1';
+export const WIRE_CACHE_REVISION='20261104-head-labels-v1';
 const SCALE=1e7;
 const packed=p=>p.toArray().map(v=>Math.round(v*SCALE));
 const unpacked=a=>new T.Vector3(...a.map(v=>v/SCALE));

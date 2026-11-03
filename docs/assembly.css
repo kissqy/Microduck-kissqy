@@ -50,6 +50,3 @@ body.viewer-expanded{overflow:hidden}
 @media(max-height:550px){.viewer-dialog .viewer-options[open]{max-height:32svh;overflow:auto}.viewer-dialog .viewer-topline{padding-block:7px}.viewer-dialog .view-toolbar{padding-block:6px}}
 
 @media(max-width:380px){.site-header{padding-inline:12px;gap:6px}.brand{font-size:16px;gap:6px}.brand svg{width:27px;height:27px}.header-actions{gap:5px}.expand-viewer,.back-link{font-size:11px;padding:8px 6px}.viewer-title{font-size:12px}.stage-actions button{padding-inline:7px}}
-
-/* Occluded knee housings retain a readable ID above the model. */
-.servo-id-callout{position:absolute;z-index:3;transform:translate(-50%,-50%);min-width:26px;padding:3px 6px;border:1px solid #809f62;border-radius:4px;background:#17231eef;color:#e3ffc7;font:700 12px/1.2 ui-monospace,monospace;text-align:center;cursor:pointer;box-shadow:0 1px 4px #0009}.servo-id-callout[aria-pressed=true]{background:var(--green);border-color:var(--green);color:#23311b}.servo-id-callout:focus-visible{outline:2px solid var(--green);outline-offset:3px}

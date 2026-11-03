@@ -103,14 +103,18 @@ export function attachServoModel(servo,id){
     }
     ports[label]={root,mouth,outward,pins,ordered,kind:'bus3',pinCount:3,source:assets.manifest.source};
   }
-  const texture=idTexture(id),decalMaterial=new T.MeshBasicMaterial({map:texture,color:texture?0xffffff:0xc1f577,transparent:!!texture,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,side:T.DoubleSide});
+  // Reuse the large knee case IDs in front of their printed covers. Opposite
+  // front-sided planes show only the facing number, without mirrored doubles.
+  const foregroundKnee=id===13||id===23;
+  const texture=idTexture(id),decalMaterial=new T.MeshBasicMaterial({map:texture,color:texture?0xffffff:0xc1f577,transparent:!!texture,depthWrite:false,depthTest:!foregroundKnee,polygonOffset:true,polygonOffsetFactor:-2,side:foregroundKnee?T.FrontSide:T.DoubleSide});
   const decals=[];
   // Verified flat case faces native X=+/-10 mm => frozen Y=+/-10 mm.
   // Label footprint lies in the intact tail panel, away from shaft and ports.
   for(const sign of [-1,1]){
     const decal=new T.Mesh(new T.PlaneGeometry(.0115,.0077),decalMaterial);
-    decal.name=`servo-id-${id}-${sign>0?'left':'right'}`;
+    decal.name=`servo-id-${id}-${sign>0?'left':'right'}`;decal.renderOrder=foregroundKnee?20:0;
     decal.rotation.x=sign>0?-Math.PI/2:Math.PI/2;
+    if(foregroundKnee&&sign<0)decal.rotateZ(Math.PI);
     decal.position.set(.0005,sign*.01008,-.0175);group.add(decal);decals.push(decal);
   }
   const detail={group,ports,decals,texture,
@@ -119,6 +123,7 @@ export function attachServoModel(servo,id){
         material.opacity=servo.material.opacity;material.transparent=servo.material.transparent;
         material.depthWrite=servo.material.depthWrite;
       }
+      if(foregroundKnee){decalMaterial.opacity=servo.material.opacity;decalMaterial.transparent=!!texture||servo.material.opacity<1;}
     },
     dispose(){
       group.removeFromParent();servo.geometry=originalGeometry;delete servo.userData.hd1910Assembly;

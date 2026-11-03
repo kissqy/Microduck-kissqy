@@ -36,7 +36,9 @@ function separation(meshIndex,center,partIndex){
     case 12:case 31:return v(.023,side*.132,-.062);
     case 14:case 29:return v(-.052,side*.123,-.019);
     case 15:return v(0,side*.067,.033);
-    case 16:return v(.031,0,.060);
+    // Separate the neck-pitch bracket behind the head; moving it forward
+    // intersects the HAT/ZERO stack when the printed parts are expanded.
+    case 16:return v(-.075,0,.060);
     case 17:return v(-.044,-.024,.078);
     case 19:return v(.100,0,.042);
     case 20:return v(.074,0,-.039);

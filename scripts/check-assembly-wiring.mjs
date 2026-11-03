@@ -11,7 +11,8 @@ const buffer=readFileSync(dir+'assets/duck-visual.bin');
 const stl=readFileSync(dir+'assets/assembly-battery-holder.stl');
 const arrayBuffer=b=>b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength);
 const element=()=>({style:{},hidden:false,attrs:{},listeners:{},setAttribute(k,v){this.attrs[k]=v;},addEventListener(k,v){this.listeners[k]=v;},removeEventListener(k){delete this.listeners[k];},remove(){},append(){},getContext(){return null;},getBoundingClientRect(){return{left:0,top:0,width:800,height:600};}});
-globalThis.document={createElement:element};
+const createdElements=[];
+globalThis.document={createElement(){const node=element();createdElements.push(node);return node;}};
 globalThis.window={matchMedia:()=>({matches:true})};
 globalThis.fetch=async url=>{const path=new URL(url).pathname;assert(path.startsWith(dir+'assets/'));const data=readFileSync(path);return{ok:true,arrayBuffer:async()=>arrayBuffer(data),json:async()=>JSON.parse(data.toString())};};
 const view=new DuckView();view.model=parseDuck(arrayBuffer(buffer));
@@ -25,6 +26,13 @@ const rest=view.actual.parts.map(p=>p.position.clone());
 const partRotations=view.actual.parts.map(p=>p.quaternion.clone());
 const api=await attachElectronics(view,()=>{},{useWireCache:!process.argv.includes('--fresh-cache')});assert.equal(api.batteryHolder.error,null);assert(api.batteryHolder.mesh);
 api.setWiringVisible(true);assert.equal(view.model.parts.length,64);assert.equal(api.explosion.count,34);
+assert(!createdElements.some(node=>node.className==='servo-id-callout'),'duplicate small knee IDs remain');
+for(const id of[13,23]){
+ const decals=api.servos.get(id).decals;assert.equal(decals.length,2,'retain the original large case IDs');
+ for(const decal of decals){assert.equal(decal.material.depthTest,false,'large knee ID must appear in front');assert.equal(decal.material.side,T.FrontSide,'avoid overlapping mirrored knee IDs');assert(decal.renderOrder>0);assert(new T.Vector3(0,1,0).applyQuaternion(decal.quaternion).z<-.999999,'knee ID must read upright on either case face');}
+}
+api.setServoIdsVisible(false);for(const id of[13,23])assert(api.servos.get(id).decals.every(decal=>!decal.visible));
+api.setServoIdsVisible(true);for(const id of[13,23])assert(api.servos.get(id).decals.every(decal=>decal.visible));
 // Physical-build regression: ankle sockets face the other leg in the zero
 // pose; the tail stays above the shaft, without changing any part transform.
 for(const [id,inwardY]of [[14,1],[24,-1]]){
@@ -82,6 +90,13 @@ if(process.argv.includes('--all'))for(let i=0;i<15;i++)for(const sign of[-1,1]){
 poses.push({name:'zero-open-lid',joints:poses[0].joints,open:true},{name:'zero-exploded-open-lid',joints:poses[0].joints,open:true,exploded:true},{name:'home-exploded-open-lid',joints:poses[1].joints,open:true,exploded:true},{name:'zero-exploded',joints:Array(15).fill(0),exploded:true},{name:'home-exploded',joints:poses[1].joints,exploded:true},{name:'home-open-lid',joints:poses[1].joints,open:true});
 if(process.argv.includes('--zero-only'))poses.splice(1);
 const allMeshes=api.collisionMeshes;
+const speakerHead=api.headClearance.speaker.parent;
+const headUp=new T.Vector3(0,0,1).transformDirection(view.actual.root.matrixWorld).applyQuaternion(speakerHead.getWorldQuaternion(new T.Quaternion()).invert());
+function axisExtent(mesh,axis){
+ const box=mesh.geometry.boundingBox;let min=Infinity,max=-Infinity;
+ for(const x of[box.min.x,box.max.x])for(const y of[box.min.y,box.max.y])for(const z of[box.min.z,box.max.z]){const d=new T.Vector3(x,y,z).applyMatrix4(mesh.matrixWorld).dot(axis);min=Math.min(min,d);max=Math.max(max,d);}
+ return{min,max};
+}
 const raycaster=new T.Raycaster(),results=[],started=performance.now();
 function assertAttached(){
  const root=view.actual.root;
@@ -105,6 +120,13 @@ function checkSegment(a,b,meshes,context){
 for(const pose of poses){
  const began=performance.now();api.setExploded(false);api.setCoverOpen(false);view.referenceMode='measured';view.pose(view.actual,pose.joints,[0,0,-1],0);
  if(pose.open)api.setCoverOpen(true);if(pose.exploded)api.setExploded(true);api.update();view.actual.root.updateMatrixWorld(true);assertAttached();
+ const speaker=api.headClearance.speaker,head=speaker.parent;
+ const axis=headUp.clone().applyQuaternion(head.getWorldQuaternion(new T.Quaternion()));
+ assert(axisExtent(speaker,axis).min-axisExtent(view.actual.servos[8],axis).max>.0028,pose.name+': speaker clips the ID 33 case');
+ if(pose.exploded){
+  const bracket=view.actual.parts.find((_,index)=>view.model.parts[index].mesh===16),bracketBounds=new T.Box3().setFromObject(bracket);
+  for(const mesh of[api.components.get('hat').group,api.components.get('zero').group,speaker])assert(!bracketBounds.intersectsBox(new T.Box3().setFromObject(mesh)),pose.name+': expanded neck bracket intersects head electronics');
+ }
  const obstacles=allMeshes.map(mesh=>{mesh.material.side=T.DoubleSide;return{mesh,name:mesh.userData.hd1910Assembly?.id??api.explosion.printedParts.find(p=>p.mesh===mesh)?.name??mesh.name,box:mesh.geometry.boundingBox.clone().applyMatrix4(mesh.matrixWorld)};});
  let segments=0,cores=0;
  for(const route of api.routes){if(route.header)continue;

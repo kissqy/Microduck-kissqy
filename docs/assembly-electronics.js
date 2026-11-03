@@ -1,10 +1,11 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
 import {createBoardModel} from './assembly-board-models.js?v=20261030-hub-arcs';
-import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261027-printed-clearance';
-import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261103-contact-hip';
+import {attachHeadClearance} from './assembly-head-clearance.js?v=20261104-head-labels';
+import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261104-head-labels';
+import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261104-head-labels';
 import {createHubModel} from './assembly-hub-model.js?v=20261103-hub-bottom';
 import {createBatteryPack,createBatteryPickup,BATTERY_PICKUP} from './assembly-battery-model.js?v=20261103-contact-hip';
-import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261103-contact-hip';
+import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261104-head-labels';
 import {parallelCablePaths} from './assembly-cable-bundles.js?v=20261030-hub-arcs';
 import {softenCableCorners} from './assembly-wire-curves.js?v=20261030-hub-arcs';
 import {createWireRouter} from './assembly-wire-routing.js?v=20261030-hub-arcs';
@@ -90,15 +91,8 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   await prepareServoModels();
   const servoDetails=new Map();
   for(const[id,index]of Object.entries(SERVO_INDEX))servoDetails.set(Number(id),attachServoModel(view.actual.servos[index],Number(id)));
-  // Knee case decals sit behind the printed leg plates in the assembled view.
-  // Keep their IDs readable with camera-facing labels at the actual hinges.
+  const headClearance=attachHeadClearance(view);
   let servoIdsVisible=true;
-  const kneeLabels=[13,23].map(id=>{
-    const label=document.createElement('button');label.type='button';label.className='servo-id-callout';label.textContent=String(id);
-    label.setAttribute('aria-label',`定位${id===13?'右膝':'左膝'}，舵机 ID ${id}`);
-    label.addEventListener('click',()=>view.onSelect?.(SERVO_INDEX[id]));container.append(label);
-    return{id,label,servo:servoDetails.get(id).group.parent};
-  });
   root.updateMatrixWorld(true);
   const headParent=face.parent,coverRest=cover.position.clone(),coverOpacity=cover.material.opacity;
   const coverWorldBox=new T.Box3().setFromObject(cover),headSize=coverWorldBox.getSize(new T.Vector3()),faceBox=new T.Box3().setFromObject(face),faceCenter=faceBox.getCenter(new T.Vector3());
@@ -203,7 +197,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   servoDetails.forEach(detail=>contactProxies.set(detail.group,solidProxies(detail.group)));
   contactProxies.set(batteryPort.root,solidProxies(batteryPort.root));
   solidProxies(batteryPack.group);
-  const collisionMeshes=[...printedMeshes,...electronicsSolids];
+  const collisionMeshes=[...printedMeshes,headClearance.speaker,...electronicsSolids];
   const servoMeshes=[...servoDetails.values()].map(detail=>detail.group.parent);
   const wireRouter=createWireRouter(root,servoMeshes,collisionMeshes,{clearance:.00045});
   const bundleRouter=createWireRouter(root,servoMeshes,collisionMeshes,{clearance:.0010});
@@ -359,10 +353,6 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   function positionLabel(label,world,visible){const point=world.project(view.camera),width=container.clientWidth,height=container.clientHeight;label.hidden=!visible||point.z< -1||point.z>1||Math.abs(point.x)>1||Math.abs(point.y)>1;label.style.left=`${(point.x+1)*width/2}px`;label.style.top=`${(1-point.y)*height/2}px`;}
   function updateLabels(){
     view.camera.updateMatrixWorld(true);
-    kneeLabels.forEach(({id,label,servo})=>{
-      positionLabel(label,servo.getWorldPosition(vector()),servoIdsVisible&&servo.material.opacity>.5);
-      label.setAttribute('aria-pressed',String(view.selected===SERVO_INDEX[id]));
-    });
     components.forEach(component=>{positionLabel(component.label,component.group.localToWorld(vector(0,component.height*.55,.007)),component.visible&&(component.spec.location!=='face'||coverAmount>.5));component.label.setAttribute('aria-pressed',String(component.id===selected));});
     positionLabel(batteryLabel,(batteryMesh||batteryMount).localToWorld(vector(.026,.025,.050)),batteryVisible&&!!batteryMesh);
     notice.hidden=![...components.values()].some(c=>c.visible)&&!coverOpen&&!wiringVisible&&!batteryVisible;
@@ -395,7 +385,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   };
   canvas.addEventListener('pointerdown',down,{capture:true});canvas.addEventListener('pointercancel',cancel,{capture:true});canvas.addEventListener('pointerup',up,{capture:true});
   const api={
-    exportWireCache(){return{revision:WIRE_CACHE_REVISION,states:[...wireCache.values()]};},components,wireRouter,bundleRouter,wires:ELECTRONICS_WIRES,routes:wires,collisionMeshes: [...servoMeshes,...collisionMeshes],servos:servoDetails,explosion,batteryHolder:{group:batteryMount,mesh:batteryMesh,error:batteryError,pickup:batteryPort,pack:batteryPack},
+    exportWireCache(){return{revision:WIRE_CACHE_REVISION,states:[...wireCache.values()]};},components,wireRouter,bundleRouter,wires:ELECTRONICS_WIRES,routes:wires,collisionMeshes: [...servoMeshes,...collisionMeshes],servos:servoDetails,explosion,headClearance,batteryHolder:{group:batteryMount,mesh:batteryMesh,error:batteryError,pickup:batteryPort,pack:batteryPack},
     setCoverOpen(open){coverOpen=!!open;coverFrom=coverAmount;coverTo=coverOpen?1:0;coverStarted=performance.now();frame();return coverOpen;},
     setVisible(id,visible){const c=components.get(id);if(!c)return false;c.visible=!!visible;c.group.visible=c.visible;frame();return c.visible;},
     setBatteryVisible(visible){batteryVisible=!!visible;if(batteryMesh)batteryMesh.visible=batteryVisible;batteryPack.group.visible=batteryVisible&&batteryPackVisible;frame();return batteryVisible;},
@@ -430,7 +420,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     },
     update:frame,
     dispose(){
-      if(disposed)return;selected=null;applyCutaway();explosion.dispose();disposed=true;kneeLabels.forEach(({label})=>label.remove());view.update=originalUpdate;view.advanceFocus=originalAdvanceFocus;if(originalPose)view.pose=originalPose;cover.position.copy(coverRest);cover.material.opacity=coverOpacity;cover.material.transparent=false;cover.material.depthWrite=true;
+      if(disposed)return;selected=null;applyCutaway();explosion.dispose();headClearance.dispose();disposed=true;view.update=originalUpdate;view.advanceFocus=originalAdvanceFocus;if(originalPose)view.pose=originalPose;cover.position.copy(coverRest);cover.material.opacity=coverOpacity;cover.material.transparent=false;cover.material.depthWrite=true;
       canvas.removeEventListener('pointerdown',down,{capture:true});canvas.removeEventListener('pointercancel',cancel,{capture:true});canvas.removeEventListener('pointerup',up,{capture:true});
       const geometries=new Set(),materials=new Set();const release=object=>object.traverse(o=>{if(o.isMesh){geometries.add(o.geometry);if(Array.isArray(o.material))o.material.forEach(m=>materials.add(m));else materials.add(o.material);}});
       components.forEach(c=>{c.label.remove();c.group.removeFromParent();release(c.group);});wires.forEach(w=>release(w.group));servoDetails.forEach(detail=>detail.dispose());release(batteryMount);geometries.forEach(g=>g.dispose());materials.forEach(m=>{m.map?.dispose();m.dispose();});wireRoot.removeFromParent();batteryMount.removeFromParent();Object.values(cableMaterials).forEach(material=>material.dispose());notice.remove();batteryLabel.remove();

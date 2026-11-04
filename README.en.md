@@ -86,7 +86,7 @@ Follow the [first-walk guide (中文)](https://kissqy.github.io/Microduck-kissqy
 
 [📥 System Image R1](https://kissqy.github.io/Microduck-kissqy/build/start.html#flash) · [📥 Robot Console R17 V167](https://kissqy.github.io/Microduck-kissqy/build/start.html#connect) · [Firmware and DIY IMU flashing](release-assets/README.en.md)
 
-**Orange Pi Zero 3W (A733, 1 GB V1.5):** [Download the community image (.img.xz)](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/Microduck_OrangePiZero3W_Experimental.img.xz) · [SHA-256 checksums](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/SHA256SUMS).
+**Orange Pi Zero 3W (A733, 1 GB V1.5):** [Download the community image (.img.xz)](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/Microduck_OrangePiZero3W_Experimental.img.xz) · [SHA-256 checksums](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/SHA256SUMS). For IMX219 capture and WebRTC, download the image artifact from a [camera-enabled build](https://github.com/lxm/microduck-maker/actions/workflows/orangepi-image.yml). The exp.1 release predates camera support.
 
 ## 🎮 Chinese Robot Console
 

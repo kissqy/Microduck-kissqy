@@ -86,7 +86,7 @@
 
 [📥 系统镜像 R1](https://kissqy.github.io/Microduck-kissqy/build/start.html#flash) · [📥 机器人中控 R17 V167](https://kissqy.github.io/Microduck-kissqy/build/start.html#connect) · [固件下载与自焊 IMU 烧录](release-assets/README.md)
 
-**Orange Pi Zero 3W（A733，1 GB V1.5）社区实验固件**：[下载完整刷卡镜像（.img.xz）](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/Microduck_OrangePiZero3W_Experimental.img.xz) · [SHA-256 校验文件](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/SHA256SUMS)。
+**Orange Pi Zero 3W（A733，1 GB V1.5）社区实验固件**：[下载完整刷卡镜像（.img.xz）](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/Microduck_OrangePiZero3W_Experimental.img.xz) · [SHA-256 校验文件](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/SHA256SUMS)。 IMX219 摄像头及 WebRTC 镜像从[摄像头适配后的 Actions 构建](https://github.com/lxm/microduck-maker/actions/workflows/orangepi-image.yml)下载；上面的 exp.1 发布版早于该适配。
 
 ## 🎮 中文机器人中控
 

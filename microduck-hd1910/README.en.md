@@ -23,7 +23,7 @@ V167 includes compiled **control.43** firmware. Update: **Fixed body jitter.** C
 
 ## Download and use
 
-**Orange Pi Zero 3W (Allwinner A733):** [Download the experimental image (.img.xz)](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/Microduck_OrangePiZero3W_Experimental.img.xz) · [SHA-256 checksums](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/SHA256SUMS). This community port targets the 1 GB V1.5 board; see the [board support and flashing guide](https://github.com/lxm/microduck-maker/tree/3d5dc0f300e3a58de9335c463c83365e911aed19/firmware/orangepi-zero3w). The R1 image below is for the Radxa ZERO 3W (RK3566).
+**Orange Pi Zero 3W (Allwinner A733):** [Download the experimental image (.img.xz)](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/Microduck_OrangePiZero3W_Experimental.img.xz) · [SHA-256 checksums](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/SHA256SUMS). This community port targets the 1 GB V1.5 board; see the [board support and flashing guide](https://github.com/lxm/microduck-maker/tree/58ca093d4b208bad3d88bf8eaa1f1453eb1e333a/firmware/orangepi-zero3w). The R1 image below is for the Radxa ZERO 3W (RK3566). For IMX219 capture and WebRTC, download the image artifact from a [camera-enabled build](https://github.com/lxm/microduck-maker/actions/workflows/orangepi-image.yml). The exp.1 release predates camera support.
 
 For the pinned BSP source, run `git submodule update --init microduck-hd1910/boards/microduck-maker` from the repository root, then open `microduck-hd1910/boards/microduck-maker/firmware/orangepi-zero3w/`.
 

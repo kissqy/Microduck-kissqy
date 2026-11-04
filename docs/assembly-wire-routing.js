@@ -108,7 +108,9 @@ export function createWireRouter(root,servoMeshes,printedMeshes=[],{clearance=CL
  // Visibility corners cover open runs. A small, lazy grid resolves the narrow
  // passages inside hollow brackets/head shells without filling those cavities
  // with solid bounding boxes. Every edge still uses exact mesh clearance.
- function passagePath(start,end,budget=2500){
+ // A rear-facing head socket can require a run around the closed head shell,
+ // beyond the small search used by adjacent sockets on the same side.
+ function passagePath(start,end,budget=12000){
   const step=.002,limit=new T.Box3().setFromPoints([start,end]).expandByScalar(.032),heap=[],nodes=new Map();
   const moves=[];for(let x=-1;x<=1;x++)for(let y=-1;y<=1;y++)for(let z=-1;z<=1;z++)if(x||y||z)moves.push([x,y,z,Math.hypot(x,y,z)*step]);
   function push(node){let i=heap.length;heap.push(node);while(i){const p=(i-1)>>1;if(heap[p].score<=node.score)break;heap[i]=heap[p];i=p;}heap[i]=node;}

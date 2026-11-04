@@ -46,6 +46,28 @@ for(const [id,inwardY]of [[14,1],[24,-1]]){
  const tail=detail.group.localToWorld(new T.Vector3(0,0,-.02)).sub(servo.getWorldPosition(new T.Vector3()));
  assert(tail.z>.0199,`ankle ${id}: case tail no longer upright`);
 }
+// In the duck's zero pose, the neck-yaw socket is on top and the head-roll
+// socket faces the back. Check actual port geometry in duck coordinates,
+// rather than assuming that their differently mounted local axes coincide.
+for(const [id,index,direction]of [[32,7,new T.Vector3(0,0,1)],[33,8,new T.Vector3(-1,0,0)]]){
+ const servo=view.actual.servos[index],center=servo.getWorldPosition(new T.Vector3());
+ for(const port of Object.values(api.servos.get(id).ports)){
+  const mouth=port.mouth.getWorldPosition(new T.Vector3());
+  const exit=port.outward.getWorldPosition(new T.Vector3()).sub(mouth).normalize();
+  assert(mouth.clone().sub(center).dot(direction)>.0089,`servo ${id}: socket on the wrong case face`);
+  assert(exit.dot(direction)>.999999,`servo ${id}: socket exit faces the wrong direction`);
+ }
+}
+const hat=api.components.get('hat'),zero=api.components.get('zero');
+for(const [board,header]of [[hat,hat.ports.J4],[zero,zero.ports.gpio40]]){
+ const center=board.group.getWorldPosition(new T.Vector3());
+ assert(header.mouth.getWorldPosition(new T.Vector3()).z<center.z-.01,board.id+': paired header must be below the PCB centre');
+ assert(new T.Vector3(0,0,1).transformDirection(board.group.matrixWorld).x<-.999999,board.id+': PCB front/back direction changed');
+ assert(Math.abs(board.group.matrixWorld.determinant()-1)<1e-6,board.id+': PCB must retain rigid, unmirrored geometry');
+}
+const headerDirection=port=>port.outward.getWorldPosition(new T.Vector3()).sub(port.mouth.getWorldPosition(new T.Vector3())).normalize();
+assert(headerDirection(hat.ports.J4).dot(headerDirection(zero.ports.gpio40))<-.999999,'paired header openings must face each other');
+for(let i=0;i<40;i++)assert(hat.ports.J4.ordered[i].getWorldPosition(new T.Vector3()).distanceTo(zero.ports.gpio40.ordered[i].getWorldPosition(new T.Vector3()))<.002,'HAT/ZERO contact pair detached after turning the boards');
 view.actual.parts.forEach((part,index)=>{
  assert(part.position.distanceTo(rest[index])<1e-12,`part ${index}: assembly changed its frozen position`);
  assert(part.quaternion.angleTo(partRotations[index])<1e-7,`part ${index}: assembly changed its frozen rotation`);

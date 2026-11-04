@@ -2,13 +2,13 @@ import * as T from './vendor/three.module.min.js?demo=20261013';
 import {createBoardModel} from './assembly-board-models.js?v=20261030-hub-arcs';
 import {attachHeadClearance} from './assembly-head-clearance.js?v=20261104-head-labels';
 import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261104-head-labels';
-import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261104-head-labels';
+import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261104-head-orientation';
 import {createHubModel} from './assembly-hub-model.js?v=20261103-hub-bottom';
 import {createBatteryPack,createBatteryPickup,BATTERY_PICKUP} from './assembly-battery-model.js?v=20261103-contact-hip';
-import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261104-head-labels';
+import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261104-head-orientation';
 import {parallelCablePaths} from './assembly-cable-bundles.js?v=20261030-hub-arcs';
 import {softenCableCorners} from './assembly-wire-curves.js?v=20261030-hub-arcs';
-import {createWireRouter} from './assembly-wire-routing.js?v=20261030-hub-arcs';
+import {createWireRouter} from './assembly-wire-routing.js?v=20261104-head-orientation';
 
 // Board footprints are documented; mounting offsets are assembly-reference
 // placements, not a mechanical clearance or connector pin-direction drawing.
@@ -121,7 +121,9 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     batteryMesh=new T.Mesh(geometry,new T.MeshStandardMaterial({color:0xc4c9c8,roughness:.73,metalness:.04,side:T.DoubleSide}));
     batteryMesh.name='电池仓_M2.5螺丝_HUB组合.stl';batteryMount.add(batteryMesh);
   }catch(error){batteryError=error?.message||'电池仓模型未加载';}
-  const faceOrientation=basisQuaternion(vector(0,-1,0),vector(0,0,1),vector(-1,0,0));
+  // Mount both face boards upside down as one paired stack. A rigid half-turn
+  // in the PCB plane keeps front/back and every connector/contact together.
+  const faceOrientation=basisQuaternion(vector(0,1,0),vector(0,0,-1),vector(-1,0,0));
   const rearBoardOrientation=basisQuaternion(vector(0,1,0),vector(0,0,1),vector(1,0,0));
   const facePositions={
     zero:vector(faceBox.min.x-.006,faceCenter.y,faceCenter.z),

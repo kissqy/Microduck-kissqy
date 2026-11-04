@@ -70,15 +70,16 @@ export function attachServoModel(servo,id){
   if(!assets)throw Error('请先加载 HD1910 舵机模型');
   if(servo.userData.hd1910Assembly)throw Error('HD1910 舵机已安装');
   const originalGeometry=servo.geometry;
-  // Author's physical build: both ankle sockets face the space between the
-  // legs. Turn only the displayed case and its details about local Z, keeping
-  // the tail upright and the two shaft planes on the same frozen hinge line.
-  // Leave the Mesh transform, parent links and joint directions untouched.
-  const inwardAnkle=id===14||id===24,uprightHip=id===10||id===20;
-  const caseGeometry=inwardAnkle?assets.geometries[0].clone().rotateZ(Math.PI):(uprightHip?assets.hipGeometry:assets.geometries[0]);
+  // Physical-build corrections: ankle sockets face inward, ID 32 sockets face
+  // up, and ID 33 sockets face the duck's back. Their frozen mounting frames
+  // differ, so the same local half-turn corrects different duck-space axes.
+  // Turn the complete displayed case and its details together; preserve the
+  // shaft line, Mesh transform, parent links and all joint directions.
+  const turnedCase=[14,24,32,33].includes(id),uprightHip=id===10||id===20;
+  const caseGeometry=turnedCase?assets.geometries[0].clone().rotateZ(Math.PI):(uprightHip?assets.hipGeometry:assets.geometries[0]);
   servo.geometry=caseGeometry;
   const group=new T.Group();group.name=`servo-${id}-identification-and-ports`;servo.add(group);
-  if(inwardAnkle||uprightHip)group.rotation.z=Math.PI;
+  if(turnedCase||uprightHip)group.rotation.z=Math.PI;
   const shellMaterial=new T.MeshStandardMaterial({color:0xe7e4d9,roughness:.66,metalness:.02,side:T.DoubleSide});
   const metalMaterial=new T.MeshStandardMaterial({color:0xc9b26b,roughness:.32,metalness:.65});
   const ports={};
@@ -127,7 +128,7 @@ export function attachServoModel(servo,id){
     },
     dispose(){
       group.removeFromParent();servo.geometry=originalGeometry;delete servo.userData.hd1910Assembly;
-      if(inwardAnkle)caseGeometry.dispose();
+      if(turnedCase)caseGeometry.dispose();
       shellMaterial.dispose();metalMaterial.dispose();decalMaterial.dispose();texture?.dispose();
       group.traverse(object=>{if(object.isMesh&&object.geometry!==assets.geometries[1]&&object.geometry!==assets.geometries[2])object.geometry.dispose();});
     },

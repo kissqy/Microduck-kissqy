@@ -366,9 +366,9 @@
     {
       "id": "battery-power",
       "name": "电池接入",
-      "spec": "电池取电可使用香蕉板（暂未上架），也可以使用仓库配套电池仓，加 M2.6 螺丝作为取电触点；取出的正极接 HUB 电源输入 VIN（+），负极接 GND（−），按实板丝印核对极性。",
-      "url": "https://github.com/kissqy/Microduck-kissqy/blob/main/docs/ASSEMBLY-NOTES.md#电池取电与-hub-接入",
-      "purchaseLabel": "查看取电说明 ↗"
+      "spec": "电池取电可自购香蕉板，也可以使用仓库配套电池仓，加 M2.6 螺丝作为取电触点；取出的正极接 HUB 电源输入 VIN（+），负极接 GND（−），按实板丝印核对极性。",
+      "url": "https://kissqy.github.io/Microduck-kissqy/build/shopping.html#battery-power-reference",
+      "purchaseLabel": "查看取电"
     },
     {
       "id": "hand-tools",
@@ -424,3 +424,4 @@
     ]
   }
 }
+

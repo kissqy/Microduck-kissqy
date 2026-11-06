@@ -1,0 +1,16 @@
+.power-reference-link{display:inline-block;font-weight:600;white-space:nowrap}
+.power-reference-dialog{width:min(820px,calc(100vw - 32px));max-height:calc(100dvh - 32px);margin:auto;padding:0;border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--text);box-shadow:0 24px 90px #0009;overflow:auto;overscroll-behavior:contain}
+.power-reference-dialog::backdrop{background:#000b;backdrop-filter:blur(4px)}
+body.power-reference-open{overflow:hidden}
+.power-reference-header{position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 22px;border-bottom:1px solid var(--line);background:var(--panel)}
+.power-reference-header h2{margin:0;font-size:21px}
+.power-reference-close{display:grid;place-items:center;flex-shrink:0;width:40px;height:40px;border:1px solid var(--line);border-radius:50%;background:var(--panel2);color:var(--text);font-size:26px;line-height:1}
+.power-reference-body{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:start;gap:24px;padding:22px}
+.power-reference-photo{display:block;min-width:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg)}
+.power-reference-photo img{display:block;width:100%;height:auto;max-height:calc(100dvh - 160px);object-fit:contain}
+.power-reference-copy{min-width:0;font-size:15px;line-height:1.9}
+.power-reference-copy p{margin:0 0 18px}
+.power-reference-copy strong{color:var(--green)}
+.power-reference-wiring{padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.power-reference-copy .power-reference-hint{margin-bottom:0;color:var(--muted);font-size:12px}
+@media(max-width:600px){.power-reference-header{padding:12px 16px}.power-reference-header h2{font-size:19px}.power-reference-body{grid-template-columns:1fr;gap:18px;padding:16px}.power-reference-photo{width:min(100%,280px);margin:auto}.power-reference-photo img{max-height:50dvh}.power-reference-copy{font-size:14px}.power-reference-copy p{margin-bottom:12px}}

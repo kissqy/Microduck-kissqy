@@ -23,6 +23,10 @@ V167 中控配套已编译的 **control.43** 固件。更新：**修复鸭身抖
 
 ## 下载与使用
 
+**Orange Pi Zero 3W（Allwinner A733）**：[下载完整刷卡镜像（.img.xz）](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/Microduck_OrangePiZero3W_Experimental.img.xz) · [SHA-256 校验文件](https://github.com/lxm/microduck-maker/releases/download/orangepi-zero3w-exp.1/SHA256SUMS)。此社区适配面向 1 GB、PCB V1.5，详见[板级适配与刷卡说明](https://github.com/lxm/microduck-maker/tree/58ca093d4b208bad3d88bf8eaa1f1453eb1e333a/firmware/orangepi-zero3w)。下方 R1 镜像用于 Radxa ZERO 3W（RK3566）。 IMX219 摄像头及 WebRTC 镜像从[摄像头适配后的 Actions 构建](https://github.com/lxm/microduck-maker/actions/workflows/orangepi-image.yml)下载；上面的 exp.1 发布版早于该适配。
+
+要查看本分支固定版本的驱动与构建源码，请在仓库根目录执行 `git submodule update --init microduck-hd1910/boards/microduck-maker`，再进入 `microduck-hd1910/boards/microduck-maker/firmware/orangepi-zero3w/`。
+
 1. [下载系统镜像 R1](https://github.com/kissqy/Microduck-kissqy/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz)，用 [Armbian Imager](https://imager.armbian.com/) 刷入 TF 卡。
 2. 首次开机连接 `Microduck-kissqy` 热点（密码 `12345678`），设置家庭 Wi-Fi 和新的系统登录密码。未自动弹出页面时访问 `http://10.42.0.1:8088`。
 3. [下载机器人中控 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip)，完整解压后运行 `start.cmd`；macOS/Linux 运行 `bash start.command`。页面地址为 `http://127.0.0.1:8090`。

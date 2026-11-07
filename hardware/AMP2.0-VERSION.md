@@ -42,4 +42,27 @@
 
 IMU 的 J2 针序保持 **1=3V3、2=SWDIO、3=GND、4=SWCLK、5=NRST**；烧录与检查入口见 [IMU FT6 固件指南](IMU-FIRMWARE.md)。本次发布为接口工程更新。
 
+
+## ToF 与喇叭实拍接线
+
+<a href="../docs/assets/hat-tof-speaker-wiring.jpg"><img src="../docs/assets/hat-tof-speaker-wiring.jpg" alt="HAT J5 的 ToF 四线接法及 J1 喇叭红黑线实拍" width="420" /></a>
+
+**ToF 接 HAT J5（SH1.0 / 4P）；喇叭接 HAT J1（HP1.25 / 2P）。** 上图 ToF 模块左侧焊孔自上而下是 **VIN、GND、SCL、SDA**，对应 **黄、绿、红、黑**；INT、LPn 在本图中留空。HAT 端按下表针号对应，不把模块焊孔顺序当作 J5 针序。
+
+| HAT J5 针号 | 本图线色 | HAT 信号 | ToF 模块焊孔 |
+| --- | --- | --- | --- |
+| 1 | 绿色 | GND | GND |
+| 2 | 黄色 | 3V3（3.3 V） | VIN |
+| 3 | 黑色 | GPIO02_I2C_SDA | SDA |
+| 4 | 红色 | GPIO03_I2C_SCL | SCL |
+
+| HAT J1 针号 | 本图线色 | 喇叭信号 |
+| --- | --- | --- |
+| 1 | 红色 | SPK_R_P（＋） |
+| 2 | 黑色 | SPK_R_N（−） |
+
+按上图朝向，最下方的 **J1 喇叭插座是上黑、下红**。J1 黑线为 **SPK_R_N 差分输出，不是 GND**；J2、J9 为麦克风接口。线色仅对应这张实拍，换线束时以信号和针号为准。
+
+[在线装配页：查看实拍与线序](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#hat-wiring)
+
 [两种版本工程总入口](README.md) · [鸭子采购总清单](../DUCK-SHOPPING-LIST.md) · [项目首页](../README.md)

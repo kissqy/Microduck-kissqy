@@ -50,6 +50,12 @@ HAT 的思路是先分析官方器件及外围，按实际需要精简，再用�
 
 **当前记录基线（2026-10-12 确认）：** HAT 与 IMU 已完成制作、整机接入及长期实机验证；IMU 制作及飞特适配的测试记录见时间线。
 
+## HAT：ToF 与喇叭接线
+
+<a href="AMP2.0-VERSION.md#tof-与喇叭实拍接线"><img src="../docs/assets/hat-tof-speaker-wiring.jpg" alt="ToF 与喇叭实拍接线" width="420" /></a>
+
+**ToF → J5：**绿 GND、黄 VIN（3.3 V）、黑 SDA、红 SCL；**喇叭 → J1：**红 SPK_R_P（＋）、黑 SPK_R_N（−）。[查看完整针号、线序和照片方向说明](AMP2.0-VERSION.md#tof-与喇叭实拍接线)。
+
 ## HUB 分线板 · 2026-11-07
 
 **[下载 HUB 完整工程（原理图 + PCB）](ProPrj_DXL_HUB_V1_2026-11-07.epro2)**。按作者提供的源文件原样发布，四路总线使用 AMP2.0 直插接口，板载 1000 µF 缓冲电容；电源输入 **CN1 为 XH2.54-2P**。

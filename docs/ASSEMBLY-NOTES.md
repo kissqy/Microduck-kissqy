@@ -18,6 +18,10 @@
 nmcli -f IN-USE,SSID,FREQ,SIGNAL device wifi list
 ```
 
+## ToF 与喇叭接线
+
+[查看实拍与完整线序表](../hardware/AMP2.0-VERSION.md#tof-与喇叭实拍接线)，也可[在装配页查看](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#hat-wiring)。ToF 接 J5：绿 GND、黄 VIN（3.3 V）、黑 SDA、红 SCL；喇叭接 J1：红 SPK_R_P（＋）、黑 SPK_R_N（−），喇叭黑线不是 GND。
+
 ## 电池取电与 HUB 接入
 
 HUB 的电源输入 CN1 为 XH2.54-2P。可用 XH2.54 电源线连接仓库电池仓的 M2.6 螺丝触点，取电方便快捷；也可直接插接电压、极性匹配的 XH2.54 接口电池，或将 XH2.54 电源线焊接到香蕉板取电。正极接 VIN（+），负极接 GND（−），按实板丝印核对极性。

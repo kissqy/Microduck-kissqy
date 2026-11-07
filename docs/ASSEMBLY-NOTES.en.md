@@ -18,6 +18,10 @@ The author encountered interference between ZERO's 2.4 GHz Wi-Fi and the gamepad
 nmcli -f IN-USE,SSID,FREQ,SIGNAL device wifi list
 ```
 
+## ToF and speaker connections
+
+[View the wiring photo and pin table](../hardware/AMP2.0-VERSION.en.md#tof-and-speaker-wiring-photo), or [open it in the assembly guide](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#hat-wiring). ToF connects to J5: green GND, yellow VIN (3.3 V), black SDA, red SCL. Speaker connects to J1: red SPK_R_P (+), black SPK_R_N (−); the black speaker output is not GND.
+
 ## Battery power and HUB connection
 
 The HUB's CN1 power input uses XH2.54-2P. Connect an XH2.54 power lead to the repository battery holder's M2.6 screw contacts for a quick, convenient connection; plug in a battery with a matching XH2.54 connector, voltage and polarity directly; or solder the XH2.54 lead to a banana board. Connect positive to VIN (+) and negative to GND (−), following the board markings.

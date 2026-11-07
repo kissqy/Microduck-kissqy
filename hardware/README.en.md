@@ -50,6 +50,12 @@ The timelines follow the build history organized on October 12, 2026. Original p
 
 **Current baseline, confirmed October 12, 2026:** fabrication, full-robot integration, and extended real-robot validation are complete for both boards. IMU fabrication and Feetech adaptation test records are in the timeline.
 
+## HAT: ToF and speaker wiring
+
+<a href="AMP2.0-VERSION.en.md#tof-and-speaker-wiring-photo"><img src="../docs/assets/hat-tof-speaker-wiring.jpg" alt="ToF and speaker wiring photo" width="420" /></a>
+
+**ToF → J5:** green GND, yellow VIN (3.3 V), black SDA, red SCL. **Speaker → J1:** red SPK_R_P (+), black SPK_R_N (−). [See pin numbers and photo orientation](AMP2.0-VERSION.en.md#tof-and-speaker-wiring-photo).
+
 ## HUB distribution board · November 7, 2026
 
 **[Download the complete HUB project (schematic + PCB)](ProPrj_DXL_HUB_V1_2026-11-07.epro2)**. The supplied source file is published unchanged. Four bus ports use straight AMP2.0 connectors, with an onboard 1000 µF buffer capacitor and an **XH2.54-2P power input at CN1**.

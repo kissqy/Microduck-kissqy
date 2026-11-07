@@ -42,4 +42,27 @@ The added indicator path is **`GPIO15_UART_RX → R34 (1kΩ) → D5 → GND`**, 
 
 IMU J2 remains **1=3V3, 2=SWDIO, 3=GND, 4=SWCLK, 5=NRST**. See the [FT6 flashing and checks guide](IMU-FIRMWARE.en.md). This publication adds the connector project variant.
 
+
+## ToF and speaker wiring photo
+
+<a href="../docs/assets/hat-tof-speaker-wiring.jpg"><img src="../docs/assets/hat-tof-speaker-wiring.jpg" alt="Real wiring from HAT J5 to the ToF module and red/black speaker leads at J1" width="420" /></a>
+
+**Connect the ToF module to HAT J5 (SH1.0 / 4P), and the speaker to HAT J1 (HP1.25 / 2P).** From top to bottom, the ToF module pads on the left of the photo are **VIN, GND, SCL, SDA**, using **yellow, green, red, black** wires. INT and LPn are unconnected in this photo. Match the HAT pins below; the module pad order is different from the J5 pin order.
+
+| HAT J5 pin | Wire in photo | HAT signal | ToF module pad |
+| --- | --- | --- | --- |
+| 1 | Green | GND | GND |
+| 2 | Yellow | 3V3 (3.3 V) | VIN |
+| 3 | Black | GPIO02_I2C_SDA | SDA |
+| 4 | Red | GPIO03_I2C_SCL | SCL |
+
+| HAT J1 pin | Wire in photo | Speaker signal |
+| --- | --- | --- |
+| 1 | Red | SPK_R_P (+) |
+| 2 | Black | SPK_R_N (−) |
+
+With the photo oriented as shown, the lowest **J1 speaker connector has black above red**. The black J1 wire is **SPK_R_N, a differential speaker output, not GND**. J2 and J9 are microphone inputs. Wire colors describe this photo; match signals and pin numbers when using another cable.
+
+[Online assembly guide: photo and pin assignments](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#hat-wiring)
+
 [Both hardware versions](README.en.md) · [Duck shopping guide](../DUCK-SHOPPING-LIST.en.md) · [Homepage](../README.en.md)

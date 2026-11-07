@@ -6,7 +6,7 @@
 
 **The listed price for a complete FrankenDuck printing service is CNY 199.** No printer purchase is needed; shipping is extra. [Contact the author about printing and colors](../../docs/assets/purchase-wechat-qr.jpg). The files below are available for self-printing.
 
-**[⬇️ Download the complete package (RAR, 14.54 MiB)](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/3d-print-frankenduck/Microduck-Print-FrankenDuck-20261015.rar)** · [SHA256](SHA256SUMS) · [Package file list](FILES.md) · [Duck shopping guide](../../DUCK-SHOPPING-LIST.en.md) · [Homepage](../../README.en.md)
+**[⬇️ Download the complete package (RAR, 14.54 MiB)](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/3d-print-frankenduck/Microduck-Print-FrankenDuck-20261107.rar)** · [SHA256](SHA256SUMS) · [Package file list](FILES.md) · [Duck shopping guide](../../DUCK-SHOPPING-LIST.en.md) · [Homepage](../../README.en.md)
 
 Published **October 15, 2026**. The archive contains **36 STL files and one 3MF project with 5 plates**. Original filenames and layouts are preserved; file counts are not assembly quantities. The original archive is supplied without editing the models or plate project.
 

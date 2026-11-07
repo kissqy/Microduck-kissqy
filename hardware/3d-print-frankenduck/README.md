@@ -6,7 +6,7 @@
 
 **缝合怪版整套代打标价：¥199。** 不需要购买打印机；运费另计。[联系作者确认代打与配色](../../docs/assets/purchase-wechat-qr.jpg)。自己打印可直接下载下方文件。
 
-**[⬇️ 下载完整打印包（RAR，14.54 MiB）](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/3d-print-frankenduck/Microduck-Print-FrankenDuck-20261015.rar)** · [SHA256 校验](SHA256SUMS) · [包内文件清单](FILES.md) · [鸭子采购总清单](../../DUCK-SHOPPING-LIST.md) · [返回首页](../../README.md)
+**[⬇️ 下载完整打印包（RAR，14.54 MiB）](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/3d-print-frankenduck/Microduck-Print-FrankenDuck-20261107.rar)** · [SHA256 校验](SHA256SUMS) · [包内文件清单](FILES.md) · [鸭子采购总清单](../../DUCK-SHOPPING-LIST.md) · [返回首页](../../README.md)
 
 发布于 **2026-10-15**。包内 **36 个 STL 文件 + 1 个 3MF 摆盘项目（5 盘）**，保留原文件名和摆盘；文件数量不等于装配数量。下载的是原始压缩包，模型与摆盘内容没有重新编辑。
 

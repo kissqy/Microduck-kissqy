@@ -41,11 +41,11 @@ The author supplied reference prices for the EAGET 32GB monitoring / dashcam mic
 | --- | ---: | --- | --- |
 | Assembled HAT<br><sub><strong>AMP2.0 servo connectors</strong>; <strong>plug-in speaker</strong>; <strong>no manual jumpers</strong>; stable communication <strong>without packet loss</strong>.<br>Power, servo communication and audio connections for ZERO.</sub> | 1 | CNY 119 | [Select HAT](https://item.taobao.com/item.htm?id=1095121548583) |
 | Assembled IMU (FT6 preflashed)<br><sub><strong>AMP2.0 interface</strong>; stable orientation <strong>without drift</strong>; <strong>FT6 preflashed</strong>.<br>Mount against the repository battery holder backplate with J1 pointing up to <strong>use the author&#x27;s IMU calibration</strong>.</sub> | 1 | CNY 99 | [Select IMU](https://item.taobao.com/item.htm?id=1095121548583) |
-| Assembled HUB (buffer capacitor included)<br><sub>Servo and battery-power distribution; onboard <strong>1000 µF buffer capacitor</strong> <strong>helps prevent ZERO resets</strong> from transient supply dips.<br>Mount above servos 10 and 20; battery positive to VIN (+), negative to GND (−).</sub> | 1 | CNY 69 | [Select HUB](https://item.taobao.com/item.htm?id=1095121548583) |
+| Assembled HUB (buffer capacitor included)<br><sub>Servo and battery-power distribution; onboard <strong>1000 µF buffer capacitor</strong> <strong>helps prevent ZERO resets</strong> from transient supply dips.<br>Mount above servos 10 and 20; CN1 is an XH2.54-2P power input. Connect battery positive to VIN (+), negative to GND (−).</sub> | 1 | CNY 69 | [Select HUB](https://item.taobao.com/item.htm?id=1095121548583) |
 
 ### Battery power connection
 
-For battery power, use a banana board (not yet listed for sale), or the repository’s battery holder with M2.6 screws as power contacts. Connect battery positive to HUB VIN (+) and negative to GND (−), following the board markings.
+The HUB's CN1 power input uses XH2.54-2P. Connect an XH2.54 power lead to the repository battery holder's M2.6 screw contacts for a quick, convenient connection; plug in a battery with a matching XH2.54 connector, voltage and polarity directly; or solder the XH2.54 lead to a banana board. Connect positive to VIN (+) and negative to GND (−), following the board markings.
 
 ## Duck body
 

@@ -27,6 +27,7 @@
 | --- | --- |
 | **HAT** | **Plug-in speaker**; **AMP2.0 servo connectors**; **no manual jumpers**; stable communication **without packet loss**. |
 | **IMU** | **AMP2.0 interface**; stable orientation **without drift**; **use the author's IMU calibration** with the matching repository battery holder to reduce walking problems caused by incorrect calibration. |
+| **HUB** | **Four straight AMP2.0 ports**; **1000 µF buffer capacitor**; **XH2.54 power input** supporting screw contacts, a compatible plug-in battery or a banana board. |
 
 **[🔧 Assembly notes: 5 GHz Wi-Fi for ZERO; the HUB includes the 1000 µF main-power buffer capacitor, with no separate purchase needed; wiring and precautions](../docs/ASSEMBLY-NOTES.en.md)**
 
@@ -48,6 +49,18 @@ The HAT started with a study of the official components and their surrounding ci
 The timelines follow the build history organized on October 12, 2026. Original projects are dated October 7, 2026; the AMP2.0 variant is dated October 15, 2026. Differences between physical-board tuning and the project BOM are documented in the HAT guide.
 
 **Current baseline, confirmed October 12, 2026:** fabrication, full-robot integration, and extended real-robot validation are complete for both boards. IMU fabrication and Feetech adaptation test records are in the timeline.
+
+## HUB distribution board · November 7, 2026
+
+**[Download the complete HUB project (schematic + PCB)](ProPrj_DXL_HUB_V1_2026-11-07.epro2)**. The supplied source file is published unchanged. Four bus ports use straight AMP2.0 connectors, with an onboard 1000 µF buffer capacitor and an **XH2.54-2P power input at CN1**.
+
+Three power-connection options are supported:
+
+1. **XH2.54 power lead + M2.6 screw contacts in the battery holder** for a quick, convenient connection.
+2. **A battery with an XH2.54 connector plugged in directly**, with voltage and polarity matching the robot.
+3. **An XH2.54 power lead soldered to a banana board**, then plugged into the HUB.
+
+Connect positive to **VIN (+)** and negative to **GND (−)**, following the board markings. [View the screw-contact photo](https://kissqy.github.io/Microduck-kissqy/build/shopping.html#battery-power-reference).
 
 > [!NOTE]
 > **🌙 A little aside · An evening for building a board**

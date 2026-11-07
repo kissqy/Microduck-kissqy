@@ -15,7 +15,10 @@ if(triggers.length){
     <img src="../assets/battery-screw-power.jpg" alt="配套电池仓内，两颗螺丝作为电池取电触点的实拍" width="864" height="1536" loading="lazy">
    </a>
    <div class="power-reference-copy" id="power-reference-copy">
-    <p>也可以<strong>自购香蕉板取电</strong>。作者偷个懒，直接用 <strong>M2.6 螺丝</strong>作取电触点；螺纹卡得紧，运动时不易松脱断电，简单实用。</p>
+    <p>HUB 电源口 <strong>CN1 使用 XH2.54-2P</strong>，可按电池选择取电方式。</p>
+    <p><strong>螺丝取电：</strong>XH2.54 电源线连接电池仓的 <strong>M2.6 螺丝触点</strong>，方便快捷。螺纹卡得紧，运动时不易松脱断电，简单实用。</p>
+    <p><strong>电池直插：</strong>电压和极性匹配的 <strong>XH2.54 接口电池</strong>，可直接插入 HUB。</p>
+    <p><strong>香蕉板取电：</strong>也可以自购香蕉板，将 <strong>XH2.54 电源线焊接到香蕉板</strong>，再插入 HUB。</p>
     <p class="power-reference-wiring">取出的正极接 HUB <strong>VIN（+）</strong>，负极接 <strong>GND（−）</strong>，按实板丝印核对极性。</p>
     <p class="power-reference-hint">点击图片可查看原图。</p>
    </div>

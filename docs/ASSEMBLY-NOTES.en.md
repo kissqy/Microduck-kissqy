@@ -20,7 +20,7 @@ nmcli -f IN-USE,SSID,FREQ,SIGNAL device wifi list
 
 ## Battery power and HUB connection
 
-For battery power, use a banana board (not yet listed for sale), or the repository’s battery holder with M2.6 screws as power contacts. Connect battery positive to HUB VIN (+) and negative to GND (−), following the board markings.
+The HUB's CN1 power input uses XH2.54-2P. Connect an XH2.54 power lead to the repository battery holder's M2.6 screw contacts for a quick, convenient connection; plug in a battery with a matching XH2.54 connector, voltage and polarity directly; or solder the XH2.54 lead to a banana board. Connect positive to VIN (+) and negative to GND (−), following the board markings.
 
 ## The HUB includes the main-power buffer capacitor
 

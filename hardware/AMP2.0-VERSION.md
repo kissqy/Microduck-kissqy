@@ -45,6 +45,8 @@ IMU 的 J2 针序保持 **1=3V3、2=SWDIO、3=GND、4=SWCLK、5=NRST**；烧录�
 
 ## ToF 与喇叭实拍接线
 
+完整安装顺序见 [头部安装与接线 · 五步实拍](../docs/HEAD-ASSEMBLY.md)，包含 ToF 固定、IMX219 排线、ZERO 间距与头壳内走线。
+
 <a href="../docs/assets/hat-tof-speaker-wiring.jpg"><img src="../docs/assets/hat-tof-speaker-wiring.jpg" alt="HAT J5 的 ToF 四线接法及 J1 喇叭红黑线实拍" width="420" /></a>
 
 **ToF 接 HAT J5（SH1.0 / 4P）；喇叭接 HAT J1（HP1.25 / 2P）。** 上图 ToF 模块左侧焊孔自上而下是 **VIN、GND、SCL、SDA**，对应 **黄、绿、红、黑**；INT、LPn 在本图中留空。HAT 端按下表针号对应，不把模块焊孔顺序当作 J5 针序。
@@ -66,3 +68,4 @@ IMU 的 J2 针序保持 **1=3V3、2=SWDIO、3=GND、4=SWCLK、5=NRST**；烧录�
 [在线装配页：查看实拍与线序](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#hat-wiring)
 
 [两种版本工程总入口](README.md) · [鸭子采购总清单](../DUCK-SHOPPING-LIST.md) · [项目首页](../README.md)
+

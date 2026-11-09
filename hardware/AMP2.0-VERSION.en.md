@@ -45,6 +45,8 @@ IMU J2 remains **1=3V3, 2=SWDIO, 3=GND, 4=SWCLK, 5=NRST**. See the [FT6 flashing
 
 ## ToF and speaker wiring photo
 
+See the [five-photo head assembly guide](../docs/HEAD-ASSEMBLY.en.md) for ToF mounting, the IMX219 ribbon, ZERO clearance and cable routing inside the head.
+
 <a href="../docs/assets/hat-tof-speaker-wiring.jpg"><img src="../docs/assets/hat-tof-speaker-wiring.jpg" alt="Real wiring from HAT J5 to the ToF module and red/black speaker leads at J1" width="420" /></a>
 
 **Connect the ToF module to HAT J5 (SH1.0 / 4P), and the speaker to HAT J1 (HP1.25 / 2P).** From top to bottom, the ToF module pads on the left of the photo are **VIN, GND, SCL, SDA**, using **yellow, green, red, black** wires. INT and LPn are unconnected in this photo. Match the HAT pins below; the module pad order is different from the J5 pin order.
@@ -66,3 +68,4 @@ With the photo oriented as shown, the lowest **J1 speaker connector has black ab
 [Online assembly guide: photo and pin assignments](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#hat-wiring)
 
 [Both hardware versions](README.en.md) · [Duck shopping guide](../DUCK-SHOPPING-LIST.en.md) · [Homepage](../README.en.md)
+

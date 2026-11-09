@@ -17,7 +17,7 @@
 
 ## 整机零件一览
 
-<a href="docs/assets/build-parts-kit.jpg"><img src="docs/assets/build-parts-kit.jpg" width="960" alt="Microduck 整机零件实拍，包含舵机、板卡、打印件、线束、轴承、供电配件与手柄" /></a>
+<a href="docs/assets/build-parts-kit.jpg?v=20261110-photo-fix"><img src="docs/assets/build-parts-kit.jpg?v=20261110-photo-fix" width="520" alt="Microduck 整机零件实拍，包含舵机、板卡、打印件、线束、轴承、供电配件与手柄" /></a>
 
 装配前，对照实物核对舵机、板卡、打印件、线束和配件。点击图片可放大查看。
 

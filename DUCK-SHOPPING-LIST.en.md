@@ -17,7 +17,7 @@ The online pages show totals first, then specifications, quantities and purchase
 
 ## Complete parts at a glance
 
-<a href="docs/assets/build-parts-kit.jpg"><img src="docs/assets/build-parts-kit.jpg" width="960" alt="Microduck parts flat lay with servos, boards, printed parts, cables, bearings, power accessories and a gamepad" /></a>
+<a href="docs/assets/build-parts-kit.jpg?v=20261110-photo-fix"><img src="docs/assets/build-parts-kit.jpg?v=20261110-photo-fix" width="520" alt="Microduck parts flat lay with servos, boards, printed parts, cables, bearings, power accessories and a gamepad" /></a>
 
 Check the servos, boards, printed parts, cables and accessories before assembly. Click the photo for a larger view.
 

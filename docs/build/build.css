@@ -34,3 +34,13 @@
 @media screen and (max-width:600px){.header-main,.route-nav,.wrap{padding-inline:12px}.shopping-table .spec{font-size:12px}.route-card p{font-size:12px}}
 
 .shopping-table .board-feature{color:var(--green);font-weight:700}
+
+/* Compact parts photo beside the existing assembly preparation summary. */
+.parts-overview-row{margin:20px 0;align-items:stretch}
+.parts-overview-row>.panel{margin:0;min-width:0}
+.parts-photo-figure{margin:0}
+.parts-photo-link{display:block;max-width:400px;margin:14px auto 0;border-radius:10px;overflow:hidden;background:#f2f3f1}
+.parts-photo-link img{display:block;width:100%;height:auto}
+.parts-photo-figure figcaption{margin-top:10px}
+.parts-ready{display:flex;flex-direction:column;justify-content:center}
+.parts-ready .actions{margin-top:12px}

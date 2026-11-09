@@ -28,3 +28,5 @@
 @media(max-width:700px){.head-photo-grid{grid-template-columns:1fr;gap:16px}.head-photos__heading{display:block}.head-photos__heading .badge{margin-top:12px}.head-photos__heading h3{font-size:22px}.head-step__photo img{max-height:none}.head-step--overview{display:block}.head-step--overview .head-step__photo{border-right:0;border-bottom:1px solid var(--line)}.head-step__copy,.head-step--overview .head-step__copy{padding:19px}.head-step h4,.head-step--overview h4{font-size:18px}.head-photos__more{font-size:11px}}
 @media print{.head-photo-grid{grid-template-columns:1fr 1fr}.head-step{background:white;break-inside:avoid;border-color:#aaa}.head-step p,.head-step h4{color:#222}.head-step .head-step__detail{color:#444}.head-step__photo img{max-height:300px}.head-step__original,.head-photos__more{display:none}}
 
+
+.body-step--landscape .head-step__photo img{aspect-ratio:4/3;max-height:none}

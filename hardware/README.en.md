@@ -58,6 +58,10 @@ The timelines follow the build history organized on October 12, 2026. Original p
 
 ## HUB distribution board · November 7, 2026
 
+<a href="../docs/BODY-ASSEMBLY.en.md"><img src="../docs/assets/body-assembly/01-hub-harness.jpg" width="320" alt="Four three-wire harness branches connected to the HUB" /></a>
+
+[HUB wiring, IMU mounting and torso assembly photos →](../docs/BODY-ASSEMBLY.en.md)
+
 **[Download the complete HUB project (schematic + PCB)](ProPrj_DXL_HUB_V1_2026-11-07.epro2)**. The supplied source file is published unchanged. Four bus ports use straight AMP2.0 connectors, with an onboard 1000 µF buffer capacitor and an **XH2.54-2P power input at CN1**.
 
 Three power-connection options are supported:

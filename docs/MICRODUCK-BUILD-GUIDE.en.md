@@ -42,6 +42,8 @@ An assembled IMU needs no programming tools. For DIY boards, see the [tool list]
 
 **Head assembly:** [Follow the five-photo guide for the ToF, IMX219, ZERO and HAT](HEAD-ASSEMBLY.en.md), or [open the web photo steps (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#head-photos).
 
+**Torso and legs:** [See the HUB harness, IMU mounting, leg assembly and head/neck photo references](BODY-ASSEMBLY.en.md), or [open their web assembly chapters (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#body-photos).
+
 The [FrankenDuck printing set](../hardware/3d-print-frankenduck/README.en.md) contains 36 STLs and one 3MF project with five plates. Adapt printer and material profiles, including TPU parts. The complete printing service is listed at **CNY 199**. That edition page explains the print-orientation, battery-holder, IMU-mount, roller-change, cooling, and assembly improvements.
 
 Choose the HUB battery-holder variant or the official-style holder with thicker latches; both IMU mounts fit this repository's IMU. The October 21 update adds leg support ramps, removes outer leg-shell counterbores and integrates interchangeable feet and roller assemblies without servo removal. Rollers use 623ZZ bearings.

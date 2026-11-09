@@ -58,6 +58,10 @@ HAT 的思路是先分析官方器件及外围，按实际需要精简，再用�
 
 ## HUB 分线板 · 2026-11-07
 
+<a href="../docs/BODY-ASSEMBLY.md"><img src="../docs/assets/body-assembly/01-hub-harness.jpg" width="320" alt="HUB 四路三芯线束分线实拍" /></a>
+
+[HUB 分线、IMU 固定与躯干装配实拍 →](../docs/BODY-ASSEMBLY.md)
+
 **[下载 HUB 完整工程（原理图 + PCB）](ProPrj_DXL_HUB_V1_2026-11-07.epro2)**。按作者提供的源文件原样发布，四路总线使用 AMP2.0 直插接口，板载 1000 µF 缓冲电容；电源输入 **CN1 为 XH2.54-2P**。
 
 支持三种取电方式：

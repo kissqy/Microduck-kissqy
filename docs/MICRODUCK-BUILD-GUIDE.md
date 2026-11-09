@@ -40,6 +40,8 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 
 **头部安装：** [跟着五张实拍完成 ToF、IMX219、ZERO 与 HAT 的安装和接线](HEAD-ASSEMBLY.md)；[直接打开网页实拍步骤](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#head-photos)。
 
+**躯干与双腿：** [查看 HUB 分线、IMU 固定、双腿合装与头颈连接实拍](BODY-ASSEMBLY.md)，也可[在网页对应章节查看](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#body-photos)。
+
 下载[全套打印件 · 缝合怪版](../hardware/3d-print-frankenduck/README.md)：36 个 STL、1 个 3MF 项目、5 盘参考摆盘。根据实际打印机与耗材调整配置，TPU 部件使用对应材料配置。整套代打标价 **¥199**；打印方向、电池仓、IMU 安装、滑轮换装、散热和装配细节的优化见上述版本说明。
 
 电池仓有 HUB 组合版和官方式加厚卡扣版；IMU 安装位适配本仓库 IMU。2026-10-21 版增加腿部支撑斜面、去除腿外壳外侧沉孔，并整合无需拆舵机即可换装的脚掌与滑轮结构。滑轮使用 623ZZ 轴承。

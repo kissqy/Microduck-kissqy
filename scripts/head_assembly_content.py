@@ -38,7 +38,6 @@ def render_gallery():
         image = "../assets/head-assembly/" + step["slug"] + ".jpg"
         if number == 4:
             image += "?v=20261109-retouched"
-        original = "../assets/head-assembly/originals/" + step["slug"] + ".jpg"
         featured = " head-step--overview" if number == 5 else ""
         photo_style = " head-step__photo--wiring" if number == 4 else ""
         cards.append(
@@ -48,7 +47,6 @@ def render_gallery():
             '<div class="head-step__copy">'
             f'<span class="head-step__number">{number:02d}</span><h4>{title}</h4>'
             f'<p>{body}</p><p class="head-step__detail">{detail}</p>'
-            f'<a class="head-step__original" href="{original}" target="_blank" rel="noopener">查看原始实拍 ↗</a>'
             '</div></article>'
         )
     return (
@@ -80,8 +78,7 @@ def render_markdown(language):
         image = 'assets/head-assembly/' + step['slug'] + '.jpg'
         if number == 4:
             image += "?v=20261109-retouched"
-        original = 'assets/head-assembly/originals/' + step['slug'] + '.jpg'
-        lines += [f'## {number:02d} · {title}', '', body, '', f'<a href="{original}"><img src="{image}" width="480" alt="{escape(title, quote=True)}" /></a>', '', detail, '', f'[Original photo]({original})' if english else f'[查看原始实拍]({original})', '']
+        lines += [f'## {number:02d} · {title}', '', body, '', f'<a href="{image}"><img src="{image}" width="480" alt="{escape(title, quote=True)}" /></a>', '', detail, '']
     if english:
         lines += ['## ToF and speaker pinout', '', 'HAT J5 is the ToF connector (SH1.0 / 4P). The order of the module pads differs from the HAT pin numbering; match signals using this table.', '', '| HAT J5 pin | Wire in these photos | HAT signal | ToF module pad |', '| --- | --- | --- | --- |', '| 1 | Green | GND | GND |', '| 2 | Yellow | 3V3 (3.3 V) | VIN |', '| 3 | Black | SDA | SDA |', '| 4 | Red | SCL | SCL |', '', 'The speaker connects to HAT J1 (HP1.25 / 2P).', '', '| HAT J1 pin | Wire in these photos | Speaker signal |', '| --- | --- | --- |', '| 1 | Red | SPK_R_P (+) |', '| 2 | Black | SPK_R_N (−) |', '', '**The black speaker wire is the SPK_R_N differential output, not GND.** J2 and J9 are microphone connectors. Wire colors describe this harness; check pin numbers and signals when changing cables.', '', '[HAT connector reference](../hardware/AMP2.0-VERSION.en.md#tof-and-speaker-wiring-photo) · [Full build guide](MICRODUCK-BUILD-GUIDE.en.md)']
     else:

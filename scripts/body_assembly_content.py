@@ -44,7 +44,6 @@ def render_photo_group(group):
     for number, step in enumerate(selected, 1):
         heading, body, detail = map(escape, step["zh"])
         image = "../assets/body-assembly/" + step["slug"] + ".jpg"
-        original = "../assets/body-assembly/originals/" + step["slug"] + ".jpg"
         overview = " head-step--overview" if len(selected) == 1 or number == len(selected) else ""
         landscape = " body-step--landscape" if step.get("landscape") else ""
         width, height = (1448, 1086) if step.get("landscape") else (1086, 1448)
@@ -54,7 +53,7 @@ def render_photo_group(group):
             f'<img src="{image}" alt="{heading}的装配实拍" width="{width}" height="{height}" loading="lazy" decoding="async"></a>'
             f'<div class="head-step__copy"><span class="head-step__number">{number:02d}</span><h4>{heading}</h4>'
             f'<p>{body}</p><p class="head-step__detail">{detail}</p>'
-            f'<a class="head-step__original" href="{original}" target="_blank" rel="noopener">查看原始实拍 ↗</a></div></article>'
+            '</div></article>'
         )
     return (
         f'<section class="head-photos body-photos" id="{identifier}" aria-labelledby="{identifier}-title">'
@@ -76,9 +75,8 @@ def render_markdown(language):
     for number, step in enumerate(STEPS, 1):
         title, body, detail = step[language]
         image = 'assets/body-assembly/' + step['slug'] + '.jpg'
-        original = 'assets/body-assembly/originals/' + step['slug'] + '.jpg'
         width = 680 if step.get('landscape') else 480
-        lines += [f'## {number:02d} · {title}', '', body, '', f'<a href="{original}"><img src="{image}" width="{width}" alt="{escape(title, quote=True)}" /></a>', '', detail, '', f'[Original photo]({original})' if english else f'[查看原始实拍]({original})', '']
+        lines += [f'## {number:02d} · {title}', '', body, '', f'<a href="{image}"><img src="{image}" width="{width}" alt="{escape(title, quote=True)}" /></a>', '', detail, '']
     if english:
         lines += ['## Match the branch connections', '', '| Branch | Connection reference |', '| --- | --- |', '| Head/neck | HAT → 34 → 33 → 32 → 31 → 30 → HUB |', '| Right leg | HUB → 10 → 11 → 12 → 13 → 14 |', '| Left leg | HUB → 20 → 21 → 22 → 23 → 24 |', '| IMU | HUB → IMU bus connector J1 |', '', 'The four HUB bus ports share their nets. Port-to-branch positions in a photo are not mandatory. With an all-black harness, check GND, power and DATA by connector signals rather than wire color.', '', '[HUB hardware and power connections](../hardware/README.en.md) · [Full build guide](MICRODUCK-BUILD-GUIDE.en.md)']
     else:

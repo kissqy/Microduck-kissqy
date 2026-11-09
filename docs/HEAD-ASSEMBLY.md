@@ -10,51 +10,41 @@
 
 将 ToF 固定在鸭脸内侧的小板安装位，四根线从侧面引出，给摄像头和上层板卡留出空间。
 
-<a href="assets/head-assembly/originals/01-tof-mount.jpg"><img src="assets/head-assembly/01-tof-mount.jpg" width="480" alt="先固定 ToF 模块" /></a>
+<a href="assets/head-assembly/01-tof-mount.jpg"><img src="assets/head-assembly/01-tof-mount.jpg" width="480" alt="先固定 ToF 模块" /></a>
 
 按本图朝向，模块焊孔自上而下：黄 VIN、绿 GND、红 SCL、黑 SDA。
-
-[查看原始实拍](assets/head-assembly/originals/01-tof-mount.jpg)
 
 ## 02 · 安装 IMX219 与摄像头排线
 
 摄像头对准鸭脸开孔，按四角安装位固定。将摄像头排线接到 ZERO 的 CSI 接口，确认插入到位、锁扣扣好。
 
-<a href="assets/head-assembly/originals/02-camera-ribbon.jpg"><img src="assets/head-assembly/02-camera-ribbon.jpg" width="480" alt="安装 IMX219 与摄像头排线" /></a>
+<a href="assets/head-assembly/02-camera-ribbon.jpg"><img src="assets/head-assembly/02-camera-ribbon.jpg" width="480" alt="安装 IMX219 与摄像头排线" /></a>
 
 先选与摄像头版本对应的鸭脸打印件；排线接触面按实际接口确认。
-
-[查看原始实拍](assets/head-assembly/originals/02-camera-ribbon.jpg)
 
 ## 03 · 固定 ZERO，留出排线弯曲空间
 
 将 ZERO 装到鸭脸立柱上，参照侧视图检查摄像头与主控之间的间距。排线沿空隙自然折回，避开螺丝和立柱。
 
-<a href="assets/head-assembly/originals/03-zero-clearance.jpg"><img src="assets/head-assembly/03-zero-clearance.jpg" width="480" alt="固定 ZERO，留出排线弯曲空间" /></a>
+<a href="assets/head-assembly/03-zero-clearance.jpg"><img src="assets/head-assembly/03-zero-clearance.jpg" width="480" alt="固定 ZERO，留出排线弯曲空间" /></a>
 
 排线不绷紧、不折成死角；核对 40 针排针与 HAT 配对座的朝向。
-
-[查看原始实拍](assets/head-assembly/originals/03-zero-clearance.jpg)
 
 ## 04 · 连接 HAT 的 ToF 与喇叭
 
 四芯 ToF 线束接 HAT J5，红黑喇叭线接 J1。J2、J9 为麦克风接口；外围接好后，再核对 HAT 与 ZERO 的配对朝向。
 
-<a href="assets/head-assembly/originals/04-hat-wiring.jpg"><img src="assets/head-assembly/04-hat-wiring.jpg?v=20261109-retouched" width="480" alt="连接 HAT 的 ToF 与喇叭" /></a>
+<a href="assets/head-assembly/04-hat-wiring.jpg?v=20261109-retouched"><img src="assets/head-assembly/04-hat-wiring.jpg?v=20261109-retouched" width="480" alt="连接 HAT 的 ToF 与喇叭" /></a>
 
 按接口编号和信号名核对线序；ToF 与喇叭的完整针序见下方。
-
-[查看原始实拍](assets/head-assembly/originals/04-hat-wiring.jpg)
 
 ## 05 · 装入头壳，整理并固定线束
 
 将叠装好的 ZERO／HAT 和喇叭装入头部，余线收进两侧空隙，参照照片固定。给舵机、嘴部活动和开盖留出余量。
 
-<a href="assets/head-assembly/originals/05-head-overview.jpg"><img src="assets/head-assembly/05-head-overview.jpg" width="480" alt="装入头壳，整理并固定线束" /></a>
+<a href="assets/head-assembly/05-head-overview.jpg"><img src="assets/head-assembly/05-head-overview.jpg" width="480" alt="装入头壳，整理并固定线束" /></a>
 
 合盖前检查：排线不卡立柱，线束不碰活动件，插头未被拉扯。
-
-[查看原始实拍](assets/head-assembly/originals/05-head-overview.jpg)
 
 ## ToF 与喇叭针序
 

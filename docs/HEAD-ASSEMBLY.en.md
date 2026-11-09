@@ -10,51 +10,41 @@ Follow the real assembly photos: ToF → IMX219 → ZERO 3W → HAT → cable ro
 
 Fasten the ToF module to its mounting points inside the face panel. Route its four wires to the side, leaving room for the camera and the boards above it.
 
-<a href="assets/head-assembly/originals/01-tof-mount.jpg"><img src="assets/head-assembly/01-tof-mount.jpg" width="480" alt="Mount the ToF module" /></a>
+<a href="assets/head-assembly/01-tof-mount.jpg"><img src="assets/head-assembly/01-tof-mount.jpg" width="480" alt="Mount the ToF module" /></a>
 
 In this photo, the module pads run top to bottom: yellow VIN, green GND, red SCL, black SDA.
-
-[Original photo](assets/head-assembly/originals/01-tof-mount.jpg)
 
 ## 02 · Install the IMX219 and its ribbon cable
 
 Align the camera with the face opening and secure its four mounting points. Connect the camera ribbon to the ZERO's CSI connector and close the latch after seating it fully.
 
-<a href="assets/head-assembly/originals/02-camera-ribbon.jpg"><img src="assets/head-assembly/02-camera-ribbon.jpg" width="480" alt="Install the IMX219 and its ribbon cable" /></a>
+<a href="assets/head-assembly/02-camera-ribbon.jpg"><img src="assets/head-assembly/02-camera-ribbon.jpg" width="480" alt="Install the IMX219 and its ribbon cable" /></a>
 
 Choose the face-panel print for your camera variant. Check the actual connector to determine ribbon contact orientation.
-
-[Original photo](assets/head-assembly/originals/02-camera-ribbon.jpg)
 
 ## 03 · Mount the ZERO and leave room for the ribbon
 
 Mount the ZERO on the face-panel standoffs. Use this side view to check the space behind the camera. Let the ribbon bend naturally through the gap, clear of screws and standoffs.
 
-<a href="assets/head-assembly/originals/03-zero-clearance.jpg"><img src="assets/head-assembly/03-zero-clearance.jpg" width="480" alt="Mount the ZERO and leave room for the ribbon" /></a>
+<a href="assets/head-assembly/03-zero-clearance.jpg"><img src="assets/head-assembly/03-zero-clearance.jpg" width="480" alt="Mount the ZERO and leave room for the ribbon" /></a>
 
 Keep the ribbon relaxed without sharp creases. Check the orientation of the 40-pin header and the HAT's mating socket.
-
-[Original photo](assets/head-assembly/originals/03-zero-clearance.jpg)
 
 ## 04 · Connect the ToF and speaker to the HAT
 
 Connect the four-wire ToF harness to HAT J5 and the red/black speaker lead to J1. J2 and J9 are microphone connectors. Check the mating orientation before joining the HAT and ZERO.
 
-<a href="assets/head-assembly/originals/04-hat-wiring.jpg"><img src="assets/head-assembly/04-hat-wiring.jpg?v=20261109-retouched" width="480" alt="Connect the ToF and speaker to the HAT" /></a>
+<a href="assets/head-assembly/04-hat-wiring.jpg?v=20261109-retouched"><img src="assets/head-assembly/04-hat-wiring.jpg?v=20261109-retouched" width="480" alt="Connect the ToF and speaker to the HAT" /></a>
 
 Match connector numbers and signal names. The ToF and speaker pin tables are below.
-
-[Original photo](assets/head-assembly/originals/04-hat-wiring.jpg)
 
 ## 05 · Fit the head shell and secure the wiring
 
 Fit the stacked ZERO/HAT assembly and speaker into the head. Tuck spare cable into the side gaps and secure it as shown. Leave slack for the servos, mouth and opening the cover.
 
-<a href="assets/head-assembly/originals/05-head-overview.jpg"><img src="assets/head-assembly/05-head-overview.jpg" width="480" alt="Fit the head shell and secure the wiring" /></a>
+<a href="assets/head-assembly/05-head-overview.jpg"><img src="assets/head-assembly/05-head-overview.jpg" width="480" alt="Fit the head shell and secure the wiring" /></a>
 
 Before closing: keep the ribbon clear of standoffs, wiring clear of moving parts, and plugs free of tension.
-
-[Original photo](assets/head-assembly/originals/05-head-overview.jpg)
 
 ## ToF and speaker pinout
 

@@ -40,7 +40,7 @@ Keep the ribbon relaxed without sharp creases. Check the orientation of the 40-p
 
 Connect the four-wire ToF harness to HAT J5 and the red/black speaker lead to J1. J2 and J9 are microphone connectors. Check the mating orientation before joining the HAT and ZERO.
 
-<a href="assets/head-assembly/originals/04-hat-wiring.jpg"><img src="assets/head-assembly/04-hat-wiring.jpg" width="480" alt="Connect the ToF and speaker to the HAT" /></a>
+<a href="assets/head-assembly/originals/04-hat-wiring.jpg"><img src="assets/head-assembly/04-hat-wiring.jpg?v=20261109-retouched" width="480" alt="Connect the ToF and speaker to the HAT" /></a>
 
 Match connector numbers and signal names. The ToF and speaker pin tables are below.
 

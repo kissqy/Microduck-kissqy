@@ -40,7 +40,7 @@
 
 四芯 ToF 线束接 HAT J5，红黑喇叭线接 J1。J2、J9 为麦克风接口；外围接好后，再核对 HAT 与 ZERO 的配对朝向。
 
-<a href="assets/head-assembly/originals/04-hat-wiring.jpg"><img src="assets/head-assembly/04-hat-wiring.jpg" width="480" alt="连接 HAT 的 ToF 与喇叭" /></a>
+<a href="assets/head-assembly/originals/04-hat-wiring.jpg"><img src="assets/head-assembly/04-hat-wiring.jpg?v=20261109-retouched" width="480" alt="连接 HAT 的 ToF 与喇叭" /></a>
 
 按接口编号和信号名核对线序；ToF 与喇叭的完整针序见下方。
 

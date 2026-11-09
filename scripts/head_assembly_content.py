@@ -36,6 +36,8 @@ def render_gallery():
     for number, step in enumerate(STEPS, 1):
         title, body, detail = map(escape, step["zh"])
         image = "../assets/head-assembly/" + step["slug"] + ".jpg"
+        if number == 4:
+            image += "?v=20261109-retouched"
         original = "../assets/head-assembly/originals/" + step["slug"] + ".jpg"
         featured = " head-step--overview" if number == 5 else ""
         photo_style = " head-step__photo--wiring" if number == 4 else ""
@@ -76,6 +78,8 @@ def render_markdown(language):
     for number, step in enumerate(STEPS, 1):
         title, body, detail = step[language]
         image = 'assets/head-assembly/' + step['slug'] + '.jpg'
+        if number == 4:
+            image += "?v=20261109-retouched"
         original = 'assets/head-assembly/originals/' + step['slug'] + '.jpg'
         lines += [f'## {number:02d} · {title}', '', body, '', f'<a href="{original}"><img src="{image}" width="480" alt="{escape(title, quote=True)}" /></a>', '', detail, '', f'[Original photo]({original})' if english else f'[查看原始实拍]({original})', '']
     if english:

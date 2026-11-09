@@ -55,7 +55,7 @@ def shell(filename,title,description,content,index=-1):
  nav=''.join(f'<a href="{f}"'+(' aria-current="page"' if index==i else '')+f'><b>{i+1:02}</b><span>{label}</span></a>' for i,(f,label,_,_) in enumerate(ROUTES))
  extra_style='<link rel="stylesheet" href="group-buy.css?v=20261101-hd95-dialog">' if filename=='shopping.html' else ''
  if filename=='assembly.html':
-  extra_style+='<link rel="stylesheet" href="head-assembly.css?v=20261109">'
+  extra_style+='<link rel="stylesheet" href="head-assembly.css?v=20261109-retouched">'
  return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d1113"><title>{E(title)} · Microduck 飞特版 · kissqy</title><meta name="description" content="{E(description,quote=True)}"><link rel="canonical" href="https://kissqy.github.io/Microduck-kissqy/build/{filename if filename!='index.html' else ''}"><link rel="stylesheet" href="build.css?v={'20261101-board-highlights' if filename=='shopping.html' else '20261030-screen'}"><link rel="stylesheet" href="../project-notice.css?v=20261028">{extra_style}</head>
 <body><header class="site-header"><div class="header-main"><a class="brand" href="./"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#c1f577"/><path d="M9 23h9V11h12v11h-7v9H9z" fill="#24311e"/></svg>microduck · kissqy <small>三步复刻 · 进阶可选</small></a><nav class="header-links" aria-label="其他入口"><a href="{REPO}">项目首页 ↗</a><a href="../console-guide.html">中控教程</a></nav></div><nav class="route-nav" aria-label="复刻三步与可选进阶">{nav}</nav></header>

@@ -15,6 +15,12 @@
 
 The online pages show totals first, then specifications, quantities and purchase links. The tables below use the author's purchase references, filtered for the default assembled-board route. Normal use uses the released models and Robot Console.
 
+## Complete parts at a glance
+
+<a href="docs/assets/build-parts-kit.jpg"><img src="docs/assets/build-parts-kit.jpg" width="960" alt="Microduck parts flat lay with servos, boards, printed parts, cables, bearings, power accessories and a gamepad" /></a>
+
+Check the servos, boards, printed parts, cables and accessories before assembly. Click the photo for a larger view.
+
 ## Total cost comparison
 
 | Item | Buy assembled boards | DIY boards, including tools |

@@ -1,3 +1,8 @@
+Historical R147 verification record, not the current build entry.
+The one-shot build/restore/package tools named below are retired.
+Retrieve those original tools from Git history: https://github.com/kissqy/Microduck-kissqy/tree/c1a53b2c28ecbb6f890296fb668156987871ba76/microduck-hd1910/firmware/verification
+For the current public build, use ../BUILDING-V167.md.
+
 Use Rust 1.99.0, cargo-zigbuild 0.23.4, Zig 0.14.1 and ONNX Runtime 1.28.0.
 restore_toolchain147.py restores actual toolchains and records download SHA256.
 PYTHONPATH="$PWD/packaging:$PWD/console" python3 -m unittest discover -s packaging -p 'test_*.py' -v

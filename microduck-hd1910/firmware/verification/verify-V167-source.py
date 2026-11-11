@@ -14,8 +14,34 @@ def current_bytes(name):
     if name.startswith(prefix):
         name='verification/official-reference/'+name[len(prefix):]
     return (ROOT/name).read_bytes()
+
+def without_redundant_manifest_entries(name, data):
+    # Source cleanup only removes these exact duplicate declarations. Keep a
+    # byte-level comparison for everything else, especially production Rust.
+    if name == 'Cargo.toml':
+        return data.replace(b'"duck-ble", "duck-ble", ', b'"duck-ble", ', 1)
+    if name == 'duck-control/Cargo.toml':
+        return data.replace(b'\n[dev-dependencies]\nserde_json.workspace = true\n', b'', 1)
+    if name == 'updater/Cargo.toml':
+        prefix, separator, development = data.partition(b'\n[dev-dependencies]\n')
+        for duplicate in (
+            b'async-trait.workspace = true',
+            b'clap = { version = "4.6.4", features = ["derive"] }',
+            b'semver.workspace = true',
+            b'serde_json.workspace = true',
+            b'sha2 = "0.11.0"',
+            b'tar = "0.4.46"',
+            b'tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }',
+            b'zstd = "0.13.3"',
+        ):
+            development = development.replace(duplicate + b'\n', b'', 1)
+        return prefix + separator + development
+    return data
+
 with zipfile.ZipFile(snapshot) as z:
-    changed=[name for name in z.namelist() if z.read(name)!=current_bytes(name)]
+    changed=[name for name in z.namelist()
+             if without_redundant_manifest_entries(name, z.read(name))
+             != without_redundant_manifest_entries(name, current_bytes(name))]
     assert set(changed)=={'duck-control/src/hd1910.rs','duck-control/src/feetech.rs','robotd/src/feetech_commissioning.rs'},changed
     name='duck-control/src/feetech.rs'
     assert z.read(name).split(b'#[cfg(test)]',1)[0]==(ROOT/name).read_bytes().split(b'#[cfg(test)]',1)[0]

@@ -148,8 +148,9 @@
     "console_program_sources_preserved_from_V164_zip": false,
     "training_program_sources_preserved_from_R1527_zip": true,
     "training_sample_source_metadata_cleared": [],
-    "Rust_sources_preserved_from_control43_archive": true,
-    "console_program_sources_preserved_from_V167_zip": true
+    "Rust_sources_preserved_from_control43_archive": false,
+    "console_program_sources_preserved_from_V167_zip": false,
+    "production_Rust_source_bytes_preserved_by_cleanup": true
   },
   "validation_scope": "Directory cleanup, source and release-byte comparison, pinned archive verification and runtime-resource restoration; no new firmware compilation or robot operation.",
   "system_image": {
@@ -277,5 +278,17 @@
         "test_fast_sync"
       ]
     }
+  },
+  "source_cleanup": {
+    "revision": 1,
+    "date": "2026-11-12",
+    "scope": "source-only cleanup; published runtime archives unchanged",
+    "record": "firmware/verification/source-cleanup-20261112.json",
+    "deleted_obsolete_tools": 41,
+    "deleted_unlinked_modules": 1,
+    "generated_metadata_copies": 59,
+    "removed_tracked_bytes": 4183658,
+    "runtime_behavior_changed": false,
+    "compiled_archives_changed": false
   }
 }

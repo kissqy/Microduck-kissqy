@@ -4,7 +4,6 @@ import math
 import re
 import shlex
 import subprocess
-import sys
 import threading
 import time
 import secrets
@@ -16,9 +15,7 @@ from pathlib import Path
 from service_channel import ServiceChannel
 from controls import ControlError
 from session_sequences import SequenceWindow
-from service_data import BUILD
 from management_profile import supports_feature
-from ssh_connect import ssh_command, ssh_process_options
 from sudo_credential import SudoCredential
 from telemetry import IDS
 from firmware_packages import PreparedFirmware, bundle_info

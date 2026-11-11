@@ -29,6 +29,6 @@ node verification/test_startup_ui.mjs static
 node verification/test_gamepad_repair_ui.mjs static
 ```
 
-`native-build152-final.json` records exact native source input hashes and the built robotd SHA256. `release-audit152.json` records payload changes and the production firmware importer check. The local `run152.py`/`package152.py` scripts retain the build workspace layout and require adapting that layout to reproduce packaging elsewhere.
+`native-build152-final.json` records exact native source input hashes and the built robotd SHA256. `release-audit152.json` records payload changes and the production firmware importer check. The retired `run152.py`/`package152.py` scripts used a historical workspace layout. Retrieve their original bytes from [the pre-cleanup Git revision](https://github.com/kissqy/Microduck-kissqy/tree/c1a53b2c28ecbb6f890296fb668156987871ba76/microduck-hd1910/firmware/verification); the current build entry is [BUILDING-V167.md](../BUILDING-V167.md).
 
 R150/R151 logs retained beside these files are historical. They do not validate R152 or establish physical reboot, wireless or temperature behavior. R152's current results are in `recovery152.json`; only robotd was rebuilt, while robotctl, padd, the GameSir bridge, models and calibration were checked against the old payload.

@@ -43,6 +43,3 @@ rustypot = "1.8.0"
 # not have, so leaving it on breaks the aarch64 build outright. rustypot disables it for the
 # same reason; this crate has to as well, or cargo's feature unification turns it back on.
 serialport = { version = "4.8", default-features = false }
-
-[dev-dependencies]
-serde_json.workspace = true

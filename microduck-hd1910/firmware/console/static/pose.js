@@ -20,12 +20,6 @@ export function rootQuaternion(g,yaw=0) {
   const h=(Number.isFinite(yaw)?yaw:0)-tiltYaw;
   return qmul([Math.cos(h/2),0,0,Math.sin(h/2)],tilt);
 }
-// The service already publishes gravity in the calibrated trunk frame.
-// Render that same frame; installation errors must be corrected in the mount,
-// not hidden by reversing both horizontal axes only in the viewer.
-export function displayRootQuaternion(g,yaw=0) {
-  return rootQuaternion(g,yaw);
-}
 export function parseDuck(buffer) {
   const d=new DataView(buffer); let p=0;
   const read=(type,size)=>{if(p+size>d.byteLength)throw Error('官方模型被截断');const v=d[type](p,true);p+=size;return v;};

@@ -36,4 +36,6 @@ The image was previously verified by reflashing, first Wi-Fi setup, SSH, robot c
 
 Current release reference: **0.15.1 + R17 V167 / control.43 + Training R1.5.27**, with the reflash-verified **Public Image R1**. Action-specific acceptance remains governed by the corresponding real-robot records.
 
-**Single next task: reproduce V167 installation and local calibration from the published downloads.** Validate one variable at a time.
+November 12: source cleanup revision 1 removed obsolete tools and an unlinked module, with duplicate model metadata restored by checksum. Resource restoration, 198 selected Python checks and console startup passed. No Rust/ARM64 rebuild or hardware acceptance was performed, and no new runtime Known-Good was established. See the [source cleanup audit (中文)](SOURCE-CLEANUP-20261112.md).
+
+**Single next task: validate Rust and ARM64 builds of the cleaned source in the existing Linux/WSL environment.** Validate one variable at a time.

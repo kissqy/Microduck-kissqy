@@ -206,6 +206,419 @@
       "bytes": 71058,
       "sha256": "1ac209f417584aede825870e9ea793fa5c66321e80dab854498c9b012d282a1f",
       "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/README.en.md",
+      "source_path": "policies/ground_pick/README.en.md",
+      "bytes": 4550,
+      "sha256": "b3df23863b4eba0e0fc478e45eae1c35f5132a666833a32733c47d396b45aa44",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/deployment-contract.json",
+      "source_path": "policies/ground_pick/deployment-contract.json",
+      "bytes": 316435,
+      "sha256": "2d2e807aadb1f98df7b64e5f3378041db6fd939e5e286a9958f1b1540ab21fee",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/deployment-profile.toml",
+      "source_path": "policies/ground_pick/deployment-profile.toml",
+      "bytes": 426,
+      "sha256": "15fbed4125ea8fb104b9d0544540fa664fc78b8f1bbcef9a1f9bfa31064a0a15",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/deployment-runtime.json",
+      "source_path": "policies/ground_pick/deployment-runtime.json",
+      "bytes": 472,
+      "sha256": "17d8dac2df102ea80b9ce8513ab45a10e60d16d913cbdaca330d4a01e329e907",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/manifest.json",
+      "source_path": "policies/ground_pick/manifest.json",
+      "bytes": 5556,
+      "sha256": "12d6870830a48bdc00f9c1dd961e09263919c535cb2604d31659e080ff497b83",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/model-info.json",
+      "source_path": "policies/ground_pick/model-info.json",
+      "bytes": 126,
+      "sha256": "eae1c29bb287c49dec2ae5b8e5fc6838c4a622bc630fd548cc7e91682a38a276",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/training-config.json",
+      "source_path": "policies/ground_pick/training-config.json",
+      "bytes": 163856,
+      "sha256": "9b3ed07a4f0b4d923917851a69b714232a6cc9d9395f6ad4252f455a7a2a7f3e",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/training-request.json",
+      "source_path": "policies/ground_pick/training-request.json",
+      "bytes": 194293,
+      "sha256": "bd92bd8f077fdd6186802798a27b6971522f4b7a94bc0b19e6e35da8c7dd63e6",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/upstream-params/agent.yaml",
+      "source_path": "policies/ground_pick/upstream-params/agent.yaml",
+      "bytes": 1345,
+      "sha256": "86ee2132d29bf6a3fdf364d250dd39860916a830c4b0ab3912fab7a848378e50",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/upstream-params/env.yaml",
+      "source_path": "policies/ground_pick/upstream-params/env.yaml",
+      "bytes": 57627,
+      "sha256": "461db3166b62587ac179ad5ef1c71ee21d37f773acac1753767586bc1e146aa2",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/使用说明.md",
+      "source_path": "policies/ground_pick/使用说明.md",
+      "bytes": 4066,
+      "sha256": "392fe46cba0851b80fcba904bf64e37dd44563312455d92b3644ee69c4612f02",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/README.en.md",
+      "source_path": "policies/walk/README.en.md",
+      "bytes": 4541,
+      "sha256": "304170b59064451b9bb6e1d86cad11b2f35435e8f169691d21bc83c8b60429af",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/deployment-execution.json",
+      "source_path": "policies/walk/deployment-execution.json",
+      "bytes": 225,
+      "sha256": "1e77b8c032cf784a7d3d059d0e8d1a32e71fa49d56e1a399aeac7ebc03e2afc9",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/deployment-profile.toml",
+      "source_path": "policies/walk/deployment-profile.toml",
+      "bytes": 389,
+      "sha256": "ebcbe4fa97ccc4eb0d1bb219ec25202b0e710bc07c9c0dd734925ecbd23988f8",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/deployment-runtime.json",
+      "source_path": "policies/walk/deployment-runtime.json",
+      "bytes": 974,
+      "sha256": "0a71011ea44943aa51b22efd9cea4da4b23be3533e48a6a94d300b82678b08e2",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/manifest.json",
+      "source_path": "policies/walk/manifest.json",
+      "bytes": 5548,
+      "sha256": "d61b0ce5745f82fc8553dc6718dfc9b4cd11dc8fc24ad2e40e7323cfb80fe4d5",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/model-info.json",
+      "source_path": "policies/walk/model-info.json",
+      "bytes": 123,
+      "sha256": "27333c5744d4b94800eee07c3183d13324862437979c79169b52769d5eafb327",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/training-config.json",
+      "source_path": "policies/walk/training-config.json",
+      "bytes": 228584,
+      "sha256": "df8cfd4d46a062b6d177ab903a6347ec2088e568273a918653f8b4d0d983c396",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/training-request.json",
+      "source_path": "policies/walk/training-request.json",
+      "bytes": 261678,
+      "sha256": "47d73ef82d8c25b8468e242a0f1390c079b676c8431be5c982ca2574da811b44",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/upstream-params/agent.yaml",
+      "source_path": "policies/walk/upstream-params/agent.yaml",
+      "bytes": 2228,
+      "sha256": "77e5c6ea815e24c8bab15f8d315a75c1c07e1936b29aabad152218e969fff0d3",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/upstream-params/env.yaml",
+      "source_path": "policies/walk/upstream-params/env.yaml",
+      "bytes": 75657,
+      "sha256": "7dd666e4515ad91c1512ce2188152a34764830126dc0ede8145d768f851a6027",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/使用说明.md",
+      "source_path": "policies/walk/使用说明.md",
+      "bytes": 4057,
+      "sha256": "57be09494ae934d32ac86c360d3353bd52a1f3690748cedb999951b6f4f3cce3",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/README.en.md",
+      "source_path": "policies/stand/README.en.md",
+      "bytes": 4655,
+      "sha256": "377dbd41887ea5cd31d72abf1d395365381e2051962c49ceb736d99e4718d1a6",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/deployment-contract.json",
+      "source_path": "policies/stand/deployment-contract.json",
+      "bytes": 352952,
+      "sha256": "5db434f4255858b88f26312e0286ed8801df94fda735e13f9f290eecbd2d17a1",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/deployment-profile.toml",
+      "source_path": "policies/stand/deployment-profile.toml",
+      "bytes": 389,
+      "sha256": "ebcbe4fa97ccc4eb0d1bb219ec25202b0e710bc07c9c0dd734925ecbd23988f8",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/deployment-runtime.json",
+      "source_path": "policies/stand/deployment-runtime.json",
+      "bytes": 1029,
+      "sha256": "ffc1c8b29fe916131c26cb2959d9067bce59729b3c49f54bd559c6c465370134",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/manifest.json",
+      "source_path": "policies/stand/manifest.json",
+      "bytes": 5470,
+      "sha256": "b34e9c57743571e91680ade1d646149ad8a831ebb19116d41a18a36e4312f2d7",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/model-info.json",
+      "source_path": "policies/stand/model-info.json",
+      "bytes": 944,
+      "sha256": "01edf513bc99b7483a93bd8f0ba6f0e31a0306dfffcb4b07353293ba8ee226a7",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/training-config.json",
+      "source_path": "policies/stand/training-config.json",
+      "bytes": 186557,
+      "sha256": "b1c8700cf77588ef9bd461c78545e198c7485d80c3ca7cbdb9cc26f09783a8b2",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/training-request.json",
+      "source_path": "policies/stand/training-request.json",
+      "bytes": 215720,
+      "sha256": "802de1c0b9d966972a39ba4a6284d6e4e3b0863e055212eddd557756871c553d",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/upstream-params/agent.yaml",
+      "source_path": "policies/stand/upstream-params/agent.yaml",
+      "bytes": 1349,
+      "sha256": "3eb4392e3144e1e909dbf7d560c3b87629872b4d277dc10a6c5365387b073674",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/upstream-params/env.yaml",
+      "source_path": "policies/stand/upstream-params/env.yaml",
+      "bytes": 71212,
+      "sha256": "70f562dc7b72ff021deebc4608d971599f7ec78e8d139ee6dbd32fada938d6a5",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/使用说明.md",
+      "source_path": "policies/stand/使用说明.md",
+      "bytes": 4137,
+      "sha256": "9f4db5ed99de73c30dea5ed585467dd2a1a62ab0070af7d54ba4663719e2c4bc",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/README.en.md",
+      "source_path": "policies/roulade/README.en.md",
+      "bytes": 3376,
+      "sha256": "9e323f6b51811aa626baaf8ea80f4839bf8e3cf6bc06669f8e1b00736bfee8af",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/deployment-contract.json",
+      "source_path": "policies/roulade/deployment-contract.json",
+      "bytes": 278563,
+      "sha256": "2e40493605eac00978db51bcc0e127d6681fb78b170694f979c703bcd8dff330",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/deployment-profile.toml",
+      "source_path": "policies/roulade/deployment-profile.toml",
+      "bytes": 397,
+      "sha256": "f34535fa1dd9623ffb891ebd43eae4e0a115556f9c0421d6c98a3de242ca7b0e",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/deployment-runtime.json",
+      "source_path": "policies/roulade/deployment-runtime.json",
+      "bytes": 472,
+      "sha256": "5be6255feba32d60fcffaa98b5333d244c738d25320b5761304b9448a9444a73",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/manifest.json",
+      "source_path": "policies/roulade/manifest.json",
+      "bytes": 3879,
+      "sha256": "f097326d4331fdd298e2d4ad4e7ade8aec8d8148195b0db2e0b30b968dce15b5",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/model-info.json",
+      "source_path": "policies/roulade/model-info.json",
+      "bytes": 120,
+      "sha256": "22d43ea985d210a34b4dc605feb4215dc8b022ed9f1f0a7de492d3989086fcff",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/training-config.json",
+      "source_path": "policies/roulade/training-config.json",
+      "bytes": 142560,
+      "sha256": "016c3605254508089abd97abd86ec09a780970cc48da23a5db841447728c56c2",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/training-request.json",
+      "source_path": "policies/roulade/training-request.json",
+      "bytes": 171103,
+      "sha256": "e6209817dd2233b249d5d516c37eacaaadf8ce3e4521812f2c600d114527fb45",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/upstream-params/agent.yaml",
+      "source_path": "policies/roulade/upstream-params/agent.yaml",
+      "bytes": 1514,
+      "sha256": "1ac37d341454b9b3a5aa98c3985bca28ae075758fe05f3018bbf5ebade682ce4",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/upstream-params/env.yaml",
+      "source_path": "policies/roulade/upstream-params/env.yaml",
+      "bytes": 51159,
+      "sha256": "937e725e063b804b43aa70e48a5769828e471f6acc287b3e57997ed6464519ca",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/使用说明.md",
+      "source_path": "policies/roulade/使用说明.md",
+      "bytes": 2892,
+      "sha256": "deddc7a4125f5f7d0a191401521d4599d85a20399cec056e94fb6ff2bcce3741",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1c94934c6421ec72ed48079cea749668/deployment-contract.json",
+      "source_path": "policies/sitstand/deployment-contract.json",
+      "bytes": 75689,
+      "sha256": "fcd3b944a0bd6314daa4f27a050817e3e189e36fc30687cc1623ed7a6700aaef",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1c94934c6421ec72ed48079cea749668/deployment-runtime.json",
+      "source_path": "policies/sitstand/deployment-runtime.json",
+      "bytes": 674,
+      "sha256": "b9b0385fc48ed013e18b3881877e0a2fd0949b38c76d0399e4b32c6972b67e1b",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1c94934c6421ec72ed48079cea749668/manifest.json",
+      "source_path": "policies/sitstand/manifest.json",
+      "bytes": 414,
+      "sha256": "24428f211159adcf19c9a474487489b1f532e7d7900d7b3549bfefbc927b243a",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1c94934c6421ec72ed48079cea749668/training-request.json",
+      "source_path": "policies/sitstand/training-request.json",
+      "bytes": 12274,
+      "sha256": "bfed29f52d35eab8478741f09c3d7320a4c6a15bacd805b4e68198af9548c6f4",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1c94934c6421ec72ed48079cea749668/upstream-params/agent.yaml",
+      "source_path": "policies/sitstand/upstream-params/agent.yaml",
+      "bytes": 1352,
+      "sha256": "b5fb01eadef32dafe32e8a2389b8bfa12265c89fc0865241014c79cd8964ddec",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1c94934c6421ec72ed48079cea749668/upstream-params/env.yaml",
+      "source_path": "policies/sitstand/upstream-params/env.yaml",
+      "bytes": 58817,
+      "sha256": "b603e2a69a0004c920420be35247d43806e6b58a37695f3e5248b3e53aea18cd",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/README.en.md",
+      "source_path": "policies/kick_left/README.en.md",
+      "bytes": 5410,
+      "sha256": "e63420301ba9890fd23776c7a9d374286effe62dffa1454fc32283119d84ee46",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/deployment-contract.json",
+      "source_path": "policies/kick_left/deployment-contract.json",
+      "bytes": 468205,
+      "sha256": "0b3b2183ae873ca0fd289d82fd98f1aec046cd33abf038815eaf1aca14a10005",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/deployment-profile.toml",
+      "source_path": "policies/kick_left/deployment-profile.toml",
+      "bytes": 868,
+      "sha256": "558318e6c3bff64797d58fc77c25a03e70ffea111e72c89a47a05d3b9d59dc47",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/manifest.json",
+      "source_path": "policies/kick_left/manifest.json",
+      "bytes": 6349,
+      "sha256": "b02df1889d690219b900c7a7d41e57ac901c14791f7e27c681fa84eadc17db57",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/training-config.json",
+      "source_path": "policies/kick_left/training-config.json",
+      "bytes": 163420,
+      "sha256": "582bd7ce60a77e043251703f0773a12804579d5a5c5f1497bed975bfe1beaff2",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/training-request.json",
+      "source_path": "policies/kick_left/training-request.json",
+      "bytes": 192895,
+      "sha256": "52281cb8db459ce5b123ad988278c9263f2b8dc5933de1154cbeea25d7902096",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/upstream-params/agent.yaml",
+      "source_path": "policies/kick_left/upstream-params/agent.yaml",
+      "bytes": 1348,
+      "sha256": "afeb4b03be23c0248ceea02dfa80e955009f41c1af4d2898346a2c8db6406b93",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/upstream-params/env.yaml",
+      "source_path": "policies/kick_left/upstream-params/env.yaml",
+      "bytes": 53382,
+      "sha256": "e5831e04b3339c03d851b35058076d1e4da6874a0832cfd2ee56f4e4f80779db",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/使用说明.md",
+      "source_path": "policies/kick_left/使用说明.md",
+      "bytes": 4834,
+      "sha256": "414c038295da228eff1f648c8d4e9e12024a05de00ae5a4f93e6d9ba84213f9e",
+      "mode": 420
     }
   ],
   "purpose": "Restore verified runtime resources for building/testing, without storing a second binary copy in source."

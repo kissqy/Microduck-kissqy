@@ -12,11 +12,10 @@ import secrets
 import subprocess
 import sys
 import threading
-import time
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse, unquote, quote, parse_qs
+from urllib.parse import urlparse, unquote, parse_qs
 
 from telemetry import BASELINE, VERSION, HOME, IDS, NAMES, LABELS, Store
 from controls import Controller, ControlError

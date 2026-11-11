@@ -1,5 +1,5 @@
 """R17 browser input over persistent SSH to official robotd IPC."""
-import json, re, select, threading, time
+import re, select, threading, time
 from input_channel import InputChannel
 from session_sequences import SequenceWindow
 class ControlError(Exception):

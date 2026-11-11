@@ -18,7 +18,13 @@ Current release: **R17 V167 / control.43**. Rust firmware and Feetech adaptation
 
 Git uses the same file object for identical bytes at different paths, while a complete directory ZIP includes each path separately.
 
-## Cleanup
+## November 12, 2026 source cleanup
+
+Removed 41 retired one-shot tools and one unlinked experiment module from the public V167/control.43 source. Another 59 identical model metadata copies are now restored from `policies/` by checksum-verified `prepare-V167.py`. In total, 101 tracked files / about 3.99 MiB were removed from the source tree; published runtime archives and Git history are unchanged.
+
+See the [source cleanup audit (中文)](../microduck-hd1910/docs/SOURCE-CLEANUP-20261112.md) for the exact manifest, verification limits and pre-existing test incompatibilities.
+
+## Earlier cleanup
 
 - Consolidated identical official-reference snapshots, preserving original bytes and source records. The old duplicate directory is deleted; a SHA256 mapping remains in `REFERENCE-LAYOUT.json`.
 - Removed the duplicate left-kick model alias and redirected the documentation index to the active directory.

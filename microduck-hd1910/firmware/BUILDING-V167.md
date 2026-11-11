@@ -18,6 +18,8 @@ python3 prepare-V167.py
 
 脚本核对固定 SHA256，从已有固件载荷恢复需要的资源；这些生成文件已加入 Git 忽略清单。`--check` 只检查归档校验值；`--download` 可下载缺失的固定归档并核对校验值。
 
+2026-11-12 源码清理后，重复模型元数据也从 `policies/` 的指定文件按 SHA256 恢复。准备步骤共恢复 91 个资源；完整清单见 `SOURCE-LAYOUT.json`，审计结果见[源码清理记录](../docs/SOURCE-CLEANUP-20261112.md)。
+
 V164 ZIP 仅作为复现构建基线保留一份，位置为 `../../release-assets/build-baselines/Microduck-Console-R17-V164.zip`。`package-V167.py` 和验证脚本已使用这个位置。
 
 ## 编译

@@ -1,0 +1,935 @@
+{
+  "schema": "microduck-source-cleanup/v1",
+  "revision": 1,
+  "date": "2026-11-12",
+  "base_commit": "c1a53b2c28ecbb6f890296fb668156987871ba76",
+  "scope": "Public R17 V167/control.43 source maintenance; no new installable release",
+  "removed_obsolete_tools": [
+    {
+      "path": "verification/build_arm150.py",
+      "bytes": 1883,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "665deba3f52ff78a168f546deae6a453ded757e5737cbf8e990511ce1748dc7a",
+      "group": "legacy_build_and_restore",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/build_native146.py",
+      "bytes": 3566,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "d1e27533f53c83e0eaa1ec0984f9f3fad7cb1b46a4f2a190c101139b6bbe0da5",
+      "group": "legacy_build_and_restore",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/build_native147.py",
+      "bytes": 3047,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "d8dedddcfd2ce8fbc6d29ec740fb93d659bbc85c35b4e16bdde427be7dd10456",
+      "group": "legacy_build_and_restore",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": [
+        "verification/REPRODUCE.txt"
+      ]
+    },
+    {
+      "path": "verification/home-policy155-audit.py",
+      "bytes": 4165,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "45e4e1ef22dbcd25f35ad3a5ddb625e0eb2fe58f8e6d82e539d8390c60873a57",
+      "group": "legacy_audit",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package146.py",
+      "bytes": 26085,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "cb84b46affb1ff8f5ef5cbb5309cbb9e78fbfb34b78f86a99e713389946a15b0",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package150.py",
+      "bytes": 17781,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "5abd262a58b1feaa92887ff39512b2a26c19fbc57f39d3220b9a23f5c1db2c1f",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package152.py",
+      "bytes": 12218,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [
+        "verification/REPRODUCE152.md"
+      ],
+      "sha256": "ae9e3aca9985e32b3e3a1e9b31e11c8759b86afe496b69e96d6e38aff18ccc1d",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package153.py",
+      "bytes": 15458,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "68c322ba5aea7817c1b8b349640215b17347a64a19f0c27c05ce54a21486d68a",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package154.py",
+      "bytes": 17528,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "3a8d5c1ee02167687c571c513663f4a565a18ebeef48dba54c0e4d0b43bd7275",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package155.py",
+      "bytes": 14662,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "e53dc590829f662b387e7c9e9ff8d1c5bf61651877595b289b4e296c80018663",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package156.py",
+      "bytes": 9203,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "e0bad6481039b82e10c1b2c19d398da000ee164571f4451f33ef9a7358874d20",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package157.py",
+      "bytes": 13969,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "604365093efb8492f26755a9e46560b2e1f2be1f8191b06f3dd687578ec61601",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package157fix1.py",
+      "bytes": 7714,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "51c5a33ddd992181ddc8e5c3f32be147989c69bf992c5f1c7acea59f49ae9900",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package157fix10.py",
+      "bytes": 10124,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "f6e2b8a479ee23b32ff74a142f7781c5517ebefc5614f3afab2efc53f45011ce",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package157fix2.py",
+      "bytes": 11752,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "d6001e724dab091fc5391d2f8da72e4a175c7574498e9c50929586b7bdf40f62",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package157fix3.py",
+      "bytes": 8134,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "2f0d811664f979cea7d25850f798d9879c84cd41078c0622d9e508a70f66b4b1",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package157fix4.py",
+      "bytes": 9484,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "1ae24cb3bfa8c2dfd352a57ada2c35cf2b6d9a13cc3c55efe97bdbd75fd41ff7",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package157fix5.py",
+      "bytes": 8572,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "3e91b5594941f2a73b15ef752d4859183f211f841b040f5c6d1c6fb90abccde0",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package157fix6.py",
+      "bytes": 10186,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "58da4a8010b71885ab9affbf26bbd072fe8e6268bfca6cde910e5a0d0ed5aad3",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package157fix7.py",
+      "bytes": 9171,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "1917e4af29f825e19a3aaa4486db6e0cd319f40b8084952cde300be70bf21321",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package157fix8.py",
+      "bytes": 13279,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "bbae1960ede261a43a78b01ca470d86f6a3d3affbf67b231c766371e590d1514",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/package157fix9.py",
+      "bytes": 7603,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "180c07a01665ae0434e6fc4d80d212c905dd743ac22fa6b1805b329a95bf58a7",
+      "group": "legacy_packagers",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/prepare_build_deps146.py",
+      "bytes": 2914,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "11336142084c02a3f50244821789535e7dfd51262d7a5284a44fa37e8834e60a",
+      "group": "legacy_build_and_restore",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/restore_baseline153.py",
+      "bytes": 2629,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "14cfc6131932be5b1942a9a9b591704299172836e46236e07c7ce701cd7ac8cf",
+      "group": "legacy_build_and_restore",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/restore_baseline154.py",
+      "bytes": 2629,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "88e2611a67ddfc4cf1343848186d2f9a0cc12f0fd58c719e703f5c8e9fd7b17b",
+      "group": "legacy_build_and_restore",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/restore_baseline155.py",
+      "bytes": 1553,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "33794626c70146fd85eecf20addd6180e5a43ad27850e8ad0562c8cfe12ef54e",
+      "group": "legacy_build_and_restore",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/restore_toolchain147.py",
+      "bytes": 9309,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "4ea0be2a0df6aafa0530e97176293d8e8bcd01b48840fc777888d4e82cd71b41",
+      "group": "legacy_build_and_restore",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": [
+        "verification/REPRODUCE.txt"
+      ]
+    },
+    {
+      "path": "verification/run-V160-tests.py",
+      "bytes": 3922,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "a89142b530521b4f4e38295e9e90c320693bf6a25aacbdae00a416cd31532024",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/run-V162-tests.py",
+      "bytes": 4105,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "49042ddef06bf7c8101feffcd11ceb904236409edb6e59f4a1dd10fd63cdb216",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/run-V163-models.py",
+      "bytes": 2785,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "a913095bab2a699a59298e6ae0b57c9dd48551e309d397e2e7aeee9a5f413551",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/run-V163-tests.py",
+      "bytes": 4105,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "66cfa95a1e1ddcd3aefd193c6345df11d010efdf2ba8413ec5a809431416ed11",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/run152.py",
+      "bytes": 2641,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [
+        "verification/REPRODUCE152.md"
+      ],
+      "sha256": "f2010940795632039d4eb323510c1e22db2ec923965a0c5efbdbb388369b3590",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/run154.py",
+      "bytes": 2638,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "ebebde7721aa9e0e6a58b23747d88546d4f96ab28a89bc16e204962cc1fad968",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/run155.py",
+      "bytes": 2638,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "e9c665380cf7e00afd4701621d2ab8b744b03bdf2c1c91f04fa4fe700c6456fc",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/run157fix8.py",
+      "bytes": 1810,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "d42e5e7e2c2753615bd37ad7546f18dd3a686919d941c98cb20d93a44bd4de7b",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/run157fix9.py",
+      "bytes": 1810,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "c5c64df6605e6fbb1c8595686383e12da9722e726bbd2886a064fb9f6ed5d41a",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/run_arm154.py",
+      "bytes": 1821,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "47aa382635b122296fc31f4204461f7b16bd4269e6b9c8992eb9657b01c74104",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/run_arm155.py",
+      "bytes": 1821,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "80975fbf79306182e086cde59ba4ecf968d77ec7700fe54e618a215195691828",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/run_native_home155.py",
+      "bytes": 5179,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "0bb3455db9d3b6d4fcea9a74c3745bbabd98ff4543e9da20ae117836cfc8a5dd",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/verify-V162-package.py",
+      "bytes": 5243,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "06e7cabc0d0190a6d30174940156a0ec6aaf7732c4c335f794719d4e396b5d3a",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    },
+    {
+      "path": "verification/verify-V163-package.py",
+      "bytes": 5563,
+      "code_references_outside_candidate_group": [],
+      "doc_references": [],
+      "sha256": "eca076fa8c942ea15f4017b4fa8fcb15253ea1fe6378b7a8d0c58d14a00100ee",
+      "group": "legacy_test_or_package_runners",
+      "current_release_references": [],
+      "reason": "One-shot previous-release tool; not invoked by build-V167.sh, package-V167.py, prepare-V167.py or current workflow/scripts. Legacy inputs/outputs belong to the recorded V146–V163 build chain.",
+      "text_references": []
+    }
+  ],
+  "generated_duplicate_resources": [
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/README.en.md",
+      "source_path": "policies/ground_pick/README.en.md",
+      "bytes": 4550,
+      "sha256": "b3df23863b4eba0e0fc478e45eae1c35f5132a666833a32733c47d396b45aa44",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/deployment-contract.json",
+      "source_path": "policies/ground_pick/deployment-contract.json",
+      "bytes": 316435,
+      "sha256": "2d2e807aadb1f98df7b64e5f3378041db6fd939e5e286a9958f1b1540ab21fee",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/deployment-profile.toml",
+      "source_path": "policies/ground_pick/deployment-profile.toml",
+      "bytes": 426,
+      "sha256": "15fbed4125ea8fb104b9d0544540fa664fc78b8f1bbcef9a1f9bfa31064a0a15",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/deployment-runtime.json",
+      "source_path": "policies/ground_pick/deployment-runtime.json",
+      "bytes": 472,
+      "sha256": "17d8dac2df102ea80b9ce8513ab45a10e60d16d913cbdaca330d4a01e329e907",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/manifest.json",
+      "source_path": "policies/ground_pick/manifest.json",
+      "bytes": 5556,
+      "sha256": "12d6870830a48bdc00f9c1dd961e09263919c535cb2604d31659e080ff497b83",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/model-info.json",
+      "source_path": "policies/ground_pick/model-info.json",
+      "bytes": 126,
+      "sha256": "eae1c29bb287c49dec2ae5b8e5fc6838c4a622bc630fd548cc7e91682a38a276",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/training-config.json",
+      "source_path": "policies/ground_pick/training-config.json",
+      "bytes": 163856,
+      "sha256": "9b3ed07a4f0b4d923917851a69b714232a6cc9d9395f6ad4252f455a7a2a7f3e",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/training-request.json",
+      "source_path": "policies/ground_pick/training-request.json",
+      "bytes": 194293,
+      "sha256": "bd92bd8f077fdd6186802798a27b6971522f4b7a94bc0b19e6e35da8c7dd63e6",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/upstream-params/agent.yaml",
+      "source_path": "policies/ground_pick/upstream-params/agent.yaml",
+      "bytes": 1345,
+      "sha256": "86ee2132d29bf6a3fdf364d250dd39860916a830c4b0ab3912fab7a848378e50",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/upstream-params/env.yaml",
+      "source_path": "policies/ground_pick/upstream-params/env.yaml",
+      "bytes": 57627,
+      "sha256": "461db3166b62587ac179ad5ef1c71ee21d37f773acac1753767586bc1e146aa2",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/b14e3a8b56ddbb8d2d831e727774a168/使用说明.md",
+      "source_path": "policies/ground_pick/使用说明.md",
+      "bytes": 4066,
+      "sha256": "392fe46cba0851b80fcba904bf64e37dd44563312455d92b3644ee69c4612f02",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/README.en.md",
+      "source_path": "policies/walk/README.en.md",
+      "bytes": 4541,
+      "sha256": "304170b59064451b9bb6e1d86cad11b2f35435e8f169691d21bc83c8b60429af",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/deployment-execution.json",
+      "source_path": "policies/walk/deployment-execution.json",
+      "bytes": 225,
+      "sha256": "1e77b8c032cf784a7d3d059d0e8d1a32e71fa49d56e1a399aeac7ebc03e2afc9",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/deployment-profile.toml",
+      "source_path": "policies/walk/deployment-profile.toml",
+      "bytes": 389,
+      "sha256": "ebcbe4fa97ccc4eb0d1bb219ec25202b0e710bc07c9c0dd734925ecbd23988f8",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/deployment-runtime.json",
+      "source_path": "policies/walk/deployment-runtime.json",
+      "bytes": 974,
+      "sha256": "0a71011ea44943aa51b22efd9cea4da4b23be3533e48a6a94d300b82678b08e2",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/manifest.json",
+      "source_path": "policies/walk/manifest.json",
+      "bytes": 5548,
+      "sha256": "d61b0ce5745f82fc8553dc6718dfc9b4cd11dc8fc24ad2e40e7323cfb80fe4d5",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/model-info.json",
+      "source_path": "policies/walk/model-info.json",
+      "bytes": 123,
+      "sha256": "27333c5744d4b94800eee07c3183d13324862437979c79169b52769d5eafb327",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/training-config.json",
+      "source_path": "policies/walk/training-config.json",
+      "bytes": 228584,
+      "sha256": "df8cfd4d46a062b6d177ab903a6347ec2088e568273a918653f8b4d0d983c396",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/training-request.json",
+      "source_path": "policies/walk/training-request.json",
+      "bytes": 261678,
+      "sha256": "47d73ef82d8c25b8468e242a0f1390c079b676c8431be5c982ca2574da811b44",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/upstream-params/agent.yaml",
+      "source_path": "policies/walk/upstream-params/agent.yaml",
+      "bytes": 2228,
+      "sha256": "77e5c6ea815e24c8bab15f8d315a75c1c07e1936b29aabad152218e969fff0d3",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/upstream-params/env.yaml",
+      "source_path": "policies/walk/upstream-params/env.yaml",
+      "bytes": 75657,
+      "sha256": "7dd666e4515ad91c1512ce2188152a34764830126dc0ede8145d768f851a6027",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1cbf8730eadd75a5704332c9f3c10f60/使用说明.md",
+      "source_path": "policies/walk/使用说明.md",
+      "bytes": 4057,
+      "sha256": "57be09494ae934d32ac86c360d3353bd52a1f3690748cedb999951b6f4f3cce3",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/README.en.md",
+      "source_path": "policies/stand/README.en.md",
+      "bytes": 4655,
+      "sha256": "377dbd41887ea5cd31d72abf1d395365381e2051962c49ceb736d99e4718d1a6",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/deployment-contract.json",
+      "source_path": "policies/stand/deployment-contract.json",
+      "bytes": 352952,
+      "sha256": "5db434f4255858b88f26312e0286ed8801df94fda735e13f9f290eecbd2d17a1",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/deployment-profile.toml",
+      "source_path": "policies/stand/deployment-profile.toml",
+      "bytes": 389,
+      "sha256": "ebcbe4fa97ccc4eb0d1bb219ec25202b0e710bc07c9c0dd734925ecbd23988f8",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/deployment-runtime.json",
+      "source_path": "policies/stand/deployment-runtime.json",
+      "bytes": 1029,
+      "sha256": "ffc1c8b29fe916131c26cb2959d9067bce59729b3c49f54bd559c6c465370134",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/manifest.json",
+      "source_path": "policies/stand/manifest.json",
+      "bytes": 5470,
+      "sha256": "b34e9c57743571e91680ade1d646149ad8a831ebb19116d41a18a36e4312f2d7",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/model-info.json",
+      "source_path": "policies/stand/model-info.json",
+      "bytes": 944,
+      "sha256": "01edf513bc99b7483a93bd8f0ba6f0e31a0306dfffcb4b07353293ba8ee226a7",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/training-config.json",
+      "source_path": "policies/stand/training-config.json",
+      "bytes": 186557,
+      "sha256": "b1c8700cf77588ef9bd461c78545e198c7485d80c3ca7cbdb9cc26f09783a8b2",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/training-request.json",
+      "source_path": "policies/stand/training-request.json",
+      "bytes": 215720,
+      "sha256": "802de1c0b9d966972a39ba4a6284d6e4e3b0863e055212eddd557756871c553d",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/upstream-params/agent.yaml",
+      "source_path": "policies/stand/upstream-params/agent.yaml",
+      "bytes": 1349,
+      "sha256": "3eb4392e3144e1e909dbf7d560c3b87629872b4d277dc10a6c5365387b073674",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/upstream-params/env.yaml",
+      "source_path": "policies/stand/upstream-params/env.yaml",
+      "bytes": 71212,
+      "sha256": "70f562dc7b72ff021deebc4608d971599f7ec78e8d139ee6dbd32fada938d6a5",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/a481d9f211f31d9476ab1a319fe362a2/使用说明.md",
+      "source_path": "policies/stand/使用说明.md",
+      "bytes": 4137,
+      "sha256": "9f4db5ed99de73c30dea5ed585467dd2a1a62ab0070af7d54ba4663719e2c4bc",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/README.en.md",
+      "source_path": "policies/roulade/README.en.md",
+      "bytes": 3376,
+      "sha256": "9e323f6b51811aa626baaf8ea80f4839bf8e3cf6bc06669f8e1b00736bfee8af",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/deployment-contract.json",
+      "source_path": "policies/roulade/deployment-contract.json",
+      "bytes": 278563,
+      "sha256": "2e40493605eac00978db51bcc0e127d6681fb78b170694f979c703bcd8dff330",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/deployment-profile.toml",
+      "source_path": "policies/roulade/deployment-profile.toml",
+      "bytes": 397,
+      "sha256": "f34535fa1dd9623ffb891ebd43eae4e0a115556f9c0421d6c98a3de242ca7b0e",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/deployment-runtime.json",
+      "source_path": "policies/roulade/deployment-runtime.json",
+      "bytes": 472,
+      "sha256": "5be6255feba32d60fcffaa98b5333d244c738d25320b5761304b9448a9444a73",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/manifest.json",
+      "source_path": "policies/roulade/manifest.json",
+      "bytes": 3879,
+      "sha256": "f097326d4331fdd298e2d4ad4e7ade8aec8d8148195b0db2e0b30b968dce15b5",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/model-info.json",
+      "source_path": "policies/roulade/model-info.json",
+      "bytes": 120,
+      "sha256": "22d43ea985d210a34b4dc605feb4215dc8b022ed9f1f0a7de492d3989086fcff",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/training-config.json",
+      "source_path": "policies/roulade/training-config.json",
+      "bytes": 142560,
+      "sha256": "016c3605254508089abd97abd86ec09a780970cc48da23a5db841447728c56c2",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/training-request.json",
+      "source_path": "policies/roulade/training-request.json",
+      "bytes": 171103,
+      "sha256": "e6209817dd2233b249d5d516c37eacaaadf8ce3e4521812f2c600d114527fb45",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/upstream-params/agent.yaml",
+      "source_path": "policies/roulade/upstream-params/agent.yaml",
+      "bytes": 1514,
+      "sha256": "1ac37d341454b9b3a5aa98c3985bca28ae075758fe05f3018bbf5ebade682ce4",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/upstream-params/env.yaml",
+      "source_path": "policies/roulade/upstream-params/env.yaml",
+      "bytes": 51159,
+      "sha256": "937e725e063b804b43aa70e48a5769828e471f6acc287b3e57997ed6464519ca",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/使用说明.md",
+      "source_path": "policies/roulade/使用说明.md",
+      "bytes": 2892,
+      "sha256": "deddc7a4125f5f7d0a191401521d4599d85a20399cec056e94fb6ff2bcce3741",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1c94934c6421ec72ed48079cea749668/deployment-contract.json",
+      "source_path": "policies/sitstand/deployment-contract.json",
+      "bytes": 75689,
+      "sha256": "fcd3b944a0bd6314daa4f27a050817e3e189e36fc30687cc1623ed7a6700aaef",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1c94934c6421ec72ed48079cea749668/deployment-runtime.json",
+      "source_path": "policies/sitstand/deployment-runtime.json",
+      "bytes": 674,
+      "sha256": "b9b0385fc48ed013e18b3881877e0a2fd0949b38c76d0399e4b32c6972b67e1b",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1c94934c6421ec72ed48079cea749668/manifest.json",
+      "source_path": "policies/sitstand/manifest.json",
+      "bytes": 414,
+      "sha256": "24428f211159adcf19c9a474487489b1f532e7d7900d7b3549bfefbc927b243a",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1c94934c6421ec72ed48079cea749668/training-request.json",
+      "source_path": "policies/sitstand/training-request.json",
+      "bytes": 12274,
+      "sha256": "bfed29f52d35eab8478741f09c3d7320a4c6a15bacd805b4e68198af9548c6f4",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1c94934c6421ec72ed48079cea749668/upstream-params/agent.yaml",
+      "source_path": "policies/sitstand/upstream-params/agent.yaml",
+      "bytes": 1352,
+      "sha256": "b5fb01eadef32dafe32e8a2389b8bfa12265c89fc0865241014c79cd8964ddec",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/1c94934c6421ec72ed48079cea749668/upstream-params/env.yaml",
+      "source_path": "policies/sitstand/upstream-params/env.yaml",
+      "bytes": 58817,
+      "sha256": "b603e2a69a0004c920420be35247d43806e6b58a37695f3e5248b3e53aea18cd",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/README.en.md",
+      "source_path": "policies/kick_left/README.en.md",
+      "bytes": 5410,
+      "sha256": "e63420301ba9890fd23776c7a9d374286effe62dffa1454fc32283119d84ee46",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/deployment-contract.json",
+      "source_path": "policies/kick_left/deployment-contract.json",
+      "bytes": 468205,
+      "sha256": "0b3b2183ae873ca0fd289d82fd98f1aec046cd33abf038815eaf1aca14a10005",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/deployment-profile.toml",
+      "source_path": "policies/kick_left/deployment-profile.toml",
+      "bytes": 868,
+      "sha256": "558318e6c3bff64797d58fc77c25a03e70ffea111e72c89a47a05d3b9d59dc47",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/manifest.json",
+      "source_path": "policies/kick_left/manifest.json",
+      "bytes": 6349,
+      "sha256": "b02df1889d690219b900c7a7d41e57ac901c14791f7e27c681fa84eadc17db57",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/training-config.json",
+      "source_path": "policies/kick_left/training-config.json",
+      "bytes": 163420,
+      "sha256": "582bd7ce60a77e043251703f0773a12804579d5a5c5f1497bed975bfe1beaff2",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/training-request.json",
+      "source_path": "policies/kick_left/training-request.json",
+      "bytes": 192895,
+      "sha256": "52281cb8db459ce5b123ad988278c9263f2b8dc5933de1154cbeea25d7902096",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/upstream-params/agent.yaml",
+      "source_path": "policies/kick_left/upstream-params/agent.yaml",
+      "bytes": 1348,
+      "sha256": "afeb4b03be23c0248ceea02dfa80e955009f41c1af4d2898346a2c8db6406b93",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/upstream-params/env.yaml",
+      "source_path": "policies/kick_left/upstream-params/env.yaml",
+      "bytes": 53382,
+      "sha256": "e5831e04b3339c03d851b35058076d1e4da6874a0832cfd2ee56f4e4f80779db",
+      "mode": 420
+    },
+    {
+      "path": "packaging/models/ee0376c927044cdece056ba1d3e6eac7/使用说明.md",
+      "source_path": "policies/kick_left/使用说明.md",
+      "bytes": 4834,
+      "sha256": "414c038295da228eff1f648c8d4e9e12024a05de00ae5a4f93e6d9ba84213f9e",
+      "mode": 420
+    }
+  ],
+  "removed_unlinked_source": {
+    "path": "duck-control/src/hd1910_test.rs",
+    "bytes": 3823,
+    "sha256": "cd8d85193706246e553ff6980b56d51061898514bafa99ca05457a70396cee66",
+    "reason": "Not declared by any Cargo target, mod, path or include; absent from the native V164 snapshot"
+  },
+  "removed_tracked_bytes": 4183658,
+  "preserved": [
+    "Published V167 console ZIP and control.43 firmware archive",
+    "V164 build baseline and V167 native-source/verification evidence",
+    "All production Rust source bytes, model weights, calibration and motion configuration",
+    "Official source/license records, active regression fixtures and independent GitHub Pages demo resources"
+  ],
+  "compiled_artifacts_changed": false,
+  "firmware_recompiled": false,
+  "robot_hardware_tested": false,
+  "validation": {
+    "pinned_archive_sha256": "passed",
+    "verified_resources_restored": 91,
+    "new_metadata_resources_byte_hash_and_mode_checked": 59,
+    "native_V164_snapshot_comparison": "passed; exact duplicate declarations normalized only for three Cargo manifests",
+    "verifier_negative_checks": "unrelated Rust/manifest/dependency changes rejected",
+    "python_suites": [
+      {
+        "command": "python -m unittest -v test_model_packages_execution test_atomic_install",
+        "cwd": "firmware/packaging",
+        "passed": 18
+      },
+      {
+        "command": "PYTHONPATH=console:packaging python -m unittest test_control_socket test_raw_telemetry test_collector_relay test_console_release_compat -q",
+        "cwd": "firmware",
+        "passed": 39
+      },
+      {
+        "command": "PYTHONPATH=console:packaging python -m unittest discover -s console/verification -p 'test_*.py' -q",
+        "cwd": "firmware",
+        "passed": 141
+      }
+    ],
+    "javascript_verification": {
+      "passed_scripts": 10,
+      "existing_failed_scripts": [
+        "console/verification/test_controls154.mjs"
+      ]
+    },
+    "console_HTTP_startup": "passed; config, HTML, JS and snapshot endpoints; clean shutdown",
+    "management_profile_JS_generator": "exact output match",
+    "python_compilation": "passed",
+    "rust_tests_run": false,
+    "hardware_tested": false,
+    "known_preexisting_test_failures": "../docs/SOURCE-CLEANUP-20261112.md#原有测试问题"
+  }
+}

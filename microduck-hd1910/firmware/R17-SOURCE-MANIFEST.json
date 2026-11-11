@@ -38,7 +38,6 @@
     "duck-control/src/feetech_snapshot.rs": "4f0233d1d7739b83db56844d88f77bd32d46c9c22a81490d02c4e5c5e62f551f",
     "duck-control/src/hardware.rs": "89f3e0395ad1031ace22294a27e162aa66f7e36f768b3dc0af5daa5ecf27e68c",
     "duck-control/src/hd1910.rs": "26e2ee9f9ee378a7dbb321d63469e8914395cb34d762b918d8837d20804493c5",
-    "duck-control/src/hd1910_test.rs": "cd8d85193706246e553ff6980b56d51061898514bafa99ca05457a70396cee66",
     "duck-control/src/imu.rs": "bda6ccf768aed3085a35e29a38a6087ec299a155b6f63aa259e531cf1ee404c6",
     "duck-control/src/io.rs": "ff927de125cfac4f1e3d778d4ab7ec5fcfb07869b5cb638865175fbe87c1cf22",
     "duck-control/src/lib.rs": "331b6308fa5a54913ed135782201b178fec819fb74549056d9fc8ea9d1e203f3",
@@ -199,5 +198,6 @@
   "hardware_verified_in_publication": false,
   "current_BUILD": "BUILD.json",
   "console_manifest": "console/BUILD_MANIFEST.json",
-  "source_layout": "SOURCE-LAYOUT.json"
+  "source_layout": "SOURCE-LAYOUT.json",
+  "source_cleanup": "verification/source-cleanup-20261112.json"
 }

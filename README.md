@@ -4,7 +4,7 @@
 
 # 🦆 Microduck 飞特 HD1910 复刻 · 从零做一只会走的机器人鸭
 
-从零件到一只会走路、会翻跟头的小鸭。基于 [Pollen Robotics Microduck](https://github.com/pollen-robotics/microduck) 完成飞特 HD1910 实机复刻，提供**系统镜像、中文机器人中控、自制 HAT／IMU 与全套 3D 打印件**。
+**Microduck-kissqy 是 kissqy 基于 [Pollen Robotics Microduck](https://github.com/pollen-robotics/microduck) 0.15.1 完成的飞特 HD1910 双足机器人鸭复刻项目。** 参考硬件为 **Radxa ZERO 3W + 15 个飞特 HD1910 舵机**，提供系统镜像、中文机器人中控、配套现成 ONNX 动作模型、独立强化学习训练中控、自制 HAT／IMU／HUB 和全套 3D 打印件。
 
 **正常复刻无需训练。配套现成动作模型，装好、刷机并完成本机标定后即可体验。**
 
@@ -19,9 +19,11 @@
   </tr>
 </table>
 
-[🚀 从零复刻路线](https://kissqy.github.io/Microduck-kissqy/build/) · [🎮 机器人中控演示](https://kissqy.github.io/Microduck-kissqy/) · [📖 中控使用教程](https://kissqy.github.io/Microduck-kissqy/console-guide.html) · [❓ 常见问题](docs/MICRODUCK-FAQ.md)
+[📚 Microduck 完整复刻教程](https://kissqy.github.io/Microduck-kissqy/guides/) · [🚀 从零复刻路线](https://kissqy.github.io/Microduck-kissqy/build/) · [🎮 机器人中控演示](https://kissqy.github.io/Microduck-kissqy/) · [📖 中控使用教程](https://kissqy.github.io/Microduck-kissqy/console-guide.html) · [❓ 常见问题](docs/MICRODUCK-FAQ.md)
 
 ## 🏆 单脚独立 · 自训新突破
+
+作者自训的单脚平衡动作已在飞特 HD1910 实机上演示。下方视频展示真实机器人表现；训练、装配和标定资料均可从本仓库继续查阅。
 
 <a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html"><img width="900" alt="Microduck 单脚独立实机视频与微信交流群，点击图片观看视频，扫码加群交流" src="docs/assets/community-one-leg-banner.webp?v=20261107-group3" /></a>
 
@@ -80,7 +82,25 @@
 
 完成这三步即可使用配套模型体验已有动作，已完成的步骤可以直接跳过。[进阶玩法](https://kissqy.github.io/Microduck-kissqy/build/advanced.html)供自训新动作或学习训练流程时选用。
 
+## 项目提供什么
+
+| 内容 | 已有资料与入口 |
+| --- | --- |
+| 飞特 HD1910 实机与现成动作模型 | 行走、坐下站起、捡取、踢球、前滚翻及滑轮动作；[实机视频与单脚平衡](https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html)、[模型来源与验证范围](microduck-hd1910/docs/MODEL-PROVENANCE.md) |
+| 系统镜像与中文机器人中控 | ZERO 3W 刷机、热点配网、舵机与 IMU 标定、实时 3D 姿态、IMX219 摄像头与 WebRTC、手柄控制、固件维护；[中控使用教程](https://kissqy.github.io/Microduck-kissqy/console-guide.html) |
+| 独立强化学习训练中控 | 任务与配方选择、训练队列、奖励曲线、仿真评估和 ONNX 导出；[训练中控说明](microduck-hd1910/training-console/README.zh-CN.md) |
+| 自制电路板与完整装配资料 | HAT 供电通信与音频板、独立躯干 IMU、HUB 分线供电板；[硬件工程](hardware/README.md)、[材料采购清单](DUCK-SHOPPING-LIST.md)、[3D 打印 STL／3MF](hardware/3d-print-frankenduck/)、[装配接线教程](https://kissqy.github.io/Microduck-kissqy/build/assembly.html) |
+
 ## 下载与版本
+
+
+| 稳定公开版本 | 用途与直接下载 |
+| --- | --- |
+| 系统镜像 R1 · Microduck 0.15.1 / control.40 | 新装 ZERO 3W：[下载 .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz) |
+| 中文机器人中控 R17 V167 · 随包固件 control.43 | 连接、标定与控制实机：[下载 ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip) |
+| 强化学习训练中控 R1.5.27 · 可选 | 训练与评估新动作：[下载 ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip) |
+
+普通复刻使用系统镜像和机器人中控，完成本机标定后使用配套模型。R1 镜像预装 control.40，V167 随包固件为 control.43；软件预装不能替代本机机械与 IMU 标定。[发布基线与验证范围](microduck-hd1910/docs/BASELINE.md)
 
 首次制作按 [刷机与首次行走教程](https://kissqy.github.io/Microduck-kissqy/build/start.html) 下载和操作；所需文件就在对应步骤。
 
@@ -100,12 +120,12 @@
 
 [查看打印文件、摆盘预览与装配说明 →](hardware/3d-print-frankenduck/)
 
-## 🔧 HAT 与 IMU 自制记录
+## 🔧 自制 HAT、IMU 与 HUB 电路板
 
-作者自行设计绘制，经长期真机使用与迭代验证，由**嘉立创 SMT 贴片生产**。
+HAT 连接 ZERO 3W 与舵机总线，提供供电、通信及音频外围；独立躯干 IMU 提供身体姿态反馈；HUB 分接舵机与电源，并带 1000 µF 缓冲电容。板卡由作者自行设计绘制，经真机使用与迭代验证，由**嘉立创 SMT 贴片生产**。提供电路工程、材料清单与制作记录。
 
 
-**成品 IMU 已预烧录 FT6，到手无需另行烧录。** 作者享有权利的原创设计与工程资料限个人非商业复刻，商业复制生产、销售或集成须事先取得书面授权。[板卡设计许可](hardware/LICENSE)
+**成品 IMU 已预烧录 FT6，到手无需另行烧录；安装后仍需完成本机标定。** 作者享有权利的原创设计与工程资料限个人非商业复刻，商业复制生产、销售或集成须事先取得书面授权。[板卡设计许可](hardware/LICENSE)
 
 [硬件工程与制作说明](hardware/README.md) · [IMU 手工制作视频](https://www.bilibili.com/video/BV1qapz6PERs/) · [购买 HAT／IMU／HUB 成品板](https://item.taobao.com/item.htm?id=1095121548583)
 

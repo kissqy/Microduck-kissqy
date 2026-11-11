@@ -4,7 +4,7 @@
 
 # 🦆 Microduck Feetech HD1910 Replica · Build a walking robot duck
 
-From a collection of parts to a walking, forward-rolling robot duck. This working Feetech HD1910 replica of [Pollen Robotics Microduck](https://github.com/pollen-robotics/microduck) includes a **system image, Chinese Robot Console, DIY HAT / IMU boards and complete 3D printing files**.
+**Microduck-kissqy is kissqy’s working Feetech HD1910 biped robot duck replica, based on [Pollen Robotics Microduck](https://github.com/pollen-robotics/microduck) 0.15.1.** The reference hardware uses a **Radxa ZERO 3W and 15 Feetech HD1910 servos**. The project includes a system image, Chinese Robot Console, ready-to-use ONNX motion models, an independent reinforcement-learning Training Studio, DIY HAT / torso IMU / HUB boards and complete 3D printing files.
 
 **No training is required for a normal build. Use the supplied movement models after assembly, flashing and calibration.**
 
@@ -19,9 +19,11 @@ From a collection of parts to a walking, forward-rolling robot duck. This workin
   </tr>
 </table>
 
-The three build stages and optional advanced guide are in Chinese. [English build guide](docs/MICRODUCK-BUILD-GUIDE.en.md) · [🎮 Robot Console demo](https://kissqy.github.io/Microduck-kissqy/) · [📖 Console tutorial (中文)](https://kissqy.github.io/Microduck-kissqy/console-guide.html) · [❓ FAQ](docs/MICRODUCK-FAQ.en.md)
+The three build stages and optional advanced guide are in Chinese. [English build guide and FAQ](https://kissqy.github.io/Microduck-kissqy/guides/en.html) · [🎮 Robot Console demo](https://kissqy.github.io/Microduck-kissqy/) · [📖 Console tutorial (中文)](https://kissqy.github.io/Microduck-kissqy/console-guide.html) · [❓ FAQ](docs/MICRODUCK-FAQ.en.md)
 
 ## 🏆 One-legged balance · A new training milestone
+
+The author’s self-trained one-legged balance has been demonstrated on a physical HD1910 robot. The video below shows the real robot; build, calibration and training references are available in this repository.
 
 <a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html"><img width="900" alt="Microduck one-legged balance video and WeChat community QR code — click to watch, scan to join" src="docs/assets/community-one-leg-banner.webp?v=20261107-group3" /></a>
 
@@ -80,7 +82,24 @@ This little duck can **walk, sit, pick things up, kick a ball, and roll forward*
 
 These three stages prepare your duck to use the supplied movements. Continue from your current progress. [Advanced play](https://kissqy.github.io/Microduck-kissqy/build/advanced.html) is optional, for training new movements or learning the training process.
 
+## What the project includes
+
+| Component | Resources |
+| --- | --- |
+| Physical HD1910 robot and motion models | Walking, sit/stand, picking, kicking, forward rolls and roller movements; [real-robot videos and one-legged balance](https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html), [model provenance and validation scope](microduck-hd1910/docs/MODEL-PROVENANCE.md) |
+| System image and Chinese Robot Console | ZERO 3W imaging, Wi-Fi setup, servo / IMU calibration, live 3D pose, IMX219 camera and WebRTC, gamepad control and firmware maintenance; [console guide (中文)](https://kissqy.github.io/Microduck-kissqy/console-guide.html) |
+| Independent reinforcement-learning Training Studio | Task recipes, queues, reward curves, simulation evaluation and ONNX export; [training documentation](microduck-hd1910/training-console/README.en.md) |
+| DIY boards and assembly resources | HAT power / communication / audio board, torso IMU and power-distribution HUB; [hardware projects](hardware/README.en.md), [parts list](DUCK-SHOPPING-LIST.en.md), [STL / 3MF printing files](hardware/3d-print-frankenduck/) and [assembly guide (中文)](https://kissqy.github.io/Microduck-kissqy/build/assembly.html) |
+
 ## Downloads and versions
+
+| Stable public version | Purpose and direct download |
+| --- | --- |
+| System Image R1 · Microduck 0.15.1 / control.40 | New ZERO 3W installations: [download .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz) |
+| Robot Console R17 V167 · bundled control.43 firmware | Connect, calibrate and control the robot: [download ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip) |
+| Training Studio R1.5.27 · optional | Train and evaluate new movements: [download ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip) |
+
+Normal builds use the system image, Robot Console and supplied models after local calibration. Image R1 contains control.40; V167 bundles control.43. Preinstalled software does not replace calibration of your own mechanics and IMU. [Release baseline and validation scope](microduck-hd1910/docs/BASELINE.en.md)
 
 Follow the [first-walk guide (中文)](https://kissqy.github.io/Microduck-kissqy/build/start.html); each stage provides its required download.
 

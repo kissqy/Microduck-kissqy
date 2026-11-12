@@ -9,22 +9,11 @@
       "spec": "HD-1910-C001；HD-1910-C001",
       "unit": "只",
       "quantity": 15,
-      "unitQuote": "119.00",
-      "subtotalCents": 178500,
+      "unitQuote": "123.00",
+      "subtotalCents": 184500,
       "group": "electronics",
-      "url": "https://item.taobao.com/item.htm?id=1078248851201",
-      "note": "装机 15 只。型号选 HD-1910-C001。",
-      "groupBuy": {
-        "unitQuote": "99.00",
-        "url": "https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/hd1910-group-buy-qr.jpg",
-        "qrImage": "../assets/hd1910-group-buy-qr.jpg",
-        "note": "团购 99 元/个；点击团购入口，在弹窗内扫码联系。",
-        "id": "hd1910-group-buy",
-        "pageUrl": "https://kissqy.github.io/Microduck-kissqy/build/shopping.html#hd1910-group-buy",
-        "organizerName": "fanhao375",
-        "organizerUrl": "https://github.com/fanhao375/microduck-replica",
-        "recommendation": "最早进行 HD1910 复刻，累计团购数万个舵机，飞特原厂核心团购渠道；为人诚信、交流热心。"
-      }
+      "url": "https://e.tb.cn/h.jhmwoGCAcQbwZRt?tk=i4416azfdRS",
+      "note": "装机 15 只。型号选 HD-1910-C001。"
     },
     {
       "id": "urt2",

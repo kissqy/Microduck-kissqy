@@ -9,7 +9,7 @@
 
 [🏠 Project homepage](README.en.md)
 
-**Assembled-board reference subtotal: CNY 2936.62**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. Printing costs are additional, based on an actual quote or filament budget. The HUB is included at CNY 69; battery-connection parts and shipping are extra.
+**Assembled-board reference subtotal: CNY 2996.62**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. Printing costs are additional, based on an actual quote or filament budget. The HUB is included at CNY 69; battery-connection parts and shipping are extra.
 
 **[Open the shopping checklist (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/shopping.html)** · [Compare budget totals (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
 
@@ -17,7 +17,7 @@ The online pages show totals first, then specifications, quantities and purchase
 
 ## Complete parts at a glance
 
-<a href="docs/assets/build-parts-kit.jpg?v=20261110-photo-fix"><img src="docs/assets/build-parts-kit.jpg?v=20261110-photo-fix" width="520" alt="Microduck parts flat lay with servos, boards, printed parts, cables, bearings, power accessories and a gamepad" /></a>
+<a href="docs/assets/build-parts-kit.jpg?v=20261112-speaker"><img src="docs/assets/build-parts-kit.jpg?v=20261112-speaker" width="520" alt="Microduck parts flat lay with servos, boards, printed parts, cables, bearings, power accessories, a gamepad and a speaker" /></a>
 
 Check the servos, boards, printed parts, cables and accessories before assembly. Click the photo for a larger view.
 
@@ -25,17 +25,17 @@ Check the servos, boards, printed parts, cables and accessories before assembly.
 
 | Item | Buy assembled boards | DIY boards, including tools |
 | --- | ---: | ---: |
-| Duck body, including gamepad, URT2 and reference spare stock | ¥2649.62 | ¥2649.62 |
+| Duck body, including gamepad, URT2 and reference spare stock | ¥2709.62 | ¥2709.62 |
 | HAT + IMU | [HAT ¥119 + IMU ¥99](https://item.taobao.com/item.htm?id=1095121548583) | ¥94.22–134.22 · first component purchase |
 | Assembled HUB (buffer capacitor included) | ¥69 | ¥69 |
 | Soldering / programming tools and consumables | No board-soldering tools; assembled IMU has FT6 preflashed | ¥800–1000 |
-| **Total without a printer** | **¥2936.62** | **¥3612.84–3852.84** |
+| **Total without a printer** | **¥2996.62** | **¥3672.84–3912.84** |
 | 3D printer allowance | +¥3500 | +¥3500 |
-| **Total including a printer** | **¥6436.62** | **¥7112.84–7352.84** |
+| **Total including a printer** | **¥6496.62** | **¥7172.84–7412.84** |
 
 Printing-service costs are additional, based on an actual quote. No printer purchase is needed. [Edition features and printing instructions](hardware/3d-print-frankenduck/README.en.md).
 
-- **The base table excludes printed parts or filament; printing costs are additional, based on an actual quote or filament budget. Robot-assembly labor, a computer, battery-connection parts, new-order shipping and losses are extra.** The body includes 15 HD1910 servos at ¥119 each; the microSD card and card reader are priced and included.
+- **The base table excludes printed parts or filament; printing costs are additional, based on an actual quote or filament budget. Robot-assembly labor, a computer, battery-connection parts, new-order shipping and losses are extra.** The body includes 15 HD1910 servos at ¥123 each; the microSD card and card reader are priced and included.
 - HAT, IMU and HUB are listed separately in the board purchasing table below. The HUB includes the main-power buffer capacitor; no separate capacitor purchase is needed.
 - DIY board materials use full component packs; the range covers free PCB coupons / no coupons. [Board cost breakdown](hardware/README.en.md#build-cost) · [Tool budget](docs/BUILD-TOOLS.en.md#budgeting-for-tools-from-scratch). Reuse existing tools; the assembled-board option assumes you have normal assembly hand tools.
 
@@ -61,7 +61,7 @@ The HUB's CN1 power input uses XH2.54-2P. Connect an XH2.54 power lead to the re
 
 | Item / exact variant | Unit | Reference quantity | Historical unit price | Subtotal | Shop / link |
 | --- | --- | ---: | ---: | ---: | --- |
-| **飞特 HD1910 串口总线舵机**<br>HD-1910-C001；HD-1910-C001 | 只 | 15 | ¥119.00 | ¥1785.00 | 深圳飞特舵机工厂店<br>[Purchase](https://item.taobao.com/item.htm?id=1078248851201)<br>[Group buy: CNY 99 each](https://kissqy.github.io/Microduck-kissqy/build/shopping.html#hd1910-group-buy) |
+| **飞特 HD1910 串口总线舵机**<br>HD-1910-C001；HD-1910-C001 | 只 | 15 | ¥123.00 | ¥1845.00 | Author’s Taobao listing<br>[Purchase](https://e.tb.cn/h.jhmwoGCAcQbwZRt?tk=i4416azfdRS) |
 | **Feetech URT2 servo programming board**<br>Used to set / change servo IDs; reuse one you already have | unit | 1 | ¥45.00 | ¥45.00 | Taobao<br>[Product](https://item.taobao.com/item.htm?abbucket=0&id=603181554943&skuId=4836538640319) |
 | **Radxa ZERO 3W**<br>2GB RAM 无 eMMC 带排针[【Microduck 原版主板】]；2GB RAM / 无eMMC / 带排针 | 个 | 1 | ¥309.00 | ¥309.00 | 瑞莎计算机(深圳)有限公司<br>[Product](https://item.taobao.com/item.htm?id=763812025816) |
 | **EAGET 32GB microSD / TF card**<br>Monitoring / dashcam variant; 32GB is sufficient; reference price supplied by the author | card | 1 | ¥39.90 | ¥39.90 | JD.com<br>[Product](https://3.cn/392wR-H7?jkl=@D1sNrEalQdG@) |

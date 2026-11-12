@@ -1,4 +1,4 @@
-import {configureShopping} from './build-shopping-route.js?v=20261112-printing-details';
+import {configureShopping} from './build-shopping-route.js?v=20261112-servo123';
 const storageKey='microduck-build-v1';
 const boardModes=['assembled','diy-owned','diy-new'];
 const printingModes=['own','service','buy-printer'];
@@ -23,7 +23,7 @@ let state=readState();
 const save=field=>{try{const latest=readState();latest[field]=state[field];localStorage.setItem(storageKey,JSON.stringify(latest));}catch{}};
 const priceInput=key=>{const raw=state.costs[key];if(raw===undefined||raw==='')return null;const number=Number(raw);return Number.isFinite(number)&&number>=0&&number<=1000000?Math.round(number*100):null;};
 let data;
-try{const response=await fetch(new URL('./data.json?v=20261112-printing-details',import.meta.url));if(response.ok)data=await response.json();}catch{}
+try{const response=await fetch(new URL('./data.json?v=20261112-servo123',import.meta.url));if(response.ok)data=await response.json();}catch{}
 if(data){
  const body=data.items.reduce((sum,item)=>sum+item.subtotalCents,0),boards=data.boards.filter(item=>!item.diyRequired).reduce((sum,item)=>sum+(item.subtotalCents??0),0),fixedBoards=data.boards.filter(item=>item.diyRequired).reduce((sum,item)=>sum+(item.subtotalCents??0),0),assembled=body+boards+fixedBoards;
  const shopping=configureShopping(data);

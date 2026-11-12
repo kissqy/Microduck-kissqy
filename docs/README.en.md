@@ -17,7 +17,7 @@ Normal replication takes the first three steps and uses the supplied motion mode
 
 [Build-route overview (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/) · [Illustrated console guide (Chinese)](https://kissqy.github.io/Microduck-kissqy/console-guide.html)
 
-The priced purchase reference includes an EAGET 32GB microSD card at CNY 39.90 and one [SAMZHE dual-head high-speed card reader with simultaneous SD / TF card reading](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) at CNY 22.90. The assembled-board base reference subtotal is CNY 2937.80. The [complete FrankenDuck printing service](../hardware/3d-print-frankenduck/README.en.md) is listed at CNY 199, making **CNY 3135.62** together. The HUB is included at CNY 69; battery-connection parts and shipping are extra. Reuse an existing card reader if available. The HUB includes the main-power buffer capacitor; no separate purchase is needed.
+The priced purchase reference includes an EAGET 32GB microSD card at CNY 39.90 and one [SAMZHE dual-head high-speed card reader with simultaneous SD / TF card reading](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) at CNY 22.90. The assembled-board base reference subtotal is CNY 2937.80. See the [FrankenDuck printing improvements and instructions](../hardware/3d-print-frankenduck/README.en.md); printing costs are additional. The HUB is included at CNY 69; battery-connection parts and shipping are extra. Reuse an existing card reader if available. The HUB includes the main-power buffer capacitor; no separate purchase is needed.
 
 **HAT, IMU and HUB are three separate boards. Select each board on the [same product page](https://item.taobao.com/item.htm?id=1095121548583). The HUB costs CNY 69 and includes the main-power buffer capacitor to buffer transient servo loads and help prevent ZERO restarts caused by supply voltage dips.**
 
@@ -128,3 +128,4 @@ Training Studio is optional after first walking. Everyday operation uses the rel
 - [Software and model ownership, personal use and commercial permission](../microduck-hd1910/docs/SOFTWARE-MODEL-RIGHTS.en.md) · [简体中文](../microduck-hd1910/docs/SOFTWARE-MODEL-RIGHTS.md)
 - [Model provenance: ten bundled policies, six source weights and historical samples](../microduck-hd1910/docs/MODEL-PROVENANCE.en.md) · [简体中文](../microduck-hd1910/docs/MODEL-PROVENANCE.md)
 - [Component license index](../LICENSE) · [Third-party sources](../microduck-hd1910/docs/THIRD-PARTY.en.md)
+

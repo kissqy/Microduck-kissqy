@@ -28,7 +28,7 @@ An assembled robot can start at step 4. For finding the robot's IP after imaging
 
 **The assembled-board option has a priced reference subtotal of CNY 2936.62**: CNY 2649.62 for the reference body purchases (including the EAGET 32GB microSD card at CNY 39.90 and SAMZHE dual-head high-speed card reader at CNY 22.90), HAT CNY 119, IMU CNY 99 and HUB CNY 69. DIY board materials plus a basic tool allowance produce a reference range of CNY 3612.84–3854.02.
 
-A 32GB microSD card is sufficient. One [SAMZHE dual-head high-speed card reader with simultaneous SD / TF card reading](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) is included at the author's reference price of CNY 22.90; reuse an existing reader if available. The complete FrankenDuck printing service is listed at CNY 199; the assembled-board plus printing reference subtotal is **CNY 3135.62**, without buying a printer. The HUB is included at CNY 69; add battery-connection parts, other unpriced items and shipping. Historical quantities include spare stock. [Open the budget page to add your costs (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
+A 32GB microSD card is sufficient. One [SAMZHE dual-head high-speed card reader with simultaneous SD / TF card reading](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) is included at the author's reference price of CNY 22.90; reuse an existing reader if available. Printing costs are additional, based on an actual quote or filament budget; no printer purchase is needed when using a printing service. The HUB is included at CNY 69; add battery-connection parts, other unpriced items and shipping. Historical quantities include spare stock. [Open the budget page to add your costs (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
 
 ## 2. What should I buy?
 
@@ -44,7 +44,7 @@ An assembled IMU needs no programming tools. For DIY boards, see the [tool list]
 
 **Torso and legs:** [See the HUB harness, IMU mounting, leg assembly and head/neck photo references](BODY-ASSEMBLY.en.md), or [open their web assembly chapters (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#body-photos).
 
-The [FrankenDuck printing set](../hardware/3d-print-frankenduck/README.en.md) contains 36 STLs and one 3MF project with five plates. Adapt printer and material profiles, including TPU parts. The complete printing service is listed at **CNY 199**. That edition page explains the print-orientation, battery-holder, IMU-mount, roller-change, cooling, and assembly improvements.
+The [FrankenDuck printing set](../hardware/3d-print-frankenduck/README.en.md) contains 36 STLs and one 3MF project with five plates. Adapt printer and material profiles, including TPU parts. That edition page explains the print-orientation, battery-holder, IMU-mount, roller-change, cooling, and assembly improvements.
 
 Choose the HUB battery-holder variant or the official-style holder with thicker latches; both IMU mounts fit this repository's IMU. The October 21 update adds leg support ramps, removes outer leg-shell counterbores and integrates interchangeable feet and roller assemblies without servo removal. Rollers use 623ZZ bearings.
 
@@ -92,4 +92,5 @@ The [repository homepage](../README.en.md) retains seven separate real-robot cli
 Report issues with hardware configuration, console version, running firmware identifier, reproduction steps and logs or video in [GitHub Issues](https://github.com/kissqy/Microduck-kissqy/issues). If these resources help your build, Star the repository to keep its update entry point handy.
 
 Author: kissqy · [Original repository](https://github.com/kissqy/Microduck-kissqy) · [FAQ](MICRODUCK-FAQ.en.md) · [Documentation index](README.en.md)
+
 

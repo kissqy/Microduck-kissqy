@@ -26,7 +26,7 @@ Microduck-kissqy 是 kissqy 基于 Pollen Robotics Microduck 0.15.1、已完成�
 
 **成品板路线已列价参考合计为 ¥2936.62**：本体参考采购 ¥2649.62（含忆捷 32GB TF 卡 ¥39.90、山泽双头高速读卡器 ¥22.90）＋HAT ¥119＋IMU ¥99＋HUB ¥69。自焊并预留基础工具的已列价参考区间为 ¥3612.84～3852.84。
 
-TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@)按 1 个、作者参考价 ¥22.90 计入，已有可复用。缝合怪版整套代打标价 ¥199；成品板＋代打参考合计 **¥3135.62**，无需购买打印机。HUB ¥69 已计入，电池接入配件与运费另计；历史采购数量含备料。[打开预算页，先看总额并补充自己的费用 →](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
+TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@)按 1 个、作者参考价 ¥22.90 计入，已有可复用。打印费用按实际报价或耗材预算另计，选择代打无需购买打印机。HUB ¥69 已计入，电池接入配件与运费另计；历史采购数量含备料。[打开预算页，先看总额并补充自己的费用 →](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
 
 ## 2. 我要买什么？
 
@@ -42,7 +42,7 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 
 **躯干与双腿：** [查看 HUB 分线、IMU 固定、双腿合装与头颈连接实拍](BODY-ASSEMBLY.md)，也可[在网页对应章节查看](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#body-photos)。
 
-下载[全套打印件 · 缝合怪版](../hardware/3d-print-frankenduck/README.md)：36 个 STL、1 个 3MF 项目、5 盘参考摆盘。根据实际打印机与耗材调整配置，TPU 部件使用对应材料配置。整套代打标价 **¥199**；打印方向、电池仓、IMU 安装、滑轮换装、散热和装配细节的优化见上述版本说明。
+下载[全套打印件 · 缝合怪版](../hardware/3d-print-frankenduck/README.md)：36 个 STL、1 个 3MF 项目、5 盘参考摆盘。根据实际打印机与耗材调整配置，TPU 部件使用对应材料配置。打印方向、电池仓、IMU 安装、滑轮换装、散热和装配细节的优化见上述版本说明。
 
 电池仓有 HUB 组合版和官方式加厚卡扣版；IMU 安装位适配本仓库 IMU。2026-10-21 版增加腿部支撑斜面、去除腿外壳外侧沉孔，并整合无需拆舵机即可换装的脚掌与滑轮结构。滑轮使用 623ZZ 轴承。
 
@@ -90,4 +90,5 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 遇到问题可在 [GitHub Issues](https://github.com/kissqy/Microduck-kissqy/issues) 提供：硬件配置、中控版本、实际固件标识、发生步骤、日志或视频。若这些资料帮助你完成搭建，欢迎 Star 收藏仓库，后续按同一入口查看更新。
 
 作者：kissqy · [项目原始仓库](https://github.com/kissqy/Microduck-kissqy) · [常见问题](MICRODUCK-FAQ.md) · [完整文档目录](README.md)
+
 

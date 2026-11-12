@@ -17,7 +17,7 @@
 
 [新手路线总入口](https://kissqy.github.io/Microduck-kissqy/build/) · [中控图文使用教程](https://kissqy.github.io/Microduck-kissqy/console-guide.html)
 
-采购参考已含忆捷 32GB TF 卡 ¥39.90 与[山泽双头高速读卡器（SD／TF 卡同读）](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@)1 个 ¥22.90；成品板路线基础小计 ¥2936.62；[缝合怪版整套代打](../hardware/3d-print-frankenduck/README.md)标价 ¥199，合计 **¥3135.62**。已含 HUB ¥69，电池接入配件与运费另计。已有读卡器可复用；HUB 已带总电源缓冲电容，用于缓冲舵机瞬时负载，防止瞬时压降导致 ZERO 重启，无需单独购买。
+采购参考已含忆捷 32GB TF 卡 ¥39.90 与[山泽双头高速读卡器（SD／TF 卡同读）](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@)1 个 ¥22.90；成品板路线基础小计 ¥2936.62；[缝合怪版打印件优化与说明](../hardware/3d-print-frankenduck/README.md)，打印费用另计。已含 HUB ¥69，电池接入配件与运费另计。已有读卡器可复用；HUB 已带总电源缓冲电容，用于缓冲舵机瞬时负载，防止瞬时压降导致 ZERO 重启，无需单独购买。
 
 **HAT、IMU、HUB 为三块独立板卡，均在[同一商品页](https://item.taobao.com/item.htm?id=1095121548583)选择对应款式。HUB ¥69 已含总电源缓冲电容，用于缓冲舵机瞬时负载，防止瞬时压降导致 ZERO 重启。**
 
@@ -128,3 +128,4 @@
 - [软件与自训模型：原创归属、个人使用与商业授权](../microduck-hd1910/docs/SOFTWARE-MODEL-RIGHTS.md) · [English](../microduck-hd1910/docs/SOFTWARE-MODEL-RIGHTS.en.md)
 - [逐模型来源：十个随包动作、六份源码权重及历史样本](../microduck-hd1910/docs/MODEL-PROVENANCE.md) · [English](../microduck-hd1910/docs/MODEL-PROVENANCE.en.md)
 - [分项许可索引](../LICENSE) · [第三方来源](../microduck-hd1910/docs/THIRD-PARTY.md)
+

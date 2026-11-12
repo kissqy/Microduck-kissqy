@@ -4,7 +4,7 @@
 
 **This set combines improvements from several community makers with modifications kissqy made while assembling, running, and maintaining the real robot. That is why it is called the “FrankenDuck” edition.** This package supplies the author's complete duck printing parts, reference plate layout, and a summary of the main improvements.
 
-**The listed price for a complete FrankenDuck printing service is CNY 199.** No printer purchase is needed; shipping is extra. [Contact the author about printing and colors](../../docs/assets/purchase-wechat-qr.jpg). The files below are available for self-printing.
+The files below are available for self-printing. [Contact the author about printed parts and colors](../../docs/assets/purchase-wechat-qr.jpg).
 
 **[⬇️ Download the complete package (RAR, 14.54 MiB)](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/3d-print-frankenduck/Microduck-Print-FrankenDuck-20261107.rar)** · [SHA256](SHA256SUMS) · [Package file list](FILES.md) · [Duck shopping guide](../../DUCK-SHOPPING-LIST.en.md) · [Homepage](../../README.en.md)
 
@@ -70,4 +70,5 @@ These images come directly from the supplied 3MF project. Plate 5 is the TPU gro
 This set starts from the official Microduck structure, incorporates improvements from multiple community makers, and combines them with kissqy's practical robot modifications. Credit belongs to the upstream project and the contributing makers. Original works retain their source rights and licenses; kissqy's additions follow this project's [component licenses](../../microduck-hd1910/LICENSE).
 
 Archive paths, sizes, and SHA256 hashes are recorded in [FILE-MANIFEST.json](FILE-MANIFEST.json).
+
 

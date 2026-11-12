@@ -1,4 +1,4 @@
-import {configureShopping} from './build-shopping-route.js?v=20261101-hub69';
+import {configureShopping} from './build-shopping-route.js?v=20261112-printing-details';
 const storageKey='microduck-build-v1';
 const boardModes=['assembled','diy-owned','diy-new'];
 const printingModes=['own','service','buy-printer'];
@@ -23,7 +23,7 @@ let state=readState();
 const save=field=>{try{const latest=readState();latest[field]=state[field];localStorage.setItem(storageKey,JSON.stringify(latest));}catch{}};
 const priceInput=key=>{const raw=state.costs[key];if(raw===undefined||raw==='')return null;const number=Number(raw);return Number.isFinite(number)&&number>=0&&number<=1000000?Math.round(number*100):null;};
 let data;
-try{const response=await fetch(new URL('./data.json?v=20261107-hub-xh254',import.meta.url));if(response.ok)data=await response.json();}catch{}
+try{const response=await fetch(new URL('./data.json?v=20261112-printing-details',import.meta.url));if(response.ok)data=await response.json();}catch{}
 if(data){
  const body=data.items.reduce((sum,item)=>sum+item.subtotalCents,0),boards=data.boards.filter(item=>!item.diyRequired).reduce((sum,item)=>sum+(item.subtotalCents??0),0),fixedBoards=data.boards.filter(item=>item.diyRequired).reduce((sum,item)=>sum+(item.subtotalCents??0),0),assembled=body+boards+fixedBoards;
  const shopping=configureShopping(data);
@@ -36,8 +36,8 @@ if(data){
  }
  const plans=[{id:'own',fields:['ownPrint','extras','shipping']},{id:'service',fields:['printService','extras','shipping'],quote:'printService',quoteText:'待填代打报价'},{id:'buy-printer',fields:['printer','ownPrint','extras','shipping'],quote:'printer',quoteText:'待填打印机价格'}];
  const names={ownPrint:'打印耗材',printService:'代打费用',printer:'打印机设备费',extras:'电池接入与工具',shipping:'运费与零星费用'};
- const defaultValues={printer:String(data.printerReferenceCents/100),printService:String(data.printServiceReferenceCents/100)};
- const references={printer:data.printerReferenceCents,printService:data.printServiceReferenceCents};
+ const defaultValues={printer:String(data.printerReferenceCents/100)};
+ const references={printer:data.printerReferenceCents};
  const cost=key=>state.costs[key]===undefined&&Object.hasOwn(references,key)?references[key]:priceInput(key);
  const shoppingHref=printing=>{
   const query=new URLSearchParams({printing,boards:state.route.boards==='assembled'?'assembled':'diy'});
@@ -57,7 +57,7 @@ if(data){
    card.classList.toggle('featured',state.route.printing===plan.id);
    const missing=plan.fields.filter((_,index)=>values[index]===null);
    card.querySelector('[data-pending]').textContent=needsQuote?(plan.id==='service'?'填入整套代打报价后计算；无需购买打印机。':'填入设备价格后计算这一档预算。'):missing.length?'＋待填费用：'+missing.map(key=>names[key]).join('、'):'已含你填写的补充预算';
-   card.querySelector('[data-plan-description]').textContent=basis+'；'+(plan.id==='own'?'已有打印机，不重复算设备费。':plan.id==='service'?'缝合怪版代打参考 '+money(data.printServiceReferenceCents)+'，可改实际报价，无需买打印机。':'另加打印机与耗材，设备参考 '+money(data.printerReferenceCents)+'，可按实价调整。');
+   card.querySelector('[data-plan-description]').textContent=basis+'；'+(plan.id==='own'?'已有打印机，不重复算设备费。':plan.id==='service'?'代打费用按实际报价填写，无需买打印机。':'另加打印机与耗材，设备参考 '+money(data.printerReferenceCents)+'，可按实价调整。');
    card.querySelector('a').setAttribute('href',shoppingHref(plan.id));
   });
   const boardCostLabel=document.getElementById('board-cost-label'),boardCostValue=document.getElementById('board-cost-value');
@@ -97,3 +97,4 @@ if(data){
  updateBudget();updatePrepared();
 }
 document.getElementById('print-list')?.addEventListener('click',()=>window.print());
+

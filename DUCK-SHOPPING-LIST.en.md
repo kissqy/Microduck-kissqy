@@ -9,7 +9,7 @@
 
 [🏠 Project homepage](README.en.md)
 
-**Assembled-board reference subtotal: CNY 2936.62**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. The complete FrankenDuck printing service is listed at CNY 199, making the assembled-board plus printing reference subtotal **CNY 3135.62**. The HUB is included at CNY 69; battery-connection parts and shipping are extra.
+**Assembled-board reference subtotal: CNY 2936.62**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. Printing costs are additional, based on an actual quote or filament budget. The HUB is included at CNY 69; battery-connection parts and shipping are extra.
 
 **[Open the shopping checklist (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/shopping.html)** · [Compare budget totals (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
 
@@ -33,9 +33,9 @@ Check the servos, boards, printed parts, cables and accessories before assembly.
 | 3D printer allowance | +¥3500 | +¥3500 |
 | **Total including a printer** | **¥6436.62** | **¥7112.84–7352.84** |
 
-**For the FrankenDuck printing service, add CNY 199: assembled boards CNY 3135.62; DIY boards with existing tools CNY 3011.84–3051.84; DIY boards with new tools CNY 3811.84–4053.02.** No printer purchase is needed. [Edition features and printing instructions](hardware/3d-print-frankenduck/README.en.md).
+Printing-service costs are additional, based on an actual quote. No printer purchase is needed. [Edition features and printing instructions](hardware/3d-print-frankenduck/README.en.md).
 
-- **The base table excludes printed parts or filament; the printing-service subtotals include CNY 199. Robot-assembly labor, a computer, battery-connection parts, new-order shipping and losses are extra.** The body includes 15 HD1910 servos at ¥119 each; the microSD card and card reader are priced and included.
+- **The base table excludes printed parts or filament; printing costs are additional, based on an actual quote or filament budget. Robot-assembly labor, a computer, battery-connection parts, new-order shipping and losses are extra.** The body includes 15 HD1910 servos at ¥119 each; the microSD card and card reader are priced and included.
 - HAT, IMU and HUB are listed separately in the board purchasing table below. The HUB includes the main-power buffer capacitor; no separate capacitor purchase is needed.
 - DIY board materials use full component packs; the range covers free PCB coupons / no coupons. [Board cost breakdown](hardware/README.en.md#build-cost) · [Tool budget](docs/BUILD-TOOLS.en.md#budgeting-for-tools-from-scratch). Reuse existing tools; the assembled-board option assumes you have normal assembly hand tools.
 
@@ -149,3 +149,4 @@ Component lists and reference designators:
 **[🧰 Open the tools and consumables list](docs/BUILD-TOOLS.en.md)**
 
 [📊 Excel snapshot (2026-10-13, Chinese; use the online lists for current purchases)](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/Microduck-HAT-IMU-Shopping-List-20261013.xlsx)
+

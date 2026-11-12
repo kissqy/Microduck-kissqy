@@ -25,9 +25,9 @@
 
 作者自训的单脚平衡动作已在飞特 HD1910 实机上演示。下方视频展示真实机器人表现；训练、装配和标定资料均可从本仓库继续查阅。
 
-<a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html"><img width="900" alt="Microduck 单脚独立实机视频与微信交流群，点击图片观看视频，扫码加群交流" src="docs/assets/community-one-leg-banner.webp?v=20261107-group3" /></a>
+<a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html"><img width="900" alt="Microduck 单脚独立实机视频与微信交流群，点击图片观看视频，扫码加群交流" src="docs/assets/community-one-leg-banner.webp?v=20261113-group4" /></a>
 
-<sub>群二维码在 2026 年 11 月 13 日前有效。</sub>
+<sub>四群二维码在 2026 年 11 月 20 日前有效。</sub>
 
 ## 🎬 更多实机视频
 

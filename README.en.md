@@ -25,9 +25,9 @@ The three build stages and optional advanced guide are in Chinese. [English buil
 
 The author’s self-trained one-legged balance has been demonstrated on a physical HD1910 robot. The video below shows the real robot; build, calibration and training references are available in this repository.
 
-<a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html"><img width="900" alt="Microduck one-legged balance video and WeChat community QR code — click to watch, scan to join" src="docs/assets/community-one-leg-banner.webp?v=20261107-group3" /></a>
+<a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html"><img width="900" alt="Microduck one-legged balance video and WeChat community QR code — click to watch, scan to join" src="docs/assets/community-one-leg-banner.webp?v=20261113-group4" /></a>
 
-<sub>The group QR code is valid before November 13, 2026.</sub>
+<sub>The Group 4 QR code is valid before November 20, 2026.</sub>
 
 ## 🎬 More real-robot videos
 

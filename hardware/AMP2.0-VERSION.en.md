@@ -2,14 +2,14 @@
 
 # HAT / IMU · AMP2.0 connector version
 
-**Both connector versions remain available. Choose for your wiring.** This page covers the **October 15, 2026 AMP2.0 version**; the [original EH2.5 projects and procurement tables](README.en.md) are retained.
+**Both connector versions remain available. Choose for your wiring.** This page covers the **HAT October 15, 2026 and IMU November 13, 2026 AMP2.0 projects**; the [original EH2.5 projects and procurement tables](README.en.md) are retained.
 
 ## Download projects
 
 | Hardware | Project | This version |
 | --- | --- | --- |
 | **HAT · AMP2.0** | [Download October 15 project](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/ProPrj_HAT_REVA_SCH_2026-10-15.epro2) | AMP2.0 bus connectors, HP1.25 speaker / microphone connectors, added D5 LED and R34 1kΩ resistor. |
-| **IMU · AMP2.0** | [Download October 15 project](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/ProPrj_imu_to_dxl_RevA_V1_2026-10-15.epro2) | J1 bus connector uses AMP2.0; J2 remains the SWD 1×5 header. |
+| **IMU · AMP2.0** | [Download November 13 project](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/ProPrj_imu_to_dxl_RevA_V1_2026-11-13.epro2) | J1 bus connector uses AMP2.0; J2 remains the SWD 1×5 header. |
 
 The author's project files are published unchanged and contain both schematic and PCB data. The HAT has **86 schematic / 86 PCB components** and the IMU **25 / 25**. Exact parts, quantities, and file SHA256 hashes are listed in [AMP2.0-BOM.json](AMP2.0-BOM.json).
 
@@ -42,6 +42,8 @@ The added indicator path is **`GPIO15_UART_RX → R34 (1kΩ) → D5 → GND`**, 
 
 IMU J2 remains **1=3V3, 2=SWDIO, 3=GND, 4=SWCLK, 5=NRST**. See the [FT6 flashing and checks guide](IMU-FIRMWARE.en.md). This publication adds the connector project variant.
 
+
+**IMU update, 2026-11-13:** J1 footprint pads 1 and 3 exchange physical positions. Electrical numbering remains **1=GND, 2=DXL_VDD, 3=DXL_DATA**. Follow the updated PCB connector orientation when matching the cable; the SWD J2 pinout is unchanged. [2026-10-15 historical project](ProPrj_imu_to_dxl_RevA_V1_2026-10-15.epro2) remains available.
 
 ## ToF and speaker wiring photo
 

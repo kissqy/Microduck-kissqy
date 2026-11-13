@@ -39,14 +39,17 @@
 
 **Both connector versions are retained. Choose for your wiring.** [AMP2.0 connectors, LED, and parts](AMP2.0-VERSION.en.md).
 
-| Hardware | Original EH2.5 · October 7, 2026 | AMP2.0 · October 15, 2026 | Build record |
+| Hardware | Original EH2.5 · October 7, 2026 | AMP2.0 · current projects | Build record |
 | --- | --- | --- | --- |
 | HAT | [EH2.5 project](ProPrj_HAT_REVA_SCH_2026-10-07.epro2) | [AMP2.0 project](ProPrj_HAT_REVA_SCH_2026-10-15.epro2), HP1.25 audio, added LED + 1kΩ | [Timeline](HAT-TIMELINE.en.md) |
-| Torso IMU | [EH2.5 project](ProPrj_imu_to_dxl_RevA_V1_2026-10-07.epro2) | [AMP2.0 project](ProPrj_imu_to_dxl_RevA_V1_2026-10-15.epro2) | [Build video](https://www.bilibili.com/video/BV1qapz6PERs/) · [Timeline](IMU-TIMELINE.en.md) |
+| Torso IMU | [EH2.5 project](ProPrj_imu_to_dxl_RevA_V1_2026-10-07.epro2) | [AMP2.0 project · 2026-11-13](ProPrj_imu_to_dxl_RevA_V1_2026-11-13.epro2) | [Build video](https://www.bilibili.com/video/BV1qapz6PERs/) · [Timeline](IMU-TIMELINE.en.md) |
 
 The HAT started with a study of the official components and their surrounding circuits. Unneeded functions were removed, and the board was made using a two-layer PCB and home reflow. The IMU first established working independent hardware and the original protocol, then reused that hardware on the Feetech bus with 15 servos.
 
-The timelines follow the build history organized on October 12, 2026. Original projects are dated October 7, 2026; the AMP2.0 variant is dated October 15, 2026. Differences between physical-board tuning and the project BOM are documented in the HAT guide.
+The timelines follow the build history organized on October 12, 2026. Original projects are dated October 7, 2026; the AMP2.0 HAT project is dated October 15, 2026 and the updated IMU project is dated November 13, 2026. Differences between physical-board tuning and the project BOM are documented in the HAT guide.
+
+IMU update, 2026-11-13: J1 footprint pads 1 and 3 exchange physical positions. Electrical numbering remains 1=GND, 2=DXL_VDD, 3=DXL_DATA; follow the updated PCB connector orientation.
+
 
 **Current baseline, confirmed October 12, 2026:** fabrication, full-robot integration, and extended real-robot validation are complete for both boards. IMU fabrication and Feetech adaptation test records are in the timeline.
 

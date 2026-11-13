@@ -2,14 +2,14 @@
 
 # HAT / IMU · AMP2.0 接口版
 
-**两种接口版本并行提供，按自己的线束选择。** 本页为 **2026-10-15 的 AMP2.0 版**；[原版 EH2.5 工程与采购表](README.md) 继续保留。
+**两种接口版本并行提供，按自己的线束选择。** 本页提供 **HAT 2026-10-15 版与 IMU 2026-11-13 线序更新版**；[原版 EH2.5 工程与采购表](README.md) 继续保留。
 
 ## 下载工程
 
 | 硬件 | 工程 | 本版内容 |
 | --- | --- | --- |
 | **HAT · AMP2.0** | [下载 2026-10-15 工程](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/ProPrj_HAT_REVA_SCH_2026-10-15.epro2) | 总线 AMP2.0，喇叭 / 麦克风 HP1.25，新增 D5 LED 与 R34 1kΩ 电阻。 |
-| **IMU · AMP2.0** | [下载 2026-10-15 工程](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/ProPrj_imu_to_dxl_RevA_V1_2026-10-15.epro2) | J1 总线接口改为 AMP2.0；J2 仍为 SWD 1×5。 |
+| **IMU · AMP2.0** | [下载 2026-11-13 工程](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/ProPrj_imu_to_dxl_RevA_V1_2026-11-13.epro2) | J1 总线接口改为 AMP2.0；J2 仍为 SWD 1×5。 |
 
 工程按作者提供的文件原样发布，均包含原理图和 PCB。源文件中 HAT 为 **86 个原理图器件 / 86 个 PCB 器件**，IMU 为 **25 / 25**；完整型号、用量及文件 SHA256 见 [AMP2.0-BOM.json](AMP2.0-BOM.json)。
 
@@ -39,6 +39,8 @@
 | HAT J9 · 右麦克风 HP1.25 | GND | MIC_EXT_R_BIAS | — |
 
 新增指示灯链路为 **`GPIO15_UART_RX → R34（1kΩ）→ D5 → GND`**，属于 HAT 硬件 RX 指示。HAT 的 R33 在本工程仍为 **0Ω**，TH1 为 **100R PTC**。
+
+**IMU 2026-11-13 更新：**J1 封装的 1、3 脚实际位置对调，电气编号仍为 **1=GND、2=DXL_VDD、3=DXL_DATA**。插头朝向和线束对应以新版 PCB 为准，不沿用旧版外观判断左右位置。[2026-10-15 历史工程](ProPrj_imu_to_dxl_RevA_V1_2026-10-15.epro2) 保留供对照。
 
 IMU 的 J2 针序保持 **1=3V3、2=SWDIO、3=GND、4=SWCLK、5=NRST**；烧录与检查入口见 [IMU FT6 固件指南](IMU-FIRMWARE.md)。本次发布为接口工程更新。
 

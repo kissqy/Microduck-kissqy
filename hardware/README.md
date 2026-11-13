@@ -39,14 +39,14 @@
 
 **两种接口版本均保留，按线束选择。** [AMP2.0 版接口、LED 与用料说明](AMP2.0-VERSION.md)。
 
-| 硬件 | 原版 EH2.5 · 2026-10-07 | AMP2.0 版 · 2026-10-15 | 制作记录 |
+| 硬件 | 原版 EH2.5 · 2026-10-07 | AMP2.0 版 · 当前工程 | 制作记录 |
 | --- | --- | --- | --- |
 | HAT 主板 | [EH2.5 工程](ProPrj_HAT_REVA_SCH_2026-10-07.epro2) | [AMP2.0 工程](ProPrj_HAT_REVA_SCH_2026-10-15.epro2)，音频 HP1.25，新增 LED + 1kΩ | [制作时间线](HAT-TIMELINE.md) |
-| 独立躯干 IMU | [EH2.5 工程](ProPrj_imu_to_dxl_RevA_V1_2026-10-07.epro2) | [AMP2.0 工程](ProPrj_imu_to_dxl_RevA_V1_2026-10-15.epro2) | [制作视频](https://www.bilibili.com/video/BV1qapz6PERs/) · [时间线](IMU-TIMELINE.md) |
+| 独立躯干 IMU | [EH2.5 工程](ProPrj_imu_to_dxl_RevA_V1_2026-10-07.epro2) | [AMP2.0 工程 · 2026-11-13](ProPrj_imu_to_dxl_RevA_V1_2026-11-13.epro2) | [制作视频](https://www.bilibili.com/video/BV1qapz6PERs/) · [时间线](IMU-TIMELINE.md) |
 
 HAT 的思路是先分析官方器件及外围，按实际需要精简，再用两层板和家庭回流完成实物。IMU 先跑通独立硬件及原版协议，再复用硬件接入飞特和 15 个舵机。
 
-时间线依据 2026-10-12《整理HAT时间线》中已经整理的制作过程。原版工程为 2026-10-07 快照，另提供 2026-10-15 的 AMP2.0 版；实板调试改动与工程 BOM 的差异见 HAT 文档。
+时间线依据 2026-10-12《整理HAT时间线》中已经整理的制作过程。原版工程为 2026-10-07 快照，AMP2.0 版 HAT 为 2026-10-15 工程，IMU 更新至 2026-11-13，调整 J1 封装的 1、3 脚实际位置；电气编号仍为 1=GND、2=DXL_VDD、3=DXL_DATA，插接方向以新版 PCB 为准。实板调试改动与工程 BOM 的差异见 HAT 文档。
 
 **当前记录基线（2026-10-12 确认）：** HAT 与 IMU 已完成制作、整机接入及长期实机验证；IMU 制作及飞特适配的测试记录见时间线。
 

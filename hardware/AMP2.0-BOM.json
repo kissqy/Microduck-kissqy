@@ -1,6 +1,6 @@
 {
   "revision": "AMP2.0 / HP1.25",
-  "date": "2026-10-15",
+  "date": "2026-11-13",
   "coexists_with": "EH2.5 projects dated 2026-10-07",
   "projects": [
     {
@@ -617,9 +617,9 @@
     },
     {
       "board": "IMU",
-      "file": "ProPrj_imu_to_dxl_RevA_V1_2026-10-15.epro2",
-      "bytes": 373893,
-      "sha256": "824bad07b60bbb1680f759c45b1e2bb918757f7f59747d254cb6d0d0c2ec4a25",
+      "file": "ProPrj_imu_to_dxl_RevA_V1_2026-11-13.epro2",
+      "bytes": 391212,
+      "sha256": "2024c4c2bcd520ca46b1dfdc812824aebb9299c790afa824aaf16ff591ce45ab",
       "schematic_components": 25,
       "pcb_components": 25,
       "parts": [

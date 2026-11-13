@@ -1,0 +1,10 @@
+/* One draft and one apply button for action scale. */
+#control-panel .runtime-parameters .global-scale-row #management-scale-apply{font-size:12px;padding:7px 13px;min-height:32px}
+
+#control-panel .advanced-parameter-editor{container-type:inline-size;min-width:0}
+#control-panel .advanced-parameter-editor .global-scale-row{min-width:0}
+@container(max-width:210px){
+ #control-panel .advanced-parameter-editor .global-scale-row{display:grid;grid-template-columns:minmax(0,1fr) 30px auto}
+ #control-panel .advanced-parameter-editor .global-scale-row label{grid-column:1/-1}
+ #control-panel .advanced-parameter-editor .global-scale-row input{min-width:0;width:100%}
+}

@@ -1,0 +1,381 @@
+{
+  "official_version": "0.15.1",
+  "official_revision": "1fa84386f07884e27866411bc1ba166977bced95",
+  "hardware_base": "R17 v1.0.95",
+  "models": {
+    "walk": {
+      "id": "1cbf8730eadd75a5704332c9f3c10f60",
+      "sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+      "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+      "epochs": 9600,
+      "source_iteration": 9599,
+      "num_envs": 2560,
+      "source_policy_directory": "policies/walk",
+      "trained_action_scale": 1.0,
+      "trained_head_alpha": 1.0,
+      "trained_legs_alpha": 1.0,
+      "execution_profile": {
+        "schema": "microduck-runtime-execution/v1",
+        "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+        "mode": "uniform",
+        "action_scale": 1.0,
+        "head_lowpass": 0.5,
+        "legs_lowpass": 0.7
+      },
+      "deployment_verified": false
+    },
+    "sitstand": {
+      "id": "1c94934c6421ec72ed48079cea749668",
+      "sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+      "task": "Mjlab-SitStand-Flat-MicroDuck"
+    },
+    "ground_pick": {
+      "id": "b14e3a8b56ddbb8d2d831e727774a168",
+      "sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69",
+      "task": "Mjlab-GroundPick-Flat-Backlash-MicroDuck",
+      "epochs": 10000,
+      "source_iteration": 9999,
+      "num_envs": 4096,
+      "base_action_scale": 1.0,
+      "head_alpha": 1.0,
+      "legs_alpha": 1.0,
+      "target_filter": "passthrough",
+      "deployment_verified": false,
+      "source_policy_directory": "policies/ground_pick"
+    },
+    "roulade": {
+      "id": "59e15d7b04d0c40e9b11b8a70bdecae6",
+      "sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac",
+      "task": "Mjlab-Roulade-Flat-MicroDuck",
+      "epochs": 10000,
+      "source_iteration": 9999,
+      "num_envs": 4096,
+      "base_action_scale": 1.0,
+      "head_alpha": 1.0,
+      "legs_alpha": 1.0,
+      "target_filter": "passthrough",
+      "deployment_verified": false,
+      "source_policy_directory": "policies/roulade"
+    },
+    "kick_right": {
+      "id": "67ad09d82f4865d222a7ae06f250cf9f",
+      "sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+      "task": "Mjlab-BallKick-Flat-MicroDuck",
+      "epochs": 10000,
+      "num_envs": 4096,
+      "base_action_scale": 1.0,
+      "head_alpha": 1.0,
+      "legs_alpha": 1.0,
+      "target_filter": "passthrough",
+      "duration_seconds": 0.5,
+      "deployment_verified": false
+    }
+  },
+  "default_global_settings": {
+    "action_scale": 0.7
+  },
+  "onnxruntime": "1.28.0",
+  "calibration_policy": "preserve current mounted calibration; never overwrite with training zeros",
+  "audio_volume": {
+    "backend": "native ALSA PCM Playback Volume + Line Playback Switch",
+    "state": "/var/lib/alsa/asound.state",
+    "save": "alsactl store aic3104",
+    "restore": "system ALSA after aic3104-init.service",
+    "robotd_startup_audio_hook": false,
+    "custom_volume_state": false
+  },
+  "native_position_fix": {
+    "encoding": "signed magnitude bit15",
+    "feedback_modulo": false,
+    "goal_turn_offset": false,
+    "observations": "signed native minus saved calibration zero",
+    "preload": "fresh signed native coordinate",
+    "home_goals": {
+      "12": 1500,
+      "22": 2276
+    },
+    "all_15_joints": true,
+    "eeprom_or_calibration_reset": false,
+    "shortest_path_guaranteed": false,
+    "hardware_tested": false
+  },
+  "retired_model_ids": [
+    "2b69fa681ed06f7ded9e2a2d12ba5c67",
+    "388461feb3f4cd24071197ffc30d63e2",
+    "5c019c3d3d2c490947f21974f3947506",
+    "8fdaf12c7478a8314a63647a466bfa34",
+    "d11f8430712c35cb2416ce3948e9f8b7"
+  ],
+  "build": "1fa8438-feetech-ft6-control.37",
+  "console_version": "1.0.160",
+  "hardware_verified": false,
+  "source_distribution": "Microduck-Source-R17-V160-control37.tar.gz",
+  "built_binaries": {
+    "robotd": {
+      "sha256": "e63fcaf2d853ca64715bda77ca1a5b305c7f8767dd09e7e2da1c1650c974b985",
+      "machine": "AArch64",
+      "needed": [
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.27",
+        "2.28",
+        "2.29",
+        "2.30"
+      ],
+      "bytes": 6773464
+    },
+    "robotctl": {
+      "sha256": "a5034efaf6d26aaecc4a1b477c947abb7cf59d157288b9ad661706f00a700da7",
+      "machine": "AArch64",
+      "needed": [
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.28",
+        "2.29",
+        "2.30"
+      ],
+      "bytes": 4362264
+    },
+    "padd": {
+      "sha256": "da0c6798e1f4f853331379aecb938e1aae43a07916e22d75815897875bd4e5ce",
+      "machine": "AArch64",
+      "needed": [
+        "libudev.so.1",
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.27",
+        "2.28",
+        "2.30"
+      ],
+      "bytes": 3414872
+    },
+    "sounds": {
+      "sha256": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103",
+      "machine": "AArch64",
+      "needed": [
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.27",
+        "2.28",
+        "2.29",
+        "2.30"
+      ],
+      "bytes": 1152920
+    },
+    "gamepad-r7/gamesir-xboxd": {
+      "sha256": "e7c428e5690adf1483b5349fb100e076b5ca37c74068a6dd315015ce47d0af73",
+      "machine": "AArch64",
+      "bytes": 47984,
+      "needed": [
+        "libpthread.so.0",
+        "libc.so.6"
+      ],
+      "glibc_versions": [
+        "2.17"
+      ]
+    },
+    "onnxruntime/libonnxruntime.so.1.28.0": {
+      "sha256": "f1ec1a08eb99bd6e5401340f0a2b101381bf4694415480291dc13bcaa30f9ec7",
+      "machine": "AArch64",
+      "needed": [
+        "libdl.so.2",
+        "librt.so.1",
+        "libpthread.so.0",
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6",
+        "ld-linux-aarch64.so.1"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.27"
+      ],
+      "bytes": 20591712
+    },
+    "onnxruntime/libonnxruntime_providers_shared.so": {
+      "sha256": "3b6be288fbfb7dff8770d08a23defdde18e8f7e0f5a2b344a0e5e238c999ea88",
+      "machine": "AArch64",
+      "needed": [
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "glibc_versions": [
+        "2.17"
+      ],
+      "bytes": 198792
+    },
+    "mediad": {
+      "sha256": "0417c8c2dc5a63dd2e1c2a65d652f31609c232abab95d50e4acbd1faab0f742b",
+      "bytes": 10916512,
+      "machine": "AArch64",
+      "revision": "1fa8438-feetech-media-demand.1",
+      "needed": [
+        "libgstwebrtc-1.0.so.0",
+        "libgstbase-1.0.so.0",
+        "libgstreamer-1.0.so.0",
+        "libgobject-2.0.so.0",
+        "libglib-2.0.so.0",
+        "libgstvideo-1.0.so.0",
+        "libgstapp-1.0.so.0",
+        "libgio-2.0.so.0",
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2",
+        "ld-linux-aarch64.so.1"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.28",
+        "2.29",
+        "2.30"
+      ]
+    }
+  },
+  "rebuilt_binaries": [
+    "mediad"
+  ],
+  "reused_binaries": [
+    "robotd",
+    "robotctl",
+    "padd",
+    "sounds",
+    "gamepad-r7/gamesir-xboxd",
+    "onnxruntime/libonnxruntime.so.1.28.0",
+    "onnxruntime/libonnxruntime_providers_shared.so"
+  ],
+  "toolchain": "Rust 1.99.0 / cargo-zigbuild 0.23.4 / Zig 0.14.1; aarch64-unknown-linux-gnu.2.31",
+  "generated_at_utc": "2026-10-10T10:19:22.131677+00:00",
+  "release_changes": "control.37 source: physical roller DPadLeft and heading control; 3 ONNX policies, V159 retained as known-good",
+  "startup_flow": {
+    "steps": [
+      "configuration_and_ipc",
+      "hardware_first_valid_sample",
+      "models_and_controller",
+      "first_completed_control_cycle"
+    ],
+    "uart_startup_hooks": false,
+    "uart_configured_ack": false,
+    "uart_generation_state_file": false,
+    "extra_cold_reopen": false,
+    "hardware_wait_interval": "existing official startup interval",
+    "ipc_available_while_hardware_waits": true,
+    "control_thread_exit_notification": true,
+    "state_transport": "robot.startupSubscribe change events plus initial snapshot",
+    "imu_ready_samples": 25,
+    "max_short_waits": 24,
+    "short_wait": "existing control period",
+    "nominal_wait_at_50hz_ms": 480,
+    "fault_backoff_seconds": 1,
+    "unchanged_ready_guard": true,
+    "startup_target_gain_torque_writes": false,
+    "new_threads_or_loops": false,
+    "steady_control_work_added": false
+  },
+  "raw_browser_input": {
+    "path": "browser WebSocket -> persistent SSH helper -> official robotd IPC",
+    "physical_pad_priority": true,
+    "device_detection": "initial snapshot plus kernel input uevents",
+    "discovery_polling": false,
+    "virtual_webpad": false,
+    "idle_wait": "blocking selector; timeout only for an active web input lease",
+    "stale_action_replay": false,
+    "input_lease_seconds": 0.6
+  },
+  "configuration_save": {
+    "startup_backup": false,
+    "save_on_actual_change": true,
+    "modified_by_owning_module": true
+  },
+  "automatic_updater_enabled": false,
+  "automatic_boot_restore_enabled": false,
+  "manual_console_upgrade_available": true,
+  "firmware_reinstall_required": true,
+  "hat_firmware_unchanged": true,
+  "uart_telemetry_unchanged": true,
+  "official_filter_algorithm_unchanged": true,
+  "native_production_changes": [
+    "mediad/src/capture.rs",
+    "mediad/src/detect.rs",
+    "mediad/src/lib.rs",
+    "mediad/src/pipeline.rs"
+  ],
+  "padd_source_sha256": "df8270bc9fc407a6ff18e9593763dd2fe120fa2a8f31081029b90cb881530fb1",
+  "gamepad_binary_sha256": "6f8d78d2bdcb85c2e216013c66e1af25b38813cb86d0e88a7722ef98df5d4b30",
+  "tests": {
+    "robot_hardware_tested": false,
+    "windows_native_tested": false,
+    "browser_pixel_rendered": false,
+    "rust_passed": 35,
+    "python_passed": 138,
+    "browser_scripts_passed": 7,
+    "logs": [
+      {
+        "path": "verification/fix10-media-tests.log",
+        "sha256": "9b66b5cd99c1320cdcb74ef85751a29bebbeab4a8cb67663ff00c1f54375579f"
+      },
+      {
+        "path": "verification/fix10-pipeline-tests.log",
+        "sha256": "5d51a212879b87932a5cd9396574138889091c7b35258184624a37fe4432e537"
+      },
+      {
+        "path": "verification/fix10-exposure-tests.log",
+        "sha256": "7faf2e055db0037277a1cea223202a413c86d2f56792e3fdaeaf74158b54d694"
+      },
+      {
+        "path": "verification/fix10-core-tests.log",
+        "sha256": "098ced3b5b91f0f81e62b5a783b983d53f36bbad43f98288f6287fa3f820d617"
+      },
+      {
+        "path": "verification/fix10-install-tests.log",
+        "sha256": "c20d13d85bab6a0662845a297ab728c7d16fa06c4ed0b0624adcc9320f97d393"
+      },
+      {
+        "path": "verification/fix10-browser-tests.log",
+        "sha256": "3eed21384e192e3a682bad922921c5919d26bac7bf871eaa2f6d2def2daafe9e"
+      },
+      {
+        "path": "verification/fix10-media-build.log",
+        "sha256": "cad25c04163ed19d80af340384ac39c847aed09da821350369f5f2c54ad25728"
+      }
+    ]
+  },
+  "verification_report": "verification/changes157fix10.json",
+  "previous_native_build": "verification/native-build157fix2.json",
+  "media_build": "1fa8438-feetech-media-demand.1",
+  "native_binaries_compiled": false,
+  "build_status": "source-only; Rust/AArch64 release pending in separate build environment"
+}

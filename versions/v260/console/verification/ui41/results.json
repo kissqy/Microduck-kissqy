@@ -1,0 +1,53 @@
+{
+  "release": "Microduck-UI41",
+  "console_version": "1.0.221",
+  "python": {
+    "total_distinct_tests": 253,
+    "initial_passed": 248,
+    "initial_failures_due_to_old_test_fixtures": 5,
+    "fixture_updates": [
+      "ai_zero temporary worker fixture includes new module",
+      "action event fixture carries input token",
+      "sit result reflects mode entry without physical-completion claim"
+    ],
+    "rerun": {
+      "modules": [
+        "test_ai_session_ui6",
+        "test_ai_connected_pad_ui26",
+        "test_ai_v200",
+        "test_ai_input_ui41"
+      ],
+      "total": 35,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 1.309
+    },
+    "final_effective_passed": 253,
+    "final_unresolved_failures": 0,
+    "log": "python-tests.log",
+    "rerun_log": "python-rerun.log"
+  },
+  "native": {
+    "passed": 67,
+    "failed": 0,
+    "ignored": 0,
+    "new_input_lease_and_handoff_tests": 15,
+    "UI40_baseline_test_count": 52,
+    "UI40_tests_unchanged": 51,
+    "heartbeat_test_expectation_restored_to_original_100ms": true
+  },
+  "frontend": {
+    "passed": true,
+    "suites": [
+      "test_ai_hat.mjs",
+      "test_ai_ui40.mjs",
+      "test_ai_camera_ui15.mjs"
+    ]
+  },
+  "arm_cross_build": true,
+  "arm_execution": false,
+  "physical_robot": false,
+  "real_cloud_voice": false,
+  "robotd_rebuilt": false,
+  "models_changed": false
+}

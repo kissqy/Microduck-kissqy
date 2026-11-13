@@ -1,0 +1,117 @@
+{
+  "all_passed": true,
+  "checks": [
+    {
+      "command": [
+        "node",
+        "packaging/test_joint_execution_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS uniform model metadata, posture-independent UI, actual output/null/stale readback, catalog binding, preserved global scale and servo editing, ordinary/LB restoration",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "packaging/test_manual_recovery_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS startup fallen + limp: explicit LB press/release only; no automatic enable or synthesized HOME\nPASS fallen HOME, homing, holding and walking use the same production pad event path\nPASS missing model disables only its action; upright HOME remains; native refusal displays without replay\nPASS recovery readback shows current pose, actual scale/filters and HOME versus Walk return\nPASS physical controller takeover releases held web LB and disables browser actions\nPASS replay, pause, offline and disconnected protections remain",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "packaging/test_settings_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS newer device settings replace receipts; mouth updates preserve saved head amplitude; missing values stay unknown",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "packaging/test_advanced_parameters_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS drafts have no writes; single apply carries all four; saved/live values are distinct; empty input cannot apply",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "packaging/test_walk_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS official global scale capability, active walk dispatch, stale telemetry configuration and explicit missing capability reason",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "console/static/execution-profile.js"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "console/static/control.js"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "console/static/advanced-parameters.js"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "console/static/service-management.js"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "test_raw_telemetry.RawTelemetryTests.test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording (test_raw_telemetry.RawTelemetryTests.test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.064s\n\nOK"
+    }
+  ],
+  "independent_native_review": "uniform-ui-and-native-independent-review146.json",
+  "reviewed_source_sha256_unchanged": true,
+  "evidence_files": [
+    "ui-uniform-tests146.log",
+    "uniform-ui-and-native-independent-review146.json",
+    "model-packages-uniform-tests146.log",
+    "model-install-crosscheck146.log"
+  ],
+  "scope": "DOM event tests and binary stream roundtrip; no Chromium rendering, systemd/uinput, real GameSir, or physical Zero.",
+  "review_sha256": "cfe287ac3ad035b9206fe46cecd52409d957435a5f365ca69ed8d6bd003ba6d5"
+}

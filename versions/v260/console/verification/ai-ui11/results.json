@@ -1,0 +1,58 @@
+{
+  "label": "V200_control.V71 AI-T1 UI11",
+  "changed": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_doubao.py",
+    "ai_hat_audio.py",
+    "ai_preferences.py",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "ai_zero.py",
+    "service_rpc.py",
+    "static/ai-panel.css",
+    "static/ai-panel.js",
+    "static/index.html",
+    "verification/test_ai_hat.mjs",
+    "verification/test_ai_hat.py",
+    "verification/test_ai_preferences.py",
+    "verification/test_ai_session_ui6.py",
+    "verification/test_ai_ui7.py"
+  ],
+  "new_modules": [
+    "ai_persona.py"
+  ],
+  "input_control": {
+    "mode": "playback suppression; not AEC",
+    "begin": "before actual first PCM write",
+    "end": "after local playback drain and 200ms acoustic guard",
+    "capture": "read continuously; discard old pipe data before reopening input",
+    "uplink_while_blocked": "same-length zero PCM at capture cadence",
+    "physical_meter_preserved": true,
+    "can_barge_in_during_playback": false,
+    "speaker_muted_allows_human_input": true,
+    "transitions_checked_across_capture_read": true
+  },
+  "personality": {
+    "editable": true,
+    "saved_in_existing_pc_configuration": true,
+    "old_settings_compatible": true,
+    "propagates_to_zero_worker": true,
+    "in_session_create_and_update": true,
+    "action_gate_conditions_unchanged": true
+  },
+  "python": {
+    "passed": 61,
+    "failures": 0,
+    "errors": 0,
+    "feature": "python-feature.json",
+    "remaining": "python-remaining.json"
+  },
+  "frontend_passed": true,
+  "new_audio_dependencies": false,
+  "firmware_sha256": "6374b23464bcd8d2e221bd6ba3208dcab0eabcda932ed3f6cc20a5c5667fcbd2",
+  "firmware_and_motion_models_byte_identical": true,
+  "real_hat_verified": false,
+  "real_cloud_ui11_verified": false,
+  "browser_render_verified": false
+}

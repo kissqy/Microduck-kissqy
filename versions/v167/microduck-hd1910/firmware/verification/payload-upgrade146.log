@@ -1,0 +1,14 @@
+已替换唯一 Walk 为 9600 轮联合模型；全程使用基础缩放 0.9、头滤波 0.5、腿滤波 0.7，全局参数及其他动作沿用本机设置。
+清理已弃用训练模型：9e3ff8bde021be28a728c02dbd8e7aaf
+服务文件已完成逐文件原子替换；已保留导入模型。
+已应用联合模型全程统一的缩放与滤波配置；原模型权重与训练数据保留。
+
+服务文件已完成逐文件原子替换；已保留导入模型。
+PASS actual v145-to-v146 payload twice; preimported joint=False; five models, sole new Walk, old Walk removed, original training files, LB binding/duration, calibration, saved parameters and 50Hz verified.
+已替换唯一 Walk 为 9600 轮联合模型；全程使用基础缩放 0.9、头滤波 0.5、腿滤波 0.7，全局参数及其他动作沿用本机设置。
+清理已弃用训练模型：9e3ff8bde021be28a728c02dbd8e7aaf
+服务文件已完成逐文件原子替换；已保留导入模型。
+已应用联合模型全程统一的缩放与滤波配置；原模型权重与训练数据保留。
+
+服务文件已完成逐文件原子替换；已保留导入模型。
+PASS actual v145-to-v146 payload twice; preimported joint=True; five models, sole new Walk, old Walk removed, original training files, LB binding/duration, calibration, saved parameters and 50Hz verified.

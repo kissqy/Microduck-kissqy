@@ -1,0 +1,77 @@
+# Does the relay credentials endpoint still answer?
+#
+# `mediad::turn` fetches short-lived Cloudflare credentials so a robot can offer a `relay`
+# candidate to a consumer that cannot reach it directly. The endpoint it used before
+# 2026-09 had been dead since June — a dangling Route53 delegation — and **nothing
+# noticed for three months**, because the only symptom is a warning in a journal nobody
+# reads and a candidate type nobody counts. Every other check in this repository passes
+# regardless: they pair two peers on one network, which never looks at a relay.
+#
+# So this is the one check that would have caught it, and it is deliberately *not* on
+# `pull_request`. The failure being guarded against is "nobody touched this for months",
+# which a PR trigger cannot see; and a third party's outage must never block work that has
+# nothing to do with it. A scheduled failure mails whoever owns the repository, which is
+# the right blast radius for "an upstream service went away".
+name: turn-endpoint
+
+on:
+  schedule:
+    # Daily. The endpoint is somebody else's Space, and a week of relay coverage lost
+    # before anybody hears about it is most of the damage already done.
+    - cron: "41 5 * * *"
+  workflow_dispatch:
+
+jobs:
+  credentials:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # **Read the URL out of the source rather than repeating it here.** A check with its
+      # own copy of the endpoint tests whatever it was last told, which can drift from what
+      # the daemon compiles in — and a green check on an endpoint no robot uses is worse
+      # than no check, because it reads as proof.
+      - name: Ask the endpoint the daemon uses
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          url=$(sed -n 's/^pub const DEFAULT_TURN_ENDPOINT: &str = "\(.*\)";$/\1/p' \
+              mediad/src/turn.rs)
+          [ -n "$url" ] || {
+              echo "::error::could not read DEFAULT_TURN_ENDPOINT from mediad/src/turn.rs"
+              exit 1
+          }
+          echo "endpoint: $url"
+
+          # No token means this cannot check anything. Failing is the point: a check that
+          # skips itself into permanent silence is the failure mode this workflow exists
+          # to end.
+          [ -n "${HF_TOKEN:-}" ] || {
+              echo "::error::no HF_TOKEN secret. Add a Hugging Face token with no scopes" \
+                   "beyond sign-in; it is used only to mint TURN credentials."
+              exit 1
+          }
+
+          code=$(curl -sS -o body.json -w '%{http_code}' --max-time 30 \
+              -H "Authorization: Bearer $HF_TOKEN" "$url?ttl=600")
+          [ "$code" = "200" ] || {
+              echo "::error::$url answered HTTP $code, not 200"
+              head -c 400 body.json || true
+              exit 1
+          }
+
+          # A 200 carrying no relay is still a robot with no relay candidate to offer —
+          # which is the outage, not a milder version of it. `stun:` entries do not count:
+          # `webrtcbin` takes a STUN server through its own property, and this is about the
+          # thing STUN cannot do.
+          relays=$(jq '[.iceServers[]? | .urls] | flatten
+                       | map(select(startswith("turn:") or startswith("turns:")))
+                       | length' body.json)
+          echo "relay servers offered: $relays"
+          [ "$relays" -gt 0 ] || {
+              echo "::error::$url answered 200 with no turn:/turns: entries"
+              head -c 400 body.json || true
+              exit 1
+          }

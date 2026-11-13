@@ -1,0 +1,28 @@
+[package]
+name = "duck-detect"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow = "1"
+# The camera's pixels — the mount turn and the UYVY sampler — shared with `mediad` and
+# `robotctl monitor`. No dependencies of its own; see its manifest for why it is not in here.
+uyvy = { path = "../uyvy" }
+# `dlopen` rather than link: the NPU runtime is a vendor blob that is not on a laptop, not in any
+# Debian suite and not needed to *build* — cross-compiling a daemon must not require it. Same
+# decision, and the same crate, as ort makes for ONNX Runtime.
+libloading = "0.9"
+tracing.workspace = true
+clap = { workspace = true, features = ["derive"] }
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+image = { version = "0.25", default-features = false, features = ["jpeg"] }
+# The CPU fallback. `load-dynamic` for the same reason `duck-detect` dlopens the NPU runtime: the
+# library belongs to the board, not to the build — and `setup-board.sh` already puts it there for
+# robotd's policies, so a board that can walk can also see.
+ort = { version = "=2.0.0-rc.11", default-features = false, features = ["load-dynamic"] }
+
+[[bin]]
+name = "duck-bench"
+path = "src/bin/duck-bench.rs"

@@ -1,0 +1,21 @@
+COMMAND: /workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66 control::joint_uniform_tests::joint_uniform_real_onnx_uses_bundled_scale_and_official_filters_in_every_posture --exact --test-threads=1
+
+running 1 test
+test control::joint_uniform_tests::joint_uniform_real_onnx_uses_bundled_scale_and_official_filters_in_every_posture ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 257 filtered out; finished in 0.61s
+
+COMMAND: /workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66 control::joint_uniform_tests::joint_uniform_reload_keeps_raw_memory_and_reset_clears_it --exact --test-threads=1
+
+running 1 test
+test control::joint_uniform_tests::joint_uniform_reload_keeps_raw_memory_and_reset_clears_it ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 257 filtered out; finished in 0.61s
+
+COMMAND: /workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66 control::selftrained_checks::explicit_home_ends_sitting_and_rising_and_resumes_the_walk_teacher --exact --test-threads=1
+
+running 1 test
+test control::selftrained_checks::explicit_home_ends_sitting_and_rising_and_resumes_the_walk_teacher ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 257 filtered out; finished in 0.42s
+

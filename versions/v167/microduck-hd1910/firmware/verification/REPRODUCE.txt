@@ -1,0 +1,20 @@
+Historical R147 verification record, not the current build entry.
+The one-shot build/restore/package tools named below are retired.
+Retrieve those original tools from Git history: https://github.com/kissqy/Microduck-kissqy/tree/c1a53b2c28ecbb6f890296fb668156987871ba76/microduck-hd1910/firmware/verification
+For the current public build, use ../BUILDING-V167.md.
+
+Use Rust 1.99.0, cargo-zigbuild 0.23.4, Zig 0.14.1 and ONNX Runtime 1.28.0.
+restore_toolchain147.py restores actual toolchains and records download SHA256.
+PYTHONPATH="$PWD/packaging:$PWD/console" python3 -m unittest discover -s packaging -p 'test_*.py' -v
+cargo test -p robotd --bin robotd --locked
+cargo test -p duck-control --lib --locked
+cargo test -p robotd-params -p duck-ipc-proto --lib --bins --locked
+Cross-build: cargo zigbuild -p robotd -p robotctl --release --target aarch64-unknown-linux-gnu.2.31 --locked
+build_native147.py hashes exact Rust/Cargo sources before/after compilation and records tools, logs and ARM binaries.
+padd is reused from v146; API40, padd source and binary SHA are verified unchanged.
+package147.py expects work-r17-146 as baseline and work-r17-147 with current source/logs, plus two original ZIPs in upload/.
+It verifies all original model files byte-for-byte, preserves Walk/LB/sitstand, installs the real payload twice with/without preimported models, and imports both ZIP formats through PreparedFirmware.
+Legacy roll/pick fixtures in source test-data are deliberately excluded from the runtime payload.
+The official-reference-from146 directory is retained historical evidence, not a new official-source lookup.
+checkpoint.pt is never deserialized or deployed. Synthetic model and fake-hardware tests do not establish physical behavior.
+No Zero motion, real gamepad, systemd/uinput activation, browser rendering or temperature measurement this release.

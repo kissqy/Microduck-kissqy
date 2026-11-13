@@ -1,0 +1,115 @@
+BUILD COMMAND: cargo test -p robotd --bin robotd --frozen --no-run --message-format=json
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.155/robotd)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 58.35s
+FILTER: r17_explicit_disable_returns_home_only_after_an_enabled_policy (1 actual tests)
+
+running 1 test
+test tests::r17_explicit_disable_returns_home_only_after_an_enabled_policy ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 260 filtered out; finished in 0.00s
+
+FILTER: explicit_home_after_a_policy_pause_restores_absolute_home_without_replay (1 actual tests)
+
+running 1 test
+test feetech_recovery_tests::explicit_home_after_a_policy_pause_restores_absolute_home_without_replay ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 260 filtered out; finished in 5.00s
+
+FILTER: intents::tests:: (9 actual tests)
+
+running 9 tests
+test intents::tests::a_stale_hold_reads_as_decayed_not_released ... ok
+test intents::tests::home_discards_pending_skills_and_recovery_and_uses_the_existing_one_shot_slot ... ok
+test intents::tests::stop_and_start_between_ticks_has_a_new_generation ... ok
+test intents::tests::stop_zeroes_the_twist_and_leaves_the_policy_enabled ... ok
+test intents::tests::taken_recovery_cannot_outlive_stop_init_relax_or_shutdown ... ok
+test intents::tests::the_body_command_stays_nominal ... ok
+test intents::tests::the_slots_are_independent ... ok
+test intents::tests::the_twist_starts_stale ... ok
+test intents::tests::writing_the_twist_refreshes_its_age ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 252 filtered out; finished in 0.38s
+
+FILTER: home_start::tests:: (7 actual tests)
+
+running 7 tests
+test home_start::tests::actual_home_is_required_even_after_the_ramp ... ok
+test home_start::tests::first_inference_rechecks_home_and_never_queues_a_rejected_press ... ok
+test home_start::tests::home_uses_the_model_contract_and_beak_remains_independent ... ok
+test home_start::tests::incomplete_sensors_torque_and_homing_each_block_start ... ok
+test home_start::tests::limp_recovery_needs_live_fallen_feedback_without_upright_home ... ok
+test home_start::tests::stable_frames_reset_on_a_gap_and_ready_feedback_expires ... ok
+test home_start::tests::tilt_and_invalid_gravity_block_start ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 254 filtered out; finished in 0.02s
+
+FILTER: r17_start_outside_home_requests_home_without_enabling (1 actual tests)
+
+running 1 test
+test tests::r17_start_outside_home_requests_home_without_enabling ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 260 filtered out; finished in 0.01s
+
+FILTER: r17_homed_flag_alone_cannot_enable_and_home_does_not_replay_the_press (1 actual tests)
+
+running 1 test
+test tests::r17_homed_flag_alone_cannot_enable_and_home_does_not_replay_the_press ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 260 filtered out; finished in 0.00s
+
+FILTER: r17_old_home_feedback_cannot_enable (1 actual tests)
+
+running 1 test
+test tests::r17_old_home_feedback_cannot_enable ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 260 filtered out; finished in 0.00s
+
+FILTER: r17_init_needs_no_home_imu_or_readiness_precheck (1 actual tests)
+
+running 1 test
+test tests::r17_init_needs_no_home_imu_or_readiness_precheck ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 260 filtered out; finished in 0.00s
+
+FILTER: start_home_ends_the_seat_even_when_reads_are_paused (1 actual tests)
+
+running 1 test
+test feetech_recovery_tests::start_home_ends_the_seat_even_when_reads_are_paused ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 260 filtered out; finished in 7.79s
+
+FILTER: feetech_official_coast_holds_and_resumes_without_reenable (1 actual tests)
+
+running 1 test
+test feetech_recovery_tests::feetech_official_coast_holds_and_resumes_without_reenable ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 260 filtered out; finished in 2.46s
+
+FILTER: faults_and_service_teardown_preserve_torque_explicit_relax_still_works (1 actual tests)
+
+running 1 test
+test stability_tests::faults_and_service_teardown_preserve_torque_explicit_relax_still_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 260 filtered out; finished in 0.08s
+
+FILTER: a_restart_asks_for_no_torque (1 actual tests)
+
+running 1 test
+test tests::a_restart_asks_for_no_torque ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 260 filtered out; finished in 0.05s
+
+FILTER: enabling_without_a_policy_leaves_the_joints_limp (1 actual tests)
+
+running 1 test
+test tests::enabling_without_a_policy_leaves_the_joints_limp ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 260 filtered out; finished in 0.02s
+
+FILTER: robot_init_powers_the_joints_and_ramps_home (1 actual tests)
+
+running 1 test
+test tests::robot_init_powers_the_joints_and_ramps_home ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 260 filtered out; finished in 0.02s
+

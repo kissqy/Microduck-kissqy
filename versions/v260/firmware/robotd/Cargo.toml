@@ -1,0 +1,64 @@
+[package]
+name = "robotd"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Robot control daemon — skeleton"
+
+[dependencies]
+duck-ipc-proto = { path = "../duck-ipc-proto" }
+duck-control = { path = "../duck-control" }
+robotd-params = { path = "../robotd-params" }
+kinematics = { path = "../kinematics" }
+odometry = { path = "../odometry" }
+pet-detect = { path = "../pet-detect" }
+# The voice, for the live synth the theremin plays through. The bank's wavs cover every
+# sound whose whole shape is known in advance; a theremin's pitch is a hand's distance and
+# is not, so `robotd` renders that one itself. Pure Rust, no vendored anything.
+sounds = { path = "../sounds" }
+clap = { workspace = true, features = ["derive"] }
+serde.workspace = true
+serde_json.workspace = true
+tokio = { workspace = true, features = [
+    "rt-multi-thread",
+    "macros",
+    "net",
+    "time",
+    "io-util",
+    "signal",
+    "sync",
+] }
+tracing.workspace = true
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+libc = "0.2"
+thiserror.workspace = true
+toml = "0.9"
+# Lock-free single-value slots for the intent hand-off: the control loop does one
+# atomic load per tick and can never be held up by an IPC task writing the other side.
+arc-swap = "1"
+
+# Test-only. `tests/updater_gate.rs` drives the real update engine against this binary,
+# which is why `updater` appears here: the test asserts that robotd upholds the contract
+# the engine depends on. A dev-dependency, so none of it reaches the shipped binary, and
+# the direction is one-way — `updater` does not depend on `robotd`.
+#
+# The test lives in *this* package rather than in `updater/tests/` for one concrete
+# reason: only here does cargo define `CARGO_BIN_EXE_robotd` and guarantee the binary is
+# built and up to date. In `updater/tests/` the path had to be guessed from the test
+# binary's location, and `cargo test --test <name>` does not rebuild sibling binaries —
+# so the test silently ran a stale robotd. That produced a confidently wrong result once
+# already.
+[dev-dependencies]
+updater = { path = "../updater" }
+# `start_paused` for the startup-retry tests: the retry interval is a second of real time,
+# which is right on a robot and far too slow in a test. Dev-only — `cargo build` does not
+# pull dev-dependencies, so the shipped binary has no test-util in it.
+tokio = { workspace = true, features = ["test-util"] }
+test-support = { path = "../test-support" }
+minisign = "0.9.1"
+semver.workspace = true
+sha2 = "0.11.0"
+tar = "0.4.46"
+tempfile = "3.27.0"
+zstd = "0.13"
+

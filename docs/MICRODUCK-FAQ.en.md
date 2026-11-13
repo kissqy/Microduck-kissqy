@@ -19,7 +19,7 @@ The [FrankenDuck printing page](../hardware/3d-print-frankenduck/README.en.md) p
 
 ## What do I download for the HD1910 build?
 
-For normal operation, download [System Image R2](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) and [Robot Console V260](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md). Add Training Studio R1.5.27 when training your own movements. Use the [Downloads table](../README.en.md#downloads-and-versions).
+For normal operation, download [System Image R2](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) and [Robot Console V260](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md). Add Training Studio R1.5.27 when training your own movements. Use the [Downloads table](../README.en.md#downloads-and-versions).
 
 R2 includes V260 / control.102 and pairs with Robot Console V260. For an older system, install the matching bundled firmware through V260 when adopting this release; do not import it through V167. [Historical Image R1](releases/public-image-r1.en.md) and the verified V167 / control.43 baseline remain available. This release does not replace existing real-robot Known-Good records.
 
@@ -27,7 +27,7 @@ At boot, R2 waits for the Wi-Fi adapter and network service, then tries saved ne
 
 ## Can the online demo connect to my robot?
 
-No. The GitHub Pages consoles demonstrate the interfaces with simulated data. Extract and run the local Robot Console, then enter ZERO's SSH connection details. See the [V260 release and usage guide](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md).
+No. The GitHub Pages consoles demonstrate the interfaces with simulated data. Extract and run the local Robot Console, then enter ZERO's SSH connection details. See the [V260 release and usage guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md).
 
 ## Why flash the IMU separately after imaging ZERO?
 
@@ -45,7 +45,7 @@ In the author's build, missing main-input buffering made servo transients prone 
 
 ## Can I copy the author's calibration if directions or posture look wrong?
 
-Do not copy it blindly. Verify your robot's joint zero positions, directions, limits and IMU mounting. Compare console feedback with physical movement before enabling policies. Increasing force does not correct wrong directions or mechanical assembly. Follow the [V260 release guide](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md), bundled instructions and runtime prompts. The [V167 guide](../microduck-hd1910/firmware/console/USER-GUIDE.en.md) remains a historical reference.
+Do not copy it blindly. Verify your robot's joint zero positions, directions, limits and IMU mounting. Compare console feedback with physical movement before enabling policies. Increasing force does not correct wrong directions or mechanical assembly. Follow the [V260 release guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md), bundled instructions and runtime prompts. The [V167 guide](../microduck-hd1910/firmware/console/USER-GUIDE.en.md) remains a historical reference.
 
 ## Which HAT and IMU connector versions exist?
 

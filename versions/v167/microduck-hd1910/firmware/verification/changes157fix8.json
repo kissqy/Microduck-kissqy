@@ -1,0 +1,228 @@
+{
+  "console_version": "1.0.157-Fix8",
+  "service_build": "1fa8438-feetech-ft6-control.36",
+  "release_baseline": "Microduck-Source-R17-v1.0.157-Fix7",
+  "firmware_reinstall_required": true,
+  "firmware_sha256": "72220680d85092cb9f102fe92f9a0a11d36e387cc5a23d7db7170b0d2a6e3c04",
+  "robotd_robotctl_padd_sounds_onnx_models_unchanged": true,
+  "core_rust_sources_unchanged": true,
+  "non_repair_service_controller_ast_identical": true,
+  "protected_files": {
+    "packaging/service.sh": "08f0461217b217e0264d0e48e12002a5839650985d450b3ae2a798a3c539a7c1",
+    "packaging/startup_gate.py": "9b1a07b55f36d8cc93b0a99d1776396f455e5f91f890a91112d8b04d18e48557",
+    "packaging/runtime.py": "9e44b986a9ab19501b522c2f28de4c27b01b0beb89be4ec5b5deeb4258af9d91",
+    "packaging/gamepad.py": "0dbad8bf2ef36d24e188c4c93fa2acb54ea0f7ffdf5cbff9642bd9d81a37f5a4",
+    "packaging/configure.py": "708b936627ce64cdc1055c59ec09aee3ff10ae5b9d60599e633c942dac94e982",
+    "packaging/voice-setup.py": "bce9e9b217f433df8c0d28cf1b80ee95d6925eb5d879276c1f162bfa2288b4b9",
+    "console/raw_telemetry.py": "da34bf7e285b0787e78b17cd0519fe6b997cbfeac3d705025ae237ce993d3f7a",
+    "console/remote_input.py": "c8e02dab52700812dd9c0e356eeffa339093854bdc5e4253b5da8fa38757e64c",
+    "console/controls.py": "5e92fbcc313b3dfa4972e194d6a3f843abf7d55da2c915db5e34c099f6e20e19",
+    "console/service_rpc.py": "c9bd998c3e4b61ccb93c0b70fff5c0a292cc73954a4ecd51034975370e95b262",
+    "console/connection.py": "3c7256b75b4296f480f8469c6bf32e4c60d6a4732dc7344c9a4d48cac4fb75a2",
+    "console/static/control.js": "0eeafc7445f35bc35c864e160a4eddc8f99aef723d9d62097140fac84ae6738d",
+    "console/static/control-socket.js": "c35b00cb27fa25dda4995ae9e27bc34adfd359d02c25d3a97120922ad30151e8",
+    "console/static/service.js": "8413f3a77d20b78b39811e28795b6de0364202fb5ed35011ea7d02f33400c45e",
+    "console/static/index.html": "676e2de2aed46501e4c37538f72753f4bb524743cb6d8b6616382febfa66c215",
+    "console/static/r17-0151.css": "873c101b68f139ce7ad9b8d531434d8111dc5251bb698b98ef0eea6f02ad1125"
+  },
+  "startup_four_steps_and_install_sequence_unchanged": true,
+  "raw_ssh_webpad_arbitration_unchanged": true,
+  "r7_mapping_and_input_forwarding_identical": true,
+  "bridge_binary": {
+    "sha256": "e7c428e5690adf1483b5349fb100e076b5ca37c74068a6dd315015ce47d0af73",
+    "machine": "AArch64",
+    "bytes": 47984,
+    "needed": [
+      "libpthread.so.0",
+      "libc.so.6"
+    ],
+    "glibc_versions": [
+      "2.17"
+    ]
+  },
+  "changed_installed_payloads": [
+    "gamepad-r7/gamesir-xboxd",
+    "release_identity.py",
+    "BUILD.json",
+    "SHA256SUMS"
+  ],
+  "added_robot_50hz_work": false,
+  "added_resident_services_or_threads": false,
+  "routine_repair": {
+    "healthy_noop": true,
+    "keeps_old_bond_on_connection_failure": true,
+    "only_missing_or_failed_layer_started_or_restarted": true,
+    "startup_waiters_not_restarted": true,
+    "no_robotd_restart_or_torque_command": true,
+    "no_phone_service_action": true
+  },
+  "explicit_pairing": {
+    "user_selected_only": true,
+    "existing_relax_confirmation_reused": true,
+    "target_bond_only": true,
+    "adapter_reset_once": true,
+    "no_automatic_reboot": true,
+    "btd_original_running_state_only": true,
+    "unit_enable_disable_never_written": true,
+    "phone_restore_error_separate": true
+  },
+  "input_wait": {
+    "real_inotify": true,
+    "no_periodic_device_scan": true,
+    "temporary_repair_watcher": true,
+    "padd_device_open_checked": true,
+    "padd_open_does_not_prove_multi_pad_priority": true
+  },
+  "logging": {
+    "named_step_terminal_outcomes": true,
+    "raw_progress_json_not_displayed": true,
+    "last_check_separate_from_current_input_events": true,
+    "robot_motion_state_separate": true
+  },
+  "tests": {
+    "python_passed": 117,
+    "frontend_logic_scripts_passed": 6,
+    "c_regression_executables_passed": 2,
+    "runs": [
+      {
+        "name": "repair",
+        "exit_code": 0,
+        "log": "verification/fix8-repair.log",
+        "sha256": "cd7c4000600cc79e019782f637d1b29333f6f2422c36c469a7c8a75192ede296"
+      },
+      {
+        "name": "input",
+        "exit_code": 0,
+        "log": "verification/fix8-input.log",
+        "sha256": "5e70fe3aed229137c5daf6bf40c86a867b518776c6e8ed2a1b7b2037a62ea7dd"
+      },
+      {
+        "name": "order",
+        "exit_code": 0,
+        "log": "verification/fix8-order.log",
+        "sha256": "5d7435b23fd42e7a4f81af211302a911028e608b4a1467d9007c34c691075b90"
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "log": "verification/fix8-install.log",
+        "sha256": "6d3429286a3e8be48f8a224d4e4cca70a6410b855a78556729cfc12dfe6fb17a"
+      },
+      {
+        "name": "test_gamepad_repair_ui",
+        "exit_code": 0,
+        "log": "verification/fix8-test_gamepad_repair_ui.log",
+        "sha256": "8fc0e55d166595ca3d7d2e18dcc35518cce15c9ae29e6c4ed48eb1fadf023dba"
+      },
+      {
+        "name": "test_fix157pc",
+        "exit_code": 0,
+        "log": "verification/fix8-test_fix157pc.log",
+        "sha256": "202e15d884c067ab28d84a5ebbac80a801bcf4bfab23b14779c242cd6f2cfe39"
+      },
+      {
+        "name": "test_robotd_first157",
+        "exit_code": 0,
+        "log": "verification/fix8-test_robotd_first157.log",
+        "sha256": "e092222c7400c718bb04a07f17f40576983422f592fb6f8d24357739fb4a475a"
+      },
+      {
+        "name": "test_startup_ui",
+        "exit_code": 0,
+        "log": "verification/fix8-test_startup_ui.log",
+        "sha256": "1051736a2c3c606f87fc8ca8b5ffe966e682f54386457b6c78195bcff54adc78"
+      },
+      {
+        "name": "test_connection_ui155",
+        "exit_code": 0,
+        "log": "verification/fix8-test_connection_ui155.log",
+        "sha256": "c4e74d103b7bf3bdf8911844ea8ee4b148a598dce1ac1c3f68dcf84a29e4ad45"
+      },
+      {
+        "name": "test_controls154",
+        "exit_code": 0,
+        "log": "verification/fix8-test_controls154.log",
+        "sha256": "4321bee40f94b73b1772c9d4b065c570b64bfe649461aef04fc0110f687bceee"
+      },
+      {
+        "name": "mapping-compile",
+        "exit_code": 0,
+        "log": "verification/fix8-mapping-compile.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "mapping",
+        "exit_code": 0,
+        "log": "verification/fix8-mapping.log",
+        "sha256": "015826a6da79ad5d92462eaae761d592c872545c7c46d6bf89088cd579aa9498"
+      },
+      {
+        "name": "disconnect-compile",
+        "exit_code": 0,
+        "log": "verification/fix8-disconnect-compile.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "disconnect",
+        "exit_code": 0,
+        "log": "verification/fix8-disconnect.log",
+        "sha256": "3583c194d45cc7c2bc3f530d24067efe3c6704de963a279df45fe9b603a275e2"
+      }
+    ],
+    "actual_linux_inotify_tested": true,
+    "robot_hardware_tested": false,
+    "windows_native_tested": false,
+    "browser_pixel_rendered": false,
+    "rust_native_suite_rerun": false
+  },
+  "elf_integrity": {
+    "robotd": {
+      "bytes": 6773464,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "robotctl": {
+      "bytes": 4362264,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "padd": {
+      "bytes": 3414872,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "sounds": {
+      "bytes": 1152920,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "gamepad-r7/gamesir-xboxd": {
+      "bytes": 47984,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "onnxruntime/libonnxruntime.so.1.28.0": {
+      "bytes": 20591712,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "onnxruntime/libonnxruntime_providers_shared.so": {
+      "bytes": 198792,
+      "machine": "AArch64",
+      "load_segments": 4
+    }
+  },
+  "changed_console_files": [
+    "BUILD_MANIFEST.json",
+    "README.zh-CN.md",
+    "docs/releases/R157-Fix8.md",
+    "gamepad_repair.py",
+    "release_identity.py",
+    "service_control.py",
+    "static/control.css",
+    "static/gamepad-repair.js",
+    "updates/Microduck-Robotd-FT6-R17.tar.gz",
+    "verification/test_gamepad_repair.py",
+    "verification/test_gamepad_repair_ui.mjs"
+  ]
+}

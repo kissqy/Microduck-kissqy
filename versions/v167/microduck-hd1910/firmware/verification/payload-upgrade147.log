@@ -1,0 +1,16 @@
+已替换 roulade 为 10000 轮模型；基础缩放 1，按原合同无目标滤波。
+已替换 ground_pick 为 10000 轮模型；基础缩放 1，按原合同无目标滤波。
+清理已弃用训练模型：8fdaf12c7478a8314a63647a466bfa34
+清理已弃用训练模型：2b69fa681ed06f7ded9e2a2d12ba5c67
+服务文件已完成逐文件原子替换；已保留导入模型。
+
+服务文件已完成逐文件原子替换；已保留导入模型。
+PASS actual v146-to-v147 payload twice; preimported=False; two new actions, five models, old pair removed, sole Walk/LB/other original bytes, action timing/non-scale parameters, global tuning and calibration preserved.
+已替换 roulade 为 10000 轮模型；基础缩放 1，按原合同无目标滤波。
+已替换 ground_pick 为 10000 轮模型；基础缩放 1，按原合同无目标滤波。
+清理已弃用训练模型：8fdaf12c7478a8314a63647a466bfa34
+清理已弃用训练模型：2b69fa681ed06f7ded9e2a2d12ba5c67
+服务文件已完成逐文件原子替换；已保留导入模型。
+
+服务文件已完成逐文件原子替换；已保留导入模型。
+PASS actual v146-to-v147 payload twice; preimported=True; two new actions, five models, old pair removed, sole Walk/LB/other original bytes, action timing/non-scale parameters, global tuning and calibration preserved.

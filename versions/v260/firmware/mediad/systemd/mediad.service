@@ -1,0 +1,147 @@
+# mediad — camera, mic, WebRTC, and the remote gateway.
+#
+# Install to /etc/systemd/system/mediad.service.
+#
+# Two lines here are load-bearing in a way that is easy to miss, and both present identically at
+# runtime — the encoder simply does not exist, with nothing saying why. They are
+# `SupplementaryGroups=` and `Environment=GST_PLUGIN_PATH=`, and each has its own comment below.
+#
+# It is safe to have running with nobody connected: `webrtcsink` listens, produces no consumer, and
+# the pipeline sits at PLAYING. What it does *not* do is authenticate — anyone who reaches the
+# signalling port can drive the robot and see its camera. That is a decision, not an omission; see
+# docs/design/remote-webrtc.md §4, whose short version is that the pairing PIN is a shared 000000,
+# so a gate would add a step to every connection and prove nothing.
+
+[Unit]
+Description=Robot media and WebRTC gateway
+Documentation=file:///opt/robot/daemon/current/docs/design/remote-webrtc.md
+
+# `After`, not `Requires`, exactly as padd has it: the services mediad forwards to are where calls
+# go, so starting first is pointless — but any of them being down must not keep this unit from
+# starting. A peer that connects while robotd is restarting gets "robotd is not answering", which
+# is the honest answer and better than mediad refusing to run.
+#
+# No `Wants=robotd.service`, for padd's reason: it only made every start or restart of this unit
+# start robotd again, undoing a `systemctl stop robotd`.
+After=robotd.service configd.service updaterd.service local-fs.target
+
+[Service]
+Type=exec
+# **No video flags here, on purpose.** What this daemon streams — camera or test pattern, frame
+# size, rate, bitrate — is `[media]` in /etc/robot/robotd.toml, edited with `robotctl configure`
+# and applied by `systemctl restart mediad`.
+#
+# They were flags on this line. The release installer rewrites this file, so changing one meant a
+# systemd drop-in — `systemctl edit --full` puts the edit exactly where it will be overwritten —
+# and nobody reaches for a drop-in to answer "why is the video soft?". The config file is the one
+# place per-board settings survive an update *and* a rollback (architecture.md §3).
+#
+# **The consequence of the camera being on by default, stated because it is not obvious:** the
+# control datachannel is bundled with the video track, so a robot whose camera is absent —
+# unplugged, or the device-tree overlay not enabled — fails to start this service and loses its
+# WebRTC control surface along with its video. BLE and the local pad are unaffected. The fix on
+# such a board is `camera = false` in `[media]`, which streams a test pattern: the pipeline starts,
+# so the control channel exists.
+ExecStart=/opt/robot/daemon/current/bin/mediad
+
+# Unprivileged, with two supplementary groups and nothing else.
+#
+#   video  — /dev/mpp_service (the VPU), /dev/rga (the 2D accelerator, used by the encoder for
+#            format and stride conversion) and /dev/videoN (the capture nodes). All three matter
+#            and each fails differently: without the VPU node the encoders are *silently not
+#            registered*, because an MPP plugin probes MPP before registering them; without
+#            /dev/rga the element exists and the pipeline fails inside RGA; the capture nodes
+#            arrive root:video already. Three debugging rounds, one cause —
+#            docs/project/media-bringup.md records them.
+#   robot  — the 0660 sockets of robotd, configd and updaterd, the same way btd and the SDK reach
+#            them.
+#
+# padd's and tofd's sockets are handed to the `robot` group by those daemons themselves, so the
+# pad tap and the depth stream are reachable through the same membership.
+#
+# **`render` is the NPU.** The rknpu driver registers as a DRM device, `root:render` mode 660, so
+# the duck detector cannot open the NPU without this group — and the failure is an `rknn_init` that
+# returns a number rather than anything about permissions. Which `/dev/dri/renderD*` it takes is not
+# fixed and is not worth writing down: on a Radxa Zero 3 the display and Mali already hold 128 and
+# 129 before the NPU binds at all, so a number recorded here would name somebody else's device.
+# Membership costs nothing on a board whose NPU is disabled; it is the difference between working
+# and not on one where it is enabled.
+User=mediad
+Group=mediad
+SupplementaryGroups=video render robot
+
+# Restart=always for padd's reason: mediad exits when it cannot start a pipeline, and a missing
+# plugin or an unopenable device node is a state to retry rather than one to stay down in — a
+# provisioning run that installs the plugins should be enough to bring it up without a reboot.
+Restart=always
+RestartSec=5s
+
+# Hardening, as far as a process driving a hardware codec can go.
+#
+# NOT PrivateDevices=yes: it would hide /dev/mpp_service, /dev/rga and the capture nodes, which are
+# the point of the process. Which nodes it may open is still bounded by the `video` group.
+#
+# AF_INET and AF_INET6 are load-bearing: the signalling server listens on a TCP socket and WebRTC
+# is UDP. Without them the daemon starts and no peer can ever reach it, which is the same shape of
+# failure as padd's missing AF_NETLINK.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=yes
+LockPersonality=yes
+CapabilityBoundingSet=
+
+# NOT MemoryDenyWriteExecute=yes, unlike padd. GStreamer dlopens its plugins, and a hardware codec
+# stack is exactly the kind of thing that maps executable pages at load time. Denying it would make
+# the daemon fail in the dynamic loader, some way from anything that mentions media.
+
+# GStreamer does not search /usr/local/lib/gstreamer-1.0 by default — its built-in path is the
+# distro's /usr/lib/aarch64-linux-gnu/gstreamer-1.0, which the plugins deliberately avoid so that
+# an apt operation cannot replace or remove them. So this is not optional: without it mpph264enc
+# and webrtcsink do not exist, and the daemon says so and exits.
+Environment=GST_PLUGIN_PATH=/usr/local/lib/gstreamer-1.0
+Environment=RUST_LOG=info
+StandardOutput=journal
+StandardError=journal
+
+# /run/mediad/, for identity.json — what this daemon is running, read by `robotctl health` and by
+# updaterd's startup check. `RuntimeDirectory=` rather than a granted path, for padd's reasons: it
+# is the only mechanism that creates a directory owned by this unit's User= *and* survives
+# ProtectSystem=strict, and systemd removes it on stop so a stopped daemon cannot leave behind an
+# identity claiming to be running.
+RuntimeDirectory=mediad
+
+# **This section is what makes `mediad` a daemon rather than something to remember.**
+#
+# `hooks/postinstall` enables and starts every unit that ships with an `[Install]` section, and
+# `units_shipped` in `updater/src/engine.rs` restarts every such unit on an apply — one rule, read
+# off the unit files rather than a list anybody maintains. So this section is the whole of what
+# makes a release install a working camera and pick up the next one, and its absence was the whole
+# of why every push ended with somebody typing `systemctl restart mediad`.
+#
+# It was absent while `mediad` had never started on a board. It has, so it is here.
+#
+# **Two ways this unit can now fail on a robot nobody was looking at, and what each costs.** Both
+# are visible in `robotctl health` as a unit that is not running, and neither touches the control
+# loop, BLE, the pad or an update:
+#
+#   * **A board with no GStreamer stack.** Provisioning installs it, and so does the pre-install
+#     hook of every update — `hooks/preinstall` runs the release's own `setup-gstreamer.sh` — so a
+#     board reaching this state has had both fail, most likely for want of network. The pipeline
+#     cannot start, `Restart=always` retries every five seconds, and re-running it by hand is
+#     `sudo /usr/local/sbin/robot-setup-gstreamer`.
+#   * **A board with no camera**, because `[media] camera` defaults to on. Same shape, and
+#     `sudo robotctl configure` → `media.camera` off is the fix.
+#
+# `WantedBy=multi-user.target` rather than a `.wants` symlink somebody adds: the release owns which
+# units exist and systemd owns whether they are enabled, and a robot whose enablement was done by
+# hand on one board is a robot nobody can reason about.
+
+[Install]
+WantedBy=multi-user.target

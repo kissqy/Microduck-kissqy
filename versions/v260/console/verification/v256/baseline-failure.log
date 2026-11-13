@@ -1,0 +1,19 @@
+test_previous_torque_timeout_uses_native_shutdown_instead (test_commissioning_shutdown.CommissioningShutdownRegressionTests.test_previous_torque_timeout_uses_native_shutdown_instead) ... ERROR
+
+======================================================================
+ERROR: test_previous_torque_timeout_uses_native_shutdown_instead (test_commissioning_shutdown.CommissioningShutdownRegressionTests.test_previous_torque_timeout_uses_native_shutdown_instead)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/0dba0a513e05/shutdown_fix_work/Microduck-Console-Studio-V255/verification/v256/test_commissioning_shutdown.py", line 48, in test_previous_torque_timeout_uses_native_shutdown_instead
+    result = runtime.commissioning_shutdown()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/0dba0a513e05/shutdown_firmware_work/Microduck-Robotd-FT6-R17/runtime.py", line 270, in commissioning_shutdown
+    relax_confirmed()
+  File "/workspace/scratch/0dba0a513e05/shutdown_firmware_work/Microduck-Robotd-FT6-R17/runtime.py", line 247, in relax_confirmed
+    raise RuntimeError('未确认全部关节扭矩 OFF；操作未继续')
+RuntimeError: 未确认全部关节扭矩 OFF；操作未继续
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (errors=1)

@@ -1,0 +1,1 @@
+SERVO_P_OK: editable integer P3/P5; saved resume preserved; queued P frozen; 4K aligned; no probes or JS errors

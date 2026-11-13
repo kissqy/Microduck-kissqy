@@ -1,0 +1,6 @@
+test_all_native_actions_including_empty_are_explicit (test_model_slots.SlotTests.test_all_native_actions_including_empty_are_explicit) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK

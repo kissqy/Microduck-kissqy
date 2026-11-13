@@ -1,0 +1,352 @@
+# Checks on every push and pull request.
+#
+# Split into three parallel jobs deliberately, so the wait is the slowest one rather than the
+# total: `check` is fast and catches most things, `board` catches the class of problem that only
+# appears off the dev machine (cross-linking, glibc floors, unix-socket and permission
+# semantics), and `coverage` needs its own instrumented build.
+name: ci
+
+# Documentation is excluded from all of it. Editing a markdown file used to cross-compile for
+# aarch64 under QEMU *and* build the workspace under instrumentation — minutes of waiting for a
+# change that cannot affect a single one of those results.
+#
+# Safe here specifically because `main` has no required status checks. A skipped job reports no
+# status at all, so filtering one that *was* required leaves every docs pull request permanently
+# pending, which is worse than the wait it removes. Re-check this before turning protection on.
+#
+# `paths-ignore` rather than `paths`, deliberately: the default stays "run". A new top-level
+# directory is tested because nobody remembered to list it, which is the right way round for a
+# filter whose failure mode is skipping everything.
+#
+# The list is written twice because GitHub Actions does not support YAML anchors, so `&docs`/`*docs`
+# is not available here however much this asks for it. Keep the two copies identical.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+
+# Cancel superseded runs: during a hot iteration week the queue is otherwise mostly
+# obsolete builds.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  # Fail on warnings in CI only. Locally a warning shouldn't block you mid-edit.
+  RUSTFLAGS: -D warnings
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+
+      # `padd` reads the gamepad through gilrs, which depends on libudev-sys — a binding to
+      # a C library, unconditional on Linux with no feature to disable it. The runner image
+      # does not ship the headers, so without this `cargo clippy --workspace` fails to build
+      # before it checks anything.
+      # And GStreamer, because `mediad`'s pipeline is gated on `target_os = "linux"` and these
+      # runners are Linux — so the host build compiles it, unlike a developer's Mac. plugins-bad
+      # is the one carrying `gstreamer-webrtc-1.0.pc`, which is what the data channel needs.
+      - run: sudo apt-get update && sudo apt-get install -y libudev-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev
+
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets
+      - run: cargo test --workspace
+
+      # These are the pieces of this repo that run without being compiled — four on a robot,
+      # and `provision-board.sh` and `dev-push.sh` on a developer's machine — so nothing else
+      # would catch a typo in one until someone tried to provision a board. shellcheck is on the
+      # runner already.
+      #
+      # `ci-release-notes.sh` is here despite running only in CI: it runs
+      # *during a release*, which is the worst moment to find a typo in a shell script.
+      #
+      # `migrate-network.sh` was missing from this list while being the riskiest of them —
+      # it is the one step that can make a headless board unreachable, and the one nobody
+      # re-runs once their own board is migrated. `robot-rescue` is here because it is the script
+      # that runs when a board cannot start its update daemon — the worst possible moment to find a
+      # typo, and it ships as text like the rest.
+      #
+      # `board-test.sh` is linted by the step below rather than here, because it needs two codes
+      # excluded. It used to be skipped entirely on the grounds that CI failing is already the
+      # feedback, which was true and too expensive: that feedback is four QEMU minutes away.
+      #
+      # `pad-link-test.sh` is a diagnostic rather than a step anything depends on, and is here for
+      # the same reason as the rest: it is typed by someone whose pad is already misbehaving, and
+      # `set -eu` turns a stray `[ x ] && y` into an exit two minutes into a measurement.
+      #
+      # `pad-stack-report.sh` for a sharper version of the same: nearly every line of it reads a
+      # tool that may not be installed, and an unquoted or unguarded one of those is an exit
+      # partway through a report that then looks complete.
+      #
+      # `seed-policies.sh` runs inside an update, on every board, and decides whether to overwrite
+      # the policies a robot walks with. `hooks/postinstall` is the thing that runs it, and every
+      # other script here, and was missing from this list while being the one file that runs on
+      # every board on every update — the argument this comment opens with, applied to itself.
+      #
+      # `duck-sim` is here for the sharpest version of the same argument: it is the no-hardware entry
+      # point `README.md` and `docs/robot/simulation.md` both send a newcomer to, and nothing had ever
+      # run it. The heredoc that writes a twin's `updater.toml` is unquoted so the paths expand, which
+      # also means a bare backtick pair in a comment runs as a command — it did, on every start, after
+      # the comment directly above that very heredoc had already warned not to. The `robotd.toml`
+      # heredoc above it is the same shape and carries the same warning, written there when its own
+      # comment was executed. A comment cannot fail a build; SC2006 can.
+      #
+      # POSIX sh, not bash: the script is piped to `sh` by the documented one-liner, and
+      # a bashism would work on a dev box and fail on the board.
+      - name: Lint the installer
+        run: |
+          for script in scripts/install.sh scripts/setup-board.sh scripts/setup-gstreamer.sh scripts/setup-login.sh scripts/setup-quiet-boot.sh scripts/migrate-network.sh scripts/provision.sh scripts/provision-board.sh scripts/ci-release-notes.sh scripts/robot-rescue scripts/dev-push.sh scripts/pad-link-test.sh scripts/pad-stack-report.sh scripts/seed-policies.sh scripts/seed-detector.sh scripts/duck-sim; do
+            sh -n "$script"
+            shellcheck --shell=sh "$script"
+            # The one-liner is only correct if the file is executable and self-contained.
+            test -x "$script"
+          done
+          # The hook, which is not executable in the repo — `xtask package` sets its mode on the
+          # way into the artifact, and `hooks_are_packaged_executable` is what checks that.
+          sh -n hooks/postinstall
+          shellcheck --shell=sh hooks/postinstall
+
+      # `board-test.sh` separately, because it needs different flags and was excluded for it.
+      #
+      # It builds the container-side checks as one enormous single-quoted string, so two codes fire on
+      # that construction itself and mean nothing: SC2037 reads `CHECKS='` as a command assignment,
+      # SC2016 objects to expressions that are *meant* not to expand until the container runs them.
+      #
+      # What is left is worth having, and is the failure that actually happens: an apostrophe inside
+      # that string closes it early, and everything after it is then expanded by this shell instead of
+      # the container's. It cost a full `board` run twice in one afternoon — four QEMU minutes to be
+      # told `unexpected EOF`, when SC2211 names the line. `sh -n` alone is not enough: two
+      # apostrophes balance, so the syntax is valid and the content is silently mangled.
+      - name: Lint the board checks
+        run: |
+          sh -n scripts/board-test.sh
+          shellcheck --shell=sh --exclude=SC2037,SC2016 scripts/board-test.sh
+
+      # The publish tooling must keep working, or a release can't be cut. Cheap to
+      # assert here rather than discovering it at tag time.
+      # Packages every binary a release ships, not just one: this is the step that would
+      # have caught `release.yml` shipping no `robotd`, so it should assemble the same set.
+      #
+      # The bins are built explicitly. `cargo test` above does not leave `target/debug/
+      # robotctl` on disk — only binaries some test actually executes get emitted there —
+      # so the previous `cp` failed on the very first CI run.
+      - name: xtask smoke test
+        run: |
+          cargo build --workspace --bins
+          mkdir -p /tmp/bin
+          cp target/debug/updaterd /tmp/bin/
+          cp target/debug/robotd /tmp/bin/
+          cp target/debug/robotctl /tmp/bin/
+          # Named package, not `packages[0]`: with --no-deps that array holds every
+          # workspace member in an unspecified order, so the old form read whichever
+          # sorted first and passed only because they all share one version today.
+          version="$(cargo metadata --format-version 1 --no-deps | python3 -c 'import json,sys; print(next(p["version"] for p in json.load(sys.stdin)["packages"] if p["name"] == "updater"))')"
+          # --zstd-level 1: this artifact is asserted on and thrown away, never downloaded.
+          # The default 19 on unstripped debug binaries took ~400s — most of this job — to
+          # save bytes nothing reads. Every other code path is exercised unchanged.
+          cargo run -p xtask -- package --version "$version" --bin-dir /tmp/bin --out /tmp/dist --zstd-level 1
+          test -f /tmp/dist/manifest.json
+          test -f "/tmp/dist/${version}.manifest.json"
+
+  board:
+    # The target is aarch64; this is the only job that proves the binaries run there.
+    #
+    # On an aarch64 runner, so the containers further down run natively. Under QEMU on x86_64 the
+    # cost was not in the binaries under test — thirty of those checks went by in nine seconds —
+    # but in the shell-heavy ones, where every `sh`, `sed` and `grep` is emulated: the first
+    # setup-board.sh run alone took 148s, each later variant ~17s, and the install.sh block ran
+    # for four and a half minutes. Natively that phase is 30s, and the job went 550s -> 196s —
+    # enough that `check` is now what the run waits on rather than this.
+    #
+    # Moving back to an x86_64 runner means restoring `docker/setup-qemu-action` with
+    # `platforms: arm64`, dropped below. Without it `docker run --platform linux/arm64` does not
+    # fall back to anything — it fails with an exec format error.
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-unknown-linux-gnu
+      - uses: Swatinem/rust-cache@v2
+
+      # v2, and the zig version pinned. Two separate reasons:
+      #   - v1's mirror list 404s for current zig releases, which is how this first
+      #     surfaced — every mirror failed and the job never got a compiler.
+      #   - "latest" would let the glibc floor move under us between runs. The floor is
+      #     the whole point of building with zig (see .cargo/config.toml), so the
+      #     toolchain that sets it must be a fixed input.
+
+      # GStreamer and libudev for the *target*, unpacked from the robot's own Debian packages.
+      #
+      # This replaced Ubuntu multiarch from ports.ubuntu.com, which served libudev alone and could
+      # not serve GStreamer honestly: it would give Ubuntu's while the robot runs Debian trixie's.
+      # One sysroot covers both, because PKG_CONFIG_LIBDIR *replaces* pkg-config's search path
+      # rather than adding to it — so a sysroot carrying only GStreamer would break `padd`, inside
+      # libudev-sys, nowhere near anything about media.
+      #
+      # Cached on the script, because the package list lives in it: edit the list and the cache
+      # misses, which is exactly when it should.
+      - name: Cache the aarch64 sysroot
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/duck-sysroot
+          key: duck-sysroot-${{ hashFiles('scripts/cross-sysroot.sh') }}
+
+      - name: Target GStreamer and libudev, as a sysroot
+        run: |
+          set -eu
+          export DUCK_SYSROOT="$HOME/.cache/duck-sysroot"
+          sh scripts/cross-sysroot.sh | tee /tmp/sysroot.log
+
+          # Expanded in this shell before being written, because GITHUB_ENV does no shell
+          # expansion: the script emits RUSTFLAGS="${RUSTFLAGS:+$RUSTFLAGS }-L ...", and writing
+          # that verbatim would put the literal braces into RUSTFLAGS. Evaluating first also picks
+          # up the workflow-level `-D warnings` rather than dropping it.
+          eval "$(grep '^export' /tmp/sysroot.log)"
+          {
+            echo "PKG_CONFIG_SYSROOT_DIR=$PKG_CONFIG_SYSROOT_DIR"
+            echo "PKG_CONFIG_LIBDIR=$PKG_CONFIG_LIBDIR"
+            echo "PKG_CONFIG_ALLOW_CROSS=$PKG_CONFIG_ALLOW_CROSS"
+            echo "RUSTFLAGS=$RUSTFLAGS"
+          } >> "$GITHUB_ENV"
+
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: 0.14.1
+
+      # A prebuilt binary, not `cargo install cargo-zigbuild --locked`. Building it from source
+      # appeared free only because rust-cache had already restored ~/.cargo/bin; on a cold cache
+      # it is minutes, and changing the runner architecture is exactly what makes the cache cold.
+      - uses: taiki-e/install-action@cargo-zigbuild
+
+      - run: ./scripts/board-test.sh
+
+  coverage:
+    # Its own job rather than another step in `check`: coverage needs a full
+    # instrumented rebuild, which shares no artifacts with the ordinary one, so bolting it
+    # onto `check` would roughly double the time to the signal everyone actually waits for.
+    runs-on: ubuntu-latest
+    # To leave a comment on the pull request. Everything else here is read-only.
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      # The floor, in one place. It is both enforced and quoted in the comment, and two copies
+      # of a number are one copy and one thing to forget.
+      COVERAGE_FLOOR: 70
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: llvm-tools-preview
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@cargo-llvm-cov
+      # Same reason as the check job: the workspace does not build without it.
+      # And GStreamer, because `mediad`'s pipeline is gated on `target_os = "linux"` and these
+      # runners are Linux — so the host build compiles it, unlike a developer's Mac. plugins-bad
+      # is the one carrying `gstreamer-webrtc-1.0.pc`, which is what the data channel needs.
+      - run: sudo apt-get update && sudo apt-get install -y libudev-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev
+
+      # `xtask` is excluded because it is build tooling that never ships. It is exercised
+      # by CI actually packaging a release — the `check` job runs `xtask package` — not by
+      # unit tests, so counting it would only ever measure the wrong thing.
+      #
+      # Everything else stays in, including code that cannot be covered without hardware
+      # (`duck-control/src/bus.rs` is the Dynamixel driver, and `FakeIo` deliberately
+      # covers the trait rather than the driver). Those are honest zeroes and the floor
+      # below is set with them included, rather than hidden by widening the exclusion until
+      # the number looks good.
+      #
+      # The floor is a ratchet, not a target: raise it when the real number rises. It sits a
+      # point under today's 71.03% so ordinary work does not trip it, while a genuine collapse
+      # still fails. Lowering it should be a deliberate, explained commit.
+      #
+      # This is that commit, for 72 -> 70. 72 was written when the number here was quoted as
+      # ~77%; line coverage has in fact been 71% since at least August, so the floor sat above
+      # the real number and every run should have been red. None were, because the status of
+      # `--fail-under-lines` was thrown away — see `set -o pipefail` below. So the floor was
+      # enforcing nothing, and the drift it existed to catch went unreported for weeks.
+      #
+      # `set -o pipefail`, because the default shell for a `run:` block is `bash -e` *without*
+      # it: the status of a pipeline is then `tee`'s, and `--fail-under-lines` exits 1 into a
+      # step that reports success. That is the whole of how the floor came to enforce nothing,
+      # and it is why the number is piped rather than written with `--output-path` — the table
+      # belongs in the log as well as the file, and now the exit code survives the pipe.
+      - name: Coverage
+        run: |
+          set -o pipefail
+          cargo llvm-cov --workspace --summary-only --ignore-filename-regex '(^|/)xtask/' --fail-under-lines "$COVERAGE_FLOOR" | tee "$RUNNER_TEMP/head.txt"
+
+      # There is deliberately no second run against the base branch. This job used to check
+      # the base out separately and build it instrumented a second time, purely to subtract
+      # one number from another and print a delta — doubling the slowest job on every pull
+      # request for a nicety, while `--fail-under-lines` above is the part that actually
+      # catches a regression.
+      #
+      # What that costs is real and worth naming: a pull request that lowers coverage while
+      # staying over the floor no longer says so. The ratchet is the mechanism now — raise the
+      # floor when the number rises, and a collapse still fails the job.
+
+      # Column 10 of the TOTAL row is line coverage. The whole table goes in the run summary,
+      # where it renders without anyone opening a log, and into a file the step below posts as a
+      # comment wherever it is allowed to.
+      - name: Summary
+        if: always() && github.event_name == 'pull_request'
+        run: |
+          pct() { awk '/^TOTAL/ {gsub("%","",$10); print $10}' "$1" 2>/dev/null; }
+          head_pct=$(pct "$RUNNER_TEMP/head.txt")
+          : "${head_pct:=unknown}"
+
+          {
+            echo "## Coverage"
+            echo
+            if [ "$head_pct" = "unknown" ]; then
+              echo "The coverage run did not produce a total — it most likely failed before finishing."
+            else
+              echo "**${head_pct}% lines** on this branch, against a floor of ${COVERAGE_FLOOR}%."
+            fi
+            echo
+            echo "<details><summary>Per-file</summary>"
+            echo
+            echo '```'
+            cat "$RUNNER_TEMP/head.txt" 2>/dev/null || echo "no report"
+            echo '```'
+            echo
+            echo "</details>"
+          } > "$RUNNER_TEMP/comment.md"
+
+          cat "$RUNNER_TEMP/comment.md" >> "$GITHUB_STEP_SUMMARY"
+
+      # Its own step, and skipped for a pull request from a fork. A fork's `pull_request` run
+      # gets a read-only `GITHUB_TOKEN` whatever this job's `permissions:` block asks for, so
+      # `gh pr comment` cannot post and fails with "Resource not accessible by integration
+      # (addComment)" — which turned every outside contribution red on the one step that merely
+      # decorates it, while `Coverage` above had already passed. The table is in the run summary
+      # either way; only the comment is missing, and it is a convenience, not the gate.
+      #
+      # Posting for a fork too would mean moving this into a `workflow_run` workflow, which runs
+      # with the base repository's token. That is a bigger change than a comment is worth.
+      - name: Comment
+        if: always() && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Edit the previous comment rather than adding one per push, so a long-running
+          # branch does not accumulate a wall of near-identical coverage reports.
+          gh pr comment "${{ github.event.number }}" --body-file "$RUNNER_TEMP/comment.md" --edit-last \
+            || gh pr comment "${{ github.event.number }}" --body-file "$RUNNER_TEMP/comment.md"

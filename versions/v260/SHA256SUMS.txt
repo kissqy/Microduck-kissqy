@@ -1,0 +1,4 @@
+673cf91c637ab74a0035454ea459cff0765f16f4d93438ecaf26ddbf78bf56ec  Microduck-Console-Source-V260.zip
+eda880d910db4b462e64ed778b1bf5bea471ca9ef46e45bb4ff6bcc85b6097c3  Microduck-Console-Studio-V260.zip
+3b4cc3225c480325fecc7ca0a17c1b53e8967a2b9e20990022cd8c3b5fa53195  Microduck-Firmware-Source-V260-control102.zip
+fbeb6fe002b51e71db04a494d127c3fd6aec1c4e9377a51417687aa426c3bdbb  Microduck-Firmware-V260-control102.zip

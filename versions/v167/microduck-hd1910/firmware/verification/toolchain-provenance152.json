@@ -1,0 +1,20 @@
+{
+  "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+  "installed_cargo_tools": "cargo-zigbuild v0.23.4:\n    cargo-zigbuild",
+  "zig": "0.14.1",
+  "download_sha256": {
+    "libudev1_257.13-1~deb13u1_arm64.deb": "459b1c9c17cc3c586e90d13d2a991715d498c6eed6c046cabf321021167bc380",
+    "rust-std-1.99.0-x86_64-unknown-linux-gnu.tar.xz": "3e58dff2d0b72196b5ea4e90536e174d400de88564a52694686b81e091169933",
+    "rustfmt-1.99.0-x86_64-unknown-linux-gnu.tar.xz": "b22c09ab9e258ec5571da170d88bd1624a4ea602e6d70d95720c5b47494cadce",
+    "cargo-1.99.0-x86_64-unknown-linux-gnu.tar.xz": "d7674918d28093097614cd9728b6ca60db9ea3038f640f0bd1e9a4188c7568ce",
+    "rust-std-1.99.0-aarch64-unknown-linux-gnu.tar.xz": "1cf7e2ef58ed1cfa6f1adea18e155cbf254c1951f39e5f5e3376879f55fd64a4",
+    "ziglang-0.14.1-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl": "6eb9d4d759b292c83810dbee2e9e8e3fbfbf01d864e6e9811bae711fd74e1c2f",
+    "libudev-dev_255.4-1ubuntu8.17_amd64.deb": "e3fde14b59c81d0ef3b9caa7c627d09b5925a915b280919616cc5909096f7519",
+    "libudev-dev_257.13-1~deb13u1_arm64.deb": "4f63c79e9eec01eadf4a450d8ef12e327b82cf49f5106abc9ac39a3353f04314",
+    "rustc-1.99.0-x86_64-unknown-linux-gnu.tar.xz": "77171ba2a0345fdf2abc4fedda55d6de078dae7a68527c28be8c77dcc9604bd5",
+    "onnxruntime-1.28.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl": "0a83bdb70d143cede762b677789bf2a7acca54b3fb82565601d5c30695aa933c"
+  },
+  "reference": "verification/toolchain-provenance150.json",
+  "target": "aarch64-unknown-linux-gnu.2.31"
+}

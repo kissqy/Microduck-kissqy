@@ -1,0 +1,10 @@
+test_export_does_not_create_motion_jobs_suspend_inputs_or_require_live_imu (test_startup_diagnostic.DiagnosticTests.test_export_does_not_create_motion_jobs_suspend_inputs_or_require_live_imu) ... ok
+test_http_export_requires_same_origin_token_and_active_ssh (test_startup_diagnostic.DiagnosticTests.test_http_export_requires_same_origin_token_and_active_ssh) ... ok
+test_partial_command_errors_are_saved_and_next_sections_are_still_collected (test_startup_diagnostic.DiagnosticTests.test_partial_command_errors_are_saved_and_next_sections_are_still_collected) ... ok
+test_ssh_service_state_listeners_and_boot_log_are_collected_without_mutations (test_startup_diagnostic.DiagnosticTests.test_ssh_service_state_listeners_and_boot_log_are_collected_without_mutations) ... ok
+test_transport_embeds_read_only_helper_and_keeps_password_out_of_command (test_startup_diagnostic.DiagnosticTests.test_transport_embeds_read_only_helper_and_keeps_password_out_of_command) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.005s
+
+OK

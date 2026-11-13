@@ -1,0 +1,25 @@
+$ ['/workspace/scratch/0587ce872ec5/ui42_bridge_evidence/test-gamesir-disconnect']
+PASS auxiliary HUP removed; next poll waited 40.099 ms; main START/stick/triggers/SYN preserved; no duplicate close
+PASS primary HUP exits; auxiliary cleanup closes once
+PASS both sources: POLLERR/POLLNVAL/EOF/ENODEV/EBADF/EIO; EAGAIN/EWOULDBLOCK/EINTR preserve descriptors
+PASS Consumer HOME -> MODE press/release once; repeat/duplicate ignored; MENU/media never START
+PASS auxiliary loss releases only auxiliary MODE; main-held MODE and START remain independent
+PASS auxiliary hotplug reopens/grabs; live auxiliary causes no scans
+PASS actual inotify: idle blocks, late directory, creation/permissions/removal/recreation; no discovery timer
+All GameSir disconnect regressions passed (production C paths, no hardware).
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+unmapped Consumer Control key code=139
+unmapped Consumer Control key code=115
+unmapped Consumer Control key code=139
+unmapped Consumer Control key code=115
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+Consumer Control isolated: /dev/input/event3 (HOME only -> Xbox MODE)
+
+exit=0

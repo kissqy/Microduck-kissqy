@@ -1,0 +1,21 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const source=fs.readFileSync(path.join(root,'training/static/studio.js'),'utf8');
+const queue=fs.readFileSync(path.join(root,'training/static/queue.js'),'utf8');
+const a=source.indexOf('function gatherStudio(){'),b=source.indexOf("$('calibration-file').onchange",a);
+assert(a>=0&&b>a);
+(async()=>{
+ const unavailable='Mjlab-Archived-Flat-MicroDuck',roller='Mjlab-Velocity-Flat-MicroDuck-Rollers';
+ const els={'task':{value:roller},'robot-overrides':{value:'{"servo_mass_model":"hd1910_820g_v1"}'},'custom-mjcf':{value:''},'studio-status':{textContent:''}};
+ const draft={schema:'microduck-training-recipe/v1',baseline:'official_0151',purpose:'sim2real',name:'官方骨架 + HD1910',robot:{},overrides:[],task_overrides:{[unavailable]:[],[roller]:[]}};
+ const ctx={$:id=>els[id],studioDraft:draft,studioData:{recipe:null,frozen:null},studioDirty:true,editVersion:2,saveTimer:null,savePromise:null,zeroFetchPromise:null,clearTimeout:()=>{},Promise,structuredClone,JSON,window:{workflowRender:()=>{}},tell:()=>{},configOverridesText:'[]',post:async(p,v)=>{assert.equal(p,'/api/recipe');const cleaned=structuredClone(v.recipe);delete cleaned.task_overrides[unavailable];return {okay:true,recipe:cleaned};}};
+ vm.createContext(ctx);vm.runInContext(source.slice(a,b),ctx);
+ assert.equal(await vm.runInContext('saveStudio()',ctx),true);
+ assert.equal(ctx.studioDirty,false);
+ assert.equal(ctx.studioDraft.task_overrides[unavailable],undefined);
+ assert.equal(ctx.studioData.recipe.task_overrides[unavailable],undefined);
+ assert.match(els['studio-status'].textContent,/页面参数已同步/);
+ assert(queue.includes("throw Error($('studio-status').textContent||'参数同步失败，请检查页面输入。')"));
+ console.log('CURRENT_TASK_UI_OK: synced unavailable task edits discarded by server response; actual backend error text retained');
+})().catch(e=>{console.error(e);process.exitCode=1});

@@ -1,0 +1,289 @@
+//! Joint ordering and fallback HOME for self-trained HD1910 deployments.
+//! Each policy obtains its exact HOME from its exported deployment contract.
+//! Per-robot encoder zeros, signs and limits come from the installed calibration.
+
+/// Left leg (5) · neck/head/mouth (5) · right leg (5).
+pub const NUM_JOINTS: usize = 15;
+
+/// Dynamixel IDs, indexed as [`JOINT_NAMES`].
+pub const JOINT_IDS: [u8; NUM_JOINTS] = [
+    20, 21, 22, 23, 24, // left leg
+    30, 31, 32, 33, 34, // neck, head, mouth
+    10, 11, 12, 13, 14, // right leg
+];
+
+/// Joint names, from the protocol crate — the wire indexes `joints` and `targets`
+/// positionally, so that order and this one cannot be allowed to drift apart. The
+/// assertion below is what makes "cannot" true.
+pub use duck_ipc_proto::JOINT_NAMES;
+
+const _: () = assert!(JOINT_NAMES.len() == NUM_JOINTS);
+
+/// The mouth is absent from every alpha policy — they are all 61-D observation, 14-action,
+/// and the action vector skips this index. Named so that omission is deliberate rather
+/// than an off-by-one someone has to rediscover.
+pub const MOUTH_INDEX: usize = 9;
+
+/// Mouth travel, radians: closed and fully open. The alpha reuses the v1.6 range,
+/// −5°..+30°, from `microduck_runtime`'s `variant.rs`.
+///
+/// The mouth is not part of any policy — every alpha network is 14 actions with this joint
+/// skipped — so these two numbers and [`mouth_target`] are the whole of mouth control.
+pub const MOUTH_CLOSED: f64 = -5.0 * std::f64::consts::PI / 180.0;
+pub const MOUTH_OPEN: f64 = 30.0 * std::f64::consts::PI / 180.0;
+
+/// Joint angle for a mouth opening fraction. 0 is closed, 1 is fully open; anything outside
+/// is clamped rather than fed to a servo as an out-of-travel target.
+pub fn mouth_target(open: f64) -> f64 {
+    let open = if open.is_finite() {
+        open.clamp(0.0, 1.0)
+    } else {
+        0.0
+    };
+    MOUTH_CLOSED + open * (MOUTH_OPEN - MOUTH_CLOSED)
+}
+
+/// The `imu_to_dxl` v2 board's Dynamixel ID. It rides the motor bus and is read in the
+/// same transaction as the servos ([`crate::bus`]).
+pub const IMU_DXL_ID: u8 = 200;
+
+pub const BAUD_RATE: u32 = 1_000_000;
+
+/// What a servo answers as out of the box: ID 1 at 57 600 baud. Both are deliberately unused
+/// on this bus — no joint is ID 1 and nothing runs at that speed — which is what lets a
+/// replacement be told apart from every servo already fitted ([`crate::bus`]).
+pub const FACTORY_ID: u8 = 1;
+pub const FACTORY_BAUD_RATE: u32 = 57_600;
+
+/// EEPROM registers asserted (and corrected) at startup.
+///
+/// `return_delay_time` is the load-bearing one: the XL330 ships at 250, which is 500 µs of
+/// turnaround *per device*. Across 16 devices that is 8 ms per tick — 40% of a 20 ms budget
+/// — spent waiting for servos to get around to answering. The rest are here because the
+/// runtime found them worth pinning.
+///
+/// `shutdown = 52` is `0b110100` — overload, electrical shock, overheating — with the
+/// input-voltage bit **clear**, where the factory's 53 sets it. That bit is what clears torque
+/// once the supply passes the servo's `Max Voltage Limit`, which nothing here writes and which
+/// therefore stays at its default 7.0 V. A charged 2S pack sits above that, so the clear bit is
+/// the reason fifteen servos do not latch themselves off a fully charged battery. Read as
+/// "latches on input-voltage faults" it says the opposite of what it does.
+pub const EXPECTED_REGISTERS: &[(&str, u8)] = &[
+    ("return_delay_time", 0),
+    ("baud_rate", 3), // 3 = 1 Mbps, must agree with BAUD_RATE
+    ("pwm_slope", 255),
+    ("shutdown", 52),
+];
+
+/// `homing_offset` on the knees, in raw position counts (0.088° each, so −45°).
+///
+/// Every other joint is at 0. The value is `microduck_runtime`'s `setup_motor_rpi.py`, the
+/// flashing rig every servo on a built robot went through, so [`DEFAULT_POSITION`] and every
+/// policy assume it. A servo straight from the box arrives at 0, so a knee adopted without this
+/// reads and drives 45° off, with nothing in the journal to say why.
+pub const KNEE_HOMING_OFFSET: i32 = -512;
+
+/// Right and left knee: the only joints whose `homing_offset` is not 0.
+pub const KNEE_IDS: [u8; 2] = [13, 23];
+
+/// The `homing_offset` a servo should hold, asserted alongside [`EXPECTED_REGISTERS`]. It is
+/// kept apart from them because it is an `i32` and differs per joint.
+pub fn homing_offset(id: u8) -> i32 {
+    if KNEE_IDS.contains(&id) {
+        KNEE_HOMING_OFFSET
+    } else {
+        0
+    }
+}
+
+/// Index of a joint by name. Linear scan over 15 entries, used at startup and in tests.
+pub fn joint_index(name: &str) -> Option<usize> {
+    JOINT_NAMES.iter().position(|n| *n == name)
+}
+
+// ── battery ──────────────────────────────────────────────────────────────────
+//
+// There is no fuel gauge and no ADC. The only measurement available is what the servos
+// report as their own supply (`crate::bus::DynamixelIo::bus_voltage`), which is the pack
+// seen through the bus — so it sags under load and recovers when the robot stands still.
+// That is why the span below is *usable-under-load*, not the cell chemistry's range.
+//
+// The span is a statement about the *rail*, and it holds because that rail is the pack: the
+// servos are fed the 2S battery, not a regulated 5 V. A servo on a bench supply reads its own
+// supply voltage like any other, so 5 V lands under `BATTERY_EMPTY_V` and maps to 0% — the
+// mapping working as defined rather than a fault to chase. Anything that regulates the servo
+// rail has to move these two constants with it.
+
+/// Off a full charge, under load. NP-F550, 2S Li-ion.
+pub const BATTERY_FULL_V: f64 = 8.2;
+
+/// The sag floor: below this the robot starts struggling, well before the pack's own
+/// protection trips. Empty for our purposes, not empty for the cells'.
+pub const BATTERY_EMPTY_V: f64 = 6.6;
+
+/// Fraction of a pack, 0–100, for a bus voltage.
+///
+/// Linear, and the numbers come from `microduck_runtime`'s `check_battery`, where they were
+/// arrived at by running a duck flat. It lives here rather than in `robotd` so there is one
+/// mapping: the prototype had it in a CLI *and* re-derived in the app, which is how two
+/// screens end up disagreeing about the same pack.
+///
+/// A non-finite or non-positive reading is 0 — those mean "no answer from the bus", and the
+/// caller is expected to report that as unknown rather than to display this number.
+pub fn battery_percent(volts: f64) -> f64 {
+    if !volts.is_finite() || volts <= 0.0 {
+        return 0.0;
+    }
+    ((volts - BATTERY_EMPTY_V) / (BATTERY_FULL_V - BATTERY_EMPTY_V)).clamp(0.0, 1.0) * 100.0
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The three tables are indexed by the same integer everywhere in the crate. If they
+    /// ever diverge in length, every lookup silently reads the wrong joint.
+    #[test]
+    fn tables_agree_on_length() {
+        assert_eq!(JOINT_IDS.len(), NUM_JOINTS);
+        assert_eq!(JOINT_NAMES.len(), NUM_JOINTS);
+        assert_eq!(DEFAULT_POSITION.len(), NUM_JOINTS);
+    }
+
+    /// A duplicated Dynamixel ID makes a `sync_read` return blocks that cannot be matched
+    /// back to joints, and a `sync_write` command two joints at once. Both fail in ways
+    /// that look like a wiring fault.
+    #[test]
+    fn ids_are_unique() {
+        let mut seen = JOINT_IDS;
+        seen.sort_unstable();
+        seen.windows(2)
+            .for_each(|w| assert_ne!(w[0], w[1], "duplicate Dynamixel ID {}", w[0]));
+    }
+
+    /// The IMU board shares the bus with the servos, so its ID must not collide with one.
+    #[test]
+    fn imu_id_does_not_collide_with_a_joint() {
+        assert!(!JOINT_IDS.contains(&IMU_DXL_ID));
+    }
+
+    /// The replacement path finds a new servo by the ID it ships with. If a joint ever took
+    /// ID 1, a fresh servo would be indistinguishable from it — and flashing "the missing
+    /// joint" onto ID 1 would re-address a servo that was never missing.
+    #[test]
+    fn factory_defaults_are_unused_on_the_bus() {
+        assert!(!JOINT_IDS.contains(&FACTORY_ID));
+        assert_ne!(IMU_DXL_ID, FACTORY_ID);
+        assert_ne!(FACTORY_BAUD_RATE, BAUD_RATE);
+    }
+
+    /// `shutdown` is the one register whose *bits* are the decision rather than the number:
+    /// the input-voltage bit is cleared on purpose, and that is what lets the pack's range run
+    /// across a servo rated to 6.0 V. The factory default is 53 — one bit away — so a later
+    /// edit that "restores the default" should meet a test rather than a comment.
+    #[test]
+    fn the_shutdown_mask_clears_the_input_voltage_bit() {
+        let want = EXPECTED_REGISTERS
+            .iter()
+            .find(|(n, _)| *n == "shutdown")
+            .map(|&(_, v)| v)
+            .expect("shutdown is an expected register");
+        const OVERLOAD: u8 = 1 << 5;
+        const ELECTRICAL_SHOCK: u8 = 1 << 4;
+        const OVERHEATING: u8 = 1 << 2;
+        const INPUT_VOLTAGE: u8 = 1 << 0;
+        assert_eq!(
+            want,
+            OVERLOAD | ELECTRICAL_SHOCK | OVERHEATING,
+            "the three faults worth latching on, with input-voltage clear"
+        );
+        assert_eq!(want & INPUT_VOLTAGE, 0);
+    }
+
+    /// The knee IDs are positional facts about [`JOINT_IDS`]; a renumbering that moved them
+    /// would put the offset on a hip.
+    #[test]
+    fn only_the_knees_have_a_homing_offset() {
+        for (i, &id) in JOINT_IDS.iter().enumerate() {
+            let want = if JOINT_NAMES[i].ends_with("_knee") {
+                KNEE_HOMING_OFFSET
+            } else {
+                0
+            };
+            assert_eq!(homing_offset(id), want, "{}", JOINT_NAMES[i]);
+        }
+    }
+
+    /// `MOUTH_INDEX` is used to skip a slot when mapping 14 policy actions onto 15 joints.
+    /// Pointing it at the wrong joint would shift every action after it by one.
+    #[test]
+    fn mouth_index_names_the_mouth() {
+        assert_eq!(JOINT_NAMES[MOUTH_INDEX], "mouth");
+        assert_eq!(joint_index("mouth"), Some(MOUTH_INDEX));
+    }
+
+    /// The ends of the span and the middle of it. Getting the direction wrong here would
+    /// report a full pack as flat, which is the kind of thing nobody double-checks.
+    #[test]
+    fn battery_percent_spans_the_usable_range() {
+        assert_eq!(battery_percent(BATTERY_FULL_V), 100.0);
+        assert_eq!(battery_percent(BATTERY_EMPTY_V), 0.0);
+        assert!((battery_percent(7.4) - 50.0).abs() < 0.001);
+    }
+
+    /// Voltages outside the span are ordinary — a fresh pack reads over 8.2 V off the
+    /// charger, and a robot being run into the ground reads under 6.6 V. Neither may
+    /// produce a percentage outside 0–100 for a caller to display.
+    #[test]
+    fn battery_percent_clamps_rather_than_extrapolating() {
+        assert_eq!(battery_percent(9.5), 100.0);
+        assert_eq!(battery_percent(5.0), 0.0);
+    }
+
+    /// A bus that did not answer arrives here as 0.0, and NaN is what a mean over an empty
+    /// set produces. Both must be 0 rather than a wild number a caller might print.
+    #[test]
+    fn battery_percent_treats_no_reading_as_zero() {
+        assert_eq!(battery_percent(0.0), 0.0);
+        assert_eq!(battery_percent(f64::NAN), 0.0);
+        assert_eq!(battery_percent(-1.0), 0.0);
+    }
+
+    /// The mouth range is the prototype's: −5° closed, +30° open. A fraction outside 0..1
+    /// (or a NaN from a broken client) must clamp rather than command a servo past travel.
+    #[test]
+    fn mouth_target_spans_the_prototype_range() {
+        assert!((mouth_target(0.0) - (-5.0f64.to_radians())).abs() < 1e-12);
+        assert!((mouth_target(1.0) - 30.0f64.to_radians()).abs() < 1e-12);
+        assert_eq!(mouth_target(-3.0), mouth_target(0.0));
+        assert_eq!(mouth_target(7.0), mouth_target(1.0));
+        assert_eq!(mouth_target(f64::NAN), mouth_target(0.0));
+    }
+
+    /// The legs are mirrored: the roll/pitch/ankle pairs are equal and opposite. A sign
+    /// typo in the home pose is invisible by inspection and makes the robot stand crooked.
+    #[test]
+    fn home_pose_legs_are_mirrored() {
+        for (left, right) in [
+            ("left_hip_roll", "right_hip_roll"),
+            ("left_hip_pitch", "right_hip_pitch"),
+            ("left_knee", "right_knee"),
+            ("left_ankle", "right_ankle"),
+        ] {
+            let l = DEFAULT_POSITION[joint_index(left).unwrap()];
+            let r = DEFAULT_POSITION[joint_index(right).unwrap()];
+            assert!(
+                (l + r).abs() < 1e-9,
+                "{left} ({l}) and {right} ({r}) should be equal and opposite"
+            );
+        }
+    }
+}
+
+/// Default self-trained Home for diagnostics; motion Home is loaded from the selected export contract.
+pub const DEFAULT_POSITION: [f64; NUM_JOINTS] = {
+    [
+        0.0, -0.0873, -0.4579, -0.0049, 0.453, 0.3491, 0.3491, 0.0, 0.0, 0.0, 0.0, 0.0873, 0.4579,
+        0.0049, -0.453,
+    ]
+};

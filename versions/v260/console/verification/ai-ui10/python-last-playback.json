@@ -1,0 +1,8 @@
+{
+  "tests_run": 4,
+  "passed": 4,
+  "failures": 0,
+  "errors": 0,
+  "elapsed_seconds": 2.387,
+  "scope": "final playback close including quick mute/unmute during drain"
+}

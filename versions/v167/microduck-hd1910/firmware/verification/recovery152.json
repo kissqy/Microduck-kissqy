@@ -1,0 +1,124 @@
+{
+  "console_version": "1.0.152",
+  "service_build": "1fa8438-feetech-ft6-control.32",
+  "tests": {
+    "native_startup": {
+      "passed": 29,
+      "failed": 0,
+      "commands": [
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "startup",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "cold_reopen",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "reopened_uart",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "r17_empty_snapshot",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "duck-control",
+            "--lib",
+            "--frozen",
+            "hd1910_transport_tests",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "log": "verification/native-tests152-final.log"
+    },
+    "python": {
+      "startup_and_service": 41,
+      "diagnostic": 4,
+      "gamepad_repair": 18,
+      "console_regression": 27,
+      "failed": 0
+    },
+    "frontend": [
+      "startup_error_and_diagnostic_download",
+      "gamepad_repair"
+    ],
+    "syntax": [
+      "changed Python modules",
+      "changed JavaScript modules",
+      "service.sh"
+    ],
+    "arm64_build": {
+      "exit_code": 0,
+      "target": "aarch64-unknown-linux-gnu.2.31",
+      "source_sha256_unchanged": true,
+      "robotd_sha256": "c266fa6d3127e164c7d8d9be11ceac5d9ff72cf565ec37877d6d024cf2101e31"
+    },
+    "hardware": {
+      "tested": false,
+      "temperature_verified": false,
+      "reboot_verified": false
+    }
+  },
+  "old_same_uart_five_attempts_removed": true,
+  "startup_max_uart_opens": 2,
+  "no_new_steady_state_work": true,
+  "hardware_tested": false,
+  "evidence": {
+    "failed_startup": "All 15 servo torque readback responses missing; ticks=0 before IMU identity read",
+    "later_old_build": "Same control.31 build later reported ready IMU and approximately 50 Hz",
+    "inference": "Prioritize UART/startup state; specific kernel/radio root cause is not established",
+    "ssh_failure": "Requires kernel/network evidence; not declared fixed by the UART change"
+  }
+}

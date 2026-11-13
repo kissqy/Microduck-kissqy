@@ -1,0 +1,14 @@
+Looking in links: /tmp/r17-toolchain-downloads/wheels
+Processing /tmp/r17-toolchain-downloads/wheels/onnx-1.23.2-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+Processing /tmp/r17-toolchain-downloads/wheels/onnxruntime-1.28.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+Processing /tmp/r17-toolchain-downloads/wheels/ziglang-0.14.1-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl
+Processing /tmp/r17-toolchain-downloads/wheels/numpy-2.5.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (from onnx==1.23.2)
+Processing /tmp/r17-toolchain-downloads/wheels/protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl (from onnx==1.23.2)
+Processing /tmp/r17-toolchain-downloads/wheels/typing_extensions-4.16.0-py3-none-any.whl (from onnx==1.23.2)
+Processing /tmp/r17-toolchain-downloads/wheels/ml_dtypes-0.6.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (from onnx==1.23.2)
+Processing /tmp/r17-toolchain-downloads/wheels/flatbuffers-25.12.19-py2.py3-none-any.whl (from onnxruntime==1.28.0)
+Processing /tmp/r17-toolchain-downloads/wheels/packaging-26.3-py3-none-any.whl (from onnxruntime==1.28.0)
+Installing collected packages: flatbuffers, ziglang, typing_extensions, protobuf, packaging, numpy, onnxruntime, ml_dtypes, onnx
+
+Successfully installed flatbuffers-25.12.19 ml_dtypes-0.6.0 numpy-2.5.3 onnx-1.23.2 onnxruntime-1.28.0 packaging-26.3 protobuf-7.36.2 typing_extensions-4.16.0 ziglang-0.14.1
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.

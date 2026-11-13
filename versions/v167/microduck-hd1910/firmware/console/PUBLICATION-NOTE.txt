@@ -1,0 +1,7 @@
+Microduck R17 V167 / control.43
+
+更新：修复鸭身抖动的问题。
+
+当前固件：1fa8438-feetech-ft6-control.43。完整中控 ZIP 与独立固件按交付包原样提供。系统镜像 R1 仍预装 control.40，需通过 V167 中控安装随包固件升级。
+
+源码整理：重复二进制由 prepare-V167.py 校验并恢复，详见 ../BUILDING-V167.md。

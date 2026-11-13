@@ -19,7 +19,7 @@
 
 ## Microduck 飞特 HD1910 版需要下载什么？
 
-普通使用先下载[系统镜像 R2](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)和[机器人中控 V260](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md)。训练自己的动作时，再下载训练中控 R1.5.27。下载统一见[首页下载区](../README.md#下载与版本)。
+普通使用先下载[系统镜像 R2](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)和[机器人中控 V260](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)。训练自己的动作时，再下载训练中控 R1.5.27。下载统一见[首页下载区](../README.md#下载与版本)。
 
 R2 镜像已预装 V260 / control.102，使用配套 V260 中控。旧系统需要本版功能时，可通过 V260 中控安装本版随包固件；不要交给 V167 中控导入。[R1 历史镜像](releases/public-image-r1.md)与 V167 / control.43 已验证基线保留，新版发布不替代原有实机 Known-Good 记录。
 
@@ -27,7 +27,7 @@ R2 开机先等待网卡和网络服务就绪，再尝试已保存的 Wi-Fi；�
 
 ## 在线中控演示能连接我的鸭子吗？
 
-不能。GitHub Pages 上的机器人中控和训练中控是模拟数据演示，用于预览界面。控制实机需要完整解压机器人中控并在本地启动，再填写 ZERO 的 SSH 地址与登录信息。见[V260 发布与使用说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md)。
+不能。GitHub Pages 上的机器人中控和训练中控是模拟数据演示，用于预览界面。控制实机需要完整解压机器人中控并在本地启动，再填写 ZERO 的 SSH 地址与登录信息。见[V260 发布与使用说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)。
 
 ## 刷了 ZERO 镜像，为什么 IMU 还需要烧录？
 
@@ -45,7 +45,7 @@ SSH 超时本身不能证明一定是无线干扰；仍需结合 ZERO 是否重�
 
 ## 舵机动作方向或姿势不对，可以直接复制作者标定吗？
 
-不能直接照搬。每只机器人都要核对零位、方向、限位和 IMU 安装。先比较中控关节反馈、机械实际运动与标定，再启用模型；不要用增大力度来掩盖方向或机械装配错误。以[V260 发布说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md)、随包使用说明和本机提示为操作依据；[V167 历史指南](../microduck-hd1910/firmware/console/README.zh-CN.md)用于旧版对照。
+不能直接照搬。每只机器人都要核对零位、方向、限位和 IMU 安装。先比较中控关节反馈、机械实际运动与标定，再启用模型；不要用增大力度来掩盖方向或机械装配错误。以[V260 发布说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)、随包使用说明和本机提示为操作依据；[V167 历史指南](../microduck-hd1910/firmware/console/README.zh-CN.md)用于旧版对照。
 
 ## HAT 和 IMU 有哪些接口版本？
 

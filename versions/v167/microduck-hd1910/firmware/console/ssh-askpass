@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+"""OpenSSH callback: login uses its own pipe, leaving RPC stdin untouched."""
+import os
+import sys
+password = os.environ.get('MICRODUCK_SSH_PASSWORD')
+if not password:
+    sys.exit(1)
+sys.stdout.buffer.write(password.encode('utf-8') + b'\n')

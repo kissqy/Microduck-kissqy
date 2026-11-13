@@ -1,0 +1,1 @@
+PASS commissioning and motion use identical green shutdown feedback; expected disconnection keeps it green

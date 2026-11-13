@@ -1,0 +1,51 @@
+{
+  "exit_code": 0,
+  "runs": [
+    {
+      "log": "process-lifecycle156.log",
+      "log_sha256": "b066b6eaace358bd484481efede0d9e9ca87db80c56285db2e603158789572c9",
+      "exit_code": 0,
+      "passed": 12,
+      "kind": "unittest"
+    },
+    {
+      "log": "python-connection156.log",
+      "log_sha256": "bf0318c0b9d8bbb900b7e8c28b3516a747fdb279508befeaa3cc438af859fa22",
+      "exit_code": 0,
+      "passed": 15,
+      "kind": "unittest"
+    },
+    {
+      "log": "python-console-exit156.log",
+      "log_sha256": "59125791e419432ebbf6517a273c3f2ddee3f0d9208526a09c86112f283fc206",
+      "exit_code": 0,
+      "passed": 3,
+      "kind": "unittest"
+    },
+    {
+      "log": "python-transport156.log",
+      "log_sha256": "ce6d37b0509f57ed231aff5101f2644cccda13a1a02e4b2da6fadcf576e15269",
+      "exit_code": 0,
+      "passed": 9,
+      "kind": "unittest"
+    },
+    {
+      "log": "python-identity156.log",
+      "log_sha256": "cb10a8cdf795303d2ffc333b172086db5b2245a31078f1ed23d8a46c19c3e773",
+      "exit_code": 0,
+      "passed": 1,
+      "kind": "unittest"
+    },
+    {
+      "log": "real-console-exit156.json",
+      "log_sha256": "0fd0678d940b51179369df521d59960aa6d188e6c0873c30c41cae8966a6285d",
+      "exit_code": 0,
+      "passed": 1,
+      "kind": "Linux real console subprocess"
+    }
+  ],
+  "passed": 41,
+  "windows_native_tested": false,
+  "robot_hardware_tested": false,
+  "direction_changed": false
+}

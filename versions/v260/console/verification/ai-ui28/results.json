@@ -1,0 +1,89 @@
+{
+  "release": "V208_control.V73_AI-T1_UI28",
+  "python_ai_tests": {
+    "tests": 196,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 196,
+    "success": true
+  },
+  "frontend": [
+    {
+      "passed": true,
+      "scope": "UI21 grouped catalogs, per-axis range display, per-question images and TOF, late preview isolation, bounded scrolling"
+    },
+    {
+      "passed": true,
+      "scope": "UI24 live speech checkbox, no optimistic state, pending on/off, Zero ACK and ASR sync, old HTTP/status/event rejection, error retains confirmed state, no second mute or task switch"
+    },
+    {
+      "passed": true,
+      "scope": "UI25 shared compact credential grid, bounded question input, no obsolete 1200px gap, unique control IDs, hidden empty visual output, model-wait busy state and model completion text"
+    },
+    {
+      "passed": true,
+      "scope": "rehearsal composer, preset draft, explicit task send and clear, waiting for provider ACK; no action request from text"
+    },
+    {
+      "passed": true,
+      "scope": "live microphone bars; retained credentials and editing; Chinese skills; multi-turn chat; vision busy/error/preview/source labels; measured brightness, exposure warning and next-capture reset"
+    },
+    {
+      "passed": true,
+      "scope": "real ControlPanel and PadControls; identical Start frames; one click one press/release; HOME then hold labels from readback; disabled during takeover/maintenance/offline; keyboard repeat; suspend reset; no automatic commands"
+    },
+    {
+      "passed": true,
+      "scope": "exact native PCM WAV, 24k mono16, per-window RAM, no autoplay/persistence, explicit replay/stop/end, sequence gaps, memory eviction, URL revocation and pagehide cleanup"
+    }
+  ],
+  "changed_inherited_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_action_gate.py",
+    "ai_persona.py",
+    "ai_runtime.py",
+    "release_identity.py",
+    "static/index.html"
+  ],
+  "new_behavior_tests": 0,
+  "normal_model_context_and_tools_independent_of_hat_permission": true,
+  "checkbox_or_final_asr_unlock_sends_cloud_session_update": false,
+  "language_pcm_blocked_only_in_existing_zero_playback_path": true,
+  "model_text_local_replay_and_native_expression_wav_retained": true,
+  "asr_question_scripts_a_gesture": false,
+  "task_delivery_and_doubao_worker_identical_to_ui27": true,
+  "general_body_interaction_rules_independent_of_task_and_hat_permission": true,
+  "model_context_proof": {
+    "no_task": true,
+    "saved_custom_persona_retained": true,
+    "body_interaction_rules_present": true,
+    "model_payload_identical_with_hat_audio_on_off": true,
+    "named_yes_expression_in_real_logged_catalog": true,
+    "all_action_names_from_logged_catalog": [
+      "sad",
+      "devastated",
+      "curious",
+      "mmh",
+      "yes",
+      "yes_fast",
+      "no",
+      "angry",
+      "excited",
+      "laugh",
+      "mock",
+      "defiant",
+      "impatient"
+    ],
+    "building_context_executes_no_robot_commands": true,
+    "live_model_choice_tested": false,
+    "instructions_sha256": "0ebe09b9af952f0479b77ef15fb4063df683726d797bfa65d2a37a8869e66f2a"
+  },
+  "live_model_semantic_action_selection_tested": false,
+  "firmware_bytes_identical_to_ui27": true,
+  "source_ui27_zip_sha256": "a53b377332b977bdc69fd78e35104901cdf1aea8ffeea03a147353d95d6e7bf4",
+  "firmware_sha256": "1b7376621ea40994edffcea48be9c9a4bd7bc42a19388bacdce827a0dbcab99e",
+  "hardware_tested": false,
+  "windows_tested": false
+}

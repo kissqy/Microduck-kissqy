@@ -1,0 +1,18 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.14s
+     Running unittests src/lib.rs (/workspace/scratch/5a402859beee/build-tools/host-target/debug/deps/mediad-fa1679039793f28d)
+
+running 11 tests
+test pipeline::tests::a_capture_that_never_comes_is_not_a_stale_frame ... ok
+test pipeline::tests::a_frame_nobody_asked_for_is_not_captured ... ok
+test pipeline::tests::a_line_without_a_type_is_counted_as_unparsed_and_not_as_absent ... ok
+test pipeline::tests::a_quarter_turn_swaps_the_frame_size ... ok
+test pipeline::tests::a_reader_gets_a_frame_from_the_running_pipeline ... ok
+test pipeline::tests::a_reader_gets_the_capture_that_answered_it ... ok
+test pipeline::tests::clockwise_is_90r_and_identity_is_nothing_at_all ... ok
+test pipeline::tests::every_candidate_type_is_counted_as_itself ... ok
+test pipeline::tests::only_right_angles_are_accepted ... ok
+test pipeline::tests::the_prefix_is_not_what_locates_the_type ... ok
+test pipeline::tests::two_readers_asking_at_once_cost_one_capture ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 120 filtered out; finished in 0.50s
+

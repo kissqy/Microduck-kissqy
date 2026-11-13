@@ -1,0 +1,45 @@
+{
+  "console_version": "1.0.157-Fix7",
+  "service_build": "1fa8438-feetech-ft6-control.36",
+  "release_baseline": "Microduck-Source-R17-v1.0.157-Fix6",
+  "firmware_reinstall_required": false,
+  "firmware_archive_byte_identical": true,
+  "firmware_sha256": "657c22814fea6038feb34a3d776bf4756969abc405388a51d7c8db54b930c51a",
+  "native_sources_unchanged": true,
+  "installed_payloads_unchanged": true,
+  "javascript_and_backend_logic_unchanged": true,
+  "recording_controls_in_topbar": true,
+  "ssh_shared_health_grid": true,
+  "desktop_wide_screen_zero_temperature_bounds_match": true,
+  "narrow_screen_ssh_spans_multiple_columns": true,
+  "added_queries_or_polling": false,
+  "changed_console_files": [
+    "README.zh-CN.md",
+    "docs/releases/R157-Fix7.md",
+    "release_identity.py",
+    "static/index.html",
+    "static/r17-0151.css"
+  ],
+  "tests": {
+    "frontend_logic_scripts_passed": 2,
+    "runs": [
+      {
+        "name": "test_fix157pc",
+        "exit_code": 0,
+        "log": "verification/fix7-test_fix157pc.log",
+        "sha256": "202e15d884c067ab28d84a5ebbac80a801bcf4bfab23b14779c242cd6f2cfe39"
+      },
+      {
+        "name": "test_connection_ui155",
+        "exit_code": 0,
+        "log": "verification/fix7-test_connection_ui155.log",
+        "sha256": "c4e74d103b7bf3bdf8911844ea8ee4b148a598dce1ac1c3f68dcf84a29e4ad45"
+      }
+    ],
+    "dom_structure_and_unique_ids_verified": true,
+    "shared_grid_tracks_verified": true,
+    "browser_pixel_rendered": false,
+    "robot_hardware_tested": false,
+    "native_suite_rerun": false
+  }
+}

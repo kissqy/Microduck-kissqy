@@ -1,0 +1,9 @@
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.149/robotd)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.11s
+     Running unittests src/main.rs (/tmp/r17-native-host150/debug/deps/robotd-f49d995f2c66543e)
+
+running 1 test
+test raw_stream::tests::lazy_bus_rpc_preserves_snapshot_fields_without_streaming ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 254 filtered out; finished in 0.03s
+

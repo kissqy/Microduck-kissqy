@@ -1,0 +1,96 @@
+{
+  "label": "V200_control.V71 AI-T1 UI6",
+  "input_archive": "Microduck-Console-R17-V200_control.V71_AI-T1_UI5.zip",
+  "input_sha256": "dfd5e99099ec624d11b8370ca5cf39bcc233957182f242ccc202b617fb448f5e",
+  "user_log": "AI-Dialogue-20261023-233834.jsonl",
+  "user_log_sha256": "96b19929574a6b934d5c8547aea0c805b08fe48078b005156381170c9e5919d9",
+  "user_log_findings": {
+    "provider_connect_attempts": 1,
+    "asr_final": "你好。",
+    "attempted_actions": [
+      "sit_down",
+      "perform_skill(sit_toggle)",
+      "stay_silent"
+    ],
+    "motion_accepted": false,
+    "exact_readiness_blocker_in_old_log": "not recorded",
+    "session_stopped_by_locked_text": true,
+    "stdin_daemon_fatal_shutdown": true
+  },
+  "old_shutdown_reproduced": {
+    "returncode": -6,
+    "error": "_enter_buffered_busy / stdin BufferedReader"
+  },
+  "python_tests": {
+    "run": 51,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 51,
+    "duration_seconds": 5.137
+  },
+  "frontend_panel_passed": true,
+  "html_structure_checked": true,
+  "browser_render_verified": false,
+  "browser_render_limitation": "No installed Chromium; the supported browser download endpoint was unavailable.",
+  "layout": {
+    "desktop_columns": 2,
+    "left": [
+      "03 IMU",
+      "04 ToF",
+      "05 odometry/system"
+    ],
+    "right": "AI, full column height",
+    "waveform_max_width_px": 300,
+    "strength_bar_max_width_px": 70,
+    "log_min_height_px": 420,
+    "stack_below_viewport_px": 900
+  },
+  "fixes": [
+    "Keep the session receiving after locked output is discarded; no audio playback",
+    "Stoppable stdin pipe reader and joined command/tool threads",
+    "Display the latest interim ASR hypothesis and authoritative final transcript",
+    "Preserve original motion readiness conditions and log the exact missing checks and readback",
+    "Live text updates above the log; final text and action events remain in the scroll area"
+  ],
+  "verified_byte_identical_to_ui5": [
+    "service_channel.py",
+    "service_rpc.py",
+    "ai_remote.py",
+    "ai_hat_audio.py",
+    "controls.py",
+    "static/control.js",
+    "release_identity.py",
+    "telemetry.py",
+    "service_data.py",
+    "start.cmd",
+    "start.command"
+  ],
+  "firmware_sha256": "6374b23464bcd8d2e221bd6ba3208dcab0eabcda932ed3f6cc20a5c5667fcbd2",
+  "firmware_byte_identical": true,
+  "speech_unlock_authorization_unchanged": true,
+  "automatic_home_or_policy_enable": false,
+  "console_audio_access": false,
+  "new_ssh_connections": 0,
+  "pcm_over_management_ssh": false,
+  "full_voice_action_loop_hardware_tested": false,
+  "ui6_doubao_online_tested": false,
+  "next_only_task": "Run UI6 on the user Zero after manual HOME and policy enable; inspect action feedback and any exact readiness blockers.",
+  "changed_from_ui5": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_action_gate.py",
+    "ai_doubao.py",
+    "ai_runtime.py",
+    "ai_zero.py",
+    "static/ai-panel.css",
+    "static/ai-panel.js",
+    "static/index.html",
+    "verification/test_ai_hat.mjs",
+    "verification/test_ai_hat.py",
+    "verification/test_ai_observability.py"
+  ],
+  "added_from_ui5": [
+    "verification/test_ai_session_ui6.py"
+  ]
+}

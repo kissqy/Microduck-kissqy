@@ -1,0 +1,3012 @@
+{
+  "schema": "microduck-training-audit-index/v1",
+  "release": "R1.5.27",
+  "training_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "runtime_revision": "1fa84386f07884e27866411bc1ba166977bced95",
+  "adapter_revision": "R1.5.26-no-ema",
+  "scope": "35 official baseline task reports; original 35-task evidence retained at docs/audit-0151/all-35-tasks-summary.json. ",
+  "tasks": [
+    {
+      "task": "Mjlab-VelStand-Flat-MicroDuck",
+      "role": "joint",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-VelStand-Flat-MicroDuck.json",
+      "report_file_sha256": "4ab79443a22fb72103e56b59de04f1915ccbc6c134a6792523620394c4b8765a",
+      "inspection_sha256": "4c4d62304657e94879f09d07228ac72e26e90f8603c8a04d85f2f34525db5c48",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": true,
+          "direct_import_verified": false,
+          "note": "任务通过 R148 白名单；图算子、合同、硬件等检查仍独立执行。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "vx / vy / yaw velocity",
+        "head": "neck pitch / head pitch / yaw / roll",
+        "body": "body pose command in official observation order"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-VelStand-Flat-Backlash-MicroDuck",
+      "role": "joint",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-VelStand-Flat-Backlash-MicroDuck.json",
+      "report_file_sha256": "967e6b078ffd49fa8850bd781d97246f977179346ad46de411c1648ae06f791e",
+      "inspection_sha256": "35bc1e925fd381abc75a853c272117aa42c3228a1aa0667c7f54d634585eb896",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "vx / vy / yaw velocity",
+        "head": "neck pitch / head pitch / yaw / roll",
+        "body": "body pose command in official observation order"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-VelStand-Rough-MicroDuck",
+      "role": "joint",
+      "hardware": "feet",
+      "terrain": "Rough",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-VelStand-Rough-MicroDuck.json",
+      "report_file_sha256": "a57226f18b61bfff39b7e79e4fdd6754556a5d49ade633591d3da9084f9f71b3",
+      "inspection_sha256": "ca3a4e13c1ec3a1f96dbbe2576e01b8263f3a6c7eaee6b9458939ce82b9f1418",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "vx / vy / yaw velocity",
+        "head": "neck pitch / head pitch / yaw / roll",
+        "body": "body pose command in official observation order"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+      "role": "joint",
+      "hardware": "feet",
+      "terrain": "Rough",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-VelStand-Rough-Backlash-MicroDuck.json",
+      "report_file_sha256": "4b73a8a898fde676bd1266d51edcaa9b8011dfceb98370eadcf7744a7fe241c9",
+      "inspection_sha256": "5c959ba1f698e3dad9a755bd16197c0634ce4a8b573ce2005c489b1b6ee3fb8a",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": true,
+          "direct_import_verified": false,
+          "note": "任务通过 R148 白名单；图算子、合同、硬件等检查仍独立执行。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "vx / vy / yaw velocity",
+        "head": "neck pitch / head pitch / yaw / roll",
+        "body": "body pose command in official observation order"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-SitStand-Flat-MicroDuck",
+      "role": "sitstand",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-SitStand-Flat-MicroDuck.json",
+      "report_file_sha256": "f6c96e2ad6e30785894e3ef4564bb4cd87e7584ac11c727da09f4f99adabd050",
+      "inspection_sha256": "98a0f8f1af25a0747858da623123472c5c0d396b77d4c7ab74dcf3c42e4526b8",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "sitstand",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "posture_flag",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "posture flag, not velocity",
+        "head": "official head pose command",
+        "body": "zeros",
+        "slot": "twist[0]",
+        "sit": 1,
+        "stand": 0
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-SitStand-Flat-Backlash-MicroDuck",
+      "role": "sitstand",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-SitStand-Flat-Backlash-MicroDuck.json",
+      "report_file_sha256": "56844b0595050b404da55cddde081fa97fd519650e0eb7be490ce9a9766677dc",
+      "inspection_sha256": "f3bbd6fea912f7072d01a458458848bc73a953ce0162e9da7983850711c535b2",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "sitstand",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "posture_flag",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "posture flag, not velocity",
+        "head": "official head pose command",
+        "body": "zeros",
+        "slot": "twist[0]",
+        "sit": 1,
+        "stand": 0
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-SitStand-Rough-MicroDuck",
+      "role": "sitstand",
+      "hardware": "feet",
+      "terrain": "Rough",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-SitStand-Rough-MicroDuck.json",
+      "report_file_sha256": "d1a8862fc849f1a472331b129f21000e793be62815488cf425d96d8f4429bc27",
+      "inspection_sha256": "a8fec4a8a27d1d32db2b2ef73fcb03551d3136979d2a3fffb73108475b90db60",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "sitstand",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "posture_flag",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "posture flag, not velocity",
+        "head": "official head pose command",
+        "body": "zeros",
+        "slot": "twist[0]",
+        "sit": 1,
+        "stand": 0
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-SitStand-Rough-Backlash-MicroDuck",
+      "role": "sitstand",
+      "hardware": "feet",
+      "terrain": "Rough",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-SitStand-Rough-Backlash-MicroDuck.json",
+      "report_file_sha256": "4ef28c2a4be5d8878e362a2797edf4840f1553c153a530bddfb21de2e45b5b31",
+      "inspection_sha256": "614c459bd78046cd9b03817a5d4bc5060fd749ff28458f32d0b17def1bb5cf0a",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "sitstand",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "posture_flag",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "posture flag, not velocity",
+        "head": "official head pose command",
+        "body": "zeros",
+        "slot": "twist[0]",
+        "sit": 1,
+        "stand": 0
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-GroundPick-Flat-MicroDuck",
+      "role": "ground_pick",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-GroundPick-Flat-MicroDuck.json",
+      "report_file_sha256": "5abd74c2d539ea99db07a35b1e76aa9290b80477d6f20b0992c2d6dfcb73dfaa",
+      "inspection_sha256": "5d6e72c32036951dabf1b0e24566d67f9fb06eefe444ab0334dec0bfbf24f307",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "ground_pick",
+          "support": "route_available",
+          "limitations": [
+            "同一 mode 只有一个 ground_pick 槽；只加载 ONNX 不会自动更新 period/end_phase，必须核对所选模型及相位配置。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": true,
+          "direct_import_verified": false,
+          "note": "任务通过 R148 白名单；图算子、合同、硬件等检查仍独立执行。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "phase",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "cos(2*pi*phase), sin(2*pi*phase), 0",
+        "head": "zeros",
+        "body": "zeros",
+        "period_s": 4.0,
+        "end_phase": 0.7,
+        "start_phase": 0.0,
+        "training_randomize_phase": true
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-GroundPick-Flat-Backlash-MicroDuck",
+      "role": "ground_pick",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-GroundPick-Flat-Backlash-MicroDuck.json",
+      "report_file_sha256": "e3be76838e2e12748e9e538629583bc6897054dbab3ec35c0814a23a6a40e986",
+      "inspection_sha256": "01689a500e13334db1c37b1e6164364aa36bbe748dedd6fd568ad288bf247eec",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "ground_pick",
+          "support": "route_available",
+          "limitations": [
+            "同一 mode 只有一个 ground_pick 槽；只加载 ONNX 不会自动更新 period/end_phase，必须核对所选模型及相位配置。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "phase",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "cos(2*pi*phase), sin(2*pi*phase), 0",
+        "head": "zeros",
+        "body": "zeros",
+        "period_s": 4.0,
+        "end_phase": 0.7,
+        "start_phase": 0.0,
+        "training_randomize_phase": true
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-GroundPick-Rough-MicroDuck",
+      "role": "ground_pick",
+      "hardware": "feet",
+      "terrain": "Rough",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-GroundPick-Rough-MicroDuck.json",
+      "report_file_sha256": "2be7dfc571b5a40f42567b6b5f9622fb1a1f22b7bc8d9d1d60706426d90c1ad2",
+      "inspection_sha256": "d4a3bfa3add4c428a8752da57df5873c2256c1e80cfbb9f1e42729e81061a9af",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "ground_pick",
+          "support": "route_available",
+          "limitations": [
+            "同一 mode 只有一个 ground_pick 槽；只加载 ONNX 不会自动更新 period/end_phase，必须核对所选模型及相位配置。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "phase",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "cos(2*pi*phase), sin(2*pi*phase), 0",
+        "head": "zeros",
+        "body": "zeros",
+        "period_s": 4.0,
+        "end_phase": 0.7,
+        "start_phase": 0.0,
+        "training_randomize_phase": true
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-GroundPick-Rough-Backlash-MicroDuck",
+      "role": "ground_pick",
+      "hardware": "feet",
+      "terrain": "Rough",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-GroundPick-Rough-Backlash-MicroDuck.json",
+      "report_file_sha256": "8858f52a1e763a0f10c757974ae83a64c1863cd06a4a21a29afd1a071d3cd8b4",
+      "inspection_sha256": "598493cdbae989df66cd682427fef0265c86cdeb22d256e401bdc7336dccb1ba",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "ground_pick",
+          "support": "route_available",
+          "limitations": [
+            "同一 mode 只有一个 ground_pick 槽；只加载 ONNX 不会自动更新 period/end_phase，必须核对所选模型及相位配置。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "phase",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "cos(2*pi*phase), sin(2*pi*phase), 0",
+        "head": "zeros",
+        "body": "zeros",
+        "period_s": 4.0,
+        "end_phase": 0.7,
+        "start_phase": 0.0,
+        "training_randomize_phase": true
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-BallKickLeft-Flat-MicroDuck",
+      "role": "kick_left",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-BallKickLeft-Flat-MicroDuck.json",
+      "report_file_sha256": "e649fc43ddd2c045407825acb4b63c8f7c336ced3838733e5274ff453b78d74e",
+      "inspection_sha256": "378ea9404061c3b4dcb74529a2049d0c9c8dc69d5ec0021645efdc992a11f34d",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "skill",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-BallKickLeft-Flat-Backlash-MicroDuck",
+      "role": "kick_left",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-BallKickLeft-Flat-Backlash-MicroDuck.json",
+      "report_file_sha256": "9cc6b65455fff7dc1f7a19f3f52685350ee0b4fda2647fd7228dbbb3a66aca65",
+      "inspection_sha256": "b6e9f4019b93d4e39a74bd08d14d572c42c5c8bc1344feb908391db2b9df8f40",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "skill",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-BallKick-Flat-MicroDuck",
+      "role": "kick_right",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-BallKick-Flat-MicroDuck.json",
+      "report_file_sha256": "4def6e54a505cc4df1ace40c877932d10f2012bbfae167310d939c032722e420",
+      "inspection_sha256": "3585b8c549a85391ff95723748d5dfaf56e36f8f74f8e1195929eab1b569a7e9",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "skill",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-BallKick-Flat-Backlash-MicroDuck",
+      "role": "kick_right",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-BallKick-Flat-Backlash-MicroDuck.json",
+      "report_file_sha256": "8a45b2439bfcfc320de0181ba21be7f0ffe85fe4764b8ad2435d30e45b0f7bfc",
+      "inspection_sha256": "cf3d3cbac79b5d9b01ada6c6e3536292b5e18d4f08e143e4bc950a2d9ed4414b",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "skill",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-Roulade-Flat-MicroDuck",
+      "role": "roulade",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-Roulade-Flat-MicroDuck.json",
+      "report_file_sha256": "f33c3b9e4973c690eb8470e2e2dd7557c0d68782d5426d393f23481dbe48d390",
+      "inspection_sha256": "47b40e99ba1658d1effed939329430ba2d4cc26c4c0d82bf7dd4205053ae3475",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "skill",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": true,
+          "direct_import_verified": false,
+          "note": "任务通过 R148 白名单；图算子、合同、硬件等检查仍独立执行。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-Velocity-Flat-MicroDuck",
+      "role": "walk",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-Velocity-Flat-MicroDuck.json",
+      "report_file_sha256": "827c7e76a3064ea65fcd5c8e12b3262d8697e378351d1cb538b709d91da53591",
+      "inspection_sha256": "112721dfa5d923aef4fd1f8cf7443c117f2a134bfb87ecad3e398e6150e13389",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "vx / vy / yaw velocity",
+        "head": "neck pitch / head pitch / yaw / roll",
+        "body": "body pose command in official observation order"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-Velocity-Flat-Backlash-MicroDuck",
+      "role": "walk",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-Velocity-Flat-Backlash-MicroDuck.json",
+      "report_file_sha256": "c50578b12a893a7a81bb014e4243bb60a5fea70a3c7a84601e745ceeeab1565f",
+      "inspection_sha256": "2389ab267628ccd6bb98d8f293bf6d7b893d05c213a3c28085ea756c4b71f069",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "vx / vy / yaw velocity",
+        "head": "neck pitch / head pitch / yaw / roll",
+        "body": "body pose command in official observation order"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-Velocity-Rough-MicroDuck",
+      "role": "walk",
+      "hardware": "feet",
+      "terrain": "Rough",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-Velocity-Rough-MicroDuck.json",
+      "report_file_sha256": "5e1bcef6b61ab68cc2c992f681a62b757542525116772862e8299835821764a2",
+      "inspection_sha256": "3c93af56b8d17dfcc33a4de065763a0a9d10a301bd2fcb02edd00464d5e7230c",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "vx / vy / yaw velocity",
+        "head": "neck pitch / head pitch / yaw / roll",
+        "body": "body pose command in official observation order"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-Velocity-Rough-Backlash-MicroDuck",
+      "role": "walk",
+      "hardware": "feet",
+      "terrain": "Rough",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-Velocity-Rough-Backlash-MicroDuck.json",
+      "report_file_sha256": "088c1976a3c3ea8c765de762a264d2d51517809388fc5d0463f3ecd677b8d83e",
+      "inspection_sha256": "315f9846a2709877ee0f59ae4eef4d5183c798e78a1250d7d5aa2cc24b57865a",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "route_available",
+          "limitations": []
+        },
+        "r148_importer": {
+          "task_allowlisted": true,
+          "direct_import_verified": false,
+          "note": "任务通过 R148 白名单；图算子、合同、硬件等检查仍独立执行。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "vx / vy / yaw velocity",
+        "head": "neck pitch / head pitch / yaw / roll",
+        "body": "body pose command in official observation order"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-StandUp-Flat-MicroDuck",
+      "role": "stand",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-StandUp-Flat-MicroDuck.json",
+      "report_file_sha256": "7c18f0d40a4fdfaea6a321c27ad0f499289aa1dbdef18dd3fd89ac505246beb6",
+      "inspection_sha256": "0d4fca48683fdb363b1ea602293ccddf3e1c1851d48fe438a7bd44ca0b1c6c89",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "teacher_only",
+          "support": "teacher_only",
+          "limitations": [
+            "倒地起身老师保留为联合训练/评估输入，不自动部署为原地保持 stand 策略。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": true,
+          "direct_import_verified": false,
+          "note": "任务通过 R148 白名单；图算子、合同、硬件等检查仍独立执行。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-StandUp-Flat-Backlash-MicroDuck",
+      "role": "stand",
+      "hardware": "feet",
+      "terrain": "Flat",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-StandUp-Flat-Backlash-MicroDuck.json",
+      "report_file_sha256": "856a93397f5eb591578f3f54f74622c3ef956e1bd6d3d8c1e7812e4d3fd083d1",
+      "inspection_sha256": "cae2c568f1d5b311b4f73c55e0e7057772afe238456a312a14efacc48b1304e4",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "teacher_only",
+          "support": "teacher_only",
+          "limitations": [
+            "倒地起身老师保留为联合训练/评估输入，不自动部署为原地保持 stand 策略。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-StandUp-Rough-MicroDuck",
+      "role": "stand",
+      "hardware": "feet",
+      "terrain": "Rough",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-StandUp-Rough-MicroDuck.json",
+      "report_file_sha256": "20f7b886a30ad2c21abb0cc2e5ee0db9ca80602269a728c40db209899e90c6b6",
+      "inspection_sha256": "7fbaf9a5f4f79217f628d51a193f252d0b35bb77b63eb1d44b23de3b0d01c80c",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "teacher_only",
+          "support": "teacher_only",
+          "limitations": [
+            "倒地起身老师保留为联合训练/评估输入，不自动部署为原地保持 stand 策略。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-StandUp-Rough-Backlash-MicroDuck",
+      "role": "stand",
+      "hardware": "feet",
+      "terrain": "Rough",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-StandUp-Rough-Backlash-MicroDuck.json",
+      "report_file_sha256": "4437c85195d22b4bdc008422d42fdad2a765881340e24c66fb09456a0353768f",
+      "inspection_sha256": "70a44fabab48d2b776bd99b336a5bc0cb8d98ec7c93ae41df54b150d222decdf",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.82,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "teacher_only",
+          "support": "teacher_only",
+          "limitations": [
+            "倒地起身老师保留为联合训练/评估输入，不自动部署为原地保持 stand 策略。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": true,
+          "direct_import_verified": false,
+          "note": "任务通过 R148 白名单；图算子、合同、硬件等检查仍独立执行。"
+        },
+        "requires_passive_roller_hardware": false,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-Velocity-Flat-MicroDuck-Rollers",
+      "role": "roller",
+      "hardware": "rollers",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-Velocity-Flat-MicroDuck-Rollers.json",
+      "report_file_sha256": "324d051a0b6a006a578d302f874b491044d77ebe3aab1dab005a8c7336c2e3ff",
+      "inspection_sha256": "e5afde2e5858f13f46379a8243d2409403104a7d16bc3d73f57d1b861cc286f4",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.8195864399999999,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "restricted_command_protocol",
+          "limitations": [
+            "冻结 robotd 不按模型屏蔽 head/body 或转换指令；调用端必须落实本合同中的命令限制。",
+            "x 是推进/滑行/刹车意图；y、yaw、head、body 必须为0。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": true,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "push/coast/brake, 0, 0 (not velocity tracking)",
+        "head": "zeros",
+        "body": "zeros",
+        "allowed_twist_ranges": {
+          "lin_vel_x": [
+            -0.5,
+            0.6
+          ],
+          "lin_vel_y": [
+            0.0,
+            0.0
+          ],
+          "ang_vel_z": [
+            0.0,
+            0.0
+          ],
+          "heading": null
+        }
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-Velocity-Flat-Backlash-MicroDuck-Rollers",
+      "role": "roller",
+      "hardware": "rollers",
+      "terrain": "Flat",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-Velocity-Flat-Backlash-MicroDuck-Rollers.json",
+      "report_file_sha256": "cf1cf8e4a1ae3907a5695e6883806ea7fda1af5d040dc08ba5ed25962c12a31f",
+      "inspection_sha256": "d0d17afef9f7de20778bb2d63503db77179fc45bfe5c3cee921705d097236c65",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.8195864399999999,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "restricted_command_protocol",
+          "limitations": [
+            "冻结 robotd 不按模型屏蔽 head/body 或转换指令；调用端必须落实本合同中的命令限制。",
+            "x 是推进/滑行/刹车意图；y、yaw、head、body 必须为0。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": true,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "push/coast/brake, 0, 0 (not velocity tracking)",
+        "head": "zeros",
+        "body": "zeros",
+        "allowed_twist_ranges": {
+          "lin_vel_x": [
+            -0.5,
+            0.6
+          ],
+          "lin_vel_y": [
+            0.0,
+            0.0
+          ],
+          "ang_vel_z": [
+            0.0,
+            0.0
+          ],
+          "heading": null
+        }
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-RollerCrouch-Flat-MicroDuck",
+      "role": "crouch",
+      "hardware": "rollers",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-RollerCrouch-Flat-MicroDuck.json",
+      "report_file_sha256": "a4f3735fa6b699dac16749fe69c435a64f6762d972e759ffa22bf0960e7bddb0",
+      "inspection_sha256": "d2f0dcf5a455621557267c7e785122a63178297677a6eaa92d6b21c0d9c2c48c",
+      "audit_passed": true,
+      "audit_warnings": [
+        {
+          "code": "bam_field_expansion",
+          "message": "配置有BAM摩擦随机化但没有显式字段展开事件，需实际环境步进验证。",
+          "path": "full.env.events"
+        }
+      ],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.8195864399999999,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "ground_pick",
+          "support": "route_available",
+          "limitations": [
+            "同一 mode 只有一个 ground_pick 槽；只加载 ONNX 不会自动更新 period/end_phase，必须核对所选模型及相位配置。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": true,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "phase",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "cos(2*pi*phase), sin(2*pi*phase), 0",
+        "head": "zeros",
+        "body": "zeros",
+        "period_s": 5.0,
+        "end_phase": 0.7,
+        "start_phase": 0.0,
+        "training_randomize_phase": false
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-RollerCrouch-Flat-Backlash-MicroDuck",
+      "role": "crouch",
+      "hardware": "rollers",
+      "terrain": "Flat",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-RollerCrouch-Flat-Backlash-MicroDuck.json",
+      "report_file_sha256": "ffbaa3ba11f7e1947874af6adaf486184e4eca784b6eab35a1a7b58d5a688659",
+      "inspection_sha256": "1ef7cd7cfdf5c16a62bdcfc5f8fe005378db3d27d7e243901b64e214cf775c34",
+      "audit_passed": true,
+      "audit_warnings": [
+        {
+          "code": "bam_field_expansion",
+          "message": "配置有BAM摩擦随机化但没有显式字段展开事件，需实际环境步进验证。",
+          "path": "full.env.events"
+        }
+      ],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.8195864399999999,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "ground_pick",
+          "support": "route_available",
+          "limitations": [
+            "同一 mode 只有一个 ground_pick 槽；只加载 ONNX 不会自动更新 period/end_phase，必须核对所选模型及相位配置。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": true,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "phase",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "cos(2*pi*phase), sin(2*pi*phase), 0",
+        "head": "zeros",
+        "body": "zeros",
+        "period_s": 5.0,
+        "end_phase": 0.7,
+        "start_phase": 0.0,
+        "training_randomize_phase": false
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-Velocity-Swizzle-MicroDuck",
+      "role": "swizzle",
+      "hardware": "rollers",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-Velocity-Swizzle-MicroDuck.json",
+      "report_file_sha256": "35cd40d697f289d457bd4d09a01b247210759be808b9e585e9f56f1541c6d34b",
+      "inspection_sha256": "453e97795cf7ec50f41304ecf11fbb64855a2587438bcd9b6b84f423c87ebb12",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.8195864399999999,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "restricted_command_protocol",
+          "limitations": [
+            "冻结 robotd 不按模型屏蔽 head/body 或转换指令；调用端必须落实本合同中的命令限制。",
+            "现有 yaw 速度控制不能当作目标航向控制；现成控制路径仅核定 y=0、yaw=0、body=0 的直行子集。完整转向需要显式按航向误差协议下发的控制端，当前没有端到端验证。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": true,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "forward/backward push, 0, clipped heading error (not yaw velocity)",
+        "head": "neck pitch / head pitch / yaw / roll; deltas from HOME",
+        "body": "zeros",
+        "allowed_twist_ranges": {
+          "lin_vel_x": [
+            -0.6,
+            0.6
+          ],
+          "lin_vel_y": [
+            0.0,
+            0.0
+          ],
+          "ang_vel_z": [
+            -0.5,
+            0.5
+          ],
+          "heading": null
+        }
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-Velocity-Swizzle-Backlash-MicroDuck",
+      "role": "swizzle",
+      "hardware": "rollers",
+      "terrain": "Flat",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-Velocity-Swizzle-Backlash-MicroDuck.json",
+      "report_file_sha256": "ea31f0f85ae82ee63046b6f9fe897ea093a77da19028488385646b2582475c1f",
+      "inspection_sha256": "e74c2d1c00ade18eecfd1314bbe4eba6fa3227425527b6c655137c4cd96be0e3",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.8195864399999999,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "restricted_command_protocol",
+          "limitations": [
+            "冻结 robotd 不按模型屏蔽 head/body 或转换指令；调用端必须落实本合同中的命令限制。",
+            "现有 yaw 速度控制不能当作目标航向控制；现成控制路径仅核定 y=0、yaw=0、body=0 的直行子集。完整转向需要显式按航向误差协议下发的控制端，当前没有端到端验证。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": true,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "forward/backward push, 0, clipped heading error (not yaw velocity)",
+        "head": "neck pitch / head pitch / yaw / roll; deltas from HOME",
+        "body": "zeros",
+        "allowed_twist_ranges": {
+          "lin_vel_x": [
+            -0.6,
+            0.6
+          ],
+          "lin_vel_y": [
+            0.0,
+            0.0
+          ],
+          "ang_vel_z": [
+            -0.5,
+            0.5
+          ],
+          "heading": null
+        }
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-RollerSlope-Flat-MicroDuck",
+      "role": "slope",
+      "hardware": "rollers",
+      "terrain": "Slope",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-RollerSlope-Flat-MicroDuck.json",
+      "report_file_sha256": "d829b414c05988d47f03538f2a480ecb9c3317908c073edd30ff2053f7320477",
+      "inspection_sha256": "22a9929bf3242e9c6b9cb7a466d96d88fa61b568b022b0004e94f6f9266f6d75",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.8195864399999999,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "restricted_command_protocol",
+          "limitations": [
+            "冻结 robotd 不按模型屏蔽 head/body 或转换指令；调用端必须落实本合同中的命令限制。",
+            "斜坡平衡策略只能持续接收全零 twist/head/body，不能作为可遥控行走模型。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": true,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-RollerSlope-Flat-Backlash-MicroDuck",
+      "role": "slope",
+      "hardware": "rollers",
+      "terrain": "Slope",
+      "backlash": true,
+      "report_path": "task-configs/Mjlab-RollerSlope-Flat-Backlash-MicroDuck.json",
+      "report_file_sha256": "b284d15cd53607125e4d50ef5cee0c6a5ffb92b38be7305127aad1fa8c971e11",
+      "inspection_sha256": "dab2eb248e673b0f759bca0c9e7a9019ca4436c6abdcded2052c6220096dbd5b",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.8195864399999999,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "walk",
+          "support": "restricted_command_protocol",
+          "limitations": [
+            "冻结 robotd 不按模型屏蔽 head/body 或转换指令；调用端必须落实本合同中的命令限制。",
+            "斜坡平衡策略只能持续接收全零 twist/head/body，不能作为可遥控行走模型。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": true,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "adapter_corrections": []
+    },
+    {
+      "task": "Mjlab-RollerStandUp-Flat-MicroDuck",
+      "role": "roller_stand",
+      "hardware": "rollers",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-RollerStandUp-Flat-MicroDuck.json",
+      "report_file_sha256": "5a42676049d798b3b3ad6fab7047794470214b64d9f70ca0b21fe6e5505d6b46",
+      "inspection_sha256": "fb30c9fcfc1127cba080ca1d70195b8eb131dff60f874027e44d5238d2c36182",
+      "audit_passed": true,
+      "audit_warnings": [],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.8195864399999999,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "manual_skill",
+          "support": "manual_configuration_required",
+          "limitations": [
+            "Roller 模式不自动切换 Stand；只能另配零命令通用技能。官方未给出该任务的执行窗口，训练回合时长不能直接作 duration。此导出不生成可触发技能或 stand 槽。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": true,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "adapter_corrections": [
+        {
+          "schema": "microduck-roller-servo-index-correction-v1",
+          "task": "Mjlab-RollerStandUp-Flat-MicroDuck",
+          "source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+          "source_joint_names": [
+            "left_hip_yaw",
+            "left_hip_roll",
+            "left_hip_pitch",
+            "left_knee",
+            "left_ankle",
+            "passive_LF_wheel",
+            "passive_LR_wheel",
+            "neck_pitch",
+            "head_pitch",
+            "head_yaw",
+            "head_roll",
+            "right_hip_yaw",
+            "right_hip_roll",
+            "right_hip_pitch",
+            "right_knee",
+            "right_ankle",
+            "passive_RF_wheel",
+            "passive_RR_wheel"
+          ],
+          "servo_joint_names": [
+            "left_hip_yaw",
+            "left_hip_roll",
+            "left_hip_pitch",
+            "left_knee",
+            "left_ankle",
+            "neck_pitch",
+            "head_pitch",
+            "head_yaw",
+            "head_roll",
+            "right_hip_yaw",
+            "right_hip_roll",
+            "right_hip_pitch",
+            "right_knee",
+            "right_ankle"
+          ],
+          "changes": [
+            {
+              "reward": "pose_stand_legs",
+              "function": "pose_target_match",
+              "before": {
+                "joint_indices": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15
+                ],
+                "target_overrides": null
+              },
+              "after": {
+                "joint_indices": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13
+                ],
+                "target_overrides": null
+              }
+            },
+            {
+              "reward": "pose_stand_l1",
+              "function": "pose_l1_penalty",
+              "before": {
+                "joint_indices": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15
+                ],
+                "target_overrides": null
+              },
+              "after": {
+                "joint_indices": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13
+                ],
+                "target_overrides": null
+              }
+            },
+            {
+              "reward": "standing_composite",
+              "function": "standing_composite_score",
+              "before": {
+                "joint_indices": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  11,
+                  12,
+                  13,
+                  14,
+                  15
+                ],
+                "target_overrides": null
+              },
+              "after": {
+                "joint_indices": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  9,
+                  10,
+                  11,
+                  12,
+                  13
+                ],
+                "target_overrides": null
+              }
+            }
+          ],
+          "scope": "reward_indices_only; weights, reset/events and upstream files unchanged"
+        }
+      ]
+    },
+    {
+      "task": "Mjlab-Spin-Flat-MicroDuck",
+      "role": "spin",
+      "hardware": "rollers",
+      "terrain": "Flat",
+      "backlash": false,
+      "report_path": "task-configs/Mjlab-Spin-Flat-MicroDuck.json",
+      "report_file_sha256": "90bc13da54393a816b49f01bda097d9874491de7fec731922f95c68035f7ac0d",
+      "inspection_sha256": "67aee88880aa3c142ff54cbb69d95acdacbd95993c60fbc730a4d4953334d910",
+      "audit_passed": true,
+      "audit_warnings": [
+        {
+          "code": "bam_field_expansion",
+          "message": "配置有BAM摩擦随机化但没有显式字段展开事件，需实际环境步进验证。",
+          "path": "full.env.events"
+        }
+      ],
+      "P": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "action_filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "total_mass_kg": 0.8195864399999999,
+      "runtime_compatibility": {
+        "native_runtime": {
+          "version": "0.15.1",
+          "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+          "route": "ground_pick",
+          "support": "route_available",
+          "limitations": [
+            "同一 mode 只有一个 ground_pick 槽；只加载 ONNX 不会自动更新 period/end_phase，必须核对所选模型及相位配置。"
+          ]
+        },
+        "r148_importer": {
+          "task_allowlisted": false,
+          "direct_import_verified": false,
+          "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+        },
+        "requires_passive_roller_hardware": true,
+        "official_finished_weights": false,
+        "automatic_deployment": false
+      },
+      "command_contract": {
+        "encoding": "phase",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "cos(2*pi*phase), sin(2*pi*phase), 0",
+        "head": "zeros",
+        "body": "zeros",
+        "period_s": 4.0,
+        "end_phase": 0.7,
+        "start_phase": 0.0,
+        "training_randomize_phase": false
+      },
+      "adapter_corrections": []
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+   Compiling syn v3.0.3
+   Compiling bitflags v2.13.1
+   Compiling hashbrown v0.17.1
+   Compiling indexmap v2.14.0
+   Compiling toml_edit v0.23.10+spec-1.0.0
+   Compiling thiserror-impl v2.0.20
+   Compiling thiserror v2.0.20
+   Compiling serde_derive v1.0.229
+   Compiling clap_derive v4.6.4
+   Compiling serde v1.0.229
+   Compiling duck-ipc-proto v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/duck-ipc-proto)
+   Compiling clap v4.6.4
+   Compiling unescaper v0.1.10
+   Compiling serialport v4.9.0
+   Compiling kinematics v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/kinematics)
+   Compiling rustypot v1.8.0
+   Compiling mio v1.2.2
+   Compiling tokio v1.53.1
+   Compiling robotd-params v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/robotd-params)
+   Compiling duck-control v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/duck-control)
+   Compiling odometry v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/odometry)
+   Compiling pet-detect v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/pet-detect)
+   Compiling sounds v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/sounds)
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/robotd)
+warning: linker stderr: ignoring deprecated linker optimization setting '1'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `robotd` (bin "robotd") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 1m 02s

@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "changed_files": [
+    "padd/src/main.rs",
+    "padd/src/recorder.rs"
+  ],
+  "replayed_sha256": {
+    "padd/src/main.rs": "b7d65654f7ba3997063e74c170168b47622e1565b72c82f2e33dbe3f8921274e",
+    "padd/src/recorder.rs": "bb48981190a06699479dc8ed96e91bea0feadcac1f0695e40c3323bcfdb35669"
+  },
+  "patch_output": "patching file padd/src/main.rs\npatching file padd/src/recorder.rs\n"
+}

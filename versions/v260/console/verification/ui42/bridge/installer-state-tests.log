@@ -1,0 +1,13 @@
+$ ['/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3', '/workspace/scratch/0587ce872ec5/ui42_bridge_evidence/test_state_directory.py', '-v']
+[固件安装 / 安装官方 padd 配置] 开始 · 安装官方服务单元与本机手柄幅度参数
+[固件安装 / 安装官方 padd 配置] 成功 · 官方 padd 配置已就绪；R7 映射保持
+[固件安装 / 安装官方 padd 配置] 开始 · 安装官方服务单元与本机手柄幅度参数
+[固件安装 / 安装官方 padd 配置] 成功 · 官方 padd 配置已就绪；R7 映射保持
+test_upgrade_retains_last_recording_and_declares_writable_persistent_directory (__main__.StateDirectoryTests.test_upgrade_retains_last_recording_and_declares_writable_persistent_directory) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+OK
+
+exit=0

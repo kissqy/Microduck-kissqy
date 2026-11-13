@@ -1,0 +1,9 @@
+test_original_left_model_and_mismatched_foot (test_v161_deployment.DeploymentTests.test_original_left_model_and_mismatched_foot) ... ok
+test_roller_catalogue_is_read_only_and_not_reported_as_loaded (test_v161_deployment.DeploymentTests.test_roller_catalogue_is_read_only_and_not_reported_as_loaded) ... ok
+test_roller_help_contains_no_browser_controls_or_duplicate_ids (test_v161_deployment.DeploymentTests.test_roller_help_contains_no_browser_controls_or_duplicate_ids) ... ok
+test_v160_upgrade_adds_lb_without_resetting_saved_parameters (test_v161_deployment.DeploymentTests.test_v160_upgrade_adds_lb_without_resetting_saved_parameters) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.146s
+
+OK

@@ -1,0 +1,21 @@
+r17-gamesir-disconnect-audit
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+Consumer Control disconnected; main gamepad remains active
+ignored Consumer Control HOME event
+unmapped Consumer Control key code=115
+Consumer Control isolated: /dev/input/event3 (not part of Xbox input)
+PASS auxiliary HUP removed; next poll waited 40.101 ms; main START/stick/triggers/SYN preserved; no duplicate close
+PASS primary HUP exits; auxiliary cleanup closes once
+PASS both sources: POLLERR/POLLNVAL/EOF/ENODEV/EBADF/EIO; EAGAIN/EWOULDBLOCK/EINTR preserve descriptors
+PASS Consumer HOME/media keys remain excluded from Xbox buttons
+PASS absent auxiliary retries at most once per second; reconnect reopens/grabs; live auxiliary causes no scans
+All GameSir disconnect regressions passed (production C paths, no hardware).
+exit_code=0
+r17-gamesir-map-audit
+PASS R7 menu/trigger isolation and axis scaling
+exit_code=0

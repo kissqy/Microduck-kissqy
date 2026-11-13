@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "model_api": 1,
+  "obs_len": 61,
+  "action_len": 14,
+  "robot": {
+    "model": "microduck",
+    "hw_rev": 1,
+    "servos": "hd1910",
+    "control_hz": 50
+  },
+  "name": "ground-pick",
+  "kind": "episodic",
+  "description": "指令槽传递 4 秒周期相位；使用 ground_pick 槽，不使用行走方向键。",
+  "entry_pose": "standing",
+  "command": {
+    "encoding": "phase",
+    "idle": [
+      0,
+      0,
+      0
+    ],
+    "period_s": 4.0,
+    "end_phase": 0.7,
+    "twist": "cos(2*pi*phase), sin(2*pi*phase), 0",
+    "head": "zeros",
+    "body": "zeros"
+  },
+  "action_scale": 1.0,
+  "training": {
+    "task_id": "Mjlab-GroundPick-Flat-MicroDuck",
+    "repo": "pollen-robotics/microduck_rl",
+    "commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "checkpoint": 4999,
+    "source_file": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/ground_pick/2026-10-04_11-01-13_console_20261004_110100_f3cbc3/model_4999.pt"
+  },
+  "target_firmware": "0.15.1",
+  "teacher_only": false,
+  "source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "task": "Mjlab-GroundPick-Flat-MicroDuck",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/ground_pick/2026-10-04_11-01-13_console_20261004_110100_f3cbc3/model_4999.pt",
+  "model_origin": {
+    "engine": "official_0151",
+    "task": "Mjlab-GroundPick-Flat-MicroDuck",
+    "baseline_pin": {
+      "revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+    },
+    "training_adapter_revision": "R1.5.4-viewer-policy-fix",
+    "friction_randomization": "official"
+  },
+  "export_source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "onnx_sha256": "2b69fa681ed06f7ded9e2a2d12ba5c6776ec87308ac4a299e4b8196199c17f24",
+  "deployment_verified": false,
+  "slot": "ground_pick",
+  "duration_s": 2.8,
+  "chain": false
+}

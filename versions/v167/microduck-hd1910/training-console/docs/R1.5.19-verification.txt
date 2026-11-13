@@ -1,0 +1,76 @@
+Microduck Training Studio R1.5.19 verification — 2026-10-07
+
+Scope: initial-state numeric comparison, array-wrapper handling, target-mapping
+evaluation lifecycle, real loopback HTTP transport and Node DOM/HTTP fixtures.
+These checks did NOT run GPU physics, MuJoCo/mjlab rollouts, the user's ONNX
+inference, a real browser, training or a physical robot. The user's A/B outcome
+must come from a new run in the installed training environment.
+
+REGRESSION COMMAND:
+python3 -m unittest tests.test_target_limit_profile tests.test_target_limit_api tests.test_recovery_api tests.test_event_protocol tests.test_remote_training tests.test_training_queue tests.test_action_filter tests.test_recovery_evaluation.RecoveryResultsTests tests.test_eval_push_dependencies -v
+
+RESULT: Ran 84 tests in 4.469s — OK.
+Includes real loopback API launch/progress/download/state persistence of the
+new field-level diagnostics; model hash binding, request isolation, original
+queue/remote/filter/recovery paths and truthful logs for an unrun B group.
+
+UI COMMANDS:
+node --check training/static/training.js
+node tests/test_target_limit_ui.cjs
+node tests/test_recovery_ui.cjs
+
+RESULT: All three commands exited 0.
+TARGET_LIMIT_UI_OK: visible entry; ONNX/role/file-size guards; upload and bound
+launch; progress, settings, stop and JSON download; unrun vs failed trials;
+numeric tolerances and bounded escaped diagnostics; normal viewer restored.
+RECOVERY_UI_OK: PT/ONNX recovery selection, request isolation, model role,
+offline/pending/in-flight guards and ordinary viewer behavior.
+The screenshot regression retains A's 1.44 s / 106.404 deg results, marks B
+(invalid, zero steps) as unrun, and renders all unmeasured B values as dashes.
+
+ADDITIONAL SOURCE/DELIVERY CHECKS:
+R1.5.19 version markers agree in frontend, API, local and SSH backend.
+All three private worker bundle paths include the comparison modules.
+The README points to the new R1.5.19 usage and numerical-rule documentation.
+Compared against the R1.5.18 public ZIP, changes are limited to comparison
+runtime, UI, backend logging/version metadata, documentation and tests.
+The original R1.5.18 usage document was preserved byte for byte.
+The user's private recording and screenshot are not added to this public ZIP.
+
+Runtime comparison test results follow below.
+
+RUNTIME COMMAND: python3 -m unittest tests.test_limit_comparison_runtime -v
+test_automatic_a_then_b_with_same_profile_and_exact_fingerprint (tests.test_limit_comparison_runtime.ComparisonOrchestrationTests.test_automatic_a_then_b_with_same_profile_and_exact_fingerprint) ... ok
+test_b_initialization_error_is_preserved_as_unrun_group (tests.test_limit_comparison_runtime.ComparisonOrchestrationTests.test_b_initialization_error_is_preserved_as_unrun_group) ... ok
+test_mismatched_start_stops_before_policy_action_and_closes_env (tests.test_limit_comparison_runtime.ComparisonOrchestrationTests.test_mismatched_start_stops_before_policy_action_and_closes_env) ... ok
+test_model_replacement_between_a_and_b_rejected (tests.test_limit_comparison_runtime.ComparisonOrchestrationTests.test_model_replacement_between_a_and_b_rejected) ... ok
+test_none_profile_never_falls_back_to_ordinary_viewer (tests.test_limit_comparison_runtime.ComparisonOrchestrationTests.test_none_profile_never_falls_back_to_ordinary_viewer) ... ok
+test_physics_history_difference_invalidates_comparison (tests.test_limit_comparison_runtime.ComparisonOrchestrationTests.test_physics_history_difference_invalidates_comparison) ... ok
+test_runtime_rechecks_actual_bytes_and_non_onnx_is_rejected (tests.test_limit_comparison_runtime.ComparisonOrchestrationTests.test_runtime_rechecks_actual_bytes_and_non_onnx_is_rejected) ... ok
+test_unexpected_auto_reset_pose_cannot_be_recorded_as_success (tests.test_limit_comparison_runtime.ComparisonOrchestrationTests.test_unexpected_auto_reset_pose_cannot_be_recorded_as_success) ... ok
+test_nan_including_qacc_shape_dtype_and_integer_change_are_rejected (tests.test_limit_comparison_runtime.NumericStateComparisonTests.test_nan_including_qacc_shape_dtype_and_integer_change_are_rejected) ... ok
+test_nonfinite_a_preflight_stops_before_first_action (tests.test_limit_comparison_runtime.NumericStateComparisonTests.test_nonfinite_a_preflight_stops_before_first_action) ... ok
+test_old_digest_only_records_do_not_gain_unproven_tolerance (tests.test_limit_comparison_runtime.NumericStateComparisonTests.test_old_digest_only_records_do_not_gain_unproven_tolerance) ... ok
+test_one_percent_of_tiny_inertia_is_not_swallowed_by_atol (tests.test_limit_comparison_runtime.NumericStateComparisonTests.test_one_percent_of_tiny_inertia_is_not_swallowed_by_atol) ... ok
+test_opaque_or_metadata_only_required_state_cannot_claim_coverage (tests.test_limit_comparison_runtime.NumericStateComparisonTests.test_opaque_or_metadata_only_required_state_cannot_claim_coverage) ... ok
+test_qacc_is_diagnostic_but_exact_warmstart_name_remains_a_gate (tests.test_limit_comparison_runtime.NumericStateComparisonTests.test_qacc_is_diagnostic_but_exact_warmstart_name_remains_a_gate) ... ok
+test_real_pose_mass_and_joint_range_changes_are_rejected (tests.test_limit_comparison_runtime.NumericStateComparisonTests.test_real_pose_mass_and_joint_range_changes_are_rejected) ... ok
+test_scalar_fields_are_captured_and_changes_cannot_hide_in_digest (tests.test_limit_comparison_runtime.NumericStateComparisonTests.test_scalar_fields_are_captured_and_changes_cannot_hide_in_digest) ... ok
+test_signed_zero_and_small_roundoff_pass_with_explicit_numbers (tests.test_limit_comparison_runtime.NumericStateComparisonTests.test_signed_zero_and_small_roundoff_pass_with_explicit_numbers) ... ok
+test_torcharray_pointer_and_stream_excluded_and_snapshot_frozen (tests.test_limit_comparison_runtime.NumericStateComparisonTests.test_torcharray_pointer_and_stream_excluded_and_snapshot_frozen) ... ok
+test_within_tolerance_group_b_runs_and_public_result_is_serializable (tests.test_limit_comparison_runtime.NumericStateComparisonTests.test_within_tolerance_group_b_runs_and_public_result_is_serializable) ... ok
+test_action_hook_preserves_raw_and_unclipped_ema_history (tests.test_limit_comparison_runtime.TargetMappingTests.test_action_hook_preserves_raw_and_unclipped_ema_history) ... ok
+test_encoder_actuals_sum_named_backlash_and_bias (tests.test_limit_comparison_runtime.TargetMappingTests.test_encoder_actuals_sum_named_backlash_and_bias) ... ok
+test_names_resolve_independent_of_profile_row_order (tests.test_limit_comparison_runtime.TargetMappingTests.test_names_resolve_independent_of_profile_row_order) ... ok
+test_pi_is_clipped_not_wrapped_and_stages_remain_visible (tests.test_limit_comparison_runtime.TargetMappingTests.test_pi_is_clipped_not_wrapped_and_stages_remain_visible) ... ok
+test_real_id21_calibration_encoder_roundtrip_and_no_a_change (tests.test_limit_comparison_runtime.TargetMappingTests.test_real_id21_calibration_encoder_roundtrip_and_no_a_change) ... ok
+test_roundtrip_may_exceed_endpoint_without_second_clip (tests.test_limit_comparison_runtime.TargetMappingTests.test_roundtrip_may_exceed_endpoint_without_second_clip) ... ok
+test_rust_round_ties_and_no_encoder_wrap (tests.test_limit_comparison_runtime.TargetMappingTests.test_rust_round_ties_and_no_encoder_wrap) ... ok
+test_vertical_pose_is_not_false_side_crossing (tests.test_limit_comparison_runtime.TargetMappingTests.test_vertical_pose_is_not_false_side_crossing) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.056s
+
+OK
+
+Scope: deterministic numerical/array-wrapper fixtures and mocked A/B orchestration; no GPU physics.

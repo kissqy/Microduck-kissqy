@@ -1,0 +1,118 @@
+{
+  "console_version": "1.0.157-Fix9",
+  "service_build": "1fa8438-feetech-ft6-control.36",
+  "release_baseline": "Microduck-Source-R17-v1.0.157-Fix8",
+  "production_changed_files": [
+    "console/README.zh-CN.md",
+    "console/docs/releases/R157-Fix9.md",
+    "console/gamepad_repair.py",
+    "console/release_identity.py",
+    "console/verification/test_gamepad_repair.py",
+    "docs/design/r17-connection-design.md"
+  ],
+  "installed_packaging_all_files_byte_identical": true,
+  "robotd_startup_install_data_and_mutual_exclusion_unchanged": true,
+  "firmware_reinstall_required_from_fix8": false,
+  "firmware_sha256": "72220680d85092cb9f102fe92f9a0a11d36e387cc5a23d7db7170b0d2a6e3c04",
+  "pair_connected_without_hid_reproduced_by_fault_injection": true,
+  "explicit_hid_connection_once_after_pair": true,
+  "bluetooth_connected_missing_physical_input_gets_one_hid_connect": true,
+  "failed_connect_preserves_bond_address_and_bluez_error": true,
+  "disconnection_during_input_wait_reported_as_bluetooth_failure": true,
+  "main_service_wait_only_reported_when_observed": true,
+  "no_added_resident_services_or_polling": true,
+  "tests": {
+    "python_passed": 123,
+    "frontend_logic_scripts_passed": 6,
+    "c_regression_executables_passed": 2,
+    "runs": [
+      {
+        "name": "repair",
+        "exit_code": 0,
+        "log": "verification/fix9-repair.log",
+        "sha256": "cf77d061fc2b3182bd5be01e3e16f1f10575b75e7ef094bac81de59f43152f11"
+      },
+      {
+        "name": "input",
+        "exit_code": 0,
+        "log": "verification/fix9-input.log",
+        "sha256": "d8a204c06ea84d46ffb1b00fcc188ba21d9586f9bdf17f143412ad7573650d79"
+      },
+      {
+        "name": "order",
+        "exit_code": 0,
+        "log": "verification/fix9-order.log",
+        "sha256": "9ba96cd28b84bb2922db2925915527150a99ba1847b8e3fc1ea788edbc9aa258"
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "log": "verification/fix9-install.log",
+        "sha256": "b4cbf9376a3c3a2a5799c6e2fd2d33e2965f5dcdbfa9f1a3dc8b433bda8adda2"
+      },
+      {
+        "name": "test_gamepad_repair_ui",
+        "exit_code": 0,
+        "log": "verification/fix9-test_gamepad_repair_ui.log",
+        "sha256": "8fc0e55d166595ca3d7d2e18dcc35518cce15c9ae29e6c4ed48eb1fadf023dba"
+      },
+      {
+        "name": "test_fix157pc",
+        "exit_code": 0,
+        "log": "verification/fix9-test_fix157pc.log",
+        "sha256": "202e15d884c067ab28d84a5ebbac80a801bcf4bfab23b14779c242cd6f2cfe39"
+      },
+      {
+        "name": "test_robotd_first157",
+        "exit_code": 0,
+        "log": "verification/fix9-test_robotd_first157.log",
+        "sha256": "e092222c7400c718bb04a07f17f40576983422f592fb6f8d24357739fb4a475a"
+      },
+      {
+        "name": "test_startup_ui",
+        "exit_code": 0,
+        "log": "verification/fix9-test_startup_ui.log",
+        "sha256": "1051736a2c3c606f87fc8ca8b5ffe966e682f54386457b6c78195bcff54adc78"
+      },
+      {
+        "name": "test_connection_ui155",
+        "exit_code": 0,
+        "log": "verification/fix9-test_connection_ui155.log",
+        "sha256": "c4e74d103b7bf3bdf8911844ea8ee4b148a598dce1ac1c3f68dcf84a29e4ad45"
+      },
+      {
+        "name": "test_controls154",
+        "exit_code": 0,
+        "log": "verification/fix9-test_controls154.log",
+        "sha256": "4321bee40f94b73b1772c9d4b065c570b64bfe649461aef04fc0110f687bceee"
+      },
+      {
+        "name": "mapping-compile",
+        "exit_code": 0,
+        "log": "verification/fix9-mapping-compile.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "mapping",
+        "exit_code": 0,
+        "log": "verification/fix9-mapping.log",
+        "sha256": "015826a6da79ad5d92462eaae761d592c872545c7c46d6bf89088cd579aa9498"
+      },
+      {
+        "name": "disconnect-compile",
+        "exit_code": 0,
+        "log": "verification/fix9-disconnect-compile.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "disconnect",
+        "exit_code": 0,
+        "log": "verification/fix9-disconnect.log",
+        "sha256": "d18dd0810d98fca4e68d8f201b6bec93fd7e96e5fef438da60c4ec04fa6d983a"
+      }
+    ],
+    "robot_hardware_tested": false,
+    "windows_native_tested": false,
+    "browser_pixel_rendered": false
+  }
+}

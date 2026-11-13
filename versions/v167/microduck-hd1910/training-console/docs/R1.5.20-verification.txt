@@ -1,0 +1,43 @@
+Microduck Training Studio R1.5.20 verification — 2026-10-07
+
+Scope: source implementation and portable tests only.
+No robot commands, firmware writes, live training, or GPU policy inference were performed.
+
+Portable Python coverage: 138 distinct tests passed.
+- Existing baseline regression: 111 tests.
+- Recorded-start profile scenarios: 6 additional tests (with multiple invalid-frame subcases).
+- Recorded-start request/API/isolation/log checks: 8 additional tests.
+- Recorded-start math/reset/readback/runtime lifecycle: 13 additional tests.
+The baseline+profile+first7 API cases ran as one 124-test suite; the final8 API,
+5 existing target-limit API and13 new runtime cases passed in a 26-test follow-up
+following the final log/readback changes.
+
+JavaScript syntax check passed. Both target-limit UI and recovery UI Node
+DOM/HTTP fixtures passed, covering standard/recorded launch, missing-pose error,
+source-frame and numerical readback output, stopping and downloading.
+This is not a real browser, 4K, CSS, Viser, or WebGL rendering test.
+
+Existing real upstream recovery tests require the pinned simulator dependencies;
+5 such tests were skipped because those dependencies are unavailable here.
+Torch/MuJoCo/mjlab/ONNX runtime and the user's ONNX weights were not installed
+or downloaded just for this verification. Actual roll/stand outcomes remain
+unknown until the user runs the new mode on the existing training machine.
+
+The supplied real recording was parsed successfully: the first StandUp enable
+uses the immediately preceding near-static sample; all14 named policy joints
+were extracted without mouth, and the original model hash was retained.
+Pure quaternion projection of its gravity input agreed within 9e-9 L2.
+This is not evidence of a successful physics rollout.
+
+Changes preserve original target mapping and startup fairness checks. Recorded
+pose application keeps sampled backlash/bias, reuses the existing geometric
+plane placement, and performs no hidden physics steps. A first-action mismatch
+in encoder pose, body gravity, qpos-derived gravity consistency, or zero velocity
+blocks the run. Nonfinite numbers are reported as invalid, never tolerated.
+
+The request mode cannot be sent into training, queues, export, PT play, ordinary
+ONNX, or cached probe operations. Original model, recipe, parameters and user
+recordings remain separate from this Public source package.
+
+Public package validation also covers ZIP CRC, the SHA256 manifest for every
+shipped file, executable start-training.command mode, and clean extracted imports.

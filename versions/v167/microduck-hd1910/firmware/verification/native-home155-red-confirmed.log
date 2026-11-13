@@ -1,0 +1,21 @@
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/home155-red-source/robotd)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 18s
+EXACT TEST: feetech_recovery_tests::explicit_home_after_a_policy_pause_restores_absolute_home_without_replay
+
+running 1 test
+test feetech_recovery_tests::explicit_home_after_a_policy_pause_restores_absolute_home_without_replay ... FAILED
+
+failures:
+
+---- feetech_recovery_tests::explicit_home_after_a_policy_pause_restores_absolute_home_without_replay stdout ----
+
+thread 'feetech_recovery_tests::explicit_home_after_a_policy_pause_restores_absolute_home_without_replay' (286) panicked at robotd/src/feetech_recovery_tests.rs:520:13:
+HOME requested while blind must survive until fresh feedback resumes; target=[0.0, -0.0873, -0.4579, 0.09981975511965978, 0.453, 0.3491, 0.3491, 0.0, 0.0, -0.08726646259971647, 0.0, 0.0873, 0.4579, 0.0049, -0.453]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    feetech_recovery_tests::explicit_home_after_a_policy_pause_restores_absolute_home_without_replay
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 258 filtered out; finished in 2.64s
+

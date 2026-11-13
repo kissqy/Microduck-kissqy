@@ -1,0 +1,523 @@
+...............服务文件已完成逐文件原子替换；已保留当前模型文件。
+已恢复随包模型的损坏合同或更新修正版合同：a481d9f211f31d9476ab1a319fe362a2
+服务文件已完成逐文件原子替换；已保留当前模型文件。
+服务文件已完成逐文件原子替换；已保留当前模型文件。
+已恢复随包模型的损坏合同或更新修正版合同：a481d9f211f31d9476ab1a319fe362a2
+服务文件已完成逐文件原子替换；已保留当前模型文件。
+服务文件已完成逐文件原子替换；已保留当前模型文件。
+已恢复随包模型的损坏合同或更新修正版合同：a481d9f211f31d9476ab1a319fe362a2
+服务文件已完成逐文件原子替换；已保留当前模型文件。
+..服务文件已完成逐文件原子替换；已保留当前模型文件。
+已恢复随包模型的损坏合同或更新修正版合同：9e3ff8bde021be28a728c02dbd8e7aaf
+服务文件已完成逐文件原子替换；已保留当前模型文件。
+清理旧训练模型：other
+服务文件已完成逐文件原子替换；模型已按明确请求重置。
+.服务文件已完成逐文件原子替换；已保留当前模型文件。
+已应用联合模型全程统一的缩放与滤波配置；原模型权重与训练数据保留。
+..服务文件已完成逐文件原子替换；已保留当前模型文件。
+已应用联合模型全程统一的缩放与滤波配置；原模型权重与训练数据保留。
+服务文件已完成逐文件原子替换；已保留当前模型文件。
+..清理已弃用训练模型：d11f8430712c35cb2416ce3948e9f8b7
+清理已弃用训练模型：388461feb3f4cd24071197ffc30d63e2
+清理已弃用训练模型：5c019c3d3d2c490947f21974f3947506
+清理已弃用训练模型：9e3ff8bde021be28a728c02dbd8e7aaf
+服务文件已完成逐文件原子替换；已保留当前模型文件。
+.服务文件已完成逐文件原子替换；已保留当前模型文件。
+.服务文件已完成逐文件原子替换；已保留当前模型文件。
+....E..清理旧配套文件：advanced_parameters.py
+清理旧配套文件：model_preflight.py
+...............按完整来源重建：/tmp/tmpa1oaxoke/hd1910-calibration.toml ← /tmp/tmpa1oaxoke/hd1910-calibration.template.toml
+安装恢复装配标定：补齐 15 个关节；头部 ID 33 零位 1599；IMU 已恢复
+安装恢复装配标定：补齐 15 个关节；头部 ID 33 零位 1599；IMU 已恢复
+.安装恢复装配标定：补齐 0 个关节；头部 ID 33 零位 1599；IMU 已恢复
+...安装恢复装配标定：补齐 1 个关节；头部 ID 33 零位 1650；IMU 保留本机设置
+.标定保存与运行回读一致：/tmp/tmp92jpp1zw/hd1910-calibration.toml；已保存 15/15；ID 33 零位 1599；IMU 已确认 True
+.............................F.......127.0.0.1 - - [09/Oct/2026 09:29:56] "POST /api/service/connection HTTP/1.1" 200 -
+.......................R7 Xbox 输入桥配置已就绪。
+官方 padd 配置已就绪；R7 映射保持。
+旧网页虚拟 Xbox 服务已退出；网页输入使用持久 SSH 与官方 robotd IPC。
+输入配置已集中安装；等待一次 systemd 重载和启动。
+FE..E.EEE.EE.EEE.E.E..........官方 0.15.1 手柄客户端已配套升级；R7 输入映射保持。
+按完整来源重建：/tmp/tmpdznyux8k/robotd.toml ← /tmp/tmpdznyux8k/robotd.saved.toml
+按完整来源重建：/tmp/tmp6hdv6_zd/robotd.toml ← /tmp/tmp6hdv6_zd/robotd.saved.toml
+按完整来源重建：/tmp/tmpcqi7u8d_/robotd.toml ← /tmp/tmpcqi7u8d_/robotd.saved.toml
+.已确认控制器实际加载： {"walk": {"sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "runtime_execution_profile": {"schema": "microduck-runtime-execution/v1", "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "mode": "uniform", "action_scale": 1.0, "head_lowpass": 0.5, "legs_lowpass": 0.7}}}
+已确认控制器实际加载： {"walk": {"sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "runtime_execution_profile": {"schema": "microduck-runtime-execution/v1", "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "mode": "uniform", "action_scale": 1.0, "head_lowpass": 0.5, "legs_lowpass": 0.7}}}
+..E..............Exception in thread Thread-45 (daemon):
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_raw_telemetry.py", line 142, in daemon
+    for start in range(0,len(wire),7):server.sendall(wire[start:start+7])
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe
+F...../opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py:2217: ResourceWarning: unclosed <socket.socket fd=9, family=1, type=1, proto=0>
+  def __init__(self, name, parent):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.EEEEF清理已弃用训练模型：d11f8430712c35cb2416ce3948e9f8b7
+清理已弃用训练模型：388461feb3f4cd24071197ffc30d63e2
+清理已弃用训练模型：5c019c3d3d2c490947f21974f3947506
+清理已弃用训练模型：9e3ff8bde021be28a728c02dbd8e7aaf
+清理已弃用训练模型：8fdaf12c7478a8314a63647a466bfa34
+清理已弃用训练模型：2b69fa681ed06f7ded9e2a2d12ba5c67
+........FE....{"service_started": true, "bus_status": {"build": "1fa8438-feetech-ft6-control.35", "mode": "motion", "phase": "configuring_uart", "fresh_sample": false, "homed": false, "policy_enabled": false, "native": {"torque_state_confirmed": false, "imu_ready": true}}}
+E.{"service_started": true, "bus_status": {"build": "1fa8438-feetech-ft6-control.35", "mode": "motion", "phase": "initializing_bus", "attempt": 2}}
+E已确认控制器实际加载： {"walk": {"sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "runtime_execution_profile": {"schema": "microduck-runtime-execution/v1", "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "mode": "uniform", "action_scale": 1.0, "head_lowpass": 0.5, "legs_lowpass": 0.7}}, "sitstand": {"sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50", "runtime_execution_profile": null}, "ground_pick": {"sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69", "runtime_execution_profile": null}, "roulade": {"sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac", "runtime_execution_profile": null}}
+..已确认控制器实际加载： {"walk": {"sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "runtime_execution_profile": {"schema": "microduck-runtime-execution/v1", "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "mode": "uniform", "action_scale": 1.0, "head_lowpass": 0.5, "legs_lowpass": 0.7}}}
+....E............E..E.....E...FFFFF..系统 PCM 音量已接入；alsactl 保存，Zero 开机由系统恢复；固件重启不调整音量。
+.系统 PCM 音量已接入；alsactl 保存，Zero 开机由系统恢复；固件重启不调整音量。
+沿用现有原生音库与系统 ALSA 音量；不重复初始化。
+.系统 PCM 音量已接入；alsactl 保存，Zero 开机由系统恢复；固件重启不调整音量。
+.系统 PCM 音量已接入；alsactl 保存，Zero 开机由系统恢复；固件重启不调整音量。
+F系统 PCM 音量已接入；alsactl 保存，Zero 开机由系统恢复；固件重启不调整音量。
+沿用现有原生音库与系统 ALSA 音量；不重复初始化。
+.......
+======================================================================
+ERROR: test_audit_regressions (unittest.loader._FailedTest.test_audit_regressions)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_audit_regressions
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_audit_regressions.py", line 12, in <module>
+    import webpad, pad_settings
+ModuleNotFoundError: No module named 'webpad'
+
+
+======================================================================
+ERROR: test_firmware_restart_reuses_an_active_listener_without_starting_worker (test_gamepad.GamepadInstallTests.test_firmware_restart_reuses_an_active_listener_without_starting_worker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_gamepad.py", line 100, in test_firmware_restart_reuses_an_active_listener_without_starting_worker
+    with patch.object(gamepad,'webpad_socket_ready',return_value=True),patch.object(gamepad,'run') as run:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'gamepad' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/gamepad.py'> does not have the attribute 'webpad_socket_ready'
+
+======================================================================
+ERROR: test_missing_padd_and_masked_webpad_are_installed_by_real_input_installers (test_gamepad.GamepadInstallTests.test_missing_padd_and_masked_webpad_are_installed_by_real_input_installers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_gamepad.py", line 56, in test_missing_padd_and_masked_webpad_are_installed_by_real_input_installers
+    with patch.object(gamepad,'ROOT',target_root),patch.object(gamepad,'BASE',bundle),patch.object(gamepad,'SETTINGS_PATH',root/'settings.json'),patch.object(gamepad,'run',run),patch.object(gamepad,'save'),patch.object(gamepad,'load',return_value={'mouth_percent':70,'head_rad':2.5}),patch.object(gamepad,'verify_webpad') as verified:
+                                                                                                                                                                                                                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'gamepad' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/gamepad.py'> does not have the attribute 'verify_webpad'
+
+======================================================================
+ERROR: test_upgrade_webpad_start_does_not_wait_for_socket_readback (test_gamepad.GamepadInstallTests.test_upgrade_webpad_start_does_not_wait_for_socket_readback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_gamepad.py", line 70, in test_upgrade_webpad_start_does_not_wait_for_socket_readback
+    with patch.object(gamepad,'ROOT',root/'system'),patch.object(gamepad,'BASE',bundle),patch.object(gamepad,'run',return_value=types.SimpleNamespace(returncode=0,stdout='',stderr='')),patch.object(gamepad,'verify_webpad',side_effect=AssertionError('no upgrade readiness gate')):
+                                                                                                                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'gamepad' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/gamepad.py'> does not have the attribute 'verify_webpad'
+
+======================================================================
+ERROR: test_close_on_eof_only_retires_stream_and_never_activates_another_worker (test_input_latency.LatencyTests.test_close_on_eof_only_retires_stream_and_never_activates_another_worker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_input_latency.py", line 142, in test_close_on_eof_only_retires_stream_and_never_activates_another_worker
+    with patch.object(controls,'open_remote_socket',side_effect=AssertionError('close reactivated webpad')),patch.object(controls.select,'select',return_value=([peer],[],[])):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'controls' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/controls.py'> does not have the attribute 'open_remote_socket'
+
+======================================================================
+ERROR: test_connect_status_and_close_never_activate_an_input_socket (test_input_latency.LatencyTests.test_connect_status_and_close_never_activate_an_input_socket)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_input_latency.py", line 17, in test_connect_status_and_close_never_activate_an_input_socket
+    with patch.object(controls,'open_remote_socket',side_effect=AssertionError('display activated webpad')):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'controls' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/controls.py'> does not have the attribute 'open_remote_socket'
+
+======================================================================
+ERROR: test_eof_replacement_opens_while_old_forward_reference_is_still_held (test_input_latency.LatencyTests.test_eof_replacement_opens_while_old_forward_reference_is_still_held)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_input_latency.py", line 132, in test_eof_replacement_opens_while_old_forward_reference_is_still_held
+    with patch.object(controls,'open_remote_socket',side_effect=replace),patch.object(controls.select,'select',return_value=([old],[],[])):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'controls' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/controls.py'> does not have the attribute 'open_remote_socket'
+
+======================================================================
+ERROR: test_failed_input_is_not_replayed_and_next_fresh_gesture_opens_a_new_stream (test_input_latency.LatencyTests.test_failed_input_is_not_replayed_and_next_fresh_gesture_opens_a_new_stream)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_input_latency.py", line 76, in test_failed_input_is_not_replayed_and_next_fresh_gesture_opens_a_new_stream
+    with patch.object(controls,'open_remote_socket',side_effect=lambda *_a,**_kw:Peer()):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'controls' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/controls.py'> does not have the attribute 'open_remote_socket'
+
+======================================================================
+ERROR: test_slow_initial_socket_open_keeps_ready_channel_for_next_fresh_gesture (test_input_latency.LatencyTests.test_slow_initial_socket_open_keeps_ready_channel_for_next_fresh_gesture)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_input_latency.py", line 109, in test_slow_initial_socket_open_keeps_ready_channel_for_next_fresh_gesture
+    with patch.object(controls,'open_remote_socket',side_effect=open_slow),patch.object(controls.select,'select',return_value=([],[],[])):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'controls' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/controls.py'> does not have the attribute 'open_remote_socket'
+
+======================================================================
+ERROR: test_slow_volume_does_not_block_input_or_snapshot_and_reuses_one_stream (test_input_latency.LatencyTests.test_slow_volume_does_not_block_input_or_snapshot_and_reuses_one_stream)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_input_latency.py", line 43, in test_slow_volume_does_not_block_input_or_snapshot_and_reuses_one_stream
+    with patch.object(controls,'open_remote_socket',side_effect=lambda *_a,**_kw:socket.create_connection(server.server_address)):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'controls' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/controls.py'> does not have the attribute 'open_remote_socket'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_input_latency.py", line 55, in test_slow_volume_does_not_block_input_or_snapshot_and_reuses_one_stream
+    audio_release.set();slow.join(3);tr.close();server.shutdown();server.server_close();worker.join(2)
+                        ^^^^
+UnboundLocalError: cannot access local variable 'slow' where it is not associated with a value
+
+======================================================================
+ERROR: test_audio_failure_is_read_once_again_after_repair_without_input_activation (test_maintenance_input.MaintenanceTests.test_audio_failure_is_read_once_again_after_repair_without_input_activation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_maintenance_input.py", line 28, in test_audio_failure_is_read_once_again_after_repair_without_input_activation
+    with patch.object(controls.threading,'Thread',InlineThread),patch.object(controls,'open_remote_socket',side_effect=AssertionError('audio recovery activated input')):
+                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'controls' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/controls.py'> does not have the attribute 'open_remote_socket'
+
+======================================================================
+ERROR: test_completed_upgrade_retires_old_stream_without_activating_webpad (test_maintenance_input.MaintenanceTests.test_completed_upgrade_retires_old_stream_without_activating_webpad)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_maintenance_input.py", line 62, in test_completed_upgrade_retires_old_stream_without_activating_webpad
+    with patch.object(controls,'open_remote_socket',side_effect=AssertionError('maintenance activated webpad')):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'controls' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/controls.py'> does not have the attribute 'open_remote_socket'
+
+======================================================================
+ERROR: test_pre_repair_audio_completion_cannot_overwrite_the_new_generation (test_maintenance_input.MaintenanceTests.test_pre_repair_audio_completion_cannot_overwrite_the_new_generation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_maintenance_input.py", line 48, in test_pre_repair_audio_completion_cannot_overwrite_the_new_generation
+    with patch.object(controls.threading,'Thread',DeferredThread),patch.object(controls,'open_remote_socket',side_effect=AssertionError('audio recovery activated input')):
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'controls' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/controls.py'> does not have the attribute 'open_remote_socket'
+
+======================================================================
+ERROR: test_pad_settings (unittest.loader._FailedTest.test_pad_settings)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_pad_settings
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_pad_settings.py", line 6, in <module>
+    import pad_settings,webpad,gamepad
+ModuleNotFoundError: No module named 'webpad'
+
+
+======================================================================
+ERROR: test_atomic_replacement_does_not_truncate_a_symlink_source (test_rebuild_config.RecoveryTests.test_atomic_replacement_does_not_truncate_a_symlink_source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_rebuild_config.py", line 47, in setUp
+    (self.base/'hd1910-calibration.training.toml').write_bytes(self.raw_cal);self.cal.write_bytes(self.raw_cal);shutil.copyfile(ROOT/'packaging/hd1910-calibration.template.toml',self.base/'hd1910-calibration.template.toml');recovery.record(self.params,self.cal)
+                                                                                                                                                                                                                                ^^^^^^^^^^^^^^^
+AttributeError: module 'rebuild_config' has no attribute 'record'
+
+======================================================================
+ERROR: test_retired_model_references_migrate_without_changing_operator_parameters (test_rebuild_config.RecoveryTests.test_retired_model_references_migrate_without_changing_operator_parameters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_rebuild_config.py", line 47, in setUp
+    (self.base/'hd1910-calibration.training.toml').write_bytes(self.raw_cal);self.cal.write_bytes(self.raw_cal);shutil.copyfile(ROOT/'packaging/hd1910-calibration.template.toml',self.base/'hd1910-calibration.template.toml');recovery.record(self.params,self.cal)
+                                                                                                                                                                                                                                ^^^^^^^^^^^^^^^
+AttributeError: module 'rebuild_config' has no attribute 'record'
+
+======================================================================
+ERROR: test_saved_installation_sources_keep_latest_settings_without_rebuilding_models (test_rebuild_config.RecoveryTests.test_saved_installation_sources_keep_latest_settings_without_rebuilding_models)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_rebuild_config.py", line 47, in setUp
+    (self.base/'hd1910-calibration.training.toml').write_bytes(self.raw_cal);self.cal.write_bytes(self.raw_cal);shutil.copyfile(ROOT/'packaging/hd1910-calibration.template.toml',self.base/'hd1910-calibration.template.toml');recovery.record(self.params,self.cal)
+                                                                                                                                                                                                                                ^^^^^^^^^^^^^^^
+AttributeError: module 'rebuild_config' has no attribute 'record'
+
+======================================================================
+ERROR: test_service_restart_attempts_once_and_preserves_first_failure (test_rebuild_config.RecoveryTests.test_service_restart_attempts_once_and_preserves_first_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_rebuild_config.py", line 47, in setUp
+    (self.base/'hd1910-calibration.training.toml').write_bytes(self.raw_cal);self.cal.write_bytes(self.raw_cal);shutil.copyfile(ROOT/'packaging/hd1910-calibration.template.toml',self.base/'hd1910-calibration.template.toml');recovery.record(self.params,self.cal)
+                                                                                                                                                                                                                                ^^^^^^^^^^^^^^^
+AttributeError: module 'rebuild_config' has no attribute 'record'
+
+======================================================================
+ERROR: test_merged_hooks_must_match_before_restart (test_runtime.RuntimeTests.test_merged_hooks_must_match_before_restart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_runtime.py", line 71, in test_merged_hooks_must_match_before_restart
+    self.assertTrue(runtime.verify_startup('commissioning')['startup_verified'])
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/runtime.py", line 128, in verify_startup
+    raise ValueError('systemd 实际启动命令不匹配本版 R17，未启动服务：'+start)
+ValueError: systemd 实际启动命令不匹配本版 R17，未启动服务：{ path=/opt/robot/feetech-ft5-r5/robotd ; argv[]=/opt/robot/feetech-ft5-r5/robotd --params /tmp/tmp0268hmgb/robotd.toml --port /dev/ttyS2 --uart-setup --commissioning ; }
+
+======================================================================
+ERROR: test_ready_requires_bus_feedback_and_no_automatic_motion (test_runtime.RuntimeTests.test_ready_requires_bus_feedback_and_no_automatic_motion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_runtime.py", line 79, in test_ready_requires_bus_feedback_and_no_automatic_motion
+    self.assertTrue(runtime.verify_ready('motion')['service_ready'])
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'service_ready'
+
+======================================================================
+ERROR: test_restart_infers_mode_and_waits_only_for_safe_live_control (test_runtime.RuntimeTests.test_restart_infers_mode_and_waits_only_for_safe_live_control)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_runtime.py", line 90, in test_restart_infers_mode_and_waits_only_for_safe_live_control
+    self.assertTrue(runtime.verify_ready()['service_ready'])
+                    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'service_ready'
+
+======================================================================
+ERROR: test_audio_readback_uses_installed_helper_once_without_input_bootstrap (test_settings_sources.SettingsSourcesTests.test_audio_readback_uses_installed_helper_once_without_input_bootstrap)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_settings_sources.py", line 40, in test_audio_readback_uses_installed_helper_once_without_input_bootstrap
+    with patch.object(controls,'open_remote_socket',side_effect=AssertionError('audio/status activated webpad')):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'controls' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/controls.py'> does not have the attribute 'open_remote_socket'
+
+======================================================================
+ERROR: test_status_and_volume (unittest.loader._FailedTest.test_status_and_volume)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_status_and_volume
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_status_and_volume.py", line 15, in <module>
+    import webpad
+ModuleNotFoundError: No module named 'webpad'
+
+
+======================================================================
+ERROR: test_closed_idle_peer_is_replaced_before_press_is_sent (test_system_log.SystemLogTests.test_closed_idle_peer_is_replaced_before_press_is_sent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_system_log.py", line 126, in test_closed_idle_peer_is_replaced_before_press_is_sent
+    with patch.object(controls,'open_remote_socket',side_effect=lambda *_a,**_kw:Socket()),patch.object(controls.select,'select',side_effect=lambda items,*_: (items,[],[])):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'controls' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/controls.py'> does not have the attribute 'open_remote_socket'
+
+======================================================================
+ERROR: test_write_failure_never_resends_uncertain_action (test_system_log.SystemLogTests.test_write_failure_never_resends_uncertain_action)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_system_log.py", line 141, in test_write_failure_never_resends_uncertain_action
+    with patch.object(controls,'open_remote_socket',side_effect=lambda *_a,**_kw:Socket()):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'controls' from '/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/controls.py'> does not have the attribute 'open_remote_socket'
+
+======================================================================
+FAIL: test_current_daemon_can_request_home_before_arrival (test_console_release_compat.ConsoleReleaseTests.test_current_daemon_can_request_home_before_arrival)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_console_release_compat.py", line 51, in test_current_daemon_can_request_home_before_arrival
+    self.assertEqual(service_data.BUILD,build)
+AssertionError: '1fa8438-feetech-ft6-control.35' != '1fa8438-feetech-ft6-control.34'
+- 1fa8438-feetech-ft6-control.35
+?                              ^
++ 1fa8438-feetech-ft6-control.34
+?                              ^
+
+
+======================================================================
+FAIL: test_complete_input_setup_writes_once_and_does_not_start_until_caller_is_ready (test_gamepad.GamepadInstallTests.test_complete_input_setup_writes_once_and_does_not_start_until_caller_is_ready)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_gamepad.py", line 94, in test_complete_input_setup_writes_once_and_does_not_start_until_caller_is_ready
+    self.assertIn(('systemctl','--no-reload','enable','gamesir-xboxd.service','padd.service','microduck-webpad.socket'),calls)
+AssertionError: ('systemctl', '--no-reload', 'enable', 'gamesir-xboxd.service', 'padd.service', 'microduck-webpad.socket') not found in [('modprobe', 'uinput'), ('systemd-sysusers', '/tmp/tmpjul5unj4/bundle/padd-sysusers.conf'), ('systemctl', 'disable', '--now', 'microduck-webpad.socket', 'microduck-webpad.service'), ('systemctl', '--no-reload', 'enable', 'gamesir-xboxd.service', 'padd.service'), ('udevadm', 'control', '--reload-rules'), ('udevadm', 'trigger', '--subsystem-match=input', '--action=change')]
+
+======================================================================
+FAIL: test_native_stream_and_tof_are_forwarded_byte_for_byte_through_actual_production_loop (test_raw_telemetry.RawTelemetryTests.test_native_stream_and_tof_are_forwarded_byte_for_byte_through_actual_production_loop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_raw_telemetry.py", line 156, in test_native_stream_and_tof_are_forwarded_byte_for_byte_through_actual_production_loop
+    self.assertEqual(received['robot']['method'],'robot.rawSubscribe');self.assertEqual(received['tof']['method'],'tof.stream')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'robot.startupSubscribe' != 'robot.rawSubscribe'
+- robot.startupSubscribe
+?       ^^ ^^^^
++ robot.rawSubscribe
+?       ^ ^
+
+
+======================================================================
+FAIL: test_current_identity_and_no_restart_or_audio_failure_hooks (test_release_identity.IdentityTests.test_current_identity_and_no_restart_or_audio_failure_hooks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_release_identity.py", line 11, in test_current_identity_and_no_restart_or_audio_failure_hooks
+    self.assertEqual(runtime.BUILD,__import__('json').loads((ROOT.parent/'BUILD.json').read_text())['build'])
+AssertionError: '1fa8438-feetech-ft6-control.35' != '1fa8438-feetech-ft6-control.34'
+- 1fa8438-feetech-ft6-control.35
+?                              ^
++ 1fa8438-feetech-ft6-control.34
+?                              ^
+
+
+======================================================================
+FAIL: test_hat_modes_and_retire_old_overrides (test_runtime.RuntimeTests.test_hat_modes_and_retire_old_overrides)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_runtime.py", line 37, in test_hat_modes_and_retire_old_overrides
+    self.assertIn('--uart-setup',text)
+AssertionError: '--uart-setup' not found in '# R17 / official 0.15.1 / self-trained HD1910 exports.\n[Unit]\nOnFailure=\n[Service]\nEnvironment=ORT_DYLIB_PATH=/opt/robot/feetech-ft5-r5/onnxruntime/libonnxruntime.so.1.28.0\nUnsetEnvironment=ALSA_CONFIG_PATH\nExecStart=\nExecStart=/opt/robot/feetech-ft5-r5/robotd --socket /run/robotd.sock --params /tmp/tmp4px20qh0/robotd.toml --port /dev/ttyS2\nExecStartPre=\nExecStartPost=\nExecStopPost=\nRestart=always\nRestartSec=2s\nExecStopPost=-/usr/bin/logger -t robotd-exit "result=${SERVICE_RESULT} code=${EXIT_CODE} status=${EXIT_STATUS}"\nTimeoutStartSec=30s\nReadWritePaths=/run /tmp/tmp4px20qh0 /tmp/tmp4px20qh0/models /tmp/tmp4px20qh0/state\nPrivateDevices=no\nDeviceAllow=/dev/ttyS2 rw\nDeviceAllow=char-alsa rw\nSupplementaryGroups=audio\n'
+
+======================================================================
+FAIL: test_complete_installer_recovers_missing_input_units_without_motion (test_upgrade_units.UpgradeUnitTests.test_complete_installer_recovers_missing_input_units_without_motion) (load='not-found', active='inactive', robot='active')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_upgrade_units.py", line 117, in test_complete_installer_recovers_missing_input_units_without_motion
+    self.assertEqual(result.returncode,0,result.stderr);self.assertIn('FULL-INSTALL-FINISHED',result.stdout)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 88 != 0 : 安装未完成；阶段：robotd-start；以上为实际错误，可直接重新升级。
+
+
+======================================================================
+FAIL: test_complete_installer_recovers_missing_input_units_without_motion (test_upgrade_units.UpgradeUnitTests.test_complete_installer_recovers_missing_input_units_without_motion) (load='loaded', active='inactive', robot='inactive')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_upgrade_units.py", line 117, in test_complete_installer_recovers_missing_input_units_without_motion
+    self.assertEqual(result.returncode,0,result.stderr);self.assertIn('FULL-INSTALL-FINISHED',result.stdout)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 88 != 0 : 安装未完成；阶段：robotd-start；以上为实际错误，可直接重新升级。
+
+
+======================================================================
+FAIL: test_complete_installer_recovers_missing_input_units_without_motion (test_upgrade_units.UpgradeUnitTests.test_complete_installer_recovers_missing_input_units_without_motion) (load='loaded', active='failed', robot='inactive')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_upgrade_units.py", line 117, in test_complete_installer_recovers_missing_input_units_without_motion
+    self.assertEqual(result.returncode,0,result.stderr);self.assertIn('FULL-INSTALL-FINISHED',result.stdout)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 88 != 0 : 安装未完成；阶段：robotd-start；以上为实际错误，可直接重新升级。
+
+
+======================================================================
+FAIL: test_complete_installer_recovers_missing_input_units_without_motion (test_upgrade_units.UpgradeUnitTests.test_complete_installer_recovers_missing_input_units_without_motion) (load='masked', active='inactive', robot='inactive')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_upgrade_units.py", line 117, in test_complete_installer_recovers_missing_input_units_without_motion
+    self.assertEqual(result.returncode,0,result.stderr);self.assertIn('FULL-INSTALL-FINISHED',result.stdout)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 88 != 0 : 安装未完成；阶段：robotd-start；以上为实际错误，可直接重新升级。
+
+
+======================================================================
+FAIL: test_complete_installer_recovers_missing_input_units_without_motion (test_upgrade_units.UpgradeUnitTests.test_complete_installer_recovers_missing_input_units_without_motion) (load='loaded', active='active', robot='active')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_upgrade_units.py", line 117, in test_complete_installer_recovers_missing_input_units_without_motion
+    self.assertEqual(result.returncode,0,result.stderr);self.assertIn('FULL-INSTALL-FINISHED',result.stdout)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 88 != 0 : 安装未完成；阶段：robotd-start；以上为实际错误，可直接重新升级。
+
+
+======================================================================
+FAIL: test_mute_migrates_and_os_restore_precedes_robotd_without_startup_audio_hook (test_voice_identity.SystemAudioTests.test_mute_migrates_and_os_restore_precedes_robotd_without_startup_audio_hook)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/packaging/test_voice_identity.py", line 64, in test_mute_migrates_and_os_restore_precedes_robotd_without_startup_audio_hook
+    unit=runtime.unit('motion');self.assertIn('After=alsa-restore.service alsa-state.service',unit)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'After=alsa-restore.service alsa-state.service' not found in '# R17 / official 0.15.1 / self-trained HD1910 exports.\n[Unit]\nOnFailure=\n[Service]\nEnvironment=ORT_DYLIB_PATH=/opt/robot/feetech-ft5-r5/onnxruntime/libonnxruntime.so.1.28.0\nUnsetEnvironment=ALSA_CONFIG_PATH\nExecStart=\nExecStart=/opt/robot/feetech-ft5-r5/robotd --socket /run/robotd.sock --params /etc/robot/feetech-ft5/robotd.toml --port /dev/ttyS2\nExecStartPre=\nExecStartPost=\nExecStopPost=\nRestart=always\nRestartSec=2s\nExecStopPost=-/usr/bin/logger -t robotd-exit "result=${SERVICE_RESULT} code=${EXIT_CODE} status=${EXIT_STATUS}"\nTimeoutStartSec=30s\nReadWritePaths=/run /etc/robot/feetech-ft5 /opt/robot/feetech-ft5-r5/models /var/lib/robot/feetech-ft5/r5\nPrivateDevices=no\nDeviceAllow=/dev/ttyS2 rw\nDeviceAllow=char-alsa rw\nSupplementaryGroups=audio\n'
+
+----------------------------------------------------------------------
+Ran 234 tests in 57.579s
+
+FAILED (failures=11, errors=25)

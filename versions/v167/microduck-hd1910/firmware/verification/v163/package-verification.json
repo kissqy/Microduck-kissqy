@@ -1,0 +1,37 @@
+{
+  "console_version": "1.0.163",
+  "build": "1fa8438-feetech-ft6-control.40",
+  "zip_bytes": 40270337,
+  "zip_sha256": "ccf97e549ba1a6d8d3715b073d587a2f2b9e40de7dfc9fe257163f9d1ce1586b",
+  "firmware_bytes": 34554759,
+  "all_hashes_verified": true,
+  "production_importer_accepted": true,
+  "hardware_tested": false,
+  "baseline": "Microduck-Console-R17-V162.zip",
+  "baseline_sha256": "9e8d82ea6a57dfbfa15592fab980e57a1e67fb2dff1b6e7bfb63f773a2283a5e",
+  "calibration_models_and_service_files_preserved": true,
+  "ssh_open_source_and_web_input_preserved": true,
+  "roller_stand_original_contract_preserved": true,
+  "roller_stand_trigger": "physical_L3_guarded",
+  "manual_test_duration_s": 5.0,
+  "automatic_recovery": false,
+  "changed_firmware_files": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "model_packages.py",
+    "padd",
+    "release_identity.py",
+    "robotd",
+    "robotd-profile.toml"
+  ],
+  "changed_console_files": [
+    "BUILD_MANIFEST.json",
+    "README.zh-CN.md",
+    "release_identity.py",
+    "service_control.py",
+    "static/index.html",
+    "updates/Microduck-Robotd-FT6-R17.tar.gz"
+  ]
+}

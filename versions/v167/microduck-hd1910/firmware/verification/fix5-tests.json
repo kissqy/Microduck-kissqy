@@ -1,0 +1,67 @@
+[
+  {
+    "name": "pc-fix",
+    "exit_code": 0,
+    "log": "verification/fix5-pc-fix-tests.log"
+  },
+  {
+    "name": "streams",
+    "exit_code": 0,
+    "log": "verification/fix5-streams-tests.log"
+  },
+  {
+    "name": "query",
+    "exit_code": 0,
+    "log": "verification/fix5-query-tests.log"
+  },
+  {
+    "name": "install",
+    "exit_code": 0,
+    "log": "verification/fix5-install-tests.log"
+  },
+  {
+    "name": "test_install_progress157",
+    "exit_code": 0,
+    "log": "verification/fix5-test_install_progress157.log"
+  },
+  {
+    "name": "test_fix157pc",
+    "exit_code": 0,
+    "log": "verification/fix5-test_fix157pc.log"
+  },
+  {
+    "name": "test_controls154",
+    "exit_code": 0,
+    "log": "verification/fix5-test_controls154.log"
+  },
+  {
+    "name": "test_connection_ui155",
+    "exit_code": 0,
+    "log": "verification/fix5-test_connection_ui155.log"
+  },
+  {
+    "name": "test_startup_ui",
+    "exit_code": 0,
+    "log": "verification/fix5-test_startup_ui.log"
+  },
+  {
+    "name": "test_joint_direction155",
+    "exit_code": 0,
+    "log": "verification/fix5-test_joint_direction155.log"
+  },
+  {
+    "name": "test_pose_state",
+    "exit_code": 0,
+    "log": "verification/fix5-test_pose_state.log"
+  },
+  {
+    "name": "test_calibration_reference",
+    "exit_code": 0,
+    "log": "verification/fix5-test_calibration_reference.log"
+  },
+  {
+    "name": "test_gamepad_repair_ui",
+    "exit_code": 0,
+    "log": "verification/fix5-test_gamepad_repair_ui.log"
+  }
+]

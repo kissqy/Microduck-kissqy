@@ -1,0 +1,10 @@
+COMMAND: cargo zigbuild -p robotd --release --target aarch64-unknown-linux-gnu.2.31 --frozen
+    Blocking waiting for file lock on package cache
+   Compiling duck-control v0.15.1 (/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.154/duck-control)
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.154/robotd)
+warning: linker stderr: ignoring deprecated linker optimization setting '1'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `robotd` (bin "robotd") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 1m 36s

@@ -1,0 +1,39 @@
+{
+  "repository": "pollen-robotics/microduck",
+  "ref": "1fa84386f07884e27866411bc1ba166977bced95",
+  "files": {
+    "robotd/src/control.rs": {
+      "sha256": "363c0a0c44115e220e0b6cfb3e425ecc5e4c3e93dbfb506404b54b6911ee9266",
+      "url": "https://github.com/pollen-robotics/microduck/blob/1fa84386f07884e27866411bc1ba166977bced95/robotd/src/control.rs"
+    },
+    "robotd/src/intents.rs": {
+      "sha256": "dde1a2585541a0f1f5d8ee89f98907387ec25d900b7a2ede326181d4bd13485f",
+      "url": "https://github.com/pollen-robotics/microduck/blob/1fa84386f07884e27866411bc1ba166977bced95/robotd/src/intents.rs"
+    },
+    "robotd/src/main.rs": {
+      "sha256": "7702be3aacdef13e196218e0dd0d8d3672a4822e06275451cbf9f51eeb99a0d5",
+      "url": "https://github.com/pollen-robotics/microduck/blob/1fa84386f07884e27866411bc1ba166977bced95/robotd/src/main.rs"
+    },
+    "robotd/src/sound.rs": {
+      "sha256": "c8de4c9b6b113a5be2c1f4a82bac8973625d77a6ac034752fc25baa95c5498fc",
+      "url": "https://github.com/pollen-robotics/microduck/blob/1fa84386f07884e27866411bc1ba166977bced95/robotd/src/sound.rs"
+    },
+    "robotd/systemd/robotd.service": {
+      "sha256": "8ff2c675a77d66150c3db98182453fe1f1744222d75f903ca07370572f39a892",
+      "url": "https://github.com/pollen-robotics/microduck/blob/1fa84386f07884e27866411bc1ba166977bced95/robotd/systemd/robotd.service"
+    }
+  },
+  "shutdown_path": {
+    "current_padd": "Microduck-UI45/verification/ui42/native-source/padd/src/main.rs:1485-1501",
+    "ipc": "robot.shutdown",
+    "handler": "robotd/src/main.rs:4443-4446",
+    "accepted_means": "latched request, not completed physical shutdown",
+    "sit_conditions": "enabled && Ready && !fallen && controller.has_sitstand()",
+    "sit_path": "play peck nonblocking, begin_shutdown_sit, wait 2*sitstand_ramp_s, cut torque, poweroff",
+    "no_sit_path": "cut torque, play peck blocking up to 1500ms, disable policy, poweroff",
+    "audio_conditions": "audio enabled, peck bank available and aplay/ALSA working; no audio success receipt",
+    "poweroff": "robotd root unit calls setsid sh -c systemctl poweroff",
+    "controller_client_change": "Send same IPC only; do not precede with relax, do not replay/fallback to OS poweroff, do not synthesize audio or fixed client waits",
+    "important_limit": "IPC accepted does not prove control thread progressed, sound played, torque cut or OS powered off; missing daemon must be surfaced as error"
+  }
+}

@@ -1,0 +1,460 @@
+{
+  "schema": "microduck-arm-sigbus-repro/v1",
+  "hardware_tested": false,
+  "emulator": "qemu-aarch64 version 7.2.22 (Debian 1:7.2+dfsg-7+deb12u18+b3)",
+  "libraries": {
+    "truncated": {
+      "bytes": 14073856,
+      "sha256": "728d6f138802a888d792c09d51ca6497c4c1c22961e736e51a4d7f2366223110"
+    },
+    "complete": {
+      "bytes": 20591712,
+      "sha256": "f1ec1a08eb99bd6e5401340f0a2b101381bf4694415480291dc13bcaa30f9ec7"
+    }
+  },
+  "results": [
+    {
+      "version": "new",
+      "library": "complete",
+      "model": "1c94934c6421ec72ed48079cea749668",
+      "code": 0,
+      "elapsed": 6.902,
+      "log": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "cmd": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/sigbus-repro/libonnxruntime-complete.so.1.28.0",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/models/1c94934c6421ec72ed48079cea749668/policy.onnx"
+      ]
+    },
+    {
+      "version": "new",
+      "library": "complete",
+      "model": "1cbf8730eadd75a5704332c9f3c10f60",
+      "code": 0,
+      "elapsed": 11.476,
+      "log": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "cmd": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/sigbus-repro/libonnxruntime-complete.so.1.28.0",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/models/1cbf8730eadd75a5704332c9f3c10f60/policy.onnx"
+      ]
+    },
+    {
+      "version": "new",
+      "library": "complete",
+      "model": "59e15d7b04d0c40e9b11b8a70bdecae6",
+      "code": 0,
+      "elapsed": 7.221,
+      "log": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "cmd": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/sigbus-repro/libonnxruntime-complete.so.1.28.0",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/models/59e15d7b04d0c40e9b11b8a70bdecae6/policy.onnx"
+      ]
+    },
+    {
+      "version": "new",
+      "library": "complete",
+      "model": "a481d9f211f31d9476ab1a319fe362a2",
+      "code": 0,
+      "elapsed": 7.351,
+      "log": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "cmd": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/sigbus-repro/libonnxruntime-complete.so.1.28.0",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/models/a481d9f211f31d9476ab1a319fe362a2/policy.onnx"
+      ]
+    },
+    {
+      "version": "new",
+      "library": "complete",
+      "model": "b14e3a8b56ddbb8d2d831e727774a168",
+      "code": 0,
+      "elapsed": 13.183,
+      "log": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "cmd": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/sigbus-repro/libonnxruntime-complete.so.1.28.0",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/models/b14e3a8b56ddbb8d2d831e727774a168/policy.onnx"
+      ]
+    },
+    {
+      "version": "old",
+      "library": "complete",
+      "model": "1c94934c6421ec72ed48079cea749668",
+      "code": 0,
+      "elapsed": 8.229,
+      "log": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "cmd": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/sigbus-repro/libonnxruntime-complete.so.1.28.0",
+        "/workspace/scratch/5a402859beee/firmware150/Microduck-Robotd-FT6-R17/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/models/1c94934c6421ec72ed48079cea749668/policy.onnx"
+      ]
+    },
+    {
+      "version": "old",
+      "library": "complete",
+      "model": "1cbf8730eadd75a5704332c9f3c10f60",
+      "code": 0,
+      "elapsed": 5.361,
+      "log": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "cmd": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/sigbus-repro/libonnxruntime-complete.so.1.28.0",
+        "/workspace/scratch/5a402859beee/firmware150/Microduck-Robotd-FT6-R17/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/models/1cbf8730eadd75a5704332c9f3c10f60/policy.onnx"
+      ]
+    },
+    {
+      "version": "old",
+      "library": "complete",
+      "model": "59e15d7b04d0c40e9b11b8a70bdecae6",
+      "code": 0,
+      "elapsed": 4.852,
+      "log": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "cmd": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/sigbus-repro/libonnxruntime-complete.so.1.28.0",
+        "/workspace/scratch/5a402859beee/firmware150/Microduck-Robotd-FT6-R17/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/models/59e15d7b04d0c40e9b11b8a70bdecae6/policy.onnx"
+      ]
+    },
+    {
+      "version": "old",
+      "library": "complete",
+      "model": "a481d9f211f31d9476ab1a319fe362a2",
+      "code": 0,
+      "elapsed": 4.455,
+      "log": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "cmd": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/sigbus-repro/libonnxruntime-complete.so.1.28.0",
+        "/workspace/scratch/5a402859beee/firmware150/Microduck-Robotd-FT6-R17/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/models/a481d9f211f31d9476ab1a319fe362a2/policy.onnx"
+      ]
+    },
+    {
+      "version": "old",
+      "library": "complete",
+      "model": "b14e3a8b56ddbb8d2d831e727774a168",
+      "code": 0,
+      "elapsed": 4.865,
+      "log": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "cmd": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/sigbus-repro/libonnxruntime-complete.so.1.28.0",
+        "/workspace/scratch/5a402859beee/firmware150/Microduck-Robotd-FT6-R17/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/models/b14e3a8b56ddbb8d2d831e727774a168/policy.onnx"
+      ]
+    },
+    {
+      "version": "new",
+      "library": "truncated",
+      "model": "1c94934c6421ec72ed48079cea749668",
+      "code": -7,
+      "elapsed": 0.266,
+      "log": "qemu: uncaught target signal 7 (Bus error) - core dumped\n",
+      "cmd": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/onnxruntime/libonnxruntime.so.1.28.0",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/models/1c94934c6421ec72ed48079cea749668/policy.onnx"
+      ]
+    },
+    {
+      "version": "old",
+      "library": "truncated",
+      "model": "1c94934c6421ec72ed48079cea749668",
+      "code": -7,
+      "elapsed": 0.165,
+      "log": "qemu: uncaught target signal 7 (Bus error) - core dumped\n",
+      "cmd": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/onnxruntime/libonnxruntime.so.1.28.0",
+        "/workspace/scratch/5a402859beee/firmware150/Microduck-Robotd-FT6-R17/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/models/1c94934c6421ec72ed48079cea749668/policy.onnx"
+      ]
+    }
+  ],
+  "common_environment": {
+    "LD_LIBRARY_PATH": "/workspace/scratch/5a402859beee/sigbus-repro/root241/usr/lib/aarch64-linux-gnu",
+    "TOKIO_WORKER_THREADS": "2",
+    "ORT_DYLIB_PATH": "set per result library path with qemu -E"
+  },
+  "runtime_origin": {
+    "archive": "/workspace/scratch/5a402859beee/work/Microduck-Console-R17-v1.0.151/updates/Microduck-Robotd-FT6-R17.tar.gz",
+    "member": "Microduck-Robotd-FT6-R17/onnxruntime/libonnxruntime.so.1.28.0",
+    "complete_bytes": 20591712,
+    "complete_sha256": "f1ec1a08eb99bd6e5401340f0a2b101381bf4694415480291dc13bcaa30f9ec7"
+  },
+  "cpuinfo_shim": {
+    "proc/cpuinfo": "processor\t: 0\nBogoMIPS\t: 48.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics\nCPU implementer\t: 0x41\nCPU architecture: 8\nCPU variant\t: 0x0\nCPU part\t: 0xd05\nCPU revision\t: 0\n\nprocessor\t: 1\nBogoMIPS\t: 48.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics\nCPU implementer\t: 0x41\nCPU architecture: 8\nCPU variant\t: 0x0\nCPU part\t: 0xd05\nCPU revision\t: 0\n\nprocessor\t: 2\nBogoMIPS\t: 48.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics\nCPU implementer\t: 0x41\nCPU architecture: 8\nCPU variant\t: 0x0\nCPU part\t: 0xd05\nCPU revision\t: 0\n\nprocessor\t: 3\nBogoMIPS\t: 48.00\nFeatures\t: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics\nCPU implementer\t: 0x41\nCPU architecture: 8\nCPU variant\t: 0x0\nCPU part\t: 0xd05\nCPU revision\t: 0\n",
+    "sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size": "64\n",
+    "sys/devices/system/cpu/cpu0/cache/index0/level": "1\n",
+    "sys/devices/system/cpu/cpu0/cache/index0/number_of_sets": "128\n",
+    "sys/devices/system/cpu/cpu0/cache/index0/shared_cpu_list": "0\n",
+    "sys/devices/system/cpu/cpu0/cache/index0/size": "32K\n",
+    "sys/devices/system/cpu/cpu0/cache/index0/type": "Data\n",
+    "sys/devices/system/cpu/cpu0/cache/index0/ways_of_associativity": "4\n",
+    "sys/devices/system/cpu/cpu0/cache/index1/coherency_line_size": "64\n",
+    "sys/devices/system/cpu/cpu0/cache/index1/level": "1\n",
+    "sys/devices/system/cpu/cpu0/cache/index1/number_of_sets": "128\n",
+    "sys/devices/system/cpu/cpu0/cache/index1/shared_cpu_list": "0\n",
+    "sys/devices/system/cpu/cpu0/cache/index1/size": "32K\n",
+    "sys/devices/system/cpu/cpu0/cache/index1/type": "Instruction\n",
+    "sys/devices/system/cpu/cpu0/cache/index1/ways_of_associativity": "4\n",
+    "sys/devices/system/cpu/cpu0/cache/index2/coherency_line_size": "64\n",
+    "sys/devices/system/cpu/cpu0/cache/index2/level": "2\n",
+    "sys/devices/system/cpu/cpu0/cache/index2/number_of_sets": "128\n",
+    "sys/devices/system/cpu/cpu0/cache/index2/shared_cpu_list": "0-3\n",
+    "sys/devices/system/cpu/cpu0/cache/index2/size": "512K\n",
+    "sys/devices/system/cpu/cpu0/cache/index2/type": "Unified\n",
+    "sys/devices/system/cpu/cpu0/cache/index2/ways_of_associativity": "4\n",
+    "sys/devices/system/cpu/cpu0/topology/cluster_cpus_list": "0-3\n",
+    "sys/devices/system/cpu/cpu0/topology/cluster_id": "0\n",
+    "sys/devices/system/cpu/cpu0/topology/core_cpus_list": "0\n",
+    "sys/devices/system/cpu/cpu0/topology/core_id": "0\n",
+    "sys/devices/system/cpu/cpu0/topology/core_siblings_list": "0-3\n",
+    "sys/devices/system/cpu/cpu0/topology/package_cpus_list": "0-3\n",
+    "sys/devices/system/cpu/cpu0/topology/physical_package_id": "0\n",
+    "sys/devices/system/cpu/cpu0/topology/thread_siblings_list": "0\n",
+    "sys/devices/system/cpu/cpu1/cache/index0/coherency_line_size": "64\n",
+    "sys/devices/system/cpu/cpu1/cache/index0/level": "1\n",
+    "sys/devices/system/cpu/cpu1/cache/index0/number_of_sets": "128\n",
+    "sys/devices/system/cpu/cpu1/cache/index0/shared_cpu_list": "1\n",
+    "sys/devices/system/cpu/cpu1/cache/index0/size": "32K\n",
+    "sys/devices/system/cpu/cpu1/cache/index0/type": "Data\n",
+    "sys/devices/system/cpu/cpu1/cache/index0/ways_of_associativity": "4\n",
+    "sys/devices/system/cpu/cpu1/cache/index1/coherency_line_size": "64\n",
+    "sys/devices/system/cpu/cpu1/cache/index1/level": "1\n",
+    "sys/devices/system/cpu/cpu1/cache/index1/number_of_sets": "128\n",
+    "sys/devices/system/cpu/cpu1/cache/index1/shared_cpu_list": "1\n",
+    "sys/devices/system/cpu/cpu1/cache/index1/size": "32K\n",
+    "sys/devices/system/cpu/cpu1/cache/index1/type": "Instruction\n",
+    "sys/devices/system/cpu/cpu1/cache/index1/ways_of_associativity": "4\n",
+    "sys/devices/system/cpu/cpu1/cache/index2/coherency_line_size": "64\n",
+    "sys/devices/system/cpu/cpu1/cache/index2/level": "2\n",
+    "sys/devices/system/cpu/cpu1/cache/index2/number_of_sets": "128\n",
+    "sys/devices/system/cpu/cpu1/cache/index2/shared_cpu_list": "0-3\n",
+    "sys/devices/system/cpu/cpu1/cache/index2/size": "512K\n",
+    "sys/devices/system/cpu/cpu1/cache/index2/type": "Unified\n",
+    "sys/devices/system/cpu/cpu1/cache/index2/ways_of_associativity": "4\n",
+    "sys/devices/system/cpu/cpu1/topology/cluster_cpus_list": "0-3\n",
+    "sys/devices/system/cpu/cpu1/topology/cluster_id": "0\n",
+    "sys/devices/system/cpu/cpu1/topology/core_cpus_list": "1\n",
+    "sys/devices/system/cpu/cpu1/topology/core_id": "1\n",
+    "sys/devices/system/cpu/cpu1/topology/core_siblings_list": "0-3\n",
+    "sys/devices/system/cpu/cpu1/topology/package_cpus_list": "0-3\n",
+    "sys/devices/system/cpu/cpu1/topology/physical_package_id": "0\n",
+    "sys/devices/system/cpu/cpu1/topology/thread_siblings_list": "1\n",
+    "sys/devices/system/cpu/cpu2/cache/index0/coherency_line_size": "64\n",
+    "sys/devices/system/cpu/cpu2/cache/index0/level": "1\n",
+    "sys/devices/system/cpu/cpu2/cache/index0/number_of_sets": "128\n",
+    "sys/devices/system/cpu/cpu2/cache/index0/shared_cpu_list": "2\n",
+    "sys/devices/system/cpu/cpu2/cache/index0/size": "32K\n",
+    "sys/devices/system/cpu/cpu2/cache/index0/type": "Data\n",
+    "sys/devices/system/cpu/cpu2/cache/index0/ways_of_associativity": "4\n",
+    "sys/devices/system/cpu/cpu2/cache/index1/coherency_line_size": "64\n",
+    "sys/devices/system/cpu/cpu2/cache/index1/level": "1\n",
+    "sys/devices/system/cpu/cpu2/cache/index1/number_of_sets": "128\n",
+    "sys/devices/system/cpu/cpu2/cache/index1/shared_cpu_list": "2\n",
+    "sys/devices/system/cpu/cpu2/cache/index1/size": "32K\n",
+    "sys/devices/system/cpu/cpu2/cache/index1/type": "Instruction\n",
+    "sys/devices/system/cpu/cpu2/cache/index1/ways_of_associativity": "4\n",
+    "sys/devices/system/cpu/cpu2/cache/index2/coherency_line_size": "64\n",
+    "sys/devices/system/cpu/cpu2/cache/index2/level": "2\n",
+    "sys/devices/system/cpu/cpu2/cache/index2/number_of_sets": "128\n",
+    "sys/devices/system/cpu/cpu2/cache/index2/shared_cpu_list": "0-3\n",
+    "sys/devices/system/cpu/cpu2/cache/index2/size": "512K\n",
+    "sys/devices/system/cpu/cpu2/cache/index2/type": "Unified\n",
+    "sys/devices/system/cpu/cpu2/cache/index2/ways_of_associativity": "4\n",
+    "sys/devices/system/cpu/cpu2/topology/cluster_cpus_list": "0-3\n",
+    "sys/devices/system/cpu/cpu2/topology/cluster_id": "0\n",
+    "sys/devices/system/cpu/cpu2/topology/core_cpus_list": "2\n",
+    "sys/devices/system/cpu/cpu2/topology/core_id": "2\n",
+    "sys/devices/system/cpu/cpu2/topology/core_siblings_list": "0-3\n",
+    "sys/devices/system/cpu/cpu2/topology/package_cpus_list": "0-3\n",
+    "sys/devices/system/cpu/cpu2/topology/physical_package_id": "0\n",
+    "sys/devices/system/cpu/cpu2/topology/thread_siblings_list": "2\n",
+    "sys/devices/system/cpu/cpu3/cache/index0/coherency_line_size": "64\n",
+    "sys/devices/system/cpu/cpu3/cache/index0/level": "1\n",
+    "sys/devices/system/cpu/cpu3/cache/index0/number_of_sets": "128\n",
+    "sys/devices/system/cpu/cpu3/cache/index0/shared_cpu_list": "3\n",
+    "sys/devices/system/cpu/cpu3/cache/index0/size": "32K\n",
+    "sys/devices/system/cpu/cpu3/cache/index0/type": "Data\n",
+    "sys/devices/system/cpu/cpu3/cache/index0/ways_of_associativity": "4\n",
+    "sys/devices/system/cpu/cpu3/cache/index1/coherency_line_size": "64\n",
+    "sys/devices/system/cpu/cpu3/cache/index1/level": "1\n",
+    "sys/devices/system/cpu/cpu3/cache/index1/number_of_sets": "128\n",
+    "sys/devices/system/cpu/cpu3/cache/index1/shared_cpu_list": "3\n",
+    "sys/devices/system/cpu/cpu3/cache/index1/size": "32K\n",
+    "sys/devices/system/cpu/cpu3/cache/index1/type": "Instruction\n",
+    "sys/devices/system/cpu/cpu3/cache/index1/ways_of_associativity": "4\n",
+    "sys/devices/system/cpu/cpu3/cache/index2/coherency_line_size": "64\n",
+    "sys/devices/system/cpu/cpu3/cache/index2/level": "2\n",
+    "sys/devices/system/cpu/cpu3/cache/index2/number_of_sets": "128\n",
+    "sys/devices/system/cpu/cpu3/cache/index2/shared_cpu_list": "0-3\n",
+    "sys/devices/system/cpu/cpu3/cache/index2/size": "512K\n",
+    "sys/devices/system/cpu/cpu3/cache/index2/type": "Unified\n",
+    "sys/devices/system/cpu/cpu3/cache/index2/ways_of_associativity": "4\n",
+    "sys/devices/system/cpu/cpu3/topology/cluster_cpus_list": "0-3\n",
+    "sys/devices/system/cpu/cpu3/topology/cluster_id": "0\n",
+    "sys/devices/system/cpu/cpu3/topology/core_cpus_list": "3\n",
+    "sys/devices/system/cpu/cpu3/topology/core_id": "3\n",
+    "sys/devices/system/cpu/cpu3/topology/core_siblings_list": "0-3\n",
+    "sys/devices/system/cpu/cpu3/topology/package_cpus_list": "0-3\n",
+    "sys/devices/system/cpu/cpu3/topology/physical_package_id": "0\n",
+    "sys/devices/system/cpu/cpu3/topology/thread_siblings_list": "3\n",
+    "sys/devices/system/cpu/online": "0-3\n",
+    "sys/devices/system/cpu/possible": "0-3\n",
+    "sys/devices/system/cpu/present": "0-3\n"
+  },
+  "cpuinfo_shim_reason": "QEMU ARM ONNX Runtime CPUinfo otherwise reads host x86 proc/sys topology and dereferences null while processing cache sysfs; target prefix provides minimal four-core ARM A55 topology for emulator only. This is not deployed to the robot.",
+  "limits": [
+    "No real ARM board or UART access.",
+    "Container denies AF_UNIX socket creation even from native Python, so fake/normal daemon lifecycle cannot run; policy validation does not create sockets or access UART.",
+    "QEMU CPUinfo shim is an emulation fixture, not firmware change."
+  ],
+  "sigbus_strace_file": "/workspace/scratch/5a402859beee/sigbus-repro/truncated-sigbus-strace.log",
+  "sigbus_strace_evidence": "SIGBUS code2 immediately after mmap of file offset0x1367000 (20,344,832), which exceeds truncated file length14,073,856.",
+  "new_robotd": {
+    "path": "/workspace/scratch/5a402859beee/package152/Microduck-Robotd-FT6-R17/robotd",
+    "bytes": 6796840,
+    "sha256": "c266fa6d3127e164c7d8d9be11ceac5d9ff72cf565ec37877d6d024cf2101e31"
+  },
+  "old_robotd": {
+    "path": "/workspace/scratch/5a402859beee/firmware150/Microduck-Robotd-FT6-R17/robotd",
+    "bytes": 6785096,
+    "sha256": "cf02d53c1368cf770dabf7a9eba370c2cf49dfdc56f617623d0167ad8531f71e"
+  },
+  "elf_segments": {
+    "truncated": [
+      {
+        "type": "PT_LOAD",
+        "offset": 0,
+        "filesz": 654776,
+        "end": 654776,
+        "within_file": true
+      },
+      {
+        "type": "PT_LOAD",
+        "offset": 655360,
+        "filesz": 15634104,
+        "end": 16289464,
+        "within_file": false
+      },
+      {
+        "type": "PT_LOAD",
+        "offset": 16318464,
+        "filesz": 3969447,
+        "end": 20287911,
+        "within_file": false
+      },
+      {
+        "type": "PT_LOAD",
+        "offset": 20348096,
+        "filesz": 240160,
+        "end": 20588256,
+        "within_file": false
+      },
+      {
+        "type": "PT_DYNAMIC",
+        "offset": 20571120,
+        "filesz": 656,
+        "end": 20571776,
+        "within_file": false
+      }
+    ],
+    "complete": [
+      {
+        "type": "PT_LOAD",
+        "offset": 0,
+        "filesz": 654776,
+        "end": 654776,
+        "within_file": true
+      },
+      {
+        "type": "PT_LOAD",
+        "offset": 655360,
+        "filesz": 15634104,
+        "end": 16289464,
+        "within_file": true
+      },
+      {
+        "type": "PT_LOAD",
+        "offset": 16318464,
+        "filesz": 3969447,
+        "end": 20287911,
+        "within_file": true
+      },
+      {
+        "type": "PT_LOAD",
+        "offset": 20348096,
+        "filesz": 240160,
+        "end": 20588256,
+        "within_file": true
+      },
+      {
+        "type": "PT_DYNAMIC",
+        "offset": 20571120,
+        "filesz": 656,
+        "end": 20571776,
+        "within_file": true
+      }
+    ]
+  }
+}

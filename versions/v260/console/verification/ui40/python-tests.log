@@ -1,0 +1,16 @@
+{"kind": "voice_state", "source": "speech_control", "control_request_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "speech_revision": 1, "speech_session": "", "unlocked": true, "message": "Zero已确认：豆包说话已启用"}
+{"kind": "voice_state", "source": "speech_control", "control_request_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "speech_revision": 2, "speech_session": "", "unlocked": false, "message": "Zero已确认：豆包说话未启用，鸭叫保留"}
+{"kind": "voice_state", "source": "speech_control", "control_request_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "speech_revision": 3, "speech_session": "", "unlocked": true, "message": "Zero已确认：豆包说话已启用"}
+127.0.0.1 - - [31/Oct/2026 20:30:32] "POST /api/ai/speech HTTP/1.1" 403 -
+127.0.0.1 - - [31/Oct/2026 20:30:32] "POST /api/ai/speech HTTP/1.1" 200 -
+127.0.0.1 - - [31/Oct/2026 20:30:33] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [31/Oct/2026 20:30:33] "POST /api/ai/configure HTTP/1.1" 403 -
+127.0.0.1 - - [31/Oct/2026 20:30:33] "POST /api/ai/configure HTTP/1.1" 200 -
+127.0.0.1 - - [31/Oct/2026 20:30:33] "POST /api/ai/skills HTTP/1.1" 400 -
+127.0.0.1 - - [31/Oct/2026 20:30:34] "POST /api/ai/vision HTTP/1.1" 403 -
+127.0.0.1 - - [31/Oct/2026 20:30:34] "POST /api/ai/vision HTTP/1.1" 200 -
+127.0.0.1 - - [31/Oct/2026 20:30:34] "POST /api/ai/vision HTTP/1.1" 400 -
+----------------------------------------------------------------------
+Ran 239 tests in 36.404s
+
+OK

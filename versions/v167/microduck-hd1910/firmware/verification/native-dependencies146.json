@@ -1,0 +1,70 @@
+{
+  "host": "/tmp/r17-debian-build-deps/host",
+  "arm64": "/tmp/r17-debian-build-deps/arm64",
+  "groups": [
+    {
+      "suite": "bookworm",
+      "architecture": "amd64",
+      "index_url": "https://deb.debian.org/debian/dists/bookworm/main/binary-amd64/Packages.xz",
+      "index_sha256": "9e0b5aabb2465b3d2e7a7fe27f9913846277833f7a2826e7767acccff5b588c5",
+      "packages": [
+        {
+          "package": "pkgconf-bin",
+          "version": "1.8.1-1",
+          "architecture": "amd64",
+          "url": "https://deb.debian.org/debian/pool/main/p/pkgconf/pkgconf-bin_1.8.1-1_amd64.deb",
+          "sha256": "8fb5a8f83e46ad04b4cf02651ceec56c0611a335cf0d30780d859a95d0400174",
+          "destination": "/tmp/r17-debian-build-deps/host"
+        },
+        {
+          "package": "libpkgconf3",
+          "version": "1.8.1-1",
+          "architecture": "amd64",
+          "url": "https://deb.debian.org/debian/pool/main/p/pkgconf/libpkgconf3_1.8.1-1_amd64.deb",
+          "sha256": "da01fb901123ae498c36387a32240e09e1f2866810146c5a574273f7eaf31093",
+          "destination": "/tmp/r17-debian-build-deps/host"
+        },
+        {
+          "package": "libudev-dev",
+          "version": "252.39-1~deb12u2",
+          "architecture": "amd64",
+          "url": "https://deb.debian.org/debian/pool/main/s/systemd/libudev-dev_252.39-1~deb12u2_amd64.deb",
+          "sha256": "b8795a05b96799cb25ed3677eef8e8b1f1facdf07ad4527e06ef8f82ca164fbd",
+          "destination": "/tmp/r17-debian-build-deps/host"
+        },
+        {
+          "package": "libudev1",
+          "version": "252.39-1~deb12u2",
+          "architecture": "amd64",
+          "url": "https://deb.debian.org/debian/pool/main/s/systemd/libudev1_252.39-1~deb12u2_amd64.deb",
+          "sha256": "6f7e08f11c4809d2e5998c775f7b423ab5ec2ce0309494b4a2615037052245e2",
+          "destination": "/tmp/r17-debian-build-deps/host"
+        }
+      ]
+    },
+    {
+      "suite": "bullseye",
+      "architecture": "arm64",
+      "index_url": "https://deb.debian.org/debian/dists/bullseye/main/binary-arm64/Packages.xz",
+      "index_sha256": "71a52585dc5ca78e5d682e13fc702a077c2b14355bce020ab0ff94e4ef84107a",
+      "packages": [
+        {
+          "package": "libudev-dev",
+          "version": "247.3-7+deb11u5",
+          "architecture": "arm64",
+          "url": "https://deb.debian.org/debian/pool/main/s/systemd/libudev-dev_247.3-7+deb11u5_arm64.deb",
+          "sha256": "608eecca1c50230a5488ce436e30926f3b93c57ed018fd7318f1fd278070bdef",
+          "destination": "/tmp/r17-debian-build-deps/arm64"
+        },
+        {
+          "package": "libudev1",
+          "version": "247.3-7+deb11u5",
+          "architecture": "arm64",
+          "url": "https://deb.debian.org/debian/pool/main/s/systemd/libudev1_247.3-7+deb11u5_arm64.deb",
+          "sha256": "df88275dafcc3b0759ef03d5027fa1f90f48bf7aeec461887798bd18298fe799",
+          "destination": "/tmp/r17-debian-build-deps/arm64"
+        }
+      ]
+    }
+  ]
+}

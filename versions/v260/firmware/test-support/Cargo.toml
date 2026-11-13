@@ -1,0 +1,22 @@
+[package]
+name = "test-support"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Signed-release fixtures for tests. Never shipped."
+publish = false
+
+# Deliberately depends on the same crates the engine verifies with, so a fixture cannot
+# produce an artifact the real code would reject for a reason the fixture invented.
+[dependencies]
+minisign = "0.9.1"
+semver.workspace = true
+serde_json.workspace = true
+sha2 = "0.11.0"
+tar = "0.4.46"
+tempfile = "3.27.0"
+zstd = "0.13"
+
+# Only the `fake-release` example, which is a CLI and needs to parse like one.
+[dev-dependencies]
+clap.workspace = true

@@ -1,0 +1,11 @@
+test_automatic_recovery_is_disabled_and_manual_installer_does_not_call_updater (test_startup157.StartupTests.test_automatic_recovery_is_disabled_and_manual_installer_does_not_call_updater) ... ok
+test_config_backup_is_made_on_actual_change_and_cannot_be_active_dropin (test_startup157.StartupTests.test_config_backup_is_made_on_actual_change_and_cannot_be_active_dropin) ... ok
+test_explicit_restart_status_queries_once_and_accepts_waiting (test_startup157.StartupTests.test_explicit_restart_status_queries_once_and_accepts_waiting) ... ok
+test_physical_input_install_retires_web_device_without_starting_robot (test_startup157.StartupTests.test_physical_input_install_retires_web_device_without_starting_robot) ... ok
+test_restart_and_core_start_are_not_gated_by_models_or_input_setup (test_startup157.StartupTests.test_restart_and_core_start_are_not_gated_by_models_or_input_setup) ... ok
+test_unit_has_official_restart_without_auxiliary_gates (test_startup157.StartupTests.test_unit_has_official_restart_without_auxiliary_gates) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.003s
+
+OK

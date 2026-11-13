@@ -1,0 +1,137 @@
+{
+  "console_version": "1.0.157-Fix1",
+  "service_build": "1fa8438-feetech-ft6-control.35",
+  "release_baseline": "Microduck-Source-R17-v1.0.157",
+  "firmware_reinstall_required": false,
+  "firmware_archive_byte_identical": true,
+  "firmware_sha256": "65595d5127407dcb85b150ebc4fbc9dafc363ca5d0774faab6ac570eaf40da66",
+  "native_sources_unchanged": true,
+  "installed_payloads_unchanged": true,
+  "model_weights_unchanged": true,
+  "added_robot_polling": false,
+  "added_50hz_work": false,
+  "removed_shortcut": {
+    "button": "management-kick-right",
+    "service_action": "run-skill",
+    "rb_official_input_preserved": true
+  },
+  "changes": [
+    "Preserve healthy input WebSocket/SSH during service work and ordinary action refusal; neutralize input once on explicit restart.",
+    "Clear robotd endpoint state after subscription ACK while keeping independent ToF and raw connection generation.",
+    "Expose four-stage startup snapshots to the browser and PC checks.",
+    "Disable gated skill buttons using already received fresh motion/policy/model/HOME/IMU/torque state.",
+    "Default workflow log plus full detail log using the original single writer thread."
+  ],
+  "changed_files": [
+    "console/README.zh-CN.md",
+    "console/console.py",
+    "console/controls.py",
+    "console/docs/releases/R157-Fix1.md",
+    "console/raw_telemetry.py",
+    "console/release_identity.py",
+    "console/remote_input.py",
+    "console/service_control.py",
+    "console/service_rpc.py",
+    "console/static/control-socket.js",
+    "console/static/control.js",
+    "console/static/index.html",
+    "console/static/raw-telemetry.js",
+    "console/static/service-management.js",
+    "console/static/service.js",
+    "console/static/startup-status.js",
+    "console/static/system-log.js",
+    "console/static/webpad-controls.js",
+    "console/system_log.py",
+    "console/telemetry.py",
+    "console/verification/test_console_exit156.py",
+    "console/verification/test_controls154.mjs",
+    "console/verification/test_fix157pc.mjs",
+    "console/verification/test_fix157pc.py",
+    "packaging/test_raw_telemetry.py",
+    "verification/fix157-new-tests-final.log",
+    "verification/fix157-pc-fix-tests.log",
+    "verification/fix157-streams-tests.log",
+    "verification/fix157-test_calibration_reference.log",
+    "verification/fix157-test_connection_ui155.log",
+    "verification/fix157-test_controls154.log",
+    "verification/fix157-test_fix157pc.log",
+    "verification/fix157-test_gamepad_repair_ui.log",
+    "verification/fix157-test_joint_direction155.log",
+    "verification/fix157-test_pose_state.log",
+    "verification/fix157-test_startup_ui.log",
+    "verification/fix157-tests.json",
+    "verification/package157fix1.py"
+  ],
+  "tests": {
+    "python_passed": 70,
+    "browser_scripts_passed": 8,
+    "runs": [
+      {
+        "name": "pc-fix",
+        "exit_code": 0,
+        "log": "verification/fix157-pc-fix-tests.log",
+        "sha256": "d46285f48ee98d6bdd5ce3ad84d43f6f1b2e893cf078d541501b914169a17760"
+      },
+      {
+        "name": "streams",
+        "exit_code": 0,
+        "log": "verification/fix157-streams-tests.log",
+        "sha256": "e44188f619a0b1a3f4412aad7cc96533e4671f717c00a1c7e122097fb8600540"
+      },
+      {
+        "name": "test_fix157pc",
+        "exit_code": 0,
+        "log": "verification/fix157-test_fix157pc.log",
+        "sha256": "202e15d884c067ab28d84a5ebbac80a801bcf4bfab23b14779c242cd6f2cfe39"
+      },
+      {
+        "name": "test_controls154",
+        "exit_code": 0,
+        "log": "verification/fix157-test_controls154.log",
+        "sha256": "4321bee40f94b73b1772c9d4b065c570b64bfe649461aef04fc0110f687bceee"
+      },
+      {
+        "name": "test_connection_ui155",
+        "exit_code": 0,
+        "log": "verification/fix157-test_connection_ui155.log",
+        "sha256": "31fb82a79d5b448d8486231d41062e36597e9aae6ad3df4a6db10f1150d477e4"
+      },
+      {
+        "name": "test_startup_ui",
+        "exit_code": 0,
+        "log": "verification/fix157-test_startup_ui.log",
+        "sha256": "1051736a2c3c606f87fc8ca8b5ffe966e682f54386457b6c78195bcff54adc78"
+      },
+      {
+        "name": "test_joint_direction155",
+        "exit_code": 0,
+        "log": "verification/fix157-test_joint_direction155.log",
+        "sha256": "2e4a3f0a1e78453c58e0c965ba6b8692f5fa5833e68a9afa299097c48adc920c"
+      },
+      {
+        "name": "test_pose_state",
+        "exit_code": 0,
+        "log": "verification/fix157-test_pose_state.log",
+        "sha256": "a9d3d13be56ba6850d99607b037440bf1426b4709ba1b8b1ec2207f469a371b4"
+      },
+      {
+        "name": "test_calibration_reference",
+        "exit_code": 0,
+        "log": "verification/fix157-test_calibration_reference.log",
+        "sha256": "6f0dc0e26f9ffe27ce71f21d652212746effb105118798c1f2ac74c271ff9174"
+      },
+      {
+        "name": "test_gamepad_repair_ui",
+        "exit_code": 0,
+        "log": "verification/fix157-test_gamepad_repair_ui.log",
+        "sha256": "72d7539bf553c19352361a88a00d88bb6aaa05c85ebafeb27f99de35d5f1e1a0"
+      }
+    ],
+    "robot_hardware_tested": false,
+    "windows_native_tested": false,
+    "native_suite_rerun": false,
+    "full_historical_suite_rerun": false,
+    "socket_boundary_note": "Executor prohibits AF_UNIX creation. Production framing/request tests substitute loopback TCP at the OS socket boundary."
+  },
+  "previous_native_test_results": "Historical v157 native results retained in verification/changes157.json; not rerun in this PC-only release."
+}

@@ -1,0 +1,27 @@
+Microduck R17 V160 / control.37 编译与打包核对
+
+已完成真实 ARM64 编译。版本：中控 1.0.160，固件 control.37，官方系统 0.15.1。
+完整基线：用户指定的 Microduck-Console-R17-V159.zip。
+保留 V159 中用户要求修改的标定、SSH 密码修复、网页/CMD GitHub 入口及原模型。
+V159 的 robotd、padd、robotctl、mediad 与 157-Fix10 相同，原程序为 control.36。
+V160 的手柄运行逻辑按原始 V160 源码编译，没有再次修改。
+
+标定以 V159 为准，不回退到 Fix10；标定文件与模型合同均与 V159 原字节相同。
+本次恢复的是助手误回退的打包基线，已编译的 control.37 robotd/padd 保持相同字节。
+
+当前测试范围：控制核心单元 136、IPC 协议单元 53、padd 单元 33、robotd 滑轮 3，共 225 通过，0 失败。三个原始滑轮 ONNX 由 ARM64 robotd 在 QEMU 加载通过。该范围不包含全部 robotd 单元及服务集成测试。
+
+历史全工程诊断：472 通过、31 失败、10 忽略，原始日志保留。
+14 项受测试环境 Unix socket 限制；10 项依赖已撤销的 LB/stand_test 配置，4 项使用旧启动阶段/采集时序预期，3 项模式测试使用旧无控制器/重复排队预期。未将这些失败改写为通过。
+
+成品校验：ZIP CRC、全部清单 SHA256、中控真实导入通过。
+124 个原固件文件与 V159 相同，包括用户指定的标定、原模型/合同、mediad、输入桥和安装流程。
+158 个原中控文件与 V159 相同，包括 service_control.py 的 SSH 修复及网页/CMD 开源入口。
+新增三个滑轮模型，替换新 robotd/padd 及匹配的版本/安装清单。原 experiments/roller 中未启用的副本由正式随包模型替代。
+
+编译工具：Rust 1.99.0，Zig 0.15.1，cargo-zigbuild 0.23.4。
+目标：aarch64-unknown-linux-gnu.2.31；新程序最高 glibc ABI 2.30。
+Zero 实机验证尚未完成。
+
+robotd SHA256：26cfe9fae61acee48d1fe0391522851afd6bf92d0ec076ccf4ad762b7ea510a1
+padd SHA256：891639c7463fce1696f4b65ec3f619f597f565c7296f80cb97a32ba572afcf0a

@@ -1,0 +1,103 @@
+{
+  "label": "V200_control.V71 AI-T1 UI7",
+  "input_archive": "Microduck-Console-R17-V200_control.V71_AI-T1_UI6.zip",
+  "input_sha256": "baa1923bfdf7fa3412af725747f0ccfd541de8e0239a205a9ae153f6322163d6",
+  "user_log": "AI-Dialogue-20261024-001144.jsonl",
+  "user_log_sha256": "0c13ffe77e623e01f39361f4ff4c62896ba1c8179b170e73716b8a6e9c281c0b",
+  "user_log_findings": {
+    "provider_connect_attempts": 1,
+    "interim_asr_received": true,
+    "final_asr_received": false,
+    "assistant_response_received": false,
+    "tool_calls_received": false,
+    "user_stopped_session": true
+  },
+  "known_good_reference": {
+    "name": "M6-C-Doubao-Function-Calling-v1.zip",
+    "sha256": "9324cb390c33ec5a25f650593514c7cb87ea5bc9cccb2af667cd6b9e6a0d6db8",
+    "reused": "default session without speech-ban instructions; PCM format/voice/speed/loudness/extension; event IDs; capture after session.created; PCM16/float32 detection"
+  },
+  "chat_reference": "KidVoice_V6_1.0.0-dev.10-ui.25: incremental user update and separate assistant history; preserve scroll position",
+  "default_voice_enabled": true,
+  "default_muted": false,
+  "mute_affects_text": false,
+  "extra_asr": false,
+  "independent_tts": false,
+  "console_audio_access": false,
+  "turn_endpoint": {
+    "method": "official input_audio_buffer.commit after ASR text unchanged for 1.5 seconds; manual commit also available",
+    "auto_commits_per_input_max": 1,
+    "local_asr_final_fabricated": false,
+    "continuous_microphone_upload": true,
+    "waiting_warning_seconds": 10
+  },
+  "conversation": {
+    "messages_max": 200,
+    "restore_on_page_refresh": true,
+    "kept_on_ai_stop": true,
+    "chat_min_height_desktop_px": 500,
+    "log_height_px": 125,
+    "old_reading_position_preserved": true
+  },
+  "css_cascade_checked": true,
+  "css_test_viewports": [
+    1920,
+    1280,
+    1024,
+    800,
+    390
+  ],
+  "old_desktop_winner": ".service-mode #sensors",
+  "new_winner": ".observation-ai-grid>#sensors.operations-grid",
+  "browser_render_verified": false,
+  "browser_limitation": "Preview server not reachable from browsers; embedded data URL refused by browser policy. No bypass attempted.",
+  "python_tests": {
+    "run": 59,
+    "passed": 59,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_seconds": 5.262
+  },
+  "frontend_passed": true,
+  "targeted_flow_verified": "mock service session acknowledgement -> HAT input -> interim ASR only -> one commit -> actual server final event -> tool -> text -> decoded HAT PCM",
+  "hardware_tested_for_ui7": false,
+  "doubao_online_tested_for_ui7": false,
+  "verified_unchanged_from_ui6": [
+    "ai_hat_audio.py",
+    "ai_audio_meter.py",
+    "controls.py",
+    "static/control.js",
+    "service_channel.py",
+    "release_identity.py",
+    "telemetry.py",
+    "service_data.py",
+    "start.cmd",
+    "start.command"
+  ],
+  "firmware_byte_identical": true,
+  "firmware_sha256": "6374b23464bcd8d2e221bd6ba3208dcab0eabcda932ed3f6cc20a5c5667fcbd2",
+  "motion_readiness_conditions_preserved": true,
+  "new_ssh_logins_per_ai_session": 0,
+  "next_only_task": "Run UI7 with mute off and say hello to HAT; inspect final transcript, actual Doubao reply, and HAT playback.",
+  "changed_from_ui6": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_action_gate.py",
+    "ai_doubao.py",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "ai_zero.py",
+    "console.py",
+    "service_rpc.py",
+    "static/ai-panel.css",
+    "static/ai-panel.js",
+    "static/index.html",
+    "verification/test_ai_hat.mjs"
+  ],
+  "added_from_ui6": [
+    "ai_conversation.py",
+    "ai_pcm.py",
+    "verification/test_ai_ui7.py"
+  ]
+}

@@ -1,0 +1,8 @@
+test_one_teardown_error_does_not_skip_other_owners_or_log (test_console_exit156.ConsoleExitTests.test_one_teardown_error_does_not_skip_other_owners_or_log) ... ok
+test_close_drains_output_and_releases_the_file_and_worker (test_console_exit156.LogExitTests.test_close_drains_output_and_releases_the_file_and_worker) ... ok
+test_flush_failure_still_signals_waiter_and_releases_file (test_console_exit156.LogExitTests.test_flush_failure_still_signals_waiter_and_releases_file) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.300s
+
+OK

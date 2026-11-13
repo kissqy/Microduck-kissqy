@@ -1,0 +1,133 @@
+robotd/src/main.rs : 2478-2522
+2478:         if !powered_off && shutdown_sit.is_none() && (intents.take_shutdown() || battery_empty) {
+2479:             let can_sit = snapshot.enabled
+2480:                 && bringup == Bringup::Ready
+2481:                 && !safety.fallen()
+2482:                 && controller.as_ref().is_some_and(|c| c.has_sitstand());
+2483:             if can_sit {
+2484:                 tracing::warn!(battery_empty, "shutdown: sitting down before power off");
+2485:                 // Goodbye peck; non-blocking — it plays out during the sit.
+2486:                 if let Some(voice) = voice.as_mut() {
+2487:                     voice.play("peck", false);
+2488:                 }
+2489:                 controller
+2490:                     .as_mut()
+2491:                     .expect("can_sit checked the controller")
+2492:                     .begin_shutdown_sit();
+2493:                 shutdown_sit = Some(tick_start);
+2494:             } else {
+2495:                 tracing::warn!(battery_empty, "shutdown: cutting torque and powering off");
+2496:                 cut_torque_before_poweroff(&mut safety);
+2497:                 // Goodbye peck; blocking, so it is heard before the poweroff kills this
+2498:                 // process's cgroup. The one deliberate block in the loop, on its last tick.
+2499:                 if let Some(voice) = voice.as_mut() {
+2500:                     voice.play("peck", true);
+2501:                 }
+2502:                 intents.set_enabled(false);
+2503:                 bringup = Bringup::Limp;
+2504:                 powered_off = true;
+2505:                 poweroff();
+2506:             }
+2507:         }
+2508:         let shutdown_sit_hold = controller.as_ref().map_or(SHUTDOWN_SIT, |c| {
+2509:             Duration::from_secs_f64(c.shutdown_sit_secs())
+2510:         });
+2511:         if let Some(started) = shutdown_sit
+2512:             && !powered_off
+2513:             && tick_start.duration_since(started) >= shutdown_sit_hold
+2514:         {
+2515:             tracing::warn!("sit complete: cutting torque and powering off");
+2516:             cut_torque_before_poweroff(&mut safety);
+2517:             intents.set_enabled(false);
+2518:             bringup = Bringup::Limp;
+2519:             powered_off = true;
+2520:             poweroff();
+2521:         }
+2522: 
+
+robotd/src/main.rs : 4443-4447
+4443:         proto::Call::RobotShutdown => {
+4444:             intents.request_shutdown();
+4445:             proto::Response::ok(Some(id), &proto::IntentResult::accepted())
+4446:         }
+4447: 
+
+robotd/src/control.rs : 306-311
+306:     /// How long a shutdown sit gets before torque is cut: twice the seat's settle time, which
+307:     /// is the prototype's four seconds over its ~2 s glide.
+308:     pub fn shutdown_sit_secs(&self) -> f64 {
+309:         2.0 * self.skills.sitstand_ramp_s
+310:     }
+311: 
+
+robotd/src/sound.rs : 276-299
+276:         }
+277:     }
+278: 
+279:     /// Play a voice-bank sound, cutting off any still-playing one. `blocking` waits for
+280:     /// playback — used right before poweroff so the goodbye peck is heard.
+281:     pub fn play(&mut self, tag: &str, blocking: bool) {
+282:         // A ride owns the single-client PCM for as long as it lasts. Cutting it for a
+283:         // 200 ms chirp would restart the wheee from its start segment on every press of the
+284:         // other trigger — and holding both triggers is the expected way to use them, since
+285:         // either one opens the mouth. The one-shot is dropped, not queued: it is an event,
+286:         // and an event that arrives during a ride is stale by the time the ride ends.
+287:         //
+288:         // The blocking goodbye peck is the exception, and the only one: it is the last
+289:         // sound this process makes, so it takes the PCM off whatever holds it.
+290:         if self.ride != Ride::Off && !blocking {
+291:             tracing::debug!(tag, "sound skipped: the wheee ride has the PCM");
+292:             return;
+293:         }
+294:         self.stop_child();
+295:         let Some(wav) = self.pick(tag) else {
+296:             if !self.warned_missing {
+297:                 self.warned_missing = true;
+298:                 tracing::warn!(
+299:                     bank = %self.bank.display(),
+
+Deployed source baseline V186 robotd/src/main.rs:2973-3016
+2973:         if !powered_off && shutdown_sit.is_none() && (intents.take_shutdown() || battery_empty) {
+2974:             let can_sit = snapshot.enabled
+2975:                 && bringup == Bringup::Ready
+2976:                 && !safety.fallen()
+2977:                 && controller.as_ref().is_some_and(|c| c.has_sitstand());
+2978:             if can_sit {
+2979:                 tracing::warn!(battery_empty, "shutdown: sitting down before power off");
+2980:                 // Goodbye peck; non-blocking — it plays out during the sit.
+2981:                 if let Some(voice) = voice.as_mut() {
+2982:                     voice.play("peck", false);
+2983:                 }
+2984:                 controller
+2985:                     .as_mut()
+2986:                     .expect("can_sit checked the controller")
+2987:                     .begin_shutdown_sit();
+2988:                 shutdown_sit = Some(tick_start);
+2989:             } else {
+2990:                 tracing::warn!(battery_empty, "shutdown: cutting torque and powering off");
+2991:                 cut_torque_before_poweroff(&mut safety);
+2992:                 // Goodbye peck; blocking, so it is heard before the poweroff kills this
+2993:                 // process's cgroup. The one deliberate block in the loop, on its last tick.
+2994:                 if let Some(voice) = voice.as_mut() {
+2995:                     voice.play("peck", true);
+2996:                 }
+2997:                 intents.set_enabled(false);
+2998:                 bringup = Bringup::Limp;
+2999:                 powered_off = true;
+3000:                 poweroff();
+3001:             }
+3002:         }
+3003:         let shutdown_sit_hold = controller.as_ref().map_or(SHUTDOWN_SIT, |c| {
+3004:             Duration::from_secs_f64(c.shutdown_sit_secs())
+3005:         });
+3006:         if let Some(started) = shutdown_sit
+3007:             && !powered_off
+3008:             && tick_start.duration_since(started) >= shutdown_sit_hold
+3009:         {
+3010:             tracing::warn!("sit complete: cutting torque and powering off");
+3011:             cut_torque_before_poweroff(&mut safety);
+3012:             intents.set_enabled(false);
+3013:             bringup = Bringup::Limp;
+3014:             powered_off = true;
+3015:             poweroff();
+3016:         }

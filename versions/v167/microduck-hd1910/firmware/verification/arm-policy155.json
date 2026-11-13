@@ -1,0 +1,130 @@
+{
+  "build": "1fa8438-feetech-ft6-control.34",
+  "robotd_sha256": "5f94b0b4050f93432b3c94be7e17b491d3a59cbce24e6466aef97020caf2c58c",
+  "library_sha256": "f1ec1a08eb99bd6e5401340f0a2b101381bf4694415480291dc13bcaa30f9ec7",
+  "library_bytes": 20591712,
+  "results": [
+    {
+      "slot": "walk",
+      "id": "1cbf8730eadd75a5704332c9f3c10f60",
+      "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+      "command": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/firmware155-base/Microduck-Robotd-FT6-R17/onnxruntime/libonnxruntime.so.1.28.0",
+        "/workspace/scratch/5a402859beee/build152/target-arm/aarch64-unknown-linux-gnu/release/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.155/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/policy.onnx"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 6.037,
+      "result": {
+        "actions": 14,
+        "input": "obs",
+        "observations": 61,
+        "valid": true
+      },
+      "log": "arm155-1cbf8730eadd75a5704332c9f3c10f60.log"
+    },
+    {
+      "slot": "sitstand",
+      "id": "1c94934c6421ec72ed48079cea749668",
+      "model_sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+      "command": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/firmware155-base/Microduck-Robotd-FT6-R17/onnxruntime/libonnxruntime.so.1.28.0",
+        "/workspace/scratch/5a402859beee/build152/target-arm/aarch64-unknown-linux-gnu/release/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.155/packaging/models/1c94934c6421ec72ed48079cea749668/policy.onnx"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.382,
+      "result": {
+        "actions": 14,
+        "input": "obs",
+        "observations": 61,
+        "valid": true
+      },
+      "log": "arm155-1c94934c6421ec72ed48079cea749668.log"
+    },
+    {
+      "slot": "ground_pick",
+      "id": "b14e3a8b56ddbb8d2d831e727774a168",
+      "model_sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69",
+      "command": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/firmware155-base/Microduck-Robotd-FT6-R17/onnxruntime/libonnxruntime.so.1.28.0",
+        "/workspace/scratch/5a402859beee/build152/target-arm/aarch64-unknown-linux-gnu/release/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.155/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/policy.onnx"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 28.055,
+      "result": {
+        "actions": 14,
+        "input": "obs",
+        "observations": 61,
+        "valid": true
+      },
+      "log": "arm155-b14e3a8b56ddbb8d2d831e727774a168.log"
+    },
+    {
+      "slot": "roulade",
+      "id": "59e15d7b04d0c40e9b11b8a70bdecae6",
+      "model_sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac",
+      "command": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/firmware155-base/Microduck-Robotd-FT6-R17/onnxruntime/libonnxruntime.so.1.28.0",
+        "/workspace/scratch/5a402859beee/build152/target-arm/aarch64-unknown-linux-gnu/release/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.155/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/policy.onnx"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 8.81,
+      "result": {
+        "actions": 14,
+        "input": "obs",
+        "observations": 61,
+        "valid": true
+      },
+      "log": "arm155-59e15d7b04d0c40e9b11b8a70bdecae6.log"
+    },
+    {
+      "slot": "kick_right",
+      "id": "67ad09d82f4865d222a7ae06f250cf9f",
+      "model_sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+      "command": [
+        "/workspace/scratch/5a402859beee/sigbus-repro/qemu/usr/bin/qemu-aarch64-static",
+        "-L",
+        "/workspace/scratch/5a402859beee/sigbus-repro/root241",
+        "-E",
+        "ORT_DYLIB_PATH=/workspace/scratch/5a402859beee/firmware155-base/Microduck-Robotd-FT6-R17/onnxruntime/libonnxruntime.so.1.28.0",
+        "/workspace/scratch/5a402859beee/build152/target-arm/aarch64-unknown-linux-gnu/release/robotd",
+        "validate-policy",
+        "/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.155/packaging/models/67ad09d82f4865d222a7ae06f250cf9f/policy.onnx"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.059,
+      "result": {
+        "actions": 14,
+        "input": "obs",
+        "observations": 61,
+        "valid": true
+      },
+      "log": "arm155-67ad09d82f4865d222a7ae06f250cf9f.log"
+    }
+  ],
+  "environment_fixture": "QEMU ARM A55 proc/sys cpuinfo prefix retained from reproduction153; not deployed",
+  "hardware_tested": false
+}

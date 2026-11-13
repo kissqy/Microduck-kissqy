@@ -1,0 +1,39 @@
+{
+  "files": {
+    "source": {
+      "path": "/workspace/scratch/0587ce872ec5/native_work/Microduck-Source-R17-V186-control57/gamepad-r7/gamesir-xboxd.c",
+      "bytes": 21472,
+      "sha256": "39fc5a8e5193aae106a11aed600d143496de1802bf73d0c046f85bb4f99d59b8"
+    },
+    "arm64": {
+      "path": "/workspace/scratch/0587ce872ec5/ui42_bridge_evidence/gamesir-xboxd.arm64",
+      "bytes": 51744,
+      "sha256": "80122e9c3af7ab2269beb76b6d9d80e2c0c12eae0a2faab0dbc363f6620835b6"
+    },
+    "native_binary": {
+      "path": "/workspace/scratch/0587ce872ec5/native_work/Microduck-Source-R17-V186-control57/gamepad-r7/gamesir-xboxd",
+      "bytes": 51744,
+      "sha256": "80122e9c3af7ab2269beb76b6d9d80e2c0c12eae0a2faab0dbc363f6620835b6"
+    },
+    "stage_binary": {
+      "path": "/workspace/scratch/0587ce872ec5/ui42_firmware_stage/Microduck-Robotd-FT6-R17/gamepad-r7/gamesir-xboxd",
+      "bytes": 51744,
+      "sha256": "80122e9c3af7ab2269beb76b6d9d80e2c0c12eae0a2faab0dbc363f6620835b6"
+    },
+    "padd_service": {
+      "path": "/workspace/scratch/0587ce872ec5/ui42_firmware_stage/Microduck-Robotd-FT6-R17/padd.service",
+      "bytes": 5795,
+      "sha256": "bc6ca73b23e0c7e4fef044fe8229628973a243c87cb1651d88c371a97112e391"
+    },
+    "installer": {
+      "path": "/workspace/scratch/0587ce872ec5/ui42_firmware_stage/Microduck-Robotd-FT6-R17/gamepad.py",
+      "bytes": 9721,
+      "sha256": "d0980bcb7220c5029321a9b480e8b479c617ea0d27b2f8e64c29cf528d5957db"
+    }
+  },
+  "compiler": "0.14.1",
+  "build_command": "zig cc -target aarch64-linux-gnu.2.28 -std=c11 -O2 -Wall -Wextra -Werror gamepad-r7/gamesir-xboxd.c -o ui42_bridge_evidence/gamesir-xboxd.arm64",
+  "host_tests": "production event/error/reconnect code; real nonblocking pipes/inotify; no hardware",
+  "consumer_mapping": "KEY_HOMEPAGE and KEY_HOME -> BTN_MODE; KEY_MENU/media ignored; main BTN_START unaffected",
+  "known_boundary": "Auxiliary disconnect requires a synthetic MODE release; PADD cannot distinguish its origin through the existing virtual gamepad."
+}

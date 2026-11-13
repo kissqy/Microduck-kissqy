@@ -1,0 +1,10 @@
+R17 v1.0.149 merge verification
+- Product baseline: Microduck-Console-R17-v1.0.148.
+- v148 behavior retained: sole Walk is 1cbf8730eadd75a5704332c9f3c10f60; model-bound execution = 1.00 / 0.50 / 0.70. The old policy.action_scale=0.70 remains a legacy/global field and does not override this Walk profile.
+- Replaced Roulade with user upload policy SHA256 59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac.
+- Replaced GroundPick with user upload policy SHA256 b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69.
+- Deployment files used in source were byte-identical to both user-uploaded ZIPs.
+- New actions: base action scale 1.0, head/legs passthrough 1.0 according to their contracts. GroundPick uses the Backlash observation contract.
+- 148->149 payload migration simulated twice for both preimported=false and preimported=true. Old action directories were removed; Walk execution sidecar stayed 1.0/.5/.7; LB duration and saved servo/pad/voice settings were preserved.
+- Native robotd/robotctl are exact control.30 binaries from the previously built compatibility release. Rust toolchain could not be re-downloaded in this session, so no new native compilation is claimed.
+- No Zero motion/hardware test was performed in this session.

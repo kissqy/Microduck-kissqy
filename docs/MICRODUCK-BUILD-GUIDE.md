@@ -9,7 +9,7 @@
 
 Microduck-kissqy 是 kissqy 基于 Pollen Robotics Microduck 0.15.1、已完成实机复刻的个人项目，面向 **Radxa ZERO 3W + 15 个飞特 HD1910 舵机 + 本仓库 HAT / IMU**。这里提供系统镜像、中文机器人中控、配套现成动作模型、自制电路板工程，以及全套打印件和摆盘。**日常使用直接用发布包里的模型，无须自己训练。**
 
-**当前发布：系统镜像 R2 / 机器人中控 V260 / 固件 control.102 / 配网 R10。** [新版下载与独立源码说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md)；[R1 历史镜像](releases/public-image-r1.md)及 V167 / control.43 已验证基线保留。新版发布不替代原有实机 Known-Good 记录。新手路线按预算、采购、装配和首次行走展开。版本及验证依据见[发布基线](../microduck-hd1910/docs/BASELINE.md)。源码可获取；作者原创部分采用个人非商业许可，官方和第三方部分保留各自许可，见[分项许可](../microduck-hd1910/LICENSE)。
+**当前发布：系统镜像 R2 / 机器人中控 V260 / 固件 control.102 / 配网 R10。** [新版下载与独立源码说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)；[R1 历史镜像](releases/public-image-r1.md)及 V167 / control.43 已验证基线保留。新版发布不替代原有实机 Known-Good 记录。新手路线按预算、采购、装配和首次行走展开。版本及验证依据见[发布基线](../microduck-hd1910/docs/BASELINE.md)。源码可获取；作者原创部分采用个人非商业许可，官方和第三方部分保留各自许可，见[分项许可](../microduck-hd1910/LICENSE)。
 
 ## 按这四个问题开始
 
@@ -69,7 +69,7 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 3. 从[下载区](../README.md#下载与版本)取得机器人中控 V260，完整解压后运行 `start.cmd`；macOS 使用 `start.command`。
 4. 填入本机 ZERO 的 SSH 地址和登录信息。**R2 镜像预装 V260 / control.102，配套使用 V260 中控。旧系统需要本版功能时，通过 V260 中控安装本版随包固件；不要交给 V167 中控导入。**
 
-软件包安装和版本说明见[V260 独立发布说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md)，操作以 V260 随包使用说明为准；[V167 历史使用指南](../microduck-hd1910/firmware/console/README.zh-CN.md)仍保留。网页在线演示使用模拟数据，实际连接需要本地运行中控。
+软件包安装和版本说明见[V260 独立发布说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)，操作以 V260 随包使用说明为准；[V167 历史使用指南](../microduck-hd1910/firmware/console/README.zh-CN.md)仍保留。网页在线演示使用模拟数据，实际连接需要本地运行中控。
 
 ### 标定自己的机器人，再进行运动
 

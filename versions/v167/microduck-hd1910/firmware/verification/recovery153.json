@@ -1,0 +1,132 @@
+{
+  "console_version": "1.0.153",
+  "service_build": "1fa8438-feetech-ft6-control.32",
+  "tests": {
+    "inherited_unchanged_native_startup": {
+      "passed": 29,
+      "failed": 0,
+      "commands": [
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "startup",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "cold_reopen",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "reopened_uart",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "r17_empty_snapshot",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "duck-control",
+            "--lib",
+            "--frozen",
+            "hd1910_transport_tests",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "log": "verification/native-tests152-final.log"
+    },
+    "python": {
+      "elf_and_install_integrity": 23,
+      "diagnostic": 5,
+      "connection_recovery": 4,
+      "raw_telemetry_and_socket": 20,
+      "failed": 0
+    },
+    "arm64_runtime": {
+      "new_complete_library_models_passed": 5,
+      "old_complete_library_models_passed": 5,
+      "truncated_library_sigbus_reproduced": 2,
+      "record": "verification/reproduction153.json"
+    },
+    "frontend": [
+      "startup_error_and_diagnostic_download",
+      "gamepad_repair"
+    ],
+    "syntax": [
+      "changed Python modules",
+      "changed JavaScript modules",
+      "service.sh"
+    ],
+    "inherited_arm64_build": {
+      "binary_built_in": "1.0.152",
+      "exit_code": 0,
+      "target": "aarch64-unknown-linux-gnu.2.31",
+      "source_sha256_unchanged": true,
+      "robotd_sha256": "c266fa6d3127e164c7d8d9be11ceac5d9ff72cf565ec37877d6d024cf2101e31"
+    },
+    "hardware": {
+      "tested": false,
+      "temperature_verified": false,
+      "reboot_verified": false
+    }
+  },
+  "old_same_uart_five_attempts_removed": true,
+  "startup_max_uart_opens": 2,
+  "no_new_steady_state_work": true,
+  "hardware_tested": false,
+  "evidence": {
+    "failed_startup": "v152 robotd received SIGBUS after IPC startup; old control.31 IMU and loop were healthy",
+    "root_cause": "v152 ONNX Runtime library was truncated to 14073856 bytes instead of 20591712",
+    "confirmed": "Same ARM robotd/library/model command crashes with truncated library and succeeds with complete original bytes",
+    "console_connection": "v152 mistook robotd forwarded endpoint resets for SSH login failure; current CMD SSH/ping and live ToF show SSH remained available",
+    "actual_ssh_failure": "True TCP22 reachability/authentication errors are retained separately; not declared fixed by the UART change"
+  }
+}

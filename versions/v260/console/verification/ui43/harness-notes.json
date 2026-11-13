@@ -1,0 +1,4 @@
+{
+  "initial_python_attempt": "78 tests passed; two historical modules could not import missing test_upgrade_units/gamepad prerequisites, so they were not counted. The changed installer path is tested by test_installer_fixed_ui43.py instead.",
+  "initial_frontend_attempt": "Recorder and repair suites passed. AI UI40 test used a literal UI42 heading; assertion updated to the current UI43 heading before rerunning."
+}

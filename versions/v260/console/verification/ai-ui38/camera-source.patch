@@ -1,0 +1,12 @@
+--- a/mediad/src/exposure.rs
++++ b/mediad/src/exposure.rs
+@@ -62,7 +62,8 @@
+ const REPORT_TICKS: u32 = 20;
+ 
+ /// Mean-luma setpoint, 8-bit and *after* the ISP's gamma curve.
+-const TARGET_Y: f64 = 90.0;
++// A modestly brighter camera image for the R17 filming profile.
++const TARGET_Y: f64 = 105.0;
+ 
+ /// Relative error tolerated without a step. Without a deadband the exposure jitters continuously on
+ /// sensor noise alone, which is visible as a picture that breathes.

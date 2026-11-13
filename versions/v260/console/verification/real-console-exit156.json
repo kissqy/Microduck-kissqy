@@ -1,0 +1,9 @@
+{
+  "console": "1.0.156",
+  "start_from_temporary_cwd": true,
+  "ctrl_c_exit_code": 0,
+  "port_released": true,
+  "linux_subprocess_tested": true,
+  "windows_native_tested": false,
+  "robot_hardware_tested": false
+}

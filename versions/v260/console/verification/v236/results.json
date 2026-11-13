@@ -1,0 +1,56 @@
+{
+  "release": "Microduck-Console-Studio-V236",
+  "console_version": "1.0.236",
+  "firmware": "1fa8438-feetech-ft6-control.84",
+  "source_baseline": "V233 / control.81",
+  "scope": [
+    "restore original V233 console layout",
+    "compact original-position voice dropdown and separate add/manage dialog",
+    "saved voice IDs with manual and AI switching",
+    "user-supplied four-duck onboarding picture with orange colors"
+  ],
+  "layout_verification": {
+    "non_voice_html_projection_byte_equal_v233": true,
+    "original_ai_css_rules_byte_equal_v233": true,
+    "other_static_files_byte_equal_v233": true,
+    "closed_management_dialog_outside_layout": true,
+    "main_console_theme": "original V233",
+    "onboarding_theme": "orange"
+  },
+  "validation": {
+    "ai_voice_vision_checks": 104,
+    "firmware_onboarding_hotspot_checks": 94,
+    "frontend_suites": [
+      "AI HAT regression",
+      "AI UI40 regression",
+      "voice controls, separate dialog and V233 layout invariant"
+    ],
+    "firmware_payload_checksums": 217,
+    "syntax_python": "passed",
+    "hotspot_program_bytes": 126092,
+    "hotspot_transport_argv_bytes": 102168,
+    "native_identity_changed_offsets_vs_v233": [
+      621676
+    ],
+    "portal_layout": "offline static render reviewed; picture shown without cropping",
+    "actual_browser_new_build_layout": "pending local launch by user; source and interaction regressions passed"
+  },
+  "artwork": {
+    "original_sha256": "384812247910638095fc723bed48cdfc7618dc983ae126241e356f2b345e86fa",
+    "embedded_sha256": "15285ab6824ef7695dc66a16454fb24cde1b7437f2330cb6cb7c882bb8b91822",
+    "dimensions": [
+      1040,
+      585
+    ],
+    "webp_quality": 48,
+    "embedded_bytes": 54702,
+    "transport_argv_bytes": 102168,
+    "artwork_redrawn": false,
+    "image_crop": false
+  },
+  "padd_native_motion_models_wifi_boot_shutdown_logic_changed": false,
+  "hardware_verified": false,
+  "cloud_live_verified": false,
+  "known_good": "previous hardware-verified reference card retained",
+  "next_task": "target-board acceptance: V233 layout, compact voice selector/manager and the supplied four-duck onboarding page"
+}

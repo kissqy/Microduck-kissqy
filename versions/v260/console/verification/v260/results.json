@@ -1,0 +1,115 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "suite": "test_release_v260",
+      "passed": true,
+      "tests": 7
+    },
+    {
+      "suite": "test_ai_v200",
+      "passed": true,
+      "tests": 8
+    },
+    {
+      "suite": "test_ai_hat",
+      "passed": true,
+      "tests": 11
+    },
+    {
+      "suite": "test_ai_speech_ui24",
+      "passed": true,
+      "tests": 10
+    },
+    {
+      "suite": "test_ai_model_capture_ui25",
+      "passed": true,
+      "tests": 13
+    },
+    {
+      "suite": "test_ai_hat_permission_ui27",
+      "passed": true,
+      "tests": 8
+    },
+    {
+      "suite": "test_ai_scene_chain_ui29",
+      "passed": true,
+      "tests": 5
+    },
+    {
+      "suite": "test_ai_isolation_ui32",
+      "passed": true,
+      "tests": 6
+    },
+    {
+      "suite": "test_ai_voices_v234",
+      "passed": true,
+      "tests": 8
+    },
+    {
+      "suite": "test_input157",
+      "passed": true,
+      "tests": 14
+    },
+    {
+      "suite": "test_connection_retry181",
+      "passed": true,
+      "tests": 7
+    },
+    {
+      "suite": "test_hotspot_service_ui44",
+      "passed": true,
+      "tests": 6
+    },
+    {
+      "suite": "test_shutdown_ui45",
+      "passed": true,
+      "tests": 6
+    },
+    {
+      "suite": "test_hotspot_ui44.mjs",
+      "passed": true
+    },
+    {
+      "suite": "test_center185.mjs",
+      "passed": true
+    },
+    {
+      "suite": "v256/test_commissioning_shutdown.mjs",
+      "passed": true
+    },
+    {
+      "suite": "syntax:ai-panel.js",
+      "passed": true
+    },
+    {
+      "suite": "syntax:service-management.js",
+      "passed": true
+    },
+    {
+      "suite": "syntax:service-builds.js",
+      "passed": true
+    },
+    {
+      "suite": "test_ai_voices_v260.mjs",
+      "passed": true
+    },
+    {
+      "suite": "test_connection_retry181.mjs",
+      "passed": true
+    }
+  ],
+  "python_tests": 109,
+  "hardware_tested": false,
+  "browser_render_tested": false,
+  "legacy_tests_not_counted_as_passed": [
+    {
+      "suite": "test_hotspot_helper_ui44",
+      "reason": "R8 event-file fixtures were removed by R10; the same nine setup errors occur in V259."
+    },
+    {
+      "suite": "test_ai_voices_v234.mjs",
+      "reason": "Frozen V233 whole-page hash already fails in V259; retained voice behavior passes test_ai_voices_v260.mjs."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+test_broken_shipped_contract_is_restored_on_repeat_upgrade (test_atomic_install.AtomicInstallTests.test_broken_shipped_contract_is_restored_on_repeat_upgrade) ... 服务文件已完成逐文件原子替换；已保留导入模型。
+已恢复随包模型的损坏合同或更新修正版合同：a481d9f211f31d9476ab1a319fe362a2
+服务文件已完成逐文件原子替换；已保留导入模型。
+服务文件已完成逐文件原子替换；已保留导入模型。
+已恢复随包模型的损坏合同或更新修正版合同：a481d9f211f31d9476ab1a319fe362a2
+服务文件已完成逐文件原子替换；已保留导入模型。
+服务文件已完成逐文件原子替换；已保留导入模型。
+已恢复随包模型的损坏合同或更新修正版合同：a481d9f211f31d9476ab1a319fe362a2
+服务文件已完成逐文件原子替换；已保留导入模型。
+ok
+test_cleanup_keeps_ownership_metadata_until_it_can_be_replaced (test_atomic_install.AtomicInstallTests.test_cleanup_keeps_ownership_metadata_until_it_can_be_replaced) ... ok
+test_corrected_same_id_contract_updates_once_and_keeps_other_models (test_atomic_install.AtomicInstallTests.test_corrected_same_id_contract_updates_once_and_keeps_other_models) ... 服务文件已完成逐文件原子替换；已保留导入模型。
+已恢复随包模型的损坏合同或更新修正版合同：9e3ff8bde021be28a728c02dbd8e7aaf
+服务文件已完成逐文件原子替换；已保留导入模型。
+清理旧训练模型：other
+服务文件已完成逐文件原子替换；模型已按明确请求重置。
+ok
+test_execution_request_marker_follows_its_file_after_interruption (test_atomic_install.AtomicInstallTests.test_execution_request_marker_follows_its_file_after_interruption) ... 服务文件已完成逐文件原子替换；已保留导入模型。
+已应用联合模型全程统一的缩放与滤波配置；原模型权重与训练数据保留。
+ok
+test_invalid_execution_digest_does_not_replace_installed_payload (test_atomic_install.AtomicInstallTests.test_invalid_execution_digest_does_not_replace_installed_payload) ... ok
+test_joint_execution_profile_reaches_preimported_model_once (test_atomic_install.AtomicInstallTests.test_joint_execution_profile_reaches_preimported_model_once) ... 服务文件已完成逐文件原子替换；已保留导入模型。
+已应用联合模型全程统一的缩放与滤波配置；原模型权重与训练数据保留。
+服务文件已完成逐文件原子替换；已保留导入模型。
+ok
+test_linked_destination_is_rejected_without_touching_external_file (test_atomic_install.AtomicInstallTests.test_linked_destination_is_rejected_without_touching_external_file) ... ok
+test_ordinary_upgrade_removes_only_explicitly_retired_models (test_atomic_install.AtomicInstallTests.test_ordinary_upgrade_removes_only_explicitly_retired_models) ... 清理已弃用训练模型：d11f8430712c35cb2416ce3948e9f8b7
+清理已弃用训练模型：388461feb3f4cd24071197ffc30d63e2
+清理已弃用训练模型：5c019c3d3d2c490947f21974f3947506
+清理已弃用训练模型：9e3ff8bde021be28a728c02dbd8e7aaf
+服务文件已完成逐文件原子替换；已保留导入模型。
+ok
+test_preserved_models_are_never_copied_to_temporary_stage (test_atomic_install.AtomicInstallTests.test_preserved_models_are_never_copied_to_temporary_stage) ... 服务文件已完成逐文件原子替换；已保留导入模型。
+ok
+test_running_executable_is_replaced_and_generated_data_is_preserved (test_atomic_install.AtomicInstallTests.test_running_executable_is_replaced_and_generated_data_is_preserved) ... 服务文件已完成逐文件原子替换；已保留导入模型。
+ok
+test_staging_failure_does_not_replace_installed_files (test_atomic_install.AtomicInstallTests.test_staging_failure_does_not_replace_installed_files) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.050s
+
+OK

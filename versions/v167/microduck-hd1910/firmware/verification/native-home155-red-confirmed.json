@@ -1,0 +1,13 @@
+{
+  "baseline_setup": "native-home155-red-setup.json",
+  "test": "feetech_recovery_tests::explicit_home_after_a_policy_pause_restores_absolute_home_without_replay",
+  "exit_code": 101,
+  "expected_failure": "HOME requested while blind must survive until fresh feedback resumes",
+  "failure_confirmed": true,
+  "test_binary_sha256": "7f8486133c203fc010b3ef082228a3c8fa1fac107d528a6720ef1da213816f54",
+  "baseline_files": {
+    "robotd/src/main.rs": "52f3ce9435203eed3319d5803309fd7d33da77eebcd1c104360db8802590bbec",
+    "robotd/src/intents.rs": "5a047b1025457d524f7a4d2c98646acaa440ad1e0c41a4fa983fb30f53f1b78c"
+  },
+  "hardware_tested": false
+}

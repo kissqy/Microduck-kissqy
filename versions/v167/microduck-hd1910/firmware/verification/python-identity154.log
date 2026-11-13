@@ -1,0 +1,13 @@
+test_current_identity_and_no_restart_or_audio_failure_hooks (test_release_identity.IdentityTests.test_current_identity_and_no_restart_or_audio_failure_hooks) ... ok
+test_current_daemon_can_request_home_before_arrival (test_console_release_compat.ConsoleReleaseTests.test_current_daemon_can_request_home_before_arrival) ... ok
+test_home_arrival_uses_measured_current_targets_and_keeps_error_checks (test_console_release_compat.ConsoleReleaseTests.test_home_arrival_uses_measured_current_targets_and_keeps_error_checks) ... ok
+test_home_request_ramp_arrival_unlocks_walk_and_frontend (test_console_release_compat.ConsoleReleaseTests.test_home_request_ramp_arrival_unlocks_walk_and_frontend) ... ok
+test_invalid_imu_and_restarted_daemon_do_not_confirm_home (test_console_release_compat.ConsoleReleaseTests.test_invalid_imu_and_restarted_daemon_do_not_confirm_home) ... ok
+test_javascript_and_python_capabilities_match_for_new_and_legacy_reports (test_console_release_compat.ConsoleReleaseTests.test_javascript_and_python_capabilities_match_for_new_and_legacy_reports) ... ok
+test_native_telemetry_adapts_new_build_and_actual_targets (test_console_release_compat.ConsoleReleaseTests.test_native_telemetry_adapts_new_build_and_actual_targets) ... ok
+test_signed_positions_remain_live_and_angles_are_not_wrapped (test_console_release_compat.ConsoleReleaseTests.test_signed_positions_remain_live_and_angles_are_not_wrapped) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.606s
+
+OK

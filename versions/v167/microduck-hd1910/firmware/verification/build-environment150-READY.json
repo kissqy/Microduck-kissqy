@@ -1,0 +1,29 @@
+{
+  "ready": true,
+  "host_environment": "/workspace/scratch/5a402859beee/scratch/build_environment150/env-host.sh",
+  "arm64_environment": "/workspace/scratch/5a402859beee/scratch/build_environment150/env-arm64.sh",
+  "source": "/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.149",
+  "tool_versions": {
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+    "rustfmt": "rustfmt 1.10.0-stable (b940084d7e 2026-09-28)",
+    "cargo-zigbuild": "cargo-zigbuild 0.23.4",
+    "zig": "0.14.1"
+  },
+  "python_versions": {
+    "onnx": "1.23.2",
+    "onnxruntime": "1.28.0",
+    "numpy": "2.5.3"
+  },
+  "cargo_lock": {
+    "before_sha256": "fa1668b2e909f80bb4fc6db66a634742f6b42cfe79df6b51c6d5d90db36a08cf",
+    "after_sha256": "fa1668b2e909f80bb4fc6db66a634742f6b42cfe79df6b51c6d5d90db36a08cf",
+    "unchanged": true
+  },
+  "cargo_fetch_frozen": true,
+  "ort_load_success": true,
+  "arm_libudev_sha_record": "/workspace/scratch/5a402859beee/scratch/build_environment150/libudev-sysroot.json",
+  "host_libudev_sha_record": "/workspace/scratch/5a402859beee/scratch/build_environment150/libudev-host.json",
+  "pkgconf_sha_record": "/workspace/scratch/5a402859beee/scratch/build_environment150/pkgconf.json",
+  "no_project_source_build_run": true
+}

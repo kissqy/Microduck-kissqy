@@ -1,0 +1,79 @@
+{
+  "release": "V201_control.V72_AI-T1_UI21",
+  "native_source": {
+    "file": "Microduck-Source-R17-V186-control57-compiled.tar.gz",
+    "sha256": "425c04cd829386ba934d9137a33081f11335a3404e5f22337eed47e993d1a1cb",
+    "patch": "console verification/ai-ui21/native-source.patch",
+    "patch_sha256": "93add89971569a49ecf683c8b1cbe7f643bb00a61278eaff4015fa161425ed2a",
+    "patched_source_sha256": {
+      "robotd/src/ai_expressions.rs": "2184bddf118f94417b4e6965e7edb9471b2528c2aef370bfa6c17574de7f09cc",
+      "robotd/src/emotion_cycle.rs": "63a6e4302aed0a4a5b46dd9debcd17f8af3a492fe8fe3eb0c348f3695a1dcf40",
+      "robotd/src/intents.rs": "aaf528b0df910e315b957b88cb4027468e58bbbe56a3256f7a1928aca8e2d354",
+      "robotd/src/main.rs": "2b47830975694b2cfa6ec54aaa501ef9ca9e9347a6dd5e13430c38111b84a3a6",
+      "robotd/src/feetech_commissioning.rs": "41bfe37cfa159315e0ce8ff1ee9e9739d5810548e5fdc578e9c70e2a140b70d6",
+      "duck-ipc-proto/src/lib.rs": "10043950d04b56309aa2ee2414394c0f2d6a27a2fd05c8b1b9034b878bf1cf25",
+      "docs/design/robotd-design.md": "493329a602920b1246b5c8442c785403315568ff7b436466e56a76ab2038f779"
+    },
+    "patch_replay_verified": true
+  },
+  "robotd": {
+    "bytes": 5860488,
+    "machine": "AArch64",
+    "load_segments": 4,
+    "sha256": "1cea4990b72b4c0015eb258f0d408ab8407b75076a890ecfcb220ee5f0cc6ef0",
+    "needed": [
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.27",
+      "2.28",
+      "2.29",
+      "2.30"
+    ]
+  },
+  "firmware_sha256": "7553d50b932fc288c4569eb5d88b9384f5849c9c3942ee581c5f3388694f2d5b",
+  "firmware_bytes": 38236549,
+  "firmware_changed_files": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "release_identity.py",
+    "robotd"
+  ],
+  "other_firmware_files_byte_identical_to_ui20": true,
+  "models_byte_identical_to_ui20": true,
+  "native_motion_curves_byte_identical": true,
+  "duck_control_and_kinematics_sources_byte_identical": true,
+  "python_ai_tests": {
+    "passed": 131,
+    "failed": 0
+  },
+  "native_expression_tests": {
+    "passed": 27,
+    "failed": 0
+  },
+  "protocol_tests": {
+    "passed": 53,
+    "failed": 0
+  },
+  "aarch64_elf_files_validated": 8,
+  "frontend_dom_tests": [
+    "test_ai_hat.mjs",
+    "test_ai_start_ui20.mjs"
+  ],
+  "hardware_tested": false,
+  "live_cloud_tested": false,
+  "browser_render_tested": false,
+  "windows_tested": false,
+  "broader_native_suite_clean": false,
+  "baseline_comparison": "native-baseline-comparison.json",
+  "broader_native_suite_notes": "Broader host suite has existing retired-LB fixture expectations, shared deployment Home initialization and unavailable sandbox Unix listeners. A baseline comparison is recorded separately; no claim of a clean full native suite.",
+  "final_followup_tests": "final-targeted.log: manual photo also carries TOF into native context; 13 UI21 checks"
+}

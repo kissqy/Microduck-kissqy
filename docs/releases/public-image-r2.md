@@ -2,7 +2,7 @@
 
 当前公开发布线为 **R2 / Microduck Console Studio V260 / control.102 / 配网 R10**，官方软件基线为 **Microduck 0.15.1**，适用 Radxa ZERO 3W，内置 11 个运行模型。
 
-[下载 R2 镜像与查看发布说明](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [直接下载镜像 .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [V260 中控、固件与源码说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md)
+[下载 R2 镜像与查看发布说明](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [直接下载镜像 .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [V260 中控、固件与源码说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)
 
 镜像文件名：`microduck-kissqy-zero3w-R2.img.xz`。SHA256：`dc300280ea4407679ce480fcc0ae58b3ffab6684785ab17582a9e3caa9685314`。
 

@@ -1,0 +1,533 @@
+--- a/padd/src/main.rs
++++ b/padd/src/main.rs
+@@ -1183,7 +1183,9 @@
+             return std::process::ExitCode::FAILURE;
+         }
+         if replay_was_busy {
+-            input.discard_ordinary(|button| pad.is_pressed(button));
++            // Logo is the recorder's cancel button: keep its press/release pair
++            // across ticks while baselining the ordinary controls held in replay.
++            input.discard_ordinary(|button| button != Button::Mode && pad.is_pressed(button));
+             toggle_head = false;
+             toggle_body = false;
+             reboot_motors = false;
+@@ -2588,6 +2590,26 @@
+         assert!(input.up,"discarding ordinary input must not change HOME belief");
+     }
+     #[test]
++    fn replay_discard_keeps_logo_release_but_ai_discard_still_blocks_it() {
++        let mut input = PadInput::default();
++        assert!(input.buttons.allows(Button::Mode));
++        // A Logo press held over multiple replay ticks must still reach its release.
++        for _ in 0..2 {
++            input.discard_ordinary(|button| {
++                button != Button::Mode && matches!(button, Button::Mode | Button::West)
++            });
++        }
++        assert!(input.buttons.release(Button::Mode));
++        assert!(!input.buttons.allows(Button::West));
++        assert!(!input.buttons.release(Button::West));
++        // AI ownership retains the existing baseline for every ordinary button.
++        input.discard_ordinary(|button| matches!(button, Button::Mode | Button::West));
++        assert!(!input.buttons.allows(Button::Mode));
++        assert!(!input.buttons.release(Button::Mode));
++        assert!(!input.buttons.release(Button::West));
++        assert!(input.buttons.allows(Button::Mode));
++    }
++    #[test]
+     fn lease_release_cleans_body_and_speed_once_but_normal_idle_sends_nothing() {
+         let (mut tx,mut rx)=UnixStream::pair().unwrap();
+         rx.set_read_timeout(Some(Duration::from_millis(30))).unwrap();
+--- a/padd/src/recorder.rs
++++ b/padd/src/recorder.rs
+@@ -642,10 +642,27 @@
+ struct Click {
+     down: Option<Instant>,
+     first: Option<Instant>,
++    suppress_until: Option<Instant>,
+ }
+ impl Click {
+     fn press(&mut self, now: Instant) {
++        if self.suppress_until.is_some_and(|until| now < until) {
++            return;
++        }
++        self.suppress_until = None;
+         self.down.get_or_insert(now);
++    }
++    fn short_release(&mut self, now: Instant) -> bool {
++        self.down
++            .take()
++            .is_some_and(|down| now.saturating_duration_since(down) <= Duration::from_millis(600))
++    }
++    fn suppress_followup(&mut self, now: Instant) {
++        // Consume the same gesture's tail: stop/save must not become replay,
++        // and cancelling playback must not leave a new recording gesture.
++        self.down = None;
++        self.first = None;
++        self.suppress_until = Some(now + CLICK_WINDOW);
+     }
+     fn release(&mut self, now: Instant) -> Option<Goal> {
+         let down = self.down.take()?;
+@@ -658,7 +675,7 @@
+             .is_some_and(|first| now.duration_since(first) <= CLICK_WINDOW)
+         {
+             self.first = None;
+-            Some(Goal::Play)
++            Some(Goal::Record)
+         } else {
+             self.first = Some(now);
+             None
+@@ -785,42 +802,33 @@
+         }
+     }
+     pub fn logo_press(&mut self, now: Instant) {
+-        if self.phase != Phase::Saving {
++        if self.phase != Phase::Saving && !(self.phase == Phase::Pending && self.pending.is_some())
++        {
+             self.click.press(now);
+         }
+     }
+     pub fn logo_release(&mut self, now: Instant, neutral: bool) {
++        if self.phase == Phase::Saving || self.phase == Phase::Pending && self.pending.is_some() {
++            return;
++        }
+         if self.phase == Phase::Playing {
+-            self.click = Click::default();
+-            self.abort("已取消回放");
++            if self.click.short_release(now) {
++                self.abort("已取消回放");
++                self.click.suppress_followup(now);
++            }
+             return;
+         }
+-        if self.phase == Phase::Saving {
++        if self.phase == Phase::Recording {
++            if self.click.short_release(now) {
++                self.stop_recording(now, neutral);
++                if self.phase != Phase::Recording {
++                    self.click.suppress_followup(now);
++                }
++            }
+             return;
+         }
+-        if self.phase == Phase::Recording {
+-            if self.click.down.take().is_some_and(|down| {
+-                now.saturating_duration_since(down) <= Duration::from_millis(600)
+-            }) {
+-                self.stop_recording(now, neutral);
+-            }
+-            return;
+-        }
+-        if matches!(self.click.release(now), Some(Goal::Play)) {
+-            self.generation += 1;
+-            self.pending = Some((Goal::Play, now));
+-            self.io_pending = true;
+-            if self
+-                .worker
+-                .jobs
+-                .try_send(Job::Load(self.generation))
+-                .is_err()
+-            {
+-                self.abort("文件工作队列忙，未开始回放");
+-                return;
+-            }
+-            self.ensure_monitor();
+-            self.set(Phase::Pending, "正在检查上次录制与机器人状态");
++        if matches!(self.click.release(now), Some(Goal::Record)) {
++            self.begin_goal(Goal::Record, now);
+         } else if self.click.first.is_some() {
+             self.ensure_monitor();
+             self.set(Phase::Pending, "等待350ms单/双击判定");
+@@ -828,6 +836,30 @@
+             self.monitor = None;
+             self.set(Phase::Idle, "Logo长按已忽略");
+         }
++    }
++    fn begin_goal(&mut self, goal: Goal, now: Instant) {
++        self.generation += 1;
++        self.pending = Some((goal, now));
++        self.io_pending = matches!(goal, Goal::Play);
++        if self.io_pending
++            && self
++                .worker
++                .jobs
++                .try_send(Job::Load(self.generation))
++                .is_err()
++        {
++            self.abort("文件工作队列忙，未开始回放");
++            return;
++        }
++        self.ensure_monitor();
++        self.set(
++            Phase::Pending,
++            if self.io_pending {
++                "正在检查上次录制与机器人状态"
++            } else {
++                "正在检查机器人状态，准备录制"
++            },
++        );
+     }
+     fn stop_recording(&mut self, now: Instant, neutral: bool) {
+         let snap = self.monitor.as_ref().and_then(Monitor::get);
+@@ -967,7 +999,7 @@
+             }
+         }
+         if self.phase == Phase::Pending && self.pending.is_none() && self.click.single(now) {
+-            self.pending = Some((Goal::Record, now));
++            self.begin_goal(Goal::Play, now);
+         }
+         let snap = self.monitor.as_ref().and_then(Monitor::get);
+         if let Some((goal, since)) = self.pending {
+@@ -1117,6 +1149,7 @@
+             if self.phase == Phase::Playing && self.player.as_ref().unwrap().done(now) {
+                 self.cleanup = true;
+                 self.player = None;
++                self.click = Click::default();
+                 self.monitor = None;
+                 self.set(Phase::Idle, "回放已结束");
+             }
+@@ -1242,7 +1275,7 @@
+         assert!(validate(&c).is_ok());
+     }
+     #[test]
+-    fn double_click_never_starts_a_recording() {
++    fn double_click_selects_recording_and_consumes_single() {
+         let mut c = Click::default();
+         let t = Instant::now();
+         c.press(t);
+@@ -1251,7 +1284,7 @@
+         c.press(t + Duration::from_millis(200));
+         assert!(matches!(
+             c.release(t + Duration::from_millis(220)),
+-            Some(Goal::Play)
++            Some(Goal::Record)
+         ));
+         assert!(!c.single(t + Duration::from_secs(1)));
+     }
+@@ -1261,10 +1294,23 @@
+         let t = Instant::now();
+         c.press(t);
+         c.release(t + Duration::from_millis(10));
++        assert!(!c.single(t + Duration::from_millis(359)));
+         assert!(c.single(t + Duration::from_millis(360)));
+         c.press(t);
+         assert!(c.release(t + Duration::from_secs(2)).is_none());
+         assert!(!c.single(t + Duration::from_secs(3)));
++    }
++    #[test]
++    fn suppressed_press_stays_ignored_even_if_released_after_window() {
++        let t = Instant::now();
++        let mut c = Click::default();
++        c.suppress_followup(t);
++        c.press(t + Duration::from_millis(100));
++        assert!(c.release(t + Duration::from_millis(500)).is_none());
++        assert!(!c.single(t + Duration::from_secs(1)));
++        c.press(t + Duration::from_millis(600));
++        assert!(c.release(t + Duration::from_millis(610)).is_none());
++        assert!(c.single(t + Duration::from_millis(960)));
+     }
+     #[test]
+     fn player_keeps_absolute_time_and_tail() {
+@@ -1371,6 +1417,255 @@
+             probed: now,
+             emotion: json!({"phase":"completed"}),
+             emotion_at: now,
++        }
++    }
++    fn set_snapshot(r: &mut Recorder, now: Instant) {
++        r.monitor = Some(Monitor {
++            value: Arc::new(Mutex::new(Some(snapshot(now)))),
++            stop: Arc::new(AtomicBool::new(false)),
++        });
++    }
++    fn double_click(r: &mut Recorder, now: Instant) {
++        r.logo_press(now - Duration::from_millis(200));
++        r.logo_release(now - Duration::from_millis(190), true);
++        r.logo_press(now - Duration::from_millis(10));
++        r.logo_release(now, true);
++    }
++    #[test]
++    fn double_click_starts_recording_without_a_previous_file_or_extra_clicks() {
++        let dir = tempfile::tempdir().unwrap();
++        let path = dir.path().join("last.json");
++        let mut r = Recorder::with_paths(
++            "unused".into(),
++            path.clone(),
++            dir.path().join("status.json"),
++        );
++        let now = Instant::now();
++        double_click(&mut r, now);
++        assert!(matches!(r.pending, Some((Goal::Record, _))));
++        assert!(!r.io_pending);
++        let generation = r.generation;
++        // A third press while the goal is being checked cannot replace it.
++        r.logo_press(now + Duration::from_millis(400));
++        r.logo_release(now + Duration::from_millis(410), true);
++        assert_eq!(r.generation, generation);
++        assert!(r.click.first.is_none() && r.click.down.is_none());
++        set_snapshot(&mut r, now);
++        assert!(r.tick(now, true, false, false).is_empty());
++        assert!(r.is_recording(), "{}", r.reason);
++        assert!(!path.exists());
++        r.abort("test cleanup");
++    }
++    #[test]
++    fn single_click_waits_then_reloads_and_replays_without_overwriting() {
++        let dir = tempfile::tempdir().unwrap();
++        let path = dir.path().join("last.json");
++        let now = Instant::now();
++        let mut saved = clip();
++        saved.identity = snapshot(now).identity();
++        save(&path, &saved, &AtomicBool::new(false)).unwrap();
++        let previous = fs::read(&path).unwrap();
++        let mut r = Recorder::with_paths(
++            "unused".into(),
++            path.clone(),
++            dir.path().join("status.json"),
++        );
++        let first = now - Duration::from_millis(360);
++        r.logo_press(first);
++        r.logo_release(first + Duration::from_millis(10), true);
++        set_snapshot(&mut r, now);
++        r.tick(now - Duration::from_millis(1), true, false, false);
++        assert!(r.pending.is_none());
++        assert!(!r.is_recording() && !r.playing());
++        let until = Instant::now() + Duration::from_secs(1);
++        while !r.playing() && Instant::now() < until {
++            let now = Instant::now();
++            set_snapshot(&mut r, now);
++            r.tick(now, true, false, false);
++            thread::sleep(Duration::from_millis(2));
++        }
++        assert!(r.playing(), "{}", r.reason);
++        assert!(!recording());
++        assert!(r.click.first.is_none() && r.click.down.is_none());
++        assert_eq!(fs::read(&path).unwrap(), previous);
++        r.abort("test cleanup");
++    }
++    #[test]
++    fn single_click_without_a_saved_clip_never_starts_recording() {
++        let dir = tempfile::tempdir().unwrap();
++        let path = dir.path().join("last.json");
++        let mut r = Recorder::with_paths(
++            "unused".into(),
++            path.clone(),
++            dir.path().join("status.json"),
++        );
++        let now = Instant::now();
++        r.logo_press(now - Duration::from_millis(400));
++        r.logo_release(now - Duration::from_millis(390), true);
++        let until = Instant::now() + Duration::from_secs(1);
++        while r.phase == Phase::Pending && Instant::now() < until {
++            let now = Instant::now();
++            set_snapshot(&mut r, now);
++            r.tick(now, true, false, false);
++            thread::sleep(Duration::from_millis(2));
++        }
++        assert!(r.phase == Phase::Error, "{}", r.reason);
++        assert!(!recording() && !path.exists());
++        assert!(r.pending.is_none() && r.click.first.is_none());
++    }
++    #[test]
++    fn recording_can_stop_immediately_and_retry_after_refused_save() {
++        let dir = tempfile::tempdir().unwrap();
++        let mut r = Recorder::with_paths(
++            "unused".into(),
++            dir.path().join("last.json"),
++            dir.path().join("status.json"),
++        );
++        let now = Instant::now();
++        double_click(&mut r, now);
++        set_snapshot(&mut r, now);
++        r.tick(now, true, false, false);
++        assert!(r.is_recording(), "{}", r.reason);
++        CAPTURE.with(|slot| {
++            slot.borrow_mut().capture.as_mut().unwrap().clip.frames =
++                vec![clip().frames[0].clone()];
++        });
++        r.logo_press(now + Duration::from_millis(10));
++        r.logo_release(now + Duration::from_millis(20), false);
++        assert!(r.is_recording());
++        assert!(r.click.suppress_until.is_none());
++        r.logo_press(now + Duration::from_millis(30));
++        r.logo_release(now + Duration::from_millis(40), true);
++        assert!(r.phase == Phase::Saving, "{}", r.reason);
++        let until = Instant::now() + Duration::from_secs(1);
++        while r.phase == Phase::Saving && Instant::now() < until {
++            r.tick(Instant::now(), true, false, false);
++            thread::sleep(Duration::from_millis(2));
++        }
++        assert!(r.phase == Phase::Idle, "{}", r.reason);
++    }
++    #[test]
++    fn stop_save_consumes_double_click_tail_even_after_save_completes() {
++        let dir = tempfile::tempdir().unwrap();
++        let path = dir.path().join("last.json");
++        let mut r = Recorder::with_paths(
++            "unused".into(),
++            path.clone(),
++            dir.path().join("status.json"),
++        );
++        let now = Instant::now();
++        set_snapshot(&mut r, now);
++        CAPTURE.with(|slot| {
++            slot.borrow_mut().capture = Some(Capture {
++                started: now - Duration::from_secs(2),
++                clip: clip(),
++                bytes: 0,
++                events: 0,
++                last_do: None,
++                seen_skill: false,
++                next_emotion: 0,
++            });
++        });
++        r.phase = Phase::Recording;
++        r.logo_press(now);
++        r.logo_release(now + Duration::from_millis(1), true);
++        assert!(r.phase == Phase::Saving, "{}", r.reason);
++        // A down during saving, released after its successful reply, is ignored.
++        r.logo_press(now + Duration::from_millis(100));
++        let until = Instant::now() + Duration::from_secs(1);
++        while r.phase == Phase::Saving && Instant::now() < until {
++            r.tick(Instant::now(), true, false, false);
++            thread::sleep(Duration::from_millis(2));
++        }
++        assert!(r.phase == Phase::Idle, "{}", r.reason);
++        r.logo_release(now + Duration::from_millis(120), true);
++        r.tick(now + Duration::from_secs(1), true, false, false);
++        assert!(r.phase == Phase::Idle && r.pending.is_none());
++        assert!(r.click.first.is_none() && r.click.down.is_none());
++        assert!(load(&path).is_ok());
++    }
++    #[test]
++    fn playback_cancel_consumes_tail_and_long_hold_remains_ignored() {
++        let dir = tempfile::tempdir().unwrap();
++        let mut r = Recorder::with_paths(
++            "unused".into(),
++            dir.path().join("last.json"),
++            dir.path().join("status.json"),
++        );
++        let now = Instant::now();
++        r.phase = Phase::Playing;
++        r.logo_press(now - Duration::from_millis(601));
++        r.logo_release(now, true);
++        assert!(r.playing());
++        r.logo_press(now);
++        r.logo_release(now + Duration::from_millis(10), true);
++        assert!(r.phase == Phase::Error && r.handoff_pending());
++        r.logo_press(now + Duration::from_millis(100));
++        r.logo_release(now + Duration::from_millis(110), true);
++        r.tick(now + Duration::from_secs(1), true, false, false);
++        assert!(r.phase == Phase::Error && r.pending.is_none());
++        assert!(r.click.first.is_none() && r.click.down.is_none());
++    }
++    #[test]
++    fn press_held_across_playback_completion_cannot_create_a_new_gesture() {
++        let dir = tempfile::tempdir().unwrap();
++        let mut r = Recorder::with_paths(
++            "unused".into(),
++            dir.path().join("last.json"),
++            dir.path().join("status.json"),
++        );
++        let now = Instant::now();
++        let mut saved = clip();
++        saved.identity = snapshot(now).identity();
++        let index = saved.frames.len();
++        r.phase = Phase::Playing;
++        r.player = Some(Player {
++            clip: saved,
++            began: now - Duration::from_secs(2),
++            index,
++        });
++        set_snapshot(&mut r, now);
++        r.logo_press(now - Duration::from_millis(10));
++        r.tick(now, true, false, false);
++        assert!(r.phase == Phase::Idle);
++        r.logo_release(now + Duration::from_millis(10), true);
++        r.tick(now + Duration::from_millis(400), true, false, false);
++        assert!(r.phase == Phase::Idle && r.pending.is_none());
++        assert!(r.click.first.is_none() && r.click.down.is_none());
++    }
++    #[test]
++    fn rejected_or_disconnected_goal_clears_pending_gesture() {
++        for (manual_ready, ai_active, disconnected) in [
++            (false, false, false),
++            (true, true, false),
++            (true, false, true),
++        ] {
++            let dir = tempfile::tempdir().unwrap();
++            let mut r = Recorder::with_paths(
++                "unused".into(),
++                dir.path().join("last.json"),
++                dir.path().join("status.json"),
++            );
++            let now = Instant::now();
++            double_click(&mut r, now);
++            if disconnected {
++                r.monitor = Some(Monitor {
++                    value: Arc::new(Mutex::new(None)),
++                    stop: Arc::new(AtomicBool::new(false)),
++                });
++            } else {
++                set_snapshot(&mut r, now);
++            }
++            let checked = if disconnected {
++                now + Duration::from_millis(1501)
++            } else {
++                now
++            };
++            r.tick(checked, manual_ready, ai_active, false);
++            assert!(r.phase == Phase::Error, "{}", r.reason);
++            assert!(r.pending.is_none() && r.click.first.is_none() && r.click.down.is_none());
++            r.tick(checked + Duration::from_secs(1), true, false, false);
++            assert!(r.phase == Phase::Error && r.pending.is_none());
+         }
+     }
+     #[test]
+@@ -1596,9 +1891,7 @@
+         );
+         let mut id = 1;
+         let mut continuous = crate::Continuous::default();
+-        let first = Instant::now() - Duration::from_millis(400);
+-        r.logo_press(first);
+-        r.logo_release(first + Duration::from_millis(10), true);
++        double_click(&mut r, Instant::now());
+         r.monitor = Some(new_monitor());
+         let until = Instant::now() + Duration::from_secs(2);
+         while !r.is_recording() && Instant::now() < until {
+@@ -1654,11 +1947,10 @@
+         assert_eq!(saved.frames.len(), 3);
+         assert!(saved.duration_ns >= saved.frames.last().unwrap().at_ns);
+         // Replay must refuse the current sitting=true because this clip began standing.
+-        let first = Instant::now() - Duration::from_millis(200);
++        thread::sleep(CLICK_WINDOW);
++        let first = Instant::now();
+         r.logo_press(first);
+         r.logo_release(first + Duration::from_millis(10), true);
+-        r.logo_press(Instant::now());
+-        r.logo_release(Instant::now(), true);
+         r.monitor = Some(new_monitor());
+         let until = Instant::now() + Duration::from_secs(1);
+         while r.phase == Phase::Pending && Instant::now() < until {
+@@ -1668,11 +1960,9 @@
+         assert!(r.phase == Phase::Error);
+         assert!(!r.handoff_pending());
+         sitting.store(false, Ordering::Release);
+-        let first = Instant::now() - Duration::from_millis(200);
++        let first = Instant::now() - Duration::from_millis(400);
+         r.logo_press(first);
+         r.logo_release(first + Duration::from_millis(10), true);
+-        r.logo_press(Instant::now());
+-        r.logo_release(Instant::now(), true);
+         r.monitor = Some(new_monitor());
+         let until = Instant::now() + Duration::from_secs(2);
+         let mut played = false;
+@@ -1723,7 +2013,7 @@
+         }
+     }
+     #[test]
+-    fn second_press_across_deadline_or_long_hold_cannot_start_recording() {
++    fn second_press_across_deadline_or_long_hold_cannot_start_playback() {
+         let t = Instant::now();
+         let mut c = Click::default();
+         c.press(t);

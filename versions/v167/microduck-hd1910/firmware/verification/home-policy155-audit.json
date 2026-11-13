@@ -1,0 +1,70 @@
+{
+  "hardware_tested": false,
+  "source_native_unchanged_from_tested154": true,
+  "native_tests": [
+    {
+      "test": "control::joint_uniform_tests::joint_uniform_real_onnx_uses_bundled_scale_and_official_filters_in_every_posture",
+      "exit_code": 0
+    },
+    {
+      "test": "control::joint_uniform_tests::joint_uniform_reload_keeps_raw_memory_and_reset_clears_it",
+      "exit_code": 0
+    },
+    {
+      "test": "control::selftrained_checks::explicit_home_ends_sitting_and_rising_and_resumes_the_walk_teacher",
+      "exit_code": 0
+    }
+  ],
+  "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+  "runtime_execution": {
+    "schema": "microduck-runtime-execution/v1",
+    "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+    "mode": "uniform",
+    "action_scale": 1.0,
+    "head_lowpass": 0.5,
+    "legs_lowpass": 0.7
+  },
+  "fixed_offline_sequence_not_physics": true,
+  "home_episodes_repeated": 2,
+  "ticks_per_episode": 100,
+  "identical_home_episode_max_target_difference_deg": 0.0,
+  "synthetic_lag": {
+    "max_joint_residual_deg": 4,
+    "imu_tilt_deg": 8,
+    "within_existing_start_guard": true,
+    "first_target_difference_from_exact_home_deg": 11.48489884290956,
+    "max_target_difference_over_fixed_sequence_deg": 11.48489884290956
+  },
+  "first_targets_exact_home_deg": {
+    "left_hip_yaw": -0.406854,
+    "left_hip_roll": -6.757189,
+    "left_hip_pitch": -26.544479,
+    "left_knee": -0.189363,
+    "left_ankle": 15.911566,
+    "neck_pitch": 12.368737,
+    "head_pitch": 18.796279,
+    "head_yaw": -1.111287,
+    "head_roll": 2.670854,
+    "right_hip_yaw": 0.919072,
+    "right_hip_roll": 8.763673,
+    "right_hip_pitch": 28.782354,
+    "right_knee": -1.239684,
+    "right_ankle": -19.818707
+  },
+  "first_targets_synthetic_lag_deg": {
+    "left_hip_yaw": 0.469654,
+    "left_hip_roll": -7.170028,
+    "left_hip_pitch": -19.790295,
+    "left_knee": -7.924264,
+    "left_ankle": 27.396465,
+    "neck_pitch": 9.088909,
+    "head_pitch": 23.242996,
+    "head_yaw": 0.922434,
+    "head_roll": 1.495095,
+    "right_hip_yaw": -0.819286,
+    "right_hip_roll": 7.44939,
+    "right_hip_pitch": 22.89452,
+    "right_knee": 7.971271,
+    "right_ankle": -30.847031
+  }
+}

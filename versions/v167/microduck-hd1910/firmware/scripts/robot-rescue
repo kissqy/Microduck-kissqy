@@ -1,0 +1,203 @@
+#!/bin/sh
+# Put the board back on the golden release, without the update daemon.
+#
+# `robotctl update rollback` and `reset-to-golden` are IPC calls into `updaterd`. That is fine for
+# every failure except the one that matters most: a release whose `updaterd` cannot start. Recovery
+# then lives inside the process that is failing to start, `Restart=` gives up, and a board with a
+# perfectly good older release on disk has no way back to it — not even for a human at a console.
+# This is that way back.
+#
+# WHY THIS IS A SHELL SCRIPT, AND WHY IT IS COPIED OUT OF THE RELEASE. A rescue that ships as a
+# binary in the release payload is broken by exactly the releases it exists to survive: the wrong
+# architecture, a missing shared library, a panic on startup. `install.sh` and `hooks/postinstall`
+# copy this into /usr/local/sbin the way they already copy unit files, and for the same reason — the
+# copy that runs must not change under anyone's feet when `current` moves.
+#
+# WHY IT READS SYMLINKS AND PARSES NOTHING. The likeliest thing this rescues is a release whose
+# `updaterd` rejects the board's `updater.toml` — the operator's file, preserved across installs,
+# while a release is free to change what it expects. A rescue that parses that same file dies of the
+# disease it is treating. `updaterd` publishes golden as a symlink on every start
+# (`Engine::refresh_golden_links`) so that the answer is one `readlink` away and survives the daemon.
+#
+# THE LOOP GUARD. `robot-boot-check` invokes this without a human, so "swap and reboot" has to be
+# something that cannot happen twice on its own. Two independent things stop it:
+#
+#   - it refuses when `current` is already golden, which covers the ordinary case, because a
+#     successful rescue leaves exactly that state;
+#   - and it refuses when a breadcrumb from a previous attempt is still there, which covers the case
+#     the first check misses — an update moved `current` away from golden and failed again.
+#
+# The breadcrumb is cleared by `updaterd` on its next start, once it has copied the record into the
+# update log (`Engine::record_rescue`). So the guard releases itself exactly when the board proves it
+# can run the update daemon again, and stays shut when it cannot: a robot sitting still with a clear
+# journal beats one rebooting forever. `--force` is the way past it by hand.
+#
+# Usage:  robot-rescue [--dry-run] [--reboot] [--force] [--because <text>]
+#
+# Exit: 0 swapped (or would have), 2 declined with nothing to do, 1 something went wrong.
+set -eu
+
+# Overridable so the decision can be tested against a temporary tree. The defaults are the only
+# values a board ever uses; `install.sh` hardcodes the same install dir.
+INSTALL_DIR="${ROBOT_INSTALL_DIR:-/opt/robot/daemon}"
+STATE_DIR="${ROBOT_STATE_DIR:-/var/lib/robot/updater}"
+
+DRY_RUN=
+REBOOT=
+FORCE=
+BECAUSE="invoked by hand"
+
+# Reboot is opt-in, not the default. The units all exec through `current`, so nothing picks up the
+# swap until they restart — but this script is also runnable on a board that is merely suspect, and
+# a robot that is standing when its daemons die is a robot that falls. Whoever is holding it decides.
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --dry-run) DRY_RUN=1 ;;
+        --reboot)  REBOOT=1 ;;
+        --force)   FORCE=1 ;;
+        --because)
+            [ $# -ge 2 ] || { echo "robot-rescue: --because needs a value" >&2; exit 1; }
+            BECAUSE="$2"
+            shift
+            ;;
+        -h|--help)
+            cat <<'USAGE'
+usage: robot-rescue [--dry-run] [--reboot] [--force] [--because <text>]
+
+Point /opt/robot/daemon/current at the golden release, without going through updaterd.
+For a board whose daemons will not start: see docs/design/boot-recovery-net.md.
+
+  --dry-run        report the decision and change nothing
+  --reboot         reboot after the swap, instead of printing the command
+  --force          act even though a previous attempt left a breadcrumb
+  --because TEXT   why, recorded in the breadcrumb and in the update log
+
+Exit: 0 swapped (or would have), 2 declined with nothing to do, 1 something went wrong.
+USAGE
+            exit 0
+            ;;
+        *)
+            echo "robot-rescue: unknown argument: $1" >&2
+            echo "usage: robot-rescue [--dry-run] [--reboot] [--force] [--because <text>]" >&2
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+say() {
+    echo "robot-rescue: $*" >&2
+    # The journal is where an operator looks after the fact, and after a reboot it is the only
+    # place left. Optional because a board without `logger` must still be rescuable.
+    command -v logger >/dev/null 2>&1 && logger -t robot-rescue "$*"
+    return 0
+}
+
+decline() {
+    say "$*"
+    exit 2
+}
+
+golden_link="${INSTALL_DIR}/golden"
+current_link="${INSTALL_DIR}/current"
+breadcrumb="${STATE_DIR}/rescued"
+
+# The loop guard, checked before anything else so that a jammed board says so rather than
+# re-deriving a decision it is not going to act on.
+#
+# Still here means `updaterd` has not started since the last attempt — it clears this once it has
+# copied the record into the update log. So the release the last rescue chose is not starting either,
+# and the fault is not one a rollback fixes.
+if [ -f "$breadcrumb" ] && [ -z "$FORCE" ]; then
+    decline "a previous rescue is still on record, and updaterd has not started since:
+
+$(cat "$breadcrumb")
+
+  So golden did not fix it, and swapping again would only reboot the robot a second time.
+  Read the journal:  journalctl -b -u robotd -u updaterd -u btd -u configd
+  Then, to try anyway:  robot-rescue --force --reboot"
+fi
+
+# No golden means no rollback target. That is the state of every board until 1.0.0 exists, so it is
+# a declined run and not an error — but say which of the two reasons it is, because "unset in
+# updater.toml" and "updaterd has not started since it was set" need different fixes.
+[ -L "$golden_link" ] || decline "no golden release published at ${golden_link}.
+  Set \`golden\` for the daemon component in /etc/robot/updater.toml, then restart updaterd —
+  it publishes the symlink on every start. If it is already set, updaterd has not started since."
+
+golden_target="$(readlink "$golden_link")"
+golden_version="$(basename "$golden_target")"
+[ -d "${INSTALL_DIR}/${golden_target}" ] || decline \
+    "golden names ${golden_version}, which is not installed at ${INSTALL_DIR}/${golden_target}."
+
+# A missing `current` is not an obstacle: a board with no live release is exactly a board that
+# should be put on golden.
+if [ -L "$current_link" ]; then
+    current_version="$(basename "$(readlink "$current_link")")"
+else
+    current_version="(none)"
+fi
+
+# Already on golden means the daemons are failing on the release that carries the standing
+# guarantee, so this cannot be a release fault. Swapping would change nothing and reboot anyway,
+# which is how a hardware fault becomes a reboot loop.
+[ "$current_version" != "$golden_version" ] || decline \
+    "current is already golden (${golden_version}); a rollback cannot fix this.
+  Look at what the failing daemon says:  journalctl -b -u robotd -u updaterd -u btd -u configd"
+
+if [ -n "$DRY_RUN" ]; then
+    say "would swap current from ${current_version} to golden ${golden_version}"
+    exit 0
+fi
+
+# The requirement rather than a proxy for it: on a board only root can write here, and testing
+# what the next four lines actually need keeps the swap exercisable against a temporary tree.
+[ -w "$INSTALL_DIR" ] || { echo "robot-rescue: ${INSTALL_DIR} is not writable; run as root" >&2; exit 1; }
+
+# The breadcrumb before the swap, matching the order the engine arms its boot counter in: a record
+# of an attempt that did not happen is recoverable, a swap nothing recorded is not. Outside
+# `install_dir`, so it survives the swap it is describing.
+#
+# `key=value` and not JSON, though `updaterd` reads it: this file is written by a shell script on a
+# board where things are already going wrong, and quoting JSON correctly in `sh` is a way to produce
+# a record nothing can read. It is also read by a human first — it is the evidence.
+#
+# Overwritten rather than appended. It is a guard and the latest record, one attempt at a time; the
+# history that must not be lost goes into the update log, which is append-only and bounded.
+mkdir -p "$STATE_DIR"
+cat > "$breadcrumb" <<EOF
+at=$(date -u '+%s')
+install_dir=${INSTALL_DIR}
+from=${current_version}
+to=${golden_version}
+because=${BECAUSE}
+EOF
+
+# `ln -sfn` unlinks and recreates, which leaves a window where `current` does not exist — and a
+# daemon starting in that window fails to exec. Rename over the top instead: `rename(2)` within one
+# directory is atomic, which is what `Store::link_to` does for the same reason.
+#
+# `rename(2)` does not follow symlinks, but `mv`'s own path resolution does: `current` points at a
+# directory, so plain `mv tmp current` moves the temporary link *into* releases/<version> and leaves
+# `current` untouched. GNU spells the fix `-T`, BSD spells it `-h`, and neither accepts the other's
+# flag — the board is GNU, and a laptop running the tests is not.
+tmp="${INSTALL_DIR}/.current.tmp"
+rm -f "$tmp"
+ln -s "$golden_target" "$tmp"
+if mv --version >/dev/null 2>&1; then
+    mv -fT "$tmp" "$current_link"
+else
+    mv -fh "$tmp" "$current_link"
+fi
+sync
+
+say "current is now golden ${golden_version} (was ${current_version})"
+
+if [ -z "$REBOOT" ]; then
+    say "nothing has restarted yet: every unit execs through current.
+  Reboot when the robot is safe to drop:  systemctl reboot"
+    exit 0
+fi
+
+say "rebooting onto ${golden_version}"
+systemctl reboot

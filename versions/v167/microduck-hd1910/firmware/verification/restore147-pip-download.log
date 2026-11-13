@@ -1,0 +1,41 @@
+Collecting onnx==1.23.2
+  Downloading onnx-1.23.2-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.7 kB)
+Collecting onnxruntime==1.28.0
+  Downloading onnxruntime-1.28.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+Collecting ziglang==0.14.1
+  Downloading ziglang-0.14.1-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl.metadata (2.7 kB)
+Collecting numpy>=1.23.2 (from onnx==1.23.2)
+  Downloading numpy-2.5.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting protobuf>=6.31.1 (from onnx==1.23.2)
+  Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Collecting typing_extensions>=4.7.1 (from onnx==1.23.2)
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting ml_dtypes>=0.5.4 (from onnx==1.23.2)
+  Downloading ml_dtypes-0.6.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.8 kB)
+Collecting flatbuffers (from onnxruntime==1.28.0)
+  Downloading flatbuffers-25.12.19-py2.py3-none-any.whl.metadata (1.0 kB)
+Collecting packaging (from onnxruntime==1.28.0)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Downloading onnx-1.23.2-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (8.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.9/8.9 MB 34.3 MB/s  0:00:00
+Downloading onnxruntime-1.28.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (19.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 19.2/19.2 MB 73.9 MB/s  0:00:00
+Downloading ziglang-0.14.1-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl (83.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 83.2/83.2 MB 68.0 MB/s  0:00:01
+Downloading ml_dtypes-0.6.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (409 kB)
+Downloading numpy-2.5.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.7/16.7 MB 64.6 MB/s  0:00:00
+Downloading protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl (343 kB)
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading flatbuffers-25.12.19-py2.py3-none-any.whl (26 kB)
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Saved /tmp/r17-toolchain-downloads/wheels/onnx-1.23.2-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+Saved /tmp/r17-toolchain-downloads/wheels/onnxruntime-1.28.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+Saved /tmp/r17-toolchain-downloads/wheels/ziglang-0.14.1-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl
+Saved /tmp/r17-toolchain-downloads/wheels/ml_dtypes-0.6.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+Saved /tmp/r17-toolchain-downloads/wheels/numpy-2.5.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+Saved /tmp/r17-toolchain-downloads/wheels/protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl
+Saved /tmp/r17-toolchain-downloads/wheels/typing_extensions-4.16.0-py3-none-any.whl
+Saved /tmp/r17-toolchain-downloads/wheels/flatbuffers-25.12.19-py2.py3-none-any.whl
+Saved /tmp/r17-toolchain-downloads/wheels/packaging-26.3-py3-none-any.whl
+Successfully downloaded onnx onnxruntime ziglang ml_dtypes numpy protobuf typing_extensions flatbuffers packaging

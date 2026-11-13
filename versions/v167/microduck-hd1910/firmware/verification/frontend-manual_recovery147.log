@@ -1,0 +1,6 @@
+PASS startup fallen + limp: explicit LB press/release only; no automatic enable or synthesized HOME
+PASS fallen HOME, homing, holding and walking use the same production pad event path
+PASS missing model disables only its action; upright HOME remains; native refusal displays without replay
+PASS recovery readback shows current pose, actual scale/filters and HOME versus Walk return
+PASS physical controller takeover releases held web LB and disables browser actions
+PASS replay, pause, offline and disconnected protections remain

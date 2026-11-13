@@ -1,0 +1,21 @@
+{
+  "training_repo": "https://github.com/pollen-robotics/microduck_rl",
+  "training_commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "runtime_repo": "https://github.com/pollen-robotics/microduck",
+  "runtime_tag": "daemon-v0.15.1",
+  "runtime_commit": "1fa84386f07884e27866411bc1ba166977bced95",
+  "files_sha256": {
+    "uv.lock": "2eeeb680025baa737e7ccf3a87da3695a9d49b228de0bb60d8af0c022ab5f1aa",
+    "pyproject.toml": "e4f73a9f9aff14826463aee558f53900307ba973a287fb3bfc27a8954a131026",
+    "src/mjlab_microduck/tasks/microduck_velocity_env_cfg.py": "75a0430b814ac7495eb237ab806fbd4dd10309b9fd3027ac3eee3c2e3c5a944a",
+    "src/mjlab_microduck/tasks/microduck_standup_env_cfg.py": "b20b8f3fac5a374dd602f371f0b500955b4dbcb4d3f7330bddfa15b327826873",
+    "src/mjlab_microduck/tasks/microduck_velstand_env_cfg.py": "ae8b73add46197b9888a3d60dc44f14946524b2658894b2603d4a229f6cc9d39",
+    "src/mjlab_microduck/tasks/microduck_sitstand_env_cfg.py": "65b1961566b0772852ba36af8e92c02a13a53de9b9a98f91e2dce1f4d8d627b1",
+    "src/mjlab_microduck/tasks/microduck_ground_pick_env_cfg.py": "9b68951e2c84fdccb5894701efa97e060438eb56c956a34c65e844ba3fa6185e",
+    "src/mjlab_microduck/tasks/microduck_ball_kick_env_cfg.py": "313180628c0d0364ea6d0f1843e7e3e10b76585491b90b0c1f0e301d9e5fd30c",
+    "src/mjlab_microduck/tasks/microduck_roulade_env_cfg.py": "5e923d9ba69946228062c72102fe2b97bce02b9fd6f52c2418a42bbd4f919b42",
+    "src/mjlab_microduck/tasks/mdp.py": "481869a70015662179f8118bd7a9dfeeafd984cd8bc05c98a5c7caa826a1045e",
+    "src/mjlab_microduck/tasks/distill.py": "bd736e28f3324a109a52c3414ea0a7017cd89c5e6d27583540107f3a34549f1f"
+  },
+  "hd1910_parameters_sha256": "ef2d51adfb1cc0831b9b02ca19aa9176fceecdf725148d084378d7d9a64afceb"
+}

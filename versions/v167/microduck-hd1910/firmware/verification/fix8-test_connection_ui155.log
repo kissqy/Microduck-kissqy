@@ -1,0 +1,1 @@
+PASS duplicate status UI removed; connection pending/first feedback neutral; real SSH, state, health and startup failures visible; stale data warning; actual banner and ServicePanel.paint agree; generation reset retires old reports; no telemetry mutation

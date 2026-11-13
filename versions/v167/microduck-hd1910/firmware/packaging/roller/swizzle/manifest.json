@@ -1,0 +1,213 @@
+{
+  "schema_version": 2,
+  "model_api": 1,
+  "obs_len": 61,
+  "action_len": 14,
+  "robot": {
+    "model": "microduck",
+    "hw_rev": 1,
+    "servos": "hd1910",
+    "control_hz": 50
+  },
+  "name": "swizzle",
+  "kind": "perpetual",
+  "description": "需要滑轮；转向槽表示航向误差，不能直接按普通行走的转速指令使用。0.15.1现成路径仅核定直行子集。",
+  "entry_pose": "standing",
+  "command": {
+    "encoding": "constant",
+    "idle": [
+      0,
+      0,
+      0
+    ],
+    "twist": "forward/backward push, 0, clipped heading error (not yaw velocity)",
+    "head": "neck pitch / head pitch / yaw / roll; deltas from HOME",
+    "body": "zeros",
+    "allowed_twist_ranges": {
+      "lin_vel_x": [
+        -0.6,
+        0.6
+      ],
+      "lin_vel_y": [
+        0.0,
+        0.0
+      ],
+      "ang_vel_z": [
+        -0.5,
+        0.5
+      ],
+      "heading": null
+    }
+  },
+  "action_scale": 1.0,
+  "trained_action_scale": 1.0,
+  "action_filter": {
+    "enabled": false,
+    "head_alpha": 1.0,
+    "legs_alpha": 1.0,
+    "version": 1,
+    "control_hz": 50.0,
+    "stage": "joint_position_target_after_home_and_scale",
+    "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+    "head_joints": [
+      "neck_pitch",
+      "head_pitch",
+      "head_yaw",
+      "head_roll"
+    ],
+    "leg_joints": [
+      "left_hip_yaw",
+      "left_hip_roll",
+      "left_hip_pitch",
+      "left_knee",
+      "left_ankle",
+      "right_hip_yaw",
+      "right_hip_roll",
+      "right_hip_pitch",
+      "right_knee",
+      "right_ankle"
+    ],
+    "update": "once_per_policy_step",
+    "reset": "first_target_passthrough_per_environment",
+    "previous_action_observation": "raw_policy_output",
+    "onnx": "external_filter_not_baked_into_graph"
+  },
+  "required_policy_settings": {
+    "head_lowpass": 1.0,
+    "legs_lowpass": 1.0,
+    "action_scale": 1.0
+  },
+  "required_skill_settings": null,
+  "runtime_compatibility": {
+    "native_runtime": {
+      "version": "0.15.1",
+      "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+      "route": "walk",
+      "support": "restricted_command_protocol",
+      "limitations": [
+        "冻结 robotd 不按模型屏蔽 head/body 或转换指令；调用端必须落实本合同中的命令限制。",
+        "现有 yaw 速度控制不能当作目标航向控制；现成控制路径仅核定 y=0、yaw=0、body=0 的直行子集。完整转向需要显式按航向误差协议下发的控制端，当前没有端到端验证。"
+      ]
+    },
+    "r148_importer": {
+      "task_allowlisted": false,
+      "direct_import_verified": false,
+      "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+    },
+    "requires_passive_roller_hardware": true,
+    "official_finished_weights": false,
+    "automatic_deployment": false
+  },
+  "runtime_only_settings": {
+    "voltage_adapt": {
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "training_action_compensation": "not_present_in_training_action_term",
+      "note": "供电随机化/负载掉压属于BAM训练物理；不等于运行端动态动作倍率补偿。导出不强制开启或关闭。"
+    },
+    "gain_and_gain_ratios": {
+      "keys": [
+        "gain",
+        "standing_gain_ratio",
+        "ground_pick_gain_ratio",
+        "skill[].params.gain_ratio"
+      ],
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "note": "训练BAM的实际kp_fw见hardware_command和training_physics；不能凭空推导固件增益或翻译层寄存器映射。"
+    }
+  },
+  "normalization": "embedded_in_onnx_once",
+  "export_contract_revision": 3,
+  "training_snapshot_sha256": "e57821bcbbd63a23c729144917885aa99f3ddc8f57126ff0bfd72c16de2d0e14",
+  "training": {
+    "task_id": "Mjlab-Velocity-Swizzle-Backlash-MicroDuck",
+    "repo": "pollen-robotics/microduck_rl",
+    "commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "checkpoint": 9999,
+    "source_file": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/velocity_swizzle/2026-10-10_08-43-34_console_20261010_084324_3fc56f/model_9999.pt"
+  },
+  "target_firmware": "0.15.1",
+  "teacher_only": false,
+  "source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "task": "Mjlab-Velocity-Swizzle-Backlash-MicroDuck",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/velocity_swizzle/2026-10-10_08-43-34_console_20261010_084324_3fc56f/model_9999.pt",
+  "model_origin": {
+    "engine": "official_0151",
+    "task": "Mjlab-Velocity-Swizzle-Backlash-MicroDuck",
+    "baseline_pin": {
+      "revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+    },
+    "training_adapter_revision": "R1.5.22-golden-stand-no-ema",
+    "friction_randomization": "official"
+  },
+  "export_source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "onnx_sha256": "14195135fcaa60cc45c36181d31542e76f07d873261ecae41dca72c0b795fcc8",
+  "deployment_verified": false,
+  "slot": "walk",
+  "mode": "roller",
+  "gear_backlash": {
+    "enabled": true,
+    "joint_count": 14,
+    "ranges_rad": {
+      "passive_left_hip_yaw_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_left_hip_roll_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_left_hip_pitch_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_left_knee_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_left_ankle_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_neck_pitch_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_head_pitch_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_head_yaw_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_head_roll_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_hip_yaw_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_hip_roll_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_hip_pitch_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_knee_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_ankle_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ]
+    },
+    "encoder_position": "motor + passive backlash",
+    "motor_velocity": "motor-side for friction and back-EMF",
+    "policy_joint_velocity": "motor + passive backlash"
+  },
+  "duration_s": null
+}

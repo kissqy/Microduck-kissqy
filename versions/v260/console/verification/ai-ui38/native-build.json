@@ -1,0 +1,53 @@
+{
+  "new_package_sha256": "bd601f9cabee3ba5ed9334083f6e39742f07e15800561cd0a67722245e1b28e7",
+  "bytes": 37611219,
+  "changed_firmware_files": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "mediad"
+  ],
+  "mediad_elf": {
+    "bytes": 9147144,
+    "machine": "AArch64",
+    "load_segments": 4,
+    "sha256": "827b5359d2dff064ce95a50046c29eb92712b086fecc15ca6160beec9348dd7b",
+    "needed": [
+      "libgstwebrtc-1.0.so.0",
+      "libgstbase-1.0.so.0",
+      "libgstreamer-1.0.so.0",
+      "libgobject-2.0.so.0",
+      "libglib-2.0.so.0",
+      "libgstvideo-1.0.so.0",
+      "libgstapp-1.0.so.0",
+      "libgio-2.0.so.0",
+      "libm.so.6",
+      "libc.so.6",
+      "ld-linux-aarch64.so.1",
+      "libpthread.so.0",
+      "libdl.so.2"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.28",
+      "2.29",
+      "2.30"
+    ],
+    "revision": "1fa8438-feetech-ft6-control.73+camera105"
+  },
+  "old_mediad_sha256": "0417c8c2dc5a63dd2e1c2a65d652f31609c232abab95d50e4acbd1faab0f742b",
+  "robotd_and_padd_byte_identical": true,
+  "models_and_calibrations_byte_identical": true,
+  "native_ae_algorithm_tests_passed": 16,
+  "hardware_tested": false,
+  "source_archive": "Microduck-Source-R17-V186-control57-compiled.tar.gz",
+  "source_archive_sha256": "425c04cd829386ba934d9137a33081f11335a3404e5f22337eed47e993d1a1cb",
+  "source_patch_sha256": "fd5398325e1ebc72b44da3f9e3a9cddbeb37f2469b1181535f31969e3d0f2df9",
+  "build_toolchain": "Rust 1.99.0; cargo-zigbuild 0.23.4; Zig 0.14.1; aarch64-unknown-linux-gnu.2.31",
+  "target_luma_before": 90.0,
+  "target_luma_after": 105.0,
+  "quality_unchanged": "720p15"
+}

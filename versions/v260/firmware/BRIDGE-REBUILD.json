@@ -1,0 +1,8 @@
+{
+  "source_sha256": "5675682ae42b691086e7c7e3c331145ee31b3b2bb46261a9dfdfaa636caa897b",
+  "binary_sha256": "19aff4331a956151514714680307e2053b1982aba820f2e5ded05f0e5b5892e3",
+  "byte_identical_to_V260": true,
+  "compiler": "Zig 0.13.0",
+  "flags": "-target aarch64-linux-gnu.2.17 -std=c11 -O2 -Wall -Wextra -Werror -s",
+  "note": "Current source differs in formatting from the historical V238 source digest; it rebuilds the exact shipped binary."
+}

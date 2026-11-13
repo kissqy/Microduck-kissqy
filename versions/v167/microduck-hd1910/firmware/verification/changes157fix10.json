@@ -1,0 +1,145 @@
+{
+  "console_version": "1.0.157-Fix10",
+  "service_build": "1fa8438-feetech-ft6-control.36",
+  "media_build": "1fa8438-feetech-media-demand.1",
+  "release_baseline": "Microduck-Source-R17-v1.0.157-Fix9",
+  "firmware_reinstall_required": true,
+  "firmware_sha256": "e9db83892488b7a6d9e87f154006def370d2dd06d2fe6fce3c765b64421fc3b4",
+  "core_native_sources_unchanged": true,
+  "control_input_binaries_unchanged": true,
+  "protected_files": {
+    "packaging/startup_gate.py": "9b1a07b55f36d8cc93b0a99d1776396f455e5f91f890a91112d8b04d18e48557",
+    "packaging/runtime.py": "9e44b986a9ab19501b522c2f28de4c27b01b0beb89be4ec5b5deeb4258af9d91",
+    "packaging/gamepad.py": "0dbad8bf2ef36d24e188c4c93fa2acb54ea0f7ffdf5cbff9642bd9d81a37f5a4",
+    "packaging/configure.py": "708b936627ce64cdc1055c59ec09aee3ff10ae5b9d60599e633c942dac94e982",
+    "packaging/voice-setup.py": "bce9e9b217f433df8c0d28cf1b80ee95d6925eb5d879276c1f162bfa2288b4b9",
+    "packaging/gamepad-r7/gamesir-xboxd": "e7c428e5690adf1483b5349fb100e076b5ca37c74068a6dd315015ce47d0af73",
+    "console/raw_telemetry.py": "da34bf7e285b0787e78b17cd0519fe6b997cbfeac3d705025ae237ce993d3f7a",
+    "console/connection.py": "3c7256b75b4296f480f8469c6bf32e4c60d6a4732dc7344c9a4d48cac4fb75a2",
+    "console/remote_input.py": "c8e02dab52700812dd9c0e356eeffa339093854bdc5e4253b5da8fa38757e64c",
+    "console/controls.py": "5e92fbcc313b3dfa4972e194d6a3f843abf7d55da2c915db5e34c099f6e20e19",
+    "console/service_rpc.py": "c9bd998c3e4b61ccb93c0b70fff5c0a292cc73954a4ecd51034975370e95b262",
+    "console/service_control.py": "86a7a39e493de44103720a558f4d07ec858c65a7059ac93248f77aa779c46b4f",
+    "console/install_handoff.py": "7ef8504124e16e80424caf2720567e15052217dc54fbbc650b7f78c54a9ae0c4",
+    "console/static/control.js": "0eeafc7445f35bc35c864e160a4eddc8f99aef723d9d62097140fac84ae6738d",
+    "console/static/control-socket.js": "c35b00cb27fa25dda4995ae9e27bc34adfd359d02c25d3a97120922ad30151e8",
+    "console/static/index.html": "676e2de2aed46501e4c37538f72753f4bb524743cb6d8b6616382febfa66c215",
+    "console/static/service.js": "8413f3a77d20b78b39811e28795b6de0364202fb5ed35011ea7d02f33400c45e",
+    "console/static/r17-0151.css": "873c101b68f139ce7ad9b8d531434d8111dc5251bb698b98ef0eea6f02ad1125"
+  },
+  "original_installer_identical_except_camera_accessory_after_core_and_input_ready": true,
+  "added_robot_50hz_work": false,
+  "added_camera_polling_or_retry_loop": false,
+  "camera_event_thread": "parks on channel receive; passive readers park on condition variable",
+  "capture_lifecycle": "real source locked NULL at boot, video peers and snapshot/stream leases share demand",
+  "bootstrap_signal": "GLib emission hook preserves upstream first-handler-wins default action",
+  "media_binary": {
+    "sha256": "0417c8c2dc5a63dd2e1c2a65d652f31609c232abab95d50e4acbd1faab0f742b",
+    "bytes": 10916512,
+    "machine": "AArch64",
+    "revision": "1fa8438-feetech-media-demand.1",
+    "needed": [
+      "libgstwebrtc-1.0.so.0",
+      "libgstbase-1.0.so.0",
+      "libgstreamer-1.0.so.0",
+      "libgobject-2.0.so.0",
+      "libglib-2.0.so.0",
+      "libgstvideo-1.0.so.0",
+      "libgstapp-1.0.so.0",
+      "libgio-2.0.so.0",
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2",
+      "ld-linux-aarch64.so.1"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.28",
+      "2.29",
+      "2.30"
+    ]
+  },
+  "elf_integrity": {
+    "robotd": {
+      "bytes": 6773464,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "robotctl": {
+      "bytes": 4362264,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "padd": {
+      "bytes": 3414872,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "sounds": {
+      "bytes": 1152920,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "mediad": {
+      "bytes": 10916512,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "gamepad-r7/gamesir-xboxd": {
+      "bytes": 47984,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "onnxruntime/libonnxruntime.so.1.28.0": {
+      "bytes": 20591712,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "onnxruntime/libonnxruntime_providers_shared.so": {
+      "bytes": 198792,
+      "machine": "AArch64",
+      "load_segments": 4
+    }
+  },
+  "tests": {
+    "robot_hardware_tested": false,
+    "windows_native_tested": false,
+    "browser_pixel_rendered": false,
+    "rust_passed": 35,
+    "python_passed": 138,
+    "browser_scripts_passed": 7,
+    "logs": [
+      {
+        "path": "verification/fix10-media-tests.log",
+        "sha256": "9b66b5cd99c1320cdcb74ef85751a29bebbeab4a8cb67663ff00c1f54375579f"
+      },
+      {
+        "path": "verification/fix10-pipeline-tests.log",
+        "sha256": "5d51a212879b87932a5cd9396574138889091c7b35258184624a37fe4432e537"
+      },
+      {
+        "path": "verification/fix10-exposure-tests.log",
+        "sha256": "7faf2e055db0037277a1cea223202a413c86d2f56792e3fdaeaf74158b54d694"
+      },
+      {
+        "path": "verification/fix10-core-tests.log",
+        "sha256": "098ced3b5b91f0f81e62b5a783b983d53f36bbad43f98288f6287fa3f820d617"
+      },
+      {
+        "path": "verification/fix10-install-tests.log",
+        "sha256": "c20d13d85bab6a0662845a297ab728c7d16fa06c4ed0b0624adcc9320f97d393"
+      },
+      {
+        "path": "verification/fix10-browser-tests.log",
+        "sha256": "3eed21384e192e3a682bad922921c5919d26bac7bf871eaa2f6d2def2daafe9e"
+      },
+      {
+        "path": "verification/fix10-media-build.log",
+        "sha256": "cad25c04163ed19d80af340384ac39c847aed09da821350369f5f2c54ad25728"
+      }
+    ]
+  }
+}

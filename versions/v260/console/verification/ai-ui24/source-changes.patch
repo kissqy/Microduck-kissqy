@@ -1,0 +1,527 @@
+--- a/ai_runtime.py
++++ b/ai_runtime.py
+@@ -38,6 +38,10 @@
+         self.task={'phase':'idle','text':'','request_id':'','message':'尚未发送本次任务'}
+         self.task_sent_at=0.0
+         self.voice_request_id=''
++        self.speech_session=''
++        self.speech_revision=-1
++        self.speech_sent_at=0.0
++        self.speech={'phase':'idle','request_id':'','enabled':False,'message':'豆包说话未启用'}
+         self.error=''
+         self.api_key=''
+         self.voice_id=DEFAULT_VOICE
+@@ -72,7 +76,7 @@
+         self.trace_dir.mkdir(parents=True,exist_ok=True)
+         self.trace_file=self.trace_dir/('AI-Dialogue-'+datetime.now().strftime('%Y%m%d-%H%M%S')+'.jsonl')
+         self.gate=ActionGate(self.rpc,self.robot_state,self.log,cancelled=lambda:self.stop_event.is_set())
+-        self.log('ai_ready', message='UI23：拍摄开场只限制豆包语音，鸭叫保留；说“你不解释解释吗”解锁。')
++        self.log('ai_ready', message='UI24：启动默认不启用豆包说话；勾选框显示Zero确认状态，鸭叫保留。')
+ 
+     def log(self,kind,**fields):
+         for name in ('id','at'):
+@@ -93,13 +97,28 @@
+             if kind=='task_prompt':
+                 if fields.get('request_id')!=self.task.get('request_id'):return None
+                 self.task.update({k:fields[k] for k in ('phase','text','message') if k in fields})
+-            if kind=='voice_state' and fields.get('source')=='rehearsal':
++            if kind=='speech_control':
++                if fields.get('request_id')!=self.speech.get('request_id'):return None
++                self.speech.update({k:fields[k] for k in ('phase','message') if k in fields})
++            if kind=='voice_state' and fields.get('source') in ('rehearsal','speech_control','startup'):
+                 if self.stop_event.is_set():return None
+-                request_id=fields.get('request_id')
+-                if request_id not in (self.task.get('request_id'),self.voice_request_id):return None
+-                self.voice_request_id=request_id
++                session=fields.get('speech_session')
++                if session and session!=self.speech_session:return None
++                revision=fields.get('speech_revision')
++                if type(revision) is int:
++                    if revision<=self.speech_revision:return None
++                    self.speech_revision=revision
++                else:
++                    request_id=fields.get('request_id')
++                    if request_id not in (self.task.get('request_id'),self.voice_request_id):return None
++                    self.voice_request_id=request_id
+                 self.gate.speaking_enabled=fields.get('unlocked') is True
+                 self.gate.rehearsal_speech=fields.get('rehearsal_speech') is True
++                if (self.speech['phase']!='pending' or
++                        fields.get('control_request_id')==self.speech['request_id']):
++                    self.speech.update(phase='applied',enabled=self.gate.speaking_enabled,
++                                       message=fields.get('message','Zero已确认说话状态'))
++                event['speech']=dict(self.speech)
+             if kind=='mic_level':
+                 self.mic_level={**fields,'received_at_ms':round(time.time()*1000)}
+             elif kind=='transcript':
+@@ -134,10 +153,14 @@
+         with self.cv:
+             conversation=self.conversation.snapshot()
+             task=dict(self.task)
++            speech=dict(self.speech)
+             if task['phase']=='pending' and time.monotonic()-self.task_sent_at>8:
+                 task.update(phase='error',message='未收到豆包任务确认；请检查连接后再发送')
++            if speech['phase']=='pending' and time.monotonic()-self.speech_sent_at>8:
++                speech.update(phase='error',message='未收到Zero确认，当前显示上次确认状态')
+         return {'running': bool(self.worker and self.worker.is_alive()),'provider_ready':self.provider_ready,'provider':'豆包实时语音 3.0',
+                 'voice_unlocked':self.gate.speaking_enabled,'rehearsal_speech':self.gate.rehearsal_speech,
++                'speech':speech,'speech_revision':self.speech_revision,'speech_session':self.speech_session,
+                 'muted':self.muted,'skills':list(self.gate.skills),
+                 'expressions':list(self.gate.expressions.values()),'head_limits':self.gate.head_ranges(),
+                 'conversation':conversation,'task':{**task,'default_text':REHEARSAL_TASK},
+@@ -194,6 +217,23 @@
+         self.log('audio_state',muted=self.muted,message='HAT 已静音，文字仍正常返回' if self.muted else 'HAT 原生语音播放已开启')
+         return self.status()
+ 
++    def set_speech(self,args):
++        if not isinstance(args,dict) or set(args)!={'enabled'} or type(args['enabled']) is not bool:
++            raise ActionDenied('只允许设置是否启用豆包说话')
++        if not self.provider or not self.provider_ready:raise ActionDenied('请先启动AI并连接豆包')
++        with self.cv:
++            if self.speech['phase']=='pending' and time.monotonic()-self.speech_sent_at<=8:
++                raise ActionDenied('正在等待Zero确认说话状态')
++            request_id=uuid.uuid4().hex;self.speech_sent_at=time.monotonic()
++            self.speech={'phase':'pending','request_id':request_id,'enabled':args['enabled'],
++                         'message':'正在启用说话…' if args['enabled'] else '正在关闭说话…'}
++            self.log('speech_control',phase='pending',request_id=request_id,enabled=args['enabled'],message=self.speech['message'])
++        try:self.provider.set_speech(args['enabled'],request_id)
++        except Exception as exc:
++            self.log('speech_control',phase='error',request_id=request_id,message='设置未送达Zero：'+str(exc)[:160])
++            raise ActionDenied('说话设置未送达，当前仍显示上次确认状态') from None
++        return self.status()
++
+     def set_task(self,args):
+         if (not isinstance(args,dict) or 'text' not in args or set(args)-{'text','speech_locked'}
+                 or type(args.get('speech_locked',False)) is not bool):
+@@ -205,7 +245,7 @@
+             if self.task['phase']=='pending' and time.monotonic()-self.task_sent_at<=8:
+                 raise ActionDenied('上一份任务正在等待豆包确认')
+             request_id=uuid.uuid4().hex;self.task_sent_at=time.monotonic()
+-            speech_locked=bool(text and args.get('speech_locked',False))
++            speech_locked=args.get('speech_locked',False)
+             self.task={'phase':'pending','request_id':request_id,'text':text,'speech_locked':speech_locked,
+                        'message':'已发送任务，等待豆包确认…'}
+             self.log('task_prompt',phase='pending',request_id=request_id,text=text,message=self.task['message'])
+@@ -380,9 +420,12 @@
+         skills=self.load_skills()  # fail closed if robotd cannot enumerate installed skills
+         if not skills:raise ActionDenied('机器人没有报告任何可用技能；拒绝启动')
+         self.stop_event=threading.Event()
+-        self.gate.speaking_enabled=True
+-        self.gate.rehearsal_speech=False
++        self.gate.speaking_enabled=False
++        self.gate.rehearsal_speech=True
+         self.voice_request_id=''
++        self.speech_session=uuid.uuid4().hex
++        self.speech_revision=-1
++        self.speech={'phase':'idle','request_id':'','enabled':False,'message':'豆包说话未启用，鸭叫保留'}
+         self.gate.pending_unlock=False
+         self.gate.unlock_at=0.0
+         self.error=''
+@@ -399,7 +442,8 @@
+         self.provider=RemoteAI(self,self.service_controller.transport.channel,self.stop_event)
+         self.worker=threading.Thread(target=self._run,daemon=True,name='Microduck-Zero-AI')
+         self.worker.start()
+-        self.log('voice_state',unlocked=True,muted=self.muted,message='调试模式：豆包文字与原生语音均已开放，动作仍按实机状态执行')
++        self.log('voice_state',unlocked=False,rehearsal_speech=True,muted=self.muted,
++                 message='豆包说话默认未启用；可勾选“启用说话”或说“你不解释解释吗”，鸭叫保留')
+         return self.status()
+ 
+     def _run(self):
+@@ -436,6 +480,7 @@
+         self.gate.rehearsal_speech=False
+         self.provider_ready=False
+         self.gate.pending_unlock=False
++        self.speech={'phase':'idle','request_id':'','enabled':False,'message':'会话已停止'}
+         self.log('voice_state',unlocked=False, message='已停止会话，权限重置')
+         return self.status()
+ 
+--- a/ai_doubao.py
++++ b/ai_doubao.py
+@@ -42,7 +42,7 @@
+         self.send_lock=threading.Lock()
+         self.audio_queue=queue.Queue(maxsize=150)
+         self.playback_cancel=threading.Event()
+-        if getattr(hub,'muted',False):self.playback_cancel.set()
++        if getattr(hub,'muted',False) or not hub.gate.speaking_enabled:self.playback_cancel.set()
+         self.input_lock=threading.Lock()
+         self.input_playing=False
+         self.expression_audio=threading.Event()
+@@ -68,6 +68,7 @@
+         self.assistant_sequence=0
+         self.assistant_display_ids={}
+         self.task_request_id=''
++        self.speech_revision=0
+         self.seen_speech_ids=deque(maxlen=128)
+         self.blocked_speech_ids=deque(maxlen=128)
+         self.completed_voice_ids=deque(maxlen=128)
+@@ -135,13 +136,13 @@
+         rehearsal=getattr(self.hub.gate,'rehearsal_speech',False)
+         if not self.hub.gate.speaking_enabled and not rehearsal:session['instructions']=LOCKED_INSTRUCTIONS
+         else:session['instructions']=validate_persona(getattr(self.hub,'persona',DEFAULT_PERSONA))+'\n'+TOOL_RULES
+-        if self.hub.gate.speaking_enabled and getattr(getattr(self.hub,'vision',None),'ready',False):
++        if getattr(getattr(self.hub,'vision',None),'ready',False):
+             session['instructions']+='\n'+VISION_RULES
+         task=validate_task(getattr(self.hub,'task_prompt',''))
+         if task:session['instructions']+='\n【本次排练任务】\n'+task+'\n【准备边界】收到文字任务只更新上下文，不触发运动或发声；等待主人下一次真实语音。所有动作仍服从工具权限和就绪回执。'
+         if rehearsal:
+             session['instructions']+='\n【当前豆包语音状态】'+(
+-                '主人真实语音口令已确认，豆包语音已开放。先依照拍摄任务用行动回应，再看图、表情和开口；不播报解锁，不说“好的”，不解释动作。'
++                '豆包说话已启用，来自主人中控勾选或真实语音口令。若有拍摄任务，先用行动回应，再看图、表情和开口；不播报解锁，不说“好的”，不解释动作。'
+                 if self.hub.gate.speaking_enabled else
+                 '豆包语音尚未开放，系统不会把你的语言音频送到HAT。官方表情的鸭叫照常播放，中控保留返回文字供调试。'
+                 '主人完整说出“你不解释解释”或“你不解释解释吗”后，系统根据豆包最终语音转写直接开放语音，无需unlock_speech工具。'
+@@ -185,32 +186,48 @@
+             except queue.Empty:break
+         self.pcm_decoder.discard()
+ 
+-    def _voice_state(self,reason):
+-        self.hub.log('voice_state',source='rehearsal',request_id=self.task_request_id,
++    def _voice_state(self,reason,source='rehearsal',control_request_id=None):
++        self.speech_revision+=1
++        self.hub.log('voice_state',source=source,request_id=self.task_request_id,
++            control_request_id=control_request_id,speech_revision=self.speech_revision,
++            speech_session=getattr(self.hub,'speech_session',''),
+             unlocked=self.hub.gate.speaking_enabled,
+             rehearsal_speech=getattr(self.hub.gate,'rehearsal_speech',False),
+             message=reason)
++
++    def _apply_speech_permission(self,enabled):
++        self._clear_voice_audio()
++        if not enabled:
++            for key in tuple(self.seen_speech_ids):
++                if key not in self.blocked_speech_ids:self.blocked_speech_ids.append(key)
++        self.hub.gate.rehearsal_speech=True
++        self.hub.gate.speaking_enabled=enabled
++        self._sync_playback_permission()
++
++    def set_speech(self,enabled,request_id):
++        if type(enabled) is not bool:raise ValueError('是否启用说话必须为布尔值')
++        with self.session_update_lock:
++            self._apply_speech_permission(enabled)
++            self._voice_state('Zero已确认：豆包说话已启用' if enabled else 'Zero已确认：豆包说话未启用，鸭叫保留',
++                              source='speech_control',control_request_id=request_id)
++            try:
++                if self._update_session('speech') is False:raise ValueError('会话更新未送达')
++            except Exception as exc:
++                self.hub.log('provider_mode',message='本地说话权限已切换，豆包会话说明未更新',reason=str(exc)[:200])
+ 
+     def set_task(self,text,request_id,speech_locked=False):
+         text=validate_task(text)
+         if type(speech_locked) is not bool:raise ValueError('豆包语音开关无效')
+         with self.session_update_lock:
+-            previous=(getattr(self.hub,'task_prompt',''),self.task_request_id,
+-                      getattr(self.hub.gate,'rehearsal_speech',False),self.hub.gate.speaking_enabled)
++            previous=(getattr(self.hub,'task_prompt',''),self.task_request_id)
+             self.hub.task_prompt=text;self.task_request_id=request_id
+-            self.hub.gate.rehearsal_speech=bool(text and speech_locked)
+-            self.hub.gate.speaking_enabled=not self.hub.gate.rehearsal_speech
+-            self._clear_voice_audio()
+-            if speech_locked:
+-                for key in tuple(self.seen_speech_ids):
+-                    if key not in self.blocked_speech_ids:self.blocked_speech_ids.append(key)
+-            self._sync_playback_permission()
++            # Old clients may request a new locked take, but task delivery or
++            # clearing can never authorize speech. The live checkbox owns it.
++            if speech_locked:self._apply_speech_permission(False)
+             try:
+                 if not self._update_session('task',request_id,text):raise ValueError('任务未发送，豆包连接已停止')
+             except Exception:
+-                (self.hub.task_prompt,self.task_request_id,self.hub.gate.rehearsal_speech,
+-                 self.hub.gate.speaking_enabled)=previous
+-                self._sync_playback_permission()
++                self.hub.task_prompt,self.task_request_id=previous
+                 self._voice_state('任务未发送，保留原豆包语音状态')
+                 raise
+             self._voice_state('仅豆包语音受限，官方鸭叫保留；说“你不解释解释吗”解锁'
+@@ -222,9 +239,7 @@
+                     or self.hub.gate.speaking_enabled or not is_speech_unlock_command(text)):return
+             # This path is invoked only by the provider's completed microphone
+             # transcription, never task text, assistant text, a timer or a tool.
+-            self._clear_voice_audio()
+-            self.hub.gate.speaking_enabled=True
+-            self._sync_playback_permission()
++            self._apply_speech_permission(True)
+             self._voice_state('已听到“你不解释解释”，豆包语音已解锁；不补播此前音频')
+             try:
+                 if self._update_session('speech') is False:raise ValueError('会话更新未送达')
+@@ -246,7 +261,7 @@
+             meta=self.session_updates.popleft() if self.session_updates else None
+         if meta and meta['reason']=='task':
+             self.hub.log('task_prompt',phase='applied',request_id=meta['request_id'],text=meta['text'],
+-                message='任务已生效，等待主人语音开始排练' if meta['text'] else '本次任务已清除，恢复默认对话')
++                message='任务已生效，等待主人语音开始排练' if meta['text'] else '本次任务已清除，说话开关保持当前状态')
+ 
+     def set_muted(self,muted):
+         self.hub.muted=bool(muted)
+@@ -452,6 +467,8 @@
+             if et == 'session.created':self.hub.provider_ready=True
+             elif et == 'session.updated':self._ack_session_update()
+             self.hub.log('provider_session',event=et,session_id=(event.get('session') or {}).get('id'))
++            if et=='session.created':
++                self._voice_state('Zero已确认启动说话状态；鸭叫与电脑回听不受此开关影响',source='startup')
+         elif et=='conversation.item.input_audio_transcription.started':
+             with self.turn_lock:self.asr_pending=None
+             self.hub.log('asr_started',item_id=event.get('item_id'))
+--- a/ai_zero.py
++++ b/ai_zero.py
+@@ -79,7 +79,7 @@
+         self.lock=threading.Lock()
+ 
+     def tool_definitions(self):
+-        visual = [vision_tool()] if self.speaking_enabled and self.hub.vision.ready else []
++        visual = [vision_tool()] if self.hub.vision.ready else []
+         tools=[t for t in self.tools if not (self.rehearsal_speech and t.get('name')=='unlock_speech')]
+         silent_desc=('本轮保持安静，不做动作；官方表情鸭叫不受豆包语音限制。'
+                      if not self.speaking_enabled else
+@@ -137,12 +137,14 @@
+         self.provider_ready=False
+         self.provider=None
+         self.task_prompt=''
++        self.speech_session=config.get('speech_session','')
+         self.muted=config.get('muted') is True
+         self.output=None;self.output_lock=threading.Lock()
+         self.gate=GateRelay(self,config['tools'])
+         self.vision=VisualService(self.vision_settings,stop,self.log,
+             distance=lambda stamp:self.gate.execute('read_distance',{'capture_t_ns':stamp}))
+         self.gate.speaking_enabled=config.get('voice_enabled') is True
++        self.gate.rehearsal_speech=config.get('rehearsal_speech') is True
+ 
+     def log(self,kind,**fields):
+         # Reply PCM has its own bounded live-only relay; no microphone PCM or credentials.
+@@ -191,6 +193,10 @@
+                 message=json.loads(line)
+                 if message.get('action')=='stop':break
+                 if message.get('action')=='mute':provider.set_muted(message.get('muted') is True)
++                if message.get('action')=='speech':
++                    try:provider.set_speech(message.get('enabled'),message.get('request_id'))
++                    except (ValueError,TypeError) as exc:
++                        hub.log('speech_control',phase='error',request_id=message.get('request_id'),message=str(exc))
+                 if message.get('action')=='commit':provider.commit_input('manual')
+                 if message.get('action')=='vision':provider.inspect_scene(message.get('question'))
+                 if message.get('action')=='tools':
+--- a/ai_remote.py
++++ b/ai_remote.py
+@@ -43,6 +43,9 @@
+         return result
+ 
+     def set_muted(self,muted):return self._control({'action':'mute','muted':muted})
++
++    def set_speech(self,enabled,request_id):
++        return self._control({'action':'speech','enabled':enabled,'request_id':request_id})
+ 
+     def update_tools(self,tools):return self._control({'action':'tools','tools':tools})
+ 
+@@ -116,6 +119,8 @@
+                 'persona':getattr(self.hub,'persona',DEFAULT_PERSONA),
+                 'vision':getattr(self.hub,'vision_settings',{}),
+                 'tools':self.hub.gate.tool_definitions(),'voice_enabled':self.hub.gate.speaking_enabled,
++                'rehearsal_speech':getattr(self.hub.gate,'rehearsal_speech',False),
++                'speech_session':getattr(self.hub,'speech_session',''),
+                 'muted':getattr(self.hub,'muted',False)}
+         def receive(event):
+             # ServiceChannel reader must never execute tools or wait for its own RPC.
+--- a/console.py
++++ b/console.py
+@@ -192,6 +192,7 @@
+                     if self.path == '/api/ai/start':return self.reply(ai_hub.start())
+                     if self.path == '/api/ai/stop':return self.reply(ai_hub.stop())
+                     if self.path == '/api/ai/audio':return self.reply(ai_hub.set_audio(payload))
++                    if self.path == '/api/ai/speech':return self.reply(ai_hub.set_speech(payload))
+                     if self.path == '/api/ai/task':return self.reply(ai_hub.set_task(payload))
+                     if self.path == '/api/ai/commit':return self.reply(ai_hub.commit_input())
+                     if self.path == '/api/ai/vision':return self.reply(ai_hub.inspect_scene(payload))
+--- a/service_rpc.py
++++ b/service_rpc.py
+@@ -36,10 +36,14 @@
+ 
+ def ai_control(request):
+     message=request.get('message') or {}
+-    if message.get('action') not in ('stop','tool_result','mute','commit','vision','tools','task'):
++    if message.get('action') not in ('stop','tool_result','mute','speech','commit','vision','tools','task'):
+         raise ValueError('unsupported AI control')
+     if message.get('action')=='mute' and type(message.get('muted')) is not bool:
+         raise ValueError('invalid AI mute state')
++    if message.get('action')=='speech':
++        if (type(message.get('enabled')) is not bool or not isinstance(message.get('request_id'),str)
++                or not re.fullmatch(r'[a-f0-9]{32}',message['request_id'])):
++            raise ValueError('invalid speech state or request id')
+     if message.get('action')=='task':
+         text=message.get('text');request_id=message.get('request_id')
+         if (not isinstance(text,str) or len(text.strip())>3000 or not isinstance(request_id,str)
+--- a/static/ai-panel.js
++++ b/static/ai-panel.js
+@@ -65,7 +65,7 @@
+     this.replyAudio=new ReplyAudioCache(()=>this.paintChat());
+     this.formLoaded=false;this.configWarning='';
+     this.visionPosting=false;this.previewCaptureId=null;
+-    this.noticeKind='';this.taskPosting=false;this.taskDirty=false;this.taskDraftLoaded=false;
++    this.noticeKind='';this.taskPosting=false;this.taskDirty=false;this.taskDraftLoaded=false;this.speechPosting=false;this.speechDesired=false;
+     const click=(id,fn)=>$(id).addEventListener('click',()=>fn.call(this));
+     click('ai-save',this.save);click('ai-start',this.start);click('ai-stop',this.stop);
+     click('ai-refresh',this.refreshSkills);
+@@ -74,7 +74,7 @@
+     click('ai-vision-capture',this.captureVision);
+     click('ai-task-preset',this.loadTaskPreset);click('ai-task-send',this.sendTask);click('ai-task-clear',this.clearTask);
+     $('ai-task-text').addEventListener('input',()=>{this.taskDirty=true;this.paintTask();});
+-    $('ai-task-speech-lock').addEventListener('change',()=>{this.taskDirty=true;this.paintTask();});
++    $('ai-speech-enabled').addEventListener('change',()=>this.setSpeech());
+     $('ai-task-text').addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();this.sendTask();}});
+     $('ai-dialogue').addEventListener('scroll',()=>{this.chatFollow=this.chatAtEnd();if(this.chatFollow)$('ai-chat-latest').hidden=true;},{passive:true});
+     $('ai-follow').addEventListener('change',()=>{});
+@@ -98,9 +98,16 @@
+     $('ai-connected').className='badge '+(s.running?'':'neutral');
+     if(s.provider_ready&&this.noticeKind==='connection')this.note('');
+   }
++  acceptStatus(next){
++    const previous=this.status;
++    if(previous&&next.speech_session===previous.speech_session&&Number.isInteger(previous.speech_revision)&&previous.speech_revision>(next.speech_revision??-1)){
++      for(const key of ['voice_unlocked','rehearsal_speech','speech_revision','speech'])next[key]=previous[key];
++    }
++    this.status=next;
++  }
+   async load(){
+     const before=this.status?.head_limits;
+-    this.status=await this.get('/status');this.paint();
++    this.acceptStatus(await this.get('/status'));this.paint();
+     if(before&&this.status.running&&this.status.provider_ready&&!this.catalogSyncing&&JSON.stringify(before)!==JSON.stringify(this.status.head_limits)){
+       this.catalogSyncing=true;
+       try{await this.post('/skills');}catch(e){this.problem(e);}finally{this.catalogSyncing=false;}
+@@ -147,25 +154,33 @@
+         vision_model:$('ai-vision-model').value.trim(),vision_enabled:!!$('ai-vision-enabled').checked};
+       const key=$('ai-api-key').value.trim();if(key)args.api_key=key;
+       const visualKey=$('ai-vision-api-key').value.trim();if(visualKey)args.vision_api_key=visualKey;
+-      this.status=await this.post('/configure',args);$('ai-api-key').value='';
++      this.acceptStatus(await this.post('/configure',args));$('ai-api-key').value='';
+       $('ai-vision-api-key').value='';
+       this.paint();this.note('语音、视觉和角色配置已保存');return true;
+     }catch(e){this.problem(e);return false}
+   }
+-  async start(){try{if(!await this.save())return;this.micLevel=null;this.micReceived=0;this.note('正在连接豆包…','connection');this.status=await this.post('/start');this.paint();}catch(e){this.problem(e)}}
+-  async stop(){try{this.status=await this.post('/stop');this.paint();this.note('已停止，聊天记录保留');}catch(e){this.problem(e)}}
++  async start(){try{if(!await this.save())return;this.micLevel=null;this.micReceived=0;this.note('正在连接豆包…','connection');this.acceptStatus(await this.post('/start'));this.paint();}catch(e){this.problem(e)}}
++  async stop(){try{this.acceptStatus(await this.post('/stop'));this.paint();this.note('已停止，聊天记录保留');}catch(e){this.problem(e)}}
+   async commitInput(){try{await this.post('/commit');this.note('已提交本句');}catch(e){this.problem(e)}}
++  async setSpeech(){
++    if(this.speechPosting)return;
++    this.speechDesired=!!$('ai-speech-enabled').checked;this.speechPosting=true;this.paintVoice();
++    try{this.acceptStatus(await this.post('/speech',{enabled:this.speechDesired}));}
++    catch(e){this.problem(e)}finally{this.speechPosting=false;this.paintVoice();}
++  }
+   paintVoice(){
+     const s=this.status||{};
+-    $('ai-lock').textContent=s.muted?'HAT 已静音':!s.running?'豆包未运行':s.voice_unlocked===false?'豆包语音受限 · 鸭叫保留':'豆包语音已开放';
+-    $('ai-lock').dataset.unlocked=String(!s.muted&&s.voice_unlocked!==false&&!!s.running);
++    const enabled=!!s.running&&s.voice_unlocked===true,busy=this.speechPosting||s.speech?.phase==='pending';
++    $('ai-speech-enabled').checked=enabled;
++    $('ai-speech-enabled').disabled=busy||!s.running||!s.provider_ready;
++    $('ai-lock').textContent=busy?((this.speechPosting?this.speechDesired:s.speech?.enabled)?'正在启用说话…':'正在关闭说话…'):s.speech?.phase==='error'?'设置未确认 · 显示上次状态':!s.running?'豆包未运行':enabled?'豆包说话已启用':'豆包说话未启用 · 鸭叫保留';
++    $('ai-lock').dataset.unlocked=String(enabled);
+   }
+   paintTask(){
+     const task=this.status?.task||{},ready=!!this.status?.provider_ready;
+     const busy=this.taskPosting||task.phase==='pending';
+-    if(!this.taskDraftLoaded){if(task.text)$('ai-task-text').value=task.text;$('ai-task-speech-lock').checked=!!task.speech_locked;this.taskDraftLoaded=true;}
++    if(!this.taskDraftLoaded){if(task.text)$('ai-task-text').value=task.text;this.taskDraftLoaded=true;}
+     $('ai-task-text').disabled=busy;
+-    $('ai-task-speech-lock').disabled=busy;
+     $('ai-task-preset').disabled=busy||!task.default_text;
+     $('ai-task-send').disabled=busy||!ready;
+     $('ai-task-clear').disabled=busy||!ready;
+@@ -173,7 +188,7 @@
+     state.textContent=this.taskPosting?'正在发送…':this.taskDirty?'草稿未发送':!ready?'启动AI后发送；确认生效后再开口':task.message||'尚未发送本次任务';
+   }
+   loadTaskPreset(){
+-    $('ai-task-text').value=this.status?.task?.default_text||'';$('ai-task-speech-lock').checked=true;this.taskDirty=true;this.paintTask();
++    $('ai-task-text').value=this.status?.task?.default_text||'';this.taskDirty=true;this.paintTask();
+   }
+   async sendTask(){
+     if(this.taskPosting)return;
+@@ -184,13 +199,13 @@
+   async clearTask(){if(!this.taskPosting)await this.applyTask('');}
+   async applyTask(text){
+     this.taskPosting=true;this.paintTask();
+-    try{this.status=await this.post('/task',{text,speech_locked:!!text&&!!$('ai-task-speech-lock').checked});this.taskDirty=false;if(!text){$('ai-task-text').value='';$('ai-task-speech-lock').checked=false;}this.paint();}
++    try{this.acceptStatus(await this.post('/task',{text}));this.taskDirty=false;if(!text)$('ai-task-text').value='';this.paint();}
+     catch(e){this.problem(e)}finally{this.taskPosting=false;this.paintTask();}
+   }
+   async captureVision(){
+     if(this.visionPosting)return;
+     this.visionPosting=true;this.paintVision();
+-    try{this.status=await this.post('/vision',{question:$('ai-vision-question').value.trim()||'眼前是什么？'});this.paint();this.note('已请求 Zero 拍照，照片和结果会留在对应对话里');}
++    try{this.acceptStatus(await this.post('/vision',{question:$('ai-vision-question').value.trim()||'眼前是什么？'}));this.paint();this.note('已请求 Zero 拍照，照片和结果会留在对应对话里');}
+     catch(e){this.problem(e)}finally{this.visionPosting=false;this.paintVision()}
+   }
+   paintVision(){
+@@ -301,7 +316,7 @@
+     if(!this.chatMessages.size){const empty=document.createElement('div');empty.className='ai-chat-empty';empty.textContent='对着 HAT 说话，识别文字、豆包回复和动作结果会留在这里。';box.append(empty);}
+     if(follow)this.latestChat();else{box.scrollTop=top;$('ai-chat-latest').hidden=false;}
+   }
+-  async refreshSkills(){try{await this.post('/skills');this.status=await this.get('/status');this.paint();this.note('动作清单已更新');}catch(e){this.problem(e)}}
++  async refreshSkills(){try{await this.post('/skills');this.acceptStatus(await this.get('/status'));this.paint();this.note('动作清单已更新');}catch(e){this.problem(e)}}
+   clearView(){$('ai-trace').replaceChildren();this.rowCount=0;this.note('日志显示已清空');}
+   mic(level,received=Date.now()){
+     if(!Number.isFinite(level?.dbfs)||!Number.isFinite(received)||received<=this.micReceived)return;
+@@ -336,7 +351,17 @@
+     this.es.addEventListener('open',()=>{$('ai-stream-state').textContent='实时事件长连接已接入';});
+   }
+   add(e){
+-    if(e.kind==='voice_state'){this.status=this.status||{};this.status.voice_unlocked=!!e.unlocked;this.status.rehearsal_speech=!!e.rehearsal_speech;this.paintVoice();}
++    if(e.kind==='voice_state'){
++      this.status=this.status||{};const s=this.status;
++      if(e.speech_session&&s.speech_session&&e.speech_session!==s.speech_session&&s.running)return;
++      if(Number.isInteger(e.speech_revision)&&e.speech_revision<=(s.speech_revision??-1))return;
++      s.voice_unlocked=!!e.unlocked;s.rehearsal_speech=!!e.rehearsal_speech;
++      if(e.speech_session)s.speech_session=e.speech_session;
++      if(Number.isInteger(e.speech_revision))s.speech_revision=e.speech_revision;
++      if(e.speech)s.speech=e.speech;
++      this.paintVoice();
++    }
++    if(e.kind==='speech_control'){this.status=this.status||{};this.status.speech={...this.status.speech,...e};this.paintVoice();}
+     if(e.kind==='audio_state'){this.status=this.status||{};this.status.muted=!!e.muted;this.paintVoice();}
+     if(e.kind==='task_prompt'){this.status=this.status||{};this.status.task={...this.status.task,...e};this.paintTask();}
+     if(e.conversation_update)this.mergeChat(e.conversation_update);
+--- a/static/ai-panel.css
++++ b/static/ai-panel.css
+@@ -114,5 +114,5 @@
+ .ai-motion-actions{display:inline-flex;align-items:center;gap:6px;flex-wrap:nowrap}
+ 
+ .ai-task-composer{display:grid;gap:6px;margin:9px 0 12px;min-width:0}.ai-task-composer textarea{box-sizing:border-box;width:100%;min-height:58px;max-height:180px;resize:vertical;border:1px solid #344c40;border-radius:7px;background:#101a19;color:#dceadf;padding:8px 10px;font-family:inherit;font-size:12px;line-height:1.6}.ai-task-actions{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}.ai-task-actions .button{padding:5px 9px;font-size:11px}#ai-task-state{font-size:11px;color:#8faa9b;margin-right:auto}#ai-task-state[data-error="true"]{color:#ef9a8b}
+-.ai-task-speech-control{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;font-size:11px;color:#bdcdbd}.ai-task-speech-control input{margin:0}
++.ai-speech-control{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;font-size:11px;color:#bdcdbd}.ai-speech-control input{margin:0}
+ .ai-replay{display:inline-flex;align-items:center;justify-content:center;margin:0 0 0 6px;padding:1px 4px;min-width:24px;min-height:24px;border:0;border-radius:5px;background:transparent;color:#b4e37c;font-size:14px;vertical-align:middle;cursor:pointer}.ai-replay:hover:enabled{background:#2a4439}.ai-replay:disabled{opacity:.3;cursor:default}.ai-replay:focus-visible{outline:1px solid #b4e37c}
+--- a/static/index.html
++++ b/static/index.html
+@@ -104,7 +104,7 @@
+       <section class="panel"><div class="panel-head"><div><span class="section-index">05</span><h2>轨迹与系统</h2></div><span class="badge neutral">估计值</span></div><canvas id="odom-chart" class="odom-chart" aria-label="接触里程计轨迹"></canvas><div class="odom-values"><span>X <strong id="odom-x">—</strong></span><span>Y <strong id="odom-y">—</strong></span><span>θ <strong id="odom-yaw">—</strong></span></div><div class="system-lines"><div><span>CPU 使用率</span><strong id="sys-cpu">—</strong></div><div class="bar"><i id="cpu-bar"></i></div><div><span>内存使用</span><strong id="sys-memory">—</strong></div><div class="bar"><i id="memory-bar"></i></div><div><span>Zero 温度</span><strong id="sys-temp">—</strong></div><div><span>Zero 开机时长</span><strong id="sys-uptime">—</strong></div></div></section>
+     </div>
+     <section class="panel" id="ai-agent-panel" aria-label="AI智能体与完整调用日志">
+-  <div class="panel-head"><div><span class="section-index">AI · UI23</span><h2>AI 智能体 · 语音与视觉</h2><span id="ai-connected" class="badge neutral">○ 豆包未运行</span></div><span id="ai-lock">豆包未运行</span></div>
++  <div class="panel-head"><div><span class="section-index">AI · UI24</span><h2>AI 智能体 · 语音与视觉</h2><span id="ai-connected" class="badge neutral">○ 豆包未运行</span></div><span id="ai-lock">豆包未运行</span></div>
+   <div class="ai-layout">
+    <div class="ai-setup">
+     <div class="ai-fields">
+@@ -126,7 +126,7 @@
+ 【回复规则】默认使用中文口语，通常一句话；每次回复最多20字，含标点。直接回应当前问题，不反复自我介绍，不使用标题、Markdown、代码或长列表。复杂问题先给20字以内的简短结论，等待用户继续提问。
+ 【能力边界】只能使用当前提供且允许执行的动作工具。没有得到图像、传感器或工具反馈时，不声称看见环境、读到数据或完成动作；不确定就简短说明。</textarea></label>
+     <div class="ai-toolbar">
+-      <div class="ai-actions"><button class="button accent" type="button" id="ai-start">启动 AI</button><button class="button" type="button" id="ai-stop" disabled>停止</button><span class="ai-motion-actions"><button class="button" type="button" id="ai-motion-start" data-button="start" title="与手柄 Start 相同：先回 HOME，回位完成后再点进入保持" disabled>Start · 回 HOME</button><button class="button" type="button" id="ai-motion-relax" data-button="select" title="立即卸力，复用手柄 Select 短按；此按钮长按也不关机" disabled>卸力</button></span><button class="button" type="button" id="ai-save" title="语音、视觉和角色配置保存到本机，重启后自动读取">保存配置</button></div>
++      <div class="ai-actions"><button class="button accent" type="button" id="ai-start">启动 AI</button><button class="button" type="button" id="ai-stop" disabled>停止</button><span class="ai-motion-actions"><button class="button" type="button" id="ai-motion-start" data-button="start" title="与手柄 Start 相同：先回 HOME，回位完成后再点进入保持" disabled>Start · 回 HOME</button><button class="button" type="button" id="ai-motion-relax" data-button="select" title="立即卸力，复用手柄 Select 短按；此按钮长按也不关机" disabled>卸力</button></span><button class="button" type="button" id="ai-save" title="语音、视觉和角色配置保存到本机，重启后自动读取">保存配置</button><label class="ai-speech-control" title="仅允许HAT播放豆包语音；不影响官方鸭叫和电脑喇叭回听。口令解锁后会自动勾上"><input id="ai-speech-enabled" type="checkbox" disabled>启用说话</label></div>
+       <p id="ai-message" role="status" hidden></p>
+     </div>
+     <div class="ai-catalog">
+@@ -137,7 +137,7 @@
+     <div class="ai-chat-heading"><h3>对话</h3><span id="ai-chat-state" role="status">尚未启动豆包对话</span></div>
+     <div id="ai-dialogue" class="ai-chat-window" role="log" aria-live="off" tabindex="0" aria-label="你与豆包的多轮对话记录"><div class="ai-chat-empty">对着 HAT 说话，识别文字、豆包回复和动作结果会留在这里。</div></div>
+     <div class="ai-chat-footer"><button class="button" id="ai-commit" type="button" title="调试用：手动请求豆包结束当前输入" disabled>结束本句</button><span>豆包自动断句</span><button class="text-button" id="ai-chat-latest" type="button" hidden>回到最新 ↓</button></div>
+-    <div class="ai-task-composer"><textarea id="ai-task-text" rows="2" maxlength="3000" aria-label="本次排练任务文字" placeholder="把拍摄目标、剧情背景或行为要求发给豆包。Ctrl+Enter 发送。"></textarea><div class="ai-task-actions"><label class="ai-task-speech-control" title="发送任务后只拦截豆包语音，保留官方鸭叫；完整说出“你不解释解释吗”后开放豆包语音"><input id="ai-task-speech-lock" type="checkbox">开场只保留鸭叫</label><span id="ai-task-state" role="status">尚未发送本次任务</span><button class="text-button" type="button" id="ai-task-preset" title="填入本次一镜到底视频目标，并选中开场豆包语音限制；仍需点击发送任务">本次脚本</button><button class="button accent" type="button" id="ai-task-send">发送任务</button><button class="button" type="button" id="ai-task-clear">清除任务</button></div></div>
++    <div class="ai-task-composer"><textarea id="ai-task-text" rows="2" maxlength="3000" aria-label="本次排练任务文字" placeholder="把拍摄目标、剧情背景或行为要求发给豆包。Ctrl+Enter 发送。"></textarea><div class="ai-task-actions"><span id="ai-task-state" role="status">尚未发送本次任务</span><button class="text-button" type="button" id="ai-task-preset" title="填入本次一镜到底视频目标；说话由上方“启用说话”控制，仍需点击发送任务">本次脚本</button><button class="button accent" type="button" id="ai-task-send">发送任务</button><button class="button" type="button" id="ai-task-clear">清除任务</button></div></div>
+     <div class="ai-debug"><div class="ai-debug-heading">运行日志 <span id="ai-stream-state">连接实时日志…</span></div>
+       <div class="ai-audit-bar"><div class="ai-audit-tools"><label><input id="ai-follow" type="checkbox" checked> 跟随日志</label><button type="button" class="button" id="ai-clear">清空日志显示</button><a class="button" href="/api/ai/log/download" download>下载完整日志</a></div></div>
+       <div id="ai-trace" role="log" aria-live="off" aria-label="语音事件、模型调用、机器人指令与回执"></div>
+--- a/release_identity.py
++++ b/release_identity.py
+@@ -1,4 +1,4 @@
+ """One identity shared by the R17 installer and console."""
+ BUILD = '1fa8438-feetech-ft6-control.73'
+-CONSOLE_VERSION = '1.0.203'
++CONSOLE_VERSION = '1.0.204'
+ OFFICIAL_VERSION = '0.15.1'

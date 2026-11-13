@@ -1,0 +1,65 @@
+{
+  "scope": [
+    "duck-control",
+    "duck-ipc-proto",
+    "robotd",
+    "padd"
+  ],
+  "selected_scope": "duck-control unit; duck-ipc-proto unit; padd unit; robotd roller::tests",
+  "robotd_process_isolation": true,
+  "hardware_tested": false,
+  "passed": 237,
+  "failed": 0,
+  "ignored": 0,
+  "elapsed_seconds": 20.16,
+  "results": [
+    {
+      "target": "duck_ipc_proto",
+      "case": null,
+      "exit_code": 0,
+      "passed": 53,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "target": "padd",
+      "case": null,
+      "exit_code": 0,
+      "passed": 42,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "target": "duck_control",
+      "case": null,
+      "exit_code": 0,
+      "passed": 139,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "target": "robotd",
+      "case": "roller::tests::both_roller_actions_load_with_the_complete_shipped_configuration",
+      "exit_code": 0,
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "target": "robotd",
+      "case": "roller::tests::walking_configuration_is_never_touched",
+      "exit_code": 0,
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "target": "robotd",
+      "case": "roller::tests::yaw_and_steering_are_wrapped_and_clipped",
+      "exit_code": 0,
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0
+    }
+  ]
+}

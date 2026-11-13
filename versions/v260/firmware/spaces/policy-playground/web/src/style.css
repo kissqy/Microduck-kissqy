@@ -1,0 +1,171 @@
+/* Big, plain and high-contrast, because the reader is ten.
+   One column on a phone, a grid on anything wider. No hover-only affordances: a tap is the input
+   this page expects. */
+:root {
+  --ink: #1b1d22;
+  --dim: #5c6270;
+  --line: #e3e6ec;
+  --card: #fff;
+  --page: #f6f7fb;
+  --go: #ffc400;
+  --go-ink: #2a2200;
+  --live: #1f9d55;
+  --bad: #c03030;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font: 17px/1.5 ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+#app { max-width: 1040px; margin: 0 auto; padding: 20px 18px 64px; }
+
+.bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+.title { font-size: 30px; margin: 0; }
+.bar-right { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+button, .picker {
+  font: inherit;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  padding: 10px 14px;
+  cursor: pointer;
+}
+button:disabled { opacity: 0.45; cursor: default; }
+button.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #eef0f5;
+  color: var(--dim);
+  font-size: 14px;
+}
+.chip-official { background: #e7f1ff; color: #2a5db0; }
+.chip-live { background: #e6f6ec; color: var(--live); }
+.chip-bad { background: #fbe9e9; color: var(--bad); }
+
+.said {
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  font-size: 18px;
+}
+.hint { color: var(--dim); }
+
+h2 { font-size: 20px; margin: 30px 0 12px; }
+
+.shelf-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.known { background: #fff8dc; border-color: #f0dfa0; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.card-name { margin: 0; font-size: 20px; text-transform: capitalize; }
+.card-what { margin: 0; color: var(--dim); }
+.card-facts { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.card-blocked { opacity: 0.7; }
+.card-blocked-why { margin: 0; color: var(--dim); font-size: 15px; }
+
+.go {
+  margin-top: auto;
+  background: var(--go);
+  border-color: #e0ab00;
+  color: var(--go-ink);
+  font-weight: 600;
+  padding: 12px;
+}
+.go-busy { background: #fff2bf; }
+
+.log-box { margin-top: 36px; color: var(--dim); }
+.log-box pre {
+  max-height: 320px;
+  overflow: auto;
+  background: #11141a;
+  color: #cfd6e4;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  white-space: pre-wrap;
+}
+
+.rest { margin-top: 34px; }
+.rest summary { cursor: pointer; font-size: 20px; font-weight: 600; margin-bottom: 10px; }
+
+.card-said {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fff6d8;
+  border: 1px solid #f0dfa0;
+  font-size: 15px;
+}
+
+/* The shelf is the page's headline, not a list above the real content: one press here is a duck
+   doing something in front of a friend. */
+.shelf { margin-top: 22px; }
+.shelf-title { font-size: 24px; margin: 0 0 12px; }
+.shelf-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.tile { display: flex; align-items: stretch; }
+.tile-go {
+  background: linear-gradient(#fff7d6, #ffe89a);
+  border: 2px solid #e6c34d;
+  border-radius: 16px 6px 6px 16px;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 16px 20px;
+  text-transform: capitalize;
+}
+.tile-go:not(:disabled):active { transform: translateY(1px); }
+.tile:has(.tile-off) .tile-go { border-right: none; }
+.tile:not(:has(.tile-off)) .tile-go { border-radius: 16px; }
+.tile-off {
+  border: 2px solid #e6c34d;
+  border-left: 1px solid #edd88f;
+  border-radius: 6px 16px 16px 6px;
+  background: #fffdf5;
+  color: #9a8a4a;
+  padding: 0 12px;
+  font-size: 15px;
+}
+
+/* Already on the duck: still pressable, no longer shouting. */
+.go-again { background: #f1f3f7; border-color: var(--line); color: var(--dim); font-weight: 500; }
+
+.chip-link { background: #eef3ff; color: #2a5db0; text-decoration: none; }
+.chip-link:hover { text-decoration: underline; }
+
+/* A clip of the trick, where a guess used to be. Fixed aspect so a grid of cards does not jump
+   around as each one's metadata arrives. */
+.card-clip {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #11141a;
+}
+
+/* The duck's own buttons: not tricks, so not yellow. Stop is the one a child should be able to
+   find without reading, so it is the only red thing on the page. */
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 18px; }
+.control { font-size: 17px; font-weight: 600; padding: 12px 18px; border-radius: 12px; }
+.control-start { background: var(--live); border-color: var(--live); color: #fff; }
+.control-stand { background: var(--card); }
+.control-stop { background: #fff1f1; border-color: #e7b6b6; color: var(--bad); }

@@ -1,0 +1,1 @@
+TRAINING_1521_UI_OK: 14 profiles; new P5/scale1/no EMA; 35 physical variants; legacy mapping preserved; immutable queue; 4K/1280; no probes or JS errors

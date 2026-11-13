@@ -11,8 +11,13 @@ Microduck 当前公开发布 · 2026-11-13
 
 R2 镜像下载：https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz
 V260 发布下载：https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260
-中控、固件、两类源码说明：https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md
-V260 独立源码：https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260
+中控、固件、两类源码说明：https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md
+V260 版本目录：https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260
+
+版本目录（main，无需切换分支）：
+V167：versions/v167/
+V260：versions/v260/
+每个版本目录均提供对应源码与运行包入口。
 
 首次开机先尝试已保存 Wi-Fi，未能连接时开启配网热点。
 热点：Microduck-kissqy，密码：12345678
@@ -24,10 +29,11 @@ V260 独立源码：https://github.com/kissqy/Microduck-kissqy/tree/release/v260
 历史版本保留：
 R1 镜像：https://github.com/kissqy/Microduck-kissqy/releases/tag/public-image-r1
 V167 中控：https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip
-V167 / control.43 源码：microduck-hd1910/firmware/，其中中控为 console/。
+V167 / control.43 源码：versions/v167/microduck-hd1910/firmware/，其中中控为 console/。
 R1 仍预装 control.40 / 配网 R5；需要旧线升级时使用 V167 的随包 control.43。
 训练中控源码：microduck-hd1910/training-console/
-V260 独立于旧线保存，不覆盖 V167，不触发旧线自动升级。
+V167、V260 在 versions/ 内分目录保存，不触发旧线自动升级。
+原 microduck-hd1910/ 与 release-assets/ 路径保留兼容旧文档和下载链接。
 
 Known-Good 与验证范围见 microduck-hd1910/docs/BASELINE.md；本次发布不新增实机验收结论。
 分项授权见 microduck-hd1910/LICENSE；第三方内容保留原许可。

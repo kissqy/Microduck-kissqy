@@ -1,0 +1,31 @@
+test_actual_process_cannot_be_replaced_by_effective_unit (test_runtime.RuntimeTests.test_actual_process_cannot_be_replaced_by_effective_unit) ... ok
+test_only_current_startup_profile_is_written_without_scanning_or_retiring (test_runtime.RuntimeTests.test_only_current_startup_profile_is_written_without_scanning_or_retiring) ... ok
+test_only_os_submission_failure_is_reported (test_runtime.RuntimeTests.test_only_os_submission_failure_is_reported) ... ok
+test_power_does_not_touch_missing_input_services_or_robot_socket (test_runtime.RuntimeTests.test_power_does_not_touch_missing_input_services_or_robot_socket) ... ok
+test_power_submits_without_bus_readback (test_runtime.RuntimeTests.test_power_submits_without_bus_readback) ... ok
+test_reconnect_stop_request_accepts_missing_old_socket_and_never_sends_motion (test_runtime.RuntimeTests.test_reconnect_stop_request_accepts_missing_old_socket_and_never_sends_motion) ... ok
+test_recovery_policy_runs_once_and_retries_only_a_failed_setting (test_runtime.RuntimeTests.test_recovery_policy_runs_once_and_retries_only_a_failed_setting) ... robot-boot-check.timer 停止/禁用指令失败：blocked
+ok
+test_existing_bank_and_audio_configuration_are_not_rewritten_in_either_phase (test_voice_identity.SystemAudioTests.test_existing_bank_and_audio_configuration_are_not_rewritten_in_either_phase) ... [固件安装 / 配置系统音频] 成功 · 本机音库与系统 ALSA 保存恢复配置已安装
+ok
+test_existing_system_volume_is_kept_without_reset_to_default (test_voice_identity.SystemAudioTests.test_existing_system_volume_is_kept_without_reset_to_default) ... [固件安装 / 配置系统音频] 成功 · 本机音库与系统 ALSA 保存恢复配置已安装
+ok
+test_file_preparation_precedes_native_start_but_does_not_touch_system_audio (test_voice_identity.SystemAudioTests.test_file_preparation_precedes_native_start_but_does_not_touch_system_audio) ... [固件安装 / 准备音库文件] 成功 · robotd 使用的本机音库与音频参数已准备
+[固件安装 / 配置系统音频] 成功 · 本机音库与系统 ALSA 保存恢复配置已安装
+ok
+test_first_install_builds_missing_bank_once_and_uses_descriptor_default (test_voice_identity.SystemAudioTests.test_first_install_builds_missing_bank_once_and_uses_descriptor_default) ... [固件安装 / 配置系统音频] 成功 · 本机音库与系统 ALSA 保存恢复配置已安装
+ok
+test_legacy_loudness_migrates_to_hardware_pcm_and_system_state_without_home_json (test_voice_identity.SystemAudioTests.test_legacy_loudness_migrates_to_hardware_pcm_and_system_state_without_home_json) ... [固件安装 / 配置系统音频] 成功 · 本机音库与系统 ALSA 保存恢复配置已安装
+ok
+test_mute_migrates_and_os_restore_precedes_robotd_without_startup_audio_hook (test_voice_identity.SystemAudioTests.test_mute_migrates_and_os_restore_precedes_robotd_without_startup_audio_hook) ... [固件安装 / 配置系统音频] 成功 · 本机音库与系统 ALSA 保存恢复配置已安装
+ok
+test_repeat_install_does_not_initialize_sound_read_mixer_or_rewrite_volume (test_voice_identity.SystemAudioTests.test_repeat_install_does_not_initialize_sound_read_mixer_or_rewrite_volume) ... [固件安装 / 配置系统音频] 成功 · 本机音库与系统 ALSA 保存恢复配置已安装
+ok
+test_complete_installer_recovers_missing_input_units_without_motion (test_upgrade_units.UpgradeUnitTests.test_complete_installer_recovers_missing_input_units_without_motion) ... ok
+test_corrupt_bundle_is_rejected_before_stopping_any_service (test_upgrade_units.UpgradeUnitTests.test_corrupt_bundle_is_rejected_before_stopping_any_service) ... ok
+test_restart_success_requires_control_readiness_without_retrying_process (test_upgrade_units.UpgradeUnitTests.test_restart_success_requires_control_readiness_without_retrying_process) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 1.381s
+
+OK

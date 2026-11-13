@@ -1,0 +1,261 @@
+{
+  "console_version": "1.0.157-Fix6",
+  "service_build": "1fa8438-feetech-ft6-control.36",
+  "release_baseline": "Microduck-Source-R17-v1.0.157-Fix5",
+  "firmware_reinstall_required": true,
+  "firmware_archive_byte_identical": false,
+  "firmware_sha256": "657c22814fea6038feb34a3d776bf4756969abc405388a51d7c8db54b930c51a",
+  "native_sources_unchanged": true,
+  "native_binaries_unchanged": true,
+  "model_weights_unchanged": true,
+  "hat_firmware_unchanged": true,
+  "added_50hz_work": false,
+  "added_robot_threads_or_polling": false,
+  "installed_script_changes": [
+    "BUILD.json",
+    "README.zh-CN.md",
+    "gamepad.py",
+    "release_identity.py",
+    "runtime.py",
+    "service.sh",
+    "startup_gate.py",
+    "voice-setup.py"
+  ],
+  "installation": {
+    "robotd_before_input_setup": true,
+    "four_steps_from_installer_push_events": true,
+    "optional_setup_failure_keeps_robotd_running": true,
+    "recovery_setting_idempotent": true,
+    "step_result_logging": true,
+    "complete_error_causes_preserved": true,
+    "raw_success_commands_and_receipts_not_displayed": true,
+    "upload_progress_from_existing_byte_writes": true,
+    "remote_fsync_and_sha256_comparison": true,
+    "install_bus_status_query_removed": true,
+    "missing_success_receipt_is_failure": true,
+    "robot_stop_failure_aborts_install": true,
+    "input_failure_does_not_gate_robotd": true
+  },
+  "boot_input": {
+    "four_step_event_gate": true,
+    "inotify_socket_creation": true,
+    "native_exec_after_ready": true,
+    "temporary_waiters": true,
+    "failed_wait_does_not_restart_robotd": true
+  },
+  "legacy_startup_migration_removed": true,
+  "process_query_shared_per_instance": true,
+  "model_log_lists_names": true,
+  "handoff": {
+    "close_old_data_and_startup_streams": true,
+    "condition_wait_during_install": true,
+    "resume_only_after_all_four_core_steps": true,
+    "initial_reconnect_attempts": 1,
+    "first_reconnect_failure_stops_automatic_attempts": true,
+    "manual_ssh_connect_unpauses": true,
+    "independent_tof_preserved": true,
+    "startup_snapshot_subscription_preserved": true,
+    "early_state_separate_from_raw": true,
+    "extra_startup_thread_removed": true,
+    "ssh_forward_reused_at_raw_handoff": true
+  },
+  "tests": {
+    "python_passed": 151,
+    "browser_scripts_passed": 10,
+    "runs": [
+      {
+        "name": "pc-fix",
+        "exit_code": 0,
+        "log": "verification/fix6-pc-fix-tests.log",
+        "sha256": "d229528d28995967213799e89a72bf5652aa67266308feb0e02e09a0c85f518a"
+      },
+      {
+        "name": "streams",
+        "exit_code": 0,
+        "log": "verification/fix6-streams-tests.log",
+        "sha256": "62a977beaf36f5f115c6f4ba6c51eeb2c1e64bdaacb6b818a9de6f52ba67a1b3"
+      },
+      {
+        "name": "query",
+        "exit_code": 0,
+        "log": "verification/fix6-query-tests.log",
+        "sha256": "1f6a952693a80511501ba81c6ce921bf9aab3287fe4443ad3a3fb380aa54d0a9"
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "log": "verification/fix6-install-tests.log",
+        "sha256": "0237c6b165bcd75f5859590bd5d0ab41455948afa590a2426a05d90e8fc4a56b"
+      },
+      {
+        "name": "order",
+        "exit_code": 0,
+        "log": "verification/fix6-order-tests.log",
+        "sha256": "8262522e9fcd5a74563ab02eb17236fcee8976eb5f9fd003a63865adf391d90f"
+      },
+      {
+        "name": "runtime",
+        "exit_code": 0,
+        "log": "verification/fix6-runtime-tests.log",
+        "sha256": "4d7cd8d4d40e1964388b19cb6bcb1fde77a19c71afa374caba94e70560fd4412"
+      },
+      {
+        "name": "test_robotd_first157",
+        "exit_code": 0,
+        "log": "verification/fix6-test_robotd_first157.log",
+        "sha256": "e092222c7400c718bb04a07f17f40576983422f592fb6f8d24357739fb4a475a"
+      },
+      {
+        "name": "test_install_progress157",
+        "exit_code": 0,
+        "log": "verification/fix6-test_install_progress157.log",
+        "sha256": "d0ed5bd7c8ad6e34522311875f1726c22d1d72d5d2a84ee397e5e17c2230f7a3"
+      },
+      {
+        "name": "test_fix157pc",
+        "exit_code": 0,
+        "log": "verification/fix6-test_fix157pc.log",
+        "sha256": "202e15d884c067ab28d84a5ebbac80a801bcf4bfab23b14779c242cd6f2cfe39"
+      },
+      {
+        "name": "test_controls154",
+        "exit_code": 0,
+        "log": "verification/fix6-test_controls154.log",
+        "sha256": "4321bee40f94b73b1772c9d4b065c570b64bfe649461aef04fc0110f687bceee"
+      },
+      {
+        "name": "test_connection_ui155",
+        "exit_code": 0,
+        "log": "verification/fix6-test_connection_ui155.log",
+        "sha256": "c4e74d103b7bf3bdf8911844ea8ee4b148a598dce1ac1c3f68dcf84a29e4ad45"
+      },
+      {
+        "name": "test_startup_ui",
+        "exit_code": 0,
+        "log": "verification/fix6-test_startup_ui.log",
+        "sha256": "1051736a2c3c606f87fc8ca8b5ffe966e682f54386457b6c78195bcff54adc78"
+      },
+      {
+        "name": "test_joint_direction155",
+        "exit_code": 0,
+        "log": "verification/fix6-test_joint_direction155.log",
+        "sha256": "2e4a3f0a1e78453c58e0c965ba6b8692f5fa5833e68a9afa299097c48adc920c"
+      },
+      {
+        "name": "test_pose_state",
+        "exit_code": 0,
+        "log": "verification/fix6-test_pose_state.log",
+        "sha256": "a9d3d13be56ba6850d99607b037440bf1426b4709ba1b8b1ec2207f469a371b4"
+      },
+      {
+        "name": "test_calibration_reference",
+        "exit_code": 0,
+        "log": "verification/fix6-test_calibration_reference.log",
+        "sha256": "249bcfc32a052070a316039f945514155a0f09c8679bc3ace34db124cbe2c71e"
+      },
+      {
+        "name": "test_gamepad_repair_ui",
+        "exit_code": 0,
+        "log": "verification/fix6-test_gamepad_repair_ui.log",
+        "sha256": "72d7539bf553c19352361a88a00d88bb6aaa05c85ebafeb27f99de35d5f1e1a0"
+      }
+    ],
+    "robot_hardware_tested": false,
+    "windows_native_tested": false,
+    "native_suite_rerun": false,
+    "full_historical_suite_rerun": false,
+    "socket_boundary_note": "Loopback TCP is substituted only at the OS boundary where AF_UNIX creation is restricted; upload receiver is executed locally on real files."
+  },
+  "elf_ranges": {
+    "robotd": {
+      "bytes": 6773464,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "robotctl": {
+      "bytes": 4362264,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "padd": {
+      "bytes": 3414872,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "sounds": {
+      "bytes": 1152920,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "gamepad-r7/gamesir-xboxd": {
+      "bytes": 43664,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "onnxruntime/libonnxruntime.so.1.28.0": {
+      "bytes": 20591712,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "onnxruntime/libonnxruntime_providers_shared.so": {
+      "bytes": 198792,
+      "machine": "AArch64",
+      "load_segments": 4
+    }
+  },
+  "changed_files": [
+    "BUILD.json",
+    "console/README.zh-CN.md",
+    "console/docs/releases/R157-Fix6.md",
+    "console/install_handoff.py",
+    "console/raw_telemetry.py",
+    "console/release_identity.py",
+    "console/service_control.py",
+    "console/startup_gate.py",
+    "console/static/raw-telemetry.js",
+    "console/static/service-management.js",
+    "console/telemetry.py",
+    "console/updates/Microduck-Robotd-FT6-R17.tar.gz",
+    "console/verification/test_fix157pc.py",
+    "console/verification/test_install_log157.py",
+    "console/verification/test_query_logs157.py",
+    "console/verification/test_robotd_first157.mjs",
+    "console/verification/test_robotd_first157.py",
+    "docs/design/r17-connection-design.md",
+    "docs/design/robotd-design.md",
+    "packaging/BUILD.json",
+    "packaging/R157-Fix6.md",
+    "packaging/README.zh-CN.md",
+    "packaging/SHA256SUMS",
+    "packaging/gamepad.py",
+    "packaging/install-files.json",
+    "packaging/release_identity.py",
+    "packaging/runtime.py",
+    "packaging/service.sh",
+    "packaging/startup_gate.py",
+    "packaging/test_raw_telemetry.py",
+    "packaging/test_runtime.py",
+    "packaging/test_upgrade_units.py",
+    "packaging/test_voice_identity.py",
+    "packaging/voice-setup.py",
+    "verification/fix6-install-tests.log",
+    "verification/fix6-order-tests.log",
+    "verification/fix6-pc-fix-tests.log",
+    "verification/fix6-query-tests.log",
+    "verification/fix6-runtime-tests.log",
+    "verification/fix6-streams-tests.log",
+    "verification/fix6-test_calibration_reference.log",
+    "verification/fix6-test_connection_ui155.log",
+    "verification/fix6-test_controls154.log",
+    "verification/fix6-test_fix157pc.log",
+    "verification/fix6-test_gamepad_repair_ui.log",
+    "verification/fix6-test_install_progress157.log",
+    "verification/fix6-test_joint_direction155.log",
+    "verification/fix6-test_pose_state.log",
+    "verification/fix6-test_robotd_first157.log",
+    "verification/fix6-test_startup_ui.log",
+    "verification/fix6-tests.json",
+    "verification/package157fix6.py"
+  ],
+  "previous_native_results": "verification/native-build157fix2.json; historical, not rerun"
+}

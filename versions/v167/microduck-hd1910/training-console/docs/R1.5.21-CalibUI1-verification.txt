@@ -1,0 +1,17 @@
+Microduck Training Studio R1.5.21 / CalibUI1
+
+从 R1.5.21 Public 的实际完整 ZIP 生成。新包只更改本机标定网页展示：
+ - 使用 R17 实时舵机列表中文名称 + (ID 序号)；
+ - 当保存的标定与新获取的 ZERO 标定比较时，仅对应差异字段高亮；
+ - 方向、编码器零点、机械下限、机械上限、物理ID、已标定状态均独立显示变更前数值；
+ - 不再整行高亮或固定高亮零点列。
+
+检查：
+ node tests/test_calibration_field_ui.cjs -> PASS（15个ID；7种独立变更情况）
+ python -m unittest discover -s tests -p test_zero_calibration.py -> PASS（9项）
+ python -m unittest discover -s tests -p test_official0151.py -> PASS（12项中1项缺冻结源码依赖跳过）
+ python -m unittest discover -s tests -p test_servo_mass.py -> PASS（8项中5项因缺MuJoCo跳过）
+ node --check training/static/studio.js -> PASS
+ Chromium 浏览器运行环境阻拦全部导航（net::ERR_BLOCKED_BY_ADMINISTRATOR），未通过真实截图验收；不将该测试标为通过。
+
+冻结不变：data/task-configs/**、训练内核与执行器模块、官方指针、模型导出逻辑、SSH后端协议及RELEASE=R1.5.21。

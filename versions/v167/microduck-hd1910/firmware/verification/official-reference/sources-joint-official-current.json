@@ -1,0 +1,37 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/53fb7d1/src/mjlab_microduck/tasks/microduck_velocity_env_cfg.py",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-53fb7d1-velocity.py",
+    "bytes": 44971,
+    "sha256": "75a0430b814ac7495eb237ab806fbd4dd10309b9fd3027ac3eee3c2e3c5a944a",
+    "resolved_git_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/53fb7d1/src/mjlab_microduck/tasks/microduck_velstand_env_cfg.py",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-53fb7d1-velstand.py",
+    "bytes": 45167,
+    "sha256": "6cb9e702b9f9049a816bd079731e54d7c7818200194be5bbd4c2fe5e95063e39",
+    "resolved_git_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck_rl/53fb7d1/AGENTS.md",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-53fb7d1-AGENTS.md",
+    "bytes": 17752,
+    "sha256": "4493d2d72d83c2f9c8486e195c3e3f903406b41046549f8d34dbf561572f2414",
+    "resolved_git_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a"
+  },
+  {
+    "url": "https://api.github.com/repos/pollen-robotics/microduck_rl/commits/53fb7d1",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-53fb7d1-commit.json",
+    "bytes": 29424,
+    "sha256": "987208f983050cfb0738868f673684939a7210cfb1fdad21435822491bc95c9b",
+    "resolved_git_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a"
+  },
+  {
+    "url": "https://huggingface.co/pollen-robotics/microduck-policies/resolve/6677ec007142bbaf05123a468f6ae58d13808786/velstand.onnx",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/hf-policies-current-velstand.onnx",
+    "bytes": 793705,
+    "sha256": "ce894d30b3343036d499bfac1102bdaa58d59a21c1b58401ecb70fb6a2f63e0a",
+    "resolved_hf_commit": "6677ec007142bbaf05123a468f6ae58d13808786"
+  }
+]

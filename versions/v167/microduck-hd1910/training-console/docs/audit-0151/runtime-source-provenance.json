@@ -1,0 +1,53 @@
+{
+  "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+  "files": [
+    {
+      "path": "duck-control/src/obs.rs",
+      "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/duck-control/src/obs.rs",
+      "sha256": "9545dae40e6a324cea153d2dc8d79563ba105c348f96e00128fb2e55d27f26a6",
+      "bytes": 16621
+    },
+    {
+      "path": "duck-control/src/policy.rs",
+      "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/duck-control/src/policy.rs",
+      "sha256": "ffdc144a97ccec60a725ebae5a534b054af4f4e8b2f1d247f648fcf00cde8014",
+      "bytes": 33338
+    },
+    {
+      "path": "AGENTS.md",
+      "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/AGENTS.md",
+      "sha256": "34c0eb9c3d0e33ee0971ac548fcd732f4acaf29d8c48e6488e63bacd605ba159",
+      "bytes": 2343
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/CONTRIBUTING.md",
+      "sha256": "92c1c3b56a92c98adf70cadddf661bf1d512819439cec89e4a399919269bff98",
+      "bytes": 9036
+    },
+    {
+      "path": "Cargo.toml",
+      "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/Cargo.toml",
+      "sha256": "ac9bc188aeb61bcde560b5818447023f1e3b6af74ce8bff7977565e6f324f111",
+      "bytes": 6282
+    },
+    {
+      "path": "robotd/src/control.rs",
+      "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/robotd/src/control.rs",
+      "sha256": "2913f61ce9d755d7d92e67f7cab79c09bf0bf82f7f1c28a962f1cb15b27a668a",
+      "bytes": 31749
+    },
+    {
+      "path": "robotd/src/main.rs",
+      "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/robotd/src/main.rs",
+      "sha256": "9234b8885e55c63e53d6d7b35a9659c69d3207dfbda0a05aff6160ef3d11c9b3",
+      "bytes": 390336
+    },
+    {
+      "path": "robotd-params/src/lib.rs",
+      "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/robotd-params/src/lib.rs",
+      "sha256": "c2a4cf9cb101b094c644764a063c6fb206f18a91105b98ccef484311bb8f06be",
+      "bytes": 155174
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+test_catalog_only_exposes_builtins_and_never_reads_onnx_or_training_data (test_builtin_controls154.BuiltinControls154Tests.test_catalog_only_exposes_builtins_and_never_reads_onnx_or_training_data) ... ok
+test_first_kick_migration_retires_standalone_recovery_and_preserves_joint_tuning (test_builtin_controls154.BuiltinControls154Tests.test_first_kick_migration_retires_standalone_recovery_and_preserves_joint_tuning) ... ok
+test_install_cleanup_removes_retired_feature_modules (test_builtin_controls154.BuiltinControls154Tests.test_install_cleanup_removes_retired_feature_modules) ... 清理旧配套文件：advanced_parameters.py
+清理旧配套文件：model_preflight.py
+ok
+test_kick_api_and_ipc_relay_do_not_expose_arbitrary_skills (test_builtin_controls154.BuiltinControls154Tests.test_kick_api_and_ipc_relay_do_not_expose_arbitrary_skills) ... ok
+test_kick_relay_uses_existing_unix_json_rpc_protocol (test_builtin_controls154.BuiltinControls154Tests.test_kick_relay_uses_existing_unix_json_rpc_protocol) ... ERROR
+test_kick_success_uses_one_original_robot_do_rpc_without_home_start_or_pause (test_builtin_controls154.BuiltinControls154Tests.test_kick_success_uses_one_original_robot_do_rpc_without_home_start_or_pause) ... ok
+test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) ... ok
+test_model_import_upload_is_unavailable_without_reading_body (test_builtin_controls154.BuiltinControls154Tests.test_model_import_upload_is_unavailable_without_reading_body) ... ok
+test_native_kick_refusal_is_not_queued_retried_or_recovered (test_builtin_controls154.BuiltinControls154Tests.test_native_kick_refusal_is_not_queued_retried_or_recovered) ... ok
+test_original_five_builtin_models_and_right_kick_contract_validate (test_builtin_controls154.BuiltinControls154Tests.test_original_five_builtin_models_and_right_kick_contract_validate) ... ok
+test_repeat_install_preserves_kick_scale_timing_and_other_custom_pad_bindings (test_builtin_controls154.BuiltinControls154Tests.test_repeat_install_preserves_kick_scale_timing_and_other_custom_pad_bindings) ... ok
+test_runtime_import_and_assignment_commands_are_retired (test_builtin_controls154.BuiltinControls154Tests.test_runtime_import_and_assignment_commands_are_retired) ... ok
+test_scale_api_accepts_only_scale_and_dispatches_no_servo_registers (test_builtin_controls154.BuiltinControls154Tests.test_scale_api_accepts_only_scale_and_dispatches_no_servo_registers) ... ok
+test_stale_servo_override_is_not_read_or_rewritten_by_scale (test_builtin_controls154.BuiltinControls154Tests.test_stale_servo_override_is_not_read_or_rewritten_by_scale) ... ok
+test_webpad_frames_remain_available_during_kick_but_not_maintenance (test_builtin_controls154.BuiltinControls154Tests.test_webpad_frames_remain_available_during_kick_but_not_maintenance) ... ok
+test_actual_apply_then_list_returns_changed_values_without_model_derivation (test_parameter_readback.ParameterReadbackTests.test_actual_apply_then_list_returns_changed_values_without_model_derivation) ... ok
+test_listing_is_read_only_and_missing_metadata_or_weights_are_reported (test_parameter_readback.ParameterReadbackTests.test_listing_is_read_only_and_missing_metadata_or_weights_are_reported) ... ok
+test_cleanup_removes_retired_models_and_preserves_current_and_unrelated_models (test_rollback_scale.RollbackScaleTests.test_cleanup_removes_retired_models_and_preserves_current_and_unrelated_models) ... 清理已弃用训练模型：d11f8430712c35cb2416ce3948e9f8b7
+清理已弃用训练模型：388461feb3f4cd24071197ffc30d63e2
+清理已弃用训练模型：5c019c3d3d2c490947f21974f3947506
+清理已弃用训练模型：9e3ff8bde021be28a728c02dbd8e7aaf
+清理已弃用训练模型：8fdaf12c7478a8314a63647a466bfa34
+清理已弃用训练模型：2b69fa681ed06f7ded9e2a2d12ba5c67
+ok
+test_console_validates_and_dispatches_scaling (test_rollback_scale.RollbackScaleTests.test_console_validates_and_dispatches_scaling) ... ok
+test_current_reassembled_calibration_is_kept_including_saved_copy (test_rollback_scale.RollbackScaleTests.test_current_reassembled_calibration_is_kept_including_saved_copy) ... ok
+test_replacement_rebinds_all_old_model_slots_and_scale (test_rollback_scale.RollbackScaleTests.test_replacement_rebinds_all_old_model_slots_and_scale) ... ok
+test_scale_is_persisted_without_changing_model_or_calibration (test_rollback_scale.RollbackScaleTests.test_scale_is_persisted_without_changing_model_or_calibration) ... ok
+test_first_replacement_updates_both_paths_and_action_scales_only (test_action_replacement.ActionReplacementTests.test_first_replacement_updates_both_paths_and_action_scales_only) ... ok
+test_interrupted_install_with_new_defaults_and_old_saved_paths_retries_scales (test_action_replacement.ActionReplacementTests.test_interrupted_install_with_new_defaults_and_old_saved_paths_retries_scales) ... ok
+test_reinstall_preserves_later_operator_bindings_scales_and_timing (test_action_replacement.ActionReplacementTests.test_reinstall_preserves_later_operator_bindings_scales_and_timing) ... ok
+test_retired_explicit_skill_path_repairs_when_default_has_no_path (test_action_replacement.ActionReplacementTests.test_retired_explicit_skill_path_repairs_when_default_has_no_path) ... ok
+test_retired_unknown_skill_and_its_button_are_removed (test_action_replacement.ActionReplacementTests.test_retired_unknown_skill_and_its_button_are_removed) ... ok
+test_execution_profile_cannot_attach_to_another_task_or_slot (test_model_packages_execution.JointExecutionContractTests.test_execution_profile_cannot_attach_to_another_task_or_slot) ... ok
+test_execution_profile_requires_the_original_unfiltered_scale_one_contract (test_model_packages_execution.JointExecutionContractTests.test_execution_profile_requires_the_original_unfiltered_scale_one_contract) ... ok
+test_profile_accepts_bounded_uniform_tuning_including_boundary_values (test_model_packages_execution.JointExecutionContractTests.test_profile_accepts_bounded_uniform_tuning_including_boundary_values) ... ok
+test_profile_rejects_nonfinite_boolean_and_out_of_range_values (test_model_packages_execution.JointExecutionContractTests.test_profile_rejects_nonfinite_boolean_and_out_of_range_values) ... ok
+test_profile_requires_exact_uniform_schema_and_rejects_posture_switch_fields (test_model_packages_execution.JointExecutionContractTests.test_profile_requires_exact_uniform_schema_and_rejects_posture_switch_fields) ... ok
+test_backlash_observation_selection_is_independent_of_target_filter (test_action_models147.ActionExportTests.test_backlash_observation_selection_is_independent_of_target_filter) ... ok
+test_current_scale_is_task_specific_and_cannot_use_walk_global_scale (test_action_models147.ActionExportTests.test_current_scale_is_task_specific_and_cannot_use_walk_global_scale) ... ok
+test_genuine_new_exports_need_no_contract_rewrite_or_legacy_ema_field (test_action_models147.ActionExportTests.test_genuine_new_exports_need_no_contract_rewrite_or_legacy_ema_field) ... ok
+test_ground_pick_phase_and_roulade_window_are_preserved (test_action_models147.ActionExportTests.test_ground_pick_phase_and_roulade_window_are_preserved) ... ok
+test_legacy_deployed_action_contracts_remain_loadable (test_action_models147.ActionExportTests.test_legacy_deployed_action_contracts_remain_loadable) ... ok
+test_new_action_filter_fields_and_ema_are_validated (test_action_models147.ActionExportTests.test_new_action_filter_fields_and_ema_are_validated) ... ok
+test_only_exact_supported_task_names_are_accepted (test_action_models147.ActionExportTests.test_only_exact_supported_task_names_are_accepted) ... ok
+test_pick_training_and_required_period_must_agree (test_action_models147.ActionExportTests.test_pick_training_and_required_period_must_agree) ... ok
+test_release_has_only_current_action_models_and_preserves_other_model_ids (test_action_models147.ActionExportTests.test_release_has_only_current_action_models_and_preserves_other_model_ids) ... ok
+test_roulade_current_revision_cannot_downgrade_to_legacy_ema_semantics (test_action_models147.ActionExportTests.test_roulade_current_revision_cannot_downgrade_to_legacy_ema_semantics) ... ok
+test_release_replaces_requested_slots_once_and_keeps_other_operator_choices (test_teacher_import.TeacherImportTests.test_release_replaces_requested_slots_once_and_keeps_other_operator_choices) ... ok
+test_teacher_metadata_is_preserved_without_training_simulation_at_runtime (test_teacher_import.TeacherImportTests.test_teacher_metadata_is_preserved_without_training_simulation_at_runtime) ... ok
+test_upgrade_preserves_runtime_settings_without_custom_marker (test_teacher_import.TeacherImportTests.test_upgrade_preserves_runtime_settings_without_custom_marker) ... ok
+test_current_descriptor_does_not_override_explicit_native_configuration (test_official_settings.OfficialSettingsTests.test_current_descriptor_does_not_override_explicit_native_configuration) ... ok
+test_fresh_profile_and_descriptor_leave_native_settings_unset (test_official_settings.OfficialSettingsTests.test_fresh_profile_and_descriptor_leave_native_settings_unset) ... ok
+test_legacy_overrides_removed_and_both_startup_copies_recover_without_them (test_official_settings.OfficialSettingsTests.test_legacy_overrides_removed_and_both_startup_copies_recover_without_them) ... 按完整来源重建：/tmp/tmpnzaco5xm/robotd.toml ← /tmp/tmpnzaco5xm/robotd.saved.toml
+按完整来源重建：/tmp/tmp3b3b7qe6/robotd.toml ← /tmp/tmp3b3b7qe6/robotd.saved.toml
+按完整来源重建：/tmp/tmpr5q88il_/robotd.toml ← /tmp/tmpr5q88il_/robotd.saved.toml
+ok
+test_native_voltage_or_filter_readback_is_not_an_r17_acceptance_gate (test_official_settings.OfficialSettingsTests.test_native_voltage_or_filter_readback_is_not_an_r17_acceptance_gate) ... 已确认控制器实际加载： {"walk": {"sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "runtime_execution_profile": {"schema": "microduck-runtime-execution/v1", "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "mode": "uniform", "action_scale": 1.0, "head_lowpass": 0.5, "legs_lowpass": 0.7}}}
+已确认控制器实际加载： {"walk": {"sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "runtime_execution_profile": {"schema": "microduck-runtime-execution/v1", "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "mode": "uniform", "action_scale": 1.0, "head_lowpass": 0.5, "legs_lowpass": 0.7}}}
+ok
+test_repeated_upgrade_leaves_native_fields_absent (test_official_settings.OfficialSettingsTests.test_repeated_upgrade_leaves_native_fields_absent) ... ok
+test_original_model_contract_and_manifest_skill (test_roulade.RouladeTests.test_original_model_contract_and_manifest_skill) ... ok
+test_unsupported_skill_window_is_rejected_before_install (test_roulade.RouladeTests.test_unsupported_skill_window_is_rejected_before_install) ... ok
+test_all_seven_official_actions_including_empty_are_explicit (test_model_slots.SlotTests.test_all_seven_official_actions_including_empty_are_explicit) ... ok
+test_catalog_json_survives_stderr_and_same_warm_process_reads_again (test_management_readback.ManagementReadbackTests.test_catalog_json_survives_stderr_and_same_warm_process_reads_again) ... ok
+test_failed_command_keeps_actual_stderr_reason (test_management_readback.ManagementReadbackTests.test_failed_command_keeps_actual_stderr_reason) ... ok
+test_action_descriptor_matches_native_supported_task_prefixes (test_audit_regressions.AuditRegressions.test_action_descriptor_matches_native_supported_task_prefixes) ... FAIL
+test_upgrade_cleanup_is_privileged_and_preserves_original_install_error (test_power_connections.PowerConnectionTests.test_upgrade_cleanup_is_privileged_and_preserves_original_install_error) ... ok
+test_atomic_replacement_does_not_truncate_a_symlink_source (test_rebuild_config.RecoveryTests.test_atomic_replacement_does_not_truncate_a_symlink_source) ... ok
+test_retired_model_references_migrate_without_changing_operator_parameters (test_rebuild_config.RecoveryTests.test_retired_model_references_migrate_without_changing_operator_parameters) ... ok
+test_saved_installation_sources_keep_latest_settings_without_rebuilding_models (test_rebuild_config.RecoveryTests.test_saved_installation_sources_keep_latest_settings_without_rebuilding_models) ... 按完整来源重建：/tmp/tmpb_9an6h_/calibration.toml ← /tmp/tmpb_9an6h_/calibration.saved.toml
+按完整来源重建：/tmp/tmpb_9an6h_/robotd.toml ← /tmp/tmpb_9an6h_/robotd.saved.toml
+ok
+test_service_restart_attempts_once_and_preserves_first_failure (test_rebuild_config.RecoveryTests.test_service_restart_attempts_once_and_preserves_first_failure) ... ok
+test_all_four_slots_must_actually_load_including_roulade (test_runtime_readback.ReadbackTests.test_all_four_slots_must_actually_load_including_roulade) ... 已确认控制器实际加载： {"walk": {"sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "runtime_execution_profile": {"schema": "microduck-runtime-execution/v1", "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "mode": "uniform", "action_scale": 1.0, "head_lowpass": 0.5, "legs_lowpass": 0.7}}, "sitstand": {"sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50", "runtime_execution_profile": null}, "ground_pick": {"sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69", "runtime_execution_profile": null}, "roulade": {"sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac", "runtime_execution_profile": null}}
+ok
+test_catalog_uses_shipped_default_but_saved_selection_wins (test_runtime_readback.ReadbackTests.test_catalog_uses_shipped_default_but_saved_selection_wins) ... ok
+test_confirmation_requires_actual_hash_and_official_global_readback (test_runtime_readback.ReadbackTests.test_confirmation_requires_actual_hash_and_official_global_readback) ... 已确认控制器实际加载： {"walk": {"sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "runtime_execution_profile": {"schema": "microduck-runtime-execution/v1", "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f", "mode": "uniform", "action_scale": 1.0, "head_lowpass": 0.5, "legs_lowpass": 0.7}}}
+ok
+test_upgrade_retires_secondary_scale_and_keeps_official_choice (test_runtime_readback.ReadbackTests.test_upgrade_retires_secondary_scale_and_keeps_official_choice) ... ok
+test_wrong_actual_roulade_coefficient_cannot_complete_upgrade (test_runtime_readback.RollScaleReadback.test_wrong_actual_roulade_coefficient_cannot_complete_upgrade) ... ok
+test_default_change_migrates_once_and_preserves_operator_choices (test_walk_replacement.WalkReplacementTests.test_default_change_migrates_once_and_preserves_operator_choices) ... ok
+test_ground_pick_official_phase_and_binding_survive_reinstall (test_walk_replacement.WalkReplacementTests.test_ground_pick_official_phase_and_binding_survive_reinstall) ... ok
+test_legacy_fallback_scale_migrates_without_an_action_map (test_walk_replacement.WalkReplacementTests.test_legacy_fallback_scale_migrates_without_an_action_map) ... ok
+test_legacy_teacher_fixture_sitstand_and_pick_keep_original_training_mapping (test_walk_replacement.WalkReplacementTests.test_legacy_teacher_fixture_sitstand_and_pick_keep_original_training_mapping) ... ok
+test_new_joint_walk_is_the_release_default_with_separate_runtime_and_training_settings (test_walk_replacement.WalkReplacementTests.test_new_joint_walk_is_the_release_default_with_separate_runtime_and_training_settings) ... ok
+test_upgrade_moves_saved_walking_scale_and_disables_deleted_skills (test_walk_replacement.WalkReplacementTests.test_upgrade_moves_saved_walking_scale_and_disables_deleted_skills) ... ok
+test_current_daemon_can_request_home_before_arrival (test_console_release_compat.ConsoleReleaseTests.test_current_daemon_can_request_home_before_arrival) ... FAIL
+test_current_identity_and_no_restart_or_audio_failure_hooks (test_release_identity.IdentityTests.test_current_identity_and_no_restart_or_audio_failure_hooks) ... FAIL
+
+======================================================================
+ERROR: test_kick_relay_uses_existing_unix_json_rpc_protocol (test_builtin_controls154.BuiltinControls154Tests.test_kick_relay_uses_existing_unix_json_rpc_protocol)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.154/packaging/test_builtin_controls154.py", line 157, in test_kick_relay_uses_existing_unix_json_rpc_protocol
+    with socket.socket(socket.AF_UNIX,socket.SOCK_STREAM) as listener:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+FAIL: test_action_descriptor_matches_native_supported_task_prefixes (test_audit_regressions.AuditRegressions.test_action_descriptor_matches_native_supported_task_prefixes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.154/packaging/test_audit_regressions.py", line 246, in test_action_descriptor_matches_native_supported_task_prefixes
+    self.assertIn('Mjlab-'+prefix+('-Flat-MicroDuck' if prefix=='VelStand' else '-'),task_fn)
+AssertionError: 'Mjlab-BallKick-' not found in 'pub fn task_slot(task: &str) -> Result<&\'static str, String> {\n    if task.starts_with("Mjlab-Velocity-")\n        || matches!(\n            task,\n            "Mjlab-VelStand-Flat-MicroDuck" | "Mjlab-VelStand-Rough-Backlash-MicroDuck"\n        )\n    {\n        Ok("walk")\n    } else if task.starts_with("Mjlab-SitStand-") {\n        Ok("sitstand")\n    } else if task.starts_with("Mjlab-StandUp-") {\n        Ok("stand")\n    } else if task.starts_with("Mjlab-GroundPick-") {\n        Ok("ground_pick")\n    } else if task.starts_with("Mjlab-Roulade-") {\n        Ok("roulade")\n    } else {\n        Err(format!("task adapter not supported: {task}"))\n    }\n}\n'
+
+======================================================================
+FAIL: test_current_daemon_can_request_home_before_arrival (test_console_release_compat.ConsoleReleaseTests.test_current_daemon_can_request_home_before_arrival)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.154/packaging/test_console_release_compat.py", line 51, in test_current_daemon_can_request_home_before_arrival
+    self.assertEqual(service_data.BUILD,build)
+AssertionError: '1fa8438-feetech-ft6-control.33' != '1fa8438-feetech-ft6-control.32'
+- 1fa8438-feetech-ft6-control.33
+?                              ^
++ 1fa8438-feetech-ft6-control.32
+?                              ^
+
+
+======================================================================
+FAIL: test_current_identity_and_no_restart_or_audio_failure_hooks (test_release_identity.IdentityTests.test_current_identity_and_no_restart_or_audio_failure_hooks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.154/packaging/test_release_identity.py", line 11, in test_current_identity_and_no_restart_or_audio_failure_hooks
+    self.assertEqual(runtime.BUILD,__import__('json').loads((ROOT.parent/'BUILD.json').read_text())['build'])
+AssertionError: '1fa8438-feetech-ft6-control.33' != '1fa8438-feetech-ft6-control.32'
+- 1fa8438-feetech-ft6-control.33
+?                              ^
++ 1fa8438-feetech-ft6-control.32
+?                              ^
+
+
+----------------------------------------------------------------------
+Ran 74 tests in 19.441s
+
+FAILED (failures=3, errors=1)

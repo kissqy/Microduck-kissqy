@@ -1,0 +1,991 @@
+{
+  "schema": "microduck-friction-readback-v1",
+  "num_envs": 2,
+  "step": 1,
+  "motor": [
+    {
+      "actuator_index": 0,
+      "available": true,
+      "joint_names": [
+        "left_hip_yaw",
+        "left_hip_roll",
+        "left_hip_pitch",
+        "left_knee",
+        "left_ankle",
+        "neck_pitch",
+        "head_pitch",
+        "head_yaw",
+        "head_roll",
+        "right_hip_yaw",
+        "right_hip_roll",
+        "right_hip_pitch",
+        "right_knee",
+        "right_ankle"
+      ],
+      "configured_scale_range": [
+        0.9,
+        1.1
+      ],
+      "friction_scale": {
+        "shape": [
+          2,
+          1
+        ],
+        "finite": true,
+        "min": 1.0020827054977417,
+        "max": 1.0335073471069336,
+        "per_item_min": [
+          1.0020827054977417
+        ],
+        "per_item_max": [
+          1.0335073471069336
+        ]
+      },
+      "actual_dof_frictionloss_nm": {
+        "shape": [
+          2,
+          14
+        ],
+        "finite": true,
+        "min": 0.025447867810726166,
+        "max": 0.04859122261404991,
+        "per_item_min": [
+          0.025491952896118164,
+          0.04627857357263565,
+          0.04029025882482529,
+          0.028977034613490105,
+          0.03733771666884422,
+          0.03770463168621063,
+          0.040853407233953476,
+          0.025447867810726166,
+          0.026714371517300606,
+          0.025494974106550217,
+          0.0470673069357872,
+          0.03983554244041443,
+          0.02897714450955391,
+          0.03765678033232689
+        ],
+        "per_item_max": [
+          0.02629343420267105,
+          0.04791326820850372,
+          0.04188081622123718,
+          0.029886523261666298,
+          0.04006775841116905,
+          0.03793492168188095,
+          0.041400469839572906,
+          0.026246633380651474,
+          0.026957999914884567,
+          0.026289789006114006,
+          0.04859122261404991,
+          0.04270240291953087,
+          0.029885848984122276,
+          0.0392444021999836
+        ]
+      }
+    }
+  ],
+  "scope": "one post-step snapshot; not long-run randomization coverage",
+  "configured_events": {
+    "randomize_joint_friction": {
+      "func": {
+        "callable": "mjlab_microduck.tasks.mdp.randomize_bam_friction"
+      },
+      "params": {
+        "asset_cfg": {
+          "name": "robot",
+          "joint_names": null,
+          "joint_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "body_names": null,
+          "body_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "geom_names": null,
+          "geom_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "site_names": null,
+          "site_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "actuator_names": null,
+          "actuator_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "tendon_names": null,
+          "tendon_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "camera_names": null,
+          "camera_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "light_names": null,
+          "light_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "material_names": null,
+          "material_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "pair_names": null,
+          "pair_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "preserve_order": false
+        },
+        "scale_range": [
+          0.9,
+          1.1
+        ]
+      },
+      "mode": "reset",
+      "interval_range_s": null,
+      "is_global_time": false,
+      "min_step_count_between_reset": 0
+    },
+    "foot_friction": {
+      "func": {
+        "callable": "mjlab.envs.mdp.dr.geom.geom_friction"
+      },
+      "params": {
+        "asset_cfg": {
+          "name": "robot",
+          "joint_names": null,
+          "joint_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "body_names": null,
+          "body_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "geom_names": [
+            "left_foot_collision",
+            "right_foot_collision"
+          ],
+          "geom_ids": [
+            26,
+            72
+          ],
+          "site_names": null,
+          "site_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "actuator_names": null,
+          "actuator_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "tendon_names": null,
+          "tendon_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "camera_names": null,
+          "camera_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "light_names": null,
+          "light_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "material_names": null,
+          "material_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "pair_names": null,
+          "pair_ids": {
+            "slice": [
+              null,
+              null,
+              null
+            ]
+          },
+          "preserve_order": false
+        },
+        "operation": "abs",
+        "ranges": [
+          0.7,
+          1.3
+        ],
+        "shared_random": true
+      },
+      "mode": "startup",
+      "interval_range_s": null,
+      "is_global_time": false,
+      "min_step_count_between_reset": 0
+    },
+    "randomize_wheel_friction": null
+  },
+  "foot_or_wheel_contact": {
+    "available": true,
+    "geom_count": 2,
+    "total_count": 2,
+    "sample_count": 2,
+    "truncated": false,
+    "scope": "geom_coefficients_after_DR; not mixed contact coefficients or contact forces",
+    "statistics_scope": "shape and min/max cover all geoms; per_item and metadata may be truncated",
+    "coefficients": {
+      "shape": [
+        2,
+        2,
+        3
+      ],
+      "finite": true,
+      "min": 9.999999747378752e-05,
+      "max": 1.2251356840133667,
+      "per_item_min": [
+        [
+          1.2203621864318848,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.2203621864318848,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ]
+      ],
+      "per_item_max": [
+        [
+          1.2251356840133667,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.2251356840133667,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ]
+      ]
+    },
+    "sliding": {
+      "shape": [
+        2,
+        2
+      ],
+      "finite": true,
+      "min": 1.2203621864318848,
+      "max": 1.2251356840133667,
+      "per_item_min": [
+        1.2203621864318848,
+        1.2203621864318848
+      ],
+      "per_item_max": [
+        1.2251356840133667,
+        1.2251356840133667
+      ]
+    },
+    "geoms": [
+      {
+        "name": "robot/left_foot_collision",
+        "body": "robot/ankle_left",
+        "condim": 3,
+        "priority": 1
+      },
+      {
+        "name": "robot/right_foot_collision",
+        "body": "robot/ankle_right",
+        "condim": 3,
+        "priority": 1
+      }
+    ]
+  },
+  "terrain_contact": {
+    "available": true,
+    "geom_count": 2501,
+    "total_count": 2501,
+    "sample_count": 32,
+    "truncated": true,
+    "scope": "geom_coefficients_after_DR; not mixed contact coefficients or contact forces",
+    "statistics_scope": "shape and min/max cover all geoms; per_item and metadata may be truncated",
+    "coefficients": {
+      "shape": [
+        2,
+        2501,
+        3
+      ],
+      "finite": true,
+      "min": 9.999999747378752e-05,
+      "max": 1.0,
+      "per_item_min": [
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ]
+      ],
+      "per_item_max": [
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ],
+        [
+          1.0,
+          0.004999999888241291,
+          9.999999747378752e-05
+        ]
+      ],
+      "total_count": 2501,
+      "sample_count": 32,
+      "truncated": true
+    },
+    "sliding": {
+      "shape": [
+        2,
+        2501
+      ],
+      "finite": true,
+      "min": 1.0,
+      "max": 1.0,
+      "per_item_min": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "per_item_max": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "total_count": 2501,
+      "sample_count": 32,
+      "truncated": true
+    },
+    "geoms": [
+      {
+        "name": "terrain_0",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_1",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_2",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_3",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_4",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_5",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_6",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_7",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_8",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_9",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_10",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_11",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_12",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_13",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_14",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_15",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_16",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_17",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_18",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_19",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_20",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_21",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_22",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_23",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_24",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_25",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_26",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_27",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_28",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_29",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_30",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      },
+      {
+        "name": "terrain_31",
+        "body": "terrain",
+        "condim": 3,
+        "priority": 0
+      }
+    ]
+  },
+  "wheel_bearings": {
+    "available": true,
+    "joint_names": [],
+    "actual_frictionloss_nm": null,
+    "reason": "该模型没有被动轮"
+  }
+}

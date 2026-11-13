@@ -1,0 +1,10 @@
+{
+  "target": "local x86_64 test dependency only, not robot firmware",
+  "wheel_sha256": "0a83bdb70d143cede762b677789bf2a7acca54b3fb82565601d5c30695aa933c",
+  "record_hash_verified": true,
+  "elf_load_bounds_verified": true,
+  "old_bytes": 5963776,
+  "old_sha256": "e2016a3351f97e8d83fa8b0871f5f35d19ea3d9042f5c506bde854f9a6d14482",
+  "new_bytes": 24272944,
+  "new_sha256": "aa4079d18f4ea7a5f3a94d80cd4bbe0f2740436626622d64d793803a20381083"
+}

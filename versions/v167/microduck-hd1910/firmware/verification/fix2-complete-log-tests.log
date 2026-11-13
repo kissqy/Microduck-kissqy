@@ -1,0 +1,12 @@
+test_complete_install_output_persists_beyond_old_page_cap (test_system_log.SystemLogTests.test_complete_install_output_persists_beyond_old_page_cap) ... ok
+test_password_redaction_covers_stream_and_disk (test_system_log.SystemLogTests.test_password_redaction_covers_stream_and_disk) ... ok
+test_actual_warm_relay_streams_the_full_install_to_log (test_system_log.SystemLogTests.test_actual_warm_relay_streams_the_full_install_to_log) ... ok
+test_log_api_and_full_download_use_same_session_file (test_system_log.SystemLogTests.test_log_api_and_full_download_use_same_session_file) ... ok
+test_audio_timeout_remains_a_failure_and_preserves_last_confirmed_value (test_system_log.SystemLogTests.test_audio_timeout_remains_a_failure_and_preserves_last_confirmed_value) ... ok
+test_management_streams_to_system_log_without_explicit_install_callback (test_system_log.SystemLogTests.test_management_streams_to_system_log_without_explicit_install_callback) ... ok
+test_relay_keeps_every_install_line_in_progress_even_when_summary_is_bounded (test_system_log.SystemLogTests.test_relay_keeps_every_install_line_in_progress_even_when_summary_is_bounded) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.631s
+
+OK

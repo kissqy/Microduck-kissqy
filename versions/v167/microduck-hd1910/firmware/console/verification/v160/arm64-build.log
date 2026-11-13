@@ -1,0 +1,157 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling libc v0.2.189
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling syn v3.0.3
+   Compiling cfg-if v1.0.4
+   Compiling memchr v2.8.3
+   Compiling serde_core v1.0.229
+   Compiling autocfg v1.5.1
+   Compiling syn v2.0.119
+   Compiling num-traits v0.2.19
+   Compiling thiserror v2.0.20
+   Compiling bitflags v2.13.1
+   Compiling thiserror-impl v2.0.20
+   Compiling zmij v1.0.23
+   Compiling utf8parse v0.2.2
+   Compiling cfg_aliases v0.2.2
+   Compiling anstyle-parse v1.0.0
+   Compiling aho-corasick v1.1.4
+   Compiling colorchoice v1.0.5
+   Compiling log v0.4.34
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.151
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling regex-syntax v0.8.11
+   Compiling anstyle-query v1.1.5
+   Compiling anstyle v1.0.14
+   Compiling once_cell v1.21.4
+   Compiling tracing-core v0.1.36
+   Compiling anstream v1.0.0
+   Compiling regex-automata v0.4.16
+   Compiling num-integer v0.1.46
+   Compiling serde_derive v1.0.229
+   Compiling typenum v1.20.1
+   Compiling winnow v1.0.4
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.2
+   Compiling heck v0.5.0
+   Compiling strsim v0.11.1
+   Compiling clap_lex v1.1.0
+   Compiling itoa v1.0.18
+   Compiling pin-project-lite v0.2.17
+   Compiling clap_builder v4.6.2
+   Compiling clap_derive v4.6.4
+   Compiling indexmap v2.14.0
+   Compiling toml_parser v1.1.2+spec-1.1.0
+   Compiling hybrid-array v0.4.13
+   Compiling tracing-attributes v0.1.31
+   Compiling semver v1.0.28
+   Compiling matrixmultiply v0.3.11
+   Compiling rustversion v1.0.23
+   Compiling toml_datetime v1.1.1+spec-1.1.0
+   Compiling toml_edit v0.25.13+spec-1.1.0
+   Compiling duck-ipc-proto v0.15.1 (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/duck-ipc-proto)
+   Compiling tracing v0.1.44
+   Compiling clap v4.6.4
+   Compiling num-complex v0.4.6
+   Compiling errno v0.3.14
+   Compiling smallvec v1.15.2
+   Compiling rawpointer v0.2.1
+   Compiling ort-sys v2.0.0-rc.11
+   Compiling pkg-config v0.3.33
+   Compiling inotify-sys v0.1.8
+   Compiling libudev-sys v0.1.4
+   Compiling signal-hook-registry v1.4.8
+   Compiling proc-macro-crate v3.5.0
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling nix v0.31.3
+   Compiling toml_datetime v0.7.5+spec-1.1.0
+   Compiling roxmltree v0.21.1
+   Compiling signal-hook v0.3.18
+   Compiling winnow v0.7.15
+   Compiling anyhow v1.0.104
+   Compiling bitflags v1.3.2
+   Compiling toml_writer v1.1.2+spec-1.1.0
+   Compiling const-oid v0.10.2
+   Compiling radium v0.7.0
+   Compiling paste v1.0.15
+   Compiling digest v0.11.3
+   Compiling nix v0.26.4
+   Compiling kinematics v0.15.1 (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/kinematics)
+   Compiling num_enum_derive v0.7.6
+   Compiling ndarray v0.17.2
+   Compiling regex v1.13.1
+   Compiling unescaper v0.1.10
+   Compiling nix v0.29.0
+   Compiling serde_spanned v1.1.1
+   Compiling libloading v0.9.0
+   Compiling is-terminal v0.4.17
+   Compiling cpufeatures v0.3.0
+   Compiling scopeguard v1.2.0
+   Compiling humantime v2.4.0
+   Compiling lazy_static v1.5.0
+   Compiling tap v1.0.1
+   Compiling termcolor v1.4.1
+   Compiling strength_reduce v0.2.4
+   Compiling ort v2.0.0-rc.11
+   Compiling transpose v0.2.3
+   Compiling env_logger v0.10.2
+   Compiling wyz v0.5.1
+   Compiling sharded-slab v0.1.7
+   Compiling serialport v4.9.0
+   Compiling sha2 v0.11.0
+   Compiling toml v0.9.12+spec-1.1.0
+   Compiling inotify v0.11.4
+   Compiling num_enum v0.7.6
+   Compiling toml_edit v0.23.10+spec-1.0.0
+   Compiling matchers v0.2.0
+   Compiling primal-check v0.3.4
+   Compiling tracing-log v0.2.0
+   Compiling thread_local v1.1.10
+   Compiling hound v3.5.1
+   Compiling nu-ansi-term v0.50.3
+   Compiling funty v2.0.0
+   Compiling gilrs v0.11.2
+   Compiling vec_map v0.8.2
+   Compiling uuid v1.26.1
+   Compiling gilrs-core v0.6.8
+   Compiling bitvec v1.1.1
+   Compiling tracing-subscriber v0.3.23
+   Compiling rustfft v6.4.1
+   Compiling rustypot v1.8.0
+   Compiling robotd-params v0.15.1 (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/robotd-params)
+   Compiling tokio-macros v2.7.1
+   Compiling libloading v0.8.9
+   Compiling mio v1.2.2
+   Compiling socket2 v0.6.5
+   Compiling bytes v1.12.1
+   Compiling fnv v1.0.7
+   Compiling tokio v1.53.1
+   Compiling duck-control v0.15.1 (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/duck-control)
+   Compiling evdev v0.13.2
+   Compiling pet-detect v0.15.1 (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/pet-detect)
+   Compiling sounds v0.15.1 (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/sounds)
+   Compiling odometry v0.15.1 (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/odometry)
+   Compiling arc-swap v1.9.2
+   Compiling pad-imu v0.15.1 (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/pad-imu)
+   Compiling padd v0.15.1 (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/padd)
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/robotd)
+warning: linker stderr: ignoring deprecated linker optimization setting '1'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `padd` (bin "padd") generated 1 warning
+warning: `robotd` (bin "robotd") generated 1 warning (1 duplicate)
+    Finished `release` profile [optimized] target(s) in 1m 49s
+
+FINAL REBUILD AFTER TEST-ONLY ADDITION:
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/robotd)
+warning: linker stderr: ignoring deprecated linker optimization setting '1'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `padd` (bin "padd") generated 1 warning
+warning: `robotd` (bin "robotd") generated 1 warning (1 duplicate)
+    Finished `release` profile [optimized] target(s) in 18.36s

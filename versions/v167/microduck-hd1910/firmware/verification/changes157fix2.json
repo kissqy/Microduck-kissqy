@@ -1,0 +1,174 @@
+{
+  "console_version": "1.0.157-Fix2",
+  "service_build": "1fa8438-feetech-ft6-control.36",
+  "release_baseline": "Microduck-Source-R17-v1.0.157-Fix1",
+  "firmware_reinstall_required": true,
+  "native_production_changes": [
+    "duck-control/src/imu.rs",
+    "robotd/src/feetech_commissioning.rs",
+    "robotd/src/main.rs"
+  ],
+  "startup": {
+    "imu_ready_samples": 25,
+    "max_short_waits": 24,
+    "short_wait": "existing control period",
+    "nominal_wait_at_50hz_ms": 480,
+    "fault_backoff_seconds": 1,
+    "unchanged_ready_guard": true,
+    "startup_target_gain_torque_writes": false,
+    "new_threads_or_loops": false,
+    "steady_control_work_added": false
+  },
+  "log": {
+    "all_sources_visible": true,
+    "workflow_markers": "robotd startup 1/4 through 4/4",
+    "one_complete_file": true,
+    "one_existing_writer": true,
+    "passwords_redacted": true
+  },
+  "models": {
+    "selection_removed": true,
+    "read_only_status": true,
+    "catalogue_api_retained_for_display_and_walk_scale": true,
+    "weights_unchanged": true
+  },
+  "hat_firmware_unchanged": true,
+  "uart_protocol_unchanged": true,
+  "native_build": "verification/native-build157fix2.json",
+  "elf_ranges": {
+    "robotd": {
+      "bytes": 6773464,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "robotctl": {
+      "bytes": 4362264,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "padd": {
+      "bytes": 3414872,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "sounds": {
+      "bytes": 1152920,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "gamepad-r7/gamesir-xboxd": {
+      "bytes": 43664,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "onnxruntime/libonnxruntime.so.1.28.0": {
+      "bytes": 20591712,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "onnxruntime/libonnxruntime_providers_shared.so": {
+      "bytes": 198792,
+      "machine": "AArch64",
+      "load_segments": 4
+    }
+  },
+  "tests": {
+    "python_passed": 77,
+    "browser_scripts_passed": 8,
+    "native_focused_passed": 15,
+    "python": [
+      {
+        "name": "pc-fix",
+        "passed": 38,
+        "log": "verification/fix2-pc-fix-tests.log",
+        "sha256": "19c805562b8643f52073641886a1452e7a74258559840edee337de03f4125e55"
+      },
+      {
+        "name": "streams",
+        "passed": 32,
+        "log": "verification/fix2-streams-tests.log",
+        "sha256": "3f1ae2bf3852463b22e2c32ee017f3c891498ef3424ab169ec61230cb6cfa253"
+      },
+      {
+        "name": "complete-log",
+        "passed": 7,
+        "log": "verification/fix2-complete-log-tests.log",
+        "sha256": "36b26150469faac4331fc86f184b64fcffbfc68045be4ce4e124560cb2d329cd"
+      }
+    ],
+    "browser": [
+      {
+        "name": "test_fix157pc",
+        "exit_code": 0,
+        "log": "verification/fix2-test_fix157pc.log",
+        "sha256": "202e15d884c067ab28d84a5ebbac80a801bcf4bfab23b14779c242cd6f2cfe39"
+      },
+      {
+        "name": "test_controls154",
+        "exit_code": 0,
+        "log": "verification/fix2-test_controls154.log",
+        "sha256": "4321bee40f94b73b1772c9d4b065c570b64bfe649461aef04fc0110f687bceee"
+      },
+      {
+        "name": "test_connection_ui155",
+        "exit_code": 0,
+        "log": "verification/fix2-test_connection_ui155.log",
+        "sha256": "31fb82a79d5b448d8486231d41062e36597e9aae6ad3df4a6db10f1150d477e4"
+      },
+      {
+        "name": "test_startup_ui",
+        "exit_code": 0,
+        "log": "verification/fix2-test_startup_ui.log",
+        "sha256": "1051736a2c3c606f87fc8ca8b5ffe966e682f54386457b6c78195bcff54adc78"
+      },
+      {
+        "name": "test_joint_direction155",
+        "exit_code": 0,
+        "log": "verification/fix2-test_joint_direction155.log",
+        "sha256": "2e4a3f0a1e78453c58e0c965ba6b8692f5fa5833e68a9afa299097c48adc920c"
+      },
+      {
+        "name": "test_pose_state",
+        "exit_code": 0,
+        "log": "verification/fix2-test_pose_state.log",
+        "sha256": "a9d3d13be56ba6850d99607b037440bf1426b4709ba1b8b1ec2207f469a371b4"
+      },
+      {
+        "name": "test_calibration_reference",
+        "exit_code": 0,
+        "log": "verification/fix2-test_calibration_reference.log",
+        "sha256": "6c45e3956c81dafa99571e3e1cb6ef4d86b22c95d564fc8aa63f3e04eaaa192d"
+      },
+      {
+        "name": "test_gamepad_repair_ui",
+        "exit_code": 0,
+        "log": "verification/fix2-test_gamepad_repair_ui.log",
+        "sha256": "72d7539bf553c19352361a88a00d88bb6aaa05c85ebafeb27f99de35d5f1e1a0"
+      }
+    ],
+    "native": [
+      {
+        "name": "native-after",
+        "passed": 9,
+        "log": "verification/fix2-native-after.log",
+        "sha256": "d61b69d926b18f2f56e2669089e1532f68e365b15669dc48c71e154d16e04877"
+      },
+      {
+        "name": "imu-tests",
+        "passed": 6,
+        "log": "verification/fix2-imu-tests.log",
+        "sha256": "c12c9b050f655d3cf09de35796bf3209d73f050cd2f7904e1b0fa30a4c750bbb"
+      }
+    ],
+    "before_fix_regression": {
+      "log": "verification/fix2-native-before.log",
+      "sha256": "49ab8fd3d277be40de13d002ab301d25ec13f25152ac891b79350dea45ce6770",
+      "expected_failure": true
+    },
+    "robot_hardware_tested": false,
+    "windows_native_tested": false,
+    "full_historical_suite_rerun": false,
+    "socket_boundary_note": "Request and stream tests use loopback TCP at the OS boundary where the executor restricts AF_UNIX creation."
+  },
+  "hardware_verified": false
+}

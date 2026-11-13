@@ -1,0 +1,27 @@
+{
+  "source_ui15_sha256": "3c0ba5501aacb16525ff9258eb670f807a54606d71388fc65b863a961042dd88",
+  "changed_existing_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "ai_vision.py",
+    "ai_zero.py",
+    "console.py",
+    "service_rpc.py",
+    "static/ai-panel.js",
+    "static/camera.js",
+    "static/index.html",
+    "verification/test_ai_camera_ui15.py",
+    "verification/test_ai_hat.mjs",
+    "verification/test_ai_session_ui6.py",
+    "verification/test_ai_vision_ui13.py"
+  ],
+  "added_runtime": "ai_fast_image.py",
+  "new_tests": [
+    "verification/test_ai_camera_ui16.py",
+    "verification/test_camera_ready_ui16.mjs"
+  ],
+  "synthetic_fixture": "verification/fixtures/vision-ui16.jpg",
+  "unchanged": "firmware, models, native voice protocol, audio gate, motion gate, saved preferences, persona and low-frame-rate profile"
+}

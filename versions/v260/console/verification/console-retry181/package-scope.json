@@ -1,0 +1,29 @@
+{
+  "base_console_sha256": "b64875a05f287d6fda6b9174cf3e6baa94bc347a3ae145f91c4ff3cff75e8bdd",
+  "changed_console_files": [
+    "README.zh-CN.md",
+    "controls.py",
+    "raw_telemetry.py",
+    "service_channel.py",
+    "static/app.js",
+    "static/control.js",
+    "static/service-management.js"
+  ],
+  "new_production_files": [
+    "connection_retry.py",
+    "static/connection-retry.js"
+  ],
+  "firmware_byte_identical": true,
+  "firmware_sha256": "5ff3a3c3333f46f4636d55ab95c0673c840d540152b9114bcbe570412c37f321",
+  "native_build": "1fa8438-feetech-ft6-control.54",
+  "upload_and_install_code_byte_identical": true,
+  "ssh_forwarding_code_byte_identical": true,
+  "power_code_byte_identical": true,
+  "models_byte_identical": true,
+  "initial_attempts": 1,
+  "automatic_retries": 3,
+  "retry_seconds": 10,
+  "stable_reset_seconds": 30,
+  "action_or_upload_replay": false,
+  "robot_hardware_tested": false
+}

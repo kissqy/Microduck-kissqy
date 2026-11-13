@@ -1,0 +1,72 @@
+[
+  {
+    "name": "repair",
+    "exit_code": 0,
+    "log": "verification/fix9-repair.log"
+  },
+  {
+    "name": "input",
+    "exit_code": 0,
+    "log": "verification/fix9-input.log"
+  },
+  {
+    "name": "order",
+    "exit_code": 0,
+    "log": "verification/fix9-order.log"
+  },
+  {
+    "name": "install",
+    "exit_code": 0,
+    "log": "verification/fix9-install.log"
+  },
+  {
+    "name": "test_gamepad_repair_ui",
+    "exit_code": 0,
+    "log": "verification/fix9-test_gamepad_repair_ui.log"
+  },
+  {
+    "name": "test_fix157pc",
+    "exit_code": 0,
+    "log": "verification/fix9-test_fix157pc.log"
+  },
+  {
+    "name": "test_robotd_first157",
+    "exit_code": 0,
+    "log": "verification/fix9-test_robotd_first157.log"
+  },
+  {
+    "name": "test_startup_ui",
+    "exit_code": 0,
+    "log": "verification/fix9-test_startup_ui.log"
+  },
+  {
+    "name": "test_connection_ui155",
+    "exit_code": 0,
+    "log": "verification/fix9-test_connection_ui155.log"
+  },
+  {
+    "name": "test_controls154",
+    "exit_code": 0,
+    "log": "verification/fix9-test_controls154.log"
+  },
+  {
+    "name": "mapping-compile",
+    "exit_code": 0,
+    "log": "verification/fix9-mapping-compile.log"
+  },
+  {
+    "name": "mapping",
+    "exit_code": 0,
+    "log": "verification/fix9-mapping.log"
+  },
+  {
+    "name": "disconnect-compile",
+    "exit_code": 0,
+    "log": "verification/fix9-disconnect-compile.log"
+  },
+  {
+    "name": "disconnect",
+    "exit_code": 0,
+    "log": "verification/fix9-disconnect.log"
+  }
+]

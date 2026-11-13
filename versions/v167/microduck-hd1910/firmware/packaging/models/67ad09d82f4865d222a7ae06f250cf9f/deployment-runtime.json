@@ -1,0 +1,12 @@
+{
+  "schema": "microduck-runtime-commands/v1",
+  "model_sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+  "source_iteration": 9999,
+  "num_steps_per_env": 24,
+  "training_step": 239976,
+  "source_parameters_sha256": {
+    "upstream-params/env.yaml": "31881529d962e87a5c7d53a0b0b4af715682b6bf32fa5e04c86b2b9a046fcfae",
+    "upstream-params/agent.yaml": "d6687fc6baca90311cd3041736e902fc4f59abc5dd3f7029611bf0e9a8dc0770"
+  },
+  "commands": {}
+}

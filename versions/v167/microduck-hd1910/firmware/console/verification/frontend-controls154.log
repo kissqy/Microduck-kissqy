@@ -1,0 +1,3 @@
+PASS scale-only payload, removed servo/import/LB test UI, guarded built-in kick, unchanged webpad session, and verified firmware versions 32/33/error
+PASS placement, one submitted repair, existing sudo flow, stale IMU bypass, replay/offline/busy gates, progress and partial evidence
+PASS stale bus startup error, live health requirement, one-click diagnostic download, duplicate guard and no motion job

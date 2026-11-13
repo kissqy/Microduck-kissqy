@@ -1,0 +1,5 @@
+UI5 release validation
+44 Python tests passed, 0 failed (5.261 s; direct exec exit 0).
+Frontend panel/meter/text/actions/stale-state checks passed.
+User UUID reproducer confirmed UI4 TypeError; fixed real HTTP SSE resume passed.
+No real Zero audio or cloud API credentials were used by these offline checks.

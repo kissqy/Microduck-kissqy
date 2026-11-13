@@ -1,0 +1,7 @@
+COMMAND: cargo zigbuild -p robotd --release --target aarch64-unknown-linux-gnu.2.31 --frozen
+warning: linker stderr: ignoring deprecated linker optimization setting '1'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `robotd` (bin "robotd") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 1.36s

@@ -1,0 +1,77 @@
+{
+  "console_version": "1.0.156",
+  "service_build": "1fa8438-feetech-ft6-control.34",
+  "scope": "PC console shutdown and reconnect lifecycle only",
+  "firmware_archive_unchanged": true,
+  "firmware_reinstall_required": false,
+  "native_source_unchanged": true,
+  "saved_calibration_direction_unchanged": true,
+  "address_and_password_preferences_preserved": true,
+  "new_periodic_work": false,
+  "windows_native_tested": false,
+  "robot_hardware_tested": false,
+  "tests": {
+    "exit_code": 0,
+    "runs": [
+      {
+        "log": "process-lifecycle156.log",
+        "log_sha256": "b066b6eaace358bd484481efede0d9e9ca87db80c56285db2e603158789572c9",
+        "exit_code": 0,
+        "passed": 12,
+        "kind": "unittest"
+      },
+      {
+        "log": "python-connection156.log",
+        "log_sha256": "bf0318c0b9d8bbb900b7e8c28b3516a747fdb279508befeaa3cc438af859fa22",
+        "exit_code": 0,
+        "passed": 15,
+        "kind": "unittest"
+      },
+      {
+        "log": "python-console-exit156.log",
+        "log_sha256": "59125791e419432ebbf6517a273c3f2ddee3f0d9208526a09c86112f283fc206",
+        "exit_code": 0,
+        "passed": 3,
+        "kind": "unittest"
+      },
+      {
+        "log": "python-transport156.log",
+        "log_sha256": "ce6d37b0509f57ed231aff5101f2644cccda13a1a02e4b2da6fadcf576e15269",
+        "exit_code": 0,
+        "passed": 9,
+        "kind": "unittest"
+      },
+      {
+        "log": "python-identity156.log",
+        "log_sha256": "cb10a8cdf795303d2ffc333b172086db5b2245a31078f1ed23d8a46c19c3e773",
+        "exit_code": 0,
+        "passed": 1,
+        "kind": "unittest"
+      },
+      {
+        "log": "real-console-exit156.json",
+        "log_sha256": "0fd0678d940b51179369df521d59960aa6d188e6c0873c30c41cae8966a6285d",
+        "exit_code": 0,
+        "passed": 1,
+        "kind": "Linux real console subprocess"
+      }
+    ],
+    "passed": 41,
+    "windows_native_tested": false,
+    "robot_hardware_tested": false,
+    "direction_changed": false
+  },
+  "windows_boundary": "Kill-on-job-close protects assigned child trees; force termination between suspended creation and assignment is not covered.",
+  "old_orphans": "No process-name scan or termination of earlier sessions or unrelated applications.",
+  "production_sha256": {
+    "console.py": "b772cd080aeb5a4a34e02a09b037375399a4ed8212738350d15e834b17e51258",
+    "connection.py": "a44b348c07f2a73e4fa6db7ecddafabc0dd0d4d8b2094708430d708e935ce8d0",
+    "process_lifecycle.py": "b119a424225ec46ddd3f82be18f059991920ae88fe35c814920999b1cfbce2fd",
+    "service_channel.py": "6a5732f625bc312994aeb8d942b7292c907bd7a40b5ba175e9ade44ee8161768",
+    "socket_transport.py": "b993fbee01beaea7d6e83d58d101623df856e7a3e1c6b6a929341bbd767c6777",
+    "staging_upload.py": "752abb48d9eaaf51fdf0c0fa1b903daa7f440a5026a0131dc1ca212ed0831b73",
+    "system_log.py": "0fe11098462a24ac0ec60a13dc700bf351fc61d57ff7e8c76667e97defd9a204",
+    "start.cmd": "9b681c3cf4a5f121eb6d23fc927aed9e9aa513568e5a7f68e280f474a4c8d4dd",
+    "release_identity.py": "a82c8d6db269acd10f4e5a7adc916b88fcc191452cad4862d6ca94f0c66cadf8"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "task": "V228 robotd deployment version identity update only",
+  "created_at_utc": "2026-11-02T14:09:07.469915+00:00",
+  "binary": "/workspace/scratch/0587ce872ec5/v228_firmware_stage/Microduck-Robotd-FT6-R17/robotd",
+  "bytes": 5861176,
+  "architecture": "AArch64 ELF64 little endian",
+  "before_sha256": "08d22eb167167dec24779074ec49df3ea34bd1c592a834f519731b53d7f2b986",
+  "after_sha256": "a44d4309f5e0bdbb974a50bf1cf410f19478797c2dd149e87cf38d62bee5992c",
+  "old": "1fa8438-feetech-ft6-control.73",
+  "new": "1fa8438-feetech-ft6-control.76",
+  "stamp_byte_offset": 621647,
+  "stamp_length": 30,
+  "occurrences_before": 1,
+  "occurrences_after": 1,
+  "changed_byte_count": 1,
+  "changed_bytes": [
+    {
+      "offset": 621676,
+      "old_ascii": "3",
+      "new_ascii": "6",
+      "old_hex": "33",
+      "new_hex": "36"
+    }
+  ],
+  "same_length": true,
+  "all_bytes_outside_identity_unchanged": true,
+  "core_bytes_unchanged": true,
+  "not_recompiled": true,
+  "native_instructions_changed": false,
+  "containing_sections": [
+    {
+      "section": ".rodata",
+      "flags": 50,
+      "offset": 545600,
+      "size": 281096
+    }
+  ],
+  "executable_sections_byte_identical": [
+    {
+      "section": ".text",
+      "offset": 1414240,
+      "size": 4268584,
+      "sha256": "807cee35810e2a8d293f3a7a0fa2dfa8f1e57558be14eac3ac508c26a477a331"
+    },
+    {
+      "section": ".plt",
+      "offset": 5682832,
+      "size": 2640,
+      "sha256": "9af96039741462c1c39818ebb39bfe4296861fba6ee222bb389e70a4f0a742ff"
+    }
+  ],
+  "elf_structure_and_dynamic_dependencies_unchanged": true,
+  "readelf_command": [
+    "readelf",
+    "-h",
+    "-l",
+    "-S",
+    "-d"
+  ],
+  "readelf_before_after_sha256": "d5a3a182c100194c14cecbeda20913fd1a7d5bcf30aa44d3c162505346a64e6c",
+  "needed_libraries": [
+    "libm.so.6",
+    "libpthread.so.0",
+    "libc.so.6",
+    "libdl.so.2"
+  ],
+  "purpose": "The existing deployment BUILD constant is returned by deployment-info and robot.busStatus. Only its final ASCII digit was updated; no motion or control code was rebuilt or changed.",
+  "limitations": [
+    "No AArch64 execution or physical robot test performed.",
+    "The original ELF build ID, if present, is retained because this is a disclosed deployment identity stamp rather than a recompile."
+  ],
+  "robotctl_read_only_check": {
+    "sha256": "a5034efaf6d26aaecc4a1b477c947abb7cf59d157288b9ad661706f00a700da7",
+    "deployment_build_constant_occurrences": 0,
+    "modified": false,
+    "source_findings": "robotctl version uses the existing IPC daemon version/revision report. No matching ft6 control deployment constant or equality gate was found; package compatibility checks and displayed deployment build come from robotd deployment-info/robot.busStatus."
+  }
+}

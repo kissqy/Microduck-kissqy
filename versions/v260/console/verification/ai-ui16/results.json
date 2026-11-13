@@ -1,0 +1,202 @@
+{
+  "release": "AI-T1 UI16",
+  "generated_at_utc": "2026-10-24T04:44:09.098031+00:00",
+  "passed": true,
+  "python": {
+    "passed": true,
+    "command": "python3 -m unittest discover -s verification -p 'test_ai*.py'",
+    "tests": 108,
+    "failures": 0,
+    "errors": 0,
+    "elapsed_seconds": 17.784,
+    "new_ui16_tests": 10
+  },
+  "frontend": {
+    "passed": true,
+    "commands": [
+      "node verification/test_ai_hat.mjs",
+      "node verification/test_ai_camera_ui15.mjs",
+      "node verification/test_camera_ready_ui16.mjs",
+      "node verification/v198/check_startup.mjs"
+    ],
+    "html_unique_ids": 216,
+    "default_persona_matches_backend": true,
+    "default_reply_characters": 20,
+    "changed_script_syntax_passed": true,
+    "ui16_browser_render_verified": false,
+    "timing_does_not_request_unreceived_image": true,
+    "late_preview_keeps_done_state": true,
+    "bounded_same_socket_producer_wait": true,
+    "disconnect_cancels_producer_wait": true
+  },
+  "native_gstreamer_pipeline": {
+    "passed": true,
+    "runtime": "official Ubuntu GStreamer 1.24.2 Base/Good, unpacked privately for test only",
+    "independent_decoder": "Pillow on test host only",
+    "frame_size": [
+      1280,
+      720
+    ],
+    "synthetic_frame": true,
+    "checks": [
+      {
+        "rotation": 0,
+        "backlight": false,
+        "host_seconds": 0.039,
+        "image_bytes": 32743,
+        "center_rgb": [
+          54,
+          54,
+          54
+        ]
+      },
+      {
+        "rotation": 0,
+        "backlight": true,
+        "host_seconds": 0.038,
+        "image_bytes": 32742,
+        "center_rgb": [
+          103,
+          103,
+          103
+        ]
+      },
+      {
+        "rotation": 90,
+        "backlight": false,
+        "host_seconds": 0.0319,
+        "image_bytes": 32743,
+        "center_rgb": [
+          54,
+          54,
+          54
+        ]
+      },
+      {
+        "rotation": 90,
+        "backlight": true,
+        "host_seconds": 0.0578,
+        "image_bytes": 32742,
+        "center_rgb": [
+          103,
+          103,
+          103
+        ]
+      },
+      {
+        "rotation": 180,
+        "backlight": false,
+        "host_seconds": 0.0302,
+        "image_bytes": 32743,
+        "center_rgb": [
+          54,
+          54,
+          54
+        ]
+      },
+      {
+        "rotation": 180,
+        "backlight": true,
+        "host_seconds": 0.0485,
+        "image_bytes": 32742,
+        "center_rgb": [
+          103,
+          103,
+          103
+        ]
+      },
+      {
+        "rotation": 270,
+        "backlight": false,
+        "host_seconds": 0.0369,
+        "image_bytes": 32743,
+        "center_rgb": [
+          54,
+          54,
+          54
+        ]
+      },
+      {
+        "rotation": 270,
+        "backlight": true,
+        "host_seconds": 0.0382,
+        "image_bytes": 32742,
+        "center_rgb": [
+          103,
+          103,
+          103
+        ]
+      }
+    ],
+    "zero_hardware_latency_tested": false,
+    "new_user_install_required": false
+  },
+  "previous_log_timings": {
+    "source": "user-provided UI15 log",
+    "requests": [
+      {
+        "request_at": "2026-10-24T12:20:05.097",
+        "total_seconds": 15.893,
+        "before_ae_ready_seconds": 3.709,
+        "png_and_lift_seconds": 5.733,
+        "blocking_preview_seconds": 4.605,
+        "vision_model_seconds": 1.846
+      },
+      {
+        "request_at": "2026-10-24T12:21:05.386",
+        "total_seconds": 18.683,
+        "before_ae_ready_seconds": 2.621,
+        "png_and_lift_seconds": 4.246,
+        "blocking_preview_seconds": 9.217,
+        "vision_model_seconds": 2.599
+      },
+      {
+        "request_at": "2026-10-24T12:21:43.577",
+        "total_seconds": 20.124,
+        "before_ae_ready_seconds": 3.619,
+        "png_and_lift_seconds": 4.656,
+        "blocking_preview_seconds": 9.509,
+        "vision_model_seconds": 2.34
+      }
+    ],
+    "measured_ui15_browser_receive_fps": 15.0,
+    "measured_ui15_raw_capture_fps": 30.0,
+    "previous_auto_preview_failure": "empty producer list was treated as fatal at startup",
+    "native_camera_unit_successfully_connected_manually": true
+  },
+  "output_pipe_benchmark": [
+    {
+      "buffering": 0,
+      "lines": 40,
+      "bytes": 1280040,
+      "host_seconds": 0.4917
+    },
+    {
+      "buffering": 65536,
+      "lines": 40,
+      "bytes": 1280040,
+      "host_seconds": 0.0166
+    }
+  ],
+  "warm_camera_reads_one_fresh_frame": true,
+  "warm_capture_opens_no_new_signalling_session": true,
+  "warm_capture_waits_for_exposure": false,
+  "vision_does_not_wait_for_preview": true,
+  "backpressure_does_not_block_native_tool_thread": true,
+  "latest_preview_queue_bound": 1,
+  "image_output_queue_bound": 384,
+  "normal_output_queue_bound": 2000,
+  "same_image_preview_and_upload": true,
+  "new_user_package_install_required": false,
+  "existing_tools_used": [
+    "gst-launch-1.0",
+    "GStreamer Base/Good native frame filters and JPEG encoder"
+  ],
+  "fallback": "existing PNG path with explicit diagnostics",
+  "ui16_zero_latency_measured": false,
+  "real_cloud_requested": false,
+  "ui16_hardware_verified": false,
+  "temperature_reduction_measured": false,
+  "firmware_byte_identical": true,
+  "firmware_sha256": "6374b23464bcd8d2e221bd6ba3208dcab0eabcda932ed3f6cc20a5c5667fcbd2"
+}

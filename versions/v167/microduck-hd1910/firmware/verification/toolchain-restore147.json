@@ -1,0 +1,281 @@
+{
+  "started_at_utc": "2026-10-08T04:33:57.134669+00:00",
+  "source": "/workspace/scratch/155bfcc94f4f/work-r17-147/source/Microduck-Source-R17-v1.0.147",
+  "source_build_or_test_run": false,
+  "rust_downloads": [
+    {
+      "url": "https://static.rust-lang.org/dist/rustfmt-1.99.0-x86_64-unknown-linux-gnu.tar.xz",
+      "sha256_url": "https://static.rust-lang.org/dist/rustfmt-1.99.0-x86_64-unknown-linux-gnu.tar.xz.sha256",
+      "sha256": "b22c09ab9e258ec5571da170d88bd1624a4ea602e6d70d95720c5b47494cadce",
+      "verified": true
+    },
+    {
+      "url": "https://static.rust-lang.org/dist/cargo-1.99.0-x86_64-unknown-linux-gnu.tar.xz",
+      "sha256_url": "https://static.rust-lang.org/dist/cargo-1.99.0-x86_64-unknown-linux-gnu.tar.xz.sha256",
+      "sha256": "d7674918d28093097614cd9728b6ca60db9ea3038f640f0bd1e9a4188c7568ce",
+      "verified": true
+    },
+    {
+      "url": "https://static.rust-lang.org/dist/rust-std-1.99.0-x86_64-unknown-linux-gnu.tar.xz",
+      "sha256_url": "https://static.rust-lang.org/dist/rust-std-1.99.0-x86_64-unknown-linux-gnu.tar.xz.sha256",
+      "sha256": "3e58dff2d0b72196b5ea4e90536e174d400de88564a52694686b81e091169933",
+      "verified": true
+    },
+    {
+      "url": "https://static.rust-lang.org/dist/rust-std-1.99.0-aarch64-unknown-linux-gnu.tar.xz",
+      "sha256_url": "https://static.rust-lang.org/dist/rust-std-1.99.0-aarch64-unknown-linux-gnu.tar.xz.sha256",
+      "sha256": "1cf7e2ef58ed1cfa6f1adea18e155cbf254c1951f39e5f5e3376879f55fd64a4",
+      "verified": true
+    },
+    {
+      "url": "https://static.rust-lang.org/dist/rustc-1.99.0-x86_64-unknown-linux-gnu.tar.xz",
+      "sha256_url": "https://static.rust-lang.org/dist/rustc-1.99.0-x86_64-unknown-linux-gnu.tar.xz.sha256",
+      "sha256": "77171ba2a0345fdf2abc4fedda55d6de078dae7a68527c28be8c77dcc9604bd5",
+      "verified": true
+    }
+  ],
+  "python_downloads": [
+    {
+      "package": "flatbuffers",
+      "version": "25.12.19",
+      "url": "https://files.pythonhosted.org/packages/e8/2d/d2a548598be01649e2d46231d151a6c56d10b964d94043a335ae56ea2d92/flatbuffers-25.12.19-py2.py3-none-any.whl",
+      "metadata_url": "https://pypi.org/pypi/flatbuffers/25.12.19/json",
+      "filename": "flatbuffers-25.12.19-py2.py3-none-any.whl",
+      "sha256": "7634f50c427838bb021c2d66a3d1168e9d199b0607e6329399f04846d42e20b4",
+      "verified": true
+    },
+    {
+      "package": "ml-dtypes",
+      "version": "0.6.0",
+      "url": "https://files.pythonhosted.org/packages/c7/f9/7d76c1eae866f5d4636401b31b6d6dd90e4b4ced1fa7cfdfcca9c60e4bd3/ml_dtypes-0.6.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "metadata_url": "https://pypi.org/pypi/ml-dtypes/0.6.0/json",
+      "filename": "ml_dtypes-0.6.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "3b4a480aa8fd54a1805b8ac10f3f91763926a74f73c0c364c10f9231854f4170",
+      "verified": true
+    },
+    {
+      "package": "numpy",
+      "version": "2.5.3",
+      "url": "https://files.pythonhosted.org/packages/65/af/aa78d1a88805456e212b65461354cd943197fb9acecc4c90fd12295123a3/numpy-2.5.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "metadata_url": "https://pypi.org/pypi/numpy/2.5.3/json",
+      "filename": "numpy-2.5.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "b7e18c623bb5c95acb3b3328861272816ba199fb531921c5d6d0b675f1fde9e3",
+      "verified": true
+    },
+    {
+      "package": "onnx",
+      "version": "1.23.2",
+      "url": "https://files.pythonhosted.org/packages/87/56/21509a657f9a73ab0ca307d325043f49ca6c4ff6bf79edeb9e159190d44d/onnx-1.23.2-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "metadata_url": "https://pypi.org/pypi/onnx/1.23.2/json",
+      "filename": "onnx-1.23.2-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "7abf381d278f31ac62487fddedc9dd42da842dce94d5d43536836ee3efdf4a2b",
+      "verified": true
+    },
+    {
+      "package": "onnxruntime",
+      "version": "1.28.0",
+      "url": "https://files.pythonhosted.org/packages/95/df/5486ab03e9be288d5268867054c8b04bebcf95bfd12e801c05cc67703dab/onnxruntime-1.28.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "metadata_url": "https://pypi.org/pypi/onnxruntime/1.28.0/json",
+      "filename": "onnxruntime-1.28.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "0a83bdb70d143cede762b677789bf2a7acca54b3fb82565601d5c30695aa933c",
+      "verified": true
+    },
+    {
+      "package": "packaging",
+      "version": "26.3",
+      "url": "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl",
+      "metadata_url": "https://pypi.org/pypi/packaging/26.3/json",
+      "filename": "packaging-26.3-py3-none-any.whl",
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+      "verified": true
+    },
+    {
+      "package": "protobuf",
+      "version": "7.36.2",
+      "url": "https://files.pythonhosted.org/packages/db/f3/3996583dd2906297a637af12114deddf7658af6e683fedb83be061983fb5/protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl",
+      "metadata_url": "https://pypi.org/pypi/protobuf/7.36.2/json",
+      "filename": "protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl",
+      "sha256": "89f23aa53c24553a2416fd4fd1ec06f74fa42b14b546d8883128813f775bbfd2",
+      "verified": true
+    },
+    {
+      "package": "typing-extensions",
+      "version": "4.16.0",
+      "url": "https://files.pythonhosted.org/packages/49/d3/b8441a820a491ddfc024b0b0cf0393375b75ea13866d9c66727e54c2fc80/typing_extensions-4.16.0-py3-none-any.whl",
+      "metadata_url": "https://pypi.org/pypi/typing-extensions/4.16.0/json",
+      "filename": "typing_extensions-4.16.0-py3-none-any.whl",
+      "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+      "verified": true
+    },
+    {
+      "package": "ziglang",
+      "version": "0.14.1",
+      "url": "https://files.pythonhosted.org/packages/9d/ef/494f128ea7ec3345850bbd75d2cb7b987006fb5601c37543e8fa83e5e3d4/ziglang-0.14.1-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl",
+      "metadata_url": "https://pypi.org/pypi/ziglang/0.14.1/json",
+      "filename": "ziglang-0.14.1-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl",
+      "sha256": "6eb9d4d759b292c83810dbee2e9e8e3fbfbf01d864e6e9811bae711fd74e1c2f",
+      "verified": true
+    }
+  ],
+  "commands": [
+    {
+      "args": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "pip",
+        "download",
+        "--only-binary=:all:",
+        "--dest",
+        "/tmp/r17-toolchain-downloads/wheels",
+        "--index-url",
+        "https://pypi.org/simple",
+        "onnx==1.23.2",
+        "onnxruntime==1.28.0",
+        "ziglang==0.14.1"
+      ],
+      "log": "/workspace/scratch/155bfcc94f4f/work-r17-147/restore147-pip-download.log",
+      "cwd": null,
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "bash",
+        "/tmp/r17-toolchain-downloads/rustc-1.99.0-x86_64-unknown-linux-gnu/install.sh",
+        "--prefix=/tmp/r17-rust/toolchains/1.99.0-x86_64-unknown-linux-gnu",
+        "--disable-ldconfig"
+      ],
+      "log": "/workspace/scratch/155bfcc94f4f/work-r17-147/restore147-rustc-1.99.0-x86_64-unknown-linux-gnu.log",
+      "cwd": null,
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "bash",
+        "/tmp/r17-toolchain-downloads/cargo-1.99.0-x86_64-unknown-linux-gnu/install.sh",
+        "--prefix=/tmp/r17-rust/toolchains/1.99.0-x86_64-unknown-linux-gnu",
+        "--disable-ldconfig"
+      ],
+      "log": "/workspace/scratch/155bfcc94f4f/work-r17-147/restore147-cargo-1.99.0-x86_64-unknown-linux-gnu.log",
+      "cwd": null,
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "bash",
+        "/tmp/r17-toolchain-downloads/rust-std-1.99.0-x86_64-unknown-linux-gnu/install.sh",
+        "--prefix=/tmp/r17-rust/toolchains/1.99.0-x86_64-unknown-linux-gnu",
+        "--disable-ldconfig"
+      ],
+      "log": "/workspace/scratch/155bfcc94f4f/work-r17-147/restore147-rust-std-1.99.0-x86_64-unknown-linux-gnu.log",
+      "cwd": null,
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "bash",
+        "/tmp/r17-toolchain-downloads/rust-std-1.99.0-aarch64-unknown-linux-gnu/install.sh",
+        "--prefix=/tmp/r17-rust/toolchains/1.99.0-x86_64-unknown-linux-gnu",
+        "--disable-ldconfig"
+      ],
+      "log": "/workspace/scratch/155bfcc94f4f/work-r17-147/restore147-rust-std-1.99.0-aarch64-unknown-linux-gnu.log",
+      "cwd": null,
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "bash",
+        "/tmp/r17-toolchain-downloads/rustfmt-1.99.0-x86_64-unknown-linux-gnu/install.sh",
+        "--prefix=/tmp/r17-rust/toolchains/1.99.0-x86_64-unknown-linux-gnu",
+        "--disable-ldconfig"
+      ],
+      "log": "/workspace/scratch/155bfcc94f4f/work-r17-147/restore147-rustfmt-1.99.0-x86_64-unknown-linux-gnu.log",
+      "cwd": null,
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--find-links",
+        "/tmp/r17-toolchain-downloads/wheels",
+        "--target",
+        "/tmp/r17-native-tools",
+        "--upgrade",
+        "onnx==1.23.2",
+        "onnxruntime==1.28.0",
+        "ziglang==0.14.1"
+      ],
+      "log": "/workspace/scratch/155bfcc94f4f/work-r17-147/restore147-pip-install.log",
+      "cwd": null,
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "cargo",
+        "fetch",
+        "--locked"
+      ],
+      "log": "/workspace/scratch/155bfcc94f4f/work-r17-147/restore147-cargo-fetch.log",
+      "cwd": "/workspace/scratch/155bfcc94f4f/work-r17-147/source/Microduck-Source-R17-v1.0.147",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "cargo",
+        "install",
+        "cargo-zigbuild",
+        "--version",
+        "0.23.4",
+        "--locked",
+        "--root",
+        "/tmp/r17-native-tools"
+      ],
+      "log": "/workspace/scratch/155bfcc94f4f/work-r17-147/restore147-cargo-zigbuild.log",
+      "cwd": null,
+      "exit_code": 0
+    }
+  ],
+  "source_cargo_lock": {
+    "before_sha256": "fa1668b2e909f80bb4fc6db66a634742f6b42cfe79df6b51c6d5d90db36a08cf",
+    "after_sha256": "fa1668b2e909f80bb4fc6db66a634742f6b42cfe79df6b51c6d5d90db36a08cf",
+    "unchanged": true
+  },
+  "tool_versions": {
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+    "rustfmt": "rustfmt 1.10.0-stable (b940084d7e 2026-09-28)",
+    "cargo-zigbuild": "cargo-zigbuild 0.23.4",
+    "zig": "0.14.1"
+  },
+  "python_versions": {
+    "onnx": "1.23.2",
+    "onnxruntime": "1.28.0",
+    "numpy": "2.5.3"
+  },
+  "environment": {
+    "PATH": "/tmp/r17-rust/toolchains/1.99.0-x86_64-unknown-linux-gnu/bin:/tmp/r17-native-tools/bin:/tmp/r17-native-tools/ziglang:/root/.codex/tmp/arg0/codex-arg0ydDiAg:/opt/codex/codex-path:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+    "PYTHONPATH": "/tmp/r17-native-tools",
+    "CARGO_HOME": "/tmp/r17-cargo",
+    "RUSTUP_HOME": "/tmp/r17-rust",
+    "ORT_DYLIB_PATH": "/tmp/r17-native-tools/onnxruntime/capi/libonnxruntime.so.1.28.0"
+  },
+  "rustlib_targets": [
+    "aarch64-unknown-linux-gnu",
+    "x86_64-unknown-linux-gnu"
+  ],
+  "finished_at_utc": "2026-10-08T04:35:57.284059+00:00",
+  "ready": true,
+  "cargo_zigbuild": {
+    "package": "cargo-zigbuild",
+    "version": "0.23.4",
+    "url": "https://static.crates.io/crates/cargo-zigbuild/cargo-zigbuild-0.23.4.crate",
+    "registry_metadata_url": "https://index.crates.io/ca/rg/cargo-zigbuild",
+    "sha256": "0b0c2fe7d5f1a782047272e3fc1cd44214c450776bbde564bf92b9776dc2d781",
+    "verified": true,
+    "installed_binary_sha256": "0ba701eb06f51cbdba537bc92910e9c8a277104485667cc45671f274f48414e4"
+  },
+  "restore_script_sha256": "4ea0be2a0df6aafa0530e97176293d8e8bcd01b48840fc777888d4e82cd71b41"
+}

@@ -1,0 +1,86 @@
+{
+  "repository": "pollen-robotics/microduck_emotions",
+  "runtime_patch_sha": "a27c1e881f6beb9b7b362170ef9c54835b76ba14",
+  "files": [
+    {
+      "path": "sad/sad.wav",
+      "bytes": 292138,
+      "sha256": "9067f3089f1723c6e2a6c1850a1bd1eba7aa468e99b8d284d666c8e704eae560"
+    },
+    {
+      "path": "devastated/devastated.wav",
+      "bytes": 633354,
+      "sha256": "c0fddf1c06151191fb2f4b1b0c3ad7110856bfcd519b25640d4990026a1e27bd"
+    },
+    {
+      "path": "curious/curious.wav",
+      "bytes": 136706,
+      "sha256": "d137a4708ae0bdb342c0fd36aedb81ce2d96cdfbcc0ee5dfb00750567f6519a6"
+    },
+    {
+      "path": "mmh/mmh.wav",
+      "bytes": 96042,
+      "sha256": "616534c27c49118ca880d9c944d753565ed0bacf67acd6d85bece98142163df8"
+    },
+    {
+      "path": "yes/yes.wav",
+      "bytes": 76842,
+      "sha256": "0831b5f9d6b80a1f8e5893a521ed6a557069860b81b0c21333ffb312e00d2736"
+    },
+    {
+      "path": "yes_fast/yes_fast.wav",
+      "bytes": 65322,
+      "sha256": "b1c6d456a132b3f521e0cad5f50a6f117d59fbaaf042acc0d64df50d15e95cf5"
+    },
+    {
+      "path": "no/no_a.wav",
+      "bytes": 141162,
+      "sha256": "6ae280991fcbbe4acf2c68ddfd2dbf81d7ba6c1aef561b774e4a10d828ccf360"
+    },
+    {
+      "path": "no/no_b.wav",
+      "bytes": 145002,
+      "sha256": "9c57fd7105486c2dfcc656244fb64f1134c282e4ae5ef26ca4eda65e0c691539"
+    },
+    {
+      "path": "no/no_c.wav",
+      "bytes": 153642,
+      "sha256": "b3dd843663a5d0eccaf1ae42d95bbb324ac2b54f2c4c781c0a2651ca8f2b5b58"
+    },
+    {
+      "path": "angry/angry_a.wav",
+      "bytes": 225624,
+      "sha256": "755b3e5302236139ebe89198449881ed60a89130af6ebf6fe1f8b86245cd5182"
+    },
+    {
+      "path": "angry/angry_b.wav",
+      "bytes": 216042,
+      "sha256": "ab799be48504f247cee44b4a6c46e16c32e1eed49944bb9b09889f8d37f611f2"
+    },
+    {
+      "path": "excited/excited.wav",
+      "bytes": 272682,
+      "sha256": "ad39ef89b59f6862e274679d0b130599ba9751cbeb547fbef68bc3da2c4105b9"
+    },
+    {
+      "path": "laugh/laugh.wav",
+      "bytes": 232552,
+      "sha256": "ecdf67431d502a20981ab1cfc74da6457f4c8ac59e810a4c2efc5ec28be07205"
+    },
+    {
+      "path": "mock/mock.wav",
+      "bytes": 197802,
+      "sha256": "c41f4a859aa2bb86e3d1fdb7dd24916af3d4c63e54c20ba4b62db2ff4afb733e"
+    },
+    {
+      "path": "defiant/defiant.wav",
+      "bytes": 134440,
+      "sha256": "73b7689361ba2c82a37cd1a0f3c3e684c08065654d92c127cc684281a4b48a15"
+    },
+    {
+      "path": "impatient/impatient.wav",
+      "bytes": 220842,
+      "sha256": "f5cd36af8e4d8ad84979956d222048a911b0446e71066bbdcac795c6eef0f4b6"
+    }
+  ]
+}

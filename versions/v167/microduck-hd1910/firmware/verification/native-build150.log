@@ -1,0 +1,9 @@
+warning: linker stderr: ignoring deprecated linker optimization setting '1'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.149/robotd)
+warning: `robotctl` (bin "robotctl") generated 1 warning
+warning: `padd` (bin "padd") generated 1 warning (1 duplicate)
+warning: `robotd` (bin "robotd") generated 1 warning (1 duplicate)
+    Finished `release` profile [optimized] target(s) in 34.87s

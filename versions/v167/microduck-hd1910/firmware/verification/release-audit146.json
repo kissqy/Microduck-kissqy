@@ -1,0 +1,338 @@
+{
+  "console_version": "1.0.146",
+  "service_build": "1fa8438-feetech-ft6-control.29",
+  "tests": {
+    "python": 272,
+    "python_run": 272,
+    "python_skipped": 0,
+    "native_suites": {
+      "duck_control": {
+        "passed": 130,
+        "failed": 0,
+        "ignored": 0
+      },
+      "duck_ipc_proto": {
+        "passed": 53,
+        "failed": 0,
+        "ignored": 0
+      },
+      "robotd": {
+        "passed": 247,
+        "failed": 0,
+        "ignored": 2
+      },
+      "robotd_params": {
+        "passed": 97,
+        "failed": 0,
+        "ignored": 0
+      },
+      "padd": {
+        "passed": 25,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    "focused": {
+      "all_passed": true,
+      "checks": [
+        {
+          "command": [
+            "node",
+            "packaging/test_joint_execution_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "stdout": "PASS uniform model metadata, posture-independent UI, actual output/null/stale readback, catalog binding, preserved global scale and servo editing, ordinary/LB restoration",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "packaging/test_manual_recovery_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "stdout": "PASS startup fallen + limp: explicit LB press/release only; no automatic enable or synthesized HOME\nPASS fallen HOME, homing, holding and walking use the same production pad event path\nPASS missing model disables only its action; upright HOME remains; native refusal displays without replay\nPASS recovery readback shows current pose, actual scale/filters and HOME versus Walk return\nPASS physical controller takeover releases held web LB and disables browser actions\nPASS replay, pause, offline and disconnected protections remain",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "packaging/test_settings_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "stdout": "PASS newer device settings replace receipts; mouth updates preserve saved head amplitude; missing values stay unknown",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "packaging/test_advanced_parameters_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "stdout": "PASS drafts have no writes; single apply carries all four; saved/live values are distinct; empty input cannot apply",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "packaging/test_walk_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "stdout": "PASS official global scale capability, active walk dispatch, stale telemetry configuration and explicit missing capability reason",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "--check",
+            "console/static/execution-profile.js"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "--check",
+            "console/static/control.js"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "--check",
+            "console/static/advanced-parameters.js"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "node",
+            "--check",
+            "console/static/service-management.js"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "python3",
+            "-m",
+            "unittest",
+            "test_raw_telemetry.RawTelemetryTests.test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording",
+            "-v"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": "test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording (test_raw_telemetry.RawTelemetryTests.test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.064s\n\nOK"
+        }
+      ],
+      "independent_native_review": "uniform-ui-and-native-independent-review146.json",
+      "reviewed_source_sha256_unchanged": true,
+      "evidence_files": [
+        "ui-uniform-tests146.log",
+        "uniform-ui-and-native-independent-review146.json",
+        "model-packages-uniform-tests146.log",
+        "model-install-crosscheck146.log"
+      ],
+      "scope": "DOM event tests and binary stream roundtrip; no Chromium rendering, systemd/uinput, real GameSir, or physical Zero.",
+      "review_sha256": "cfe287ac3ad035b9206fe46cecd52409d957435a5f365ca69ed8d6bd003ba6d5"
+    },
+    "robotd_rebuilt": true,
+    "robotctl_rebuilt": true,
+    "padd_rebuilt": true,
+    "reused_binary_payload_from": "1.0.145",
+    "hardware_tested": false,
+    "windows_hardware_tested": false,
+    "full_system_integration_verified": false,
+    "integration_scope": "Real ONNX control/formula tests with fake hardware, execution profile tests, import/configuration and frontend/input regressions. No physical Zero, systemd/uinput or GameSir activation."
+  },
+  "preserved": {
+    "source_directories": {
+      "gamepad-r7": 8,
+      "padd": 6,
+      "robotctl": 12,
+      "sounds": 15,
+      "odometry": 3,
+      "firmware": 30,
+      "kinematics": 11,
+      "policies/stand": 12,
+      "policies/sitstand": 8,
+      "policies/ground_pick": 9,
+      "policies/roulade": 9
+    },
+    "source_files": {
+      "Cargo.lock": "fa1668b2e909f80bb4fc6db66a634742f6b42cfe79df6b51c6d5d90db36a08cf",
+      "robotd/src/params.rs": "386305e3ce00a409f6527d2be2048a927c2b448423ed1bb9fc63f29af0ff3064",
+      "robotd/src/intents.rs": "5a047b1025457d524f7a4d2c98646acaa440ad1e0c41a4fa983fb30f53f1b78c",
+      "robotd/src/home_start.rs": "85a2736ba94bb0f725ab66c2d278954ce0c8b9625849c8998bbccb4873946fd7",
+      "robotd/src/raw_codec.rs": "6d15762bf3783867ce2025843db2d552cf0281f836f6e17b85465b1b4f1174bc",
+      "robotd/src/telemetry_system.rs": "1d509a00dbd73a30268a4cd7252c18a28285a9a18191f532353ca2fdfac2939d",
+      "robotd/src/telemetry_geometry.rs": "40a18eaf7c575a14901ba09248d6e908cde16b3a03d8be6ce8024e37bd7913c2",
+      "console/static/duck.js": "a7a5fe0e3835dc59fd9d97de2be378bbfaf87f30e1e8acebfa5af74143a2a667",
+      "console/static/webpad-controls.js": "21f07a5eeec552d9820b9ea27a38a8b98151afa0b377d15cc218d591e08362a1",
+      "console/static/raw-telemetry.js": "b89a37aa3a4aad2ad1966c31e960a37254387427addb79e24abefd459b67c83a",
+      "console/static/raw-kinematics.js": "814dc7401c3dfe76b815a721a73c57f7da9adecd4ebc787da8d3190ef90288a4",
+      "console/static/control-socket.js": "fba1cbf20eed1a6ca42a52dcded8e6b7c241e9307c50832a589bbec6ed12e954",
+      "console/raw_telemetry.py": "35f1287fc301c72b6daf9d0d3875d0672c935f1c1180b564cac2cda75b541a99",
+      "console/socket_transport.py": "26659847468f056982bcf755c8665c87aff668eaf710d45f4022b998b755aa3b",
+      "console/console.py": "f295213ca3af0f116855ae01dd4ed93d149b1ac4d975fa19e2a915044d3780d7",
+      "console/controls.py": "91d406a1edf62322518e6e427a6515c875475b92b224c379f8e47d110912cb9b",
+      "console/control_socket.py": "68b40569e6dc4981fd534d08b968d2279c96d583759d77e771beec4c456a27fd"
+    },
+    "payload_files": {
+      "sounds": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103",
+      "uart-service.py": "7a1304ca3f076407f9db6d1ba947495f76a3ecef5aa800ee26d78971e1faddde",
+      "hd1910-calibration.robot.toml": "b208a0a89244f8906936b5b3dce585f218d59372d2f04b60117f684d22937e40",
+      "hd1910-calibration.training.toml": "bfa1045e1601199edad0a329417f0128457638bd277dd46e1196dafdd44a6bf7",
+      "hd1910-calibration.template.toml": "5f3083e48ffd21787d05d70d34eeeb928c07e30dea477204ce6c67cf9bb2fba6",
+      "gamepad-r7/gamesir-xboxd": "6f8d78d2bdcb85c2e216013c66e1af25b38813cb86d0e88a7722ef98df5d4b30",
+      "webpad.py": "27e26079612ba05f01fc47f06f506ecb3fb01ab8d5a986726963806313b1f58c",
+      "microduck-webpad.service": "0c2f25034a205423039c0cc39ac19c61d2e65b0ee807f266c215730010866166",
+      "microduck-webpad.socket": "c4f44a44d5df1f2a5e12f14f27cf0c244b66bf41f6a6a85e602273b338f048bf"
+    },
+    "source_test_fixture_only": {
+      "directory": "test-data/walk-teacher14000",
+      "files": 13,
+      "shipped_in_runtime": false
+    },
+    "payload_old_models": {
+      "1c94934c6421ec72ed48079cea749668": 8,
+      "8fdaf12c7478a8314a63647a466bfa34": 9,
+      "a481d9f211f31d9476ab1a319fe362a2": 12,
+      "2b69fa681ed06f7ded9e2a2d12ba5c67": 9
+    },
+    "onnxruntime_files": 6,
+    "hat_firmware_sha256": "d7bd2f37a6a4e0e15d1f9650a3959bcf4d8c704524d8ec319d72d8bdf104ab6d",
+    "uploaded_training_files": {
+      "deployment-contract.json": "8ac94b3903dc8af0f75b41281fb245907c0cccf85822530ff8848c8553391f1e",
+      "deployment-profile.toml": "ebcbe4fa97ccc4eb0d1bb219ec25202b0e710bc07c9c0dd734925ecbd23988f8",
+      "manifest.json": "d61b0ce5745f82fc8553dc6718dfc9b4cd11dc8fc24ad2e40e7323cfb80fe4d5",
+      "policy.onnx": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+      "training-config.json": "df8cfd4d46a062b6d177ab903a6347ec2088e568273a918653f8b4d0d983c396",
+      "training-request.json": "47d73ef82d8c25b8468e242a0f1390c079b676c8431be5c982ca2574da811b44",
+      "upstream-params/agent.yaml": "77e5c6ea815e24c8bab15f8d315a75c1c07e1936b29aabad152218e969fff0d3",
+      "upstream-params/env.yaml": "7dd666e4515ad91c1512ce2188152a34764830126dc0ede8145d768f851a6027",
+      "使用说明.md": "b9fb32c65ca4f73d8e919112598195608937fa9733eac9518185f88cfb3215ad"
+    }
+  },
+  "evidence": [
+    {
+      "name": "native-tests146.log",
+      "sha256": "806fa67b27d400c86c1864d0fb7600f7afd1e9ae8817994547c0e3c76629cb61"
+    },
+    {
+      "name": "python-tests146.log",
+      "sha256": "f2e3044f930a6499feec258c1d70b0eaec78d572b22e992a401752466d0d693e"
+    },
+    {
+      "name": "native-build146.log",
+      "sha256": "69e78c2ad78adcceae650ef2bc872357c3a0387b327757195748ba2c4dee1bc7"
+    },
+    {
+      "name": "native-build-environment146.json",
+      "sha256": "593e14253dc64ce13061578b71f028f6850cae227040f0f4696af726805525a0"
+    },
+    {
+      "name": "focused-verification146.json",
+      "sha256": "69ae5538b957fbcb1f1586e775c3fcae71b4b2bcbdca6020b415f472293d4d69"
+    },
+    {
+      "name": "joint-model-audit.json",
+      "sha256": "8b2f75836ce9fbe6674fb2adc94b5714567ed97904289345adb05500a039c795"
+    },
+    {
+      "name": "joint-model-audit.txt",
+      "sha256": "a3409c82258e3e22fd3d665fab760371ab721636853b931d01ee475ebc8ba0e7"
+    },
+    {
+      "name": "audit_joint_model.py",
+      "sha256": "8682e21fa38227a23a2193a3e6d530459ddc17ecd862207b8674229496954583"
+    },
+    {
+      "name": "native-dependencies146.json",
+      "sha256": "b7165dd209bd932f6041d5f6abdcded694e8ff6906789e9905deeb7fccf8c484"
+    },
+    {
+      "name": "prepare_build_deps146.py",
+      "sha256": "11336142084c02a3f50244821789535e7dfd51262d7a5284a44fa37e8834e60a"
+    },
+    {
+      "name": "build_native146.py",
+      "sha256": "d1e27533f53c83e0eaa1ec0984f9f3fad7cb1b46a4f2a190c101139b6bbe0da5"
+    },
+    {
+      "name": "ui-uniform-tests146.log",
+      "sha256": "2b1039a67fde503cc6a0da0f759d346fed1944dc7466e038d7dd2bbc233ab24c"
+    },
+    {
+      "name": "uniform-ui-and-native-independent-review146.json",
+      "sha256": "cfe287ac3ad035b9206fe46cecd52409d957435a5f365ca69ed8d6bd003ba6d5"
+    },
+    {
+      "name": "model-packages-uniform-tests146.log",
+      "sha256": "fb16a5a656ef4d9ce667ba5800f5a18d220117849fea1592e8e761f25581d96c"
+    },
+    {
+      "name": "model-install-crosscheck146.log",
+      "sha256": "c9c0a3de3765d9406381573c32c0550745790b66120a77fc69861219f2115b98"
+    }
+  ],
+  "changed_payload_files": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "configure.py",
+    "install-files.json",
+    "install-files.py",
+    "management-profile.json",
+    "model_packages.py",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/deployment-contract.json",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/deployment-execution.json",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/deployment-profile.toml",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/deployment-runtime.json",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/export-data.zip",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/manifest.json",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/model-info.json",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/policy.onnx",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/training-config.json",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/training-request.json",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/upstream-params/agent.yaml",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/upstream-params/env.yaml",
+    "models/1cbf8730eadd75a5704332c9f3c10f60/使用说明.md",
+    "padd",
+    "release_identity.py",
+    "robotctl",
+    "robotd",
+    "robotd-profile.toml"
+  ],
+  "install_repeated_with_settings_preserved": true,
+  "preimported_model_receives_execution_profile": true,
+  "old_walk_removed_on_ordinary_upgrade": true,
+  "only_one_walk_slot": true,
+  "runtime_models": 5,
+  "console_and_firmware_import_verified": true,
+  "payload_sha256": "9cecf03286c608d750cee402d6a977870ba1d92a97b37cb5274abcdefd6c459a",
+  "rebuilt_binaries": [
+    "robotd",
+    "robotctl",
+    "padd"
+  ],
+  "hardware_tested": false,
+  "api_version": 40,
+  "raw_schema": "r17.raw.v1",
+  "raw_envelope_changed": false,
+  "additive_execution_metadata": true
+}

@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "test": "verification/test_ai_hat.mjs",
+  "cases": [
+    "personality saved in config request",
+    "personality restored on refresh without overwriting edits",
+    "playback input-block indication and recovery",
+    "actual physical level still visible while blocked",
+    "ascending audio meter",
+    "retained credentials",
+    "Chinese skill labels",
+    "multi-turn chat and scrolling"
+  ]
+}

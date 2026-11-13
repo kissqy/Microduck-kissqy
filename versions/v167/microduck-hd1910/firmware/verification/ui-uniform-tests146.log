@@ -1,0 +1,46 @@
+$ node packaging/test_joint_execution_ui.mjs console/static
+PASS uniform model metadata, posture-independent UI, actual output/null/stale readback, catalog binding, preserved global scale and servo editing, ordinary/LB restoration
+
+exit=0
+$ node packaging/test_manual_recovery_ui.mjs console/static
+PASS startup fallen + limp: explicit LB press/release only; no automatic enable or synthesized HOME
+PASS fallen HOME, homing, holding and walking use the same production pad event path
+PASS missing model disables only its action; upright HOME remains; native refusal displays without replay
+PASS recovery readback shows current pose, actual scale/filters and HOME versus Walk return
+PASS physical controller takeover releases held web LB and disables browser actions
+PASS replay, pause, offline and disconnected protections remain
+
+exit=0
+$ node packaging/test_settings_ui.mjs console/static
+PASS newer device settings replace receipts; mouth updates preserve saved head amplitude; missing values stay unknown
+
+exit=0
+$ node packaging/test_advanced_parameters_ui.mjs console/static
+PASS drafts have no writes; single apply carries all four; saved/live values are distinct; empty input cannot apply
+
+exit=0
+$ node packaging/test_walk_ui.mjs console/static
+PASS official global scale capability, active walk dispatch, stale telemetry configuration and explicit missing capability reason
+
+exit=0
+$ node --check console/static/execution-profile.js
+
+exit=0
+$ node --check console/static/control.js
+
+exit=0
+$ node --check console/static/advanced-parameters.js
+
+exit=0
+$ node --check console/static/service-management.js
+
+exit=0
+$ python3 -m unittest test_raw_telemetry.RawTelemetryTests.test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording -v
+test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording (test_raw_telemetry.RawTelemetryTests.test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.064s
+
+OK
+
+exit=0

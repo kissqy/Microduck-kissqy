@@ -1,0 +1,250 @@
+{
+  "console_version": "1.0.163",
+  "build": "1fa8438-feetech-ft6-control.40",
+  "official_version": "0.15.1",
+  "compiled_arm64": true,
+  "hardware_tested": false,
+  "full_regression_run": false,
+  "rust_scope": {
+    "scope": [
+      "duck-control",
+      "duck-ipc-proto",
+      "robotd",
+      "padd"
+    ],
+    "selected_scope": "duck-control unit; duck-ipc-proto unit; padd unit; robotd roller::tests",
+    "robotd_process_isolation": true,
+    "hardware_tested": false,
+    "passed": 235,
+    "failed": 0,
+    "ignored": 0,
+    "elapsed_seconds": 24.08,
+    "results": [
+      {
+        "target": "padd",
+        "case": null,
+        "exit_code": 0,
+        "passed": 41,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "target": "duck_ipc_proto",
+        "case": null,
+        "exit_code": 0,
+        "passed": 53,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "target": "duck_control",
+        "case": null,
+        "exit_code": 0,
+        "passed": 138,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "target": "robotd",
+        "case": "roller::tests::both_roller_actions_load_with_the_complete_shipped_configuration",
+        "exit_code": 0,
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "target": "robotd",
+        "case": "roller::tests::walking_configuration_is_never_touched",
+        "exit_code": 0,
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      },
+      {
+        "target": "robotd",
+        "case": "roller::tests::yaw_and_steering_are_wrapped_and_clipped",
+        "exit_code": 0,
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      }
+    ]
+  },
+  "python_scope": {
+    "passed": 6,
+    "failed": 0,
+    "hardware_tested": false,
+    "scope": "manual L3 config; upgrade/reinstall and custom settings; original exports and coefficients; unchanged service, SSH and web input"
+  },
+  "arm64_models": {
+    "hardware_tested": false,
+    "emulator": "QEMU ARM64",
+    "build": "1fa8438-feetech-ft6-control.40",
+    "robotd_sha256": "464dde28e0be939237fdd1b7e9a4087d751b5c495b896cf25b6c8e44ba3c0fe9",
+    "deployment_info": {
+      "build": "1fa8438-feetech-ft6-control.40",
+      "model_api": 2,
+      "official_version": "0.15.1"
+    },
+    "results": [
+      {
+        "model": "walk",
+        "sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+        "exit_code": 0,
+        "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+        "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+        "elapsed_seconds": 1.73
+      },
+      {
+        "model": "sitstand",
+        "sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+        "exit_code": 0,
+        "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+        "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+        "elapsed_seconds": 1.821
+      },
+      {
+        "model": "ground_pick",
+        "sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69",
+        "exit_code": 0,
+        "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+        "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+        "elapsed_seconds": 1.923
+      },
+      {
+        "model": "roulade",
+        "sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac",
+        "exit_code": 0,
+        "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+        "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+        "elapsed_seconds": 1.791
+      },
+      {
+        "model": "kick_right",
+        "sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+        "exit_code": 0,
+        "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+        "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+        "elapsed_seconds": 1.785
+      },
+      {
+        "model": "kick_left",
+        "sha256": "ee0376c927044cdece056ba1d3e6eac77b3e02ee3f701f1feb437c183ed39a6d",
+        "exit_code": 0,
+        "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+        "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+        "elapsed_seconds": 1.889
+      },
+      {
+        "model": "roller_swizzle",
+        "sha256": "14195135fcaa60cc45c36181d31542e76f07d873261ecae41dca72c0b795fcc8",
+        "exit_code": 0,
+        "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+        "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+        "elapsed_seconds": 1.8
+      },
+      {
+        "model": "roller_crouch",
+        "sha256": "82be20b115d925ab5adfd20c12188364dd841a2c533eba3bfd64fb9212fe4aa4",
+        "exit_code": 0,
+        "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+        "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+        "elapsed_seconds": 1.852
+      },
+      {
+        "model": "roller_spin",
+        "sha256": "621fe9f3ae3463089033c76354f8290e23457898af7e3e78de008af4a7180569",
+        "exit_code": 0,
+        "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+        "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+        "elapsed_seconds": 1.718
+      },
+      {
+        "model": "roller_standup",
+        "sha256": "2575b5894bcd8e3fdbe005b1a7b90d9491085726df32000c26cf5b92b7a10ebb",
+        "exit_code": 0,
+        "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+        "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+        "elapsed_seconds": 1.717
+      }
+    ]
+  },
+  "package_verification": {
+    "console_version": "1.0.163",
+    "build": "1fa8438-feetech-ft6-control.40",
+    "zip_bytes": 40270337,
+    "zip_sha256": "ccf97e549ba1a6d8d3715b073d587a2f2b9e40de7dfc9fe257163f9d1ce1586b",
+    "firmware_bytes": 34554759,
+    "all_hashes_verified": true,
+    "production_importer_accepted": true,
+    "hardware_tested": false,
+    "baseline": "Microduck-Console-R17-V162.zip",
+    "baseline_sha256": "9e8d82ea6a57dfbfa15592fab980e57a1e67fb2dff1b6e7bfb63f773a2283a5e",
+    "calibration_models_and_service_files_preserved": true,
+    "ssh_open_source_and_web_input_preserved": true,
+    "roller_stand_original_contract_preserved": true,
+    "roller_stand_trigger": "physical_L3_guarded",
+    "manual_test_duration_s": 5.0,
+    "automatic_recovery": false,
+    "changed_firmware_files": [
+      "BUILD.json",
+      "ELF-CHECK.json",
+      "README.zh-CN.md",
+      "SHA256SUMS",
+      "model_packages.py",
+      "padd",
+      "release_identity.py",
+      "robotd",
+      "robotd-profile.toml"
+    ],
+    "changed_console_files": [
+      "BUILD_MANIFEST.json",
+      "README.zh-CN.md",
+      "release_identity.py",
+      "service_control.py",
+      "static/index.html",
+      "updates/Microduck-Robotd-FT6-R17.tar.gz"
+    ]
+  },
+  "source_changes": {
+    "baseline": "V162/control.39",
+    "robotd_production_logic_preserved": true,
+    "robotd_change": "BUILD identity control.39 to control.40 only",
+    "changed_rust_files": [
+      "padd/src/main.rs",
+      "robotd/src/feetech_commissioning.rs"
+    ],
+    "added_rust_files": [
+      "padd/src/roller_test.rs"
+    ],
+    "sha256": {
+      "padd/src/main.rs": "42e334cf44adba39cff19e3afd6b089116cb6e9b5428a12f513bd9c79e4a28ff",
+      "padd/src/roller_test.rs": "94d10284837eef693cd5470a52cc49bca0d27a362c361ddaed466e6c6a85e32b",
+      "robotd/src/feetech_commissioning.rs": "c15c80ec72139cbc3870a673d027d6752239cf71cfa1cfe582bd1c03faf80083"
+    }
+  },
+  "roller_standup": {
+    "checkpoint": 11000,
+    "model_sha256": "2575b5894bcd8e3fdbe005b1a7b90d9491085726df32000c26cf5b92b7a10ebb",
+    "original_export_preserved": true,
+    "trigger": "physical L3",
+    "guards": [
+      "roller mode",
+      "enabled motion",
+      "fresh actual IMU and confirmed fall"
+    ],
+    "duration_s": 5,
+    "duration_source": "local manual test window",
+    "automatic": false
+  },
+  "binary_sha256": {
+    "robotd": "464dde28e0be939237fdd1b7e9a4087d751b5c495b896cf25b6c8e44ba3c0fe9",
+    "padd": "356ed712b97c5c073cc9c691ede802a72704c7ece42d69c626f3c69fab0af241"
+  },
+  "toolchain": {
+    "rust": "1.99.0",
+    "zig": "0.15.1",
+    "cargo-zigbuild": "0.23.4",
+    "target": "aarch64-unknown-linux-gnu.2.31"
+  }
+}

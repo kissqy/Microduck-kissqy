@@ -1,0 +1,75 @@
+--- a/controls.py
++++ b/controls.py
+@@ -168,8 +168,9 @@
+                 result = self.input_channel.request(request)
+                 if not isinstance(result,dict) or type(result.get('accepted')) is not bool:
+                     raise ValueError('手柄接口回执无效')
+-                self.pad_status = {k:v for k,v in result.items() if k!='accepted'}
+-                self.pad_status_at = time.monotonic()
++                # InputChannel._read publishes each response before waking this
++                # waiter. A newer status may already be cached; do not replay
++                # this older command receipt into the display cache.
+                 result['audio'] = self.audio_status
+                 result['control_rtt_ms'] = round((time.monotonic()-started)*1000,1)
+                 if result.get('accepted') is False and self.log:
+@@ -208,7 +209,8 @@
+                 result = self.input_channel.request({'action':'reset'})
+                 if result.get('accepted') is not True:
+                     raise ControlError(result.get('reason') or '旧输入清除未确认',503)
+-                self._input_status(result)
++                # The ordered SSH reader has already published this receipt.
++                # Re-publishing here could overwrite a newer status.
+ 
+     def reconnect_after_service(self):
+         self.pause_input()
+--- a/static/control.js
++++ b/static/control.js
+@@ -96,7 +96,7 @@
+     this.paint();
+   }
+   connectionFailed(message){
+-    this.connected=false;this.socket.close();
++    this.connected=false;this.resetRecorderReadback();this.socket.close();
+     if(!this.servicePaused())showFeedback(this.feedback,message+'；'+this.reconnect.failed(),'error');
+   }
+   change(arm=true){
+@@ -135,6 +135,25 @@
+   recoveringLink(){return this.recovering&&Date.now()<this.recoveryUntil&&this.s?.service_control?.job?.status!=='error';}
+   linkFeedback(message,status){this.linkMessage=message;showFeedback(this.feedback,message,status);}
+   resetConnectionRetry(){this.reconnect=new ConnectionRetry();}
++  resetRecorderReadback(){
++    this.recorderReport=undefined;this.recorderChecked=undefined;this.recorderReceived=undefined;
++    this.recorderPid=undefined;this.recorderStamp=undefined;this.recorderEpoch=this.linkEpoch;
++  }
++  recorderReadback(drive,live){
++    if(!live||this.recorderEpoch!==this.linkEpoch)this.resetRecorderReadback();
++    if(!live)return {fresh:false};
++    const report=drive?.recorder,checked=report?.checked_ms;
++    if(!report||!Number.isSafeInteger(checked))return {report,fresh:false};
++    // Input events, command replies and telemetry snapshots can arrive out of
++    // order. Keep only this display's newest receipt, without changing input state.
++    const native=report.available===true&&Number.isSafeInteger(report.pid)&&Number.isSafeInteger(report.t_ms);
++    if((this.recorderChecked===undefined||checked>this.recorderChecked)&&
++       !(native&&report.pid===this.recorderPid&&report.t_ms<this.recorderStamp)){
++      this.recorderReport={...report};this.recorderChecked=checked;this.recorderReceived=performance.now();
++      if(native){this.recorderPid=report.pid;this.recorderStamp=report.t_ms;}
++    }
++    return {report:this.recorderReport,fresh:Number.isFinite(this.recorderReceived)&&performance.now()-this.recorderReceived<=3500};
++  }
+   render(s,options={}){
+     // A command receipt is useful immediately; the next snapshot owns state.
+     this.audio=s.control?.audio;
+@@ -173,11 +192,9 @@
+     const settingsDisabled=!settings||!supportsFeature(bus,'live_pad_settings')||!!this.s?.service_control?.busy||!!this.s?.service_operation||this.options.replay||this.options.offline;
+     mouth.disabled=settingsDisabled;
+     const drive=this.state?.drive_speed??this.s?.control?.webpad?.drive_speed;
+-    const recorder=drive?.recorder,checked=recorder?.checked_ms;
+-    if(Number.isSafeInteger(checked)&&checked!==this.recorderChecked){this.recorderChecked=checked;this.recorderReceived=performance.now();}
+-    const recorderFresh=Number.isSafeInteger(checked)&&Number.isFinite(this.recorderReceived)&&performance.now()-this.recorderReceived<=3500;
+     const recorderLive=this.connected&&this.s?.control?.connected!==false&&this.state?.available!==false&&this.s?.control?.webpad?.available!==false&&!this.options.replay&&!this.options.offline&&!this.servicePaused();
+-    this.root.querySelector('#control-recorder').textContent=recorderLive&&drive&&!recorder?'录放：安装配套更新后支持录放':recorderLabel(recorder,recorderLive&&recorderFresh);
++    const recorder=this.recorderReadback(drive,recorderLive);
++    this.root.querySelector('#control-recorder').textContent=recorderLive&&drive&&!drive.recorder?'录放：安装配套更新后支持录放':recorderLabel(recorder.report,recorderLive&&recorder.fresh);
+ 
+     for(const button of this.root.querySelectorAll('[data-head-amplitude]')){button.disabled=settingsDisabled;const selected=Number(button.dataset.headAmplitude)===(this.headRad??settings?.head_rad);button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));}
+     this.root.querySelector('#control-audio-status').textContent=Number.isInteger(audio?.volume)?'嘴巴限制与头部幅度对网页、真实手柄共同生效；运行中更新，不卸力。':'音量等待配置 · 幅度保存到 Zero，重启后保留。';

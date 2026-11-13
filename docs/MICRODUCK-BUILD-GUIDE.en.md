@@ -9,7 +9,7 @@
 
 Microduck-kissqy is kissqy's working physical replica project based on Pollen Robotics Microduck 0.15.1, for **Radxa ZERO 3W, 15 Feetech HD1910 servos and this repository's HAT / torso IMU**. It includes a system image, a Chinese-language Robot Console, ready-made motion models, PCB projects and printing files. **Ordinary use starts with the released models; training your own is optional.**
 
-**Current release: System Image R2 / Robot Console V260 / control.102 / Wi-Fi setup R10.** [Downloads and independent source](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md). [Image R1](releases/public-image-r1.en.md) and the verified V167 / control.43 baseline remain available. This release does not replace existing real-robot Known-Good records. Follow budget, shopping, assembly and first walking below. See the [release baseline and validation scope](../microduck-hd1910/docs/BASELINE.en.md). Source is available; the author's original additions carry personal noncommercial terms, while upstream and third-party components retain their respective licenses. See [component licensing](../microduck-hd1910/LICENSE).
+**Current release: System Image R2 / Robot Console V260 / control.102 / Wi-Fi setup R10.** [Downloads and independent source](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md). [Image R1](releases/public-image-r1.en.md) and the verified V167 / control.43 baseline remain available. This release does not replace existing real-robot Known-Good records. Follow budget, shopping, assembly and first walking below. See the [release baseline and validation scope](../microduck-hd1910/docs/BASELINE.en.md). Source is available; the author's original additions carry personal noncommercial terms, while upstream and third-party components retain their respective licenses. See [component licensing](../microduck-hd1910/LICENSE).
 
 ## Start with these four questions
 
@@ -71,7 +71,7 @@ Follow the [assembly notes](ASSEMBLY-NOTES.en.md) for 5 GHz Wi-Fi and power conn
 3. Download Robot Console V260 from [Downloads](../README.en.md#downloads-and-versions), extract the complete archive and run `start.cmd` on Windows or `start.command` on macOS.
 4. Enter your ZERO's SSH address and credentials. **Image R2 includes V260 / control.102 and pairs with Robot Console V260. For an older system, use V260 to install its bundled firmware when adopting this release. Do not import it through V167.**
 
-See the [V260 release guide](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) and bundled instructions for installation, logs and controls. The [historical V167 user guide](../microduck-hd1910/firmware/console/USER-GUIDE.en.md) remains available. The online demos use simulated data; actual control requires the locally running console.
+See the [V260 release guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) and bundled instructions for installation, logs and controls. The [historical V167 user guide](../microduck-hd1910/firmware/console/USER-GUIDE.en.md) remains available. The online demos use simulated data; actual control requires the locally running console.
 
 ### Calibrate your own robot before movement
 

@@ -1,0 +1,19 @@
+{
+  "apt_source": "https://snapshot.ubuntu.com/ubuntu/20260828T000000Z",
+  "packages": [
+    {
+      "package": "libpkgconf3",
+      "version": "1.8.1-2build1",
+      "filename": "pool/main/p/pkgconf/libpkgconf3_1.8.1-2build1_amd64.deb",
+      "sha256": "fc3a57e8f931ec06cb7c51acc56878f1fec247ff02a7adcab26905c2faeb2792",
+      "verified": true
+    },
+    {
+      "package": "pkgconf-bin",
+      "version": "1.8.1-2build1",
+      "filename": "pool/main/p/pkgconf/pkgconf-bin_1.8.1-2build1_amd64.deb",
+      "sha256": "7a812f05ee1610154b433e2ad54f6e4163fcbb306b9fb31afe959afb2e5e1545",
+      "verified": true
+    }
+  ]
+}

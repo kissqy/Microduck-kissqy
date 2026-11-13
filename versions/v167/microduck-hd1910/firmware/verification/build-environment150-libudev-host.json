@@ -1,0 +1,10 @@
+{
+  "package": "libudev-dev",
+  "version": "255.4-1ubuntu8.17",
+  "apt_source": "https://snapshot.ubuntu.com/ubuntu/20260828T000000Z",
+  "filename": "pool/main/s/systemd/libudev-dev_255.4-1ubuntu8.17_amd64.deb",
+  "sha256": "e3fde14b59c81d0ef3b9caa7c627d09b5925a915b280919616cc5909096f7519",
+  "verified": true,
+  "sysroot": "/tmp/r17-host-libudev",
+  "real_library": "/usr/lib/x86_64-linux-gnu/libudev.so.1"
+}

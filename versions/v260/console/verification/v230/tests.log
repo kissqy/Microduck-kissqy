@@ -1,0 +1,97 @@
+test_commissioning_mode_query_crosses_the_real_unix_relay (test_commissioning_power.CommissioningPowerTests.test_commissioning_mode_query_crosses_the_real_unix_relay) ... ok
+test_commissioning_uses_existing_privileged_helper (test_commissioning_power.CommissioningPowerTests.test_commissioning_uses_existing_privileged_helper) ... ok
+test_controller_accepts_commissioning_receipt_and_pauses_after_acceptance (test_commissioning_power.CommissioningPowerTests.test_controller_accepts_commissioning_receipt_and_pauses_after_acceptance) ... ok
+test_live_commissioning_relax_then_poweroff (test_commissioning_power.CommissioningPowerTests.test_live_commissioning_relax_then_poweroff) ... ok
+test_mode_change_after_relax_never_powers_off (test_commissioning_power.CommissioningPowerTests.test_mode_change_after_relax_never_powers_off) ... ok
+test_motion_unknown_and_unconfirmed_relax_never_call_os (test_commissioning_power.CommissioningPowerTests.test_motion_unknown_and_unconfirmed_relax_never_call_os) ... ok
+test_native_motion_path_preserved (test_commissioning_power.CommissioningPowerTests.test_native_motion_path_preserved) ... ok
+test_unknown_mode_and_rejected_helper_do_not_fall_back (test_commissioning_power.CommissioningPowerTests.test_unknown_mode_and_rejected_helper_do_not_fall_back) ... ok
+test_changed_config_preserves_boot_parameters_and_metadata (test_repair_armbian_env.BootWriterTests.test_changed_config_preserves_boot_parameters_and_metadata) ... ok
+test_empty_or_missing_config_is_not_recreated (test_repair_armbian_env.BootWriterTests.test_empty_or_missing_config_is_not_recreated) ... ok
+test_failure_after_rename_reports_error_with_complete_new_file (test_repair_armbian_env.BootWriterTests.test_failure_after_rename_reports_error_with_complete_new_file) ... ok
+test_failures_before_rename_leave_original_complete (test_repair_armbian_env.BootWriterTests.test_failures_before_rename_leave_original_complete) ... ok
+test_legacy_rewrites_unchanged_config (test_repair_armbian_env.BootWriterTests.test_legacy_rewrites_unchanged_config) ... ok
+test_missing_quirks_and_newline_cleanup_preserve_all_other_fields (test_repair_armbian_env.BootWriterTests.test_missing_quirks_and_newline_cleanup_preserve_all_other_fields) ... ok
+test_no_change_does_not_rewrite_or_sync_boot_config (test_repair_armbian_env.BootWriterTests.test_no_change_does_not_rewrite_or_sync_boot_config) ... ok
+test_ambiguous_invocation_is_refused (test_repair_armbian_env.RepairTests.test_ambiguous_invocation_is_refused) ... ok
+test_backup_apply_idempotence_and_restore (test_repair_armbian_env.RepairTests.test_backup_apply_idempotence_and_restore) ... ok
+test_backup_sync_failure_does_not_install (test_repair_armbian_env.RepairTests.test_backup_sync_failure_does_not_install) ... ok
+test_check_is_read_only (test_repair_armbian_env.RepairTests.test_check_is_read_only) ... ok
+test_concurrent_vendor_update_is_not_overwritten (test_repair_armbian_env.RepairTests.test_concurrent_vendor_update_is_not_overwritten) ... ok
+test_empty_config_is_refused (test_repair_armbian_env.RepairTests.test_empty_config_is_refused) ... ok
+test_missing_script_is_not_applicable (test_repair_armbian_env.RepairTests.test_missing_script_is_not_applicable) ... ok
+test_restore_refuses_corrupted_backup (test_repair_armbian_env.RepairTests.test_restore_refuses_corrupted_backup) ... ok
+test_restore_refuses_later_vendor_update (test_repair_armbian_env.RepairTests.test_restore_refuses_later_vendor_update) ... ok
+test_symlink_is_refused (test_repair_armbian_env.RepairTests.test_symlink_is_refused) ... ok
+test_target_replace_failure_leaves_original_and_backup (test_repair_armbian_env.RepairTests.test_target_replace_failure_leaves_original_and_backup) ... ok
+test_unknown_vendor_function_is_not_overwritten (test_repair_armbian_env.RepairTests.test_unknown_vendor_function_is_not_overwritten) ... ok
+test_unrelated_board_setup_is_preserved (test_repair_armbian_env.RepairTests.test_unrelated_board_setup_is_preserved) ... ok
+test_console_expected_bytes_equal_installed_portal_and_module (test_system_install.SystemInstallTests.test_console_expected_bytes_equal_installed_portal_and_module) ... ok
+test_install_is_idempotent_keeps_home_network_and_patches_boot_writer (test_system_install.SystemInstallTests.test_install_is_idempotent_keeps_home_network_and_patches_boot_writer) ... ok
+test_already_active_does_not_reactivate (test_wifi_r7.R7Tests.test_already_active_does_not_reactivate) ... ok
+test_delayed_wireless_enumeration_waits_before_activation (test_wifi_r7.R7Tests.test_delayed_wireless_enumeration_waits_before_activation) ... [Microduck Wi-Fi R7] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_disabled_software_radio_enabled_once (test_wifi_r7.R7Tests.test_disabled_software_radio_enabled_once) ... [Microduck Wi-Fi R7] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_disk_profile_not_cached_is_loaded (test_wifi_r7.R7Tests.test_disk_profile_not_cached_is_loaded) ... [Microduck Wi-Fi R7] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_existing_bad_mode_only_permissions_fixed (test_wifi_r7.R7Tests.test_existing_bad_mode_only_permissions_fixed) ... [Microduck Wi-Fi R7] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_invalid_profile_not_overwritten (test_wifi_r7.R7Tests.test_invalid_profile_not_overwritten) ... [Microduck Wi-Fi R7] 热点激活 1/3 失败：已有热点配置无效，已保留原文件：MissingSectionHeaderError
+[Microduck Wi-Fi R7] 热点激活 2/3 失败：已有热点配置无效，已保留原文件：MissingSectionHeaderError
+[Microduck Wi-Fi R7] 热点激活 3/3 失败：已有热点配置无效，已保留原文件：MissingSectionHeaderError
+ok
+test_loading_failure_does_not_activate_stale_connection (test_wifi_r7.R7Tests.test_loading_failure_does_not_activate_stale_connection) ... [Microduck Wi-Fi R7] 热点激活 1/3 失败：load failed
+[Microduck Wi-Fi R7] 热点激活 2/3 失败：load failed
+[Microduck Wi-Fi R7] 热点激活 3/3 失败：load failed
+ok
+test_loading_uuid_not_confirmed_does_not_activate (test_wifi_r7.R7Tests.test_loading_uuid_not_confirmed_does_not_activate) ... [Microduck Wi-Fi R7] 热点激活 1/3 失败：NetworkManager 未确认加载指定热点 UUID
+[Microduck Wi-Fi R7] 热点激活 2/3 失败：NetworkManager 未确认加载指定热点 UUID
+[Microduck Wi-Fi R7] 热点激活 3/3 失败：NetworkManager 未确认加载指定热点 UUID
+ok
+test_missing_profile_created (test_wifi_r7.R7Tests.test_missing_profile_created) ... [Microduck Wi-Fi R7] 热点配置缺失，已创建本项目默认配置
+[Microduck Wi-Fi R7] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_no_robot_or_driver_restart_calls (test_wifi_r7.R7Tests.test_no_robot_or_driver_restart_calls) ... [Microduck Wi-Fi R7] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_no_saved_profiles_does_not_wait (test_wifi_r7.R7Tests.test_no_saved_profiles_does_not_wait) ... ok
+test_old_networks_have_total_wait_budget (test_wifi_r7.R7Tests.test_old_networks_have_total_wait_budget) ... [Microduck Wi-Fi R7] 旧 Wi-Fi 未连上，将在限定时间内回退热点：old Wi-Fi unavailable
+[Microduck Wi-Fi R7] 旧 Wi-Fi 未连上，将在限定时间内回退热点：old Wi-Fi unavailable
+[Microduck Wi-Fi R7] 旧 Wi-Fi 查询或等待失败，进入热点流程：旧 Wi-Fi 等待窗口已结束
+ok
+test_owner_password_and_ssid_preserved (test_wifi_r7.R7Tests.test_owner_password_and_ssid_preserved) ... [Microduck Wi-Fi R7] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_radio_request_error_does_not_hide_ready_interface (test_wifi_r7.R7Tests.test_radio_request_error_does_not_hide_ready_interface) ... [Microduck Wi-Fi R7] 软件开关请求未确认，继续核对网卡实际状态：radio request failed
+[Microduck Wi-Fi R7] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_radio_request_error_still_bounds_unavailable_interface (test_wifi_r7.R7Tests.test_radio_request_error_still_bounds_unavailable_interface) ... [Microduck Wi-Fi R7] 软件开关请求未确认，继续核对网卡实际状态：radio request failed
+ok
+test_readiness_wait_stops (test_wifi_r7.R7Tests.test_readiness_wait_stops) ... ok
+test_saved_profile_timeout_reaches_ap (test_wifi_r7.R7Tests.test_saved_profile_timeout_reaches_ap) ... [Microduck Wi-Fi R7] 旧 Wi-Fi 查询或等待失败，进入热点流程：Command '('nmcli', '-t', '-e', 'no', '-f', 'UUID,TYPE,NAME', 'connection', 'show')' timed out after 6.0 seconds
+[Microduck Wi-Fi R7] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_second_attempt_can_recover (test_wifi_r7.R7Tests.test_second_attempt_can_recover) ... [Microduck Wi-Fi R7] 热点激活 1/3 失败：activation failed
+[Microduck Wi-Fi R7] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_success_command_without_ip_does_not_pass (test_wifi_r7.R7Tests.test_success_command_without_ip_does_not_pass) ... [Microduck Wi-Fi R7] 热点激活 1/3 失败：激活命令已返回，但热点连接或 10.42.0.1 尚未就绪
+[Microduck Wi-Fi R7] 热点激活 2/3 失败：激活命令已返回，但热点连接或 10.42.0.1 尚未就绪
+[Microduck Wi-Fi R7] 热点激活 3/3 失败：激活命令已返回，但热点连接或 10.42.0.1 尚未就绪
+ok
+test_success_command_wrong_state_does_not_pass (test_wifi_r7.R7Tests.test_success_command_wrong_state_does_not_pass) ... [Microduck Wi-Fi R7] 热点激活 1/3 失败：激活命令已返回，但热点连接或 10.42.0.1 尚未就绪
+[Microduck Wi-Fi R7] 热点激活 2/3 失败：激活命令已返回，但热点连接或 10.42.0.1 尚未就绪
+[Microduck Wi-Fi R7] 热点激活 3/3 失败：激活命令已返回，但热点连接或 10.42.0.1 尚未就绪
+ok
+test_symlink_profile_rejected (test_wifi_r7.R7Tests.test_symlink_profile_rejected) ... [Microduck Wi-Fi R7] 热点激活 1/3 失败：热点配置是符号链接，拒绝覆盖或加载
+[Microduck Wi-Fi R7] 热点激活 2/3 失败：热点配置是符号链接，拒绝覆盖或加载
+[Microduck Wi-Fi R7] 热点激活 3/3 失败：热点配置是符号链接，拒绝覆盖或加载
+ok
+test_three_ap_failures_then_stop (test_wifi_r7.R7Tests.test_three_ap_failures_then_stop) ... [Microduck Wi-Fi R7] 热点激活 1/3 失败：activation failed
+[Microduck Wi-Fi R7] 热点激活 2/3 失败：activation failed
+[Microduck Wi-Fi R7] 热点激活 3/3 失败：activation failed
+ok
+test_working_home_is_preserved (test_wifi_r7.R7Tests.test_working_home_is_preserved) ... ok
+
+----------------------------------------------------------------------
+Ran 53 tests in 1.323s
+
+OK

@@ -1,0 +1,205 @@
+{
+  "purpose": "Two single-start pipeline checks, not a success-rate or convergence estimate",
+  "task": "Mjlab-StandUp-Rough-Backlash-MicroDuck",
+  "source_iteration": 11000,
+  "onnx_sha256": "a481d9f211f31d9476ab1a319fe362a21ef0879d9fa59442a122845af598268c",
+  "physics_action_observation_contract_match": true,
+  "firmware_p": 5.0,
+  "action_scale": 1.0,
+  "action_filter": {
+    "enabled": false,
+    "head_alpha": 1.0,
+    "legs_alpha": 1.0,
+    "version": 1,
+    "control_hz": 50.0,
+    "stage": "joint_position_target_after_home_and_scale",
+    "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+    "head_joints": [
+      "neck_pitch",
+      "head_pitch",
+      "head_yaw",
+      "head_roll"
+    ],
+    "leg_joints": [
+      "left_hip_yaw",
+      "left_hip_roll",
+      "left_hip_pitch",
+      "left_knee",
+      "left_ankle",
+      "right_hip_yaw",
+      "right_hip_roll",
+      "right_hip_pitch",
+      "right_knee",
+      "right_ankle"
+    ],
+    "update": "once_per_policy_step",
+    "reset": "first_target_passthrough_per_environment",
+    "previous_action_observation": "raw_policy_output",
+    "onnx": "external_filter_not_baked_into_graph"
+  },
+  "device": "cpu",
+  "poses": [
+    {
+      "pose": "back_flat",
+      "initial": {
+        "projected_gravity_b": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "root_height_m": 0.0485026091337204,
+        "qvel_all_zero": true,
+        "commands_all_zero": true
+      },
+      "result": {
+        "trial": 1,
+        "pose": "back_flat",
+        "elapsed_s": 1.4800000000000009,
+        "hold_s": 1.0000000000000004,
+        "result": "passed",
+        "reason": "达到站高与倾角指标并持续1秒",
+        "height_m": 0.11560292541980743,
+        "tilt_deg": 0.9831764950135778
+      },
+      "peak_height_m": 0.11689234524965286,
+      "longest_continuous_qualified_s": 1.0000000000000004,
+      "wall_seconds": 3.6433439149986953
+    },
+    {
+      "pose": "face_down",
+      "initial": {
+        "projected_gravity_b": [
+          0.9999999403953552,
+          0.0,
+          -5.960464477539063e-08
+        ],
+        "root_height_m": 0.07618740946054459,
+        "qvel_all_zero": true,
+        "commands_all_zero": true
+      },
+      "result": {
+        "trial": 2,
+        "pose": "face_down",
+        "elapsed_s": 1.3600000000000008,
+        "hold_s": 1.0000000000000004,
+        "result": "passed",
+        "reason": "达到站高与倾角指标并持续1秒",
+        "height_m": 0.11608215421438217,
+        "tilt_deg": 0.3871487803751646
+      },
+      "peak_height_m": 0.11743990331888199,
+      "longest_continuous_qualified_s": 1.0000000000000004,
+      "wall_seconds": 3.5100368540006457
+    }
+  ],
+  "contact_verified": false,
+  "evaluation": {
+    "mature_step": 96001,
+    "timed_terms": [
+      "ground_state_mix",
+      "head_pose_range",
+      "com_range",
+      "head_com_range",
+      "action_rate_weight",
+      "arrival_damping_weight",
+      "head_pose_bias_weight",
+      "torque_rate_weight",
+      "body_pose_tracking_weight",
+      "body_pose_range",
+      "height_stand_sharp_weight",
+      "upright_sharp_weight",
+      "standing_composite_weight"
+    ],
+    "specialist": true,
+    "final_mix": {
+      "standing_prob": 0.15,
+      "sitting_prob": 0.2,
+      "face_down_prob": 0.3,
+      "face_up_prob": 0.35
+    }
+  },
+  "step_dt": 0.02,
+  "episode_length_s": 6.0,
+  "final_trial_state": {
+    "pose": "face_down",
+    "pose_label": "趴地",
+    "target_height_m": 0.115,
+    "minimum_height_m": 0.10500000000000001,
+    "maximum_tilt_deg": 15.0,
+    "hold_seconds": 1.0,
+    "current": {
+      "trial": 2,
+      "pose": "face_down",
+      "elapsed_s": 1.3600000000000008,
+      "hold_s": 1.0000000000000004,
+      "result": "passed",
+      "reason": "达到站高与倾角指标并持续1秒",
+      "height_m": 0.11608215421438217,
+      "tilt_deg": 0.3871487803751646
+    },
+    "counts": {
+      "back_flat": {
+        "passed": 1,
+        "failed": 0,
+        "cancelled": 0
+      },
+      "left_side": {
+        "passed": 0,
+        "failed": 0,
+        "cancelled": 0
+      },
+      "right_side": {
+        "passed": 0,
+        "failed": 0,
+        "cancelled": 0
+      },
+      "face_down": {
+        "passed": 1,
+        "failed": 0,
+        "cancelled": 0
+      }
+    },
+    "history": [
+      {
+        "trial": 1,
+        "pose": "back_flat",
+        "elapsed_s": 1.4800000000000009,
+        "hold_s": 1.0000000000000004,
+        "result": "passed",
+        "reason": "达到站高与倾角指标并持续1秒",
+        "height_m": 0.11560292541980743,
+        "tilt_deg": 0.9831764950135778
+      },
+      {
+        "trial": 2,
+        "pose": "face_down",
+        "elapsed_s": 1.3600000000000008,
+        "hold_s": 1.0000000000000004,
+        "result": "passed",
+        "reason": "达到站高与倾角指标并持续1秒",
+        "height_m": 0.11608215421438217,
+        "tilt_deg": 0.3871487803751646
+      }
+    ],
+    "contact_verified": false,
+    "terrain": "plane",
+    "commands": "zero"
+  },
+  "completed": true,
+  "sampling_notes": {
+    "environment_seed": null,
+    "fixed": [
+      "body orientation",
+      "flat floor",
+      "1 mm initial collision-geometry clearance",
+      "zero root and joint velocities",
+      "zero command observations"
+    ],
+    "retained_from_upstream": [
+      "joint-pose sampling",
+      "yaw sampling",
+      "physical domain randomization"
+    ],
+    "limitation": "One sampled episode per pose. The script reproduces the pipeline but an unseeded rerun need not reproduce the same sampled pose, dynamics or outcome."
+  }
+}

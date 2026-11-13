@@ -1,0 +1,166 @@
+{
+  "console_version": "1.0.157-Fix5",
+  "service_build": "1fa8438-feetech-ft6-control.36",
+  "release_baseline": "Microduck-Source-R17-v1.0.157-Fix4",
+  "firmware_reinstall_required": false,
+  "firmware_archive_byte_identical": true,
+  "firmware_sha256": "e14f1f327d840adafb32bd3e60d01ffcc964929527affb599727dc659431898a",
+  "native_sources_unchanged": true,
+  "installed_payloads_unchanged": true,
+  "model_weights_unchanged": true,
+  "removed_display": [
+    "live display pause button",
+    "system log pause button",
+    "page-width connection banner"
+  ],
+  "ssh_module": {
+    "in_heading": true,
+    "connection_feedback_in_own_status_row": true,
+    "original_credential_and_connection_channels_reused": true
+  },
+  "remote_installer_path": {
+    "posixpath_join": true,
+    "windows_path_semantics_regression_passed": true
+  },
+  "logging": {
+    "system_log_source_filters": false,
+    "workflow_terminal_outcomes_only": true,
+    "wait_events_still_delivered": true,
+    "upload_byte_progress_preserved": true,
+    "installer_execution_failure_named": true,
+    "failure_reasons_preserved": true
+  },
+  "display_pause_state_and_guards_removed": true,
+  "replay_and_real_connection_pause_preserved": true,
+  "install_handoff_unchanged": true,
+  "placement_structure_verified": true,
+  "browser_pixel_rendered": false,
+  "added_queries_or_polling": false,
+  "added_robot_threads_or_loops": false,
+  "changed_files": [
+    "console/README.zh-CN.md",
+    "console/docs/releases/R157-Fix5.md",
+    "console/raw_telemetry.py",
+    "console/release_identity.py",
+    "console/service_control.py",
+    "console/static/advanced-parameters.js",
+    "console/static/app.js",
+    "console/static/control.js",
+    "console/static/gamepad-repair.js",
+    "console/static/index.html",
+    "console/static/inspection.js",
+    "console/static/r17-0151.css",
+    "console/static/service-management.js",
+    "console/static/service.js",
+    "console/static/system-log.js",
+    "console/verification/test_controls154.mjs",
+    "console/verification/test_gamepad_repair_ui.mjs",
+    "console/verification/test_install_log157.py",
+    "console/verification/test_query_logs157.py",
+    "verification/fix5-install-tests.log",
+    "verification/fix5-pc-fix-tests.log",
+    "verification/fix5-query-tests.log",
+    "verification/fix5-streams-tests.log",
+    "verification/fix5-test_calibration_reference.log",
+    "verification/fix5-test_connection_ui155.log",
+    "verification/fix5-test_controls154.log",
+    "verification/fix5-test_fix157pc.log",
+    "verification/fix5-test_gamepad_repair_ui.log",
+    "verification/fix5-test_install_progress157.log",
+    "verification/fix5-test_joint_direction155.log",
+    "verification/fix5-test_pose_state.log",
+    "verification/fix5-test_startup_ui.log",
+    "verification/fix5-tests.json",
+    "verification/package157fix5.py"
+  ],
+  "tests": {
+    "python_passed": 117,
+    "browser_scripts_passed": 9,
+    "runs": [
+      {
+        "name": "pc-fix",
+        "exit_code": 0,
+        "log": "verification/fix5-pc-fix-tests.log",
+        "sha256": "93bdc61be09e7f499c54006e5475455bd8657c9cce094c1abedbc4bd5004436b"
+      },
+      {
+        "name": "streams",
+        "exit_code": 0,
+        "log": "verification/fix5-streams-tests.log",
+        "sha256": "94e0beecd939f2bd663e235908055092e3df1450b2546ffdb6f6908fca77d109"
+      },
+      {
+        "name": "query",
+        "exit_code": 0,
+        "log": "verification/fix5-query-tests.log",
+        "sha256": "3abe15aba0070baa88c91775ca6be78d1510820aa9b4614f9e253806ade5ed84"
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "log": "verification/fix5-install-tests.log",
+        "sha256": "cf20ad30ce1d68d992d32700f54f138e1fe63de9c26e366e8b66f938ffaff161"
+      },
+      {
+        "name": "test_install_progress157",
+        "exit_code": 0,
+        "log": "verification/fix5-test_install_progress157.log",
+        "sha256": "d0ed5bd7c8ad6e34522311875f1726c22d1d72d5d2a84ee397e5e17c2230f7a3"
+      },
+      {
+        "name": "test_fix157pc",
+        "exit_code": 0,
+        "log": "verification/fix5-test_fix157pc.log",
+        "sha256": "202e15d884c067ab28d84a5ebbac80a801bcf4bfab23b14779c242cd6f2cfe39"
+      },
+      {
+        "name": "test_controls154",
+        "exit_code": 0,
+        "log": "verification/fix5-test_controls154.log",
+        "sha256": "4321bee40f94b73b1772c9d4b065c570b64bfe649461aef04fc0110f687bceee"
+      },
+      {
+        "name": "test_connection_ui155",
+        "exit_code": 0,
+        "log": "verification/fix5-test_connection_ui155.log",
+        "sha256": "c4e74d103b7bf3bdf8911844ea8ee4b148a598dce1ac1c3f68dcf84a29e4ad45"
+      },
+      {
+        "name": "test_startup_ui",
+        "exit_code": 0,
+        "log": "verification/fix5-test_startup_ui.log",
+        "sha256": "1051736a2c3c606f87fc8ca8b5ffe966e682f54386457b6c78195bcff54adc78"
+      },
+      {
+        "name": "test_joint_direction155",
+        "exit_code": 0,
+        "log": "verification/fix5-test_joint_direction155.log",
+        "sha256": "2e4a3f0a1e78453c58e0c965ba6b8692f5fa5833e68a9afa299097c48adc920c"
+      },
+      {
+        "name": "test_pose_state",
+        "exit_code": 0,
+        "log": "verification/fix5-test_pose_state.log",
+        "sha256": "a9d3d13be56ba6850d99607b037440bf1426b4709ba1b8b1ec2207f469a371b4"
+      },
+      {
+        "name": "test_calibration_reference",
+        "exit_code": 0,
+        "log": "verification/fix5-test_calibration_reference.log",
+        "sha256": "2b14f70f2a69c15cb41281aa223973efb7e514b864fc1db22f2dad39787914da"
+      },
+      {
+        "name": "test_gamepad_repair_ui",
+        "exit_code": 0,
+        "log": "verification/fix5-test_gamepad_repair_ui.log",
+        "sha256": "72d7539bf553c19352361a88a00d88bb6aaa05c85ebafeb27f99de35d5f1e1a0"
+      }
+    ],
+    "robot_hardware_tested": false,
+    "windows_native_tested": false,
+    "native_suite_rerun": false,
+    "full_historical_suite_rerun": false,
+    "socket_boundary_note": "Loopback TCP is substituted only at the OS socket boundary where the executor restricts AF_UNIX creation."
+  },
+  "previous_native_results": "Historical native results retained from earlier releases; not rerun for this PC-only update"
+}

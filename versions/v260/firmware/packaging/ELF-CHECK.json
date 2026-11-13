@@ -1,0 +1,164 @@
+{
+  "robotd": {
+    "bytes": 5861176,
+    "machine": "AArch64",
+    "load_segments": 4,
+    "sha256": "65bf917cd05f9304ae1d6602562f9aacc1953ae0b3d4fb067305a8f06678f7a0",
+    "needed": [
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.27",
+      "2.28",
+      "2.29",
+      "2.30"
+    ],
+    "revision": "Reuse V259 native programs; robotd deployment identity control.101 to control.102 only. Skill removal is applied through configuration and resource retirement."
+  },
+  "robotctl": {
+    "sha256": "a5034efaf6d26aaecc4a1b477c947abb7cf59d157288b9ad661706f00a700da7",
+    "machine": "AArch64",
+    "needed": [
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.28",
+      "2.29",
+      "2.30"
+    ],
+    "bytes": 4362264
+  },
+  "padd": {
+    "bytes": 3788992,
+    "machine": "AArch64",
+    "sha256": "fd9fb6b99083d9f1eeee5414910dc861d8f88c805f182e6e4a57d9c7b6834bbd",
+    "needed": [
+      "libudev.so.1",
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.27",
+      "2.28",
+      "2.30"
+    ],
+    "revision": "UI45-Rec2",
+    "package_release": "Microduck-Console-Studio-V260",
+    "reused_without_recompilation": true
+  },
+  "sounds": {
+    "sha256": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103",
+    "machine": "AArch64",
+    "needed": [
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.27",
+      "2.28",
+      "2.29",
+      "2.30"
+    ],
+    "bytes": 1152920
+  },
+  "gamepad-r7/gamesir-xboxd": {
+    "bytes": 13992,
+    "machine": "AArch64",
+    "sha256": "19aff4331a956151514714680307e2053b1982aba820f2e5ded05f0e5b5892e3",
+    "needed": [
+      "libpthread.so.0",
+      "libc.so.6"
+    ],
+    "glibc_versions": [
+      "2.17"
+    ],
+    "revision": "V238-B-unassigned",
+    "reused_without_recompilation": false,
+    "compiler": "Zig 0.13.0 aarch64-linux-gnu.2.17",
+    "source_sha256": "5594fb9983db3e40dfe38378080f2951b1c16ed522f507e1eb9caab05b9e4f08"
+  },
+  "onnxruntime/libonnxruntime.so.1.28.0": {
+    "sha256": "f1ec1a08eb99bd6e5401340f0a2b101381bf4694415480291dc13bcaa30f9ec7",
+    "machine": "AArch64",
+    "needed": [
+      "libdl.so.2",
+      "librt.so.1",
+      "libpthread.so.0",
+      "libstdc++.so.6",
+      "libm.so.6",
+      "libgcc_s.so.1",
+      "libc.so.6",
+      "ld-linux-aarch64.so.1"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.27"
+    ],
+    "bytes": 20591712
+  },
+  "onnxruntime/libonnxruntime_providers_shared.so": {
+    "sha256": "3b6be288fbfb7dff8770d08a23defdde18e8f7e0f5a2b344a0e5e238c999ea88",
+    "machine": "AArch64",
+    "needed": [
+      "libstdc++.so.6",
+      "libm.so.6",
+      "libgcc_s.so.1",
+      "libc.so.6"
+    ],
+    "glibc_versions": [
+      "2.17"
+    ],
+    "bytes": 198792
+  },
+  "mediad": {
+    "bytes": 10920000,
+    "machine": "AArch64",
+    "sha256": "6e31181cfb540f9ea0686227d12c0c5467f1a27aca88a804336faa963a2ea22c",
+    "needed": [
+      "libgstwebrtc-1.0.so.0",
+      "libgstbase-1.0.so.0",
+      "libgstreamer-1.0.so.0",
+      "libgobject-2.0.so.0",
+      "libglib-2.0.so.0",
+      "libgstvideo-1.0.so.0",
+      "libgstapp-1.0.so.0",
+      "libgio-2.0.so.0",
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2",
+      "ld-linux-aarch64.so.1"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.28",
+      "2.29",
+      "2.30"
+    ],
+    "revision": "UI40-AE90"
+  }
+}

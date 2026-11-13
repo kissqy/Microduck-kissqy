@@ -1,0 +1,55 @@
+{
+  "receiver_byte_identical": true,
+  "chunk_bytes": 65536,
+  "firmware_bytes": 35607322,
+  "output_backpressure_injection": {
+    "original_V169": {
+      "seconds": 0.40294024199829437,
+      "result": "BrokenPipeError",
+      "error": "[Errno 32] Broken pipe"
+    },
+    "V169_upload_fix": {
+      "seconds": 0.06950877299823333,
+      "result": "success"
+    }
+  },
+  "local_stdio_trials": [
+    {
+      "without_progress": {
+        "seconds": 0.06819591700332239,
+        "result": "success"
+      },
+      "production_progress": {
+        "callback_seconds": 0.000231888989219442,
+        "callback_count": 105,
+        "seconds": 0.06251726699701976,
+        "result": "success"
+      }
+    },
+    {
+      "without_progress": {
+        "seconds": 0.05877423199854093,
+        "result": "success"
+      },
+      "production_progress": {
+        "callback_seconds": 0.00022717895626556128,
+        "callback_count": 105,
+        "seconds": 0.056750711002678145,
+        "result": "success"
+      }
+    },
+    {
+      "without_progress": {
+        "seconds": 0.0556197690020781,
+        "result": "success"
+      },
+      "production_progress": {
+        "callback_seconds": 0.0002859990345314145,
+        "callback_count": 105,
+        "seconds": 0.0655162909970386,
+        "result": "success"
+      }
+    }
+  ],
+  "limits": "Local Python subprocess only; no SSH encryption/authentication, Windows or Zero/Wi-Fi test. Injected output block is not evidence of the original field cause."
+}

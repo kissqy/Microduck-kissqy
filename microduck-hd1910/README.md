@@ -1,12 +1,14 @@
 **简体中文** | [English](README.en.md)
 
-# Microduck HD1910
+# Microduck HD1910 · 原路径兼容目录
+
+版本入口已统一到 [versions/](../versions/)：[V260](../versions/v260/) 与 [V167](../versions/v167/)。本目录保留兼容已有源码、文档和下载地址；查找版本时无需切换分支。
 
 基于 Microduck 官方 **0.15.1** 的飞特 HD1910 适配，包含机器人固件、R17 机器人中控和独立训练中控。参考硬件：Radxa ZERO 3W、官方骨架、15 个 HD1910。社区个人项目，与 Pollen Robotics 无官方隶属关系。
 
 **源码公开、分项许可；明确适用个人非商业条款的原创部分限个人非商业使用，商业及组织用途须书面授权。其余内容保留各自许可，范围见 [LICENSE](LICENSE)。**
 
-**当前下载：系统镜像 R2 + Console Studio V260／control.102，开机配网 R10。** 更新于 2026-11-13。[发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [文件与使用说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md)。本目录原 V167／control.43 源码继续保留。
+**当前下载：系统镜像 R2 + Console Studio V260／control.102，开机配网 R10。** 更新于 2026-11-13。[发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [文件与使用说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)。本目录原 V167／control.43 源码继续保留。
 
 **作者成品 IMU 已预烧录 FT6，到手无需另行烧录，安装后仍需本机标定。** 自焊新板、换芯片或维护升级再看 [STM32 FT6 下载与烧录指南](../hardware/IMU-FIRMWARE.md)；ZERO 机器人服务固件不会烧录外置 IMU。
 
@@ -14,13 +16,13 @@
 
 | 内容 | 版本 | 源码或发布位置 |
 | --- | --- | --- |
-| 机器人固件与设备服务 | 官方 0.15.1 · control.102 | [V260 固件源码](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260/firmware) |
-| 机器人中控 | Studio V260（R17） | [V260 中控源码](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260/console) |
+| 机器人固件与设备服务 | 官方 0.15.1 · control.102 | [V260 固件源码](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260/firmware) |
+| 机器人中控 | Studio V260（R17） | [V260 中控源码](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260/console) |
 | 公开系统镜像 | R2 · 开机配网 R10 | [镜像发布页](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
 | 训练中控 | R1.5.27 | [training-console/](training-console/) |
-| 历史机器人固件与中控 | V167 / control.43 | [firmware/](firmware/) · [console/](firmware/console/) |
+| 历史机器人固件与中控 | V167 / control.43 | [V167 固件](../versions/v167/microduck-hd1910/firmware/) · [V167 中控](../versions/v167/microduck-hd1910/firmware/console/) |
 
-V260 独立冻结在 `release/v260/versions/v260`。main 的 `firmware/` 与 `firmware/console/` 仍为 V167／control.43。R1、V167 运行包及验证记录保留；本次发布不改变已记录的实机 Known-Good 范围。
+V260 源码归入 `versions/v260/`；V167 源码与构建资源归入 `versions/v167/`，保留原有内部相对路径。本兼容目录仍保留 V167／control.43。R1、V167 运行包及验证记录保留；本次发布不改变已记录的实机 Known-Good 范围。
 
 ## 下载与使用
 
@@ -34,10 +36,10 @@ V260 独立冻结在 `release/v260/versions/v260`。main 的 `firmware/` 与 `fi
 
 ## 从源码使用
 
-- V260 中控与固件：[独立源码](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260)，资源恢复与构建见[版本说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md)。
-- 历史 V167 中控启动入口：`firmware/console/start.cmd` 或 `start.command`。
+- V260 中控与固件：[独立源码](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260)，资源恢复与构建见[版本说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)。
+- 历史 V167 中控启动入口（从仓库根目录）：`versions/v167/microduck-hd1910/firmware/console/start.cmd` 或 `start.command`。
 - 训练中控启动入口：`training-console/start-training.cmd` 或 `start-training.command`。
-- 历史 V167 固件编译：[BUILD.md](docs/BUILD.md)。编译不是日常使用的前置要求。
+- 历史 V167 固件编译：[BUILD.md](../versions/v167/microduck-hd1910/docs/BUILD.md)。编译不是日常使用的前置要求。
 - 发布版本与验证范围：[BASELINE.md](docs/BASELINE.md)。完整来源及校验记录：[PUBLICATION-MANIFEST.json](PUBLICATION-MANIFEST.json)。
 - 原创归属与使用：[软件与自训模型权利说明](docs/SOFTWARE-MODEL-RIGHTS.md) · [逐模型来源](docs/MODEL-PROVENANCE.md)。
 - 许可与第三方来源：[LICENSE](LICENSE) · [THIRD-PARTY.md](docs/THIRD-PARTY.md)。

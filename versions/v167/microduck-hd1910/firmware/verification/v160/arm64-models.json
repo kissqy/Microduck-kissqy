@@ -1,0 +1,31 @@
+{
+  "hardware_tested": false,
+  "emulator": "QEMU ARM64",
+  "build": "1fa8438-feetech-ft6-control.37",
+  "results": [
+    {
+      "model": "swizzle",
+      "sha256": "14195135fcaa60cc45c36181d31542e76f07d873261ecae41dca72c0b795fcc8",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.83
+    },
+    {
+      "model": "crouch",
+      "sha256": "82be20b115d925ab5adfd20c12188364dd841a2c533eba3bfd64fb9212fe4aa4",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.748
+    },
+    {
+      "model": "spin",
+      "sha256": "621fe9f3ae3463089033c76354f8290e23457898af7e3e78de008af4a7180569",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.769
+    }
+  ]
+}

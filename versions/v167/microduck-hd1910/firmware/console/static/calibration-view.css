@@ -1,0 +1,20 @@
+.pose-reference-toolbar{padding:9px 14px 8px;border-bottom:1px solid var(--line);background:#182124;flex-shrink:0}
+.pose-reference-buttons{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.pose-reference-buttons button{border:1px solid #46534e;border-radius:5px;padding:5px 8px;color:#c5d0cb;font-size:12px;white-space:nowrap;background:#202c2d}
+.pose-reference-buttons button[aria-pressed="true"]{color:#172118;border-color:#c1f577;background:#c1f577;font-weight:700}
+.pose-reference-buttons button:disabled{opacity:.4;cursor:not-allowed}
+.pose-reference-buttons .reference-only{margin-left:auto;color:#9baba6;font-size:11px}
+#pose-reference-info{font-size:12px;color:#d3ded9;margin:7px 0 0;line-height:1.55;min-height:19px}
+#pose-reference-detail{font-size:11px;color:#91a39c;margin:2px 0 0;line-height:1.55;min-height:18px}
+.badge.reference{color:#f3d294;border-color:#816b43;background:#332d21}
+.twin-panel[data-reference="true"] .viewport-label{color:#efcf8e}
+.twin-panel .viewport-label{top:48px;right:12px;font-size:12px;line-height:1.6;letter-spacing:0}
+.twin-panel .viewport-controls{top:10px;right:12px}
+.twin-panel .viewport-controls button{font-size:12px;padding:5px 9px}
+.robot-side-tag{position:absolute;z-index:2;padding:3px 7px;border-radius:5px;font-size:11px;white-space:nowrap;transform:translate(-50%,-50%);pointer-events:none;background:#10232cdb;border:1px solid #5b8caa;color:#b9e3ff;text-shadow:0 1px 2px #000}
+.robot-side-tag.robot-right{background:#312013db;border-color:#a57d49;color:#ffd6a5}
+.twin-panel .axis-legend{font-size:11px;color:#b1c1b7;word-spacing:1px;pointer-events:none}
+.twin-panel .panel-note .calibration-coordinate{color:#c2d3ca}
+.service-calibration-reference{line-height:1.7;margin:5px 0 0;color:#a8bcb3;font-size:12px}
+@media(min-width:2300px){.pose-reference-buttons button{font-size:13px;padding:6px 10px}#pose-reference-info{font-size:13px}.robot-side-tag{font-size:12px}}
+@media(max-width:1000px){.pose-reference-buttons .reference-only{width:100%;margin-left:0}.twin-panel .viewport-label{font-size:11px}.twin-panel .viewport-controls button{padding:4px 7px}}

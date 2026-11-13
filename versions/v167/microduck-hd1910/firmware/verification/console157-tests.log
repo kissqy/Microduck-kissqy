@@ -1,0 +1,16 @@
+..........................................E.................
+======================================================================
+ERROR: test_same_unix_connection_handles_multiple_requests (test_input157.TransportTests.test_same_unix_connection_handles_multiple_requests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157/console/verification/test_input157.py", line 106, in test_same_unix_connection_handles_multiple_requests
+    path=str(Path(directory)/'robotd.sock');server=socket.socket(socket.AF_UNIX);server.bind(path);server.listen()
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+----------------------------------------------------------------------
+Ran 60 tests in 0.918s
+
+FAILED (errors=1)

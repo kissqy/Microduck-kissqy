@@ -1,0 +1,84 @@
+Microduck-kissqy — 分项许可索引 / Mixed-License Index
+
+本仓库采用分项许可。本文件是许可范围与来源的索引，不是将整个仓库统一
+改用某一种许可证，也不为任何第三方内容授予新权利。源码或设计资料公开，
+不代表所有内容均可不受限制地商用。
+
+1. 作者原创软件、工具与发布资料
+
+   对作者拥有并有权单独授权的原创部分，适用范围见：
+   microduck-hd1910/LICENSE
+
+   其中列明的个人非商业许可正文见：
+   microduck-hd1910/LICENSES/Personal-NonCommercial.txt
+
+   该子目录中原固件、上游代码及明确排除的资源不因此改用个人非商业许可。
+
+   根目录 docs/ 在线演示、装配与复刻指南界面，以及 scripts/ 工具中的作者
+   原创且有权单独许可的部分，适用上述个人非商业条款；同源中控代码沿用
+   其对应范围。第三方依赖、几何、参考配置及此前已有明确许可的内容除外，
+   不撤回已有效授予的 Apache、MIT 或其他许可。
+
+   软件逐项范围、FT6 固件、发布包及商用说明：
+   microduck-hd1910/docs/SOFTWARE-MODEL-RIGHTS.md
+
+   HD1910 自训模型的权重、来源与既有授权须逐模型确认，不能以训练引擎
+   或打包目录的软件许可概括所有权重；模型清单与依据见：
+   microduck-hd1910/docs/MODEL-PROVENANCE.md
+
+2. 作者原创 HAT／IMU 硬件设计资料
+
+   对作者拥有并有权单独授权的原创电路设计、PCB 布局及原创制作资料，
+   适用范围与个人非商业许可说明见：
+   hardware/LICENSE
+
+   这不表示 hardware/ 中全部内容或所有三维打印文件均属作者原创。
+
+3. 官方与其他第三方内容
+
+   - Pollen Robotics 的 Microduck 上游固件与官方训练软件中明确采用
+     Apache-2.0 的部分，继续按各自原许可证使用。
+   - 官方 microduck_rl 的 LICENSE-MODELS.md 将其指定目录中的 STL
+     以 CC BY-NC-SA 4.0 发布；具体范围按该来源文件列明的路径确认：
+     https://github.com/pollen-robotics/microduck_rl/blob/develop/LICENSE-MODELS.md
+   - 本仓库内官方模型、显示网格、社区改件及其他第三方资料，仍须按具体
+     文件来源、随附版权头与原许可分别确认。上述官方 STL 说明不意味着
+     本仓库全部模型、历史快照或社区打印件统一改用 CC BY-NC-SA 4.0。
+   - 其他驱动、依赖、素材及已有明确许可证的内容，继续适用原许可。
+
+   现有第三方归属索引见：
+   microduck-hd1910/docs/THIRD-PARTY.md
+
+4. 权利边界
+
+   路径仅帮助定位，不扩大作者拥有的权利。第三方许可和版权头优先适用于
+   相应内容；不得以本项目的原创部分声明缩减第三方许可，也不撤销此前
+   已有效授予的权利。申请商业授权应联系相应权利人，仓库维护者只能许可
+   其拥有并有权单独许可的部分。
+
+   本项目应表述为“源码公开、分项许可；明确适用个人非商业条款的原创部分
+   限个人非商业使用，商业及组织用途须书面授权；其余内容按各自许可”，
+   不应表述为整个仓库统一采用 OSI 自由开源许可。
+
+English
+
+This is a mixed-license repository. This file is an index, not a new blanket
+license or a grant of rights in third-party material. The author's separately
+licensable original software is scoped by microduck-hd1910/LICENSE; original
+HAT/IMU design material is scoped by hardware/LICENSE. Personal non-commercial
+terms are in microduck-hd1910/LICENSES/Personal-NonCommercial.txt.
+
+Separately licensable original web UI/build-guide code in root docs/ and tools
+in scripts/ use those personal non-commercial terms; shared console code follows
+its applicable scope. Third-party dependencies, geometry, reference configurations
+and previously expressly licensed content are excluded. See the bilingual
+SOFTWARE-MODEL-RIGHTS and MODEL-PROVENANCE guides in microduck-hd1910/docs/ for
+component and policy provenance; this index does not revoke existing grants.
+
+Upstream Apache-2.0 material retains that license. The official microduck_rl
+LICENSE-MODELS.md identifies particular STL directories under CC BY-NC-SA 4.0;
+that statement does not relicense every model, historical snapshot or community
+print file in this repository. Consult each source, copyright notice and
+original license. No third-party or previously validly granted rights are
+restricted or revoked. The maintainer can grant only rights they are entitled
+to license separately.

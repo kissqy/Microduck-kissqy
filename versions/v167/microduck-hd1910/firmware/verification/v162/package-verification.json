@@ -1,0 +1,50 @@
+{
+  "console_version": "1.0.162",
+  "build": "1fa8438-feetech-ft6-control.39",
+  "zip_bytes": 40197398,
+  "zip_sha256": "9e8d82ea6a57dfbfa15592fab980e57a1e67fb2dff1b6e7bfb63f773a2283a5e",
+  "firmware_bytes": 34493941,
+  "all_hashes_verified": true,
+  "production_importer_accepted": true,
+  "hardware_tested": false,
+  "baseline": "Microduck-Console-R17-V161.zip",
+  "baseline_sha256": "ac721370902b521c013dce056d6c8c83d8f2ff2a8a30abaf01555d6408d76fe9",
+  "calibration_config_existing_models_preserved": true,
+  "gamepad_and_web_input_unchanged": true,
+  "ssh_and_open_source_entrances_preserved": true,
+  "roller_stand_original_contract_preserved": true,
+  "roller_stand_trigger_bound": false,
+  "runtime_coefficients_from_contract": true,
+  "v161_firmware_files_preserved": 144,
+  "changed_firmware_files": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "install-files.json",
+    "model_packages.py",
+    "release_identity.py",
+    "robotd"
+  ],
+  "added_firmware_files": [
+    "roller/standup/deployment-contract.json",
+    "roller/standup/deployment-profile.toml",
+    "roller/standup/manifest.json",
+    "roller/standup/policy.onnx",
+    "roller/standup/training-config.json",
+    "roller/standup/training-request.json",
+    "roller/standup/upstream-params/agent.yaml",
+    "roller/standup/upstream-params/env.yaml",
+    "roller/standup/使用说明.md"
+  ],
+  "changed_console_files": [
+    "BUILD_MANIFEST.json",
+    "README.zh-CN.md",
+    "release_identity.py",
+    "service_control.py",
+    "static/index.html",
+    "static/r17-0151.css",
+    "static/service-management.js",
+    "updates/Microduck-Robotd-FT6-R17.tar.gz"
+  ]
+}

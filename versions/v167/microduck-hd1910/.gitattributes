@@ -1,0 +1,11 @@
+# Preserve frozen release bytes and SHA256 manifests on every OS.
+# Disabling newline conversion still permits normal text diffs.
+* -text
+*.png binary
+*.jpg binary
+*.bin binary
+*.onnx binary
+*.zip binary
+*.gz binary
+*.exe binary
+*.so* binary

@@ -1,0 +1,221 @@
+{
+  "console_version": "1.0.157",
+  "build": "1fa8438-feetech-ft6-control.35",
+  "release_baseline": "1.0.156 / control.34",
+  "firmware_reinstall_required": true,
+  "startup": {
+    "steps": [
+      "configuration_and_ipc",
+      "hardware_first_valid_sample",
+      "models_and_controller",
+      "first_completed_control_cycle"
+    ],
+    "uart_startup_hooks": false,
+    "uart_configured_ack": false,
+    "uart_generation_state_file": false,
+    "extra_cold_reopen": false,
+    "hardware_wait_interval": "existing official startup interval",
+    "ipc_available_while_hardware_waits": true,
+    "control_thread_exit_notification": true,
+    "state_transport": "robot.startupSubscribe change events plus initial snapshot"
+  },
+  "web_input": {
+    "path": "browser WebSocket -> persistent SSH helper -> official robotd IPC",
+    "physical_pad_priority": true,
+    "device_detection": "initial snapshot plus kernel input uevents",
+    "discovery_polling": false,
+    "virtual_webpad": false,
+    "idle_wait": "blocking selector; timeout only for an active web input lease",
+    "stale_action_replay": false,
+    "input_lease_seconds": 0.6
+  },
+  "new_periodic_uart_or_model_work": false,
+  "tests": {
+    "python": [
+      {
+        "log": "verification/input157-tests.log",
+        "sha256": "deb5d45cdb9bca92b29064c7d4f3dcfc1f9ba8cb83d4e1490fd2b24ac7057d3f",
+        "passed": 14,
+        "exit_code": 0
+      },
+      {
+        "log": "verification/focused157-tests.log",
+        "sha256": "8551cba5ca8c1027695d7feb0fad3c0f238b01ab220f2e0046b347b5326e531a",
+        "passed": 73,
+        "exit_code": 0
+      }
+    ],
+    "startup_rerun": {
+      "log": "verification/startup157-tests.log",
+      "sha256": "07a5027648276e068b6d04d0dd2ce9a23932f43faad5cbab6fa2635930d8f683",
+      "passed": 6,
+      "exit_code": 0
+    },
+    "browser": [
+      {
+        "test": "console/verification/test_calibration_reference.mjs",
+        "exit_code": 0,
+        "log": "verification/test_calibration_reference-157.log",
+        "sha256": "aeadea6c4e0deafb321f5a88fe11aaf3442528e710645f4b5ef1ca78d02b0e97"
+      },
+      {
+        "test": "console/verification/test_connection_ui155.mjs",
+        "exit_code": 0,
+        "log": "verification/test_connection_ui155-157.log",
+        "sha256": "31fb82a79d5b448d8486231d41062e36597e9aae6ad3df4a6db10f1150d477e4"
+      },
+      {
+        "test": "console/verification/test_controls154.mjs",
+        "exit_code": 0,
+        "log": "verification/test_controls154-157.log",
+        "sha256": "0bbbdfeb10e2b3a9a8eb0afcaacd4954ba7393c85b1aaa25fb3e1a9e813c88e8"
+      },
+      {
+        "test": "console/verification/test_gamepad_repair_ui.mjs",
+        "exit_code": 0,
+        "log": "verification/test_gamepad_repair_ui-157.log",
+        "sha256": "72d7539bf553c19352361a88a00d88bb6aaa05c85ebafeb27f99de35d5f1e1a0"
+      },
+      {
+        "test": "console/verification/test_joint_direction155.mjs",
+        "exit_code": 0,
+        "log": "verification/test_joint_direction155-157.log",
+        "sha256": "2e4a3f0a1e78453c58e0c965ba6b8692f5fa5833e68a9afa299097c48adc920c"
+      },
+      {
+        "test": "console/verification/test_pose_state.mjs",
+        "exit_code": 0,
+        "log": "verification/test_pose_state-157.log",
+        "sha256": "a9d3d13be56ba6850d99607b037440bf1426b4709ba1b8b1ec2207f469a371b4"
+      },
+      {
+        "test": "console/verification/test_startup_ui.mjs",
+        "exit_code": 0,
+        "log": "verification/test_startup_ui-157.log",
+        "sha256": "1051736a2c3c606f87fc8ca8b5ffe966e682f54386457b6c78195bcff54adc78"
+      }
+    ],
+    "native_full_suite_passed": false,
+    "previous_native_attempt": {
+      "passed": 131,
+      "failed": 4,
+      "log_preserved": false,
+      "failures": [
+        "diagnostic_registers_share_storage_and_refresh_only_after_a_new_inspection",
+        "hd1910_contract_p_arm_and_relax_preserve_d_limit_acceleration_and_eeprom",
+        "negative_feedback_preloads_itself_but_home_targets_stay_calibrated_positive",
+        "telemetry_between_old_and_new_deadline_is_fresh_without_late_exception"
+      ]
+    },
+    "historical_full_python_suite_passed": false,
+    "historical_suite_note": "Old UART/webpad assertions remain in historical tests; focused release regressions passed.",
+    "robot_hardware_tested": false,
+    "windows_native_tested": false
+  },
+  "native_build": "verification/native-build157-final.json",
+  "elf_ranges": {
+    "robotd": {
+      "bytes": 6777640,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "robotctl": {
+      "bytes": 4362264,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "padd": {
+      "bytes": 3414872,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "sounds": {
+      "bytes": 1152920,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "gamepad-r7/gamesir-xboxd": {
+      "bytes": 43664,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "onnxruntime/libonnxruntime.so.1.28.0": {
+      "bytes": 20591712,
+      "machine": "AArch64",
+      "load_segments": 4
+    },
+    "onnxruntime/libonnxruntime_providers_shared.so": {
+      "bytes": 198792,
+      "machine": "AArch64",
+      "load_segments": 4
+    }
+  },
+  "changed_files": [
+    "ELF-CHECK.json",
+    "README.md",
+    "console/README.zh-CN.md",
+    "console/control_socket.py",
+    "console/controls.py",
+    "console/docs/releases/R157.md",
+    "console/input_channel.py",
+    "console/raw_telemetry.py",
+    "console/release_identity.py",
+    "console/remote_input.py",
+    "console/service_channel.py",
+    "console/static/control-socket.js",
+    "console/static/control.js",
+    "console/static/raw-telemetry.js",
+    "console/static/service.js",
+    "console/telemetry.py",
+    "console/verification/test_input157.py",
+    "docs/design/r17-connection-design.md",
+    "docs/design/robotd-design.md",
+    "duck-control/src/feetech.rs",
+    "packaging/ELF-CHECK.json",
+    "packaging/R157.md",
+    "packaging/README.zh-CN.md",
+    "packaging/configure.py",
+    "packaging/gamepad.py",
+    "packaging/install-files.json",
+    "packaging/padd",
+    "packaging/rebuild-config.py",
+    "packaging/release_identity.py",
+    "packaging/robotctl",
+    "packaging/robotd",
+    "packaging/runtime.py",
+    "packaging/service.sh",
+    "packaging/test_startup157.py",
+    "robotd/src/feetech_commissioning.rs",
+    "robotd/src/feetech_r9_tests.rs",
+    "robotd/src/main.rs",
+    "robotd-params/src/edit.rs",
+    "verification/browser157-tests.json",
+    "verification/console157-tests.log",
+    "verification/focused157-tests.log",
+    "verification/input157-tests.log",
+    "verification/native-build157-final.json",
+    "verification/native-build157-final.log",
+    "verification/package157.py",
+    "verification/packaging157-tests.log",
+    "verification/socket157-tests.log",
+    "verification/startup157-tests.log",
+    "verification/test_calibration_reference-157.log",
+    "verification/test_connection_ui155-157.log",
+    "verification/test_controls154-157.log",
+    "verification/test_gamepad_repair_ui-157.log",
+    "verification/test_joint_direction155-157.log",
+    "verification/test_pose_state-157.log",
+    "verification/test_startup_ui-157.log",
+    "packaging/microduck-webpad.service",
+    "packaging/microduck-webpad.socket",
+    "packaging/test_uart_startup.py",
+    "packaging/test_uart_state.py",
+    "packaging/test_webpad.py",
+    "packaging/test_webpad_activation.py",
+    "packaging/test_webpad_hotplug_permissions.py",
+    "packaging/test_webpad_startup.py",
+    "packaging/uart-service.py",
+    "packaging/webpad.py"
+  ],
+  "hardware_verified": false
+}

@@ -1,0 +1,21 @@
+[Unit]
+Description=Microduck R17 browser Xbox input adapter
+After=systemd-udevd.service microduck-webpad.socket
+Requires=microduck-webpad.socket
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/robot/feetech-ft5-r5/webpad.py
+Sockets=microduck-webpad.socket
+User=root
+Group=robot
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+# InputMonitor uses kernel input hotplug events; without NETLINK it rescans at 50 Hz.
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+StandardOutput=journal
+StandardError=journal

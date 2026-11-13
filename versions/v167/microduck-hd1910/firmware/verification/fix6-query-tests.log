@@ -1,0 +1,20 @@
+test_failed_initial_volume_is_reported_without_success_or_input_action (test_query_logs157.QueryLogTests.test_failed_initial_volume_is_reported_without_success_or_input_action) ... ok
+test_invalid_query_json_keeps_original_output (test_query_logs157.QueryLogTests.test_invalid_query_json_keeps_original_output) ... ok
+test_model_query_json_error_keeps_the_helper_reason (test_query_logs157.QueryLogTests.test_model_query_json_error_keeps_the_helper_reason) ... ok
+test_model_query_returns_identical_catalogue_with_one_summary (test_query_logs157.QueryLogTests.test_model_query_returns_identical_catalogue_with_one_summary) ... ok
+test_query_failure_keeps_complete_stderr_and_does_not_retry (test_query_logs157.QueryLogTests.test_query_failure_keeps_complete_stderr_and_does_not_retry) ... ok
+test_volume_load_once_returns_same_value_without_mixer_dump (test_query_logs157.QueryLogTests.test_volume_load_once_returns_same_value_without_mixer_dump) ... ok
+test_disk_readiness_validates_actual_saved_file_not_display_count (test_compact_controls.CompactTests.test_disk_readiness_validates_actual_saved_file_not_display_count) ... ok
+test_failed_native_volume_readback_does_not_report_success (test_compact_controls.CompactTests.test_failed_native_volume_readback_does_not_report_success) ... ok
+test_invalid_saved_calibration_still_blocks_and_surfaces_helper_error (test_compact_controls.CompactTests.test_invalid_saved_calibration_still_blocks_and_surfaces_helper_error) ... ok
+test_model_catalog_can_be_read_when_motor_daemon_has_failed (test_compact_controls.CompactTests.test_model_catalog_can_be_read_when_motor_daemon_has_failed) ... ok
+test_model_catalog_still_requires_the_installed_management_helper (test_compact_controls.CompactTests.test_model_catalog_still_requires_the_installed_management_helper) ... ok
+test_saved_calibration_is_checked_in_helper_instead_of_live_joint_count (test_compact_controls.CompactTests.test_saved_calibration_is_checked_in_helper_instead_of_live_joint_count) ... ok
+test_unconfigured_volume_fails_with_configuration_reason (test_compact_controls.CompactTests.test_unconfigured_volume_fails_with_configuration_reason) ... ok
+test_volume_is_not_motion_and_rejects_noninteger_values (test_compact_controls.CompactTests.test_volume_is_not_motion_and_rejects_noninteger_values) ... ok
+test_volume_roundtrip_is_finite_native_audio_and_does_not_open_input (test_compact_controls.CompactTests.test_volume_roundtrip_is_finite_native_audio_and_does_not_open_input) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.015s
+
+OK

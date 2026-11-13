@@ -1,0 +1,17 @@
+{
+  "baseline": "V162/control.39",
+  "robotd_production_logic_preserved": true,
+  "robotd_change": "BUILD identity control.39 to control.40 only",
+  "changed_rust_files": [
+    "padd/src/main.rs",
+    "robotd/src/feetech_commissioning.rs"
+  ],
+  "added_rust_files": [
+    "padd/src/roller_test.rs"
+  ],
+  "sha256": {
+    "padd/src/main.rs": "42e334cf44adba39cff19e3afd6b089116cb6e9b5428a12f513bd9c79e4a28ff",
+    "padd/src/roller_test.rs": "94d10284837eef693cd5470a52cc49bca0d27a362c361ddaed466e6c6a85e32b",
+    "robotd/src/feetech_commissioning.rs": "c15c80ec72139cbc3870a673d027d6752239cf71cfa1cfe582bd1c03faf80083"
+  }
+}

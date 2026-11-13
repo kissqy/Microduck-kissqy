@@ -1,0 +1,32 @@
+R17 v1.0.147 两个替换模型只读审计
+
+未执行或反序列化 checkpoint.pt；仅把它作为不透明字节进行 ZIP CRC 校验。上传原件未改。
+
+roulade：Mjlab-Roulade-Flat-MicroDuck
+模型 SHA256：59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac
+32位模型ID：59e15d7b04d0c40e9b11b8a70bdecae6
+4096环境，训练上限10000，导出9999；50Hz，单一 float32 obs[1,61] → actions[1,14]。
+原训练动作缩放1.0、头1.0、腿1.0、滤波disabled；previous_action保留原始输出。新合同不含旧 action_ema_old_weight，不能为适配修改原件补字段。
+动作时长1.0秒，chain=True；命令：{"encoding": "constant", "idle": [0, 0, 0], "twist": "zeros", "head": "zeros", "body": "zeros"}
+BAM ef2d51…afceb，固件P=5，质量0.82kg，backlash=False。
+ZIP结构、全部CRC、ONNX哈希、元数据、实际训练记录、HOME/限位等26项检查全部通过。NumPy按ONNX图运算得到4个有限值探针。
+主机ONNX检查及ORT探针对照：{"available": true, "onnx_checker_version": "1.23.2", "onnx_checker_passed": true, "onnxruntime_version": "1.28.0", "provider": "CPUExecutionProvider", "finite_probe_count": 4, "all_match_reference": true, "maximum_reference_delta": 8.21426510810852e-07}
+主动14关节定义/HOME/限位、BAM参数文件及数值、硬件P和装配标定与v146四个模型都一致；新包多记录actuator implementation字段，捡取明确为Backlash。以上不代表实机运动或aarch64部署验证。
+
+ground_pick：Mjlab-GroundPick-Flat-Backlash-MicroDuck
+模型 SHA256：b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69
+32位模型ID：b14e3a8b56ddbb8d2d831e727774a168
+4096环境，训练上限10000，导出9999；50Hz，单一 float32 obs[1,61] → actions[1,14]。
+原训练动作缩放1.0、头1.0、腿1.0、滤波disabled；previous_action保留原始输出。新合同不含旧 action_ema_old_weight，不能为适配修改原件补字段。
+动作时长2.8秒，chain=False；命令：{"encoding": "phase", "idle": [0, 0, 0], "period_s": 4.0, "end_phase": 0.7, "twist": "cos(2*pi*phase), sin(2*pi*phase), 0", "head": "zeros", "body": "zeros"}
+BAM ef2d51…afceb，固件P=5，质量0.82kg，backlash=True。
+ZIP结构、全部CRC、ONNX哈希、元数据、实际训练记录、HOME/限位等27项检查全部通过。NumPy按ONNX图运算得到16个有限值探针。
+主机ONNX检查及ORT探针对照：{"available": true, "onnx_checker_version": "1.23.2", "onnx_checker_passed": true, "onnxruntime_version": "1.28.0", "provider": "CPUExecutionProvider", "finite_probe_count": 16, "all_match_reference": true, "maximum_reference_delta": 7.152557373046875e-07}
+主动14关节定义/HOME/限位、BAM参数文件及数值、硬件P和装配标定与v146四个模型都一致；新包多记录actuator implementation字段，捡取明确为Backlash。以上不代表实机运动或aarch64部署验证。
+
+与 v146 的兼容工作：
+Exact task is known, but v146 does not recognize its current target-filter contract and requires a legacy action_ema_old_weight field that this genuine export does not contain.
+New exact task GroundPick-Flat-Backlash is absent from the official_adapter allowlist. Needs task-specific ground_pick_action_scale mapping, current target-filter validation and backlash observation functions.
+必须保留新联合Walk的独立uniform 0.9/0.5/0.7配置、LB11000以及本机标定；替换仅针对ground_pick和roulade。
+两份原包的studio_recipe全局快照仍可含另一任务旧默认0.9，实际本任务训练全1由完整环境、ONNX元数据、合同及policy_parameters共同确认。
+详细原文件哈希、动作相位、主动关节限位、v146比较和每项检查见 action-model-audit147.json。

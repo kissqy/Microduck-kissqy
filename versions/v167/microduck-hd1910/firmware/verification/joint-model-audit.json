@@ -1,0 +1,839 @@
+{
+  "schema": "microduck-joint-model-audit/v1",
+  "scope": "Read-only uploaded JSON/ONNX analysis; checkpoint.pt was never unpickled; no real robot or closed-loop simulator test.",
+  "files": {
+    "policy.onnx": {
+      "sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+      "bytes": 795454
+    },
+    "deployment-profile.toml": {
+      "sha256": "ebcbe4fa97ccc4eb0d1bb219ec25202b0e710bc07c9c0dd734925ecbd23988f8",
+      "bytes": 389
+    },
+    "training-config.json": {
+      "sha256": "df8cfd4d46a062b6d177ab903a6347ec2088e568273a918653f8b4d0d983c396",
+      "bytes": 228584
+    },
+    "deployment-contract.json": {
+      "sha256": "8ac94b3903dc8af0f75b41281fb245907c0cccf85822530ff8848c8553391f1e",
+      "bytes": 431990
+    },
+    "manifest.json": {
+      "sha256": "d61b0ce5745f82fc8553dc6718dfc9b4cd11dc8fc24ad2e40e7323cfb80fe4d5",
+      "bytes": 5548
+    },
+    "使用说明.md": {
+      "sha256": "b9fb32c65ca4f73d8e919112598195608937fa9733eac9518185f88cfb3215ad",
+      "bytes": 4013
+    },
+    "training-request.json": {
+      "sha256": "47d73ef82d8c25b8468e242a0f1390c079b676c8431be5c982ca2574da811b44",
+      "bytes": 261678
+    }
+  },
+  "identity": {
+    "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+    "slot": "walk",
+    "role": "joint",
+    "onnx_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+    "model_id": "1cbf8730eadd75a5704332c9f3c10f60",
+    "manifest_sha_matches": true,
+    "checkpoint_iteration": 9599,
+    "training_max_iterations": 9600,
+    "num_envs": 2560,
+    "control_hz": 50.0,
+    "training_source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "snapshot_provenance": "training_run_readback",
+    "origin": "Uploaded locally trained HD1910 joint student using the pinned official training recipe; not a claim that these weights are an official published velstand model.",
+    "training_source_file": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/velstand/2026-10-07_00-14-46_console_20261007_001438_ac58f8/model_9599.pt",
+    "training_adapter_revision": "R1.5.9-current-actions-backlash",
+    "deployment_verified_in_original_manifest": false
+  },
+  "training_action": {
+    "source_keys": [
+      "deployment-contract.json/action_mapping",
+      "deployment-contract.json/actions/joint_pos",
+      "manifest.json/required_policy_settings"
+    ],
+    "mapping": "q_target = home + training_action_scale * raw_policy_output; target passthrough",
+    "action_term": {
+      "entity_name": "robot",
+      "clip": null,
+      "transmission_type": "joint",
+      "actuator_names": [
+        ".*"
+      ],
+      "scale": 1.0,
+      "offset": 0.0,
+      "preserve_order": false,
+      "use_default_offset": true
+    },
+    "filter": {
+      "enabled": false,
+      "head_alpha": 1.0,
+      "legs_alpha": 1.0,
+      "version": 1,
+      "control_hz": 50.0,
+      "stage": "joint_position_target_after_home_and_scale",
+      "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+      "head_joints": [
+        "neck_pitch",
+        "head_pitch",
+        "head_yaw",
+        "head_roll"
+      ],
+      "leg_joints": [
+        "left_hip_yaw",
+        "left_hip_roll",
+        "left_hip_pitch",
+        "left_knee",
+        "left_ankle",
+        "right_hip_yaw",
+        "right_hip_roll",
+        "right_hip_pitch",
+        "right_knee",
+        "right_ankle"
+      ],
+      "update": "once_per_policy_step",
+      "reset": "first_target_passthrough_per_environment",
+      "previous_action_observation": "raw_policy_output",
+      "onnx": "external_filter_not_baked_into_graph"
+    },
+    "required_policy_settings": {
+      "head_lowpass": 1.0,
+      "legs_lowpass": 1.0,
+      "action_scale": 1.0
+    },
+    "previous_action_observation": "raw_policy_output_before_scaling_and_filtering",
+    "runtime_only_settings": {
+      "voltage_adapt": {
+        "export_behavior": "inherit_existing_runtime_configuration",
+        "training_action_compensation": "not_present_in_training_action_term",
+        "note": "供电随机化/负载掉压属于BAM训练物理；不等于运行端动态动作倍率补偿。导出不强制开启或关闭。"
+      },
+      "gain_and_gain_ratios": {
+        "keys": [
+          "gain",
+          "standing_gain_ratio",
+          "ground_pick_gain_ratio",
+          "roulade_gain_ratio"
+        ],
+        "export_behavior": "inherit_existing_runtime_configuration",
+        "note": "训练BAM的实际kp_fw见hardware_command和training_physics；不能凭空推导固件增益或翻译层寄存器映射。"
+      }
+    }
+  },
+  "training_expert_bc": {
+    "source_key": "training-config.json/full/agent/algorithm/bc_cfg",
+    "gate_tilt_deg": 35.0,
+    "anchor_tilt_deg": 25.0,
+    "gravity_slice": [
+      3,
+      6
+    ],
+    "twist_slice": [
+      48,
+      51
+    ],
+    "coef": 1.0,
+    "anchor_coef": 1.0,
+    "checkpoint_path": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/expert_cache/studio_0151/ae939a39117b4ac2aa08a03b68e5e9a07cdedae4eb7ce2935bf523050b115af5/model.pt",
+    "anchor_checkpoint_path": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/expert_cache/studio_0151/94788b23cbd242f294db67265230b02dacd45d082512de2c869e3b7b191f1364/model.pt",
+    "limits": "The package records config and cached checkpoint paths, not the CheckpointedExpertPpo implementation or teacher weights. Do not infer teacher iterations from checkpoint_name defaults, and do not claim a runtime teacher label exists."
+  },
+  "training_recovery_reward": {
+    "source_key": "training-config.json/full/env/rewards/recovery_success/params",
+    "parameters": {
+      "fallen_tilt_deg": 40.0,
+      "min_fallen_s": 0.5,
+      "up_tilt_deg": 25.0,
+      "up_z": 0.09
+    },
+    "limits": "up_z is simulator world height. Existing robot odometry assumes a foot contact anchor and is not a direct world-height sensor."
+  },
+  "onnx": {
+    "runtime_version": "1.28.0",
+    "inputs": [
+      {
+        "name": "obs",
+        "shape": [
+          1,
+          61
+        ],
+        "type": "tensor(float)"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "actions",
+        "shape": [
+          1,
+          14
+        ],
+        "type": "tensor(float)"
+      }
+    ],
+    "ops": {
+      "Sub": 1,
+      "Div": 1,
+      "Gemm": 4,
+      "Elu": 3
+    },
+    "nodes": [
+      {
+        "inputs": [
+          "obs",
+          "obs_normalizer._mean"
+        ],
+        "outputs": [
+          "/obs_normalizer/Sub_output_0"
+        ],
+        "name": "/obs_normalizer/Sub",
+        "op": "Sub"
+      },
+      {
+        "inputs": [
+          "/obs_normalizer/Sub_output_0",
+          "onnx::Div_24"
+        ],
+        "outputs": [
+          "/obs_normalizer/Div_output_0"
+        ],
+        "name": "/obs_normalizer/Div",
+        "op": "Div"
+      },
+      {
+        "inputs": [
+          "/obs_normalizer/Div_output_0",
+          "mlp.0.weight",
+          "mlp.0.bias"
+        ],
+        "outputs": [
+          "/mlp/mlp.0/Gemm_output_0"
+        ],
+        "name": "/mlp/mlp.0/Gemm",
+        "op": "Gemm"
+      },
+      {
+        "inputs": [
+          "/mlp/mlp.0/Gemm_output_0"
+        ],
+        "outputs": [
+          "/mlp/mlp.1/Elu_output_0"
+        ],
+        "name": "/mlp/mlp.1/Elu",
+        "op": "Elu"
+      },
+      {
+        "inputs": [
+          "/mlp/mlp.1/Elu_output_0",
+          "mlp.2.weight",
+          "mlp.2.bias"
+        ],
+        "outputs": [
+          "/mlp/mlp.2/Gemm_output_0"
+        ],
+        "name": "/mlp/mlp.2/Gemm",
+        "op": "Gemm"
+      },
+      {
+        "inputs": [
+          "/mlp/mlp.2/Gemm_output_0"
+        ],
+        "outputs": [
+          "/mlp/mlp.1_1/Elu_output_0"
+        ],
+        "name": "/mlp/mlp.1_1/Elu",
+        "op": "Elu"
+      },
+      {
+        "inputs": [
+          "/mlp/mlp.1_1/Elu_output_0",
+          "mlp.4.weight",
+          "mlp.4.bias"
+        ],
+        "outputs": [
+          "/mlp/mlp.4/Gemm_output_0"
+        ],
+        "name": "/mlp/mlp.4/Gemm",
+        "op": "Gemm"
+      },
+      {
+        "inputs": [
+          "/mlp/mlp.4/Gemm_output_0"
+        ],
+        "outputs": [
+          "/mlp/mlp.1_2/Elu_output_0"
+        ],
+        "name": "/mlp/mlp.1_2/Elu",
+        "op": "Elu"
+      },
+      {
+        "inputs": [
+          "/mlp/mlp.1_2/Elu_output_0",
+          "mlp.6.weight",
+          "mlp.6.bias"
+        ],
+        "outputs": [
+          "actions"
+        ],
+        "name": "/mlp/mlp.6/Gemm",
+        "op": "Gemm"
+      }
+    ],
+    "initializers": [
+      {
+        "shape": [
+          1,
+          61
+        ],
+        "data_type": 1,
+        "name": "obs_normalizer._mean",
+        "all_finite": true,
+        "elements": 61,
+        "minimum": -0.9565542340278625,
+        "maximum": 0.10271167010068893,
+        "all_positive": false
+      },
+      {
+        "shape": [
+          512,
+          61
+        ],
+        "data_type": 1,
+        "name": "mlp.0.weight",
+        "all_finite": true,
+        "elements": 31232
+      },
+      {
+        "shape": [
+          512
+        ],
+        "data_type": 1,
+        "name": "mlp.0.bias",
+        "all_finite": true,
+        "elements": 512
+      },
+      {
+        "shape": [
+          256,
+          512
+        ],
+        "data_type": 1,
+        "name": "mlp.2.weight",
+        "all_finite": true,
+        "elements": 131072
+      },
+      {
+        "shape": [
+          256
+        ],
+        "data_type": 1,
+        "name": "mlp.2.bias",
+        "all_finite": true,
+        "elements": 256
+      },
+      {
+        "shape": [
+          128,
+          256
+        ],
+        "data_type": 1,
+        "name": "mlp.4.weight",
+        "all_finite": true,
+        "elements": 32768
+      },
+      {
+        "shape": [
+          128
+        ],
+        "data_type": 1,
+        "name": "mlp.4.bias",
+        "all_finite": true,
+        "elements": 128
+      },
+      {
+        "shape": [
+          14,
+          128
+        ],
+        "data_type": 1,
+        "name": "mlp.6.weight",
+        "all_finite": true,
+        "elements": 1792
+      },
+      {
+        "shape": [
+          14
+        ],
+        "data_type": 1,
+        "name": "mlp.6.bias",
+        "all_finite": true,
+        "elements": 14
+      },
+      {
+        "shape": [
+          1,
+          61
+        ],
+        "data_type": 1,
+        "name": "onnx::Div_24",
+        "all_finite": true,
+        "elements": 61,
+        "minimum": 0.012886893935501575,
+        "maximum": 3.901392698287964,
+        "all_positive": true
+      }
+    ],
+    "all_initializers_finite": true,
+    "normalization": "One Sub/Div normalizer before the MLP. No external re-normalization is needed.",
+    "mode_output_present": false,
+    "recurrent_state_present": false,
+    "output_postprocessing_in_graph": false,
+    "finite_probe_count": 26,
+    "finite_probe_passes": 26,
+    "finite_probes": [
+      {
+        "tilt_deg": 0,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.1752907782793045,
+        "max": 0.10709831118583679
+      },
+      {
+        "tilt_deg": 0,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.1752907782793045,
+        "max": 0.10709831118583679
+      },
+      {
+        "tilt_deg": 20,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.5486931800842285,
+        "max": 0.2621493339538574
+      },
+      {
+        "tilt_deg": 20,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.4102242588996887,
+        "max": 0.3587247133255005
+      },
+      {
+        "tilt_deg": 24,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.6476387977600098,
+        "max": 0.3682655096054077
+      },
+      {
+        "tilt_deg": 24,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.5101798176765442,
+        "max": 0.8100679516792297
+      },
+      {
+        "tilt_deg": 25,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.5911197066307068,
+        "max": 0.4065372347831726
+      },
+      {
+        "tilt_deg": 25,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.4979229271411896,
+        "max": 0.8719344735145569
+      },
+      {
+        "tilt_deg": 26,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.5219765305519104,
+        "max": 0.43031442165374756
+      },
+      {
+        "tilt_deg": 26,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.4498738646507263,
+        "max": 0.802750825881958
+      },
+      {
+        "tilt_deg": 34,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.6915779709815979,
+        "max": 0.5309047698974609
+      },
+      {
+        "tilt_deg": 34,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.549232006072998,
+        "max": 0.30970174074172974
+      },
+      {
+        "tilt_deg": 35,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.7085062265396118,
+        "max": 0.5612248182296753
+      },
+      {
+        "tilt_deg": 35,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.5685067176818848,
+        "max": 0.3264159858226776
+      },
+      {
+        "tilt_deg": 36,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.7261913418769836,
+        "max": 0.5881924033164978
+      },
+      {
+        "tilt_deg": 36,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.6180656552314758,
+        "max": 0.34344223141670227
+      },
+      {
+        "tilt_deg": 45,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.8336008787155151,
+        "max": 0.6972303986549377
+      },
+      {
+        "tilt_deg": 45,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.9748711585998535,
+        "max": 0.4760783612728119
+      },
+      {
+        "tilt_deg": 60,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.9956697225570679,
+        "max": 0.7263877987861633
+      },
+      {
+        "tilt_deg": 60,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -1.284036636352539,
+        "max": 0.6227447390556335
+      },
+      {
+        "tilt_deg": 90,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.9970637559890747,
+        "max": 0.7177456021308899
+      },
+      {
+        "tilt_deg": 90,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -1.42933189868927,
+        "max": 0.7786370515823364
+      },
+      {
+        "tilt_deg": 120,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.7904260754585266,
+        "max": 0.6921917796134949
+      },
+      {
+        "tilt_deg": 120,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -1.292456030845642,
+        "max": 0.7092553973197937
+      },
+      {
+        "tilt_deg": 180,
+        "axis": 0,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.9075494408607483,
+        "max": 0.5535521507263184
+      },
+      {
+        "tilt_deg": 180,
+        "axis": 1,
+        "finite": true,
+        "shape": [
+          1,
+          14
+        ],
+        "min": -0.9075494408607483,
+        "max": 0.5535521507263184
+      }
+    ],
+    "probe_limits": "Synthetic snapshots with zero gyro, HOME-relative joint positions, velocities, previous actions and commands. Checks format/finite inference only, not recovery success, stability, or sim-to-real equivalence."
+  },
+  "baseline_comparison": {
+    "walk": {
+      "baseline_contract": "/workspace/scratch/155bfcc94f4f/work-r17-146/source/Microduck-Source-R17-v1.0.146/test-data/walk-teacher14000/deployment-contract.json",
+      "baseline_contract_sha256": "1eebaab9d9c23f22f74e67b7225364fe71267328359449d29b72ac965108a3a7",
+      "equal_fields": {
+        "runtime_joint_order": true,
+        "runtime_home_rad": true,
+        "observations": true,
+        "commands": true,
+        "hardware_command": true,
+        "previous_action_observation": true,
+        "normalization": true,
+        "gear_backlash": true,
+        "robot_mode": true
+      },
+      "hardware_calibration_data_equal": true,
+      "joint_definitions_including_limits_equal": true,
+      "bam_and_runtime_actuator_properties_equal_ignoring_temporary_path": true,
+      "body_differences": {
+        "jaw_soft": {
+          "iquat": {
+            "new": [
+              0.9996083752061892,
+              0.020148695983316214,
+              -0.019164325811557942,
+              -0.0031392489552195635
+            ],
+            "previous": [
+              0.999608371457717,
+              0.02014879356931975,
+              -0.01916440755814105,
+              -0.003139317170574948
+            ]
+          },
+          "inertia": {
+            "new": [
+              0.00034317898831845304,
+              0.00027177659287734335,
+              0.00015975377432373596
+            ],
+            "previous": [
+              0.0003431779202949022,
+              0.0002717765945191842,
+              0.00015975377183711156
+            ]
+          }
+        }
+      },
+      "total_mass_equal": true,
+      "collision_geom_count": {
+        "new": 17,
+        "previous": 2
+      }
+    },
+    "stand": {
+      "baseline_contract": "/workspace/scratch/155bfcc94f4f/work-r17-146/source/Microduck-Source-R17-v1.0.146/policies/stand/deployment-contract.json",
+      "baseline_contract_sha256": "5db434f4255858b88f26312e0286ed8801df94fda735e13f9f290eecbd2d17a1",
+      "equal_fields": {
+        "runtime_joint_order": true,
+        "runtime_home_rad": true,
+        "observations": true,
+        "commands": false,
+        "hardware_command": true,
+        "previous_action_observation": true,
+        "normalization": true,
+        "gear_backlash": true,
+        "robot_mode": true
+      },
+      "hardware_calibration_data_equal": true,
+      "joint_definitions_including_limits_equal": true,
+      "bam_and_runtime_actuator_properties_equal_ignoring_temporary_path": true,
+      "body_differences": {
+        "jaw_soft": {
+          "iquat": {
+            "new": [
+              0.9996083752061892,
+              0.020148695983316214,
+              -0.019164325811557942,
+              -0.0031392489552195635
+            ],
+            "previous": [
+              0.999608371457717,
+              0.02014879356931975,
+              -0.01916440755814105,
+              -0.003139317170574948
+            ]
+          },
+          "inertia": {
+            "new": [
+              0.00034317898831845304,
+              0.00027177659287734335,
+              0.00015975377432373596
+            ],
+            "previous": [
+              0.0003431779202949022,
+              0.0002717765945191842,
+              0.00015975377183711156
+            ]
+          }
+        }
+      },
+      "total_mass_equal": true,
+      "collision_geom_count": {
+        "new": 17,
+        "previous": 2
+      }
+    }
+  },
+  "final_deployment_selection": {
+    "status": "User-authorized uniform runtime tuning in every posture; no teacher phase detector or posture-based parameter switch.",
+    "execution_file": "/workspace/scratch/155bfcc94f4f/work-r17-146/source/Microduck-Source-R17-v1.0.146/policies/walk/deployment-execution.json",
+    "execution_sha256": "c5d7b224db9c7c85c9b4aca58f418dc30d8fccab9b37070c8f22b5cb84590053",
+    "profile": {
+      "schema": "microduck-runtime-execution/v1",
+      "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+      "mode": "uniform",
+      "action_scale": 0.9,
+      "head_lowpass": 0.5,
+      "legs_lowpass": 0.7
+    },
+    "binding_matches_model": true,
+    "storage": "Separate model-SHA256-bound deployment-execution.json; original ONNX, manifest, deployment contract and training-profile TOML remain byte-for-byte training records.",
+    "schema_limits": {
+      "supported_task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+      "supported_slot": "walk",
+      "mode": "uniform",
+      "action_scale_inclusive_range": [
+        0.1,
+        2.0
+      ],
+      "head_and_legs_lowpass": "finite number >0 and <=1; reject booleans, unknown and duplicate fields"
+    },
+    "missing_execution_profile": "Use the recorded training base scale1/head1/legs1, without inheriting an unrelated saved global0.7.",
+    "training_gate_boundary": "The recorded 35/25-degree masks select teacher losses during training. They do not configure deployed scale/filter switching.",
+    "observations": "previous_action remains the previous raw ONNX action, before target scale/filter.",
+    "loop": "Existing 50 Hz policy loop; one ONNX inference per policy step. No second inference, new telemetry loop, network task or posture switch required by this uniform profile.",
+    "hardware": "Preserve current robot calibration, independent LB recovery skill and existing motor/input protections.",
+    "catalog": "Exactly one shipped Walk at policies/walk; the old teacher is only test-data/walk-teacher14000, excluded from the firmware model catalog.",
+    "voltage_adaptation": "Existing voltage compensation remains active according to the saved setting. The profile specifies a base action scale, not a promise that the final effective scale is identical.",
+    "limitation": "The entire joint student was trained at1/1/1. Uniform0.9/0.5/0.7 is the requested runtime experiment, not a recovered teacher-specific or officially trained setting. No real Zero, closed-loop simulation or real Chromium validation is claimed."
+  },
+  "upstream_gate_verification": {
+    "source_file": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck_rl-src_mjlab_microduck_tasks_distill.py",
+    "sha256": "bd736e28f3324a109a52c3414ea0a7017cd89c5e6d27583540107f3a34549f1f",
+    "revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "predicate": "g=gravity/norm(gravity); fallen=(-g.z < cos(gate)); therefore stand expert is used above 35 degrees, walk anchor at or below 25 degrees, no BC teacher between 25 and 35 degrees.",
+    "functions": [
+      "fallen_mask_from_obs",
+      "PpoWithExpertBc._bc_update",
+      "expert_input"
+    ],
+    "student_twist": "Only the stand teacher input is twist-zeroed for the training loss; this is not a runtime instruction to zero the deployed student command.",
+    "limits": "Training-only BC masks, not a deployment switch. This is the pinned upstream implementation; the recorded local CheckpointedExpertPpo adapter implementation is not present in the uploaded package."
+  }
+}

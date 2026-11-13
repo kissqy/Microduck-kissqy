@@ -1,0 +1,16 @@
+test_endpoint_reset_clears_old_errors_and_samples_preserves_tof (test_fix157pc.HandoffTests.test_endpoint_reset_clears_old_errors_and_samples_preserves_tof) ... ok
+test_failed_input_cleanup_does_not_gate_main_restart (test_fix157pc.HandoffTests.test_failed_input_cleanup_does_not_gate_main_restart) ... ok
+test_hub_does_not_replay_old_robot_metadata_after_handoff (test_fix157pc.HandoffTests.test_hub_does_not_replay_old_robot_metadata_after_handoff) ... ok
+test_legitimate_refusal_keeps_same_framed_connection_for_next_request (test_fix157pc.HandoffTests.test_legitimate_refusal_keeps_same_framed_connection_for_next_request) ... ok
+test_production_raw_handoff_suppresses_expected_eof_but_preserves_real_failures (test_fix157pc.HandoffTests.test_production_raw_handoff_suppresses_expected_eof_but_preserves_real_failures) ... ok
+test_remote_reset_clears_input_and_old_ipc_without_action_edges (test_fix157pc.HandoffTests.test_remote_reset_clears_input_and_old_ipc_without_action_edges) ... ok
+test_removed_shortcut_is_rejected_but_remote_rb_mapping_remains (test_fix157pc.HandoffTests.test_removed_shortcut_is_rejected_but_remote_rb_mapping_remains) ... ok
+test_restart_keeps_healthy_input_channel_and_audio_read (test_fix157pc.HandoffTests.test_restart_keeps_healthy_input_channel_and_audio_read) ... ok
+test_default_flow_detail_output_redaction_dedupe_and_reset (test_fix157pc.LogTests.test_default_flow_detail_output_redaction_dedupe_and_reset) ... ok
+test_detailed_and_default_download_routes (test_fix157pc.LogTests.test_detailed_and_default_download_routes) ... ok
+test_real_management_relay_retains_full_output_in_details_only (test_fix157pc.LogTests.test_real_management_relay_retains_full_output_in_details_only) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.579s
+
+OK

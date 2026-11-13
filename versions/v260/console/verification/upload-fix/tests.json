@@ -1,0 +1,8 @@
+{
+  "python_passed": 19,
+  "python_failed": 0,
+  "suite": "test_upload_fix; test_install_log157.UploadTests; InstallTransportTests; HandoffTests",
+  "rust_rebuilt": false,
+  "zero_hardware_tested": false,
+  "windows_ssh_tested": false
+}

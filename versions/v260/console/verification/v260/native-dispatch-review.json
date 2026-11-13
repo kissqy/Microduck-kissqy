@@ -1,0 +1,18 @@
+{
+  "source_archive": "Microduck-Source-R17-V186-control57-compiled.tar.gz",
+  "source_archive_sha256": "425c04cd829386ba934d9137a33081f11335a3404e5f22337eed47e993d1a1cb",
+  "native_recompiled": false,
+  "source_review_not_arm_execution": true,
+  "findings": [
+    "robot.skills derives named skills from configured policy skills; the withdrawn named skill is removed during upgrade.",
+    "robot.do Flamingo reaches queue_skill, which accepts only a name in the loaded policies.skills list. No retired binding means no motion is queued.",
+    "The unchanged PADD can still send its former short-Up request; the daemon refuses it because the named model is no longer installed/configured. The existing long-Up drive-mode switch remains unchanged.",
+    "The default skill resolver contains fallback kicks and roulade; a perpetual Flamingo policy is not automatically installed by this release."
+  ],
+  "source_file_sha256": {
+    "intents.rs": "13767227333d6707efdc4c20628807938d5c1e7ca1bd4716f61e5ceb9da8b469",
+    "params.rs": "386305e3ce00a409f6527d2be2048a927c2b448423ed1bb9fc63f29af0ff3064",
+    "params-lib.rs": "6e10db4b31411b142b5f04d920a3ae7f4b74f026c1f3ef23b85970923d88fd90",
+    "main.rs": "f08a65369ad3525a9b0b3d122a3bba996cb8067326c6d31e477e45dac4176e3d"
+  }
+}

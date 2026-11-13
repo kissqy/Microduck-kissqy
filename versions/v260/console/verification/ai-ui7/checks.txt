@@ -1,0 +1,6 @@
+UI7 release validation
+59 Python tests passed; frontend multi-turn/scroll/meter checks passed.
+User log reproduced as an interim-ASR-only flow; one endpoint commit reaches final/tool/text/audio on the mock service.
+Default speech allowed; mute blocks only HAT audio.
+CSS specificity resolved against all linked stylesheets at five viewport widths. This is not pixel rendering.
+Real Zero/Doubao UI7 validation remains outstanding.

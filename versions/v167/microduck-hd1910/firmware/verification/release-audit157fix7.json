@@ -1,0 +1,105 @@
+{
+  "console_version": "1.0.157-Fix7",
+  "firmware_archive_byte_identical": true,
+  "firmware_sha256": "657c22814fea6038feb34a3d776bf4756969abc405388a51d7c8db54b930c51a",
+  "zip_files": 157,
+  "production_firmware_importer": {
+    "verified": true,
+    "build": "1fa8438-feetech-ft6-control.36",
+    "console_version": "1.0.157-Fix7",
+    "official_version": "0.15.1",
+    "sha256": "657c22814fea6038feb34a3d776bf4756969abc405388a51d7c8db54b930c51a",
+    "models": {
+      "walk": {
+        "id": "1cbf8730eadd75a5704332c9f3c10f60",
+        "sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+        "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+        "epochs": 9600,
+        "source_iteration": 9599,
+        "num_envs": 2560,
+        "source_policy_directory": "policies/walk",
+        "trained_action_scale": 1.0,
+        "trained_head_alpha": 1.0,
+        "trained_legs_alpha": 1.0,
+        "execution_profile": {
+          "schema": "microduck-runtime-execution/v1",
+          "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+          "mode": "uniform",
+          "action_scale": 1.0,
+          "head_lowpass": 0.5,
+          "legs_lowpass": 0.7
+        },
+        "deployment_verified": false
+      },
+      "sitstand": {
+        "id": "1c94934c6421ec72ed48079cea749668",
+        "sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+        "task": "Mjlab-SitStand-Flat-MicroDuck"
+      },
+      "ground_pick": {
+        "id": "b14e3a8b56ddbb8d2d831e727774a168",
+        "sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69",
+        "task": "Mjlab-GroundPick-Flat-Backlash-MicroDuck",
+        "epochs": 10000,
+        "source_iteration": 9999,
+        "num_envs": 4096,
+        "base_action_scale": 1.0,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "target_filter": "passthrough",
+        "deployment_verified": false,
+        "source_policy_directory": "policies/ground_pick"
+      },
+      "roulade": {
+        "id": "59e15d7b04d0c40e9b11b8a70bdecae6",
+        "sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac",
+        "task": "Mjlab-Roulade-Flat-MicroDuck",
+        "epochs": 10000,
+        "source_iteration": 9999,
+        "num_envs": 4096,
+        "base_action_scale": 1.0,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "target_filter": "passthrough",
+        "deployment_verified": false,
+        "source_policy_directory": "policies/roulade"
+      },
+      "kick_right": {
+        "id": "67ad09d82f4865d222a7ae06f250cf9f",
+        "sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+        "task": "Mjlab-BallKick-Flat-MicroDuck",
+        "epochs": 10000,
+        "num_envs": 4096,
+        "base_action_scale": 1.0,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "target_filter": "passthrough",
+        "duration_seconds": 0.5,
+        "deployment_verified": false
+      }
+    },
+    "bytes": 25832103
+  },
+  "tests": {
+    "frontend_logic_scripts_passed": 2,
+    "runs": [
+      {
+        "name": "test_fix157pc",
+        "exit_code": 0,
+        "log": "verification/fix7-test_fix157pc.log",
+        "sha256": "202e15d884c067ab28d84a5ebbac80a801bcf4bfab23b14779c242cd6f2cfe39"
+      },
+      {
+        "name": "test_connection_ui155",
+        "exit_code": 0,
+        "log": "verification/fix7-test_connection_ui155.log",
+        "sha256": "c4e74d103b7bf3bdf8911844ea8ee4b148a598dce1ac1c3f68dcf84a29e4ad45"
+      }
+    ],
+    "dom_structure_and_unique_ids_verified": true,
+    "shared_grid_tracks_verified": true,
+    "browser_pixel_rendered": false,
+    "robot_hardware_tested": false,
+    "native_suite_rerun": false
+  }
+}

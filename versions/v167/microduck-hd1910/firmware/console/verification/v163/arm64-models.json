@@ -1,0 +1,93 @@
+{
+  "hardware_tested": false,
+  "emulator": "QEMU ARM64",
+  "build": "1fa8438-feetech-ft6-control.40",
+  "robotd_sha256": "464dde28e0be939237fdd1b7e9a4087d751b5c495b896cf25b6c8e44ba3c0fe9",
+  "deployment_info": {
+    "build": "1fa8438-feetech-ft6-control.40",
+    "model_api": 2,
+    "official_version": "0.15.1"
+  },
+  "results": [
+    {
+      "model": "walk",
+      "sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.73
+    },
+    {
+      "model": "sitstand",
+      "sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.821
+    },
+    {
+      "model": "ground_pick",
+      "sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.923
+    },
+    {
+      "model": "roulade",
+      "sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.791
+    },
+    {
+      "model": "kick_right",
+      "sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.785
+    },
+    {
+      "model": "kick_left",
+      "sha256": "ee0376c927044cdece056ba1d3e6eac77b3e02ee3f701f1feb437c183ed39a6d",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.889
+    },
+    {
+      "model": "roller_swizzle",
+      "sha256": "14195135fcaa60cc45c36181d31542e76f07d873261ecae41dca72c0b795fcc8",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.8
+    },
+    {
+      "model": "roller_crouch",
+      "sha256": "82be20b115d925ab5adfd20c12188364dd841a2c533eba3bfd64fb9212fe4aa4",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.852
+    },
+    {
+      "model": "roller_spin",
+      "sha256": "621fe9f3ae3463089033c76354f8290e23457898af7e3e78de008af4a7180569",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.718
+    },
+    {
+      "model": "roller_standup",
+      "sha256": "2575b5894bcd8e3fdbe005b1a7b90d9491085726df32000c26cf5b92b7a10ebb",
+      "exit_code": 0,
+      "stdout": "{\"actions\":14,\"input\":\"obs\",\"observations\":61,\"valid\":true}\n",
+      "stderr": "onnxruntime cpuid_info warning: Unknown CPU vendor. cpuinfo_vendor value: 0\n",
+      "elapsed_seconds": 1.717
+    }
+  ]
+}

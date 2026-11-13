@@ -1,0 +1,84 @@
+{
+  "label": "V200_control.V71 AI-T1 UI8",
+  "scope": "Chinese compact configuration, direct skill list, real-level mini bars, local credentials and voice persistence",
+  "python": {
+    "passed": 51,
+    "failures": 0,
+    "errors": 0,
+    "elapsed_seconds": 5.003,
+    "modules": [
+      "test_ai_preferences",
+      "test_ai_ui7",
+      "test_ai_v200",
+      "test_ai_hat",
+      "test_ai_log_cursor",
+      "test_ai_observability",
+      "test_ai_session_ui6"
+    ]
+  },
+  "frontend": {
+    "passed": true,
+    "test": "verification/test_ai_hat.mjs",
+    "checks": [
+      "20 compact actual-level bars",
+      "loud rises; quiet stays low",
+      "repeated status does not create samples",
+      "stale and stopped bars reset",
+      "saved voice restored once; edits preserved",
+      "saved key omitted from API status and retained when browser input is blank",
+      "Chinese skill labels",
+      "multi-turn chat and scroll retention"
+    ]
+  },
+  "css_cascade": {
+    "passed": true,
+    "widths": [
+      1920,
+      1280,
+      1024,
+      800,
+      390
+    ],
+    "mic_width_px": 80,
+    "mic_height_px": 22,
+    "sensor_rows": 3,
+    "chat_taller_than_log": true
+  },
+  "html": {
+    "ids_unique": true,
+    "ai_sections_directly_visible": true
+  },
+  "preferences": {
+    "restart_roundtrip_passed": true,
+    "atomic_write_failure_preserves_previous": true,
+    "invalid_input_does_not_mutate_previous": true,
+    "log_status_secret_redaction": true,
+    "windows_dpapi_branch": "mocked system protection; real Windows not run",
+    "nonwindows_file_mode": "0600",
+    "saved_file_in_bundle": false
+  },
+  "changes": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_preferences.py",
+    "ai_runtime.py",
+    "static/ai-panel.css",
+    "static/ai-panel.js",
+    "static/index.html",
+    "verification/test_ai_hat.mjs",
+    "verification/test_ai_preferences.py"
+  ],
+  "unchanged": [
+    "Doubao protocol and turn handling",
+    "native HAT audio",
+    "motion gating",
+    "physical/manual controller",
+    "firmware and motion models",
+    "SSH transport"
+  ],
+  "firmware_sha256": "6374b23464bcd8d2e221bd6ba3208dcab0eabcda932ed3f6cc20a5c5667fcbd2",
+  "browser_render_verified": false,
+  "hardware_verified": false,
+  "doubao_online_verified": false,
+  "previous_ui7_validation": "verification/ai-ui7/results.json"
+}

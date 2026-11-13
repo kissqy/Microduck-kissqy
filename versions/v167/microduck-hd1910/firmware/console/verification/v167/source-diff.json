@@ -1,0 +1,23 @@
+{
+  "baseline": "V164/control.40",
+  "baseline_source": "Microduck-Source-R17-V163-control40-compiled.tar.gz",
+  "baseline_source_sha256": "cd0bd2421d7c6bd774c90c074f0913d563625962baf6c13d4c1496619aa20ff0",
+  "changed_rust_files": [
+    "duck-control/src/feetech.rs",
+    "duck-control/src/hd1910.rs",
+    "robotd/src/feetech_commissioning.rs"
+  ],
+  "production_files": [
+    "duck-control/src/hd1910.rs",
+    "robotd/src/feetech_commissioning.rs: build identity only"
+  ],
+  "feetech_changes": "tests only; production prefix byte-identical",
+  "added_readback_transactions": false,
+  "control_loop_and_timing_unchanged": true,
+  "sha256": {
+    "duck-control/src/feetech.rs": "6536468db3f2256227f2c35ce45a34838b101a46d8559b9e3a6b8eecf926e6d7",
+    "duck-control/src/hd1910.rs": "26e2ee9f9ee378a7dbb321d63469e8914395cb34d762b918d8837d20804493c5",
+    "robotd/src/feetech_commissioning.rs": "55c82c6f8776901deb65b8a8bc90c15f1e488626a90a54329dd95017ee602f8d"
+  },
+  "native_baseline_snapshot_sha256": "b647f43435f57e70765b6778d82699c7c7ba2a2229f6e664e65b1a3134e3bec0"
+}

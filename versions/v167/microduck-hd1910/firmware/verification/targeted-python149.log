@@ -1,0 +1,124 @@
+test_backlash_observation_selection_is_independent_of_target_filter (test_action_models147.ActionExportTests.test_backlash_observation_selection_is_independent_of_target_filter) ... ok
+test_current_scale_is_task_specific_and_cannot_use_walk_global_scale (test_action_models147.ActionExportTests.test_current_scale_is_task_specific_and_cannot_use_walk_global_scale) ... ok
+test_genuine_new_exports_need_no_contract_rewrite_or_legacy_ema_field (test_action_models147.ActionExportTests.test_genuine_new_exports_need_no_contract_rewrite_or_legacy_ema_field) ... ok
+test_ground_pick_phase_and_roulade_window_are_preserved (test_action_models147.ActionExportTests.test_ground_pick_phase_and_roulade_window_are_preserved) ... ok
+test_import_and_assignment_preserve_walk_lb_saved_tuning_and_original_files (test_action_models147.ActionExportTests.test_import_and_assignment_preserve_walk_lb_saved_tuning_and_original_files) ... ok
+test_legacy_deployed_action_contracts_remain_loadable (test_action_models147.ActionExportTests.test_legacy_deployed_action_contracts_remain_loadable) ... ok
+test_new_action_filter_fields_and_ema_are_validated (test_action_models147.ActionExportTests.test_new_action_filter_fields_and_ema_are_validated) ... ok
+test_only_exact_supported_task_names_are_accepted (test_action_models147.ActionExportTests.test_only_exact_supported_task_names_are_accepted) ... ok
+test_pick_training_and_required_period_must_agree (test_action_models147.ActionExportTests.test_pick_training_and_required_period_must_agree) ... ok
+test_release_has_only_current_action_models_and_preserves_other_model_ids (test_action_models147.ActionExportTests.test_release_has_only_current_action_models_and_preserves_other_model_ids) ... ok
+test_roulade_current_revision_cannot_downgrade_to_legacy_ema_semantics (test_action_models147.ActionExportTests.test_roulade_current_revision_cannot_downgrade_to_legacy_ema_semantics) ... ok
+test_first_replacement_updates_both_paths_and_action_scales_only (test_action_replacement.ActionReplacementTests.test_first_replacement_updates_both_paths_and_action_scales_only) ... ok
+test_interrupted_install_with_new_defaults_and_old_saved_paths_retries_scales (test_action_replacement.ActionReplacementTests.test_interrupted_install_with_new_defaults_and_old_saved_paths_retries_scales) ... ok
+test_reinstall_preserves_later_operator_bindings_scales_and_timing (test_action_replacement.ActionReplacementTests.test_reinstall_preserves_later_operator_bindings_scales_and_timing) ... ok
+test_retired_explicit_skill_path_repairs_when_default_has_no_path (test_action_replacement.ActionReplacementTests.test_retired_explicit_skill_path_repairs_when_default_has_no_path) ... ok
+test_retired_unknown_skill_and_its_button_are_removed (test_action_replacement.ActionReplacementTests.test_retired_unknown_skill_and_its_button_are_removed) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 7.334s
+
+OK
+test_broken_shipped_contract_is_restored_on_repeat_upgrade (test_atomic_install.AtomicInstallTests.test_broken_shipped_contract_is_restored_on_repeat_upgrade) ... 服务文件已完成逐文件原子替换；已保留导入模型。
+已恢复随包模型的损坏合同或更新修正版合同：a481d9f211f31d9476ab1a319fe362a2
+服务文件已完成逐文件原子替换；已保留导入模型。
+服务文件已完成逐文件原子替换；已保留导入模型。
+已恢复随包模型的损坏合同或更新修正版合同：a481d9f211f31d9476ab1a319fe362a2
+服务文件已完成逐文件原子替换；已保留导入模型。
+服务文件已完成逐文件原子替换；已保留导入模型。
+已恢复随包模型的损坏合同或更新修正版合同：a481d9f211f31d9476ab1a319fe362a2
+服务文件已完成逐文件原子替换；已保留导入模型。
+ok
+test_cleanup_keeps_ownership_metadata_until_it_can_be_replaced (test_atomic_install.AtomicInstallTests.test_cleanup_keeps_ownership_metadata_until_it_can_be_replaced) ... ok
+test_corrected_same_id_contract_updates_once_and_keeps_other_models (test_atomic_install.AtomicInstallTests.test_corrected_same_id_contract_updates_once_and_keeps_other_models) ... 服务文件已完成逐文件原子替换；已保留导入模型。
+已恢复随包模型的损坏合同或更新修正版合同：9e3ff8bde021be28a728c02dbd8e7aaf
+服务文件已完成逐文件原子替换；已保留导入模型。
+清理旧训练模型：other
+服务文件已完成逐文件原子替换；模型已按明确请求重置。
+ok
+test_execution_request_marker_follows_its_file_after_interruption (test_atomic_install.AtomicInstallTests.test_execution_request_marker_follows_its_file_after_interruption) ... 服务文件已完成逐文件原子替换；已保留导入模型。
+已应用联合模型全程统一的缩放与滤波配置；原模型权重与训练数据保留。
+ok
+test_invalid_execution_digest_does_not_replace_installed_payload (test_atomic_install.AtomicInstallTests.test_invalid_execution_digest_does_not_replace_installed_payload) ... ok
+test_joint_execution_profile_reaches_preimported_model_once (test_atomic_install.AtomicInstallTests.test_joint_execution_profile_reaches_preimported_model_once) ... 服务文件已完成逐文件原子替换；已保留导入模型。
+已应用联合模型全程统一的缩放与滤波配置；原模型权重与训练数据保留。
+服务文件已完成逐文件原子替换；已保留导入模型。
+ok
+test_linked_destination_is_rejected_without_touching_external_file (test_atomic_install.AtomicInstallTests.test_linked_destination_is_rejected_without_touching_external_file) ... ok
+test_ordinary_upgrade_removes_only_explicitly_retired_models (test_atomic_install.AtomicInstallTests.test_ordinary_upgrade_removes_only_explicitly_retired_models) ... 清理已弃用训练模型：d11f8430712c35cb2416ce3948e9f8b7
+清理已弃用训练模型：388461feb3f4cd24071197ffc30d63e2
+清理已弃用训练模型：5c019c3d3d2c490947f21974f3947506
+清理已弃用训练模型：9e3ff8bde021be28a728c02dbd8e7aaf
+服务文件已完成逐文件原子替换；已保留导入模型。
+ok
+test_preserved_models_are_never_copied_to_temporary_stage (test_atomic_install.AtomicInstallTests.test_preserved_models_are_never_copied_to_temporary_stage) ... 服务文件已完成逐文件原子替换；已保留导入模型。
+ok
+test_running_executable_is_replaced_and_generated_data_is_preserved (test_atomic_install.AtomicInstallTests.test_running_executable_is_replaced_and_generated_data_is_preserved) ... 服务文件已完成逐文件原子替换；已保留导入模型。
+ok
+test_staging_failure_does_not_replace_installed_files (test_atomic_install.AtomicInstallTests.test_staging_failure_does_not_replace_installed_files) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.063s
+
+OK
+test_bad_reimport_does_not_modify_a_working_installation (test_model_packages_execution.JointExecutionImportTests.test_bad_reimport_does_not_modify_a_working_installation) ... ok
+test_broken_installed_sidecar_is_reported_and_not_silently_dropped_on_reimport (test_model_packages_execution.JointExecutionImportTests.test_broken_installed_sidecar_is_reported_and_not_silently_dropped_on_reimport) ... ok
+test_catalog_reads_small_metadata_without_hashing_or_revalidating_the_onnx (test_model_packages_execution.JointExecutionImportTests.test_catalog_reads_small_metadata_without_hashing_or_revalidating_the_onnx) ... ok
+test_execution_profile_cannot_attach_to_another_task_or_slot (test_model_packages_execution.JointExecutionImportTests.test_execution_profile_cannot_attach_to_another_task_or_slot) ... ok
+test_execution_profile_requires_the_original_unfiltered_scale_one_contract (test_model_packages_execution.JointExecutionImportTests.test_execution_profile_requires_the_original_unfiltered_scale_one_contract) ... ok
+test_explicit_valid_sidecar_can_replace_the_same_model_deployment_copy (test_model_packages_execution.JointExecutionImportTests.test_explicit_valid_sidecar_can_replace_the_same_model_deployment_copy) ... ok
+test_import_and_binding_preserve_model_calibration_tuning_lb_and_training_archive (test_model_packages_execution.JointExecutionImportTests.test_import_and_binding_preserve_model_calibration_tuning_lb_and_training_archive) ... ok
+test_mismatched_model_hash_is_rejected_before_installation (test_model_packages_execution.JointExecutionImportTests.test_mismatched_model_hash_is_rejected_before_installation) ... ok
+test_original_joint_zip_keeps_training_settings_without_creating_an_experiment (test_model_packages_execution.JointExecutionImportTests.test_original_joint_zip_keeps_training_settings_without_creating_an_experiment) ... ok
+test_profile_accepts_bounded_uniform_tuning_including_boundary_values (test_model_packages_execution.JointExecutionImportTests.test_profile_accepts_bounded_uniform_tuning_including_boundary_values) ... ok
+test_profile_rejects_nonfinite_boolean_and_out_of_range_values (test_model_packages_execution.JointExecutionImportTests.test_profile_rejects_nonfinite_boolean_and_out_of_range_values) ... ok
+test_profile_requires_exact_uniform_schema_and_rejects_posture_switch_fields (test_model_packages_execution.JointExecutionImportTests.test_profile_requires_exact_uniform_schema_and_rejects_posture_switch_fields) ... ok
+test_reimporting_original_training_zip_preserves_the_installed_execution_profile (test_model_packages_execution.JointExecutionImportTests.test_reimporting_original_training_zip_preserves_the_installed_execution_profile) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 4.025s
+
+OK
+test_actual_process_cannot_be_replaced_by_effective_unit (test_runtime.RuntimeTests.test_actual_process_cannot_be_replaced_by_effective_unit) ... ok
+test_hat_modes_and_retire_old_overrides (test_runtime.RuntimeTests.test_hat_modes_and_retire_old_overrides) ... ok
+test_merged_hooks_must_match_before_restart (test_runtime.RuntimeTests.test_merged_hooks_must_match_before_restart) ... ok
+test_only_os_submission_failure_is_reported (test_runtime.RuntimeTests.test_only_os_submission_failure_is_reported) ... ok
+test_other_installation_hook_only_and_late_override_are_retired (test_runtime.RuntimeTests.test_other_installation_hook_only_and_late_override_are_retired) ... ok
+test_power_does_not_touch_missing_input_services_or_robot_socket (test_runtime.RuntimeTests.test_power_does_not_touch_missing_input_services_or_robot_socket) ... ok
+test_power_submits_without_bus_readback (test_runtime.RuntimeTests.test_power_submits_without_bus_readback) ... ok
+test_ready_requires_bus_feedback_and_no_automatic_motion (test_runtime.RuntimeTests.test_ready_requires_bus_feedback_and_no_automatic_motion) ... ok
+test_reconnect_stop_request_accepts_missing_old_socket_and_never_sends_motion (test_runtime.RuntimeTests.test_reconnect_stop_request_accepts_missing_old_socket_and_never_sends_motion) ... ok
+test_all_four_slots_must_actually_load_including_roulade (test_runtime_readback.ReadbackTests.test_all_four_slots_must_actually_load_including_roulade) ... ERROR
+test_catalog_uses_shipped_default_but_saved_selection_wins (test_runtime_readback.ReadbackTests.test_catalog_uses_shipped_default_but_saved_selection_wins) ... ok
+test_confirmation_requires_actual_hash_and_official_global_readback (test_runtime_readback.ReadbackTests.test_confirmation_requires_actual_hash_and_official_global_readback) ... ERROR
+test_upgrade_retires_secondary_scale_and_keeps_official_choice (test_runtime_readback.ReadbackTests.test_upgrade_retires_secondary_scale_and_keeps_official_choice) ... ok
+test_wrong_actual_roulade_coefficient_cannot_complete_upgrade (test_runtime_readback.RollScaleReadback.test_wrong_actual_roulade_coefficient_cannot_complete_upgrade) ... ok
+
+======================================================================
+ERROR: test_all_four_slots_must_actually_load_including_roulade (test_runtime_readback.ReadbackTests.test_all_four_slots_must_actually_load_including_roulade)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/data/work149/packaging/test_runtime_readback.py", line 38, in test_all_four_slots_must_actually_load_including_roulade
+    self.assertTrue(runtime.verify_loaded_models()['loaded_models_verified'])
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/mnt/data/work149/packaging/runtime.py", line 397, in verify_loaded_models
+    raise ValueError('安装文件已更新，但未确认运行模型一致：'+last[-1500:])
+ValueError: 安装文件已更新，但未确认运行模型一致：{"build": "1fa8438-feetech-ft6-control.30", "loaded_models": {"walk": {"sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f"}, "sitstand": {"sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50"}, "ground_pick": {"sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69"}, "roulade": {"sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac"}}}
+
+======================================================================
+ERROR: test_confirmation_requires_actual_hash_and_official_global_readback (test_runtime_readback.ReadbackTests.test_confirmation_requires_actual_hash_and_official_global_readback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/data/work149/packaging/test_runtime_readback.py", line 28, in test_confirmation_requires_actual_hash_and_official_global_readback
+    with patch.object(runtime,'config',return_value=data),patch.object(runtime,'rpc',return_value=bus):self.assertTrue(runtime.verify_loaded_models()['loaded_models_verified'])
+                                                                                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/mnt/data/work149/packaging/runtime.py", line 397, in verify_loaded_models
+    raise ValueError('安装文件已更新，但未确认运行模型一致：'+last[-1500:])
+ValueError: 安装文件已更新，但未确认运行模型一致：{"build": "1fa8438-feetech-ft6-control.30", "loaded_models": {"walk": {"sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f"}}}
+
+----------------------------------------------------------------------
+Ran 14 tests in 17.617s
+
+FAILED (errors=2)
+test_default_change_migrates_once_and_preserves_operator_choices (test_walk_replacement.WalkReplacementTests.test_default_change_migrates_once_and_preserves_operator_choices) ... ok
+test_ground_pick_official_phase_and_binding_survive_reinstall (test_walk_replacement.WalkReplacementTests.test_ground_pick_official_phase_and_binding_survive_reinstall) ... 

@@ -1,0 +1,1085 @@
+{
+  "note": "冻结官方构造值与当前默认页面配方的静态差异。未开启长训练，动态随机化另见源代码；首次联合启动还会绑定本地老师和重置课程计时。",
+  "tasks": {
+    "Mjlab-Velocity-Flat-MicroDuck": [
+      {
+        "path": "agent.save_interval",
+        "official": 250,
+        "studio": 1000
+      },
+      {
+        "path": "env.scene.entities.robot.articulation.actuators",
+        "official": [
+          {
+            "target_names_expr": [
+              "^(?!passive_).*"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": "xl330",
+            "model": "m6",
+            "json_path": null,
+            "vin": null,
+            "kp_fw": 200.0,
+            "vin_range": [
+              6.5,
+              8.2
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 6.0,
+            "stiff_frictionloss": true
+          }
+        ],
+        "studio": [
+          {
+            "target_names_expr": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": null,
+            "model": null,
+            "json_path": "/workspace/scratch/37068f809c8e/servo-audit/work/Microduck-Training-Studio-R1.5.3/training/hd1910_m6.json",
+            "vin": null,
+            "kp_fw": 5.0,
+            "vin_range": [
+              7.4,
+              8.0
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 7.0,
+            "stiff_frictionloss": true
+          }
+        ]
+      },
+      {
+        "path": "env.scene.entities.robot.spec_fn.callable",
+        "official": "mjlab_microduck.robot.microduck_constants.get_walk_spec",
+        "studio": "training.recipe.apply_robot.<locals>.build_spec"
+      }
+    ],
+    "Mjlab-Velocity-Rough-MicroDuck": [
+      {
+        "path": "agent.save_interval",
+        "official": 250,
+        "studio": 1000
+      },
+      {
+        "path": "env.scene.entities.robot.articulation.actuators",
+        "official": [
+          {
+            "target_names_expr": [
+              "^(?!passive_).*"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": "xl330",
+            "model": "m6",
+            "json_path": null,
+            "vin": null,
+            "kp_fw": 200.0,
+            "vin_range": [
+              6.5,
+              8.2
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 6.0,
+            "stiff_frictionloss": true
+          }
+        ],
+        "studio": [
+          {
+            "target_names_expr": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": null,
+            "model": null,
+            "json_path": "/workspace/scratch/37068f809c8e/servo-audit/work/Microduck-Training-Studio-R1.5.3/training/hd1910_m6.json",
+            "vin": null,
+            "kp_fw": 5.0,
+            "vin_range": [
+              7.4,
+              8.0
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 7.0,
+            "stiff_frictionloss": true
+          }
+        ]
+      },
+      {
+        "path": "env.scene.entities.robot.spec_fn.callable",
+        "official": "mjlab_microduck.robot.microduck_constants.get_walk_spec",
+        "studio": "training.recipe.apply_robot.<locals>.build_spec"
+      }
+    ],
+    "Mjlab-StandUp-Flat-MicroDuck": [
+      {
+        "path": "agent.save_interval",
+        "official": 250,
+        "studio": 1000
+      },
+      {
+        "path": "env.scene.entities.robot.articulation.actuators",
+        "official": [
+          {
+            "target_names_expr": [
+              "^(?!passive_).*"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": "xl330",
+            "model": "m6",
+            "json_path": null,
+            "vin": null,
+            "kp_fw": 200.0,
+            "vin_range": [
+              6.5,
+              8.2
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 6.0,
+            "stiff_frictionloss": true
+          }
+        ],
+        "studio": [
+          {
+            "target_names_expr": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": null,
+            "model": null,
+            "json_path": "/workspace/scratch/37068f809c8e/servo-audit/work/Microduck-Training-Studio-R1.5.3/training/hd1910_m6.json",
+            "vin": null,
+            "kp_fw": 5.0,
+            "vin_range": [
+              7.4,
+              8.0
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 7.0,
+            "stiff_frictionloss": true
+          }
+        ]
+      },
+      {
+        "path": "env.scene.entities.robot.spec_fn.callable",
+        "official": "mjlab_microduck.robot.microduck_constants.get_standup_spec",
+        "studio": "training.recipe.apply_robot.<locals>.build_spec"
+      }
+    ],
+    "Mjlab-StandUp-Rough-MicroDuck": [
+      {
+        "path": "agent.save_interval",
+        "official": 250,
+        "studio": 1000
+      },
+      {
+        "path": "env.scene.entities.robot.articulation.actuators",
+        "official": [
+          {
+            "target_names_expr": [
+              "^(?!passive_).*"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": "xl330",
+            "model": "m6",
+            "json_path": null,
+            "vin": null,
+            "kp_fw": 200.0,
+            "vin_range": [
+              6.5,
+              8.2
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 6.0,
+            "stiff_frictionloss": true
+          }
+        ],
+        "studio": [
+          {
+            "target_names_expr": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": null,
+            "model": null,
+            "json_path": "/workspace/scratch/37068f809c8e/servo-audit/work/Microduck-Training-Studio-R1.5.3/training/hd1910_m6.json",
+            "vin": null,
+            "kp_fw": 5.0,
+            "vin_range": [
+              7.4,
+              8.0
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 7.0,
+            "stiff_frictionloss": true
+          }
+        ]
+      },
+      {
+        "path": "env.scene.entities.robot.spec_fn.callable",
+        "official": "mjlab_microduck.robot.microduck_constants.get_standup_spec",
+        "studio": "training.recipe.apply_robot.<locals>.build_spec"
+      }
+    ],
+    "Mjlab-VelStand-Flat-MicroDuck": [
+      {
+        "path": "agent.save_interval",
+        "official": 250,
+        "studio": 1000
+      },
+      {
+        "path": "env.scene.entities.robot.articulation.actuators",
+        "official": [
+          {
+            "target_names_expr": [
+              "^(?!passive_).*"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": "xl330",
+            "model": "m6",
+            "json_path": null,
+            "vin": null,
+            "kp_fw": 200.0,
+            "vin_range": [
+              6.5,
+              8.2
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 6.0,
+            "stiff_frictionloss": true
+          }
+        ],
+        "studio": [
+          {
+            "target_names_expr": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": null,
+            "model": null,
+            "json_path": "/workspace/scratch/37068f809c8e/servo-audit/work/Microduck-Training-Studio-R1.5.3/training/hd1910_m6.json",
+            "vin": null,
+            "kp_fw": 5.0,
+            "vin_range": [
+              7.4,
+              8.0
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 7.0,
+            "stiff_frictionloss": true
+          }
+        ]
+      },
+      {
+        "path": "env.scene.entities.robot.spec_fn.callable",
+        "official": "mjlab_microduck.robot.microduck_constants.get_allcollisions_spec",
+        "studio": "training.recipe.apply_robot.<locals>.build_spec"
+      }
+    ],
+    "Mjlab-VelStand-Rough-MicroDuck": [
+      {
+        "path": "agent.save_interval",
+        "official": 250,
+        "studio": 1000
+      },
+      {
+        "path": "env.scene.entities.robot.articulation.actuators",
+        "official": [
+          {
+            "target_names_expr": [
+              "^(?!passive_).*"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": "xl330",
+            "model": "m6",
+            "json_path": null,
+            "vin": null,
+            "kp_fw": 200.0,
+            "vin_range": [
+              6.5,
+              8.2
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 6.0,
+            "stiff_frictionloss": true
+          }
+        ],
+        "studio": [
+          {
+            "target_names_expr": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": null,
+            "model": null,
+            "json_path": "/workspace/scratch/37068f809c8e/servo-audit/work/Microduck-Training-Studio-R1.5.3/training/hd1910_m6.json",
+            "vin": null,
+            "kp_fw": 5.0,
+            "vin_range": [
+              7.4,
+              8.0
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 7.0,
+            "stiff_frictionloss": true
+          }
+        ]
+      },
+      {
+        "path": "env.scene.entities.robot.spec_fn.callable",
+        "official": "mjlab_microduck.robot.microduck_constants.get_allcollisions_spec",
+        "studio": "training.recipe.apply_robot.<locals>.build_spec"
+      }
+    ],
+    "Mjlab-SitStand-Flat-MicroDuck": [
+      {
+        "path": "agent.save_interval",
+        "official": 250,
+        "studio": 1000
+      },
+      {
+        "path": "env.scene.entities.robot.articulation.actuators",
+        "official": [
+          {
+            "target_names_expr": [
+              "^(?!passive_).*"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": "xl330",
+            "model": "m6",
+            "json_path": null,
+            "vin": null,
+            "kp_fw": 200.0,
+            "vin_range": [
+              6.5,
+              8.2
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 6.0,
+            "stiff_frictionloss": true
+          }
+        ],
+        "studio": [
+          {
+            "target_names_expr": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": null,
+            "model": null,
+            "json_path": "/workspace/scratch/37068f809c8e/servo-audit/work/Microduck-Training-Studio-R1.5.3/training/hd1910_m6.json",
+            "vin": null,
+            "kp_fw": 5.0,
+            "vin_range": [
+              7.4,
+              8.0
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 7.0,
+            "stiff_frictionloss": true
+          }
+        ]
+      },
+      {
+        "path": "env.scene.entities.robot.spec_fn.callable",
+        "official": "mjlab_microduck.robot.microduck_constants.get_standup_spec",
+        "studio": "training.recipe.apply_robot.<locals>.build_spec"
+      }
+    ],
+    "Mjlab-SitStand-Rough-MicroDuck": [
+      {
+        "path": "agent.save_interval",
+        "official": 250,
+        "studio": 1000
+      },
+      {
+        "path": "env.scene.entities.robot.articulation.actuators",
+        "official": [
+          {
+            "target_names_expr": [
+              "^(?!passive_).*"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": "xl330",
+            "model": "m6",
+            "json_path": null,
+            "vin": null,
+            "kp_fw": 200.0,
+            "vin_range": [
+              6.5,
+              8.2
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 6.0,
+            "stiff_frictionloss": true
+          }
+        ],
+        "studio": [
+          {
+            "target_names_expr": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": null,
+            "model": null,
+            "json_path": "/workspace/scratch/37068f809c8e/servo-audit/work/Microduck-Training-Studio-R1.5.3/training/hd1910_m6.json",
+            "vin": null,
+            "kp_fw": 5.0,
+            "vin_range": [
+              7.4,
+              8.0
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 7.0,
+            "stiff_frictionloss": true
+          }
+        ]
+      },
+      {
+        "path": "env.scene.entities.robot.spec_fn.callable",
+        "official": "mjlab_microduck.robot.microduck_constants.get_standup_spec",
+        "studio": "training.recipe.apply_robot.<locals>.build_spec"
+      }
+    ],
+    "Mjlab-GroundPick-Flat-MicroDuck": [
+      {
+        "path": "agent.save_interval",
+        "official": 250,
+        "studio": 1000
+      },
+      {
+        "path": "env.scene.entities.robot.articulation.actuators",
+        "official": [
+          {
+            "target_names_expr": [
+              "^(?!passive_).*"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": "xl330",
+            "model": "m6",
+            "json_path": null,
+            "vin": null,
+            "kp_fw": 200.0,
+            "vin_range": [
+              6.5,
+              8.2
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 6.0,
+            "stiff_frictionloss": true
+          }
+        ],
+        "studio": [
+          {
+            "target_names_expr": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": null,
+            "model": null,
+            "json_path": "/workspace/scratch/37068f809c8e/servo-audit/work/Microduck-Training-Studio-R1.5.3/training/hd1910_m6.json",
+            "vin": null,
+            "kp_fw": 5.0,
+            "vin_range": [
+              7.4,
+              8.0
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 7.0,
+            "stiff_frictionloss": true
+          }
+        ]
+      },
+      {
+        "path": "env.scene.entities.robot.spec_fn.callable",
+        "official": "mjlab_microduck.robot.microduck_constants.get_ground_pick_spec",
+        "studio": "training.recipe.apply_robot.<locals>.build_spec"
+      }
+    ],
+    "Mjlab-GroundPick-Rough-MicroDuck": [
+      {
+        "path": "agent.save_interval",
+        "official": 250,
+        "studio": 1000
+      },
+      {
+        "path": "env.scene.entities.robot.articulation.actuators",
+        "official": [
+          {
+            "target_names_expr": [
+              "^(?!passive_).*"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": "xl330",
+            "model": "m6",
+            "json_path": null,
+            "vin": null,
+            "kp_fw": 200.0,
+            "vin_range": [
+              6.5,
+              8.2
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 6.0,
+            "stiff_frictionloss": true
+          }
+        ],
+        "studio": [
+          {
+            "target_names_expr": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": null,
+            "model": null,
+            "json_path": "/workspace/scratch/37068f809c8e/servo-audit/work/Microduck-Training-Studio-R1.5.3/training/hd1910_m6.json",
+            "vin": null,
+            "kp_fw": 5.0,
+            "vin_range": [
+              7.4,
+              8.0
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 7.0,
+            "stiff_frictionloss": true
+          }
+        ]
+      },
+      {
+        "path": "env.scene.entities.robot.spec_fn.callable",
+        "official": "mjlab_microduck.robot.microduck_constants.get_ground_pick_spec",
+        "studio": "training.recipe.apply_robot.<locals>.build_spec"
+      }
+    ],
+    "Mjlab-BallKick-Flat-MicroDuck": [
+      {
+        "path": "agent.save_interval",
+        "official": 250,
+        "studio": 1000
+      },
+      {
+        "path": "env.scene.entities.robot.articulation.actuators",
+        "official": [
+          {
+            "target_names_expr": [
+              "^(?!passive_).*"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": "xl330",
+            "model": "m6",
+            "json_path": null,
+            "vin": null,
+            "kp_fw": 200.0,
+            "vin_range": [
+              6.5,
+              8.2
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 6.0,
+            "stiff_frictionloss": true
+          }
+        ],
+        "studio": [
+          {
+            "target_names_expr": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": null,
+            "model": null,
+            "json_path": "/workspace/scratch/37068f809c8e/servo-audit/work/Microduck-Training-Studio-R1.5.3/training/hd1910_m6.json",
+            "vin": null,
+            "kp_fw": 5.0,
+            "vin_range": [
+              7.4,
+              8.0
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 7.0,
+            "stiff_frictionloss": true
+          }
+        ]
+      },
+      {
+        "path": "env.scene.entities.robot.spec_fn.callable",
+        "official": "mjlab_microduck.robot.microduck_constants.get_standup_spec",
+        "studio": "training.recipe.apply_robot.<locals>.build_spec"
+      }
+    ],
+    "Mjlab-Roulade-Flat-MicroDuck": [
+      {
+        "path": "agent.save_interval",
+        "official": 250,
+        "studio": 1000
+      },
+      {
+        "path": "env.scene.entities.robot.articulation.actuators",
+        "official": [
+          {
+            "target_names_expr": [
+              "^(?!passive_).*"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": "xl330",
+            "model": "m6",
+            "json_path": null,
+            "vin": null,
+            "kp_fw": 200.0,
+            "vin_range": [
+              6.5,
+              8.2
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 6.0,
+            "stiff_frictionloss": true
+          }
+        ],
+        "studio": [
+          {
+            "target_names_expr": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "transmission_type": "joint",
+            "armature": null,
+            "frictionloss": null,
+            "viscous_damping": null,
+            "delay_min_lag": 3,
+            "delay_max_lag": 6,
+            "delay_hold_prob": 0.0,
+            "delay_update_period": 0,
+            "delay_per_env_phase": true,
+            "motor_name": null,
+            "model": null,
+            "json_path": "/workspace/scratch/37068f809c8e/servo-audit/work/Microduck-Training-Studio-R1.5.3/training/hd1910_m6.json",
+            "vin": null,
+            "kp_fw": 5.0,
+            "vin_range": [
+              7.4,
+              8.0
+            ],
+            "vin_drop_gain_range": [
+              0.0,
+              0.2
+            ],
+            "vin_min": 7.0,
+            "stiff_frictionloss": true
+          }
+        ]
+      },
+      {
+        "path": "env.scene.entities.robot.spec_fn.callable",
+        "official": "mjlab_microduck.robot.microduck_constants.get_standup_spec",
+        "studio": "training.recipe.apply_robot.<locals>.build_spec"
+      }
+    ]
+  }
+}

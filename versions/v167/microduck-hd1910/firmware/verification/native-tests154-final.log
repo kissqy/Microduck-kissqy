@@ -1,0 +1,56 @@
+COMMAND: cargo test -p robotd --bin robotd --frozen startup -- --test-threads=1
+    Blocking waiting for file lock on package cache
+   Compiling duck-control v0.15.1 (/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.154/duck-control)
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.154/robotd)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 58.19s
+     Running unittests src/main.rs (/workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66)
+
+running 5 tests
+test feetech_r9_tests::r9_startup_cadence_and_motion_use_one_bus_without_recovery ... ok
+test raw_stream::tests::new_viewer_gets_unchanged_startup_failure_without_reencoding ... ok
+test tests::a_config_that_disables_walking_is_repaired_at_startup ... ok
+test tests::r17_home_hold_mouth_never_bypasses_startup_relax_fall_or_missing_sensors ... ok
+test tests::r17_startup_refuses_motion_without_queuing_it_for_later ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 253 filtered out; finished in 1.31s
+
+COMMAND: cargo test -p robotd --bin robotd --frozen cold_reopen -- --test-threads=1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.45s
+     Running unittests src/main.rs (/workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66)
+
+running 3 tests
+test tests::feetech_cold_reopen_is_finite_and_does_not_retry_configuration_or_shutdown ... ok
+test tests::feetech_cold_reopen_releases_the_failed_owner_before_new_setup ... ok
+test tests::feetech_cold_reopen_shutdown_during_settle_does_not_open_again ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 255 filtered out; finished in 0.00s
+
+COMMAND: cargo test -p robotd --bin robotd --frozen reopened_uart -- --test-threads=1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.32s
+     Running unittests src/main.rs (/workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66)
+
+running 1 test
+test tests::reopened_uart_rejects_an_acknowledgement_from_the_previous_generation ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 257 filtered out; finished in 0.00s
+
+COMMAND: cargo test -p robotd --bin robotd --frozen r17_empty_snapshot -- --test-threads=1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.38s
+     Running unittests src/main.rs (/workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66)
+
+running 1 test
+test tests::r17_empty_snapshot_and_warming_imu_do_not_accept_home ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 257 filtered out; finished in 0.09s
+
+COMMAND: cargo test -p robotd --bin robotd --frozen unfiltered_skill -- --test-threads=1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.08s
+     Running unittests src/main.rs (/workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66)
+
+running 3 tests
+test control::unfiltered_skill_tests::new_backlash_pick_original_onnx_keeps_phase_cutoff_and_encoder_observation ... ok
+test control::unfiltered_skill_tests::new_roulade_original_onnx_uses_direct_targets_raw_feedback_and_existing_window ... ok
+test control::unfiltered_skill_tests::new_roulade_still_chains_from_held_pad_requests_and_home_cancels ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 255 filtered out; finished in 3.30s
+

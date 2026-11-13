@@ -1,0 +1,160 @@
+--- ../Microduck-Source-R17-v1.0.157-Fix9/mediad/src/pipeline.rs	2026-10-04 08:15:41.000000000 -0700
++++ mediad/src/pipeline.rs	2026-10-10 03:15:49.560724228 -0700
+@@ -272,6 +272,7 @@
+ /// The reader/callback rendezvous. [`Frames`] is the handle; this is what both ends touch.
+ #[derive(Default)]
+ struct Shared {
++    capture: std::sync::OnceLock<crate::capture::Capture>,
+     latest: Mutex<Latest>,
+     /// Signalled when [`Latest::generation`] moves, which is the only thing a reader waits on.
+     delivered: std::sync::Condvar,
+@@ -308,12 +309,19 @@
+     ///
+     /// `None` when no frame arrived within [`FRAME_TIMEOUT`].
+     pub fn inspect_next<T>(&self, read: impl FnOnce(&Frame) -> T) -> Option<T> {
++        if let Some(capture) = self.0.capture.get() {
++            capture.wait_active();
++        }
+         self.next_capture(|frame| frame.map(read))
+     }
+ 
+     /// Ask for the next frame and take a copy of it. `None` when none arrived within
+     /// [`FRAME_TIMEOUT`].
+     pub fn next_frame(&self) -> Option<Frame> {
++        let _lease = self.0.capture.get().map(|capture| capture.acquire());
++        if self.0.capture.get().is_some_and(|capture| !capture.ready()) {
++            return None;
++        }
+         self.next_capture(|frame| frame.cloned())
+     }
+ 
+@@ -605,7 +613,6 @@
+ 
+     let consumers: Consumers = Arc::new(std::sync::atomic::AtomicU32::new(0));
+     let (channels_tx, channels_rx) = mpsc::channel::<Channel>(4);
+-    wire_consumers(&sink, channels_tx, runtime, consumers.clone(), relays)?;
+ 
+     // ── the raw branch ──────────────────────────────────────────────────────
+     //
+@@ -682,21 +689,38 @@
+         ])
+         .context("could not add elements to the pipeline")?;
+ 
+-    // On the capsfilter's src pad, which is the last point before the tee splits the stream —
+-    // so this counts every frame the driver delivered, with nothing lossy in between.
++    // Count real source frames, excluding the temporary codec-discovery pattern.
+     meter_capture_rate(
+-        &capsfilter
+-            .static_pad("src")
+-            .context("capsfilter has no src pad, which cannot happen")?,
++        &src.static_pad("src").context("source has no src pad")?,
+         width,
+         height,
+         fps,
+         consumers.clone(),
+     )?;
+ 
++    let capture = if matches!(&source, Source::Camera(_)) {
++        let (capture, selector) = crate::capture::Capture::install(&pipeline, &src, &caps, &sink)?;
++        let _ = frames.0.capture.set(capture.clone());
++        selector.link(&capsfilter)?;
++        Some(capture)
++    } else {
++        src.link(&capsfilter)?;
++        None
++    };
++    wire_consumers(
++        &sink,
++        channels_tx,
++        runtime,
++        consumers.clone(),
++        relays,
++        capture.clone(),
++    )?;
++    if let Some(branch) = stream_branch.as_ref() {
++        *branch.demand.lock().expect("stream demand") = capture;
++    }
+     match flip.as_ref() {
+-        Some(flip) => gst::Element::link_many([&src, &capsfilter, flip, &tee]),
+-        None => gst::Element::link_many([&src, &capsfilter, &tee]),
++        Some(flip) => gst::Element::link_many([&capsfilter, flip, &tee]),
++        None => gst::Element::link_many([&capsfilter, &tee]),
+     }
+     .context(
+         "could not link the source to the tee. A caps failure here means the source cannot \
+@@ -915,6 +939,8 @@
+         valve,
+         encoder,
+         encoded,
++        demand: Arc::new(Mutex::new(None)),
++        capture: Arc::new(Mutex::new(None)),
+     })
+ }
+ 
+@@ -1020,6 +1046,8 @@
+     valve: gst::Element,
+     encoder: gst::Element,
+     pub encoded: Encoded,
++    demand: Arc<Mutex<Option<crate::capture::Capture>>>,
++    capture: Arc<Mutex<Option<crate::capture::Lease>>>,
+ }
+ 
+ impl StreamBranch {
+@@ -1035,12 +1063,23 @@
+     /// working. `h264parse config-interval=-1` puts SPS and PPS in front of it, so that keyframe
+     /// is enough on its own.
+     pub fn open(&self) {
++        let mut lease = self.capture.lock().expect("stream capture");
++        if lease.is_none() {
++            *lease = self
++                .demand
++                .lock()
++                .expect("stream demand")
++                .as_ref()
++                .map(|capture| capture.acquire());
++        }
++        drop(lease);
+         self.gate(false);
+         self.request_keyframe();
+     }
+ 
+     pub fn close(&self) {
+         self.gate(true);
++        self.capture.lock().expect("stream capture").take();
+     }
+ 
+     /// Set the valve's `drop`, and **do not panic if it is the wrong element**.
+@@ -1924,13 +1963,21 @@
+     runtime: tokio::runtime::Handle,
+     consumers: Consumers,
+     relays: Arc<crate::turn::Relays>,
++    capture: Option<crate::capture::Capture>,
+ ) -> Result<()> {
+     // Counted here rather than inferred from the log, so `robotctl health` can say whether anyone
+     // is actually watching. `consumer-removed` is guarded the same way `consumer-added` is: a
+     // signal that has moved upstream should degrade the count, not abort the daemon.
+     if glib::subclass::signal::SignalId::lookup("consumer-removed", sink.type_()).is_some() {
+         let leaving = consumers.clone();
+-        sink.connect("consumer-removed", false, move |_| {
++        let capture = capture.clone();
++        sink.connect("consumer-removed", false, move |values| {
++            if let (Some(capture), Some(peer)) = (
++                capture.as_ref(),
++                values.get(1).and_then(|v| v.get::<String>().ok()),
++            ) {
++                capture.peer(&peer, false);
++            }
+             // `try_update` rather than `fetch_sub`, so a spurious removal cannot wrap the count
+             // around to four billion viewers.
+             let _ = leaving.try_update(
+@@ -1964,6 +2011,10 @@
+             .and_then(|v| v.get::<String>().ok())
+             .unwrap_or_else(|| "?".into());
+ 
++        if let Some(capture) = capture.as_ref() {
++            capture.peer(&peer, true);
++        }
++
+         // Before the datachannel, because this is what the *offer* needs and the offer is
+         // generated as soon as this handler returns. §6 of `remote-access-design.md`.
+         let turn_servers = offer_relay_candidates(&webrtcbin, &peer, &relays);

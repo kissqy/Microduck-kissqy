@@ -1,0 +1,64 @@
+{
+  "release": "V204_control.V73_AI-T1_UI24",
+  "python_ai_tests": {
+    "tests": 172,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 172,
+    "success": true
+  },
+  "frontend_modules": [
+    "test_ai_hat.mjs",
+    "test_ai_start_ui20.mjs",
+    "test_ai_replay_ui23.mjs"
+  ],
+  "changed_inherited_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_doubao.py",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "ai_zero.py",
+    "console.py",
+    "release_identity.py",
+    "service_rpc.py",
+    "static/ai-panel.css",
+    "static/ai-panel.js",
+    "static/index.html",
+    "verification/test_ai_hat.mjs",
+    "verification/test_ai_speech_ui23.py",
+    "verification/test_ai_ui7.py"
+  ],
+  "firmware_bytes_identical_to_ui23": true,
+  "native_rebuilt": false,
+  "user_log_evidence": {
+    "source": "AI-Dialogue-20261024-153645.jsonl",
+    "startup_voice_state": [
+      {
+        "at": "2026-10-24T15:37:33.517",
+        "unlocked": true
+      },
+      {
+        "at": "2026-10-24T15:38:24.041",
+        "unlocked": false
+      }
+    ],
+    "task_events": 0,
+    "speaker_playback_started": 2
+  },
+  "speech_default_enabled": false,
+  "independent_live_speech_checkbox": true,
+  "zero_confirmed_state_only": true,
+  "state_revision_and_session_guard": true,
+  "task_send_clear_cannot_authorize_speech": true,
+  "voice_command_syncs_checkbox": true,
+  "speech_off_preserves_official_wav_vision_actions_text_and_browser_replay": true,
+  "real_worker_pipe_test": "actual ServiceChannel, service_rpc, ai_zero and native Doubao handler; simulated cloud events, no hardware audio devices",
+  "firmware_sha256": "1b7376621ea40994edffcea48be9c9a4bd7bc42a19388bacdce827a0dbcab99e",
+  "hardware_tested": false,
+  "live_cloud_tested": false,
+  "browser_render_tested": false,
+  "actual_browser_audio_device_tested": false,
+  "windows_tested": false
+}

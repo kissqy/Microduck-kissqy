@@ -1,0 +1,12 @@
+{
+  "modules": [
+    "test_ai_session_ui6",
+    "test_ai_connected_pad_ui26",
+    "test_ai_v200",
+    "test_ai_input_ui41"
+  ],
+  "total": 35,
+  "failures": 0,
+  "errors": 0,
+  "seconds": 1.309
+}

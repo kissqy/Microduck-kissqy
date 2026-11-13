@@ -1,0 +1,8 @@
+   Compiling duck-control v0.15.1 (/workspace/scratch/5a402859beee/v167-work/Microduck-Source-R17-V167-control43/duck-control)
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/v167-work/Microduck-Source-R17-V167-control43/robotd)
+warning: linker stderr: ignoring deprecated linker optimization setting '1'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `robotd` (bin "robotd") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 27.29s

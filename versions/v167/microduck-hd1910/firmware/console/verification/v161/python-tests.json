@@ -1,0 +1,7 @@
+{
+  "passed": 16,
+  "failed": 0,
+  "hardware_tested": false,
+  "scope": "left raw model, installed V160 migration and same-version reinstall, read-only roller catalogue/help, single-query installation logs, existing model controls",
+  "additional_diagnostic": "python-controls.log preserves 6 failing legacy cases requesting the retired run-skill API; no production API was restored"
+}

@@ -1,0 +1,156 @@
+{
+  "console_version": "1.0.154",
+  "service_build": "1fa8438-feetech-ft6-control.33",
+  "tests": {
+    "duck_control": {
+      "passed": 135,
+      "failed": 0,
+      "log": "verification/native-gain-kick154.log"
+    },
+    "robotd_focused": {
+      "passed": 13,
+      "failed": 0,
+      "commands": [
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "startup",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "cold_reopen",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "reopened_uart",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "r17_empty_snapshot",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "-p",
+            "robotd",
+            "--bin",
+            "robotd",
+            "--frozen",
+            "unfiltered_skill",
+            "--",
+            "--test-threads=1"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "log": "verification/native-tests154-final.log"
+    },
+    "python_backend": {
+      "passed": 74,
+      "failed": 0,
+      "log": "verification/python-backend154.log",
+      "scope": "55 targeted feature tests and 19 repaired historical fixture checks; not a claim of all discovery passing"
+    },
+    "frontend": {
+      "passed": 3,
+      "log": "console/verification/frontend-controls154.log"
+    },
+    "arm64_policy_load": {
+      "passed": 5,
+      "failed": 0,
+      "record": "verification/arm-policy154.json"
+    },
+    "hardware": {
+      "tested": false,
+      "temperature_verified": false,
+      "reboot_verified": false
+    }
+  },
+  "hardware_tested": false,
+  "servo": {
+    "p_source": "model contract kp_fw; current builtins 5",
+    "scope": "all 15 including mouth",
+    "p_write_register": 50,
+    "p_write_bytes": 1,
+    "register_48_written": false,
+    "register_51_written": false,
+    "relax_restores_prior_p_only": true,
+    "preserves_existing_d_and_torque_limit": true,
+    "upgrade_removes_old_test_json": true
+  },
+  "models": {
+    "runtime_count": 5,
+    "model_import_ui_api_cli_removed": true,
+    "firmware_zip_upload_preserved": true,
+    "right_kick_id": "67ad09d82f4865d222a7ae06f250cf9f",
+    "one_shot_seconds": 0.5,
+    "raw_training_assets_unchanged": true
+  },
+  "recovery": {
+    "stand_test_removed_from_configuration": true,
+    "teacher_absent_from_runtime_payload": true,
+    "teacher_source_fixture_retained": true,
+    "walk_union_handles_recovery": true,
+    "default_lb": "kick_left",
+    "left_kick_model_bound": false,
+    "default_rb": "kick_right",
+    "custom_pad_bindings_preserved": true
+  },
+  "firmware_display": {
+    "source": "verified bundle_info.build",
+    "hardcoded_18_removed": true,
+    "failure_clears_prior_label": true
+  },
+  "inherited_fixes": {
+    "complete_arm_ort": true,
+    "ssh_endpoint_errors_separate": true,
+    "startup_max_uart_opens": 2,
+    "same_handle_retry_removed": true
+  },
+  "inference_hz": 50,
+  "no_new_steady_state_polling": true
+}

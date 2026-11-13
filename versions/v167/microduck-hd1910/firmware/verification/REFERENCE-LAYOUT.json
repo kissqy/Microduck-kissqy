@@ -1,0 +1,178 @@
+{
+  "schema": "microduck-reference-layout/v1",
+  "legacy_directory": "official-reference-from146",
+  "canonical_directory": "official-reference",
+  "files": [
+    {
+      "name": "hf-policies-main-manifest.json",
+      "bytes": 2638,
+      "sha256": "5c6a73f95f388f131aaef570f6113f0d36b84a72d5755662cd57e67adf7fd24c"
+    },
+    {
+      "name": "microduck_rl-53fb7d1-pyproject.toml",
+      "bytes": 5239,
+      "sha256": "e4f73a9f9aff14826463aee558f53900307ba973a287fb3bfc27a8954a131026"
+    },
+    {
+      "name": "microduck_rl-fixed-tree.json",
+      "bytes": 69601,
+      "sha256": "9891ca5a17bfcde6da634096da5a75461cd024bbe7e8d186f19b9ff34e6325f7"
+    },
+    {
+      "name": "microduck_rl-AGENTS.md",
+      "bytes": 17752,
+      "sha256": "4493d2d72d83c2f9c8486e195c3e3f903406b41046549f8d34dbf561572f2414"
+    },
+    {
+      "name": "microduck_rl-src_mjlab_microduck_tasks_distill.py",
+      "bytes": 11001,
+      "sha256": "bd736e28f3324a109a52c3414ea0a7017cd89c5e6d27583540107f3a34549f1f"
+    },
+    {
+      "name": "microduck-fixed-tree.json",
+      "bytes": 113885,
+      "sha256": "f9c1f6dccc3819cbe98ba0610cec46161f8db92e1fba73dcb09edbcf910ac1cb"
+    },
+    {
+      "name": "microduck_rl-53fb7d1-velocity.py",
+      "bytes": 44971,
+      "sha256": "75a0430b814ac7495eb237ab806fbd4dd10309b9fd3027ac3eee3c2e3c5a944a"
+    },
+    {
+      "name": "sources-joint-official-additional.json",
+      "bytes": 4226,
+      "sha256": "fb96cf5e5611fb5e45973dd6120c1b2b99c3f262e8129a65d31dfd26f6e482e9"
+    },
+    {
+      "name": "microduck-duck-control_src_policy.rs",
+      "bytes": 33338,
+      "sha256": "ffdc144a97ccec60a725ebae5a534b054af4f4e8b2f1d247f648fcf00cde8014"
+    },
+    {
+      "name": "microduck-robotd_src_control.rs",
+      "bytes": 31749,
+      "sha256": "2913f61ce9d755d7d92e67f7cab79c09bf0bf82f7f1c28a962f1cb15b27a668a"
+    },
+    {
+      "name": "microduck-scripts_seed-policies.sh",
+      "bytes": 11733,
+      "sha256": "52eb9d573359a280999091d01c46a17097436bd395f2f3c582f2fb5d903c0ab6"
+    },
+    {
+      "name": "hf-policies-v5-velstand.onnx",
+      "bytes": 793705,
+      "sha256": "1c659be55da94bc5753b707de5c6a3e7c49931e05ca3b6991615cef1a8ba9a45"
+    },
+    {
+      "name": "microduck_rl-53fb7d1-velstand.py",
+      "bytes": 45167,
+      "sha256": "6cb9e702b9f9049a816bd079731e54d7c7818200194be5bbd4c2fe5e95063e39"
+    },
+    {
+      "name": "sources-joint-official-v5.json",
+      "bytes": 2639,
+      "sha256": "08a0cffd2b0d9e77d6d3bb8e26838b2ffc40bdf5084d1c615aeeea04db31c7b3"
+    },
+    {
+      "name": "official-velstand-onnx-audit.json",
+      "bytes": 12574,
+      "sha256": "750a803ecf666bcc3098fa04967cf3d162ce517d8fbfc9fdb88fc96d57ed5ad9"
+    },
+    {
+      "name": "microduck-docs_policy-manifest.md",
+      "bytes": 9270,
+      "sha256": "936d6c5b6fa4f09fc09d4808d39b926486239916a82f6c312f123531c387f34a"
+    },
+    {
+      "name": "microduck_rl-53fb7d1-mdp.py",
+      "bytes": 325793,
+      "sha256": "ef9ff35bf3161fccc3e34fee2f9234a6cfec518846568881e16254cba3fb2f17"
+    },
+    {
+      "name": "microduck_rl-src_mjlab_microduck_tasks_microduck_velstand_env_cfg.py",
+      "bytes": 40494,
+      "sha256": "ae8b73add46197b9888a3d60dc44f14946524b2658894b2603d4a229f6cc9d39"
+    },
+    {
+      "name": "hf-policies-current-velstand.onnx",
+      "bytes": 793705,
+      "sha256": "ce894d30b3343036d499bfac1102bdaa58d59a21c1b58401ecb70fb6a2f63e0a"
+    },
+    {
+      "name": "hf-policies-v5-api.json",
+      "bytes": 1113,
+      "sha256": "7671ad9f0e6fc55061874f75c50d6a7fc7df148c4cc14f25bca44862bc94429e"
+    },
+    {
+      "name": "microduck-docs_design_policy-channel-design.md",
+      "bytes": 52077,
+      "sha256": "5ce2e2d06720f3aebb663092abd7d4a363e9f9cbece96afa353bae4f3e48f0df"
+    },
+    {
+      "name": "hf-policies-v5-manifest.json",
+      "bytes": 1935,
+      "sha256": "622048c2c23ea58942023f66fd16b189a875fd169e88d85beb16ebbe63b20c94"
+    },
+    {
+      "name": "sources-joint-official-current.json",
+      "bytes": 2072,
+      "sha256": "fe7b3d3791550991de315fe474117e8c675d18199a779d2170b7f858712db765"
+    },
+    {
+      "name": "sources.json",
+      "bytes": 13319,
+      "sha256": "23c138e17332fb296717a3ef7ee429a8da189c93c661bafdeacce24243bea6ba"
+    },
+    {
+      "name": "microduck_rl-src_mjlab_microduck_tasks_microduck_velocity_env_cfg.py",
+      "bytes": 44971,
+      "sha256": "75a0430b814ac7495eb237ab806fbd4dd10309b9fd3027ac3eee3c2e3c5a944a"
+    },
+    {
+      "name": "hf-policies-v5-README.md",
+      "bytes": 28,
+      "sha256": "98b45ea81164d1e1a1dd82255207053b15cd6c69d922a1c5cf3387ce604d4b74"
+    },
+    {
+      "name": "official-joint-runtime-findings.json",
+      "bytes": 5095,
+      "sha256": "52960aa32313631942a4732bdd4843e8385ba02895e844c5301e4459bd915e9b"
+    },
+    {
+      "name": "microduck-docs_recurrent-policies.md",
+      "bytes": 4461,
+      "sha256": "863cebeb5cf98fbb13ee5458b8460bf0962e8a732904d8b07021e2365fa00beb"
+    },
+    {
+      "name": "microduck-robotd-params_src_lib.rs",
+      "bytes": 155174,
+      "sha256": "c2a4cf9cb101b094c644764a063c6fb206f18a91105b98ccef484311bb8f06be"
+    },
+    {
+      "name": "microduck_rl-53fb7d1-commit.json",
+      "bytes": 29424,
+      "sha256": "987208f983050cfb0738868f673684939a7210cfb1fdad21435822491bc95c9b"
+    },
+    {
+      "name": "microduck_rl-develop-velstand_policy.md",
+      "bytes": 7050,
+      "sha256": "e2ab07da06d2086bc6e09422a4f3ef06290aa0f3347350d0cb045d1c537e7ab5"
+    },
+    {
+      "name": "sources-joint-official-lineage.json",
+      "bytes": 1211,
+      "sha256": "83928043122f68930791801ab303b29990644dcf65094e6815652dc64fb7a723"
+    },
+    {
+      "name": "microduck_rl-53fb7d1-AGENTS.md",
+      "bytes": 17752,
+      "sha256": "4493d2d72d83c2f9c8486e195c3e3f903406b41046549f8d34dbf561572f2414"
+    },
+    {
+      "name": "microduck-deploy_robotd.toml",
+      "bytes": 28325,
+      "sha256": "1b9ddb2010405812df195d825c5765f3d2ace7360e7c7846af43ffe507fac742"
+    }
+  ],
+  "note": "The two directories were byte-identical. Preserve original source snapshots once; historical capture-path records remain unchanged."
+}

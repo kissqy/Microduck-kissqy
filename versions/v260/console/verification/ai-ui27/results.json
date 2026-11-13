@@ -1,0 +1,66 @@
+{
+  "release": "V207_control.V73_AI-T1_UI27",
+  "python_ai_tests": {
+    "tests": 196,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 196,
+    "success": true
+  },
+  "frontend": [
+    {
+      "passed": true,
+      "scope": "UI21 grouped catalogs, per-axis range display, per-question images and TOF, late preview isolation, bounded scrolling"
+    },
+    {
+      "passed": true,
+      "scope": "UI24 live speech checkbox, no optimistic state, pending on/off, Zero ACK and ASR sync, old HTTP/status/event rejection, error retains confirmed state, no second mute or task switch"
+    },
+    {
+      "passed": true,
+      "scope": "UI25 shared compact credential grid, bounded question input, no obsolete 1200px gap, unique control IDs, hidden empty visual output, model-wait busy state and model completion text"
+    },
+    {
+      "passed": true,
+      "scope": "rehearsal composer, preset draft, explicit task send and clear, waiting for provider ACK; no action request from text"
+    },
+    {
+      "passed": true,
+      "scope": "live microphone bars; retained credentials and editing; Chinese skills; multi-turn chat; vision busy/error/preview/source labels; measured brightness, exposure warning and next-capture reset"
+    },
+    {
+      "passed": true,
+      "scope": "real ControlPanel and PadControls; identical Start frames; one click one press/release; HOME then hold labels from readback; disabled during takeover/maintenance/offline; keyboard repeat; suspend reset; no automatic commands"
+    },
+    {
+      "passed": true,
+      "scope": "exact native PCM WAV, 24k mono16, per-window RAM, no autoplay/persistence, explicit replay/stop/end, sequence gaps, memory eviction, URL revocation and pagehide cleanup"
+    }
+  ],
+  "changed_inherited_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_action_gate.py",
+    "ai_doubao.py",
+    "ai_persona.py",
+    "ai_zero.py",
+    "release_identity.py",
+    "static/index.html",
+    "verification/test_ai_speech_ui23.py",
+    "verification/test_ai_speech_ui24.py"
+  ],
+  "new_behavior_tests": 5,
+  "normal_model_context_and_tools_independent_of_hat_permission": true,
+  "checkbox_or_final_asr_unlock_sends_cloud_session_update": false,
+  "language_pcm_blocked_only_in_existing_zero_playback_path": true,
+  "model_text_local_replay_and_native_expression_wav_retained": true,
+  "asr_question_scripts_a_gesture": false,
+  "only_explicit_task_or_role_tools_edit_context": true,
+  "live_model_semantic_action_selection_tested": false,
+  "firmware_bytes_identical_to_ui26": true,
+  "source_ui26_zip_sha256": "a4300cb3bbbdb5eb2ac2ca86ede22c19696505eb08c44f9efc3f12530f26cb16",
+  "firmware_sha256": "1b7376621ea40994edffcea48be9c9a4bd7bc42a19388bacdce827a0dbcab99e",
+  "hardware_tested": false,
+  "windows_tested": false
+}

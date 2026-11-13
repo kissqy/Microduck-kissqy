@@ -1,0 +1,11 @@
+   Compiling libudev-sys v0.1.4
+warning: linker stderr: ignoring deprecated linker optimization setting '1'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `robotd` (bin "robotd") generated 1 warning
+   Compiling gilrs-core v0.6.8
+   Compiling gilrs v0.11.2
+   Compiling padd v0.15.1 (/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/padd)
+warning: `padd` (bin "padd") generated 1 warning (1 duplicate)
+    Finished `release` profile [optimized] target(s) in 6.06s

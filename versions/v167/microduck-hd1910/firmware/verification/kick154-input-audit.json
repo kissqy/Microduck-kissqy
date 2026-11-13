@@ -1,0 +1,324 @@
+{
+  "schema": "microduck-kick154-input-audit/v1",
+  "hardware_tested": false,
+  "model_id": "67ad09d82f4865d222a7ae06f250cf9f",
+  "model_sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+  "original_export_files": {
+    "policy.onnx": {
+      "bytes": 795427,
+      "sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd"
+    },
+    "deployment-contract.json": {
+      "bytes": 425308,
+      "sha256": "48ba1c5217705b5af6ef7279e85413346e46de9ab146dc5f8864b95b5514f4ae"
+    },
+    "training-request.json": {
+      "bytes": 177837,
+      "sha256": "52bee2ec9295c7c75e6b6ae612e828754dc73ecd351da1177cb68067d9158d47"
+    },
+    "manifest.json": {
+      "bytes": 4666,
+      "sha256": "ba1fbae9b89f19f8c9e8ce2233e75ca5639b6380365ea19aed1160aac76ee3cb"
+    },
+    "deployment-profile.toml": {
+      "bytes": 817,
+      "sha256": "48ac7a371999f604a50a3a06230e13271362bb057521f48a45dec2e085535886"
+    },
+    "使用说明.md": {
+      "bytes": 3534,
+      "sha256": "3b727ac854de53f09e2651d01944385e7b89dc5f955b30a201478e788c0b3ed2"
+    },
+    "training-config.json": {
+      "bytes": 149515,
+      "sha256": "b546fa8f448fa0da29512e179368d6ef7fb373efbbed5ffeb6e03e98a6b52dc5"
+    },
+    "upstream-params/agent.yaml": {
+      "bytes": 1349,
+      "sha256": "d6687fc6baca90311cd3041736e902fc4f59abc5dd3f7029611bf0e9a8dc0770"
+    },
+    "upstream-params/env.yaml": {
+      "bytes": 51962,
+      "sha256": "31881529d962e87a5c7d53a0b0b4af715682b6bf32fa5e04c86b2b9a046fcfae"
+    }
+  },
+  "checkpoint_handling": "checkpoint.pt archived in unchanged export-data.zip, never deserialized or deployed as executable inference input",
+  "training": {
+    "task": "Mjlab-BallKick-Flat-MicroDuck",
+    "environment_count": 4096,
+    "max_iterations": 10000,
+    "export_iteration": 9999,
+    "firmware_p": 5,
+    "action_scale": 1,
+    "head_alpha": 1,
+    "legs_alpha": 1
+  },
+  "runtime_skill": {
+    "name": "kick_right",
+    "path": "/opt/robot/feetech-ft5-r5/models/67ad09d82f4865d222a7ae06f250cf9f/policy.onnx",
+    "duration": 0.5,
+    "chain": false,
+    "command": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "unwind": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "unwind_s": 0.0,
+    "params": {
+      "action_scale": 1.0
+    }
+  },
+  "command": "constant zero twist/head/body, no phase reconstruction",
+  "old_five_model_files_unchanged": true,
+  "local_calibration_baseline_unchanged": true,
+  "training_source_calibration_diff_from_bundle_baseline": [
+    {
+      "name": "left_hip_yaw",
+      "id": 20,
+      "changed": {
+        "direction": {
+          "baseline": 1,
+          "training_source": -1
+        }
+      }
+    },
+    {
+      "name": "neck_pitch",
+      "id": 30,
+      "changed": {
+        "zero_raw": {
+          "baseline": 2100,
+          "training_source": 2526
+        },
+        "direction": {
+          "baseline": 1,
+          "training_source": -1
+        }
+      }
+    },
+    {
+      "name": "head_pitch",
+      "id": 31,
+      "changed": {
+        "zero_raw": {
+          "baseline": 1742,
+          "training_source": 2228
+        },
+        "direction": {
+          "baseline": 1,
+          "training_source": -1
+        }
+      }
+    },
+    {
+      "name": "head_roll",
+      "id": 33,
+      "changed": {
+        "direction": {
+          "baseline": 1,
+          "training_source": -1
+        }
+      }
+    },
+    {
+      "name": "right_hip_yaw",
+      "id": 10,
+      "changed": {
+        "direction": {
+          "baseline": 1,
+          "training_source": -1
+        }
+      }
+    }
+  ],
+  "training_calibration_policy": "Source record only; installer preserves robot current saved calibration. No offsets/directions copied to robot from model package.",
+  "management_jsons_identical": true,
+  "temporary_servo_defaults_removed": true,
+  "real_pad_bindings_preserved": false,
+  "onnx_runtime": "1.28.0",
+  "onnx_input": [
+    {
+      "name": "obs",
+      "shape": [
+        1,
+        61
+      ],
+      "type": "tensor(float)"
+    }
+  ],
+  "onnx_output": [
+    {
+      "name": "actions",
+      "shape": [
+        1,
+        14
+      ],
+      "type": "tensor(float)"
+    }
+  ],
+  "inference_cases": [
+    {
+      "case": 0,
+      "finite": true,
+      "output_min": -0.9961837530136108,
+      "output_max": 0.36468973755836487
+    },
+    {
+      "case": 1,
+      "finite": true,
+      "output_min": -1.0407119989395142,
+      "output_max": 0.35952386260032654
+    },
+    {
+      "case": 2,
+      "finite": true,
+      "output_min": -0.9702486395835876,
+      "output_max": 0.4770999848842621
+    },
+    {
+      "case": 3,
+      "finite": true,
+      "output_min": -1.02809476852417,
+      "output_max": 0.33895421028137207
+    },
+    {
+      "case": 4,
+      "finite": true,
+      "output_min": -1.0040735006332397,
+      "output_max": 0.3445016145706177
+    },
+    {
+      "case": 5,
+      "finite": true,
+      "output_min": -1.0275235176086426,
+      "output_max": 0.5298596620559692
+    },
+    {
+      "case": 6,
+      "finite": true,
+      "output_min": -1.0139871835708618,
+      "output_max": 0.5015773773193359
+    },
+    {
+      "case": 7,
+      "finite": true,
+      "output_min": -0.9963474273681641,
+      "output_max": 0.505760908126831
+    },
+    {
+      "case": 8,
+      "finite": true,
+      "output_min": -0.9968447685241699,
+      "output_max": 0.38529983162879944
+    },
+    {
+      "case": 9,
+      "finite": true,
+      "output_min": -0.9946204423904419,
+      "output_max": 0.2730424702167511
+    },
+    {
+      "case": 10,
+      "finite": true,
+      "output_min": -1.0169634819030762,
+      "output_max": 0.35613664984703064
+    },
+    {
+      "case": 11,
+      "finite": true,
+      "output_min": -0.9595659971237183,
+      "output_max": 0.4000035226345062
+    },
+    {
+      "case": 12,
+      "finite": true,
+      "output_min": -1.0241448879241943,
+      "output_max": 0.27802497148513794
+    },
+    {
+      "case": 13,
+      "finite": true,
+      "output_min": -1.0100936889648438,
+      "output_max": 0.28019610047340393
+    },
+    {
+      "case": 14,
+      "finite": true,
+      "output_min": -1.0606088638305664,
+      "output_max": 0.52360999584198
+    },
+    {
+      "case": 15,
+      "finite": true,
+      "output_min": -0.987278938293457,
+      "output_max": 0.33672797679901123
+    },
+    {
+      "case": 16,
+      "finite": true,
+      "output_min": -0.9986919164657593,
+      "output_max": 0.46103695034980774
+    },
+    {
+      "case": 17,
+      "finite": true,
+      "output_min": -0.981428325176239,
+      "output_max": 0.3919520080089569
+    },
+    {
+      "case": 18,
+      "finite": true,
+      "output_min": -0.9826538562774658,
+      "output_max": 0.38914844393730164
+    },
+    {
+      "case": 19,
+      "finite": true,
+      "output_min": -1.0401957035064697,
+      "output_max": 0.5051958560943604
+    },
+    {
+      "case": 20,
+      "finite": true,
+      "output_min": -0.9910966753959656,
+      "output_max": 0.31200161576271057
+    }
+  ],
+  "limits": "CPU inference and contract checks prove interface and finite outputs only; no real robot kicking or balance test performed.",
+  "real_pad_bindings": {
+    "a": "ground_pick",
+    "x": "roulade",
+    "lb": "kick_left",
+    "rb": "kick_right",
+    "dpad_down": "sit_toggle"
+  },
+  "standalone_recovery": "Retired stand_test runtime skill and catalog entry; joint walk policy handles recovery. Teacher source files retained only as regression fixtures.",
+  "retire_standalone_recovery": {
+    "skill": "stand_test",
+    "model_id": "a481d9f211f31d9476ab1a319fe362a2",
+    "remove_catalog_manual_recovery": true,
+    "pad_migration": {
+      "lb": {
+        "from": "stand_test",
+        "to": "kick_left"
+      },
+      "rb": {
+        "from": "",
+        "to": "kick_right",
+        "also_when_missing": true
+      }
+    },
+    "preserve_other_custom_bindings": true
+  },
+  "builtin_model_count": 5,
+  "left_kick_available": false,
+  "left_kick_fallback": "none; no right-kick mirroring",
+  "import_metadata_removed": true,
+  "management_profile_sha256": "0f95b2eaca896a8d2f3b46ab9fe7c29e5a18a141b8dd65244832f39b2f77b551",
+  "service_builds_profile_matches": true,
+  "service_builds_non_profile_logic_unchanged": true
+}

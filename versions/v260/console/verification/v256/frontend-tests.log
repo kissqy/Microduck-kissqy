@@ -1,0 +1,2 @@
+PASS commissioning and motion use identical green shutdown feedback; expected disconnection keeps it green
+PASS shutdown credential forwarding for commissioning, motion/commissioning receipt UI, disconnected/offline/replay gates, privileged reboot and request-vs-powered-off wording

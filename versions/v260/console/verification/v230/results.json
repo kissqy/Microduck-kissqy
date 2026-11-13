@@ -1,0 +1,50 @@
+{
+  "release": "Microduck-Console-Studio-V230",
+  "console_version": "1.0.230",
+  "firmware": "1fa8438-feetech-ft6-control.78",
+  "baseline": "Microduck-Console-Studio-V229",
+  "baseline_zip_sha256": "d2c4651155f408c42ea28080b15f28cdc93a59553a73fa60aba042dd4bc484f7",
+  "scope": [
+    "wait for managed Wi-Fi interface",
+    "load existing AP keyfile or create only when missing",
+    "verify active AP state and IPv4; bounded retries",
+    "existing Armbian PR #2 boot writer fix",
+    "commissioning torque-off confirmation then OS poweroff; native motion shutdown retained"
+  ],
+  "validation": {
+    "focused_python_tests": 53,
+    "hotspot_helper_tests": 9,
+    "hotspot_service_tests": 6,
+    "recorder_order_regression_tests": 3,
+    "frontend_suites": [
+      "hotspot UI44",
+      "recorder UI42"
+    ],
+    "javascript_syntax": "passed",
+    "bash_syntax": "passed",
+    "aarch64_elf_structures": "passed",
+    "image_e2fsck": "passed",
+    "image_changed_files_readback": 99,
+    "driver_firmware_unchanged_files": 150
+  },
+  "firmware_changed_existing_files": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "SHA256SUMS",
+    "install-files.json",
+    "release_identity.py",
+    "robotd",
+    "runtime.py",
+    "service.sh"
+  ],
+  "native_changed_byte_offsets": [
+    621676
+  ],
+  "padd_mediad_models_and_motion_configuration_byte_identical_to_v229": true,
+  "ai_python_files_byte_identical_to_v229": true,
+  "wifi_driver_modified": false,
+  "bootloader_dtb_kernel_modified": false,
+  "hardware_verified": false,
+  "known_good": "previously hardware-verified reference card retained",
+  "next_task": "target board first boot, hotspot discovery/provisioning, physical power-loss reboot and commissioning shutdown validation"
+}

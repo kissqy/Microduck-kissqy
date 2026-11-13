@@ -1,0 +1,65 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/scripts/seed-policies.sh",
+    "resolved": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/scripts/seed-policies.sh",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-scripts_seed-policies.sh",
+    "bytes": 11733,
+    "sha256": "52eb9d573359a280999091d01c46a17097436bd395f2f3c582f2fb5d903c0ab6",
+    "x_repo_commit": null,
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/docs/policy-manifest.md",
+    "resolved": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/docs/policy-manifest.md",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-docs_policy-manifest.md",
+    "bytes": 9270,
+    "sha256": "936d6c5b6fa4f09fc09d4808d39b926486239916a82f6c312f123531c387f34a",
+    "x_repo_commit": null,
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/docs/design/policy-channel-design.md",
+    "resolved": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/docs/design/policy-channel-design.md",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-docs_design_policy-channel-design.md",
+    "bytes": 52077,
+    "sha256": "5ce2e2d06720f3aebb663092abd7d4a363e9f9cbece96afa353bae4f3e48f0df",
+    "x_repo_commit": null,
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/docs/recurrent-policies.md",
+    "resolved": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/docs/recurrent-policies.md",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-docs_recurrent-policies.md",
+    "bytes": 4461,
+    "sha256": "863cebeb5cf98fbb13ee5458b8460bf0962e8a732904d8b07021e2365fa00beb",
+    "x_repo_commit": null,
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/robotd-params/src/lib.rs",
+    "resolved": "https://raw.githubusercontent.com/pollen-robotics/microduck/1fa84386f07884e27866411bc1ba166977bced95/robotd-params/src/lib.rs",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-robotd-params_src_lib.rs",
+    "bytes": 155174,
+    "sha256": "c2a4cf9cb101b094c644764a063c6fb206f18a91105b98ccef484311bb8f06be",
+    "x_repo_commit": null,
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  {
+    "url": "https://huggingface.co/pollen-robotics/microduck-policies/resolve/main/manifest.json",
+    "resolved": "https://huggingface.co/api/resolve-cache/models/pollen-robotics/microduck-policies/6677ec007142bbaf05123a468f6ae58d13808786/manifest.json",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/hf-policies-main-manifest.json",
+    "bytes": 2638,
+    "sha256": "5c6a73f95f388f131aaef570f6113f0d36b84a72d5755662cd57e67adf7fd24c",
+    "x_repo_commit": null,
+    "resolved_hf_commit": "6677ec007142bbaf05123a468f6ae58d13808786"
+  },
+  {
+    "url": "https://api.github.com/repos/pollen-robotics/microduck/git/trees/1fa84386f07884e27866411bc1ba166977bced95?recursive=1",
+    "resolved": "https://api.github.com/repos/pollen-robotics/microduck/git/trees/1fa84386f07884e27866411bc1ba166977bced95",
+    "local": "/workspace/scratch/155bfcc94f4f/work-r17-146/official-reference/microduck-fixed-tree.json",
+    "bytes": 113885,
+    "sha256": "f9c1f6dccc3819cbe98ba0610cec46161f8db92e1fba73dcb09edbcf910ac1cb",
+    "x_repo_commit": null,
+    "resolved_git_commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  }
+]

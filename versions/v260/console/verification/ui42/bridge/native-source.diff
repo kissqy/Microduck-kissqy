@@ -1,0 +1,366 @@
+--- ui41/gamepad-r7/gamesir-xboxd.c
++++ ui42/gamepad-r7/gamesir-xboxd.c
+@@ -226,8 +226,16 @@
+ }
+ 
+ static bool consumer_home_key(int code) {
+-    return code == KEY_HOMEPAGE || code == KEY_HOME || code == KEY_MENU;
+-}
++    /* KEY_MENU is ambiguous and remains isolated. The actual three-line menu
++     * key is BTN_START on the main node; never turn a media key into START. */
++    return code == KEY_HOMEPAGE || code == KEY_HOME;
++}
++
++struct mode_state {
++    bool primary;
++    unsigned consumer;
++    bool emitted;
++};
+ 
+ static int scaled(const struct axis_map *m, int value) {
+     if (value < m->in_min) value = m->in_min;
+@@ -246,13 +254,48 @@
+     return write(ufd, &out, sizeof(out)) == (ssize_t)sizeof(out) ? 0 : -1;
+ }
+ 
++static bool emit_mode(int ufd, struct mode_state *mode) {
++    bool down = mode->primary || mode->consumer != 0;
++    if (down == mode->emitted)
++        return true;
++    if (emit_event(ufd, EV_KEY, BTN_MODE, down) < 0)
++        return false;
++    mode->emitted = down;
++    return true;
++}
++
++static bool update_mode(int ufd, struct mode_state *mode,
++                        int source, int code, int value) {
++    /* Repeat and duplicate presses must not become additional record clicks.
++     * Keep both source levels: losing Consumer Control cannot release a MODE
++     * still held on the main node, and alias releases cannot cut each other off. */
++    if (value != 0 && value != 1)
++        return true;
++    if (source == 0) {
++        mode->primary = value != 0;
++    } else {
++        unsigned mask = code == KEY_HOMEPAGE ? 1u : 2u;
++        if (value) mode->consumer |= mask;
++        else mode->consumer &= ~mask;
++    }
++    return emit_mode(ufd, mode);
++}
++
++static bool release_consumer_mode(int ufd, struct mode_state *mode) {
++    bool was_down = mode->emitted;
++    mode->consumer = 0;
++    if (!emit_mode(ufd, mode))
++        return false;
++    return was_down == mode->emitted || emit_event(ufd, EV_SYN, SYN_REPORT, 0) == 0;
++}
++
+ static int open_consumer_input(void) {
+     char path[64] = {0};
+     int fd = find_named_input(CONSUMER_NAME, path, sizeof(path), false);
+     if (fd >= 0) {
+         if (ioctl(fd, EVIOCGRAB, 1) < 0)
+             perror("EVIOCGRAB Consumer Control");
+-        fprintf(stderr, "Consumer Control isolated: %s (not part of Xbox input)\n",
++        fprintf(stderr, "Consumer Control isolated: %s (HOME only -> Xbox MODE)\n",
+                 path);
+     }
+     return fd;
+@@ -365,24 +408,26 @@
+     }
+ }
+ 
+-static bool input_disconnected(struct pollfd *input, int source) {
++static bool input_disconnected(struct pollfd *input, int source, int ufd,
++                               struct mode_state *mode) {
+     if (source == 0)
+         return false;
+     /* A hung-up auxiliary fd stays immediately ready forever.  Remove it
+      * without destroying the working main pad or its virtual Xbox device. */
+     close_consumer_input(input);
+     fprintf(stderr, "Consumer Control disconnected; main gamepad remains active\n");
+-    return true;
++    return release_consumer_mode(ufd, mode);
+ }
+ 
+ static bool forward_ready_inputs(struct pollfd pollfds[2], int ufd,
+-                                 const struct axis_map *maps, int n) {
++                                 const struct axis_map *maps, int n,
++                                 struct mode_state *mode) {
+     for (int source = 0; source < 2; source++) {
+         struct pollfd *input = &pollfds[source];
+         if (input->fd < 0)
+             continue;
+         if (input->revents & (POLLERR | POLLHUP | POLLNVAL)) {
+-            if (!input_disconnected(input, source))
++            if (!input_disconnected(input, source, ufd, mode))
+                 return false;
+             continue;
+         }
+@@ -393,7 +438,7 @@
+         if (got < 0 && (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK))
+             continue;
+         if (got <= 0) {
+-            if (!input_disconnected(input, source))
++            if (!input_disconnected(input, source, ufd, mode))
+                 return false;
+             continue;
+         }
+@@ -404,17 +449,18 @@
+                 emit_event(ufd, EV_SYN, SYN_REPORT, 0);
+             } else if (source == 1 && e->type == EV_KEY &&
+                        consumer_home_key(e->code)) {
+-                /* Consumer-media keys are not gamepad START.  The real
+-                 * three-line menu key arrives as BTN_START on the main node. */
+-                if (e->value == 1)
+-                    fprintf(stderr, "ignored Consumer Control HOME event\n");
++                if (!update_mode(ufd, mode, source, e->code, e->value))
++                    return false;
+             } else if (source == 1 && e->type == EV_KEY && e->value == 1) {
+                 fprintf(stderr, "unmapped Consumer Control key code=%u\n", e->code);
+             } else if (source == 0 && e->type == EV_KEY && xbox_key(e->code)) {
+                 /* TL2/TR2 are deliberately excluded.  Their analogue
+                  * values are emitted below as ABS_Z/ABS_RZ, exactly as a
+                  * normal Xbox 360 controller exposes its triggers. */
+-                emit_event(ufd, EV_KEY, e->code, e->value);
++                if (e->code == BTN_MODE) {
++                    if (!update_mode(ufd, mode, source, e->code, e->value))
++                        return false;
++                } else emit_event(ufd, EV_KEY, e->code, e->value);
+             } else if (source == 0 && e->type == EV_ABS) {
+                 for (int j = 0; j < n; j++) {
+                     if (maps[j].src == e->code)
+@@ -522,6 +568,7 @@
+         {.fd = watch->fd, .events = POLLIN},
+     };
+     int result = 0;
++    struct mode_state mode = {0};
+     while (running) {
+         int pr = poll(pollfds, 3, -1);
+         if (pr < 0) {
+@@ -529,7 +576,7 @@
+             break;
+         }
+         if (pr == 0) continue;
+-        if (!forward_ready_inputs(pollfds, ufd, maps, n))
++        if (!forward_ready_inputs(pollfds, ufd, maps, n, &mode))
+             break;
+         if (pollfds[2].revents & (POLLERR | POLLHUP | POLLNVAL)) {
+             fprintf(stderr, "input hotplug watcher failed; bridge exits\n");
+--- ui41/gamepad-r7/test_mapping.c
++++ ui42/gamepad-r7/test_mapping.c
+@@ -6,6 +6,8 @@
+  assert(xbox_key(BTN_START)); assert(xbox_key(BTN_MODE));
+  assert(!xbox_key(BTN_TR2)); assert(!xbox_key(BTN_TL2));
+  assert(!xbox_key(KEY_MENU)); assert(!xbox_key(KEY_HOMEPAGE));
++ assert(consumer_home_key(KEY_HOMEPAGE)); assert(consumer_home_key(KEY_HOME));
++ assert(!consumer_home_key(KEY_MENU)); assert(!consumer_home_key(KEY_VOLUMEUP));
+  struct axis_map trigger={.in_min=0,.in_max=1023,.out_min=0,.out_max=255};
+  assert(scaled(&trigger,-1)==0); assert(scaled(&trigger,1023)==255);
+  assert(scaled(&trigger,2048)==255);
+--- ui41/gamepad-r7/tests/test_gamesir_disconnect.c
++++ ui42/gamepad-r7/tests/test_gamesir_disconnect.c
+@@ -91,9 +91,11 @@
+     int auxiliary[2];
+     int output[2];
+     struct pollfd inputs[2];
++    struct mode_state mode;
+ };
+ 
+ static void make_fixture(struct fixture *f) {
++    f->mode = (struct mode_state){0};
+     assert(pipe2(f->primary, O_NONBLOCK | O_CLOEXEC) == 0);
+     assert(pipe2(f->auxiliary, O_NONBLOCK | O_CLOEXEC) == 0);
+     assert(pipe2(f->output, O_NONBLOCK | O_CLOEXEC) == 0);
+@@ -128,7 +130,7 @@
+     f.auxiliary[1] = -1;
+     assert(poll(f.inputs, 2, 20) > 0);
+     assert(f.inputs[1].revents & POLLHUP);
+-    assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0));
++    assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0, &f.mode));
+     assert(f.inputs[0].fd == f.primary[0]);
+     assert(f.inputs[1].fd == -1);
+     assert(fcntl(f.auxiliary[0], F_GETFD) == -1 && errno == EBADF);
+@@ -161,7 +163,7 @@
+     };
+     assert(write(f.primary[1], events, sizeof(events)) == sizeof(events));
+     assert(poll(f.inputs, 2, 20) > 0);
+-    assert(forward_ready_inputs(f.inputs, f.output[1], maps, 3));
++    assert(forward_ready_inputs(f.inputs, f.output[1], maps, 3, &f.mode));
+     struct input_event output[16];
+     assert(read(f.output[0], output, sizeof(output)) == 5 * sizeof(output[0]));
+     assert_event(&output[0], EV_KEY, BTN_START, 1);
+@@ -182,7 +184,7 @@
+     close(f.primary[1]);
+     f.primary[1] = -1;
+     assert(poll(f.inputs, 2, 20) > 0);
+-    assert(!forward_ready_inputs(f.inputs, f.output[1], NULL, 0));
++    assert(!forward_ready_inputs(f.inputs, f.output[1], NULL, 0, &f.mode));
+     /* Main ownership remains with run_bridge's caller for reconnect cleanup. */
+     assert(fcntl(f.primary[0], F_GETFD) >= 0);
+     assert(f.inputs[1].fd == f.auxiliary[0]);
+@@ -201,7 +203,7 @@
+             struct fixture f;
+             make_fixture(&f);
+             f.inputs[source].revents = poll_errors[i];
+-            assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0) == (source == 1));
++            assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0, &f.mode) == (source == 1));
+             assert(watched_closes == (source == 1 ? 1 : 0));
+             assert(source == 0 || f.inputs[1].fd == -1);
+             destroy_fixture(&f);
+@@ -213,7 +215,7 @@
+             f.inputs[source].revents = POLLIN;
+             failing_read_fd = f.inputs[source].fd;
+             read_error = permanent_errors[i];
+-            assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0) == (source == 1));
++            assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0, &f.mode) == (source == 1));
+             assert(watched_closes == (source == 1 ? 1 : 0));
+             assert(source == 0 || f.inputs[1].fd == -1);
+             destroy_fixture(&f);
+@@ -225,7 +227,7 @@
+             f.inputs[source].revents = POLLIN;
+             failing_read_fd = f.inputs[source].fd;
+             read_error = temporary_errors[i];
+-            assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0));
++            assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0, &f.mode));
+             assert(f.inputs[0].fd == f.primary[0]);
+             assert(f.inputs[1].fd == f.auxiliary[0]);
+             assert(watched_closes == 0);
+@@ -236,22 +238,86 @@
+          "EAGAIN/EWOULDBLOCK/EINTR preserve descriptors");
+ }
+ 
+-static void test_consumer_keys_stay_isolated(void) {
+-    struct fixture f;
+-    make_fixture(&f);
+-    const struct input_event events[] = {
+-        {.type = EV_KEY, .code = KEY_HOMEPAGE, .value = 1},
+-        {.type = EV_KEY, .code = KEY_VOLUMEUP, .value = 1},
+-        {.type = EV_SYN, .code = SYN_REPORT},
+-    };
+-    assert(write(f.auxiliary[1], events, sizeof(events)) == sizeof(events));
+-    assert(poll(f.inputs, 2, 20) > 0);
+-    assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0));
+-    struct input_event output[4];
+-    assert(read(f.output[0], output, sizeof(output)) == sizeof(output[0]));
+-    assert_event(&output[0], EV_SYN, SYN_REPORT, 0);
+-    destroy_fixture(&f);
+-    puts("PASS Consumer HOME/media keys remain excluded from Xbox buttons");
++static void test_consumer_home_mode_and_media_isolation(void) {
++    const int home_keys[] = {KEY_HOMEPAGE, KEY_HOME};
++    for (size_t key = 0; key < sizeof(home_keys) / sizeof(home_keys[0]); key++) {
++        struct fixture f;
++        make_fixture(&f);
++        const struct input_event events[] = {
++            {.type = EV_KEY, .code = home_keys[key], .value = 1},
++            {.type = EV_KEY, .code = home_keys[key], .value = 1},
++            {.type = EV_KEY, .code = home_keys[key], .value = 2},
++            {.type = EV_KEY, .code = KEY_MENU, .value = 1},
++            {.type = EV_KEY, .code = KEY_VOLUMEUP, .value = 1},
++            {.type = EV_SYN, .code = SYN_REPORT},
++            {.type = EV_KEY, .code = home_keys[key], .value = 0},
++            {.type = EV_KEY, .code = home_keys[key], .value = 0},
++            {.type = EV_SYN, .code = SYN_REPORT},
++        };
++        assert(write(f.auxiliary[1], events, sizeof(events)) == sizeof(events));
++        assert(poll(f.inputs, 2, 20) > 0);
++        assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0, &f.mode));
++        struct input_event output[16];
++        assert(read(f.output[0], output, sizeof(output)) == 4 * sizeof(output[0]));
++        assert_event(&output[0], EV_KEY, BTN_MODE, 1);
++        assert_event(&output[1], EV_SYN, SYN_REPORT, 0);
++        assert_event(&output[2], EV_KEY, BTN_MODE, 0);
++        assert_event(&output[3], EV_SYN, SYN_REPORT, 0);
++        destroy_fixture(&f);
++    }
++    puts("PASS Consumer HOME -> MODE press/release once; repeat/duplicate ignored; MENU/media never START");
++}
++
++static void test_auxiliary_disconnect_releases_only_its_mode(void) {
++    for (int main_held = 0; main_held < 2; main_held++) {
++        struct fixture f;
++        make_fixture(&f);
++        const struct input_event main_events[] = {
++            {.type = EV_KEY, .code = BTN_MODE, .value = 1},
++            {.type = EV_KEY, .code = BTN_MODE, .value = 2},
++            {.type = EV_SYN, .code = SYN_REPORT},
++        };
++        const struct input_event aux_events[] = {
++            {.type = EV_KEY, .code = KEY_HOMEPAGE, .value = 1},
++            {.type = EV_KEY, .code = KEY_HOME, .value = 1},
++            {.type = EV_KEY, .code = KEY_HOMEPAGE, .value = 0},
++            {.type = EV_SYN, .code = SYN_REPORT},
++        };
++        if (main_held) assert(write(f.primary[1], main_events, sizeof(main_events)) == sizeof(main_events));
++        assert(write(f.auxiliary[1], aux_events, sizeof(aux_events)) == sizeof(aux_events));
++        assert(poll(f.inputs, 2, 20) > 0);
++        assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0, &f.mode));
++        struct input_event output[16];
++        ssize_t count = read(f.output[0], output, sizeof(output));
++        assert(count == (main_held ? 3 : 2) * (ssize_t)sizeof(output[0]));
++        assert_event(&output[0], EV_KEY, BTN_MODE, 1);
++        close(f.auxiliary[1]);f.auxiliary[1] = -1;
++        assert(poll(f.inputs, 2, 20) > 0);
++        assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0, &f.mode));
++        assert(f.inputs[1].fd == -1 && f.inputs[0].fd == f.primary[0]);
++        count = read(f.output[0], output, sizeof(output));
++        if (main_held) {
++            assert(count < 0 && errno == EAGAIN);
++            const struct input_event release[] = {
++                {.type = EV_KEY, .code = BTN_MODE, .value = 0},
++                {.type = EV_KEY, .code = BTN_START, .value = 1},
++                {.type = EV_SYN, .code = SYN_REPORT},
++            };
++            assert(write(f.primary[1], release, sizeof(release)) == sizeof(release));
++            assert(poll(f.inputs, 2, 20) > 0);
++            assert(forward_ready_inputs(f.inputs, f.output[1], NULL, 0, &f.mode));
++            assert(read(f.output[0], output, sizeof(output)) == 3 * sizeof(output[0]));
++            assert_event(&output[0], EV_KEY, BTN_MODE, 0);
++            assert_event(&output[1], EV_KEY, BTN_START, 1);
++            assert_event(&output[2], EV_SYN, SYN_REPORT, 0);
++        } else {
++            assert(count == 2 * sizeof(output[0]));
++            assert_event(&output[0], EV_KEY, BTN_MODE, 0);
++            assert_event(&output[1], EV_SYN, SYN_REPORT, 0);
++        }
++        destroy_fixture(&f);
++    }
++    puts("PASS auxiliary loss releases only auxiliary MODE; main-held MODE and START remain independent");
+ }
+ 
+ static void test_consumer_hotplug_recovers_without_timer_scans(void) {
+@@ -336,7 +402,8 @@
+     test_auxiliary_hup_and_primary_forwarding();
+     test_primary_hup();
+     test_permanent_and_temporary_errors();
+-    test_consumer_keys_stay_isolated();
++    test_consumer_home_mode_and_media_isolation();
++    test_auxiliary_disconnect_releases_only_its_mode();
+     test_consumer_hotplug_recovers_without_timer_scans();
+     test_real_input_hotplug_waits_and_late_directory();
+     puts("All GameSir disconnect regressions passed (production C paths, no hardware).");
+--- ui41/gamepad-r7/tests/README.md
++++ ui42/gamepad-r7/tests/README.md
+@@ -19,11 +19,16 @@
+ - Both sources handle POLLERR/POLLNVAL, EOF, ENODEV, EBADF and EIO as permanent
+   failures; EAGAIN/EWOULDBLOCK/EINTR leave the descriptors active.
+ - Cleanup closes an auxiliary descriptor only once.
+-- Consumer HOME/media keys stay excluded from the Xbox button map.
++- Consumer KEY_HOMEPAGE/KEY_HOME map only to independent BTN_MODE press/release;
++  repeat and duplicate presses are filtered. Ambiguous KEY_MENU and media stay
++  excluded, and no Consumer key becomes START.
++- Auxiliary loss releases its held MODE once, without releasing MODE still held
++  by the main gamepad node or disturbing that node's START/stick/trigger mapping.
+ - A missing auxiliary node retries at most once per second and is reopened and
+   grabbed when it returns. A present auxiliary node causes no discovery scans.
+ 
+-The virtual Xbox identity, axis discovery/scaling and input mappings remain the
+-same. Auxiliary loss keeps the main virtual controller alive. Full main-device
++The virtual Xbox identity, key descriptor order and axis discovery/scaling remain
++the same. HOME is the sole new Consumer mapping. Auxiliary loss keeps the main
++virtual controller alive. Full main-device
+ loss still recreates it through the original outer loop. This test establishes
+ the error/recovery behavior; it does not claim a measured robot temperature drop.

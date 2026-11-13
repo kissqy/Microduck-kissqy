@@ -1,0 +1,25 @@
+   Compiling mediad v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix10/mediad)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.55s
+     Running unittests src/lib.rs (/workspace/scratch/5a402859beee/build-tools/host-target/debug/deps/mediad-fa1679039793f28d)
+
+running 9 tests
+test capture::tests::boot_and_discovery_keep_real_camera_asleep ... 
+(gst-plugin-scanner:51): GStreamer-WARNING **: 03:16:35.136: Failed to load plugin '/workspace/scratch/5a402859beee/build-tools/host-root/usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstcdparanoia.so': libcdda_paranoia.so.0: cannot open shared object file: No such file or directory
+
+(gst-plugin-scanner:51): GStreamer-WARNING **: 03:16:35.150: Failed to load plugin '/workspace/scratch/5a402859beee/build-tools/host-root/usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstlibvisual.so': libvisual-0.4.so.0: cannot open shared object file: No such file or directory
+
+(gst-plugin-scanner:51): GStreamer-WARNING **: 03:16:35.152: Failed to load plugin '/workspace/scratch/5a402859beee/build-tools/host-root/usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstcdparanoia.so': libcdda_paranoia.so.0: cannot open shared object file: No such file or directory
+
+(gst-plugin-scanner:51): GStreamer-WARNING **: 03:16:35.153: Failed to load plugin '/workspace/scratch/5a402859beee/build-tools/host-root/usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstlibvisual.so': libvisual-0.4.so.0: cannot open shared object file: No such file or directory
+ok
+test capture::tests::bootstrap_hook_preserves_first_handler_wins_start_action ... ok
+test capture::tests::early_demand_survives_codec_discovery ... ok
+test capture::tests::last_viewer_sleeps_and_can_rejoin_three_times ... ok
+test capture::tests::one_page_leaving_does_not_sleep_another ... ok
+test capture::tests::passive_meter_does_not_wake_capture ... ok
+test capture::tests::repeated_and_unknown_peer_events_do_not_corrupt_demand ... ok
+test capture::tests::resumed_frames_follow_the_running_sink_clock ... ok
+test capture::tests::snapshot_leases_keep_capture_until_the_last_reader_returns ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 122 filtered out; finished in 1.56s
+

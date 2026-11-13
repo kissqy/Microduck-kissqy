@@ -1,0 +1,110 @@
+{
+  "reviewed_at_utc": "2026-10-07T02:04:01.816949+00:00",
+  "status": "read_only_official_reference_review_complete_experimental_changes_paused",
+  "daemon_commit": "1fa84386f07884e27866411bc1ba166977bced95",
+  "user_training_base_commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "official_current_training_commit": "53fb7d115b1be79c6d07e8fd4eab311285e16f2a",
+  "official_model_set_v5_commit": "1b56c396825c052a4e26e95cf2b8d8298af9e9b4",
+  "official_model_set_current_commit": "6677ec007142bbaf05123a468f6ae58d13808786",
+  "official_default": {
+    "walk": "velstand.onnx",
+    "stand": null,
+    "base_action_scale": 0.9,
+    "head_lowpass": 0.5,
+    "legs_lowpass": 0.7,
+    "limp_fall": false,
+    "per_phase_scale_or_filter_override": false,
+    "applies_to": "Every NetWalk inference, including zero-command standing and recovery within the same student; skills/separate networks retain their own scale routes."
+  },
+  "source_locations": [
+    {
+      "file": "microduck-robotd-params_src_lib.rs",
+      "lines": "1579-1588;1640-1648",
+      "supports": "Default Walk model, Stand None, mode-resolved .9/.5/.7"
+    },
+    {
+      "file": "microduck-robotd_src_control.rs",
+      "lines": "527-536;555-632",
+      "supports": "Net selection uses active state, then one shared scale/target-filter path; no fallen-posture tuning route"
+    },
+    {
+      "file": "microduck-deploy_robotd.toml",
+      "lines": "139-168;222-238",
+      "supports": "Documented defaults and limp_fall default off for single velstand"
+    },
+    {
+      "file": "microduck-scripts_seed-policies.sh",
+      "lines": "POLICY_VERSION pin and version comparison",
+      "supports": "Daemon minimum policy set v5; newer installed sets are kept"
+    },
+    {
+      "file": "hf-policies-v5-manifest.json",
+      "lines": "velstand entry",
+      "supports": "Single perpetual Walk, no separate standing network, no per-phase or target-filter fields; training branch protective_fall but no exact training commit"
+    },
+    {
+      "file": "hf-policies-main-manifest.json",
+      "lines": "velstand entry",
+      "supports": "Current model task VelStand-Rough, commit53fb7d1, checkpoint1250, same no-per-phase declaration"
+    },
+    {
+      "file": "official-velstand-onnx-audit.json",
+      "lines": "all records",
+      "supports": "Both official ONNX versions have action_scale metadata1.0 and no action_filter metadata; normalized MLP has no separate output EMA/filter/phase port"
+    },
+    {
+      "file": "microduck_rl-53fb7d1-velocity.py",
+      "lines": "263-273",
+      "supports": "JointPositionActionCfg from base, action scale1.0"
+    },
+    {
+      "file": "microduck_rl-53fb7d1-velstand.py",
+      "lines": "474",
+      "supports": "Joint VelStand inherits velocity base"
+    },
+    {
+      "file": "microduck_rl-53fb7d1-AGENTS.md",
+      "lines": "74-79",
+      "supports": "Official training statement: policies unfiltered, no action low-pass in training"
+    },
+    {
+      "file": "microduck-docs_recurrent-policies.md",
+      "lines": "Memory lifetime final paragraph",
+      "supports": "Existing runtime scale/filters retain their config; disable filters for policy trained without them"
+    }
+  ],
+  "inconsistency": "Official daemon defaults/commentary still apply .9/.5/.7 to the joint Walk network, while official training commit53fb7d1 declares unfiltered policies and action scale1.0. This review does not establish why this divergence exists or what every physical official robot is configured to run. Do not invent a phase-based official override to reconcile it.",
+  "limits": [
+    "The v5 manifest does not pin an exact training commit; its no-filter training state is not established by that manifest or by absent ONNX filter metadata.",
+    "Model action_scale metadata1.0 describes the exported action mapping; it does not auto-set official daemon action_scale.",
+    "Absence of an explicit filter op in an ONNX graph does not alone establish how its training actuator targets were filtered outside the graph.",
+    "No user or official hardware was operated, no new firmware deployed, no success rate inferred for the user model.",
+    "Teacher-loss angle gates are training loss selectors, not deployment filter/scale transitions."
+  ],
+  "web_refs": [
+    {
+      "ref": "turn78search0",
+      "url": "https://github.com/pollen-robotics/microduck/blob/main/deploy/robotd.toml"
+    },
+    {
+      "ref": "turn85search2",
+      "url": "https://github.com/pollen-robotics/microduck/blob/main/robotd/src/control.rs"
+    },
+    {
+      "ref": "turn81view1",
+      "url": "https://github.com/pollen-robotics/microduck/blob/main/docs/design/policy-channel-design.md"
+    },
+    {
+      "ref": "turn81view2",
+      "url": "https://github.com/pollen-robotics/microduck/blob/main/docs/recurrent-policies.md"
+    },
+    {
+      "ref": "turn84view3",
+      "url": "https://github.com/pollen-robotics/microduck_rl/blob/develop/AGENTS.md"
+    },
+    {
+      "ref": "turn81view3",
+      "url": "https://github.com/pollen-robotics/microduck/blob/main/scripts/seed-policies.sh"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+中文：PUBLICATION-NOTE.txt
+English: https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/training-console/PUBLICATION-NOTE.en.md
+
+Microduck Training Studio R1.5.27
+中控：http://127.0.0.1:8092
+开源：https://github.com/kissqy/Microduck-kissqy
+训练：14 类动作、35 种任务配方，面向 Microduck 0.15.1 与 HD1910 P5。
+安装与使用说明：README.zh-CN.md

@@ -1,0 +1,155 @@
+--- a/padd/src/main.rs
++++ b/padd/src/main.rs
+@@ -168,7 +168,7 @@
+     /// added latency under one tick.
+     ///
+     /// Not quite how often intents are *sent*: a frame identical to the last one and asking
+-    /// for no motion is held back, down to [`HEARTBEAT`]. See [`Continuous`].
++    /// for no motion is held back, until it changes. See [`Continuous`].
+     // Bounded both ways, and refused rather than clamped so the flag says what it did.
+     // Zero reaches `1.0 / 0.0` and `Duration::from_secs_f64` panics on infinity. The ceiling
+     // is the other half of the same line: a rate this loop cannot keep gives a period of 0 ns,
+@@ -690,6 +690,7 @@
+     let mut bindings_checked = Instant::now();
+ 
+     let mut input = PadInput::default();
++    let mut previous_mouth = 0.0;
+     // Kept separately from the robot state: replacing the pad must also end a mode/hold
+     // even if the old disconnect and the new connect land inside one control tick.
+     let mut active_pad = None;
+@@ -1002,7 +1003,7 @@
+                 let call = proto::Call::RobotDo(proto::DoParams { skill: "flamingo".into() });
+                 match request(&mut stream, &mut next_id, &call) {
+                     Ok(Some(answer)) => match answer.result_as::<proto::IntentResult>() {
+-                        Ok(result) if result.accepted => tracing::warn!("↑ 短按：火烈鸟：最长站立 6 秒，再按取消；落脚 2 秒后回 Walk，下次换脚"),
++                        Ok(result) if result.accepted => tracing::warn!("↑ 短按：火烈鸟：最长站立 6 秒，再按取消；落脚 2 秒后回 Walk，右脚支撑"),
+                         Ok(result) => tracing::warn!(reason = ?result.reason, "↑ 火烈鸟未执行"),
+                         Err(e) => tracing::warn!(error = %e, "火烈鸟响应无效"),
+                     },
+@@ -1218,13 +1219,15 @@
+         let rt = trigger(Button::RightTrigger2);
+         let lt = trigger(Button::LeftTrigger2);
+         let mouth = input_limits.settings.mouth(rt, lt);
+-        if let Err(e) = notify(
+-            &mut stream,
+-            &proto::Call::RobotMouth(proto::MouthParams { open: mouth }),
+-        ) {
++        // Neutral triggers do not reserve the mouth from another robotd client.
++        // Active triggers still refresh every tick, and release sends one zero.
++        if let Some(params) = trigger_mouth(previous_mouth, mouth)
++            && let Err(e) = notify(&mut stream, &proto::Call::RobotMouth(params))
++        {
+             tracing::error!(error = %e, "send failed");
+             return std::process::ExitCode::FAILURE;
+         }
++        previous_mouth = mouth;
+ 
+         // Chirp on the right trigger's rising edge; the robot cuts off a still-playing
+         // sound, so rapid pulses quack rapidly. The wheee rides the left trigger: start on
+@@ -1372,6 +1375,10 @@
+ }
+ 
+ /// Send a continuous intent: no `id`, no reply, nothing to wait for.
++fn trigger_mouth(previous: f64, current: f64) -> Option<proto::MouthParams> {
++    (current > 0.0 || previous > 0.0).then_some(proto::MouthParams { open: current })
++}
++
+ fn notify(stream: &mut UnixStream, call: &proto::Call) -> std::io::Result<()> {
+     let mut line = serde_json::to_vec(&proto::Request::notify(call))?;
+     line.push(b'\n');
+@@ -1379,22 +1386,9 @@
+     stream.flush()
+ }
+ 
+-/// How long an unchanged frame may go unsent while the robot is being asked to stand still.
+-///
+-/// The sticks are *polled*, so an untouched pad re-sent the same three zeros fifty times a
+-/// second — a `serde_json` encode, a `write_all`, a `flush`, and a `serde_json` parse on
+-/// `robotd`'s side, a hundred messages a second in the modes that send two, to say nothing
+-/// changed. Ten a second says it as well.
+-///
+-/// **Nothing about the robot's safety rests on this number**, which is why it can be picked
+-/// for legibility rather than argued against `[safety] deadman_ms` — a value this daemon
+-/// cannot read and does not know. A frame is only ever held back when it is byte-identical
+-/// to the last one sent *and* asks for no motion ([`Continuous::may_hold`]); a stick that is
+-/// doing anything goes out on every tick as it always did. What the heartbeat buys is the
+-/// report: without it `robotd`'s twist would age past the deadman while a pad sat connected
+-/// and idle, and `robot.state` would carry `limited_by: ["deadman"]` for a robot that is
+-/// stationary because it was asked to be.
+-const HEARTBEAT: Duration = Duration::from_millis(100);
++// A neutral pad has no new motion intent. Repeating its zero heartbeat would
++// overwrite speech/AI clients; the robotd deadman already returns an idle twist
++// to zero. Releases and every active stick sample still go out immediately.
+ 
+ /// The continuous intents, encoded once a tick and sent when they say something new.
+ #[derive(Default)]
+@@ -1449,12 +1443,12 @@
+     /// A held stick therefore keeps sending at the full rate. That is the case where the
+     /// robot is walking and the daemon has something to say; this is about the one where it
+     /// is not and does not.
+-    fn may_hold(&self, calls: &[proto::Call], now: Instant) -> bool {
++    fn may_hold(&self, calls: &[proto::Call], _now: Instant) -> bool {
+         let asks_for_motion = calls.iter().any(|call| match call {
+             proto::Call::RobotMove(p) => p.vx != 0.0 || p.vy != 0.0 || p.vyaw != 0.0,
+             _ => false,
+         });
+-        !asks_for_motion && self.at.is_some_and(|at| now.duration_since(at) < HEARTBEAT)
++        !asks_for_motion && self.at.is_some()
+     }
+ }
+ 
+@@ -1710,6 +1704,7 @@
+         });
+         let mut next_id = 1;
+         let mut input = PadInput::default();
++    let mut previous_mouth = 0.0;
+         for expected in [false, true] {
+             assert!(
+                 !input.up,
+@@ -1815,30 +1810,27 @@
+         );
+     }
+ 
+-    /// The heartbeat is what keeps `robotd` from reporting a deadman on a robot that is
+-    /// standing still because it was asked to.
+-    #[test]
+-    fn a_stationary_frame_goes_out_again_on_the_heartbeat() {
++    /// An untouched connected pad must not continually cancel another input.
++    #[test]
++    fn a_stationary_frame_does_not_overwrite_another_client_on_heartbeat() {
+         let (mut ours, mut theirs) = socket();
+         let mut continuous = Continuous::default();
+         let at = Instant::now();
+-
+         continuous.send(&mut ours, &still(), at).expect("first");
+         drain(&mut theirs);
+-
+-        continuous
+-            .send(
+-                &mut ours,
+-                &still(),
+-                at + HEARTBEAT - Duration::from_millis(1),
+-            )
+-            .expect("held");
+-        assert_eq!(drain(&mut theirs), "", "not due yet");
+-
+-        continuous
+-            .send(&mut ours, &still(), at + HEARTBEAT)
+-            .expect("heartbeat");
+-        assert!(drain(&mut theirs).contains("robot.move"), "due");
++        for elapsed in [100, 500, 1000, 10_000] {
++            continuous.send(&mut ours, &still(), at + Duration::from_millis(elapsed)).expect("idle");
++        }
++        assert_eq!(drain(&mut theirs), "", "neutral pad cannot overwrite another client's velocity");
++    }
++
++    #[test]
++    fn neutral_trigger_is_silent_but_hold_and_release_are_preserved() {
++        assert!(trigger_mouth(0.0, 0.0).is_none());
++        assert_eq!(trigger_mouth(0.0, 0.8).unwrap().open, 0.8);
++        assert_eq!(trigger_mouth(0.8, 0.8).unwrap().open, 0.8);
++        assert_eq!(trigger_mouth(0.8, 0.0).unwrap().open, 0.0);
++        assert!(trigger_mouth(0.0, 0.0).is_none());
+     }
+ 
+     /// A stick that moves is heard on the tick it moved, not on the next heartbeat.

@@ -1,0 +1,37 @@
+{
+  "training_and_layout_files_byte_identical": [
+    "training/filtered_actions.py",
+    "training/hd1910_actuator.py",
+    "training/hd1910_m6.json",
+    "training/official_adapter.py",
+    "training/recipe.py",
+    "training/sample_alignment.py",
+    "training/live_view.py",
+    "training/durable_agent.py",
+    "training/durable_manager.py",
+    "training/training_queue.py",
+    "training/static/studio.css",
+    "training/static/workflow.css",
+    "training/static/queue.css",
+    "training/static/training.css",
+    "training/static/studio.js",
+    "training/static/training.js",
+    "training/static/queue.js",
+    "training/static/workflow.js",
+    "training/static/teachers.js",
+    "data/hardware.json",
+    "data/pins.json",
+    "data/baseline_official0151.json"
+  ],
+  "training_functions_source_identical": [
+    "apply_agent",
+    "apply_env",
+    "training_config",
+    "train",
+    "apply_recipe",
+    "configure_evaluation_events",
+    "wrap_official_config"
+  ],
+  "source_revision_unchanged": true,
+  "verification": "No training mathematics, hardware data, curriculum, queue or layout changes"
+}

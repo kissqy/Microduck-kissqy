@@ -1,0 +1,215 @@
+test_catalog_only_exposes_builtins_and_never_reads_onnx_or_training_data (test_builtin_controls154.BuiltinControls154Tests.test_catalog_only_exposes_builtins_and_never_reads_onnx_or_training_data) ... ok
+test_first_kick_migration_retires_standalone_recovery_and_preserves_joint_tuning (test_builtin_controls154.BuiltinControls154Tests.test_first_kick_migration_retires_standalone_recovery_and_preserves_joint_tuning) ... ok
+test_install_cleanup_removes_retired_feature_modules (test_builtin_controls154.BuiltinControls154Tests.test_install_cleanup_removes_retired_feature_modules) ... 清理旧配套文件：advanced_parameters.py
+清理旧配套文件：model_preflight.py
+ok
+test_kick_api_and_ipc_relay_do_not_expose_arbitrary_skills (test_builtin_controls154.BuiltinControls154Tests.test_kick_api_and_ipc_relay_do_not_expose_arbitrary_skills) ... ERROR
+test_kick_relay_uses_existing_unix_json_rpc_protocol (test_builtin_controls154.BuiltinControls154Tests.test_kick_relay_uses_existing_unix_json_rpc_protocol) ... ERROR
+test_kick_success_uses_one_original_robot_do_rpc_without_home_start_or_pause (test_builtin_controls154.BuiltinControls154Tests.test_kick_success_uses_one_original_robot_do_rpc_without_home_start_or_pause) ... ERROR
+test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) ... 
+  test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='fresh') ... FAIL
+  test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='mode') ... FAIL
+  test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='phase') ... FAIL
+  test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='imu') ... FAIL
+  test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='torque') ... FAIL
+  test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='relax') ... FAIL
+  test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='home') ... FAIL
+  test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='policy') ... FAIL
+  test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='model') ... FAIL
+test_model_import_upload_is_unavailable_without_reading_body (test_builtin_controls154.BuiltinControls154Tests.test_model_import_upload_is_unavailable_without_reading_body) ... ok
+test_native_kick_refusal_is_not_queued_retried_or_recovered (test_builtin_controls154.BuiltinControls154Tests.test_native_kick_refusal_is_not_queued_retried_or_recovered) ... ERROR
+test_original_five_builtin_models_and_right_kick_contract_validate (test_builtin_controls154.BuiltinControls154Tests.test_original_five_builtin_models_and_right_kick_contract_validate) ... ok
+test_repeat_install_preserves_kick_scale_timing_and_other_custom_pad_bindings (test_builtin_controls154.BuiltinControls154Tests.test_repeat_install_preserves_kick_scale_timing_and_other_custom_pad_bindings) ... ok
+test_runtime_import_and_assignment_commands_are_retired (test_builtin_controls154.BuiltinControls154Tests.test_runtime_import_and_assignment_commands_are_retired) ... ok
+test_scale_api_accepts_only_scale_and_dispatches_no_servo_registers (test_builtin_controls154.BuiltinControls154Tests.test_scale_api_accepts_only_scale_and_dispatches_no_servo_registers) ... ok
+test_stale_servo_override_is_not_read_or_rewritten_by_scale (test_builtin_controls154.BuiltinControls154Tests.test_stale_servo_override_is_not_read_or_rewritten_by_scale) ... ok
+test_webpad_frames_remain_available_during_kick_but_not_maintenance (test_builtin_controls154.BuiltinControls154Tests.test_webpad_frames_remain_available_during_kick_but_not_maintenance) ... 
+  test_webpad_frames_remain_available_during_kick_but_not_maintenance (test_builtin_controls154.BuiltinControls154Tests.test_webpad_frames_remain_available_during_kick_but_not_maintenance) (action='run-skill') ... ERROR
+
+======================================================================
+ERROR: test_kick_api_and_ipc_relay_do_not_expose_arbitrary_skills (test_builtin_controls154.BuiltinControls154Tests.test_kick_api_and_ipc_relay_do_not_expose_arbitrary_skills)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 136, in test_kick_api_and_ipc_relay_do_not_expose_arbitrary_skills
+    self.assertEqual(validate(COMMAND),COMMAND)
+                     ^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/console/service_control.py", line 100, in validate
+    raise ControlError("指令或参数不受支持", 400)
+controls.ControlError: 指令或参数不受支持
+
+======================================================================
+ERROR: test_kick_relay_uses_existing_unix_json_rpc_protocol (test_builtin_controls154.BuiltinControls154Tests.test_kick_relay_uses_existing_unix_json_rpc_protocol)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 180, in test_kick_relay_uses_existing_unix_json_rpc_protocol
+    result=service_rpc.execute({'method':'robot.do','params':{'skill':'kick_right'}})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/console/service_rpc.py", line 41, in execute
+    if request.get('method') not in allowed: raise ValueError('unsupported service method')
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: unsupported service method
+
+======================================================================
+ERROR: test_kick_success_uses_one_original_robot_do_rpc_without_home_start_or_pause (test_builtin_controls154.BuiltinControls154Tests.test_kick_success_uses_one_original_robot_do_rpc_without_home_start_or_pause)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 148, in test_kick_success_uses_one_original_robot_do_rpc_without_home_start_or_pause
+    result=controller.handle({'client':'kick-page-154','seq':1,'command':COMMAND})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/console/service_control.py", line 542, in handle
+    command = validate(payload["command"])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/console/service_control.py", line 100, in validate
+    raise ControlError("指令或参数不受支持", 400)
+controls.ControlError: 指令或参数不受支持
+
+======================================================================
+ERROR: test_native_kick_refusal_is_not_queued_retried_or_recovered (test_builtin_controls154.BuiltinControls154Tests.test_native_kick_refusal_is_not_queued_retried_or_recovered)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 207, in test_native_kick_refusal_is_not_queued_retried_or_recovered
+    with patch('service_control.threading.Thread',ImmediateThread):controller.handle({'client':'kick-page-154','seq':1,'command':COMMAND})
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/console/service_control.py", line 542, in handle
+    command = validate(payload["command"])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/console/service_control.py", line 100, in validate
+    raise ControlError("指令或参数不受支持", 400)
+controls.ControlError: 指令或参数不受支持
+
+======================================================================
+ERROR: test_webpad_frames_remain_available_during_kick_but_not_maintenance (test_builtin_controls154.BuiltinControls154Tests.test_webpad_frames_remain_available_during_kick_but_not_maintenance) (action='run-skill')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 218, in test_webpad_frames_remain_available_during_kick_but_not_maintenance
+    if allowed:self.assertTrue(controller.handle(payload)['accepted']);transport.call.assert_called_once()
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/console/controls.py", line 229, in handle
+    with self.sequences.protect(key):return self._handle(payload)
+                                            ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/console/controls.py", line 247, in _handle
+    if s.get('service_operation') or s.get('service_control',{}).get('busy') and s.get('service_control',{}).get('job',{}).get('action') not in {'set-pad-settings'}:raise ControlError('等待服务操作完成')
+                                                                                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+controls.ControlError: 等待服务操作完成
+
+======================================================================
+FAIL: test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='fresh')
+----------------------------------------------------------------------
+controls.ControlError: 指令或参数不受支持
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 199, in test_kick_unready_states_reject_without_job_or_rpc
+    with self.assertRaisesRegex(ControlError,message):controller.handle({'client':'kick-page-154','seq':1,'command':COMMAND})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "新鲜" does not match "指令或参数不受支持"
+
+======================================================================
+FAIL: test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='mode')
+----------------------------------------------------------------------
+controls.ControlError: 指令或参数不受支持
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 199, in test_kick_unready_states_reject_without_job_or_rpc
+    with self.assertRaisesRegex(ControlError,message):controller.handle({'client':'kick-page-154','seq':1,'command':COMMAND})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "运动模式" does not match "指令或参数不受支持"
+
+======================================================================
+FAIL: test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='phase')
+----------------------------------------------------------------------
+controls.ControlError: 指令或参数不受支持
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 199, in test_kick_unready_states_reject_without_job_or_rpc
+    with self.assertRaisesRegex(ControlError,message):controller.handle({'client':'kick-page-154','seq':1,'command':COMMAND})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "运动模式" does not match "指令或参数不受支持"
+
+======================================================================
+FAIL: test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='imu')
+----------------------------------------------------------------------
+controls.ControlError: 指令或参数不受支持
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 199, in test_kick_unready_states_reject_without_job_or_rpc
+    with self.assertRaisesRegex(ControlError,message):controller.handle({'client':'kick-page-154','seq':1,'command':COMMAND})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "IMU" does not match "指令或参数不受支持"
+
+======================================================================
+FAIL: test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='torque')
+----------------------------------------------------------------------
+controls.ControlError: 指令或参数不受支持
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 199, in test_kick_unready_states_reject_without_job_or_rpc
+    with self.assertRaisesRegex(ControlError,message):controller.handle({'client':'kick-page-154','seq':1,'command':COMMAND})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "上力" does not match "指令或参数不受支持"
+
+======================================================================
+FAIL: test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='relax')
+----------------------------------------------------------------------
+controls.ControlError: 指令或参数不受支持
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 199, in test_kick_unready_states_reject_without_job_or_rpc
+    with self.assertRaisesRegex(ControlError,message):controller.handle({'client':'kick-page-154','seq':1,'command':COMMAND})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "上力" does not match "指令或参数不受支持"
+
+======================================================================
+FAIL: test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='home')
+----------------------------------------------------------------------
+controls.ControlError: 指令或参数不受支持
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 199, in test_kick_unready_states_reject_without_job_or_rpc
+    with self.assertRaisesRegex(ControlError,message):controller.handle({'client':'kick-page-154','seq':1,'command':COMMAND})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "HOME" does not match "指令或参数不受支持"
+
+======================================================================
+FAIL: test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='policy')
+----------------------------------------------------------------------
+controls.ControlError: 指令或参数不受支持
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 199, in test_kick_unready_states_reject_without_job_or_rpc
+    with self.assertRaisesRegex(ControlError,message):controller.handle({'client':'kick-page-154','seq':1,'command':COMMAND})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "Start" does not match "指令或参数不受支持"
+
+======================================================================
+FAIL: test_kick_unready_states_reject_without_job_or_rpc (test_builtin_controls154.BuiltinControls154Tests.test_kick_unready_states_reject_without_job_or_rpc) (name='model')
+----------------------------------------------------------------------
+controls.ControlError: 指令或参数不受支持
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/scratch/5a402859beee/v161-source/Microduck-Source-R17-V161-control38/packaging/test_builtin_controls154.py", line 199, in test_kick_unready_states_reject_without_job_or_rpc
+    with self.assertRaisesRegex(ControlError,message):controller.handle({'client':'kick-page-154','seq':1,'command':COMMAND})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "尚未加载" does not match "指令或参数不受支持"
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.716s
+
+FAILED (failures=9, errors=5)

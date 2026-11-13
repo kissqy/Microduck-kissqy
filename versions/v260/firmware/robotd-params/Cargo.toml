@@ -1,0 +1,30 @@
+[package]
+name = "robotd-params"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "robotd's startup parameters — the schema, the defaults, and the validation"
+
+# Extracted from `robotd/src/params.rs` verbatim so that `robotctl configure` can edit the
+# file with the real types, the real defaults and the real validation, instead of a copied
+# schema that drifts. `robotd` re-exports this as `crate::params`, so nothing there changed.
+[dependencies]
+# The theremin's defaults are `kinematics::hand::Config`'s, and its socket default is the
+# protocol crate's — the sections mirror the daemons they configure. Both are pure-Rust
+# library crates; nothing here grows a C toolchain or a network stack.
+kinematics = { path = "../kinematics" }
+duck-ipc-proto = { path = "../duck-ipc-proto" }
+serde = { workspace = true }
+toml = "0.9"
+# The official policy set describes itself in JSON, beside its `.onnx` files — what it contains
+# and how long each one-shot runs, so adding a policy to the set is not a daemon release. Pure
+# serde like the rest of this list; no C toolchain and no network stack.
+serde_json.workspace = true
+# The lossless writer in `edit`. Pure Rust like everything else here — no C toolchain and no
+# network stack — which is what lets the crate on the recovery path own it.
+toml_edit = "0.23"
+thiserror.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tempfile = "3.27.0"

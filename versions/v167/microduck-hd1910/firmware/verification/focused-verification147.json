@@ -1,0 +1,73 @@
+{
+  "all_passed": true,
+  "commands": [
+    {
+      "command": [
+        "node",
+        "packaging/test_joint_execution_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "evidence": "frontend-joint_execution147.log"
+    },
+    {
+      "command": [
+        "node",
+        "packaging/test_manual_recovery_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "evidence": "frontend-manual_recovery147.log"
+    },
+    {
+      "command": [
+        "node",
+        "packaging/test_settings_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "evidence": "frontend-settings147.log"
+    },
+    {
+      "command": [
+        "node",
+        "packaging/test_advanced_parameters_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "evidence": "frontend-advanced_parameters147.log"
+    },
+    {
+      "command": [
+        "node",
+        "packaging/test_walk_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "evidence": "frontend-walk147.log"
+    }
+  ],
+  "evidence_files": [
+    "frontend-joint_execution147.log",
+    "frontend-manual_recovery147.log",
+    "frontend-settings147.log",
+    "frontend-advanced_parameters147.log",
+    "frontend-walk147.log",
+    "model-import-tests147.log",
+    "native-unfiltered-tests147.log",
+    "native-unfiltered-tests147-serial.log",
+    "native-unfiltered-tests147-final.log",
+    "restore147-cargo-zigbuild.log",
+    "restore147-cargo-fetch.log",
+    "restore147-pip-download.log",
+    "restore147-rustc-1.99.0-x86_64-unknown-linux-gnu.log",
+    "restore147-rust-std-1.99.0-x86_64-unknown-linux-gnu.log",
+    "restore147-rustfmt-1.99.0-x86_64-unknown-linux-gnu.log",
+    "restore147-cargo-1.99.0-x86_64-unknown-linux-gnu.log",
+    "restore147-rust-std-1.99.0-aarch64-unknown-linux-gnu.log",
+    "restore147-pip-install.log"
+  ],
+  "browser_rendered": false,
+  "native_prior_attempts": "Earlier unchanged PTY/deadline-sensitive tests failed under scheduling load; final unfiltered complete suite passed with no filtering or deadline changes. Prior logs retained.",
+  "generated_at_utc": "2026-10-08T04:40:50.333554+00:00"
+}

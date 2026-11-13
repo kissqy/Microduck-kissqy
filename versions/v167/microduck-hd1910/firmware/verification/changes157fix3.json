@@ -1,0 +1,135 @@
+{
+  "console_version": "1.0.157-Fix3",
+  "service_build": "1fa8438-feetech-ft6-control.36",
+  "release_baseline": "Microduck-Source-R17-v1.0.157-Fix2",
+  "firmware_reinstall_required": false,
+  "firmware_archive_byte_identical": true,
+  "firmware_sha256": "6ba875422dc2fc49cce6cc7f9b35936d9ef192dfa01fda759c76e8ac0f972eb8",
+  "native_sources_unchanged": true,
+  "installed_payloads_unchanged": true,
+  "model_weights_unchanged": true,
+  "removed_display": [
+    "extra service status bar",
+    "gait preflight bar",
+    "duplicate four-step summary",
+    "duplicate recording export button"
+  ],
+  "logging": {
+    "system_log_source_filters": false,
+    "model_query_summary": true,
+    "volume_query_summary": true,
+    "process_query_summary": true,
+    "query_payloads_unchanged": true,
+    "full_explicit_output_preserved": true,
+    "query_failure_stdout_stderr_preserved": true,
+    "invalid_volume_not_reported_as_success": true
+  },
+  "added_queries_or_polling": false,
+  "added_robot_threads_or_loops": false,
+  "changed_files": [
+    "README.md",
+    "console/README.zh-CN.md",
+    "console/controls.py",
+    "console/docs/releases/R157-Fix3.md",
+    "console/release_identity.py",
+    "console/service_control.py",
+    "console/static/connection.js",
+    "console/static/r17-0151.css",
+    "console/static/service.css",
+    "console/static/service.js",
+    "console/verification/test_connection_ui155.mjs",
+    "console/verification/test_query_logs157.py",
+    "packaging/test_compact_controls.py",
+    "verification/fix3-pc-fix-tests.log",
+    "verification/fix3-query-tests.log",
+    "verification/fix3-streams-tests.log",
+    "verification/fix3-test_calibration_reference.log",
+    "verification/fix3-test_connection_ui155.log",
+    "verification/fix3-test_controls154.log",
+    "verification/fix3-test_fix157pc.log",
+    "verification/fix3-test_gamepad_repair_ui.log",
+    "verification/fix3-test_joint_direction155.log",
+    "verification/fix3-test_pose_state.log",
+    "verification/fix3-test_startup_ui.log",
+    "verification/fix3-tests.json",
+    "verification/package157fix3.py"
+  ],
+  "tests": {
+    "python_passed": 85,
+    "browser_scripts_passed": 8,
+    "runs": [
+      {
+        "name": "pc-fix",
+        "exit_code": 0,
+        "log": "verification/fix3-pc-fix-tests.log",
+        "sha256": "f5d9091dac33195662883b43b5c0a92327e458a5ce66fa869ffea713e8fbe64d"
+      },
+      {
+        "name": "streams",
+        "exit_code": 0,
+        "log": "verification/fix3-streams-tests.log",
+        "sha256": "3b86250399ee899b76a80856cf03dc0af987078e6126c43436bcc5db46285085"
+      },
+      {
+        "name": "test_fix157pc",
+        "exit_code": 0,
+        "log": "verification/fix3-test_fix157pc.log",
+        "sha256": "202e15d884c067ab28d84a5ebbac80a801bcf4bfab23b14779c242cd6f2cfe39"
+      },
+      {
+        "name": "test_controls154",
+        "exit_code": 0,
+        "log": "verification/fix3-test_controls154.log",
+        "sha256": "4321bee40f94b73b1772c9d4b065c570b64bfe649461aef04fc0110f687bceee"
+      },
+      {
+        "name": "test_connection_ui155",
+        "exit_code": 0,
+        "log": "verification/fix3-test_connection_ui155.log",
+        "sha256": "c4e74d103b7bf3bdf8911844ea8ee4b148a598dce1ac1c3f68dcf84a29e4ad45"
+      },
+      {
+        "name": "test_startup_ui",
+        "exit_code": 0,
+        "log": "verification/fix3-test_startup_ui.log",
+        "sha256": "1051736a2c3c606f87fc8ca8b5ffe966e682f54386457b6c78195bcff54adc78"
+      },
+      {
+        "name": "test_joint_direction155",
+        "exit_code": 0,
+        "log": "verification/fix3-test_joint_direction155.log",
+        "sha256": "2e4a3f0a1e78453c58e0c965ba6b8692f5fa5833e68a9afa299097c48adc920c"
+      },
+      {
+        "name": "test_pose_state",
+        "exit_code": 0,
+        "log": "verification/fix3-test_pose_state.log",
+        "sha256": "a9d3d13be56ba6850d99607b037440bf1426b4709ba1b8b1ec2207f469a371b4"
+      },
+      {
+        "name": "test_calibration_reference",
+        "exit_code": 0,
+        "log": "verification/fix3-test_calibration_reference.log",
+        "sha256": "12176ae85fe590d444d760fb3effdf8ef37ee7b6f6b3e932d37e0272b22ad8cb"
+      },
+      {
+        "name": "test_gamepad_repair_ui",
+        "exit_code": 0,
+        "log": "verification/fix3-test_gamepad_repair_ui.log",
+        "sha256": "72d7539bf553c19352361a88a00d88bb6aaa05c85ebafeb27f99de35d5f1e1a0"
+      },
+      {
+        "name": "query",
+        "exit_code": 0,
+        "log": "verification/fix3-query-tests.log",
+        "sha256": "0a2d07dc670dd7d73f53b56e83653bedbbdd5d01cea27a693beacac407ed9859"
+      }
+    ],
+    "robot_hardware_tested": false,
+    "windows_native_tested": false,
+    "native_suite_rerun": false,
+    "full_historical_suite_rerun": false,
+    "socket_boundary_note": "Loopback TCP is substituted only at the OS socket boundary where the executor restricts AF_UNIX creation."
+  },
+  "previous_native_results": "verification/native-build157fix2.json and fix2-native-after.log; historical, not rerun"
+}

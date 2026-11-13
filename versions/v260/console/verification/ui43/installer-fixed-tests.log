@@ -1,0 +1,10 @@
+test_non_deferred_upgrade_restarts_only_the_handpad_service (__main__.InstallerFixedSpeedTests.test_non_deferred_upgrade_restarts_only_the_handpad_service) ... ok
+test_original_native_defaults_and_binary_are_preserved (__main__.InstallerFixedSpeedTests.test_original_native_defaults_and_binary_are_preserved) ... ok
+test_recorder_status_function_is_byte_identical_to_ui42 (__main__.InstallerFixedSpeedTests.test_recorder_status_function_is_byte_identical_to_ui42) ... ok
+test_status_uses_original_defaults_and_refuses_old_explicit_speed (__main__.InstallerFixedSpeedTests.test_status_uses_original_defaults_and_refuses_old_explicit_speed) ... ok
+test_upgrade_ignores_old_speeds_and_broken_json_and_preserves_recording (__main__.InstallerFixedSpeedTests.test_upgrade_ignores_old_speeds_and_broken_json_and_preserves_recording) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.039s
+
+OK

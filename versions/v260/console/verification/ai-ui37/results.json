@@ -1,0 +1,133 @@
+{
+  "release": "V217_control.V73_AI-T1_UI37",
+  "python_ai_tests": {
+    "tests": 237,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 237,
+    "environment_unavailable": [],
+    "other_errors": [],
+    "success": true,
+    "available_checks_passed": true
+  },
+  "frontend": [
+    {
+      "passed": true,
+      "scope": "UI21 grouped catalogs, per-axis range display, per-question images and TOF, late preview isolation, bounded scrolling"
+    },
+    {
+      "passed": true,
+      "scope": "UI24 live speech checkbox, no optimistic state, pending on/off, Zero ACK and ASR sync, old HTTP/status/event rejection, error retains confirmed state, no second mute or task switch"
+    },
+    {
+      "passed": true,
+      "scope": "UI29 action-and-scene result distinguishes completed motion from a failed camera without claiming the motion did not execute"
+    },
+    {
+      "passed": true,
+      "scope": "UI34 Walk scene receipt distinguishes stopped input, vision failure and cancelled photo without claiming measured movement completion"
+    },
+    {
+      "passed": true,
+      "scope": "UI25 shared compact credential grid, bounded question input, no obsolete 1200px gap, unique control IDs, hidden empty visual output, model-wait busy state and model completion text"
+    },
+    {
+      "passed": true,
+      "scope": "rehearsal composer, preset draft, explicit task send and clear, waiting for provider ACK; no action request from text"
+    },
+    {
+      "passed": true,
+      "scope": "live microphone bars; retained credentials and editing; Chinese skills; multi-turn chat; vision busy/error/preview/source labels; measured brightness, exposure warning and next-capture reset"
+    },
+    {
+      "passed": true,
+      "scope": "real ControlPanel and PadControls; identical Start frames; one click one press/release; HOME then hold labels from readback; disabled during takeover/maintenance/offline; keyboard repeat; suspend reset; no automatic commands"
+    },
+    {
+      "passed": true,
+      "scope": "exact native PCM WAV, 24k mono16, per-window RAM, no autoplay/persistence, explicit replay/stop/end, sequence gaps, memory eviction, URL revocation and pagehide cleanup"
+    }
+  ],
+  "native_input_tests_passed": 46,
+  "native_package": {
+    "new_package_sha256": "312038a9e6cead868f4f0759678e5d22a7179c8c34d2bb7b69465fbd84786d38",
+    "bytes": 38124393,
+    "changed_firmware_files": [
+      "BUILD.json",
+      "ELF-CHECK.json",
+      "README.zh-CN.md",
+      "SHA256SUMS",
+      "padd"
+    ],
+    "padd_elf": {
+      "bytes": 3091560,
+      "machine": "AArch64",
+      "load_segments": 4,
+      "sha256": "76ec0e40a1c8e014987ae115dfbdd5023b9eb9efa119b8b089a39d2c57fc1fda",
+      "needed": [
+        "libudev.so.1",
+        "libm.so.6",
+        "libc.so.6",
+        "libpthread.so.0",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.27",
+        "2.28",
+        "2.30"
+      ],
+      "revision": "1fa8438-feetech-ft6-control.73+padd-mouth1"
+    },
+    "old_padd_sha256": "1c3950f155c7cbe7d7d1c60243bc5bc1c861aec39dcd98a247891917644fa97c",
+    "robotd_byte_identical": true,
+    "models_and_calibrations_byte_identical": true,
+    "hardware_tested": false,
+    "source_archive": "Microduck-Source-R17-V186-control57-compiled.tar.gz",
+    "source_archive_sha256": "425c04cd829386ba934d9137a33081f11335a3404e5f22337eed47e993d1a1cb",
+    "source_patch_sha256": "c8a36df240fce2e0c2e4b270a809f1df336dd7e180f9575ca06f2ef929f1fd1f",
+    "native_tests_passed": 46,
+    "only_native_binary_changed": "padd",
+    "build_toolchain": "Rust 1.99.0; cargo-zigbuild 0.23.4; configured Zig 0.14.1; aarch64-unknown-linux-gnu.2.31",
+    "native_mouth_formula_degrees": "-5 + 35 * open",
+    "official_expression_full_open": 1.0,
+    "official_expression_full_open_target_deg": 30.0,
+    "speech_partial_close": 0.2,
+    "speech_partial_close_target_deg": 2.0
+  },
+  "changed_inherited_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_action_gate.py",
+    "ai_doubao.py",
+    "ai_hat_audio.py",
+    "ai_persona.py",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "release_identity.py",
+    "static/index.html",
+    "updates/Microduck-Robotd-FT6-R17.tar.gz",
+    "verification/test_ai_rehearsal_ui36.py",
+    "verification/test_ai_speech_mouth_ui35.py"
+  ],
+  "mouth_schedule": "actual successfully written HAT PCM envelope and projected PCM playback clock",
+  "per_character_acoustic_alignment": false,
+  "new_dependencies_or_tts": false,
+  "default_walk": {
+    "vx": 0.3,
+    "vy": 0,
+    "vyaw": 0,
+    "seconds": 3
+  },
+  "default_shake_count": 1,
+  "post_walk_fixed_delay_seconds": 0.0,
+  "requires_installing_bundled_padd_update": true,
+  "robotd_and_models_unchanged": true,
+  "primary_service_python_unchanged": true,
+  "hardware_tested": false,
+  "windows_tested": false,
+  "live_cloud_tested": false
+}

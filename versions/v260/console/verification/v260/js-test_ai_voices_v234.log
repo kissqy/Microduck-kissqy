@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: all non-voice markup must remain exactly V233
++ actual - expected
+
++ 'bc1442170e9bd2bd7ee9c73de30895a98fb51b6c7e4bda2d3c01e9f8a9724ed2'
+- '2a593ab44d7b3589bac7e5a986a2238dfdd414064b998863037446712c8dd2e9'
+
+    at file:///workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/verification/test_ai_voices_v234.mjs:10:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'bc1442170e9bd2bd7ee9c73de30895a98fb51b6c7e4bda2d3c01e9f8a9724ed2',
+  expected: '2a593ab44d7b3589bac7e5a986a2238dfdd414064b998863037446712c8dd2e9',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.1

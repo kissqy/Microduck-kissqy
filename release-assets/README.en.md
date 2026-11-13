@@ -2,16 +2,18 @@
 
 # Feetech HD1910 firmware and console downloads
 
+Choose a version from [versions/](../versions/): [V260](../versions/v260/) or [V167](../versions/v167/README.en.md). This directory preserves existing package URLs and historical installation instructions.
+
 **Current release: R2 + Console Studio V260 / control.102, first-boot Wi-Fi R10.** Updated November 13, 2026.
 
 | Package | Entry and purpose |
 | --- | --- |
 | System Image R2 | [Download .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz); control.102 and 11 ONNX models are preinstalled. |
 | Console Studio V260 | [Release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260); complete desktop console with matching firmware. |
-| V260 standalone firmware and two source archives | [Four-package guide](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) · [independent source tree](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260). |
+| V260 standalone firmware and source | [Runtime and source guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) · [independent source tree](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260). |
 | STM32 IMU FT6 | [IMU download and flashing](../hardware/IMU-FIRMWARE.en.md); assembled IMUs are preflashed. |
 
-Use V260's matching bundled firmware for V260 upgrades. The original R1 / V167 packages remain below, with V167 source retained on main. The V260 source is in the separate release branch; publication does not add real-robot Known-Good results.
+Use V260's matching bundled firmware for V260 upgrades. Source and package navigation is grouped under `versions/v167/` and `versions/v260/` on main, without branch switching. The original R1 / V167 packages and old URLs remain below for compatibility; this organization does not add real-robot Known-Good results.
 
 ## Historical release: control.43
 

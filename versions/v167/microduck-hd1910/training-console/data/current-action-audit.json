@@ -1,0 +1,27 @@
+{
+  "checked_date": "2026-10-04",
+  "target_runtime": "0.15.1",
+  "manifest_url": "https://huggingface.co/pollen-robotics/microduck-policies/blob/main/manifest.json",
+  "manifest_sha256": "d461425524686749b4a84da4c1dc585e2db997e70f756e348a09f65b15b96e27",
+  "active_files": [
+    "velstand.onnx",
+    "alpha_sitstand.onnx",
+    "alpha_ground_pick.onnx",
+    "ball_kick_left.onnx",
+    "ball_kick_right.onnx",
+    "roulade.onnx",
+    "roller.onnx",
+    "roller_crouch.onnx"
+  ],
+  "legacy_files_without_default_slot": [
+    "alpha_walking.onnx",
+    "alpha_stand.onnx"
+  ],
+  "training_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "published_velstand_recipe": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+  "published_velstand_recipe_evidence": "src/mjlab_microduck/tasks/microduck_velstand_env_cfg.py: production recipe comment",
+  "sitstand_published_commit": "77ffadf",
+  "sitstand_file_sha256_at_published_commit_and_frozen_source": "65b1961566b0772852ba36af8e92c02a13a53de9b9a98f91e2dce1f4d8d627b1",
+  "left_kick": "Studio registration uses the official make_microduck_ball_kick_env_cfg(kick_foot=\"left\"), not mirrored right weights.",
+  "limitations": "Published checkpoint recipes not fully documented in the manifest are represented by current frozen public factories; their exact original run settings and convergence are not inferred from file names."
+}

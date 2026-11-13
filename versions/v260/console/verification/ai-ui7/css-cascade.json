@@ -1,0 +1,385 @@
+{
+  "method": "actual stylesheet selector matching and CSS specificity; no pixel rendering",
+  "results": [
+    {
+      "version": "UI6",
+      "width": 1920,
+      "sensors": {
+        "grid-template-columns": {
+          "value": "repeat(3,minmax(0,1fr))",
+          "selector": ".service-mode #sensors"
+        }
+      },
+      "ai-trace": {
+        "height": {
+          "value": "0",
+          "selector": "#ai-trace"
+        },
+        "min-height": {
+          "value": "420px",
+          "selector": "#ai-trace"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": "#ai-trace"
+        }
+      },
+      "sensor_cards": [
+        "IMU · 身体姿态",
+        "ToF · 深度视野",
+        "轨迹与系统"
+      ]
+    },
+    {
+      "version": "UI6",
+      "width": 1280,
+      "sensors": {
+        "grid-template-columns": {
+          "value": "repeat(3,minmax(0,1fr))",
+          "selector": ".service-mode #sensors"
+        }
+      },
+      "ai-trace": {
+        "height": {
+          "value": "0",
+          "selector": "#ai-trace"
+        },
+        "min-height": {
+          "value": "420px",
+          "selector": "#ai-trace"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": "#ai-trace"
+        }
+      },
+      "sensor_cards": [
+        "IMU · 身体姿态",
+        "ToF · 深度视野",
+        "轨迹与系统"
+      ]
+    },
+    {
+      "version": "UI6",
+      "width": 1024,
+      "sensors": {
+        "grid-template-columns": {
+          "value": "repeat(2,minmax(0,1fr))",
+          "selector": ".service-mode #sensors"
+        }
+      },
+      "ai-trace": {
+        "height": {
+          "value": "0",
+          "selector": "#ai-trace"
+        },
+        "min-height": {
+          "value": "420px",
+          "selector": "#ai-trace"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": "#ai-trace"
+        }
+      },
+      "sensor_cards": [
+        "IMU · 身体姿态",
+        "ToF · 深度视野",
+        "轨迹与系统"
+      ]
+    },
+    {
+      "version": "UI6",
+      "width": 800,
+      "sensors": {
+        "grid-template-columns": {
+          "value": "repeat(2,minmax(0,1fr))",
+          "selector": ".service-mode #sensors"
+        }
+      },
+      "ai-trace": {
+        "height": {
+          "value": "480px",
+          "selector": "#ai-trace"
+        },
+        "min-height": {
+          "value": "320px",
+          "selector": "#ai-trace"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": "#ai-trace"
+        }
+      },
+      "sensor_cards": [
+        "IMU · 身体姿态",
+        "ToF · 深度视野",
+        "轨迹与系统"
+      ]
+    },
+    {
+      "version": "UI6",
+      "width": 390,
+      "sensors": {
+        "grid-template-columns": {
+          "value": "1fr",
+          "selector": ".service-mode #sensors"
+        }
+      },
+      "ai-trace": {
+        "height": {
+          "value": "400px",
+          "selector": "#ai-trace"
+        },
+        "min-height": {
+          "value": "280px",
+          "selector": "#ai-trace"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": "#ai-trace"
+        }
+      },
+      "sensor_cards": [
+        "IMU · 身体姿态",
+        "ToF · 深度视野",
+        "轨迹与系统"
+      ]
+    },
+    {
+      "version": "UI7",
+      "width": 1920,
+      "sensors": {
+        "grid-template-columns": {
+          "value": "minmax(0,1fr)",
+          "selector": ".observation-ai-grid>#sensors.operations-grid"
+        }
+      },
+      "ai-dialogue": {
+        "height": {
+          "value": "0",
+          "selector": ".ai-chat-window"
+        },
+        "min-height": {
+          "value": "500px",
+          "selector": ".ai-chat-window"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": ".ai-chat-window"
+        }
+      },
+      "ai-trace": {
+        "height": {
+          "value": "125px",
+          "selector": "#ai-trace"
+        },
+        "min-height": {
+          "value": "80px",
+          "selector": "#ai-trace"
+        },
+        "max-height": {
+          "value": "180px",
+          "selector": "#ai-trace"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": "#ai-trace"
+        }
+      },
+      "sensor_cards": [
+        "IMU · 身体姿态",
+        "ToF · 深度视野",
+        "轨迹与系统"
+      ]
+    },
+    {
+      "version": "UI7",
+      "width": 1280,
+      "sensors": {
+        "grid-template-columns": {
+          "value": "minmax(0,1fr)",
+          "selector": ".observation-ai-grid>#sensors.operations-grid"
+        }
+      },
+      "ai-dialogue": {
+        "height": {
+          "value": "0",
+          "selector": ".ai-chat-window"
+        },
+        "min-height": {
+          "value": "500px",
+          "selector": ".ai-chat-window"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": ".ai-chat-window"
+        }
+      },
+      "ai-trace": {
+        "height": {
+          "value": "125px",
+          "selector": "#ai-trace"
+        },
+        "min-height": {
+          "value": "80px",
+          "selector": "#ai-trace"
+        },
+        "max-height": {
+          "value": "180px",
+          "selector": "#ai-trace"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": "#ai-trace"
+        }
+      },
+      "sensor_cards": [
+        "IMU · 身体姿态",
+        "ToF · 深度视野",
+        "轨迹与系统"
+      ]
+    },
+    {
+      "version": "UI7",
+      "width": 1024,
+      "sensors": {
+        "grid-template-columns": {
+          "value": "minmax(0,1fr)",
+          "selector": ".observation-ai-grid>#sensors.operations-grid"
+        }
+      },
+      "ai-dialogue": {
+        "height": {
+          "value": "0",
+          "selector": ".ai-chat-window"
+        },
+        "min-height": {
+          "value": "500px",
+          "selector": ".ai-chat-window"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": ".ai-chat-window"
+        }
+      },
+      "ai-trace": {
+        "height": {
+          "value": "125px",
+          "selector": "#ai-trace"
+        },
+        "min-height": {
+          "value": "80px",
+          "selector": "#ai-trace"
+        },
+        "max-height": {
+          "value": "180px",
+          "selector": "#ai-trace"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": "#ai-trace"
+        }
+      },
+      "sensor_cards": [
+        "IMU · 身体姿态",
+        "ToF · 深度视野",
+        "轨迹与系统"
+      ]
+    },
+    {
+      "version": "UI7",
+      "width": 800,
+      "sensors": {
+        "grid-template-columns": {
+          "value": "minmax(0,1fr)",
+          "selector": ".observation-ai-grid>#sensors.operations-grid"
+        }
+      },
+      "ai-dialogue": {
+        "height": {
+          "value": "520px",
+          "selector": ".ai-chat-window"
+        },
+        "min-height": {
+          "value": "420px",
+          "selector": ".ai-chat-window"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": ".ai-chat-window"
+        }
+      },
+      "ai-trace": {
+        "height": {
+          "value": "125px",
+          "selector": "#ai-trace"
+        },
+        "min-height": {
+          "value": "80px",
+          "selector": "#ai-trace"
+        },
+        "max-height": {
+          "value": "180px",
+          "selector": "#ai-trace"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": "#ai-trace"
+        }
+      },
+      "sensor_cards": [
+        "IMU · 身体姿态",
+        "ToF · 深度视野",
+        "轨迹与系统"
+      ]
+    },
+    {
+      "version": "UI7",
+      "width": 390,
+      "sensors": {
+        "grid-template-columns": {
+          "value": "minmax(0,1fr)",
+          "selector": ".observation-ai-grid>#sensors.operations-grid"
+        }
+      },
+      "ai-dialogue": {
+        "height": {
+          "value": "470px",
+          "selector": ".ai-chat-window"
+        },
+        "min-height": {
+          "value": "380px",
+          "selector": ".ai-chat-window"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": ".ai-chat-window"
+        }
+      },
+      "ai-trace": {
+        "height": {
+          "value": "125px",
+          "selector": "#ai-trace"
+        },
+        "min-height": {
+          "value": "80px",
+          "selector": "#ai-trace"
+        },
+        "max-height": {
+          "value": "180px",
+          "selector": "#ai-trace"
+        },
+        "overflow-y": {
+          "value": "auto",
+          "selector": "#ai-trace"
+        }
+      },
+      "sensor_cards": [
+        "IMU · 身体姿态",
+        "ToF · 深度视野",
+        "轨迹与系统"
+      ]
+    }
+  ]
+}

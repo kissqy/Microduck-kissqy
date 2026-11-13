@@ -1,0 +1,11 @@
+test_custom_only_upgrade_keeps_user_skills_and_reinstall_is_idempotent (__main__.ManualRollerTests.test_custom_only_upgrade_keeps_user_skills_and_reinstall_is_idempotent) ... ok
+test_fresh_install_has_one_finite_zero_command_skill (__main__.ManualRollerTests.test_fresh_install_has_one_finite_zero_command_skill) ... ok
+test_native_service_configuration_and_ssh_paths_are_preserved (__main__.ManualRollerTests.test_native_service_configuration_and_ssh_paths_are_preserved) ... ok
+test_original_export_bytes_and_all_coefficients_are_preserved (__main__.ManualRollerTests.test_original_export_bytes_and_all_coefficients_are_preserved) ... ok
+test_upgrade_preserves_saved_parameters_and_adds_new_skill (__main__.ManualRollerTests.test_upgrade_preserves_saved_parameters_and_adds_new_skill) ... ok
+test_web_l3_remains_display_only (__main__.ManualRollerTests.test_web_l3_remains_display_only) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.226s
+
+OK

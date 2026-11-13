@@ -1,0 +1,440 @@
+test_adapter_has_same_mapping_for_describe_train_and_export (tests.test_roller_standup_adapter.RollerStandupAdapterTests.test_adapter_has_same_mapping_for_describe_train_and_export) ... ok
+test_all_three_leg_rewards_preserve_joint_intent_and_reset_contract (tests.test_roller_standup_adapter.RollerStandupAdapterTests.test_all_three_leg_rewards_preserve_joint_intent_and_reset_contract) ... ok
+test_corrected_hd1910_two_world_reset_and_ten_steps (tests.test_roller_standup_adapter.RollerStandupAdapterTests.test_corrected_hd1910_two_world_reset_and_ten_steps) ... Warp CUDA warning: Could not find or load the NVIDIA CUDA driver. GPU execution will not be available.
+[mdp] Patches 1-2 active: NaN-safe reward/advantage
+[mdp] Patch 4 active: ONNX export filters passive_* joints
+[mdp] Patch 5 active: MICRODUCK_WARM_START=1 restarts curricula after checkpoint load
+Setting seed: 31
+Warp 1.12.0 initialized:
+   CUDA Toolkit 12.9, CUDA driver not available (NVRTC compilation available)
+   Devices:
+     "cpu"      : "x86_64"
+   Kernel cache:
+     /root/.cache/warp/1.12.0
+[BamActuator] model='m6' joints=14 kt=0.6238 R=4.9102 vin=range=(7.4, 8.0) drop_gain_range=(0.0, 0.2) force_limit=±1.02Nm friction_base=0.0158 friction_viscous=0.0003 envs=2 device=cpu
+
++--------------------------------+
+|        Base Environment        |
++------------------------+-------+
+| Property               | Value |
++------------------------+-------+
+| Number of environments | 2     |
+| Environment device     | cpu   |
+| Environment seed       | 31    |
+| Physics step-size      | 0.005 |
+| Environment step-size  | 0.02  |
++------------------------+-------+
+
+[INFO] <EventManager> contains 3 active terms.
++-------------------------------------+
+| Active Event Terms in Mode: 'reset' |
++-------+-----------------------------+
+| Index | Name                        |
++-------+-----------------------------+
+|   0   | reset_base                  |
+|   1   | reset_robot_joints          |
+|   2   | reset_action_history        |
+|   3   | randomize_wheel_friction    |
+|   4   | randomize_com               |
+|   5   | randomize_head_com          |
+|   6   | randomize_joint_friction    |
+|   7   | randomize_armature          |
+|   8   | set_ground_state            |
++-------+-----------------------------+
++----------------------------------------------+
+|    Active Event Terms in Mode: 'interval'    |
++-------+------------+-------------------------+
+| Index | Name       | Interval time range (s) |
++-------+------------+-------------------------+
+|   0   | push_robot |        (3.0, 6.0)       |
++-------+------------+-------------------------+
++---------------------------------------+
+| Active Event Terms in Mode: 'startup' |
++-------+-------------------------------+
+| Index | Name                          |
++-------+-------------------------------+
+|   0   | encoder_bias                  |
+|   1   | base_com                      |
+|   2   | expand_bam_friction_fields    |
+|   3   | randomize_mass_inertia        |
++-------+-------------------------------+
++-----------------------------+
+| Domain Randomization Fields |
++-------+---------------------+
+| Index | Field Name          |
++-------+---------------------+
+|   0   | body_ipos           |
+|   1   | body_subtreemass    |
+|   2   | dof_invweight0      |
+|   3   | body_invweight0     |
+|   4   | tendon_length0      |
+|   5   | tendon_invweight0   |
+|   6   | dof_frictionloss    |
+|   7   | dof_damping         |
+|   8   | body_mass           |
+|   9   | body_inertia        |
+|   10  | body_iquat          |
+|   11  | dof_armature        |
++-------+---------------------+
+
+Module repeat_array_kernel_39317a34 8b94c13 load on device 'cpu' took 3.20 ms  (cached)
+Module repeat_array_kernel_39317a34 83c495b load on device 'cpu' took 0.15 ms  (cached)
+Module repeat_array_kernel_39317a34 024b13f load on device 'cpu' took 0.21 ms  (cached)
+Module repeat_array_kernel_39317a34 c14a6b4 load on device 'cpu' took 0.13 ms  (cached)
+[INFO] <CommandManager> contains 1 active terms.
++--------------------------------------------+
+|            Active Command Terms            |
++-------+-------+----------------------------+
+| Index | Name  |            Type            |
++-------+-------+----------------------------+
+|   0   | twist | VelocityCommandCommandOnly |
++-------+-------+----------------------------+
+
+[INFO] <ActionManager> contains 1 active terms.
++---------------------------------+
+| Active Action Terms (shape: 14) |
++-------+-----------+-------------+
+| Index | Name      |   Dimension |
++-------+-----------+-------------+
+|   0   | joint_pos |          14 |
++-------+-----------+-------------+
+
+[INFO] <ObservationManager> contains 2 groups.
++-----------------------------------------------------------+
+| Active Observation Terms in Group: 'actor' (shape: (61,)) |
++-----------+----------------------------------+------------+
+|   Index   | Name                             |   Shape    |
++-----------+----------------------------------+------------+
+|     0     | base_ang_vel                     |    (3,)    |
+|     1     | projected_gravity                |    (3,)    |
+|     2     | joint_pos                        |   (14,)    |
+|     3     | joint_vel                        |   (14,)    |
+|     4     | actions                          |   (14,)    |
+|     5     | command                          |    (3,)    |
+|     6     | head_command                     |    (4,)    |
+|     7     | body_command                     |    (6,)    |
++-----------+----------------------------------+------------+
++------------------------------------------------------------+
+| Active Observation Terms in Group: 'critic' (shape: (78,)) |
++----------+------------------------------------+------------+
+|  Index   | Name                               |   Shape    |
++----------+------------------------------------+------------+
+|    0     | base_lin_vel                       |    (3,)    |
+|    1     | base_ang_vel                       |    (3,)    |
+|    2     | projected_gravity                  |    (3,)    |
+|    3     | joint_pos                          |   (14,)    |
+|    4     | joint_vel                          |   (14,)    |
+|    5     | actions                            |   (14,)    |
+|    6     | command                            |    (3,)    |
+|    7     | foot_air_time                      |    (2,)    |
+|    8     | foot_contact                       |    (2,)    |
+|    9     | foot_contact_forces                |    (6,)    |
+|    10    | wheel_vel                          |    (4,)    |
+|    11    | head_command                       |    (4,)    |
+|    12    | body_command                       |    (6,)    |
++----------+------------------------------------+------------+
+
+[INFO] <TerminationManager> contains 3 active terms.
++------------------------------------------+
+|         Active Termination Terms         |
++-------+-----------------------+----------+
+| Index | Name                  | Time Out |
++-------+-----------------------+----------+
+|   0   | time_out              |   True   |
+|   1   | out_of_terrain_bounds |   True   |
+|   2   | nan_state             |  False   |
++-------+-----------------------+----------+
+
+[INFO] <RewardManager> contains 19 active terms.
++---------------------------------------+
+|          Active Reward Terms          |
++-------+----------------------+--------+
+| Index | Name                 | Weight |
++-------+----------------------+--------+
+|   0   | body_ang_vel         |  -0.05 |
+|   1   | angular_momentum     |  -0.02 |
+|   2   | action_rate_l2       |   -0.6 |
+|   3   | self_collisions      |   -1.0 |
+|   4   | neck_action_rate_l2  |   -0.5 |
+|   5   | neck_joint_pos_l2    |   -0.5 |
+|   6   | joint_torques_l2     | -0.001 |
+|   7   | action_over_limit    |   -0.5 |
+|   8   | pose_stand_legs      |    8.0 |
+|   9   | pose_stand_l1        |    5.0 |
+|   10  | height_stand         |    4.0 |
+|   11  | height_stand_sharp   |    4.0 |
+|   12  | height_stand_l1      |   30.0 |
+|   13  | com_upward_velocity  |    3.0 |
+|   14  | gentle_rise          |   0.02 |
+|   15  | upright_linear       |    6.0 |
+|   16  | upright_sharp        |    6.0 |
+|   17  | standing_composite   |   15.0 |
+|   18  | joint_torque_rate_l2 |   -0.2 |
++-------+----------------------+--------+
+
+[INFO] <CurriculumManager> contains 6 active terms.
++----------------------------+
+|  Active Curriculum Terms   |
++-------+--------------------+
+| Index | Name               |
++-------+--------------------+
+|   0   | action_rate_weight |
+|   1   | wheel_friction     |
+|   2   | com_range          |
+|   3   | head_com_range     |
+|   4   | ground_state_mix   |
+|   5   | push_magnitude     |
++-------+--------------------+
+
+[INFO] <MetricsManager> contains 1 active terms.
++-------------------------+
+|   Active Metrics Terms  |
++-------+-----------------+
+| Index | Name            |
++-------+-----------------+
+|   0   | mean_action_acc |
++-------+-----------------+
+
+[INFO] <NullRecorderManager> (inactive)
+Module mujoco_warp._src.io 0374352 load on device 'cpu' took 0.42 ms  (cached)
+Module mujoco_warp._src.smooth 8731313 load on device 'cpu' took 0.43 ms  (cached)
+Module _tile_cholesky_factorize__locals__cholesky_factorize_c69276de b65006d load on device 'cpu' took 0.27 ms  (cached)
+Module _tile_cholesky_solve__locals__cholesky_solve_c0aa4f5e 3dac87f load on device 'cpu' took 0.17 ms  (cached)
+Module reset_data__locals__reset_xfrc_applied_e7898c5c 1f5e12c load on device 'cpu' took 0.22 ms  (cached)
+Module reset_data__locals__reset_qM_10d3c793 f59ca3c load on device 'cpu' took 0.11 ms  (cached)
+Module reset_data__locals__reset_mocap_ff71f630 d0e4e7e load on device 'cpu' took 0.14 ms  (cached)
+Module reset_data__locals__reset_contact_df686d47 3af0a2f load on device 'cpu' took 0.12 ms  (cached)
+Module reset_data__locals__reset_nworld_6e0d904e aef9a67 load on device 'cpu' took 0.12 ms  (cached)
+Module mujoco_warp._src.collision_driver eed4cf3 load on device 'cpu' took 0.33 ms  (cached)
+Module _nxn_broadphase__locals__kernel_e73b1315 157cf89 load on device 'cpu' took 0.26 ms  (cached)
+Module ccd_kernel_builder__locals__ccd_kernel_079dfa94 f710486 load on device 'cpu' took 0.38 ms  (cached)
+Module _primitive_narrowphase__locals__primitive_narrowphase_b282a07a b20db85 load on device 'cpu' took 0.37 ms  (cached)
+Module mujoco_warp._src.constraint 02b3f03 load on device 'cpu' took 0.31 ms  (cached)
+Module _efc_contact_init__locals__kernel_fda71e14 d197232 load on device 'cpu' took 0.21 ms  (cached)
+Module _efc_contact_jac_dense__locals__kernel_7974b597 a581aa2 load on device 'cpu' took 0.20 ms  (cached)
+Module _efc_contact_update__locals__kernel_90315d53 49b5115 load on device 'cpu' took 0.18 ms  (cached)
+Module mujoco_warp._src.sensor 93435cc load on device 'cpu' took 0.31 ms  (cached)
+Module mujoco_warp._src.forward 5dcb54e load on device 'cpu' took 0.22 ms  (cached)
+Module mujoco_warp._src.passive 12b3435 load on device 'cpu' took 0.18 ms  (cached)
+Module mujoco_warp._src.support fda47c6 load on device 'cpu' took 0.14 ms  (cached)
+Module _tile_cholesky_factorize_solve__locals__cholesky_factorize_solve_da8974fa 83f14d0 load on device 'cpu' took 0.14 ms  (cached)
+Module mujoco_warp._src.solver 2f1f5c6 load on device 'cpu' took 0.22 ms  (cached)
+Module solve_init_jaref__locals__kernel_cf8d890e c28e4fc load on device 'cpu' took 0.14 ms  (cached)
+Module mul_m_dense__locals___mul_m_dense_63eb81d7 4adf3de load on device 'cpu' took 0.13 ms  (cached)
+Module update_constraint_efc__locals__kernel_32935e9d 7127a83 load on device 'cpu' took 0.19 ms  (cached)
+Module update_constraint_gauss_cost__locals__kernel_e88c7347 474f917 load on device 'cpu' took 0.14 ms  (cached)
+Module update_gradient_JTDAJ_dense_tiled__locals__kernel_9981265a 0eb94fb load on device 'cpu' took 0.14 ms  (cached)
+Module update_gradient_cholesky__locals__kernel_11b66683 828557a load on device 'cpu' took 0.14 ms  (cached)
+Module linesearch_jv_fused__locals__kernel_c90cc86b 3650363 load on device 'cpu' took 0.14 ms  (cached)
+Module linesearch_prepare_gauss__locals__kernel_cc28fc48 561b801 load on device 'cpu' took 0.13 ms  (cached)
+Module update_constraint_efc__locals__kernel_3c1a9816 0242ddf load on device 'cpu' took 0.16 ms  (cached)
+Module _contact_sort__locals__contact_sort_304c86df 71fdfff load on device 'cpu' took 0.16 ms  (cached)
+Module mujoco_warp._src.derivative 77f0d4f load on device 'cpu' took 0.34 ms  (cached)
+FRICTION_READBACK {'schema': 'microduck-friction-readback-v1', 'num_envs': 2, 'step': 10, 'motor': [{'actuator_index': 0, 'available': True, 'joint_names': ['left_hip_yaw', 'left_hip_roll', 'left_hip_pitch', 'left_knee', 'left_ankle', 'neck_pitch', 'head_pitch', 'head_yaw', 'head_roll', 'right_hip_yaw', 'right_hip_roll', 'right_hip_pitch', 'right_knee', 'right_ankle'], 'configured_scale_range': [0.9, 1.1], 'friction_scale': {'shape': [2, 1], 'finite': True, 'min': 0.9349862933158875, 'max': 1.0666993856430054, 'per_item_min': [0.9349862933158875], 'per_item_max': [1.0666993856430054]}, 'actual_dof_frictionloss_nm': {'shape': [2, 14], 'finite': True, 'min': 0.02398456260561943, 'max': 0.07922956347465515, 'per_item_min': [0.02487782947719097, 0.0280868262052536, 0.033164724707603455, 0.04175925627350807, 0.03545995429158211, 0.03109854832291603, 0.032652150839567184, 0.024497106671333313, 0.026389745995402336, 0.02398456260561943, 0.026544060558080673, 0.0271924901753664, 0.060782160609960556, 0.04162377119064331], 'per_item_max': [0.03236950561404228, 0.03254632279276848, 0.04716376215219498, 0.07922956347465515, 0.07922951132059097, 0.04930182918906212, 0.0419437475502491, 0.029875123873353004, 0.028507471084594727, 0.02734934538602829, 0.030737249180674553, 0.03100535459816456, 0.06481832265853882, 0.06700345873832703]}}], 'configured_events': {'randomize_joint_friction': {'func': {'callable': 'mjlab_microduck.tasks.mdp.randomize_bam_friction'}, 'params': {'asset_cfg': {'name': 'robot', 'joint_names': None, 'joint_ids': {'slice': [None, None, None]}, 'body_names': None, 'body_ids': {'slice': [None, None, None]}, 'geom_names': None, 'geom_ids': {'slice': [None, None, None]}, 'site_names': None, 'site_ids': {'slice': [None, None, None]}, 'actuator_names': None, 'actuator_ids': {'slice': [None, None, None]}, 'tendon_names': None, 'tendon_ids': {'slice': [None, None, None]}, 'camera_names': None, 'camera_ids': {'slice': [None, None, None]}, 'light_names': None, 'light_ids': {'slice': [None, None, None]}, 'material_names': None, 'material_ids': {'slice': [None, None, None]}, 'pair_names': None, 'pair_ids': {'slice': [None, None, None]}, 'preserve_order': False}, 'scale_range': [0.9, 1.1]}, 'mode': 'reset', 'interval_range_s': None, 'is_global_time': False, 'min_step_count_between_reset': 0}, 'foot_friction': None, 'randomize_wheel_friction': {'func': {'callable': 'mjlab.envs.mdp.dr.joint.joint_friction'}, 'params': {'asset_cfg': {'name': 'robot', 'joint_names': ['passive_LF_wheel', 'passive_LR_wheel', 'passive_RF_wheel', 'passive_RR_wheel'], 'joint_ids': [5, 6, 16, 17], 'body_names': None, 'body_ids': {'slice': [None, None, None]}, 'geom_names': None, 'geom_ids': {'slice': [None, None, None]}, 'site_names': None, 'site_ids': {'slice': [None, None, None]}, 'actuator_names': None, 'actuator_ids': {'slice': [None, None, None]}, 'tendon_names': None, 'tendon_ids': {'slice': [None, None, None]}, 'camera_names': None, 'camera_ids': {'slice': [None, None, None]}, 'light_names': None, 'light_ids': {'slice': [None, None, None]}, 'material_names': None, 'material_ids': {'slice': [None, None, None]}, 'pair_names': None, 'pair_ids': {'slice': [None, None, None]}, 'preserve_order': False}, 'operation': 'abs', 'ranges': [0.05, 0.05]}, 'mode': 'reset', 'interval_range_s': None, 'is_global_time': False, 'min_step_count_between_reset': 0}}, 'foot_or_wheel_contact': {'available': True, 'geom_count': 4, 'scope': 'geom_coefficients_after_DR; not mixed contact coefficients or contact forces', 'coefficients': {'shape': [2, 4, 3], 'finite': True, 'min': 9.999999747378752e-05, 'max': 1.0, 'per_item_min': [[1.0, 0.004999999888241291, 9.999999747378752e-05], [1.0, 0.004999999888241291, 9.999999747378752e-05], [1.0, 0.004999999888241291, 9.999999747378752e-05], [1.0, 0.004999999888241291, 9.999999747378752e-05]], 'per_item_max': [[1.0, 0.004999999888241291, 9.999999747378752e-05], [1.0, 0.004999999888241291, 9.999999747378752e-05], [1.0, 0.004999999888241291, 9.999999747378752e-05], [1.0, 0.004999999888241291, 9.999999747378752e-05]]}, 'sliding': {'shape': [2, 4], 'finite': True, 'min': 1.0, 'max': 1.0, 'per_item_min': [1.0, 1.0, 1.0, 1.0], 'per_item_max': [1.0, 1.0, 1.0, 1.0]}, 'geoms': [{'name': None, 'body': 'robot/tire', 'condim': 3, 'priority': 0}, {'name': None, 'body': 'robot/tire_2', 'condim': 3, 'priority': 0}, {'name': None, 'body': 'robot/tire_3', 'condim': 3, 'priority': 0}, {'name': None, 'body': 'robot/tire_4', 'condim': 3, 'priority': 0}]}, 'terrain_contact': {'available': True, 'geom_count': 1, 'scope': 'geom_coefficients_after_DR; not mixed contact coefficients or contact forces', 'coefficients': {'shape': [2, 1, 3], 'finite': True, 'min': 9.999999747378752e-05, 'max': 1.0, 'per_item_min': [[1.0, 0.004999999888241291, 9.999999747378752e-05]], 'per_item_max': [[1.0, 0.004999999888241291, 9.999999747378752e-05]]}, 'sliding': {'shape': [2, 1], 'finite': True, 'min': 1.0, 'max': 1.0, 'per_item_min': [1.0], 'per_item_max': [1.0]}, 'geoms': [{'name': 'terrain', 'body': 'terrain', 'condim': 3, 'priority': 0}]}, 'wheel_bearings': {'available': True, 'joint_names': ['passive_LF_wheel', 'passive_LR_wheel', 'passive_RF_wheel', 'passive_RR_wheel'], 'actual_frictionloss_nm': {'shape': [2, 4], 'finite': True, 'min': 0.05000000074505806, 'max': 0.05000000074505806, 'per_item_min': [0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806], 'per_item_max': [0.05000000074505806, 0.05000000074505806, 0.05000000074505806, 0.05000000074505806]}}}
+ROLLER_STANDUP_HD1910_TWO_WORLDS_TEN_STEPS_61x14_FINITE
+ok
+test_three_reward_target_vectors_map_legs_and_neck_by_name (tests.test_roller_standup_adapter.RollerStandupAdapterTests.test_three_reward_target_vectors_map_legs_and_neck_by_name) ... ok
+test_unknown_or_passive_reward_target_fails_before_partial_mutation (tests.test_roller_standup_adapter.RollerStandupAdapterTests.test_unknown_or_passive_reward_target_fails_before_partial_mutation) ... ok
+test_walking_contact_readback_is_post_randomization_and_has_no_wheels (tests.test_roller_standup_adapter.RollerStandupAdapterTests.test_walking_contact_readback_is_post_randomization_and_has_no_wheels) ... Setting seed: 31
+[BamActuator] model='m6' joints=14 kt=0.6238 R=4.9102 vin=range=(7.4, 8.0) drop_gain_range=(0.0, 0.2) force_limit=±1.02Nm friction_base=0.0158 friction_viscous=0.0003 envs=2 device=cpu
+Module mujoco_warp._src.render_util 3cd330a load on device 'cpu' took 1597.80 ms  (compiled)
+Module mujoco_warp._src.bvh e843d00 load on device 'cpu' took 2155.31 ms  (compiled)
+
++--------------------------------+
+|        Base Environment        |
++------------------------+-------+
+| Property               | Value |
++------------------------+-------+
+| Number of environments | 2     |
+| Environment device     | cpu   |
+| Environment seed       | 31    |
+| Physics step-size      | 0.005 |
+| Environment step-size  | 0.02  |
++------------------------+-------+
+
+[INFO] <EventManager> contains 3 active terms.
++-------------------------------------+
+| Active Event Terms in Mode: 'reset' |
++-------+-----------------------------+
+| Index | Name                        |
++-------+-----------------------------+
+|   0   | reset_base                  |
+|   1   | reset_robot_joints          |
+|   2   | reset_action_history        |
+|   3   | randomize_com               |
+|   4   | randomize_head_com          |
+|   5   | randomize_joint_friction    |
+|   6   | randomize_armature          |
++-------+-----------------------------+
++----------------------------------------------+
+|    Active Event Terms in Mode: 'interval'    |
++-------+------------+-------------------------+
+| Index | Name       | Interval time range (s) |
++-------+------------+-------------------------+
+|   0   | push_robot |        (3.0, 6.0)       |
++-------+------------+-------------------------+
++---------------------------------------+
+| Active Event Terms in Mode: 'startup' |
++-------+-------------------------------+
+| Index | Name                          |
++-------+-------------------------------+
+|   0   | foot_friction                 |
+|   1   | encoder_bias                  |
+|   2   | base_com                      |
+|   3   | expand_bam_friction_fields    |
+|   4   | randomize_mass_inertia        |
++-------+-------------------------------+
++-----------------------------+
+| Domain Randomization Fields |
++-------+---------------------+
+| Index | Field Name          |
++-------+---------------------+
+|   0   | geom_friction       |
+|   1   | body_ipos           |
+|   2   | body_subtreemass    |
+|   3   | dof_invweight0      |
+|   4   | body_invweight0     |
+|   5   | tendon_length0      |
+|   6   | tendon_invweight0   |
+|   7   | dof_frictionloss    |
+|   8   | dof_damping         |
+|   9   | body_mass           |
+|   10  | body_inertia        |
+|   11  | body_iquat          |
+|   12  | dof_armature        |
++-------+---------------------+
+
+[INFO] <CommandManager> contains 3 active terms.
++------------------------------------------------+
+|              Active Command Terms              |
++-------+-----------+----------------------------+
+| Index | Name      |            Type            |
++-------+-----------+----------------------------+
+|   0   | twist     | VelocityCommandCommandOnly |
+|   1   | head_pose |     UniformPoseCommand     |
+|   2   | body_pose |     UniformPoseCommand     |
++-------+-----------+----------------------------+
+
+[INFO] <ActionManager> contains 1 active terms.
++---------------------------------+
+| Active Action Terms (shape: 14) |
++-------+-----------+-------------+
+| Index | Name      |   Dimension |
++-------+-----------+-------------+
+|   0   | joint_pos |          14 |
++-------+-----------+-------------+
+
+[INFO] <ObservationManager> contains 2 groups.
++-----------------------------------------------------------+
+| Active Observation Terms in Group: 'actor' (shape: (61,)) |
++-----------+----------------------------------+------------+
+|   Index   | Name                             |   Shape    |
++-----------+----------------------------------+------------+
+|     0     | base_ang_vel                     |    (3,)    |
+|     1     | projected_gravity                |    (3,)    |
+|     2     | joint_pos                        |   (14,)    |
+|     3     | joint_vel                        |   (14,)    |
+|     4     | actions                          |   (14,)    |
+|     5     | command                          |    (3,)    |
+|     6     | head_command                     |    (4,)    |
+|     7     | body_command                     |    (6,)    |
++-----------+----------------------------------+------------+
++------------------------------------------------------------+
+| Active Observation Terms in Group: 'critic' (shape: (76,)) |
++----------+------------------------------------+------------+
+|  Index   | Name                               |   Shape    |
++----------+------------------------------------+------------+
+|    0     | base_lin_vel                       |    (3,)    |
+|    1     | base_ang_vel                       |    (3,)    |
+|    2     | projected_gravity                  |    (3,)    |
+|    3     | joint_pos                          |   (14,)    |
+|    4     | joint_vel                          |   (14,)    |
+|    5     | actions                            |   (14,)    |
+|    6     | command                            |    (3,)    |
+|    7     | foot_height                        |    (2,)    |
+|    8     | foot_air_time                      |    (2,)    |
+|    9     | foot_contact                       |    (2,)    |
+|    10    | foot_contact_forces                |    (6,)    |
+|    11    | head_command                       |    (4,)    |
+|    12    | body_command                       |    (6,)    |
++----------+------------------------------------+------------+
+
+[INFO] <TerminationManager> contains 4 active terms.
++------------------------------------------+
+|         Active Termination Terms         |
++-------+-----------------------+----------+
+| Index | Name                  | Time Out |
++-------+-----------------------+----------+
+|   0   | time_out              |   True   |
+|   1   | fell_over             |  False   |
+|   2   | out_of_terrain_bounds |   True   |
+|   3   | nan_state             |  False   |
++-------+-----------------------+----------+
+
+[INFO] <RewardManager> contains 16 active terms.
++-----------------------------------------+
+|           Active Reward Terms           |
++-------+------------------------+--------+
+| Index | Name                   | Weight |
++-------+------------------------+--------+
+|   0   | track_linear_velocity  |    2.0 |
+|   1   | track_angular_velocity |    2.0 |
+|   2   | upright                |    2.0 |
+|   3   | pose                   |    1.0 |
+|   4   | body_ang_vel           |  -0.05 |
+|   5   | angular_momentum       |  -0.02 |
+|   6   | dof_pos_limits         |   -1.0 |
+|   7   | action_rate_l2         |   -0.1 |
+|   8   | air_time               |    3.0 |
+|   9   | foot_clearance         |   -2.0 |
+|   10  | foot_swing_height      |  -0.25 |
+|   11  | foot_slip              |   -0.1 |
+|   12  | self_collisions        |   -1.0 |
+|   13  | head_pose_tracking     |    2.0 |
+|   14  | body_pose_tracking     |    0.0 |
+|   15  | head_pose_bias         |    0.0 |
++-------+------------------------+--------+
+
+[INFO] <CurriculumManager> contains 7 active terms.
++-------------------------------+
+|    Active Curriculum Terms    |
++-------+-----------------------+
+| Index | Name                  |
++-------+-----------------------+
+|   0   | action_rate_weight    |
+|   1   | standing_envs         |
+|   2   | head_pose_range       |
+|   3   | body_pose_range       |
+|   4   | com_range             |
+|   5   | head_com_range        |
+|   6   | head_pose_bias_weight |
++-------+-----------------------+
+
+[INFO] <MetricsManager> contains 1 active terms.
++-------------------------+
+|   Active Metrics Terms  |
++-------+-----------------+
+| Index | Name            |
++-------+-----------------+
+|   0   | mean_action_acc |
++-------+-----------------+
+
+[INFO] <NullRecorderManager> (inactive)
+Module _tile_cholesky_factorize__locals__cholesky_factorize_a02b7349 70689db load on device 'cpu' took 0.29 ms  (cached)
+Module _tile_cholesky_solve__locals__cholesky_solve_8c82e9f1 b8f2819 load on device 'cpu' took 0.15 ms  (cached)
+Module _tile_cholesky_factorize_solve__locals__cholesky_factorize_solve_b16bf393 cd62458 load on device 'cpu' took 0.34 ms  (cached)
+Module solve_init_jaref__locals__kernel_5208712d fbe27e4 load on device 'cpu' took 0.16 ms  (cached)
+Module mul_m_dense__locals___mul_m_dense_b66df345 db44421 load on device 'cpu' took 0.14 ms  (cached)
+Module update_constraint_gauss_cost__locals__kernel_baf8e129 efdabd1 load on device 'cpu' took 0.13 ms  (cached)
+Module update_gradient_JTDAJ_dense_tiled__locals__kernel_9404d42c 6b42f96 load on device 'cpu' took 0.20 ms  (cached)
+Module update_gradient_cholesky__locals__kernel_5ee47d83 702e3ec load on device 'cpu' took 0.16 ms  (cached)
+Module linesearch_jv_fused__locals__kernel_7bf09094 6b3208c load on device 'cpu' took 0.17 ms  (cached)
+Module linesearch_prepare_gauss__locals__kernel_97347d38 0cadf6d load on device 'cpu' took 0.33 ms  (cached)
+Module mujoco_warp._src.ray abbcfd9 load on device 'cpu' took 2844.37 ms  (compiled)
+FRICTION_READBACK {'schema': 'microduck-friction-readback-v1', 'num_envs': 2, 'step': 1, 'motor': [{'actuator_index': 0, 'available': True, 'joint_names': ['left_hip_yaw', 'left_hip_roll', 'left_hip_pitch', 'left_knee', 'left_ankle', 'neck_pitch', 'head_pitch', 'head_yaw', 'head_roll', 'right_hip_yaw', 'right_hip_roll', 'right_hip_pitch', 'right_knee', 'right_ankle'], 'configured_scale_range': [0.9, 1.1], 'friction_scale': {'shape': [2, 1], 'finite': True, 'min': 0.9087933301925659, 'max': 0.9624113440513611, 'per_item_min': [0.9087933301925659], 'per_item_max': [0.9624113440513611]}, 'actual_dof_frictionloss_nm': {'shape': [2, 14], 'finite': True, 'min': 0.02307775616645813, 'max': 0.04313412308692932, 'per_item_min': [0.023117542266845703, 0.0406801775097847, 0.03524434566497803, 0.026129083707928658, 0.033521685749292374, 0.03132365271449089, 0.036392442882061005, 0.02307775616645813, 0.023366685956716537, 0.023109646514058113, 0.040170345455408096, 0.03681662678718567, 0.026126880198717117, 0.03456563130021095], 'per_item_max': [0.02447606436908245, 0.042827144265174866, 0.03858562558889389, 0.027669373899698257, 0.0360407754778862, 0.03484198823571205, 0.037466105073690414, 0.024439001455903053, 0.024806620553135872, 0.024474846199154854, 0.04313412308692932, 0.03912176936864853, 0.027667498216032982, 0.03700575977563858]}}], 'configured_events': {'randomize_joint_friction': {'func': {'callable': 'mjlab_microduck.tasks.mdp.randomize_bam_friction'}, 'params': {'asset_cfg': {'name': 'robot', 'joint_names': None, 'joint_ids': {'slice': [None, None, None]}, 'body_names': None, 'body_ids': {'slice': [None, None, None]}, 'geom_names': None, 'geom_ids': {'slice': [None, None, None]}, 'site_names': None, 'site_ids': {'slice': [None, None, None]}, 'actuator_names': None, 'actuator_ids': {'slice': [None, None, None]}, 'tendon_names': None, 'tendon_ids': {'slice': [None, None, None]}, 'camera_names': None, 'camera_ids': {'slice': [None, None, None]}, 'light_names': None, 'light_ids': {'slice': [None, None, None]}, 'material_names': None, 'material_ids': {'slice': [None, None, None]}, 'pair_names': None, 'pair_ids': {'slice': [None, None, None]}, 'preserve_order': False}, 'scale_range': [0.9, 1.1]}, 'mode': 'reset', 'interval_range_s': None, 'is_global_time': False, 'min_step_count_between_reset': 0}, 'foot_friction': {'func': {'callable': 'mjlab.envs.mdp.dr.geom.geom_friction'}, 'params': {'asset_cfg': {'name': 'robot', 'joint_names': None, 'joint_ids': {'slice': [None, None, None]}, 'body_names': None, 'body_ids': {'slice': [None, None, None]}, 'geom_names': ['left_foot_collision', 'right_foot_collision'], 'geom_ids': [26, 72], 'site_names': None, 'site_ids': {'slice': [None, None, None]}, 'actuator_names': None, 'actuator_ids': {'slice': [None, None, None]}, 'tendon_names': None, 'tendon_ids': {'slice': [None, None, None]}, 'camera_names': None, 'camera_ids': {'slice': [None, None, None]}, 'light_names': None, 'light_ids': {'slice': [None, None, None]}, 'material_names': None, 'material_ids': {'slice': [None, None, None]}, 'pair_names': None, 'pair_ids': {'slice': [None, None, None]}, 'preserve_order': False}, 'operation': 'abs', 'ranges': [0.7, 1.3], 'shared_random': True}, 'mode': 'startup', 'interval_range_s': None, 'is_global_time': False, 'min_step_count_between_reset': 0}, 'randomize_wheel_friction': None}, 'foot_or_wheel_contact': {'available': True, 'geom_count': 2, 'scope': 'geom_coefficients_after_DR; not mixed contact coefficients or contact forces', 'coefficients': {'shape': [2, 2, 3], 'finite': True, 'min': 9.999999747378752e-05, 'max': 1.0829700231552124, 'per_item_min': [[0.7908838391304016, 0.004999999888241291, 9.999999747378752e-05], [0.7908838391304016, 0.004999999888241291, 9.999999747378752e-05]], 'per_item_max': [[1.0829700231552124, 0.004999999888241291, 9.999999747378752e-05], [1.0829700231552124, 0.004999999888241291, 9.999999747378752e-05]]}, 'sliding': {'shape': [2, 2], 'finite': True, 'min': 0.7908838391304016, 'max': 1.0829700231552124, 'per_item_min': [0.7908838391304016, 0.7908838391304016], 'per_item_max': [1.0829700231552124, 1.0829700231552124]}, 'geoms': [{'name': 'robot/left_foot_collision', 'body': 'robot/ankle_left', 'condim': 3, 'priority': 1}, {'name': 'robot/right_foot_collision', 'body': 'robot/ankle_right', 'condim': 3, 'priority': 1}]}, 'terrain_contact': {'available': True, 'geom_count': 1, 'scope': 'geom_coefficients_after_DR; not mixed contact coefficients or contact forces', 'coefficients': {'shape': [2, 1, 3], 'finite': True, 'min': 9.999999747378752e-05, 'max': 1.0, 'per_item_min': [[1.0, 0.004999999888241291, 9.999999747378752e-05]], 'per_item_max': [[1.0, 0.004999999888241291, 9.999999747378752e-05]]}, 'sliding': {'shape': [2, 1], 'finite': True, 'min': 1.0, 'max': 1.0, 'per_item_min': [1.0], 'per_item_max': [1.0]}, 'geoms': [{'name': 'terrain', 'body': 'terrain', 'condim': 3, 'priority': 0}]}, 'wheel_bearings': {'available': True, 'joint_names': [], 'actual_frictionloss_nm': None, 'reason': '该模型没有被动轮'}}
+ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 16.610s
+
+OK

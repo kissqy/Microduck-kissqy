@@ -1,0 +1,11 @@
+
+running 3 tests
+test roller::tests::both_roller_actions_load_with_the_complete_shipped_configuration ... ok
+test roller::tests::walking_configuration_is_never_touched ... ok
+test roller::tests::yaw_and_steering_are_wrapped_and_clipped ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 263 filtered out; finished in 1.02s
+
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/robotd)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.68s
+     Running unittests src/main.rs (target/debug/deps/robotd-fdc52ec6ee5b0cb0)

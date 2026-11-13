@@ -1,0 +1,169 @@
+{
+  "schema": "r17-management/v1",
+  "features": [
+    "supported",
+    "motion",
+    "management",
+    "webpad",
+    "live_pad_settings",
+    "coast"
+  ],
+  "legacy_first": {
+    "motion": 9,
+    "management": 13,
+    "supported": 7,
+    "webpad": 100,
+    "live_pad_settings": 100,
+    "coast": 14
+  },
+  "actions": [
+    {
+      "slot": "walk",
+      "label": "行走／保持 / Walk",
+      "task_prefixes": [
+        "VelStand",
+        "Velocity"
+      ]
+    },
+    {
+      "slot": "sitstand",
+      "label": "坐下／站起 / Sit & stand",
+      "task_prefixes": [
+        "SitStand"
+      ]
+    },
+    {
+      "slot": "ground_pick",
+      "label": "地面捡取 / Ground pick",
+      "task_prefixes": [
+        "GroundPick"
+      ]
+    },
+    {
+      "slot": "kick_left",
+      "label": "左脚踢球 / Left kick",
+      "task_prefixes": [
+        "BallKickLeft"
+      ],
+      "built_in": true
+    },
+    {
+      "slot": "kick_right",
+      "label": "右脚踢球 / Right kick",
+      "task_prefixes": [
+        "BallKick"
+      ],
+      "built_in": true
+    },
+    {
+      "slot": "roulade",
+      "label": "前滚翻 / Roulade",
+      "task_prefixes": [
+        "Roulade"
+      ]
+    }
+  ],
+  "legacy_builds": {
+    "coast": [
+      14,
+      "14.1",
+      18,
+      20,
+      21
+    ]
+  },
+  "defaults": {
+    "policy": {
+      "action_scale": 0.7
+    },
+    "pad": {
+      "mouth_percent": 100.0,
+      "head_rad": 2.5
+    },
+    "audio": {
+      "volume": 50
+    },
+    "joint_action_scale": 1.0
+  },
+  "requested_model_replacement": {
+    "slot": "walk",
+    "id": "1cbf8730eadd75a5704332c9f3c10f60",
+    "export_contract_revision": 2,
+    "execution_profile_sha256": "1e77b8c032cf784a7d3d059d0e8d1a32e71fa49d56e1a399aeac7ebc03e2afc9"
+  },
+  "retired_model_ids": [
+    "d11f8430712c35cb2416ce3948e9f8b7",
+    "388461feb3f4cd24071197ffc30d63e2",
+    "5c019c3d3d2c490947f21974f3947506",
+    "9e3ff8bde021be28a728c02dbd8e7aaf",
+    "8fdaf12c7478a8314a63647a466bfa34",
+    "2b69fa681ed06f7ded9e2a2d12ba5c67"
+  ],
+  "requested_action_replacements": [
+    {
+      "slot": "roulade",
+      "id": "59e15d7b04d0c40e9b11b8a70bdecae6"
+    },
+    {
+      "slot": "ground_pick",
+      "id": "b14e3a8b56ddbb8d2d831e727774a168"
+    },
+    {
+      "slot": "kick_right",
+      "id": "67ad09d82f4865d222a7ae06f250cf9f"
+    },
+    {
+      "slot": "kick_left",
+      "id": "ee0376c927044cdece056ba1d3e6eac7"
+    }
+  ],
+  "builtin_models": [
+    {
+      "id": "1cbf8730eadd75a5704332c9f3c10f60",
+      "name": "行走＋倒地联合 9600 轮",
+      "slot": "walk"
+    },
+    {
+      "id": "1c94934c6421ec72ed48079cea749668",
+      "name": "坐下／站起 10000 轮",
+      "slot": "sitstand"
+    },
+    {
+      "id": "b14e3a8b56ddbb8d2d831e727774a168",
+      "name": "低头捡取 10000 轮 · 无缩放滤波",
+      "slot": "ground_pick"
+    },
+    {
+      "id": "59e15d7b04d0c40e9b11b8a70bdecae6",
+      "name": "前滚翻 10000 轮 · 无缩放滤波",
+      "slot": "roulade"
+    },
+    {
+      "id": "67ad09d82f4865d222a7ae06f250cf9f",
+      "name": "右脚踢球 10000 轮 · 无缩放滤波",
+      "slot": "kick_right"
+    },
+    {
+      "id": "ee0376c927044cdece056ba1d3e6eac7",
+      "name": "左脚踢球 10000 轮 · 无缩放滤波",
+      "slot": "kick_left"
+    }
+  ],
+  "retire_standalone_recovery": {
+    "skill": "stand_test",
+    "model_id": "a481d9f211f31d9476ab1a319fe362a2",
+    "remove_catalog_manual_recovery": true,
+    "pad_migration": {
+      "lb": {
+        "from": "stand_test",
+        "to": "kick_left"
+      },
+      "rb": {
+        "from": "",
+        "to": "kick_right",
+        "also_when_missing": true
+      }
+    },
+    "preserve_other_custom_bindings": true
+  }
+}

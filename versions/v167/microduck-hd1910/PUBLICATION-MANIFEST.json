@@ -1,0 +1,294 @@
+{
+  "schema": "microduck-publication/v2",
+  "publication_revision": "v167-control43-published",
+  "date": "2026-10-14",
+  "firmware_console_version": "1.0.167",
+  "firmware_build": "1fa8438-feetech-ft6-control.43",
+  "firmware_compilation_console_version": "1.0.167",
+  "api_version": 40,
+  "training_console_version": "1.5.27",
+  "upstream_firmware": {
+    "repository": "https://github.com/pollen-robotics/microduck",
+    "tag": "daemon-v0.15.1",
+    "commit": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  "upstream_training": {
+    "repository": "https://github.com/pollen-robotics/microduck_rl",
+    "commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "included_in_source_bundle": false,
+    "retrieval": "first environment preparation uses pinned git checkout and uv sync --frozen --python 3.12"
+  },
+  "source_archive": {
+    "name": "Microduck-Source-R17-V167-control43-clean.tar.gz",
+    "firmware_source_location": "firmware/",
+    "original_compiled_archive": {
+      "name": "Microduck-Source-R17-V167-control43-compiled.tar.gz",
+      "sha256": "d6e2e0c48adb565f0b31f70f9c6d0b628ebedcb50cac827be257294e62561119"
+    },
+    "omitted": [
+      "duplicate compiled binaries and packaged model binaries",
+      "nested V164 baseline ZIP"
+    ],
+    "preparation": "firmware/prepare-V167.py"
+  },
+  "models": {
+    "walk": {
+      "id": "1cbf8730eadd75a5704332c9f3c10f60",
+      "sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+      "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+      "epochs": 9600,
+      "source_iteration": 9599,
+      "num_envs": 2560,
+      "source_policy_directory": "policies/walk",
+      "trained_action_scale": 1,
+      "trained_head_alpha": 1,
+      "trained_legs_alpha": 1,
+      "execution_profile": {
+        "schema": "microduck-runtime-execution/v1",
+        "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+        "mode": "uniform",
+        "action_scale": 1,
+        "head_lowpass": 0.5,
+        "legs_lowpass": 0.7
+      },
+      "deployment_verified": false
+    },
+    "sitstand": {
+      "id": "1c94934c6421ec72ed48079cea749668",
+      "sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+      "task": "Mjlab-SitStand-Flat-MicroDuck"
+    },
+    "ground_pick": {
+      "id": "b14e3a8b56ddbb8d2d831e727774a168",
+      "sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69",
+      "task": "Mjlab-GroundPick-Flat-Backlash-MicroDuck",
+      "epochs": 10000,
+      "source_iteration": 9999,
+      "num_envs": 4096,
+      "base_action_scale": 1,
+      "head_alpha": 1,
+      "legs_alpha": 1,
+      "target_filter": "passthrough",
+      "deployment_verified": false,
+      "source_policy_directory": "policies/ground_pick"
+    },
+    "roulade": {
+      "id": "59e15d7b04d0c40e9b11b8a70bdecae6",
+      "sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac",
+      "task": "Mjlab-Roulade-Flat-MicroDuck",
+      "epochs": 10000,
+      "source_iteration": 9999,
+      "num_envs": 4096,
+      "base_action_scale": 1,
+      "head_alpha": 1,
+      "legs_alpha": 1,
+      "target_filter": "passthrough",
+      "deployment_verified": false,
+      "source_policy_directory": "policies/roulade"
+    },
+    "kick_right": {
+      "id": "67ad09d82f4865d222a7ae06f250cf9f",
+      "sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+      "task": "Mjlab-BallKick-Flat-MicroDuck",
+      "epochs": 10000,
+      "num_envs": 4096,
+      "base_action_scale": 1,
+      "head_alpha": 1,
+      "legs_alpha": 1,
+      "target_filter": "passthrough",
+      "duration_seconds": 0.5,
+      "deployment_verified": false
+    },
+    "kick_left": {
+      "id": "ee0376c927044cdece056ba1d3e6eac7",
+      "sha256": "ee0376c927044cdece056ba1d3e6eac77b3e02ee3f701f1feb437c183ed39a6d",
+      "task": "Mjlab-BallKickLeft-Flat-Backlash-MicroDuck",
+      "epochs": 10000,
+      "num_envs": 4096,
+      "base_action_scale": 1,
+      "target_filter": "passthrough",
+      "duration_seconds": 0.5,
+      "deployment_verified": false
+    }
+  },
+  "roller_models": {
+    "swizzle": "roller/swizzle/policy.onnx",
+    "crouch": "roller/crouch/policy.onnx",
+    "spin": "roller/spin/policy.onnx",
+    "standup": "roller/standup/policy.onnx"
+  },
+  "binary_sha256": {
+    "robotd": "da2bab2320554124e8925c3880962da535dc5b6a414f15dada0c5ca773218647",
+    "robotctl": "a5034efaf6d26aaecc4a1b477c947abb7cf59d157288b9ad661706f00a700da7",
+    "padd": "356ed712b97c5c073cc9c691ede802a72704c7ece42d69c626f3c69fab0af241",
+    "sounds": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103",
+    "gamepad-r7/gamesir-xboxd": "e7c428e5690adf1483b5349fb100e076b5ca37c74068a6dd315015ce47d0af73",
+    "onnxruntime/libonnxruntime.so.1.28.0": "f1ec1a08eb99bd6e5401340f0a2b101381bf4694415480291dc13bcaa30f9ec7",
+    "onnxruntime/libonnxruntime_providers_shared.so": "3b6be288fbfb7dff8770d08a23defdde18e8f7e0f5a2b344a0e5e238c999ea88",
+    "mediad": "0417c8c2dc5a63dd2e1c2a65d652f31609c232abab95d50e4acbd1faab0f742b"
+  },
+  "firmware_payload_sha256": "bcfd5c183c697b9c4e0fdbd563d995eda6a48331a7c49b9e76d20bd156c65cce",
+  "runtime_archives": [
+    {
+      "name": "Microduck-Console-R17-V167.zip",
+      "bytes": 39865662,
+      "sha256": "7e2d70bac58464f67d3e71e8761f515068322bb419cec0c29f57810a7132bffa"
+    },
+    {
+      "name": "Microduck-Training-Studio-R1.5.27.zip",
+      "bytes": 24385768,
+      "sha256": "1c9f7725a7e253361f2c091ee062ecf0d67b685b16eefc5c7632b414754596e6"
+    }
+  ],
+  "source_identity_checks": {
+    "package_BUILD_exact_match": true,
+    "padd_source_matches_shipped_BUILD": true,
+    "padd_roller_source_matches_shipped_BUILD": true,
+    "Rust_sources_preserved_from_control40_archive": false,
+    "console_program_sources_preserved_from_V164_zip": false,
+    "training_program_sources_preserved_from_R1527_zip": true,
+    "training_sample_source_metadata_cleared": [],
+    "Rust_sources_preserved_from_control43_archive": false,
+    "console_program_sources_preserved_from_V167_zip": false,
+    "production_Rust_source_bytes_preserved_by_cleanup": true
+  },
+  "validation_scope": "Directory cleanup, source and release-byte comparison, pinned archive verification and runtime-resource restoration; no new firmware compilation or robot operation.",
+  "system_image": {
+    "release": "public-image-r1",
+    "name": "microduck-zero3w-0.15.1-R1.img.xz",
+    "sha256": "75da978b5d56acd9e4146256431732381de84523bb683e4ab7ac9f0580a7bce5",
+    "reported_acceptance": "Previously verified by reflashing the card, first Wi-Fi setup, SSH, robot communication and R17 identification."
+  },
+  "hardware_verified_in_source_sync": false,
+  "repository_documentation_cleanup": {
+    "date": "2026-10-12",
+    "removed_legacy_documents": 49,
+    "firmware_programs_models_and_runtime_archives_unchanged": true,
+    "history": "Removed documents remain available in Git history."
+  },
+  "repository_documentation_translation": {
+    "date": "2026-10-12",
+    "english_guides": 59,
+    "language_switch": "Paired Markdown links at the top of each guide",
+    "homepage": "../README.en.md",
+    "documentation_index": "../docs/README.en.md",
+    "scope": "Documentation only; English editions preserve version-specific history and original technical identifiers. Existing upstream English documentation is retained.",
+    "application_interfaces": "Existing Chinese interfaces unchanged",
+    "firmware_binaries_models_and_runtime_archives_unchanged": true,
+    "revalidated_hardware_in_translation": false,
+    "updated": "2026-10-13"
+  },
+  "standalone_compiled_firmware": {
+    "published": "2026-10-14",
+    "path": "firmware/console/updates/Microduck-Robotd-FT6-R17.tar.gz",
+    "name": "Microduck-Robotd-FT6-R17.tar.gz",
+    "bytes": 34138802,
+    "sha256": "bcfd5c183c697b9c4e0fdbd563d995eda6a48331a7c49b9e76d20bd156c65cce",
+    "build": "1fa8438-feetech-ft6-control.43",
+    "architecture": "AArch64",
+    "source": "firmware/console/updates/Microduck-Robotd-FT6-R17.tar.gz",
+    "recompiled": false,
+    "install_guides": {
+      "zh-CN": "../release-assets/README.md",
+      "en": "../release-assets/README.en.md"
+    },
+    "byte_identical_to_V167_bundled_payload": true
+  },
+  "online_demos": {
+    "updated": "2026-10-14",
+    "source_commit": "a07cfd0644227be8c55c76e1dc73f623f4a38027",
+    "robot_console_version": "1.0.167",
+    "robot_firmware_display": "1fa8438-feetech-ft6-control.43",
+    "training_console_version": "1.5.27",
+    "robot_url": "https://kissqy.github.io/Microduck-kissqy/",
+    "training_url": "https://kissqy.github.io/Microduck-kissqy/training/",
+    "data": "Simulated telemetry, training curves and job history; published task and hardware reference snapshots",
+    "isolation": "Static same-origin assets only; no robot, SSH, CUDA, training, firmware writes or camera connections; recipe drafts exist only in the current tab",
+    "source_frontends_runtime_archives_and_firmware_unchanged": true
+  },
+  "release_notes": {
+    "zh-CN": "修复鸭身抖动的问题",
+    "en": "Fixed body jitter."
+  },
+  "repository_layout": {
+    "base_commit": "7a52d297a9adfe6d2315481953dc64060252d142",
+    "generated_runtime_files": 32,
+    "duplicate_bytes_removed": 61487165,
+    "baseline": "release-assets/build-baselines/Microduck-Console-R17-V164.zip"
+  },
+  "publication_state": {
+    "published": true,
+    "initial_commit": "8f6060711f38ce9bf2aa67cb21054d32c0abddf2",
+    "changes": "修复鸭身抖动的问题"
+  },
+  "repository_cleanup": {
+    "date": "2026-10-14",
+    "base_commit": "a07cfd0644227be8c55c76e1dc73f623f4a38027",
+    "removed_reference_files": 34,
+    "removed_model_alias_files": 12,
+    "extra_generated_resources": 2,
+    "removed_duplicate_bytes": 5292726,
+    "retained": [
+      "Static online-demo resource copies needed by GitHub Pages",
+      "Original compiled console and firmware archives",
+      "Pinned V164 build baseline",
+      "Original archive evidence and training configuration data"
+    ],
+    "robot_runtime_source_changed": false,
+    "compiled_archives_changed": false,
+    "fixed_snapshot_relative_links": 9,
+    "online_demo_console_version": "1.0.167",
+    "online_demo_build_display": "1fa8438-feetech-ft6-control.43",
+    "removed_unused_legacy_test": "packaging/test_rough_stand_import.py",
+    "removed_unused_build_and_docs": [
+      "build-V160.sh",
+      "package-V160.py",
+      "build-V162.sh",
+      "package-V162.py",
+      "build-V163.sh",
+      "package-V163.py",
+      "verification/package147.py",
+      "V163-构建说明.md",
+      "V163-BUILD.en.md"
+    ]
+  },
+  "imu_firmware_documentation": {
+    "date": "2026-10-14",
+    "version": "FT6_SYNC15_UART_IRQ_v1",
+    "binary": "firmware/console/updates/imu_to_feetech_ReVA_FT6_SYNC15_UART_IRQ_v1.bin",
+    "bytes": 8428,
+    "sha256": "d7bd2f37a6a4e0e15d1f9650a3959bcf4d8c704524d8ec319d72d8bdf104ab6d",
+    "binary_modified": false,
+    "guide": "../hardware/IMU-FIRMWARE.md",
+    "guide_en": "../hardware/IMU-FIRMWARE.en.md",
+    "j2_pinout_source": "../hardware/ProPrj_imu_to_dxl_RevA_V1_2026-10-07.epro2: PCB J2 PAD_NET"
+  },
+  "imu_source_cleanup": {
+    "date": "2026-10-14",
+    "active_version": "FT6_SYNC15_UART_IRQ_v1",
+    "retired_files_removed": 13,
+    "default_make_target": "Feetech FT6",
+    "binary_modified": false,
+    "verification": {
+      "ft6_active_source_preprocessor_sha256": "14f79382cb5ef0159061b69fc26972723d5a3f78ca894385acd6a9e5422af593",
+      "preprocessor_comparison": "identical before/after with unchanged STM32 register header stub; no target rebuild",
+      "host_test_suites": [
+        "test_feetech",
+        "test_led_status",
+        "test_fast_sync"
+      ]
+    }
+  },
+  "source_cleanup": {
+    "revision": 1,
+    "date": "2026-11-12",
+    "scope": "source-only cleanup; published runtime archives unchanged",
+    "record": "firmware/verification/source-cleanup-20261112.json",
+    "deleted_obsolete_tools": 41,
+    "deleted_unlinked_modules": 1,
+    "generated_metadata_copies": 59,
+    "removed_tracked_bytes": 4183658,
+    "runtime_behavior_changed": false,
+    "compiled_archives_changed": false
+  }
+}

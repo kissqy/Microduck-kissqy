@@ -1,0 +1,275 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling libc v0.2.189
+   Compiling syn v2.0.119
+   Compiling syn v3.0.3
+   Compiling cfg-if v1.0.4
+   Compiling find-msvc-tools v0.1.9
+   Compiling shlex v2.0.1
+   Compiling typenum v1.20.1
+   Compiling jobserver v0.1.35
+   Compiling cc v1.4.0
+   Compiling pkg-config v0.3.33
+   Compiling serde_core v1.0.229
+   Compiling synstructure v0.13.2
+   Compiling pin-project-lite v0.2.17
+   Compiling once_cell v1.21.4
+   Compiling zerofrom-derive v0.1.7
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling zerofrom v0.1.8
+   Compiling yoke-derive v0.8.2
+   Compiling stable_deref_trait v1.2.1
+   Compiling errno v0.3.14
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.2
+   Compiling indexmap v2.14.0
+   Compiling yoke v0.8.3
+   Compiling signal-hook-registry v1.4.8
+   Compiling zerovec-derive v0.11.3
+   Compiling autocfg v1.5.1
+   Compiling smallvec v1.15.2
+   Compiling version_check v0.9.5
+   Compiling bytes v1.12.1
+   Compiling zerovec v0.11.6
+   Compiling generic-array v0.14.7
+   Compiling cmake v0.1.58
+   Compiling displaydoc v0.2.6
+   Compiling fs_extra v1.3.0
+   Compiling futures-core v0.3.34
+   Compiling dunce v1.0.5
+   Compiling subtle v2.6.1
+   Compiling aws-lc-sys v0.43.0
+   Compiling tracing-core v0.1.36
+   Compiling bitflags v2.13.1
+   Compiling tokio-macros v2.7.1
+   Compiling tracing-attributes v0.1.31
+   Compiling mio v1.2.2
+   Compiling socket2 v0.6.5
+   Compiling tokio v1.53.1
+   Compiling tracing v0.1.44
+   Compiling tinystr v0.8.3
+   Compiling num-traits v0.2.19
+   Compiling aws-lc-rs v1.17.3
+   Compiling zmij v1.0.23
+   Compiling thiserror v2.0.20
+   Compiling zeroize v1.9.0
+   Compiling serde v1.0.229
+   Compiling writeable v0.6.3
+   Compiling litemap v0.8.2
+   Compiling icu_locale_core v2.2.0
+   Compiling zerotrie v0.2.4
+   Compiling potential_utf v0.1.5
+   Compiling http v1.4.2
+   Compiling thiserror-impl v2.0.20
+   Compiling serde_derive v1.0.229
+   Compiling icu_normalizer_data v2.2.0
+   Compiling utf8_iter v1.0.4
+   Compiling slab v0.4.12
+   Compiling icu_properties_data v2.2.0
+   Compiling serde_json v1.0.151
+   Compiling icu_collections v2.2.0
+   Compiling icu_provider v2.2.0
+   Compiling rustls-pki-types v1.15.1
+   Compiling crypto-common v0.1.7
+   Compiling utf8parse v0.2.2
+   Compiling log v0.4.34
+   Compiling percent-encoding v2.3.2
+   Compiling anstyle-parse v1.0.0
+   Compiling http-body v1.1.0
+   Compiling aho-corasick v1.1.4
+   Compiling hybrid-array v0.4.13
+   Compiling futures-macro v0.3.34
+   Compiling rustls v0.23.42
+   Compiling rustix v1.1.4
+   Compiling httparse v1.10.1
+   Compiling regex-syntax v0.8.11
+   Compiling futures-sink v0.3.34
+   Compiling is_terminal_polyfill v1.70.2
+   Compiling colorchoice v1.0.5
+   Compiling anstyle v1.0.14
+   Compiling untrusted v0.9.0
+   Compiling anstyle-query v1.1.5
+   Compiling futures-task v0.3.34
+   Compiling futures-util v0.3.34
+   Compiling anstream v1.0.0
+   Compiling tokio-util v0.7.19
+   Compiling regex-automata v0.4.16
+   Compiling icu_properties v2.2.0
+   Compiling icu_normalizer v2.2.0
+   Compiling num-integer v0.1.46
+   Compiling block-buffer v0.10.4
+   Compiling zstd-sys v2.0.16+zstd.1.5.7
+   Compiling linux-raw-sys v0.12.1
+   Compiling atomic-waker v1.1.2
+   Compiling clap_lex v1.1.0
+   Compiling heck v0.5.0
+   Compiling fnv v1.0.7
+   Compiling tower-service v0.3.3
+   Compiling winnow v1.0.4
+   Compiling try-lock v0.2.5
+   Compiling strsim v0.11.1
+   Compiling clap_builder v4.6.2
+   Compiling want v0.3.1
+   Compiling toml_parser v1.1.2+spec-1.1.0
+   Compiling h2 v0.4.15
+   Compiling clap_derive v4.6.4
+   Compiling digest v0.10.7
+   Compiling idna_adapter v1.2.2
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling form_urlencoded v1.2.2
+   Compiling futures-channel v0.3.34
+   Compiling matrixmultiply v0.3.11
+   Compiling semver v1.0.28
+   Compiling toml_datetime v1.1.1+spec-1.1.0
+   Compiling rustls-webpki v0.103.13
+   Compiling const-oid v0.10.2
+   Compiling rustversion v1.0.23
+   Compiling digest v0.11.3
+   Compiling toml_edit v0.25.13+spec-1.1.0
+   Compiling hyper v1.11.0
+   Compiling idna v1.1.0
+   Compiling clap v4.6.4
+   Compiling num-complex v0.4.6
+   Compiling inout v0.1.4
+   Compiling sync_wrapper v1.0.2
+   Compiling rawpointer v0.2.1
+   Compiling cpufeatures v0.3.0
+   Compiling ort-sys v2.0.0-rc.11
+   Compiling toml_writer v1.1.2+spec-1.1.0
+   Compiling zstd-safe v7.2.4
+   Compiling getrandom v0.4.3
+   Compiling ipnet v2.12.0
+   Compiling openssl-probe v0.2.1
+   Compiling humantime v2.4.0
+   Compiling base64 v0.22.1
+   Compiling tower-layer v0.3.3
+   Compiling tower v0.5.3
+   Compiling hyper-util v0.1.20
+   Compiling rustls-native-certs v0.8.4
+   Compiling sha2 v0.11.0
+   Compiling cipher v0.4.4
+   Compiling url v2.5.8
+   Compiling tokio-rustls v0.26.4
+   Compiling proc-macro-crate v3.5.0
+   Compiling duck-ipc-proto v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/duck-ipc-proto)
+   Compiling hmac v0.12.1
+   Compiling serde_spanned v1.1.1
+   Compiling cpufeatures v0.2.17
+   Compiling ryu v1.0.23
+   Compiling paste v1.0.15
+   Compiling anyhow v1.0.104
+   Compiling bitflags v1.3.2
+   Compiling signal-hook v0.3.18
+   Compiling nix v0.26.4
+   Compiling serde_urlencoded v0.7.1
+   Compiling sha2 v0.10.9
+   Compiling pbkdf2 v0.12.2
+   Compiling num_enum_derive v0.7.6
+   Compiling tower-http v0.6.11
+   Compiling hyper-rustls v0.27.9
+   Compiling ndarray v0.17.2
+   Compiling salsa20 v0.10.2
+   Compiling rustls-platform-verifier v0.7.0
+   Compiling xattr v1.6.1
+   Compiling regex v1.13.1
+   Compiling http-body-util v0.1.4
+   Compiling unescaper v0.1.10
+   Compiling toml_datetime v0.7.5+spec-1.1.0
+   Compiling roxmltree v0.21.1
+   Compiling filetime v0.2.29
+   Compiling libloading v0.9.0
+   Compiling encoding_rs v0.8.35
+   Compiling rtoolbox v0.0.5
+   Compiling is-terminal v0.4.17
+   Compiling strength_reduce v0.2.4
+   Compiling mime v0.3.17
+   Compiling winnow v0.7.15
+   Compiling lazy_static v1.5.0
+   Compiling scopeguard v1.2.0
+   Compiling termcolor v1.4.1
+   Compiling env_logger v0.10.2
+   Compiling serialport v4.9.0
+   Compiling sharded-slab v0.1.7
+   Compiling reqwest v0.13.4
+   Compiling transpose v0.2.3
+   Compiling rpassword v7.5.4
+   Compiling kinematics v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/kinematics)
+   Compiling ort v2.0.0-rc.11
+   Compiling tar v0.4.46
+   Compiling scrypt v0.11.0
+   Compiling num_enum v0.7.6
+   Compiling zstd v0.13.3
+   Compiling primal-check v0.3.4
+   Compiling matchers v0.2.0
+   Compiling tracing-log v0.2.0
+   Compiling thread_local v1.1.10
+   Compiling fastrand v2.5.0
+   Compiling ct-codecs v1.1.7
+   Compiling hound v3.5.1
+   Compiling nu-ansi-term v0.50.3
+   Compiling tracing-subscriber v0.3.23
+   Compiling minisign v0.9.1
+   Compiling tempfile v3.27.0
+   Compiling toml v1.1.3+spec-1.1.0
+   Compiling rustypot v1.8.0
+   Compiling rustfft v6.4.1
+   Compiling hf-robot-account v0.1.0
+   Compiling toml_edit v0.23.10+spec-1.0.0
+   Compiling toml v0.9.12+spec-1.1.0
+   Compiling humantime-serde v1.1.1
+   Compiling fs4 v1.1.0
+   Compiling libloading v0.8.9
+   Compiling async-trait v0.1.92
+   Compiling minisign-verify v0.2.5
+   Compiling updater v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/updater)
+   Compiling duck-control v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/duck-control)
+   Compiling robotd-params v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/robotd-params)
+   Compiling pet-detect v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/pet-detect)
+   Compiling test-support v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/test-support)
+   Compiling sounds v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/sounds)
+   Compiling odometry v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/odometry)
+   Compiling arc-swap v1.9.2
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/robotd)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 47s
+     Running unittests src/main.rs (build157-tools/host-target/debug/deps/robotd-f49d995f2c66543e)
+
+running 9 tests
+test tests::r17_home_hold_mouth_never_bypasses_startup_relax_fall_or_missing_sensors ... ok
+
+thread 'tests::startup_invalid_imu_does_not_wait_forever_at_fifty_hz' (4467) panicked at robotd/src/main.rs:6091:9:
+assertion `left == right` failed: only one bounded warmup burst
+  left: 3
+ right: 26
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test tests::startup_notifications_only_publish_changes_and_keep_late_snapshot ... ok
+test tests::r17_startup_refuses_motion_without_queuing_it_for_later ... ok
+
+thread 'tests::startup_read_failures_keep_one_second_backoff_before_imu_confirmation' (4469) panicked at robotd/src/main.rs:6070:9:
+assertion `left == right` failed
+  left: 26s
+ right: 2.48s
+
+thread 'tests::startup_imu_confirmation_uses_control_period_without_writes' (4465) panicked at robotd/src/main.rs:6059:9:
+assertion `left == right` failed
+  left: 24s
+ right: 480ms
+test tests::startup_invalid_imu_does_not_wait_forever_at_fifty_hz ... FAILED
+test tests::startup_read_failures_keep_one_second_backoff_before_imu_confirmation ... FAILED
+test tests::startup_imu_confirmation_uses_control_period_without_writes ... FAILED
+test tests::startup_incomplete_joint_feedback_never_uses_fast_confirmation ... ok
+test raw_stream::tests::new_viewer_gets_unchanged_startup_failure_without_reencoding ... ok
+test feetech_r9_tests::r9_startup_cadence_and_motion_use_one_bus_without_recovery ... ok
+
+failures:
+
+failures:
+    tests::startup_imu_confirmation_uses_control_period_without_writes
+    tests::startup_invalid_imu_does_not_wait_forever_at_fifty_hz
+    tests::startup_read_failures_keep_one_second_backoff_before_imu_confirmation
+
+test result: FAILED. 6 passed; 3 failed; 0 ignored; 0 measured; 254 filtered out; finished in 1.16s
+
+error: test failed, to rerun pass `-p robotd --bin robotd`

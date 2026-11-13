@@ -1,0 +1,19 @@
+test_body_and_head_toggles_keep_current_mapping (test_input157.InputTests.test_body_and_head_toggles_keep_current_mapping) ... ok
+test_held_select_shuts_down_once_but_short_release_relaxes (test_input157.InputTests.test_held_select_shuts_down_once_but_short_release_relaxes) ... ok
+test_home_then_hold_and_release_stays_enabled (test_input157.InputTests.test_home_then_hold_and_release_stays_enabled) ... ok
+test_hotplug_during_blocking_home_status_discards_following_actions (test_input157.InputTests.test_hotplug_during_blocking_home_status_discards_following_actions) ... ok
+test_idle_has_no_timer_and_modes_survive_neutral_frame (test_input157.InputTests.test_idle_has_no_timer_and_modes_survive_neutral_frame) ... ok
+test_malformed_nonfinite_and_expired_input_is_never_written (test_input157.InputTests.test_malformed_nonfinite_and_expired_input_is_never_written) ... ok
+test_old_page_close_cannot_close_new_owner (test_input157.InputTests.test_old_page_close_cannot_close_new_owner) ... ok
+test_physical_takeover_discards_select_and_does_not_replay (test_input157.InputTests.test_physical_takeover_discards_select_and_does_not_replay) ... ok
+test_skill_and_sound_bindings (test_input157.InputTests.test_skill_and_sound_bindings) ... ok
+test_status_listeners_sleep_until_a_state_change (test_input157.InputTests.test_status_listeners_sleep_until_a_state_change) ... ok
+test_timeout_eof_and_close_never_fabricate_select_release (test_input157.InputTests.test_timeout_eof_and_close_never_fabricate_select_release) ... ok
+test_kernel_bitmap_word_boundaries_identify_gamepad (test_input157.TransportTests.test_kernel_bitmap_word_boundaries_identify_gamepad) ... ok
+test_live_event_overrides_old_system_snapshot_without_polling (test_input157.TransportTests.test_live_event_overrides_old_system_snapshot_without_polling) ... ok
+test_same_byte_stream_handles_multiple_requests (test_input157.TransportTests.test_same_byte_stream_handles_multiple_requests) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.003s
+
+OK

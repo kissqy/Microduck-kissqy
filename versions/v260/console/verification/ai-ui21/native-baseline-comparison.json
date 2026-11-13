@@ -1,0 +1,38 @@
+{
+  "baseline_source": "Microduck-Source-R17-V186-control57-compiled.tar.gz",
+  "baseline_sha256": "425c04cd829386ba934d9137a33081f11335a3404e5f22337eed47e993d1a1cb",
+  "baseline_test_result": "test result: FAILED. 278 passed; 25 failed; 2 ignored; 0 measured; 0 filtered out; finished in 72.56s",
+  "ui21_test_result": "test result: FAILED. 283 passed; 24 failed; 2 ignored; 0 measured; 0 filtered out; finished in 15.88s",
+  "shared_failures": [
+    "control::joint_uniform_tests::joint_uniform_keeps_manual_lb_teacher_and_returns_to_new_walk",
+    "control::selftrained_checks::lb_recovery_test_runs_official_skill_and_returns_to_original_walk",
+    "feetech_recovery_tests::explicit_home_after_a_policy_pause_restores_absolute_home_without_replay",
+    "feetech_recovery_tests::fallen_lb_preempts_home_ramp_and_drops_same_tick_mode_or_policy_changes",
+    "feetech_recovery_tests::fallen_limp_lb_starts_teacher_directly_finishes_home_and_retries_after_select",
+    "feetech_recovery_tests::feetech_official_coast_holds_and_resumes_without_reenable",
+    "feetech_recovery_tests::home_lb_pending_request_is_cancelled_by_start_home_disable_and_relax",
+    "feetech_recovery_tests::home_lb_starts_fallen_finishes_home_and_start_cancels_while_blind",
+    "feetech_recovery_tests::limp_lb_rechecks_current_feedback_and_never_replays_a_refused_edge",
+    "feetech_recovery_tests::limp_lb_revalidates_after_torque_readback_and_honors_late_init_or_select",
+    "feetech_recovery_tests::limp_lb_start_via_padd_init_cancels_even_while_sensors_are_blind",
+    "feetech_recovery_tests::policy_lb_returns_walk_and_select_then_limp_lb_can_restart",
+    "feetech_recovery_tests::start_home_ends_the_seat_even_when_reads_are_paused",
+    "official_start_tests::v186_official_start_prone",
+    "official_start_tests::v186_official_start_sagged",
+    "official_start_tests::v186_official_start_side_from_limp",
+    "official_start_tests::v186_official_start_supine",
+    "raw_stream::tests::lazy_bus_rpc_preserves_snapshot_fields_without_streaming",
+    "raw_stream::tests::offline_control_keeps_acquisition_counts_without_full_reports_or_geometry",
+    "stability_tests::feetech_acquisition_ticks_before_first_valid_pose_without_target_writes",
+    "tests::a_mode_switch_on_a_limp_robot_swaps_the_policies_and_leaves_it_limp",
+    "tests::a_mode_switch_that_arrives_on_a_blind_tick_is_not_lost",
+    "tests::r17_empty_snapshot_and_warming_imu_do_not_accept_home",
+    "tests::setting_the_mode_accepts_refuses_and_says_which"
+  ],
+  "ui21_only_failures": [],
+  "baseline_only_failures": [
+    "feetech_read_only::tests::service_loop_counts_faults_without_any_motor_write"
+  ],
+  "same_broad_suite_clean": false,
+  "notes": "Frozen source baseline reproduces all 24 UI21 main-test failures. Baseline also failed a timing-sensitive service-loop test. Unix listener integration tests are blocked by sandbox Operation not permitted; targeted expression checks execute independently and all 27 pass."
+}

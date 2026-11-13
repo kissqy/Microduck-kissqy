@@ -1,0 +1,87 @@
+{
+  "release": "V211_control.V73_AI-T1_UI31",
+  "python_ai_tests": {
+    "tests": 210,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 210,
+    "success": true
+  },
+  "frontend": [
+    {
+      "passed": true,
+      "scope": "UI21 grouped catalogs, per-axis range display, per-question images and TOF, late preview isolation, bounded scrolling"
+    },
+    {
+      "passed": true,
+      "scope": "UI24 live speech checkbox, no optimistic state, pending on/off, Zero ACK and ASR sync, old HTTP/status/event rejection, error retains confirmed state, no second mute or task switch"
+    },
+    {
+      "passed": true,
+      "scope": "UI29 action-and-scene result distinguishes completed motion from a failed camera without claiming the motion did not execute"
+    },
+    {
+      "passed": true,
+      "scope": "UI25 shared compact credential grid, bounded question input, no obsolete 1200px gap, unique control IDs, hidden empty visual output, model-wait busy state and model completion text"
+    },
+    {
+      "passed": true,
+      "scope": "rehearsal composer, preset draft, explicit task send and clear, waiting for provider ACK; no action request from text"
+    },
+    {
+      "passed": true,
+      "scope": "live microphone bars; retained credentials and editing; Chinese skills; multi-turn chat; vision busy/error/preview/source labels; measured brightness, exposure warning and next-capture reset"
+    },
+    {
+      "passed": true,
+      "scope": "real ControlPanel and PadControls; identical Start frames; one click one press/release; HOME then hold labels from readback; disabled during takeover/maintenance/offline; keyboard repeat; suspend reset; no automatic commands"
+    },
+    {
+      "passed": true,
+      "scope": "exact native PCM WAV, 24k mono16, per-window RAM, no autoplay/persistence, explicit replay/stop/end, sequence gaps, memory eviction, URL revocation and pagehide cleanup"
+    }
+  ],
+  "changed_inherited_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_action_gate.py",
+    "ai_persona.py",
+    "ai_runtime.py",
+    "release_identity.py",
+    "static/index.html",
+    "verification/test_ai_hat_permission_ui27.py"
+  ],
+  "new_behavior_tests": 0,
+  "updated_existing_full_rate_pure_yaw_test": true,
+  "default_task_walk_arguments": {
+    "vx": 0,
+    "vy": 0,
+    "vyaw": -1.5,
+    "seconds": 1
+  },
+  "schema_and_execution_yaw_bounds": [
+    -1.5,
+    1.5
+  ],
+  "rate_reference": "frozen padd/src/main.rs max_angular default 1.5; Drive vyaw=-right_x*max_angular",
+  "zero_translation_and_final_stop_checked": true,
+  "out_of_range_yaw_rejected": true,
+  "firmware_audio_camera_and_remote_bytes_identical_to_ui30": [
+    "ai_doubao.py",
+    "ai_zero.py",
+    "ai_vision.py",
+    "ai_camera_setup.py",
+    "ai_remote.py",
+    "service_control.py",
+    "ai_hat_audio.py",
+    "static/ai-panel.js",
+    "updates/Microduck-Robotd-FT6-R17.tar.gz"
+  ],
+  "camera_quality": "720p15",
+  "live_model_semantic_tool_selection_tested": false,
+  "hardware_tested": false,
+  "windows_tested": false,
+  "source_ui30_zip_sha256": "1d710aa39e45d3ed241b4038601953c25b401d80b1ad6b2208f309f068310dbe",
+  "firmware_sha256": "1b7376621ea40994edffcea48be9c9a4bd7bc42a19388bacdce827a0dbcab99e"
+}

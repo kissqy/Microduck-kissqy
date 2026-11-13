@@ -1,0 +1,1 @@
+PASS queue: snapshots, future teachers/latest PT, sequential dispatch without page, pause/resume, failure/retry, clear, 4K/mobile layout; no automatic environment checks.

@@ -1,0 +1,7 @@
+{
+  "url": "https://docs.volcengine.com/docs/DoubaoVoice/endtoend-realtime-voice-full-duplex-version?lang=en",
+  "model": "1.2.6.1",
+  "session_tools_schema": "tools belongs to documented create/update session object",
+  "retrieved_at": "2026-10-24",
+  "live_provider_tested": false
+}

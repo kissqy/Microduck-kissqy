@@ -93,13 +93,20 @@ These three stages prepare your duck to use the supplied movements. Continue fro
 
 ## Downloads and versions
 
-**Current release: System Image R2 + Console Studio V260 / control.102, first-boot Wi-Fi R10.** Updated November 13, 2026. V260 is published independently from the retained V167 source and packages.
+**Current release: System Image R2 + Console Studio V260 / control.102, first-boot Wi-Fi R10.** Updated November 13, 2026. Both versions are available under `versions/` on main; no branch switching is needed. Original V167 source and package URLs remain compatible.
+
+| Version directory | Firmware | System image | Entry |
+| --- | --- | --- | --- |
+| V260 · current release | control.102 | R2 · Wi-Fi R10 | [versions/v260/](versions/v260/) |
+| V167 · historical release | control.43 | R1 includes control.40; V167 bundles control.43 | [versions/v167/](versions/v167/README.en.md) |
+
+Training Studio R1.5.27 remains a separate tool; its version number is independent of the Robot Console.
 
 | Current release | Purpose and download |
 | --- | --- |
 | System Image R2 · Microduck 0.15.1 / control.102 | New ZERO 3W installations: [download .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
-| Robot Console Studio V260 · bundled control.102 | Connect, calibrate and control the robot: [release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [package guide](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) |
-| V260 console and firmware source | [Independent source tree](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260) · [four-package guide](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) |
+| Robot Console Studio V260 · bundled control.102 | Connect, calibrate and control the robot: [release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [package guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |
+| V260 console and firmware source | [Independent source tree](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260) · [runtime and source guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |
 | Training Studio R1.5.27 · optional | Train and evaluate new movements: [download ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip) |
 
 R2 includes control.102 and 11 ONNX runtime models. Verify your own mechanics and IMU calibration before movement. For an existing installation, use V260's matching bundled firmware when upgrading. [Release baseline and validation scope](microduck-hd1910/docs/BASELINE.en.md); publishing this release does not extend the recorded real-robot Known-Good scope.
@@ -109,7 +116,7 @@ R2 includes control.102 and 11 ONNX runtime models. Verify your own mechanics an
 
 - [System Image R1](https://github.com/kissqy/Microduck-kissqy/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz) includes control.40 and first-boot Wi-Fi R5.
 - [Robot Console R17 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip) includes control.43; [historical firmware guide](release-assets/README.en.md#historical-release-control43).
-- Original V167 firmware and console source remain in `microduck-hd1910/firmware/`; V260 source lives in the separate branch linked above.
+- V167 firmware and console source are grouped under [versions/v167/](versions/v167/README.en.md); V260 source is under [versions/v260/](versions/v260/). The original root source and download paths remain for compatibility.
 
 </details>
 

@@ -1,0 +1,51 @@
+test_single_socket_orders_press_release_and_revokes_on_disconnect (test_control_socket.SocketTests.test_single_socket_orders_press_release_and_revokes_on_disconnect) ... ok
+test_slow_http_management_does_not_queue_websocket_input (test_control_socket.SocketTests.test_slow_http_management_does_not_queue_websocket_input) ... 127.0.0.1 - - [10/Oct/2026 09:16:50] "POST /api/service/connection HTTP/1.1" 200 -
+ok
+test_unmasked_and_oversized_frames_rejected_before_json_dispatch (test_control_socket.SocketTests.test_unmasked_and_oversized_frames_rejected_before_json_dispatch) ... ok
+test_wrong_credentials_and_foreign_origin_never_dispatch (test_control_socket.SocketTests.test_wrong_credentials_and_foreign_origin_never_dispatch) ... ok
+test_browser_adapter_matches_existing_python_store_for_motion_commissioning_and_stale_samples (test_raw_telemetry.RawTelemetryTests.test_browser_adapter_matches_existing_python_store_for_motion_commissioning_and_stale_samples) ... ok
+test_codec_handles_nonfinite_as_missing_and_rejects_structural_errors (test_raw_telemetry.RawTelemetryTests.test_codec_handles_nonfinite_as_missing_and_rejects_structural_errors) ... ok
+test_fanout_preserves_bytes_bounds_backlog_and_never_replays_old_measurements_as_fresh (test_raw_telemetry.RawTelemetryTests.test_fanout_preserves_bytes_bounds_backlog_and_never_replays_old_measurements_as_fresh) ... ok
+test_mirror_preserves_complete_reports_at_ten_hz_without_skipping_low_rate_channels (test_raw_telemetry.RawTelemetryTests.test_mirror_preserves_complete_reports_at_ten_hz_without_skipping_low_rate_channels) ... ok
+test_native_stream_and_tof_are_forwarded_byte_for_byte_through_actual_production_loop (test_raw_telemetry.RawTelemetryTests.test_native_stream_and_tof_are_forwarded_byte_for_byte_through_actual_production_loop) ... Exception in thread Thread-18 (daemon):
+ok
+Traceback (most recent call last):
+test_production_rust_worker_fixture_matches_both_decoders_and_preserves_15_joints (test_raw_telemetry.RawTelemetryTests.test_production_rust_worker_fixture_matches_both_decoders_and_preserves_15_joints) ...   File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix1/packaging/test_raw_telemetry.py", line 142, in daemon
+    for start in range(0,len(wire),7):server.sendall(wire[start:start+7])
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py:1077: ResourceWarning: unclosed <socket.socket fd=8, family=1, type=1, proto=0>
+  self._invoke_excepthook(self)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_real_websocket_auth_fanout_ping_and_close_do_not_disconnect_robot (test_raw_telemetry.RawTelemetryTests.test_real_websocket_auth_fanout_ping_and_close_do_not_disconnect_robot) ... ok
+test_server_websocket_frame_lengths_support_full_raw_metadata (test_raw_telemetry.RawTelemetryTests.test_server_websocket_frame_lengths_support_full_raw_metadata) ... ok
+test_ssh_authentication_failure_is_reported_without_killing_the_collector (test_raw_telemetry.RawTelemetryTests.test_ssh_authentication_failure_is_reported_without_killing_the_collector) ... ok
+test_tof_quiet_ack_refreshes_once_and_a_real_frame_rearms_the_next_quiet_period (test_raw_telemetry.RawTelemetryTests.test_tof_quiet_ack_refreshes_once_and_a_real_frame_rearms_the_next_quiet_period) ... ok
+test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording (test_raw_telemetry.RawTelemetryTests.test_uniform_execution_metadata_actual_values_and_clear_reach_both_stores_and_recording) ... ok
+test_a_different_endpoint_is_independent_and_does_not_wake_an_input_socket (test_socket_transport.TunnelTests.test_a_different_endpoint_is_independent_and_does_not_wake_an_input_socket) ... ok
+test_a_failed_bind_debug_line_is_not_readiness_and_never_connects_a_foreign_port (test_socket_transport.TunnelTests.test_a_failed_bind_debug_line_is_not_readiness_and_never_connects_a_foreign_port) ... ok
+test_endpoint_is_shared_and_last_stream_close_owns_ssh_teardown (test_socket_transport.TunnelTests.test_endpoint_is_shared_and_last_stream_close_owns_ssh_teardown) ... ok
+test_failure_does_not_retry_or_leave_a_process_and_cancellation_does_not_start_one (test_socket_transport.TunnelTests.test_failure_does_not_retry_or_leave_a_process_and_cancellation_does_not_start_one) ... ok
+test_forward_command_keeps_auth_and_loopback_only_without_a_remote_command (test_socket_transport.TunnelTests.test_forward_command_keeps_auth_and_loopback_only_without_a_remote_command) ... ok
+test_local_mode_opens_the_existing_unix_socket_without_ssh_or_payload (test_socket_transport.TunnelTests.test_local_mode_opens_the_existing_unix_socket_without_ssh_or_payload) ... ok
+test_remote_socket_transmits_unmodified_binary_and_close_wakes_a_blocked_reader (test_socket_transport.TunnelTests.test_remote_socket_transmits_unmodified_binary_and_close_wakes_a_blocked_reader) ... ok
+test_retiring_a_dead_tunnel_never_closes_a_new_generation (test_socket_transport.TunnelTests.test_retiring_a_dead_tunnel_never_closes_a_new_generation) ... ok
+test_unrelated_listener_debug_does_not_release_the_requested_endpoint (test_socket_transport.TunnelTests.test_unrelated_listener_debug_does_not_release_the_requested_endpoint) ... ok
+test_acknowledged_shutdown_blocks_all_input_and_probes_until_explicit_resume (test_power_connections.PowerConnectionTests.test_acknowledged_shutdown_blocks_all_input_and_probes_until_explicit_resume) ... ok
+test_collector_pause_prevents_process_creation_and_resume_starts_only_one (test_power_connections.PowerConnectionTests.test_collector_pause_prevents_process_creation_and_resume_starts_only_one) ... ok
+test_failed_shutdown_does_not_report_off_or_suspend_connections (test_power_connections.PowerConnectionTests.test_failed_shutdown_does_not_report_off_or_suspend_connections) ... ok
+test_installation_disables_bytecode_cache_for_python_children (test_power_connections.PowerConnectionTests.test_installation_disables_bytecode_cache_for_python_children) ... ok
+test_power_has_no_collection_pause_or_upgrade_readiness_gate (test_power_connections.PowerConnectionTests.test_power_has_no_collection_pause_or_upgrade_readiness_gate) ... ok
+test_power_sends_one_os_command_without_installed_firmware_gate (test_power_connections.PowerConnectionTests.test_power_sends_one_os_command_without_installed_firmware_gate) ... ok
+test_reboot_retains_reconnect_and_unblocks_on_new_boot (test_power_connections.PowerConnectionTests.test_reboot_retains_reconnect_and_unblocks_on_new_boot) ... ok
+test_upgrade_cleanup_is_privileged_and_preserves_original_install_error (test_power_connections.PowerConnectionTests.test_upgrade_cleanup_is_privileged_and_preserves_original_install_error) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 7.217s
+
+OK

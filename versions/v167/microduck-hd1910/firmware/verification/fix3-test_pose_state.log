@@ -1,0 +1,6 @@
+PASS physical IDs fix shuffled telemetry order; direction is not applied twice
+PASS unavailable mouth never freezes the fourteen actual hinges
+PASS missing, stale, uncalibrated, nonfinite or duplicated real hinges are rejected
+PASS ghost requires fresh state, complete visual targets and a motion context
+PASS IMU status distinguishes unverified installation, stale samples and invalid vectors
+PASS nonservice uses the standard state radians, ignoring servo order and degree values

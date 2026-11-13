@@ -1,0 +1,281 @@
+   Compiling padd v0.15.1 (/workspace/scratch/5a402859beee/v163-source/Microduck-Source-R17-V163-control40/padd)
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/v163-source/Microduck-Source-R17-V163-control40/robotd)
+   Compiling duck-control v0.15.1 (/workspace/scratch/5a402859beee/v163-source/Microduck-Source-R17-V163-control40/duck-control)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 20.46s
+
+COMMAND: /workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/target/debug/deps/padd-2197edd54a4bce94 --test-threads=1
+
+running 41 tests
+test input_settings::tests::live_changes_confirm_pid_and_keep_previous_on_invalid_file ... ok
+test input_settings::tests::mouth_cap_keeps_raw_triggers_for_sound_and_never_opens_at_idle ... ok
+test roller_click_tests::inherited_l3_waits_for_release_before_a_new_test_press ... ok
+test roller_test::tests::failed_gates_send_no_motion_or_skill_request ... ok
+test roller_test::tests::fallen_motion_with_valid_imu_passes ... ok
+test roller_test::tests::home_limp_and_other_skills_are_refused ... ok
+test roller_test::tests::missing_invalid_and_upright_imu_are_refused ... ok
+test roller_test::tests::native_socket_executes_exactly_one_guarded_skill ... ok
+test roller_test::tests::standing_or_unconfirmed_fall_is_refused ... ok
+test roller_test::tests::unhealthy_stale_and_frozen_feedback_are_refused ... ok
+test tap::tests::a_departed_subscriber_is_forgotten ... ok
+test tap::tests::a_frame_survives_the_wire ... ok
+test tap::tests::a_slow_subscriber_is_dropped_from_rather_than_blocking_the_reader ... ok
+test tap::tests::a_subscriber_arriving_mid_stream_is_told_the_device ... ok
+test tap::tests::a_subscriber_arriving_mid_stream_is_told_the_imu_too ... ok
+test tap::tests::an_unreadable_sibling_does_not_end_the_imu_search ... ok
+test tap::tests::dropped_samples_are_not_dropped_frames ... ok
+test tap::tests::every_code_gets_a_name_or_a_number ... ok
+test tap::tests::head_control_holds_the_imu_open_and_reads_the_filter ... ok
+test tap::tests::the_device_is_only_held_while_a_pad_and_a_watcher_both_exist ... ok
+test tap::tests::the_imu_is_the_accelerometer_sibling_under_the_same_hid_device ... ok
+test tests::a_changed_frame_is_sent_at_once ... ok
+test tests::a_frame_that_asks_for_motion_is_always_sent ... ok
+test tests::a_hold_does_not_survive_the_pad_going_away ... ok
+test tests::a_pad_dropout_after_the_shutdown_does_not_revive_the_stop ... ok
+test tests::a_rate_this_loop_cannot_run_at_is_refused_rather_than_divided_by ... ok
+test tests::a_stationary_frame_goes_out_again_on_the_heartbeat ... ok
+test tests::a_two_call_frame_is_one_write_and_two_lines ... ok
+test tests::an_unchanged_stationary_frame_is_not_resent ... ok
+test tests::an_untouched_pad_in_head_mode_holds_both_intents ... ok
+test tests::grabbed_gamesir_raw_node_cannot_hide_the_mapped_xbox ... ok
+test tests::inherited_buttons_wait_for_release_and_select_release_does_not_relax ... ok
+test tests::malformed_or_wrong_id_reply_cannot_latch_home ... ok
+test tests::neutral_web_attachment_preserves_the_first_deliberate_start_press ... ok
+test tests::radio_reconnect_cannot_keep_head_or_body_mode_or_skip_explicit_home ... ok
+test tests::refused_home_does_not_make_the_next_start_enable_the_policy ... ok
+test tests::restart_closing_the_socket_is_an_error_instead_of_successful_home ... ok
+test tests::select_stops_on_a_short_release_and_shuts_down_on_a_long_hold ... ok
+test tests::stalled_robotd_is_bounded_without_a_background_poll ... ok
+test tests::the_head_follows_the_pad_with_the_sticks_signs_gain_and_limit ... ok
+test tests::y_cycles_follow_hold_follow_and_re_centres_each_time ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+
+COMMAND: /workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/target/debug/deps/duck_ipc_proto-2d7313b34343afec --test-threads=1
+
+running 53 tests
+test clock::tests::monotonic_advances_and_realtime_is_this_century ... ok
+test tests::a_beacon_survives_the_advertisement ... ok
+test tests::a_binary_outside_the_layout_has_no_release ... ok
+test tests::a_bus_section_missing_a_counter_still_parses ... ok
+test tests::a_call_serialises_as_jsonrpc ... ok
+test tests::a_clean_frame_carries_neither_alarm ... ok
+test tests::a_deleted_binary_still_names_its_release ... ok
+test tests::a_dev_release_keeps_the_suffix_that_distinguishes_it ... ok
+test tests::a_hit_renders_only_what_the_publisher_wrote ... ok
+test tests::a_log_entry_without_a_run_still_parses ... ok
+test tests::a_missing_battery_is_unknown_not_empty ... ok
+test tests::a_notification_parses_without_an_id_field ... ok
+test tests::a_pairing_pin_is_redacted_from_debug_output ... ok
+test tests::a_quantised_register_is_good_enough_to_cast_from ... ok
+test tests::a_ref_with_a_slash_survives_the_wire ... ok
+test tests::a_release_path_names_its_version ... ok
+test tests::a_roster_of_the_wrong_length_is_not_a_beacon ... ok
+test tests::a_run_record_is_one_flat_line ... ok
+test tests::a_state_frame_missing_odom_still_parses ... ok
+test tests::a_usb_pad_is_not_on_the_radio ... ok
+test tests::a_wifi_key_is_redacted_from_debug_output ... ok
+test tests::a_wifi_key_still_serialises ... ok
+test tests::an_address_payload_is_not_mistaken_for_a_beacon ... ok
+test tests::an_identity_survives_being_published_and_read_back ... ok
+test tests::an_imu_section_missing_its_newest_field_still_parses ... ok
+test tests::an_older_frame_reports_no_velocity_rather_than_zero ... ok
+test tests::an_unknown_params_member_is_refused_by_name ... ok
+test tests::an_unknown_run_event_keeps_the_rest_of_the_transcript ... ok
+test tests::an_unlimited_command_omits_limited_by ... ok
+test tests::build_info_is_explicit_about_an_unknown_revision ... ok
+test tests::build_info_macro_reports_the_calling_crate ... ok
+test tests::component_carrying_calls_expose_it ... ok
+test tests::degraded_is_omitted_when_false_and_present_when_true ... ok
+test tests::every_call_covers_every_variant ... ok
+test tests::every_call_has_a_distinct_method ... ok
+test tests::every_call_round_trips_over_the_wire ... ok
+test tests::from_dir_round_trips_and_is_omitted_when_unset ... ok
+test tests::health_without_the_degraded_field_is_not_degraded ... ok
+test tests::hello_result_round_trips_with_and_without_a_revision ... ok
+test tests::methods_without_params_accept_any_params_field ... ok
+test tests::notifications_carry_no_id ... ok
+test tests::only_authenticate_has_no_service ... ok
+test tests::only_software_changing_calls_are_mutating ... ok
+test tests::pad_reports_round_trip_under_their_tag ... ok
+test tests::pairing_a_pad_needs_no_parameters ... ok
+test tests::responses_omit_the_half_they_do_not_use ... ok
+test tests::robot_results_round_trip ... ok
+test tests::robot_state_uses_the_documented_field_names ... ok
+test tests::subscriptions_are_the_only_thing_on_the_stream_lane ... ok
+test tests::target_round_trips_in_every_form ... ok
+test tests::the_theremin_block_is_absent_until_there_is_a_theremin ... ok
+test tests::unknown_methods_and_bad_params_get_different_codes ... ok
+test tests::velocity_and_load_ride_under_their_documented_names ... ok
+
+test result: ok. 53 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+COMMAND: /workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/target/debug/deps/duck_control-5797cf45a5817fb0 --test-threads=1
+
+running 138 tests
+test bus::tests::a_dead_board_runs_past_the_warning_threshold ... ok
+test bus::tests::a_hiccup_is_remembered_in_the_total_but_not_the_run ... ok
+test bus::tests::a_replacement_is_inferred_only_from_exactly_one_missing_servo ... ok
+test bus::tests::fresh_blocks_count_for_nothing ... ok
+test bus::tests::position_conversion_round_trips_through_rustypot ... ok
+test bus::tests::read_block_is_long_enough_for_every_field ... ok
+test bus::tests::separate_episodes_add_up ... ok
+test bus::tests::the_first_block_is_never_stale ... ok
+test bus::tests::velocity_scale_matches_the_datasheet_figure ... ok
+test deployment::tests::corrected_contract_does_not_require_voltage_adaptation_off ... ok
+test deployment::tests::current_skill_contracts_validate_observations_independently_of_target_format ... ok
+test deployment::tests::current_walk_uses_exact_home_and_body_commands ... ok
+test deployment::tests::exported_left_kick_loads_original_backlash_one_shot_and_rejects_wrong_foot ... ok
+test deployment::tests::exported_right_kick_loads_original_bytes_as_unfiltered_one_shot ... ok
+test deployment::tests::joint_rough_export_remains_unfiltered_training_data_with_separate_uniform_override ... ok
+test deployment::tests::legacy_flat_skill_contracts_keep_existing_ema_semantics ... ok
+test deployment::tests::official0151_adapter_requires_matching_task_and_runtime ... ok
+test deployment::tests::official_ground_pick_export_loads_with_original_hash_and_phase ... ok
+test deployment::tests::pick_contract_uses_phase_period_and_zero_head_body_commands ... ok
+test deployment::tests::right_kick_rejects_changed_role_timing_command_or_filter_contract ... ok
+test deployment::tests::roller_stand_keeps_manual_contract_and_rejects_an_invented_slot ... ok
+test deployment::tests::rough_stand_contract_keeps_teacher_semantics_and_independent_scale ... ok
+test deployment::tests::runtime_commands_reject_wrong_model_and_cannot_override_padding ... ok
+test deployment::tests::runtime_curriculum_restores_full_trained_head_commands_without_changing_home ... ok
+test deployment::tests::unfiltered_skills_load_original_contracts_with_slot_specific_scale ... ok
+test deployment::tests::uniform_profile_rejects_wrong_model_nonfinite_values_and_hidden_switch_rules ... ok
+test deployment::tests::unsupported_joint_order_and_offsets_are_rejected ... ok
+test deployment::tests::v160_roller_models_keep_original_training_contracts ... ok
+test fall::tests::a_fall_fires_once_after_the_debounce ... ok
+test fall::tests::a_footfall_on_an_upright_robot_never_fires ... ok
+test fall::tests::a_slow_lean_waits ... ok
+test fall::tests::a_static_tilt_is_not_a_fall ... ok
+test fall::tests::it_rearms_when_the_fall_stops ... ok
+test fall::tests::recovering_from_a_lean_never_fires ... ok
+test fall::tests::reset_drops_a_debounce_in_progress ... ok
+test fall::tests::the_rate_is_the_analytic_derivative ... ok
+test feetech::hd1910_transport_tests::both_hip_pitch_signed_replies_reach_sensors_and_diagnostics ... ok
+test feetech::hd1910_transport_tests::complete_late_telemetry_still_rejects_expired_data_and_bad_imu ... ok
+test feetech::hd1910_transport_tests::complete_late_torque_confirmation_keeps_its_original_deadline ... ok
+test feetech::hd1910_transport_tests::control_status_matches_full_diagnostics_through_feedback_and_torque_changes ... ok
+test feetech::hd1910_transport_tests::diagnostic_registers_share_storage_and_refresh_only_after_a_new_inspection ... ok
+test feetech::hd1910_transport_tests::hd1910_contract_p_arm_and_relax_preserve_d_limit_acceleration_and_eeprom ... ok
+test feetech::hd1910_transport_tests::hd1910_gain_readback_failure_never_enables_torque_and_remains_restorable ... ok
+test feetech::hd1910_transport_tests::imu_protocol_faults_and_missing_initial_feedback_stay_strict ... ok
+test feetech::hd1910_transport_tests::joint_recovery_keeps_real_timestamps_and_has_a_wall_clock_limit ... ok
+test feetech::hd1910_transport_tests::model_contract_p_is_not_replaced_by_xl330_gain_requests ... ok
+test feetech::hd1910_transport_tests::native_speed_reaches_policy_with_signed_magnitude_local_directions_and_no_current_claim ... ok
+test feetech::hd1910_transport_tests::negative_feedback_preloads_itself_but_home_targets_stay_calibrated_positive ... ok
+test feetech::hd1910_transport_tests::numeric_snapshot_matches_native_report_without_uart_or_lost_offline_counts ... ok
+test feetech::hd1910_transport_tests::restart_preserves_powered_servos_without_writing_until_explicit_init ... ok
+test feetech::hd1910_transport_tests::startup_identity_timeout_keeps_servos_limp_and_goal_channel_closed ... ok
+test feetech::hd1910_transport_tests::startup_unconfirmed_torque_never_proceeds_to_imu_or_goals ... ok
+test feetech::hd1910_transport_tests::telemetry_between_old_and_new_deadline_is_fresh_without_late_exception ... ok
+test feetech::hd1910_transport_tests::twenty_ms_missing_replies_keep_failure_identity_and_never_refresh_expired_imu ... ok
+test feetech::tests::calibrated_target_roundtrips_and_clamps_without_wrapping ... ok
+test feetech::tests::combined_sync_read_packet_is_native_and_imu_first ... ok
+test feetech::tests::fifteen_joint_sync_fits_single_native_packet ... ok
+test feetech::tests::imu_layout_status_and_freshness_are_mandatory ... ok
+test feetech::tests::native_goal_encoding_is_signed_magnitude_not_twos_complement_or_modulo ... ok
+test feetech::tests::no_calibration_from_two_bench_ids ... ok
+test feetech::tests::position_feedback_and_angles_keep_the_unmodified_signed_coordinate ... ok
+test feetech::tests::read_loss_preserves_ready_and_allows_hold_but_not_stale_torque_on ... ok
+test feetech::tests::rejects_damage_and_resynchronises ... ok
+test feetech::tests::rejects_joint_order_and_limits_before_bus_open ... ok
+test feetech::tests::sign_is_not_twos_complement ... ok
+test feetech::tests::sync_read_collector_requires_each_exact_reply_once ... ok
+test feetech::tests::sync_torque_checks_all_fifteen_fragmented_replies_and_reports_missing ... ok
+test feetech::tests::telemetry_config_does_not_implicitly_authorize_motion ... ok
+test feetech::tests::telemetry_totals_do_not_blame_devices_for_late_or_unsent_requests ... ok
+test feetech::tests::telemetry_totals_preserve_every_missing_reply_through_recovery ... ok
+test feetech::tests::unified_imu_read_requires_all_16_frames_and_no_extra_transaction ... ok
+test feetech::tests::validates_motion_before_send ... ok
+test feetech::tests::verified_hat_read_and_reply ... ok
+test hd1910::tests::missing_speed_is_not_refiltered_and_fresh_speed_resumes_independently ... ok
+test hd1910::tests::native_velocity_uses_one_sample_delay_and_resets_after_long_gap ... ok
+test imu::tests::all_zero_quaternion_bytes_hold_the_last_good_value ... ok
+test imu::tests::gravity_is_a_unit_vector_in_steady_state ... ok
+test imu::tests::gravity_stays_close_to_unit_through_a_transient ... ok
+test imu::tests::gyro_counts_are_signed ... ok
+test imu::tests::half_precision_decodes_known_values ... ok
+test imu::tests::not_ready_until_the_chip_has_produced_output ... ok
+test io::tests::fake_io_tracks_what_was_written ... ok
+test io::tests::frozen_fake_io_ignores_writes ... ok
+test io::tests::simulated_read_failure_clears_itself ... ok
+test model::tests::battery_percent_clamps_rather_than_extrapolating ... ok
+test model::tests::battery_percent_spans_the_usable_range ... ok
+test model::tests::battery_percent_treats_no_reading_as_zero ... ok
+test model::tests::factory_defaults_are_unused_on_the_bus ... ok
+test model::tests::home_pose_legs_are_mirrored ... ok
+test model::tests::ids_are_unique ... ok
+test model::tests::imu_id_does_not_collide_with_a_joint ... ok
+test model::tests::mouth_index_names_the_mouth ... ok
+test model::tests::mouth_target_spans_the_prototype_range ... ok
+test model::tests::only_the_knees_have_a_homing_offset ... ok
+test model::tests::tables_agree_on_length ... ok
+test model::tests::the_shutdown_mask_clears_the_input_voltage_bit ... ok
+test obs::tests::every_block_lands_at_its_documented_offset ... ok
+test obs::tests::joint_positions_are_relative_to_the_home_pose ... ok
+test obs::tests::only_padding_contracts_zero_body_command_slots ... ok
+test obs::tests::scattering_an_action_skips_the_mouth ... ok
+test obs::tests::the_layout_widths_sum_to_the_declared_input ... ok
+test obs::tests::the_mouth_is_excluded_from_the_observation ... ok
+test obs::tests::twist_magnitude_ignores_head_and_body ... ok
+test obs::tests::unbound_body_axes_are_always_zero ... ok
+test policy::tests::a_panic_out_of_ort_becomes_an_error_that_keeps_its_message ... ok
+test policy::tests::an_unprintable_panic_payload_still_reports_something ... ok
+test policy::tests::disabling_standing_beats_the_magnitude_rule ... ok
+test policy::tests::only_file_errors_name_a_file ... ok
+test policy::tests::the_catch_is_transparent_when_nothing_panics ... ok
+test policy::tests::the_standing_threshold_matches_the_prototype ... ok
+test policy::tests::without_a_standing_policy_it_never_stands ... ok
+test safety::tests::a_brief_tilt_is_not_a_fall ... ok
+test safety::tests::a_caller_that_asks_for_the_limp_gain_gets_it ... ok
+test safety::tests::a_converged_imu_still_detects_a_fall ... ok
+test safety::tests::a_fall_does_not_preempt_the_caller ... ok
+test safety::tests::a_limit_run_resets_when_the_limit_stops_firing ... ok
+test safety::tests::a_limit_that_keeps_firing_is_reported_periodically_not_per_tick ... ok
+test safety::tests::a_non_finite_target_is_refused_not_clamped ... ok
+test safety::tests::a_plain_tick_trips_no_limit ... ok
+test safety::tests::a_refused_tick_does_not_end_a_range_run ... ok
+test safety::tests::a_robot_that_has_never_been_driven_reports_no_deadman ... ok
+test safety::tests::a_sustained_tilt_is_a_fall ... ok
+test safety::tests::an_ordinary_target_passes_through_unchanged ... ok
+test safety::tests::an_unconverged_imu_cannot_declare_a_fall ... ok
+test safety::tests::by_default_a_fall_reports_but_does_not_preempt ... ok
+test safety::tests::limits_are_reported_without_changing_what_is_applied ... ok
+test safety::tests::out_of_range_targets_are_clamped_and_reported ... ok
+test safety::tests::rebooting_motors_rewrites_the_gain_on_the_next_apply ... ok
+test safety::tests::the_deadman_zeroes_the_twist_only ... ok
+test safety::tests::the_gain_is_only_written_when_it_changes ... ok
+test safety::tests::the_three_limits_are_counted_separately ... ok
+test sim::tests::a_frame_that_will_not_parse_drops_the_connection ... ok
+test sim::tests::a_frame_without_a_load_block_is_not_a_frame_of_zero_load ... ok
+test sim::tests::a_protocol_mismatch_names_both_versions ... ok
+test sim::tests::a_read_carries_the_sensors_the_loop_expects ... ok
+test sim::tests::a_refusal_is_an_error_rather_than_a_silent_success ... ok
+test sim::tests::a_simulator_that_restarts_is_reconnected_to_on_the_next_tick ... ok
+test sim::tests::the_targets_cross_in_joint_order ... ok
+
+test result: ok. 138 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.89s
+
+
+COMMAND: /workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/target/debug/deps/robotd-d38ed701a79c9753 --test-threads=1 --exact roller::tests::both_roller_actions_load_with_the_complete_shipped_configuration
+
+running 1 test
+test roller::tests::both_roller_actions_load_with_the_complete_shipped_configuration ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 265 filtered out; finished in 1.59s
+
+
+COMMAND: /workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/target/debug/deps/robotd-d38ed701a79c9753 --test-threads=1 --exact roller::tests::walking_configuration_is_never_touched
+
+running 1 test
+test roller::tests::walking_configuration_is_never_touched ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 265 filtered out; finished in 0.00s
+
+
+COMMAND: /workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/target/debug/deps/robotd-d38ed701a79c9753 --test-threads=1 --exact roller::tests::yaw_and_steering_are_wrapped_and_clipped
+
+running 1 test
+test roller::tests::yaw_and_steering_are_wrapped_and_clipped ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 265 filtered out; finished in 0.00s
+

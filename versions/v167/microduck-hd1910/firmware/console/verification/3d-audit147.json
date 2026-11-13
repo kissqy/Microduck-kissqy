@@ -1,0 +1,233 @@
+{
+  "schema": "microduck-console-3d-audit-v1",
+  "console_version": "1.0.147",
+  "created_utc": "2026-10-07T12:12:45.355948+00:00",
+  "baseline_console_source": "Microduck-Source-R17-v1.0.146.tar.gz",
+  "baseline_source_sha256": "7fb47afedbc3f3704d157ecedc6e779545d000f9edf2c374fcd3fef4eb93df18",
+  "training_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "runtime_revision": "1fa84386f07884e27866411bc1ba166977bced95",
+  "source_audit_findings": {
+    "moving_hinges": 14,
+    "mouth_34_has_movable_visual_hinge": false,
+    "joint_sign_or_id_reversal_found": false,
+    "visual_asset_changed": false,
+    "r146_original_numeric_reports": [
+      "r146_three_comparison_report.json",
+      "r146_runtime_skeleton_report.json"
+    ],
+    "confirmed_display_problems": [
+      "Measured pose depends on saved calibration, without an independent direction reference.",
+      "No complete feedback initially displayed HOME without an explicit model-zero alternative.",
+      "Mouth calibration/feedback could block the fourteen actual hinges.",
+      "Target ghost could retain motion targets during commissioning or stale telemetry.",
+      "IMU labels could disagree with stale/unverified gravity held by the renderer.",
+      "Named camera front was tied to the fixed scene instead of the robot heading."
+    ]
+  },
+  "reference_tests": {
+    "reference/runtime": {
+      "passed": true,
+      "reference_xml": "/workspace/scratch/9f94b8b8f4de/console-3d-audit/work/Microduck-Source-R17-v1.0.147/kinematics/assets/alpha/robot_walk.xml",
+      "pose_cases": 90,
+      "visual_parts": 64,
+      "moving_hinges": 14,
+      "mouth_animation_rejected": true,
+      "offline_references": true,
+      "one_local_joint_only": true,
+      "camera_cases": 12,
+      "body_anchored_labels": true,
+      "head_yaw_body_and_screen_sign": true,
+      "max_rotation_matrix_error": 2.1094237467877974e-15,
+      "max_position_coordinate_error_mm": 4.312896789704368e-06
+    },
+    "reference/training": {
+      "passed": true,
+      "reference_xml": "/workspace/scratch/9f94b8b8f4de/target-limit-ab/analysis-2fa8995d/official-8d0db749-robot_groundcontact_backlash.xml",
+      "pose_cases": 90,
+      "visual_parts": 64,
+      "moving_hinges": 14,
+      "mouth_animation_rejected": true,
+      "offline_references": true,
+      "one_local_joint_only": true,
+      "camera_cases": 12,
+      "body_anchored_labels": true,
+      "head_yaw_body_and_screen_sign": true,
+      "max_rotation_matrix_error": 2.1094237467877974e-15,
+      "max_position_coordinate_error_mm": 0.020897343740167162
+    }
+  },
+  "focused_test_runs": [
+    {
+      "label": "reference/runtime",
+      "chunk_id": "8325de",
+      "wall_time_seconds": 0.164674275,
+      "exit_code": 0,
+      "original_token_count": 123,
+      "output": "{\"passed\":true,\"reference_xml\":\"/workspace/scratch/9f94b8b8f4de/console-3d-audit/work/Microduck-Source-R17-v1.0.147/kinematics/assets/alpha/robot_walk.xml\",\"pose_cases\":90,\"visual_parts\":64,\"moving_hinges\":14,\"mouth_animation_rejected\":true,\"offline_references\":true,\"one_local_joint_only\":true,\"camera_cases\":12,\"body_anchored_labels\":true,\"head_yaw_body_and_screen_sign\":true,\"max_rotation_matrix_error\":2.1094237467877974e-15,\"max_position_coordinate_error_mm\":0.000004312896789704368}\n"
+    },
+    {
+      "label": "reference/training",
+      "chunk_id": "3096f1",
+      "wall_time_seconds": 0.137014718,
+      "exit_code": 0,
+      "original_token_count": 120,
+      "output": "{\"passed\":true,\"reference_xml\":\"/workspace/scratch/9f94b8b8f4de/target-limit-ab/analysis-2fa8995d/official-8d0db749-robot_groundcontact_backlash.xml\",\"pose_cases\":90,\"visual_parts\":64,\"moving_hinges\":14,\"mouth_animation_rejected\":true,\"offline_references\":true,\"one_local_joint_only\":true,\"camera_cases\":12,\"body_anchored_labels\":true,\"head_yaw_body_and_screen_sign\":true,\"max_rotation_matrix_error\":2.1094237467877974e-15,\"max_position_coordinate_error_mm\":0.020897343740167162}\n"
+    },
+    {
+      "label": "pose/state",
+      "chunk_id": "57040a",
+      "wall_time_seconds": 1.7457e-05,
+      "exit_code": 0,
+      "original_token_count": 121,
+      "output": "PASS physical IDs fix shuffled telemetry order; direction is not applied twice\nPASS unavailable mouth never freezes the fourteen actual hinges\nPASS missing, stale, uncalibrated, nonfinite or duplicated real hinges are rejected\nPASS ghost requires fresh state, complete visual targets and a motion context\nPASS IMU status distinguishes unverified installation, stale samples and invalid vectors\nPASS nonservice uses the standard state radians, ignoring servo order and degree values\n"
+    },
+    {
+      "label": "release/tests",
+      "chunk_id": "ee0720",
+      "wall_time_seconds": 0.424421083,
+      "exit_code": 0,
+      "original_token_count": 670,
+      "output": "test_current_daemon_can_request_home_before_arrival (test_console_release_compat.ConsoleReleaseTests.test_current_daemon_can_request_home_before_arrival) ... ok\ntest_home_arrival_uses_measured_current_targets_and_keeps_error_checks (test_console_release_compat.ConsoleReleaseTests.test_home_arrival_uses_measured_current_targets_and_keeps_error_checks) ... ok\ntest_home_request_ramp_arrival_unlocks_walk_and_frontend (test_console_release_compat.ConsoleReleaseTests.test_home_request_ramp_arrival_unlocks_walk_and_frontend) ... ok\ntest_invalid_imu_and_restarted_daemon_do_not_confirm_home (test_console_release_compat.ConsoleReleaseTests.test_invalid_imu_and_restarted_daemon_do_not_confirm_home) ... ok\ntest_javascript_and_python_capabilities_match_for_new_and_legacy_reports (test_console_release_compat.ConsoleReleaseTests.test_javascript_and_python_capabilities_match_for_new_and_legacy_reports) ... ok\ntest_native_telemetry_adapts_new_build_and_actual_targets (test_console_release_compat.ConsoleReleaseTests.test_native_telemetry_adapts_new_build_and_actual_targets) ... ok\ntest_signed_positions_remain_live_and_angles_are_not_wrapped (test_console_release_compat.ConsoleReleaseTests.test_signed_positions_remain_live_and_angles_are_not_wrapped) ... ok\ntest_input_reconnect_error_does_not_turn_installed_firmware_into_failed_upgrade (test_firmware_console.DirectUpgradeTests.test_input_reconnect_error_does_not_turn_installed_firmware_into_failed_upgrade) ... ok\ntest_bundle_manifest_mismatch_and_tamper_are_refused (test_firmware_console.FirmwareTests.test_bundle_manifest_mismatch_and_tamper_are_refused) ... ok\ntest_firmware_command_cannot_carry_executable_paths (test_firmware_console.FirmwareTests.test_firmware_command_cannot_carry_executable_paths) ... ok\ntest_matching_local_zip_checked_before_any_remote_operation (test_firmware_console.FirmwareTests.test_matching_local_zip_checked_before_any_remote_operation) ... ok\ntest_old_or_unknown_firmware_and_truncated_zip_are_rejected (test_firmware_console.FirmwareTests.test_old_or_unknown_firmware_and_truncated_zip_are_rejected) ... ok\ntest_progress_received_before_management_finishes (test_firmware_console.FirmwareTests.test_progress_received_before_management_finishes) ... ok\ntest_sudo_password_never_enters_progress_or_final_error (test_firmware_console.FirmwareTests.test_sudo_password_never_enters_progress_or_final_error) ... ok\ntest_upgrade_works_without_fresh_robot_feedback_and_preserves_logs (test_firmware_console.FirmwareTests.test_upgrade_works_without_fresh_robot_feedback_and_preserves_logs) ... ok\n\n----------------------------------------------------------------------\nRan 15 tests in 0.438s\n\nOK\n"
+    },
+    {
+      "label": "existing/UI",
+      "chunk_id": "532d02",
+      "wall_time_seconds": 0.051773967,
+      "exit_code": 0,
+      "original_token_count": 176,
+      "output": "PASS startup fallen + limp: explicit LB press/release only; no automatic enable or synthesized HOME\nPASS fallen HOME, homing, holding and walking use the same production pad event path\nPASS missing model disables only its action; upright HOME remains; native refusal displays without replay\nPASS recovery readback shows current pose, actual scale/filters and HOME versus Walk return\nPASS physical controller takeover releases held web LB and disables browser actions\nPASS replay, pause, offline and disconnected protections remain\nPASS uniform model metadata, posture-independent UI, actual output/null/stale readback, catalog binding, preserved global scale and servo editing, ordinary/LB restoration\n"
+    },
+    {
+      "label": "product/syntax",
+      "chunk_id": "59c559",
+      "wall_time_seconds": 0.330552052,
+      "exit_code": 0,
+      "original_token_count": 16,
+      "output": "All six modified or added JavaScript modules pass syntax checks\n"
+    }
+  ],
+  "standalone_package_test_runs": [
+    {
+      "command": [
+        "node",
+        "verification/test_calibration_reference.mjs"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"passed\":true,\"reference_xml\":\"/workspace/scratch/9f94b8b8f4de/console-3d-audit/work/Microduck-Source-R17-v1.0.147/console/verification/reference_runtime.xml\",\"pose_cases\":90,\"visual_parts\":64,\"moving_hinges\":14,\"mouth_animation_rejected\":true,\"offline_references\":true,\"one_local_joint_only\":true,\"camera_cases\":12,\"body_anchored_labels\":true,\"head_yaw_body_and_screen_sign\":true,\"max_rotation_matrix_error\":2.1094237467877974e-15,\"max_position_coordinate_error_mm\":0.000004312896789704368}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "verification/test_calibration_reference.mjs",
+        "verification/reference_training_8d0db749.xml"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"passed\":true,\"reference_xml\":\"verification/reference_training_8d0db749.xml\",\"pose_cases\":90,\"visual_parts\":64,\"moving_hinges\":14,\"mouth_animation_rejected\":true,\"offline_references\":true,\"one_local_joint_only\":true,\"camera_cases\":12,\"body_anchored_labels\":true,\"head_yaw_body_and_screen_sign\":true,\"max_rotation_matrix_error\":2.1094237467877974e-15,\"max_position_coordinate_error_mm\":0.020897343740167162}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "verification/test_pose_state.mjs"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS physical IDs fix shuffled telemetry order; direction is not applied twice\nPASS unavailable mouth never freezes the fourteen actual hinges\nPASS missing, stale, uncalibrated, nonfinite or duplicated real hinges are rejected\nPASS ghost requires fresh state, complete visual targets and a motion context\nPASS IMU status distinguishes unverified installation, stale samples and invalid vectors\nPASS nonservice uses the standard state radians, ignoring servo order and degree values\n",
+      "stderr": ""
+    }
+  ],
+  "safety_of_reference_controls": {
+    "sends_motor_commands": false,
+    "writes_calibration": false,
+    "changes_model_weights": false,
+    "reviewed_paths": [
+      "static/calibration-reference.js",
+      "static/calibration-view.js",
+      "static/pose-state.js",
+      "static/duck.js",
+      "static/service.js"
+    ],
+    "service_change": "Labels and help text only; option values and move/capture/post paths preserved."
+  },
+  "unchanged_files_verified": [
+    {
+      "path": "console.py",
+      "sha256": "f295213ca3af0f116855ae01dd4ed93d149b1ac4d975fa19e2a915044d3780d7",
+      "matches_r146": true
+    },
+    {
+      "path": "controls.py",
+      "sha256": "91d406a1edf62322518e6e427a6515c875475b92b224c379f8e47d110912cb9b",
+      "matches_r146": true
+    },
+    {
+      "path": "control_socket.py",
+      "sha256": "68b40569e6dc4981fd534d08b968d2279c96d583759d77e771beec4c456a27fd",
+      "matches_r146": true
+    },
+    {
+      "path": "firmware_packages.py",
+      "sha256": "e7a51c72eb746f04bf307e7b6b0adae4ef3a1b288cd82e18d3af3a3a432eecb7",
+      "matches_r146": true
+    },
+    {
+      "path": "static/control.js",
+      "sha256": "d93782f02207903f1570638584726b8f0bbef5c91d360d3c5d1e481b08858694",
+      "matches_r146": true
+    },
+    {
+      "path": "static/control-socket.js",
+      "sha256": "fba1cbf20eed1a6ca42a52dcded8e6b7c241e9307c50832a589bbec6ed12e954",
+      "matches_r146": true
+    },
+    {
+      "path": "static/raw-telemetry.js",
+      "sha256": "b89a37aa3a4aad2ad1966c31e960a37254387427addb79e24abefd459b67c83a",
+      "matches_r146": true
+    },
+    {
+      "path": "static/raw-kinematics.js",
+      "sha256": "814dc7401c3dfe76b815a721a73c57f7da9adecd4ebc787da8d3190ef90288a4",
+      "matches_r146": true
+    },
+    {
+      "path": "static/pose.js",
+      "sha256": "2ed790562837c8014d5321098c74cba14b4d0b3c2498e7bdaf3d81e045b11350",
+      "matches_r146": true
+    },
+    {
+      "path": "static/joint-map.js",
+      "sha256": "5a4c1bc0142424a0fe277eba9a508485af3ff89e83ac823b3bd899baa432b812",
+      "matches_r146": true
+    },
+    {
+      "path": "static/joint-reference.js",
+      "sha256": "3c8247b750ad21b9f885f5d7c5e489effd0a142db7719d07208966be530bc664",
+      "matches_r146": true
+    },
+    {
+      "path": "static/assets/duck-visual.bin",
+      "sha256": "2051b738abb89cc672923ee9ae4705354e0760ba90238398eb402ba453b06d98",
+      "matches_r146": true
+    },
+    {
+      "path": "updates/Microduck-Robotd-FT6-R17.tar.gz",
+      "sha256": "9cecf03286c608d750cee402d6a977870ba1d92a97b37cb5274abcdefd6c459a",
+      "matches_r146": true
+    },
+    {
+      "path": "updates/imu_to_feetech_ReVA_FT6_SYNC15_UART_IRQ_v1.bin",
+      "sha256": "d7bd2f37a6a4e0e15d1f9650a3959bcf4d8c704524d8ec319d72d8bdf104ab6d",
+      "matches_r146": true
+    }
+  ],
+  "validation_limits": {
+    "hardware_connected_or_tested": false,
+    "browser_rendering_verified": false,
+    "browser_limitation": "No usable local Chromium; cloud browser could not open the local preview address. No screenshot acceptance is claimed.",
+    "three_js_transforms_verified_without_webgl": true,
+    "live_user_installation_inspected": false,
+    "real_motor_direction_inferred_from_saved_calibration": false,
+    "proves_real_rollover_success": false
+  }
+}

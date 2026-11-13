@@ -1,0 +1,15 @@
+{
+  "hardware_tested": false,
+  "windows_native_tested": false,
+  "scope": "bounded retry, independent data streams, explicit reconnect and unchanged upload/handoff regression",
+  "results": {
+    "python-tests": {
+      "exit_code": 0,
+      "tests": 23
+    },
+    "frontend-tests": {
+      "exit_code": 0
+    }
+  },
+  "passed": true
+}

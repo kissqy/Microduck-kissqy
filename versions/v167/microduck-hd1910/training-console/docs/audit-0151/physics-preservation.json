@@ -1,0 +1,169 @@
+{
+  "baseline": "R1.5.20",
+  "compared_tasks": 27,
+  "normalization": "json_path omitted only; compare full env/agent and body/joint numeric data",
+  "tasks": [
+    {
+      "task": "Mjlab-BallKick-Flat-Backlash-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-BallKick-Flat-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-BallKickLeft-Flat-Backlash-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-BallKickLeft-Flat-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-GroundPick-Flat-Backlash-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-GroundPick-Flat-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-GroundPick-Rough-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-RollerCrouch-Flat-Backlash-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-RollerCrouch-Flat-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-Roulade-Flat-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-SitStand-Flat-Backlash-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-SitStand-Flat-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-SitStand-Rough-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-StandUp-Flat-Backlash-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-StandUp-Flat-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-StandUp-Rough-Backlash-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-StandUp-Rough-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-VelStand-Flat-Backlash-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-VelStand-Flat-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-VelStand-Rough-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-Velocity-Flat-Backlash-MicroDuck-Rollers",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-Velocity-Flat-Backlash-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-Velocity-Flat-MicroDuck-Rollers",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-Velocity-Flat-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-Velocity-Rough-Backlash-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    },
+    {
+      "task": "Mjlab-Velocity-Rough-MicroDuck",
+      "resolved_full_equal_except_parameter_file_location": true,
+      "body_mass_pose_inertia_equal": true,
+      "joint_limits_axes_home_equal": true
+    }
+  ]
+}

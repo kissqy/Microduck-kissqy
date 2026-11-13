@@ -1,0 +1,56 @@
+{
+  "version": "1.0.151",
+  "baseline": "1.0.150",
+  "scope": "console-only finite gamepad repair",
+  "tests": {
+    "python_repair": {
+      "passed": 18,
+      "failed": 0,
+      "log": "gamepad-repair151.log"
+    },
+    "python_console_regression": {
+      "passed": 37,
+      "failed": 0,
+      "log": "console-regression151.log"
+    },
+    "frontend": [
+      "gamepad_repair_ui",
+      "settings_ui",
+      "manual_recovery_ui",
+      "advanced_parameters_ui",
+      "walk_ui"
+    ],
+    "syntax": [
+      "python compile",
+      "service.js",
+      "gamepad-repair.js"
+    ]
+  },
+  "payload": {
+    "sha256": "f5461e5e1385a38c7b99b767965e20a193bb9da49a857b8533a473fc5a6ca265",
+    "byte_identical_to_v150": true,
+    "build": "1fa8438-feetech-ft6-control.31"
+  },
+  "changed_existing_files": [
+    "release_identity.py",
+    "service_control.py",
+    "README.zh-CN.md",
+    "BUILD_MANIFEST.json",
+    "static/service.js",
+    "static/control.css"
+  ],
+  "added_files": [
+    "gamepad_repair.py",
+    "verification/gamepad-repair-ui151.log",
+    "verification/gamepad-repair151.log",
+    "verification/test_gamepad_repair.py",
+    "verification/test_gamepad_repair_ui.mjs",
+    "verification/console-regression151.log",
+    "static/gamepad-repair.js",
+    "docs/releases/R151.md"
+  ],
+  "hardware_tested": false,
+  "browser_rendering_verified": false,
+  "browser_limitation": "Playwright is installed, Chromium executable unavailable; DOM event tests run.",
+  "created_at": "2026-10-09T00:31:50.689230+00:00"
+}

@@ -1,0 +1,329 @@
+--- UI42/remote_input.py
++++ UI43/remote_input.py
+@@ -11,6 +11,7 @@
+ LEGACY_NAME = 'Microduck R17 Web Xbox'
+ BUTTONS = {'start', 'select', 'a', 'b', 'x', 'y', 'rb'}
+ AXES = {'lx', 'ly', 'rx', 'ry', 'lt', 'rt', 'dx', 'dy'}
++LINEAR_SPEED = .3  # Full-deflection walking speed in every translation direction, m/s.
+ 
+ 
+ def devices(root=Path('/sys/class/input')):
+@@ -202,8 +203,6 @@
+         self.deadline = self.clock() + .6 if active else None
+         context = request.get('context') or {}
+         self.refresh_drive()
+-        speed = self.drive_speed.get('saved_speed', self.drive_speed.get('speed'))
+-        speed_valid = type(speed) in (int,float) and speed in (.1,.2,.3)
+         settings = context.get('settings') or {}
+         head = settings.get('head_rad', 2.5)
+         mouth = settings.get('mouth_percent', 100)
+@@ -261,10 +260,7 @@
+             return 0 if abs(value) < .1 else value
+         lx, ly, rx, ry = stick('lx'), -stick('ly'), stick('rx'), -stick('ry')
+         if self.mode == 'drive':
+-            if not speed_valid:
+-                if lx or ly:raise ValueError(self.drive_speed.get('error') or '平移速度尚未确认')
+-                speed = 0  # A settings error must not block neutral/stop/button input.
+-            calls.append(('robot.move', {'vx':ly*speed,'vy':-lx*speed,'vyaw':-rx*1.5}))
++            calls.append(('robot.move', {'vx':ly*LINEAR_SPEED,'vy':-lx*LINEAR_SPEED,'vyaw':-rx*1.5}))
+         else:
+             calls.append(('robot.move', {'vx':0,'vy':0,'vyaw':0}))
+             if self.mode == 'head':
+--- UI42/service_control.py
++++ UI43/service_control.py
+@@ -25,7 +25,7 @@
+ 
+ ROOT = Path(__file__).resolve().parent
+ STOP_ACTIONS = {"relax", "reboot", "shutdown"}
+-MANAGEMENT_ACTIONS = {"chorale-prepare", "repair-gamepad", "set-pad-settings", "set-drive-speed", "set-action-scale", "switch-mode", "reconnect-service", "upgrade-service", "reboot", "shutdown"}
++MANAGEMENT_ACTIONS = {"chorale-prepare", "repair-gamepad", "set-pad-settings", "set-action-scale", "switch-mode", "reconnect-service", "upgrade-service", "reboot", "shutdown"}
+ HOME_TIMEOUT = 12.0
+ HOME_RESTORE_TIMEOUT = 5.0
+ HOME_POLL_INTERVAL = .1
+@@ -90,7 +90,6 @@
+               "repair-gamepad": {"action", "supported", "address", "operation"},
+               "upgrade-service": {"action", "supported", "firmware"},
+               "set-action-scale": {"action", "model", "scale", "supported"},
+-              "set-drive-speed": {"action", "speed", "supported"},
+               "set-pad-settings": {"action", "mouth_percent", "head_rad", "supported"},
+               "move": {"action", "id", "position", "duration_ms"},
+               "center": {"action", "unassembled", "duration_ms"},
+@@ -102,7 +101,7 @@
+         raise ControlError("指令或参数不受支持", 400)
+     if "id" in command and (type(command["id"]) is not int or command["id"] not in IDS): raise ControlError("只能控制官方 15 个关节 ID", 400)
+     if "duration_ms" in command: numeric(command["duration_ms"], 500, 10000, True)
+-    if action in ("chorale-prepare", "init", "switch-mode", "set-pad-settings", "set-drive-speed", "set-action-scale", "reconnect-service", "upgrade-service", "repair-gamepad") and command["supported"] is not True: raise ControlError("请先确认服务操作", 400)
++    if action in ("chorale-prepare", "init", "switch-mode", "set-pad-settings", "set-action-scale", "reconnect-service", "upgrade-service", "repair-gamepad") and command["supported"] is not True: raise ControlError("请先确认服务操作", 400)
+     if action == 'repair-gamepad':
+         if not isinstance(command['address'], str) or command['address'] and not re.fullmatch(r'(?:[0-9A-F]{2}:){5}[0-9A-F]{2}', command['address']):
+             raise ControlError('手柄 MAC 格式无效', 400)
+@@ -118,8 +117,6 @@
+     if action in ("set-action-scale",):
+         numeric(command["scale"], 0.1, 1.0)
+         if command["scale"] not in tuple(round(n/100,2) for n in range(10,101)):raise ControlError("请选择 0.10 到 1.00 的缩放值，步长 0.01",400)
+-    if action == "set-drive-speed":
+-        if type(command["speed"]) not in (int,float) or command["speed"] not in (.1,.2,.3):raise ControlError("平移速度请选择 0.1、0.2 或 0.3 m/s",400)
+     if action == "set-pad-settings":
+         numeric(command["mouth_percent"],0,100)
+         if type(command["head_rad"]) not in (int,float) or command["head_rad"] not in (.5,1.,2.5):raise ControlError("头部幅度选项无效",400)
+@@ -610,7 +607,7 @@
+                             snapshot.get("calibrated_count") != 15 or native.get("imu_mount_verified") is not True
+                             and report.get("imu_mount_verified") is not True):
+                         raise ControlError("请先完成 15 个关节标定和 IMU 安装确认", 409)
+-                elif action in {"reconnect-service", "upgrade-service", "set-pad-settings", "set-drive-speed", "set-action-scale"}:
++                elif action in {"reconnect-service", "upgrade-service", "set-pad-settings", "set-action-scale"}:
+                     if action == 'upgrade-service' and command['firmware'] != 'bundled':
+                         prepared=self.prepared_firmware
+                         if not prepared or prepared.owner!=client or not secrets.compare_digest(prepared.token,command['firmware']):
+@@ -659,11 +656,11 @@
+         restarting=getattr(self.store,'robotd_restarting',None)
+         restart=command['action'] in {'chorale-prepare','switch-mode','reconnect-service','set-action-scale'}
+         log=getattr(self.store,'system_log',None)
+-        labels={'chorale-prepare':'启用合唱','chorale-start':'开始合唱','chorale-stop':'停止合唱','switch-mode':'服务模式切换','upgrade-service':'固件安装','reconnect-service':'重启固件','set-action-scale':'动作缩放','set-drive-speed':'平移速度设置','set-pad-settings':'手柄幅度设置','init':'回 HOME','repair-gamepad':'手柄连接修复','relax':'停止并松开','reboot':'重启 Zero','shutdown':'关闭 Zero','move':'关节移动','center':'整组居中','capture':'关节标定','verify-imu':'IMU 方向保存'}
++        labels={'chorale-prepare':'启用合唱','chorale-start':'开始合唱','chorale-stop':'停止合唱','switch-mode':'服务模式切换','upgrade-service':'固件安装','reconnect-service':'重启固件','set-action-scale':'动作缩放','set-pad-settings':'手柄幅度设置','init':'回 HOME','repair-gamepad':'手柄连接修复','relax':'停止并松开','reboot':'重启 Zero','shutdown':'关闭 Zero','move':'关节移动','center':'整组居中','capture':'关节标定','verify-imu':'IMU 方向保存'}
+         label=labels.get(command['action'],command['action'])
+         if restart and restarting is not None:restarting.set()
+         try:
+-            if (restart or command['action'] in {'upgrade-service','set-drive-speed'}) and self.controls and hasattr(self.controls,'pause_input'):
++            if (restart or command['action'] == 'upgrade-service') and self.controls and hasattr(self.controls,'pause_input'):
+                 try:self.controls.pause_input()
+                 except Exception as exc:
+                     if log:log.add('手柄输入清除',str(exc))
+@@ -754,11 +751,6 @@
+                         job['result'] = answer
+                         if isinstance(answer, dict): job['phase'] = answer.get('phase', 'failed')
+                     raise ControlError(answer.get('message', '手柄修复回执无效') if isinstance(answer, dict) else '手柄修复回执无效', 503)
+-            elif command["action"] == "set-drive-speed":
+-                answer = self.transport.manage("drive-speed", str(command["speed"]), password=sudo_password)
+-                if not isinstance(answer,dict) or answer.get('drive_speed',{}).get('speed') != command['speed']:
+-                    raise ControlError('未确认实体手柄已采用所选速度，请查看系统日志',503)
+-                if self.controls:self.controls.pause_input()
+             elif command["action"] == "set-pad-settings":
+                 answer = self.transport.manage("pad-settings", str(command["mouth_percent"]), str(command["head_rad"]), password=sudo_password)
+             elif command["action"] == "set-action-scale":
+--- UI42/static/index.html
++++ UI43/static/index.html
+@@ -79,7 +79,6 @@
+         <label>音量 <output id="control-volume-value">—</output><input id="control-volume" aria-label="音量" type="range" min="0" max="100" step="1" disabled></label>
+         <label>嘴巴最大开度 <output id="control-mouth-value">—</output><input id="control-mouth" aria-label="嘴巴最大开度" type="range" min="0" max="100" step="1" disabled></label>
+         <div class="pad-head-amplitude"><span>头部幅度</span><div role="group" aria-label="头部幅度"><button class="button" data-head-amplitude="2.5">官方 2.5 rad</button><button class="button" data-head-amplitude="1">1.0 rad</button><button class="button" data-head-amplitude="0.5">0.5 rad</button></div></div>
+-        <div class="pad-drive-speed"><label for="control-drive-speed">平移速度</label><select id="control-drive-speed" aria-label="平移速度" aria-describedby="drive-speed-status" title="前后及侧移速度；转向不变。切换时手柄会短暂重连，请先松开摇杆。" disabled><option value="" disabled>等待回读</option><option value="0.1">0.1 m/s</option><option value="0.2" selected>0.2 m/s（默认）</option><option value="0.3">0.3 m/s</option></select><span id="drive-speed-status" role="status">等待回读</span></div>
+       </div>
+       <section class="chorale-controls" aria-label="双鸭合唱">
+         <div class="chorale-heading"><strong>双鸭合唱</strong><span id="chorale-state" role="status">等待机器人实时状态</span></div>
+@@ -104,7 +103,7 @@
+       <section class="panel"><div class="panel-head"><div><span class="section-index">05</span><h2>轨迹与系统</h2></div><span class="badge neutral">估计值</span></div><canvas id="odom-chart" class="odom-chart" aria-label="接触里程计轨迹"></canvas><div class="odom-values"><span>X <strong id="odom-x">—</strong></span><span>Y <strong id="odom-y">—</strong></span><span>θ <strong id="odom-yaw">—</strong></span></div><div class="system-lines"><div><span>CPU 使用率</span><strong id="sys-cpu">—</strong></div><div class="bar"><i id="cpu-bar"></i></div><div><span>内存使用</span><strong id="sys-memory">—</strong></div><div class="bar"><i id="memory-bar"></i></div><div><span>Zero 温度</span><strong id="sys-temp">—</strong></div><div><span>Zero 开机时长</span><strong id="sys-uptime">—</strong></div></div></section>
+     </div>
+     <section class="panel" id="ai-agent-panel" aria-label="AI智能体与完整调用日志">
+-  <div class="panel-head"><div><span class="section-index">AI · UI42</span><h2>AI 智能体 · 语音与视觉</h2><span id="ai-connected" class="badge neutral">○ 豆包未运行</span></div><span id="ai-lock">豆包未运行</span></div>
++  <div class="panel-head"><div><span class="section-index">AI · UI43</span><h2>AI 智能体 · 语音与视觉</h2><span id="ai-connected" class="badge neutral">○ 豆包未运行</span></div><span id="ai-lock">豆包未运行</span></div>
+   <div class="ai-layout">
+    <div class="ai-setup">
+     <div class="ai-fields" aria-label="语音与视觉配置">
+--- UI42/static/control.js
++++ UI43/static/control.js
+@@ -35,7 +35,6 @@
+     mouth.addEventListener('input',()=>{this.mouthDirty=true;root.querySelector('#control-mouth-value').textContent=Number(mouth.value).toFixed(0)+'%';});
+     mouth.addEventListener('change',()=>this.applyPadSettings());
+     for(const button of root.querySelectorAll('[data-head-amplitude]'))button.onclick=()=>{this.headRad=Number(button.dataset.headAmplitude);this.mouthDirty=true;this.applyPadSettings();};
+-    root.querySelector('#control-drive-speed').addEventListener('change',event=>window.dispatchEvent(new CustomEvent('r17-drive-speed',{detail:{speed:Number(event.target.value)}})));
+     this.timer=setInterval(()=>this.tick(),100);
+     for(const event of ['blur','pagehide'])window.addEventListener(event,()=>this.suspend());
+     window.addEventListener('pagehide',()=>this.socket.close());
+@@ -174,12 +173,6 @@
+     const settingsDisabled=!settings||!supportsFeature(bus,'live_pad_settings')||!!this.s?.service_control?.busy||!!this.s?.service_operation||this.options.replay||this.options.offline;
+     mouth.disabled=settingsDisabled;
+     const drive=this.state?.drive_speed??this.s?.control?.webpad?.drive_speed;
+-    const driveDisabled=!drive?.supported||!this.s?.service_sample_fresh||!!this.s?.service_control?.busy||!!this.s?.service_operation||this.options.replay||this.options.offline;
+-    const driveSelect=this.root.querySelector('#control-drive-speed');
+-    driveSelect.disabled=driveDisabled;driveSelect.value=[.1,.2,.3].includes(drive?.speed)?String(drive.speed):'';
+-    const driveStatus=this.root.querySelector('#drive-speed-status');
+-    driveStatus.textContent=!drive?'等待回读':!drive.supported?'需 V196+ 固件':drive.error||'已应用';
+-    driveStatus.classList.toggle('error',!!drive?.error);
+     const recorder=drive?.recorder,checked=recorder?.checked_ms;
+     if(Number.isSafeInteger(checked)&&checked!==this.recorderChecked){this.recorderChecked=checked;this.recorderReceived=performance.now();}
+     const recorderFresh=Number.isSafeInteger(checked)&&Number.isFinite(this.recorderReceived)&&performance.now()-this.recorderReceived<=3500;
+--- UI42/static/service.js
++++ UI43/static/service.js
+@@ -10,8 +10,8 @@
+ 
+ const finite=v=>typeof v==='number'&&Number.isFinite(v);
+ const fmt=(v,n=1)=>finite(v)?v.toFixed(n):'—';
+-const actions={'chorale-prepare':'启用合唱','chorale-start':'开始合唱','chorale-stop':'停止合唱','set-drive-speed':'平移速度设置','set-pad-settings':'手柄幅度设置',move:'关节移动',center:'整组顺序居中',capture:'关节标定',init:'Home 站姿','switch-mode':'服务模式切换','reconnect-service':'重新连接 HAT','upgrade-service':'升级 R17 / 0.15.1','set-action-scale':'动作缩放应用',relax:'停止并松开', 'verify-imu':'IMU 安装方向',reboot:'重启 Zero',shutdown:'关闭 Zero','resume-connection':'恢复连接'};
+-const feedbackTargets={'chorale-prepare':'chorale-feedback','chorale-start':'chorale-feedback','chorale-stop':'chorale-feedback','repair-gamepad':'gamepad-repair-status','set-drive-speed':'control-feedback','set-pad-settings':'control-feedback',move:'service-job',center:'service-job',capture:'service-job',init:'control-feedback',
++const actions={'chorale-prepare':'启用合唱','chorale-start':'开始合唱','chorale-stop':'停止合唱','set-pad-settings':'手柄幅度设置',move:'关节移动',center:'整组顺序居中',capture:'关节标定',init:'Home 站姿','switch-mode':'服务模式切换','reconnect-service':'重新连接 HAT','upgrade-service':'升级 R17 / 0.15.1','set-action-scale':'动作缩放应用',relax:'停止并松开', 'verify-imu':'IMU 安装方向',reboot:'重启 Zero',shutdown:'关闭 Zero','resume-connection':'恢复连接'};
++const feedbackTargets={'chorale-prepare':'chorale-feedback','chorale-start':'chorale-feedback','chorale-stop':'chorale-feedback','repair-gamepad':'gamepad-repair-status','set-pad-settings':'control-feedback',move:'service-job',center:'service-job',capture:'service-job',init:'control-feedback',
+   'switch-mode':'service-mode-job','forget-sudo-password':'service-mode-job','verify-imu':'service-imu-job',
+   relax:'service-power-job',reboot:'service-power-job',shutdown:'service-power-job','resume-connection':'service-power-job',
+   'set-action-scale':'management-status',
+@@ -42,7 +42,6 @@
+     this.lastJob='';this.mountDirty=false;this.calibrationDirty=false;
+     this.gamepadRepair=new GamepadRepair(this);
+     this.chorale=new ChoralePanel(this);
+-    window.addEventListener('r17-drive-speed',e=>this.post({action:'set-drive-speed',...e.detail,supported:true}));
+     window.addEventListener('r17-pad-settings',e=>this.post({action:'set-pad-settings',...e.detail,supported:true}));
+     this.s=null;this.options={};this.dirty=false;this.ownsMotion=false;this.posting=false;this.lastSample=0;
+     this.root=document.createElement('section');this.root.id='service-panel';this.root.className='service-console';this.root.hidden=!cfg.service_enabled;
+@@ -223,7 +222,7 @@
+       'switch-mode':command.target==='motion'?'service-mode-motion':'service-mode-calibrate',
+       'reconnect-service':'management-reconnect','upgrade-service':'firmware-flash',
+       'repair-gamepad':'gamepad-repair-start',
+-      'set-drive-speed':'control-drive-speed','set-pad-settings':'control-mouth','set-action-scale':'management-scale-apply'};
++      'set-pad-settings':'control-mouth','set-action-scale':'management-scale-apply'};
+     const configurationAction=['chorale-prepare','chorale-stop','repair-gamepad','switch-mode','reconnect-service','upgrade-service','set-action-scale'].includes(command.action);
+     if(!['relax','reboot','shutdown','resume-connection','forget-sudo-password'].includes(command.action)&&((special[command.action]?this.$(special[command.action]).disabled:this.blocked)||this.posting||this.centerConfirmation||document.hidden||!configurationAction&&performance.now()-this.lastSample>2000))return;
+     if(command.action==='center'){
+@@ -243,7 +242,7 @@
+     if(command.action!=='relax')this.posting=true;
+     if(['move','center','init'].includes(command.action))this.ownsMotion=true;
+     try{
+-      const privileged=['chorale-prepare','repair-gamepad','switch-mode','reconnect-service','upgrade-service','set-pad-settings','set-drive-speed','set-action-scale','reboot','shutdown'].includes(command.action);
++      const privileged=['chorale-prepare','repair-gamepad','switch-mode','reconnect-service','upgrade-service','set-pad-settings','set-action-scale','reboot','shutdown'].includes(command.action);
+       const password=privileged?this.$('service-sudo-password').value:'';
+       if(password)command.sudo_password=password;
+       const body=JSON.stringify({client:this.client,seq:++this.seq,command});
+--- UI42/static/r17-0151.css
++++ UI43/static/r17-0151.css
+@@ -366,11 +366,6 @@
+ #control-panel .pad-sliders>label{min-width:0}
+ #control-panel .pad-head-amplitude{gap:5px 8px;min-width:0}
+ #control-panel .pad-head-amplitude .button{min-height:32px;padding:5px 8px;white-space:nowrap}
+-#control-panel .pad-drive-speed{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:2px 8px;min-width:0;font-size:11px}
+-#control-panel .pad-drive-speed>label{display:block;color:#b1c3a8}
+-#control-panel #control-drive-speed{width:100%;min-width:0;min-height:32px;padding:5px 8px;font-size:11px}
+-#control-panel #drive-speed-status{grid-column:2;color:#aab9a5;font-size:11px;line-height:1.35;overflow-wrap:anywhere}
+-#control-panel #drive-speed-status.error{color:#ffaaa2}
+ #control-panel .chorale-controls{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:4px 12px;margin:8px 0 4px;padding:8px 10px}
+ #control-panel .chorale-heading{gap:4px 10px;margin:0;min-width:0;font-size:12px}
+ #control-panel .chorale-heading strong{white-space:nowrap}
+@@ -389,6 +384,6 @@
+ #control-panel .chorale-controls .service-job.error{padding:6px 8px;border-radius:5px;background:#472726}
+ #control-panel .chorale-controls .service-job.warning{padding:6px 8px;border-radius:5px;background:#3d341c}
+ #control-panel .chorale-controls .service-job::before{width:6px;height:6px}
+-@container pad-controls (min-width:900px){#control-panel .pad-sliders{grid-template-columns:minmax(120px,1fr) minmax(120px,1fr) auto minmax(190px,auto)}}
++@container pad-controls (min-width:900px){#control-panel .pad-sliders{grid-template-columns:minmax(120px,1fr) minmax(120px,1fr) auto}}
+ @container pad-controls (max-width:600px){#control-panel .chorale-controls{grid-template-columns:minmax(0,1fr) auto}#control-panel .chorale-heading{grid-column:1/-1}#control-panel .chorale-settings{justify-self:end}#control-panel .chorale-settings[open]{justify-self:stretch}}
+-@container pad-controls (max-width:440px){#control-panel .pad-sliders{grid-template-columns:minmax(0,1fr)}#control-panel .pad-drive-speed{grid-template-columns:auto minmax(0,1fr)}#control-panel .chorale-setup-row span{min-width:0;flex-basis:100%}}
++@container pad-controls (max-width:440px){#control-panel .pad-sliders{grid-template-columns:minmax(0,1fr)}#control-panel .chorale-setup-row span{min-width:0;flex-basis:100%}}
+--- UI42/firmware/drive_settings.py
++++ UI43/firmware/drive_settings.py
+@@ -1,28 +1,14 @@
+-"""Three persisted linear speed choices, using official padd CLI options."""
++"""Read-only fixed walking speed and handpad recorder status."""
+ import json
+ from pathlib import Path
+-import sys
+ import time
+ 
+-PATH = Path('/etc/robot/feetech-ft5/drive-settings.json')
+ BASE = Path('/opt/robot/feetech-ft5-r5')
+ REPORT = Path('/run/padd/input-settings.json')
+ RECORDER = Path('/run/padd/recorder.json')
+ PROC = Path('/proc')
+-CHOICES = (.1, .2, .3)
++LINEAR_SPEED = .3
+ RECORDER_PHASES = frozenset(('idle','recording','saving','playing','error','pending'))
+-
+-def validate(speed):
+-    if type(speed) not in (int, float) or speed not in CHOICES:
+-        raise ValueError('平移速度请选择 0.1、0.2 或 0.3 m/s')
+-    return float(speed)
+-
+-def load():
+-    return validate(json.loads(PATH.read_text())['speed']) if PATH.exists() else .2
+-
+-def save(speed):
+-    from configure import atomic_write
+-    atomic_write(PATH, json.dumps({'speed': validate(speed)})+'\n')
+ 
+ def recorder_status(padd_pid):
+     """Display-only metadata; never starts recording or sends a robot request."""
+@@ -54,10 +40,9 @@
+         return {'available':False,'checked_ms':now,'reason':reason[:300]}
+ 
+ def status():
+-    result = {'supported': True, 'speed': None}
++    result = {'supported': True, 'fixed': True, 'speed': None}
+     padd_pid = None
+     try:
+-        result['saved_speed'] = load()
+         pid = json.loads(REPORT.read_text())['pid']
+         if type(pid) is not int or pid<=0:raise ValueError('等待实体手柄服务启动')
+         args = (PROC/str(pid)/'cmdline').read_bytes().decode().rstrip('\0').split('\0')
+@@ -66,38 +51,14 @@
+         padd_pid = pid
+         values = []
+         for flag in ('--max-linear', '--max-linear-backward'):
+-            if args.count(flag) != 1:
+-                raise ValueError('请升级 V196 配套固件以启用三档速度')
+-            values.append(validate(float(args[args.index(flag)+1])))
+-        if values != [result['saved_speed']]*2:
+-            raise ValueError('保存速度与实体手柄实际参数不一致，请重新选择档位')
++            if args.count(flag) > 1:
++                raise ValueError('实体手柄速度参数重复，请安装配套更新')
++            values.append(float(args[args.index(flag)+1]) if flag in args else LINEAR_SPEED)
++        if values != [LINEAR_SPEED]*2:
++            raise ValueError('实体手柄仍在使用旧速度参数，请安装配套更新')
+         result['speed'] = values[0]
+     except (OSError, ValueError, KeyError, IndexError, TypeError) as exc:
+         result['error'] = str(exc)
+     result['recorder'] = recorder_status(padd_pid)
+     return result
+ 
+-def apply(speed):
+-    speed = validate(speed)
+-    save(speed)
+-    # Reuse the installer: preserve head/mouth settings and all existing input flags.
+-    # Only padd restarts; robotd, models and motor enable state are untouched.
+-    from gamepad import upgrade_client
+-    upgrade_client()
+-    until = time.monotonic()+8
+-    while time.monotonic() < until:
+-        result = status()
+-        if result['speed'] == speed:
+-            return {'accepted': True, 'drive_speed': result,
+-                    'message': f'平移速度 {speed:.1f} m/s 已保存并确认生效；网页和实体手柄同步，转向速度不变。'}
+-        time.sleep(.1)
+-    raise ValueError('速度已保存，但尚未确认生效：'+result.get('error', '手柄服务未就绪'))
+-
+-if __name__ == '__main__':
+-    if len(sys.argv) != 2:
+-        raise ValueError('用法：drive_settings.py 0.1|0.2|0.3')
+-    # Keep stdout a single machine-readable receipt; installer messages go to stderr.
+-    import contextlib
+-    with contextlib.redirect_stdout(sys.stderr):
+-        receipt = apply(float(sys.argv[1]))
+-    print(json.dumps(receipt, ensure_ascii=False))
+--- UI42/firmware/gamepad.py
++++ UI43/firmware/gamepad.py
+@@ -89,13 +89,12 @@
+     dest=ROOT/'etc/systemd/system/padd.service'
+     replace_owned_file(BASE/'padd.service',dest,0o644)
+     settings=load()
+-    import drive_settings
+-    speed=drive_settings.load()
+-    if not drive_settings.PATH.exists():drive_settings.save(speed)
+     if not SETTINGS_PATH.exists():save(**settings)
+     dest=ROOT/PAD_DROPIN;dest.parent.mkdir(parents=True,exist_ok=True)
+     from configure import atomic_write
+-    atomic_write(dest,'[Service]\nExecStart=\nExecStart=/usr/bin/python3 '+str(BASE/'startup_gate.py')+' --timeout 60 --exec '+str(BASE/'padd')+' --socket /run/robotd.sock --config '+str(CONFIG)+' --max-linear '+format(speed,'g')+' --max-linear-backward '+format(speed,'g')+' --max-head '+format(settings['head_rad'],'g')+' --input-settings '+str(SETTINGS_PATH)+'\nRuntimeDirectory=padd\nStateDirectory=padd\nEnvironment=PYTHONDONTWRITEBYTECODE=1\nRestartPreventExitStatus=78\n')
++    # Use padd's original 0.3 m/s forward/backward/strafe defaults. The retired
++    # drive-settings.json must not override them, including after an upgrade.
++    atomic_write(dest,'[Service]\nExecStart=\nExecStart=/usr/bin/python3 '+str(BASE/'startup_gate.py')+' --timeout 60 --exec '+str(BASE/'padd')+' --socket /run/robotd.sock --config '+str(CONFIG)+' --max-head '+format(settings['head_rad'],'g')+' --input-settings '+str(SETTINGS_PATH)+'\nRuntimeDirectory=padd\nStateDirectory=padd\nEnvironment=PYTHONDONTWRITEBYTECODE=1\nRestartPreventExitStatus=78\n')
+     if not deferred:
+         run('systemctl','daemon-reload')
+         run('systemctl','--no-reload','enable','padd.service')
+--- UI42/firmware/service.sh
++++ UI43/firmware/service.sh
+@@ -301,11 +301,6 @@
+     systemctl start padd.service gamesir-xboxd.service
+     echo 'robotd 已按现有配置重新启动；输入连接复用，不重写配置。'
+     ;;
+-drive-speed)
+-    require_installed
+-    [[ $# -eq 2 ]] || fail '用法：drive-speed 0.1|0.2|0.3'
+-    python3 "$install_dir/drive_settings.py" "$2"
+-    ;;
+ pad-settings)
+     require_installed
+     [[ $# -eq 3 ]] || fail '用法：pad-settings 嘴巴百分比 头部幅度rad'

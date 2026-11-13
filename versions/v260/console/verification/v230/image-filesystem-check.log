@@ -1,0 +1,7 @@
+Pass 1: Checking inodes, blocks, and sizes
+Pass 2: Checking directory structure
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+armbi_root: 72013/82176 files (0.1% non-contiguous), 733600/766464 blocks
+e2fsck 1.47.2 (1-Jan-2025)

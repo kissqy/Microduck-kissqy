@@ -1,0 +1,131 @@
+{
+  "console_version": "1.0.150",
+  "service_build": "1fa8438-feetech-ft6-control.31",
+  "generated_at_utc": "2026-10-08T14:57:29.183896+00:00",
+  "baseline": {
+    "console_version": "1.0.149",
+    "service_build": "1fa8438-feetech-ft6-control.30",
+    "previous_release_test_results_are_historical": true
+  },
+  "evidence": {
+    "failure_recording": "microduck-recording(20261008-135537).json",
+    "observed": "Feetech ID 200 response timeout; configuration_error; startup_failures=1; control_ticks=0. The old control thread exited while IPC and sounds remained available.",
+    "later_recordings": "The two later supplied recordings showed IMU readiness and an approximately 50 Hz control loop. Their different boot IDs prove separate boots, but do not identify the power or reboot cause.",
+    "imu_hardware_fault_confirmed": false
+  },
+  "fixes": [
+    "At most five startup attempts with 400 ms between failures on the same UART, including commissioning startup.",
+    "Confirm torque OFF on all fifteen servos before IMU identity and existing register inspection; no gain or target writes during startup.",
+    "Reject initialization and motion until the first complete fresh ready sample. Keep startup phases authoritative over warming numeric snapshots; never replay refused motion.",
+    "Prefer the GameSir virtual Xbox device and exclude the exact bridge-owned raw device; clear input modes and holds on disconnect or replacement.",
+    "One kernel input snapshot on reconnect requires held buttons to release first. RobotInit marks the pad up only after an accepted response.",
+    "Socket response validation and three-second read/write timeout use the existing padd service recovery path.",
+    "Explicit firmware restart waits for actual control readiness instead of relying on systemctl or IPC availability."
+  ],
+  "preservation": {
+    "steady_control_hz": 50,
+    "new_background_loops": 0,
+    "models_parameters_calibration_hat_bridge_ui_preserved": true,
+    "byte_comparison_record": "verification/release-audit150.json",
+    "cargo_lock_sha256": "fa1668b2e909f80bb4fc6db66a634742f6b42cfe79df6b51c6d5d90db36a08cf"
+  },
+  "tests": {
+    "recovery_regressions": {
+      "status": "passed",
+      "native_checks": [
+        "feetech::hd1910_transport_tests::startup_releases_residual_torque_before_retrying_a_booting_imu",
+        "feetech::hd1910_transport_tests::startup_unconfirmed_torque_never_proceeds_to_imu_or_goals",
+        "tests::feetech_startup_retries_only_the_bounded_boot_window",
+        "tests::r17_empty_snapshot_and_warming_imu_do_not_accept_home",
+        "tests::r17_startup_refuses_motion_without_queuing_it_for_later",
+        "raw_stream::tests::lazy_bus_rpc_preserves_snapshot_fields_without_streaming"
+      ]
+    },
+    "padd": {
+      "status": "passed",
+      "passed": 33,
+      "failed": 0,
+      "ignored": 0,
+      "log": "verification/pad-tests150.log"
+    },
+    "python": {
+      "status": "passed",
+      "passed": 35,
+      "failed": 0,
+      "modules": [
+        "test_runtime",
+        "test_upgrade_units",
+        "test_uart_startup",
+        "test_release_identity",
+        "test_gamepad",
+        "test_webpad_startup",
+        "test_firmware_console"
+      ],
+      "log": "verification/python-recovery150.log"
+    },
+    "gamepad_bridge": {
+      "status": "passed",
+      "programs": [
+        "test_gamesir_disconnect.c",
+        "test_mapping.c"
+      ],
+      "production_bridge_unchanged": true,
+      "log": "verification/gamepad-bridge150.log"
+    },
+    "native_default_suite": {
+      "command": "cargo test -p duck-control -p robotd --frozen -- --test-threads=1",
+      "exit_code": 101,
+      "duck_control_passed": 135,
+      "robotd_passed": 252,
+      "failed": [
+        "feetech_read_only::tests::service_loop_counts_faults_without_any_motor_write"
+      ],
+      "ignored_onnx_tests": 10,
+      "status": "one_preexisting_timing_test_failed_in_suite_but_passed_in_isolation",
+      "log": "verification/native-tests150.log",
+      "observed_timing": {
+        "read_max_ms": 168.273,
+        "period_max_ms": 491.414889,
+        "deadline_ms": 40
+      },
+      "reason": "The full-suite host run incurred scheduling delays exceeding the unchanged PTY transport deadline. The expected success count became 2985 rather than 2998. Its precise isolated run passed; neither transport limits nor this test assertion were changed.",
+      "isolated_pass_log": "verification/diagnostics150/read-only-isolated150.log"
+    },
+    "native_earlier_attempts": {
+      "old_fixture_changes": "Test-only expectations now follow the bundled v149 Walk scale 1.0 and the intentional startup-status precedence. Models and runtime values were unchanged.",
+      "twenty_ms_transport_test": "One full-suite attempt failed its unchanged IMU-stale string assertion. The actual error string was not logged, so host timing is a hypothesis. It passed both the precise isolated run and the final full-suite run.",
+      "diagnostic_logs": [
+        "verification/diagnostics150/serial-timing-failure.log",
+        "verification/diagnostics150/raw-stream-legacy-fixture-failure.log",
+        "verification/diagnostics150/raw-stream-corrected-pass.log",
+        "verification/diagnostics150/missing-replies-isolated150.log"
+      ]
+    },
+    "arm64_build": {
+      "status": "passed",
+      "exit_code": 0,
+      "source_hashes_frozen": true,
+      "target": "aarch64-unknown-linux-gnu.2.31",
+      "binaries": {
+        "robotd": "cf02d53c1368cf770dabf7a9eba370c2cf49dfdc56f617623d0167ad8531f71e",
+        "robotctl": "05ebae696ed12e8824088ddd4e7833110bf045ca9416f027481e333e4d12f00c",
+        "padd": "7609e5b5dfcaf8a81d17c14ba8ef825bfc5528b8e33977cabc2128c780352d9d"
+      },
+      "record": "verification/native-build150.json"
+    },
+    "bash_syntax": {
+      "status": "passed",
+      "file": "packaging/service.sh"
+    },
+    "hardware": {
+      "status": "not_run",
+      "reboot_and_temperature_verified": false
+    }
+  },
+  "limitations": [
+    "No access to the robot was available. Cold boot, shock recovery, wireless reconnection and temperature require hardware validation.",
+    "This release fixes the software startup and input recovery paths, not the unidentified underlying cause of Zero rebooting.",
+    "A preexisting host PTY timing stress test failed in the full suite and passed in isolation. The full-suite result is retained without relaxing deadlines or assertions."
+  ],
+  "next_hardware_task": "Install the matching v150 bundled firmware, perform one normal reboot, then verify controller HOME with the robot supported."
+}

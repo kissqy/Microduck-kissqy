@@ -1,0 +1,135 @@
+{
+  "release": "UI40 native mouth lease and AE90",
+  "source_archive": "Microduck-Source-R17-V186-control57-compiled.tar.gz",
+  "source_archive_sha256": "425c04cd829386ba934d9137a33081f11335a3404e5f22337eed47e993d1a1cb",
+  "source_bases": {
+    "padd": "V186 frozen source + original UI37 native-input.patch",
+    "mediad": "V186 frozen source + UI38 camera-source.patch, then only target90 restoration"
+  },
+  "ui39_native_patch_sha256": {
+    "ai-ui37/native-input.patch": "c8a36df240fce2e0c2e4b270a809f1df336dd7e180f9575ca06f2ef929f1fd1f",
+    "ai-ui38/camera-source.patch": "fd5398325e1ebc72b44da3f9e3a9cddbeb37f2469b1181535f31969e3d0f2df9"
+  },
+  "shared_proto_api_version": 40,
+  "source_changes": {
+    "padd/src/main.rs": "4e2d89e0d95b88d804443d31f81833682ea733a1e312ba187733e628869a2bcd",
+    "padd/src/mouth_pause.rs": "4b3f940a0db5e5e34282a167eb9c59f8c198e4cab9a56c3b6ca6f1b8b72a6e24",
+    "mediad/src/exposure.rs": "aa781b7765b127e88469ca1f1677b7a489e3eee7be7e1904405a66228a87b39f"
+  },
+  "patch_sha256": "16a814451b5b6e3400508c3f27b7aecff7f2a6e90d5d6c949a84f1721570db52",
+  "heartbeat": {
+    "unchanged": true,
+    "ui39_sha256": "a1d531a9254c059bc66b93fc6a7f997ffbf2f576c1e9be02cdf4e155e4f7a0ae",
+    "ui40_sha256": "a1d531a9254c059bc66b93fc6a7f997ffbf2f576c1e9be02cdf4e155e4f7a0ae",
+    "note": "Entire Continuous implementation byte-identical to UI39 source, not restored to V186 heartbeat."
+  },
+  "original_ui39_binary_sha256": {
+    "robotd": "08d22eb167167dec24779074ec49df3ea34bd1c592a834f519731b53d7f2b986",
+    "padd": "76ec0e40a1c8e014987ae115dfbdd5023b9eb9efa119b8b089a39d2c57fc1fda",
+    "mediad": "827b5359d2dff064ce95a50046c29eb92712b086fecc15ca6160beec9348dd7b"
+  },
+  "binaries": {
+    "padd": {
+      "workspace_path": "/workspace/scratch/0587ce872ec5/native_work/target-arm-ui40/aarch64-unknown-linux-gnu/release/padd",
+      "bytes": 3578512,
+      "sha256": "51b2542fe860e863cd97f6421fb39b8ba7a5b4b57afa958d58b818d7eb47dd90",
+      "machine": "AArch64",
+      "needed": [
+        "libudev.so.1",
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.27",
+        "2.28",
+        "2.30"
+      ],
+      "built_from_source": true,
+      "elf_manually_patched": false
+    },
+    "mediad": {
+      "workspace_path": "/workspace/scratch/0587ce872ec5/native_work/target-media-ui40/aarch64-unknown-linux-gnu/release/mediad",
+      "bytes": 10920000,
+      "sha256": "6e31181cfb540f9ea0686227d12c0c5467f1a27aca88a804336faa963a2ea22c",
+      "machine": "AArch64",
+      "needed": [
+        "libgstwebrtc-1.0.so.0",
+        "libgstbase-1.0.so.0",
+        "libgstreamer-1.0.so.0",
+        "libgobject-2.0.so.0",
+        "libglib-2.0.so.0",
+        "libgstvideo-1.0.so.0",
+        "libgstapp-1.0.so.0",
+        "libgio-2.0.so.0",
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2",
+        "ld-linux-aarch64.so.1"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.28",
+        "2.29",
+        "2.30"
+      ],
+      "built_from_source": true,
+      "elf_manually_patched": false
+    }
+  },
+  "preserve_robotd_binary_sha256": "08d22eb167167dec24779074ec49df3ea34bd1c592a834f519731b53d7f2b986",
+  "robotd_rebuilt": false,
+  "robotd_policy_imu_bus_changes": false,
+  "toolchain": {
+    "rust": "1.99.0 (b940084d7 2026-09-28)",
+    "cargo_zigbuild": "0.23.4",
+    "zig": "0.14.1",
+    "target": "aarch64-unknown-linux-gnu.2.31",
+    "fresh_target_directories": true
+  },
+  "tests": {
+    "padd_host": {
+      "passed": 52,
+      "failed": 0,
+      "existing_retained": 45,
+      "lease_tests": 7
+    },
+    "original_AE_algorithm": {
+      "passed": 15,
+      "failed": 0,
+      "pipeline_capture_stub": true
+    },
+    "arm64_cross_builds": [
+      "padd",
+      "mediad"
+    ],
+    "arm64_execution": false,
+    "physical_robot": false
+  },
+  "mouth_lease": {
+    "directory": "/run/padd/ai-mouth",
+    "token": "32 lowercase hex",
+    "lease_extension": ".lease",
+    "ack_extension": ".ack",
+    "format": "ASCII CLOCK_MONOTONIC expiry milliseconds plus newline",
+    "ttl_ms": 750,
+    "max_future_ms": 1500,
+    "poll_before_no_pad_continue": true,
+    "normal_padd_mouth": "official unconditional notification per pad tick",
+    "velocity_heartbeat_changed": false
+  },
+  "AE_target_Y": {
+    "before": 105.0,
+    "after": 90.0
+  },
+  "warnings": [
+    "Linker warns deprecated optimization setting 1; both cross builds exit0."
+  ]
+}

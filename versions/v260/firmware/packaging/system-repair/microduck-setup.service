@@ -1,0 +1,14 @@
+[Unit]
+Description=Microduck R10 boot-only saved-Wi-Fi check and setup portal
+Wants=NetworkManager.service
+After=NetworkManager.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/local/libexec/microduck-setup-portal.py --serve auto
+Restart=no
+Environment=LC_ALL=C
+NoNewPrivileges=no
+
+[Install]
+WantedBy=multi-user.target

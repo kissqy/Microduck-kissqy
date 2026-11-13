@@ -1,0 +1,89 @@
+seed: 42
+num_steps_per_env: 24
+max_iterations: 9600
+obs_groups:
+  actor: !!python/tuple
+  - actor
+  critic: !!python/tuple
+  - critic
+save_interval: 1000
+experiment_name: velstand
+run_name: console_20261007_001438_ac58f8
+logger: tensorboard
+wandb_project: mjlab_microduck
+wandb_tags: !!python/tuple []
+resume: true
+load_run: ^_studio_warm_94788b23cbd242f2$
+load_checkpoint: ^model\.pt$
+clip_actions: null
+upload_model: true
+class_name: OnPolicyRunner
+actor:
+  hidden_dims: !!python/tuple
+  - 512
+  - 256
+  - 128
+  activation: elu
+  obs_normalization: true
+  cnn_cfg: null
+  distribution_cfg:
+    class_name: GaussianDistribution
+    init_std: 1.0
+    std_type: scalar
+  rnn_type: null
+  rnn_hidden_dim: 256
+  rnn_num_layers: 1
+  class_name: MLPModel
+critic:
+  hidden_dims: !!python/tuple
+  - 512
+  - 256
+  - 128
+  activation: elu
+  obs_normalization: true
+  cnn_cfg: null
+  distribution_cfg: null
+  rnn_type: null
+  rnn_hidden_dim: 256
+  rnn_num_layers: 1
+  class_name: MLPModel
+algorithm:
+  num_learning_epochs: 5
+  num_mini_batches: 4
+  learning_rate: 0.001
+  schedule: adaptive
+  gamma: 0.99
+  lam: 0.95
+  entropy_coef: 0.01
+  desired_kl: 0.01
+  max_grad_norm: 1.0
+  value_loss_coef: 1.0
+  use_clipped_value_loss: true
+  clip_param: 0.2
+  normalize_advantage_per_mini_batch: false
+  optimizer: adam
+  share_cnn_encoders: false
+  class_name: official_adapter.CheckpointedExpertPpo
+  symmetry_cfg: null
+  bc_cfg:
+    wandb_run_path: null
+    checkpoint_name: model_9750.pt
+    checkpoint_path: /home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/expert_cache/studio_0151/ae939a39117b4ac2aa08a03b68e5e9a07cdedae4eb7ce2935bf523050b115af5/model.pt
+    coef: 1.0
+    learning_rate: 0.0003
+    gate_tilt_deg: 35.0
+    epochs: 5
+    mini_batches: 4
+    min_mini_batch: 512
+    min_samples: 64
+    gravity_slice: !!python/tuple
+    - 3
+    - 6
+    twist_slice: !!python/tuple
+    - 48
+    - 51
+    anchor_wandb_run_path: null
+    anchor_checkpoint_name: model_3750.pt
+    anchor_checkpoint_path: /home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/expert_cache/studio_0151/94788b23cbd242f294db67265230b02dacd45d082512de2c869e3b7b191f1364/model.pt
+    anchor_coef: 1.0
+    anchor_tilt_deg: 25.0

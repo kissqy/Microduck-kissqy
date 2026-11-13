@@ -1,0 +1,157 @@
+{
+  "console_version": "1.0.157-Fix1",
+  "service_build": "1fa8438-feetech-ft6-control.35",
+  "firmware_sha256": "65595d5127407dcb85b150ebc4fbc9dafc363ca5d0774faab6ac570eaf40da66",
+  "firmware_archive_byte_identical": true,
+  "production_firmware_importer": {
+    "verified": true,
+    "build": "1fa8438-feetech-ft6-control.35",
+    "console_version": "1.0.157-Fix1",
+    "official_version": "0.15.1",
+    "sha256": "65595d5127407dcb85b150ebc4fbc9dafc363ca5d0774faab6ac570eaf40da66",
+    "models": {
+      "walk": {
+        "id": "1cbf8730eadd75a5704332c9f3c10f60",
+        "sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+        "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+        "epochs": 9600,
+        "source_iteration": 9599,
+        "num_envs": 2560,
+        "source_policy_directory": "policies/walk",
+        "trained_action_scale": 1.0,
+        "trained_head_alpha": 1.0,
+        "trained_legs_alpha": 1.0,
+        "execution_profile": {
+          "schema": "microduck-runtime-execution/v1",
+          "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+          "mode": "uniform",
+          "action_scale": 1.0,
+          "head_lowpass": 0.5,
+          "legs_lowpass": 0.7
+        },
+        "deployment_verified": false
+      },
+      "sitstand": {
+        "id": "1c94934c6421ec72ed48079cea749668",
+        "sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+        "task": "Mjlab-SitStand-Flat-MicroDuck"
+      },
+      "ground_pick": {
+        "id": "b14e3a8b56ddbb8d2d831e727774a168",
+        "sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69",
+        "task": "Mjlab-GroundPick-Flat-Backlash-MicroDuck",
+        "epochs": 10000,
+        "source_iteration": 9999,
+        "num_envs": 4096,
+        "base_action_scale": 1.0,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "target_filter": "passthrough",
+        "deployment_verified": false,
+        "source_policy_directory": "policies/ground_pick"
+      },
+      "roulade": {
+        "id": "59e15d7b04d0c40e9b11b8a70bdecae6",
+        "sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac",
+        "task": "Mjlab-Roulade-Flat-MicroDuck",
+        "epochs": 10000,
+        "source_iteration": 9999,
+        "num_envs": 4096,
+        "base_action_scale": 1.0,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "target_filter": "passthrough",
+        "deployment_verified": false,
+        "source_policy_directory": "policies/roulade"
+      },
+      "kick_right": {
+        "id": "67ad09d82f4865d222a7ae06f250cf9f",
+        "sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+        "task": "Mjlab-BallKick-Flat-MicroDuck",
+        "epochs": 10000,
+        "num_envs": 4096,
+        "base_action_scale": 1.0,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "target_filter": "passthrough",
+        "duration_seconds": 0.5,
+        "deployment_verified": false
+      }
+    },
+    "bytes": 25826415
+  },
+  "zip_files": 144,
+  "tests": {
+    "python_passed": 70,
+    "browser_scripts_passed": 8,
+    "runs": [
+      {
+        "name": "pc-fix",
+        "exit_code": 0,
+        "log": "verification/fix157-pc-fix-tests.log",
+        "sha256": "d46285f48ee98d6bdd5ce3ad84d43f6f1b2e893cf078d541501b914169a17760"
+      },
+      {
+        "name": "streams",
+        "exit_code": 0,
+        "log": "verification/fix157-streams-tests.log",
+        "sha256": "e44188f619a0b1a3f4412aad7cc96533e4671f717c00a1c7e122097fb8600540"
+      },
+      {
+        "name": "test_fix157pc",
+        "exit_code": 0,
+        "log": "verification/fix157-test_fix157pc.log",
+        "sha256": "202e15d884c067ab28d84a5ebbac80a801bcf4bfab23b14779c242cd6f2cfe39"
+      },
+      {
+        "name": "test_controls154",
+        "exit_code": 0,
+        "log": "verification/fix157-test_controls154.log",
+        "sha256": "4321bee40f94b73b1772c9d4b065c570b64bfe649461aef04fc0110f687bceee"
+      },
+      {
+        "name": "test_connection_ui155",
+        "exit_code": 0,
+        "log": "verification/fix157-test_connection_ui155.log",
+        "sha256": "31fb82a79d5b448d8486231d41062e36597e9aae6ad3df4a6db10f1150d477e4"
+      },
+      {
+        "name": "test_startup_ui",
+        "exit_code": 0,
+        "log": "verification/fix157-test_startup_ui.log",
+        "sha256": "1051736a2c3c606f87fc8ca8b5ffe966e682f54386457b6c78195bcff54adc78"
+      },
+      {
+        "name": "test_joint_direction155",
+        "exit_code": 0,
+        "log": "verification/fix157-test_joint_direction155.log",
+        "sha256": "2e4a3f0a1e78453c58e0c965ba6b8692f5fa5833e68a9afa299097c48adc920c"
+      },
+      {
+        "name": "test_pose_state",
+        "exit_code": 0,
+        "log": "verification/fix157-test_pose_state.log",
+        "sha256": "a9d3d13be56ba6850d99607b037440bf1426b4709ba1b8b1ec2207f469a371b4"
+      },
+      {
+        "name": "test_calibration_reference",
+        "exit_code": 0,
+        "log": "verification/fix157-test_calibration_reference.log",
+        "sha256": "6f0dc0e26f9ffe27ce71f21d652212746effb105118798c1f2ac74c271ff9174"
+      },
+      {
+        "name": "test_gamepad_repair_ui",
+        "exit_code": 0,
+        "log": "verification/fix157-test_gamepad_repair_ui.log",
+        "sha256": "72d7539bf553c19352361a88a00d88bb6aaa05c85ebafeb27f99de35d5f1e1a0"
+      }
+    ],
+    "robot_hardware_tested": false,
+    "windows_native_tested": false,
+    "native_suite_rerun": false,
+    "full_historical_suite_rerun": false,
+    "socket_boundary_note": "Executor prohibits AF_UNIX creation. Production framing/request tests substitute loopback TCP at the OS socket boundary."
+  },
+  "robot_hardware_tested": false,
+  "windows_native_tested": false
+}

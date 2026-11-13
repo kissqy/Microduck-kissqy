@@ -93,13 +93,20 @@
 
 ## 下载与版本
 
-**当前发布：系统镜像 R2 + Console Studio V260／control.102，开机配网 R10。** 更新于 2026-11-13。V260 独立发布，原 V167 源码与运行包保留。
+**当前发布：系统镜像 R2 + Console Studio V260／control.102，开机配网 R10。** 更新于 2026-11-13。两个版本均在 main 的 `versions/` 目录中，无需切换分支。原 V167 源码与运行包的旧地址继续兼容。
+
+| 版本目录 | 配套固件 | 系统镜像 | 入口 |
+| --- | --- | --- | --- |
+| V260 · 当前发布 | control.102 | R2 · 配网 R10 | [versions/v260/](versions/v260/) |
+| V167 · 历史版本 | control.43 | R1 预装 control.40；V167 随包固件为 control.43 | [versions/v167/](versions/v167/) |
+
+训练中控 R1.5.27 为独立工具，不与机器人中控的 V167、V260 版本号混用。
 
 | 当前发布版本 | 用途与下载 |
 | --- | --- |
 | 系统镜像 R2 · Microduck 0.15.1 / control.102 | 新装 ZERO 3W：[下载 .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [镜像发布说明](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
-| 中文机器人中控 Studio V260 · 随包固件 control.102 | 连接、标定与控制实机：[前往发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [文件与使用说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) |
-| V260 中控源码与固件源码 | [独立版本源码](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260) · [四类文件说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) |
+| 中文机器人中控 Studio V260 · 随包固件 control.102 | 连接、标定与控制实机：[前往发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [文件与使用说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |
+| V260 中控源码与固件源码 | [独立版本源码](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260) · [运行包与源码说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |
 | 强化学习训练中控 R1.5.27 · 可选 | 训练与评估新动作：[下载 ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip) |
 
 R2 已预装 control.102 与 11 个 ONNX 运行模型。首次运动前仍需核对本机机械与 IMU 标定；已有系统升级时，使用 V260 中控安装本版随包固件。[发布基线与验证范围](microduck-hd1910/docs/BASELINE.md)；本次发布整理不扩大已记录的实机 Known-Good 范围。
@@ -109,7 +116,7 @@ R2 已预装 control.102 与 11 个 ONNX 运行模型。首次运动前仍需核
 
 - [系统镜像 R1](https://github.com/kissqy/Microduck-kissqy/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz)：预装 control.40，开机配网 R5。
 - [机器人中控 R17 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip)：随包固件 control.43；[历史固件说明](release-assets/README.md#历史版本control43)。
-- 原 V167 固件与中控源码仍位于 `microduck-hd1910/firmware/`；V260 源码位于上方独立分支。
+- V167 固件与中控源码统一从 [versions/v167/](versions/v167/) 进入；V260 源码从 [versions/v260/](versions/v260/) 进入。原根目录源码和下载地址保留兼容。
 
 </details>
 

@@ -1,0 +1,102 @@
+{
+  "passed": true,
+  "runtime": "official Ubuntu GStreamer 1.24.2 Base/Good, unpacked privately for test only",
+  "independent_decoder": "Pillow on test host only",
+  "frame_size": [
+    1280,
+    720
+  ],
+  "synthetic_frame": true,
+  "checks": [
+    {
+      "rotation": 0,
+      "backlight": false,
+      "host_seconds": 0.039,
+      "image_bytes": 32743,
+      "center_rgb": [
+        54,
+        54,
+        54
+      ]
+    },
+    {
+      "rotation": 0,
+      "backlight": true,
+      "host_seconds": 0.038,
+      "image_bytes": 32742,
+      "center_rgb": [
+        103,
+        103,
+        103
+      ]
+    },
+    {
+      "rotation": 90,
+      "backlight": false,
+      "host_seconds": 0.0319,
+      "image_bytes": 32743,
+      "center_rgb": [
+        54,
+        54,
+        54
+      ]
+    },
+    {
+      "rotation": 90,
+      "backlight": true,
+      "host_seconds": 0.0578,
+      "image_bytes": 32742,
+      "center_rgb": [
+        103,
+        103,
+        103
+      ]
+    },
+    {
+      "rotation": 180,
+      "backlight": false,
+      "host_seconds": 0.0302,
+      "image_bytes": 32743,
+      "center_rgb": [
+        54,
+        54,
+        54
+      ]
+    },
+    {
+      "rotation": 180,
+      "backlight": true,
+      "host_seconds": 0.0485,
+      "image_bytes": 32742,
+      "center_rgb": [
+        103,
+        103,
+        103
+      ]
+    },
+    {
+      "rotation": 270,
+      "backlight": false,
+      "host_seconds": 0.0369,
+      "image_bytes": 32743,
+      "center_rgb": [
+        54,
+        54,
+        54
+      ]
+    },
+    {
+      "rotation": 270,
+      "backlight": true,
+      "host_seconds": 0.0382,
+      "image_bytes": 32742,
+      "center_rgb": [
+        103,
+        103,
+        103
+      ]
+    }
+  ],
+  "zero_hardware_latency_tested": false,
+  "new_user_install_required": false
+}

@@ -1,0 +1,18 @@
+   Compiling duck-control v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/duck-control)
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/robotd)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.30s
+     Running unittests src/main.rs (build157-tools/host-target/debug/deps/robotd-f49d995f2c66543e)
+
+running 9 tests
+test tests::r17_home_hold_mouth_never_bypasses_startup_relax_fall_or_missing_sensors ... ok
+test tests::startup_notifications_only_publish_changes_and_keep_late_snapshot ... ok
+test tests::r17_startup_refuses_motion_without_queuing_it_for_later ... ok
+test tests::startup_read_failures_keep_one_second_backoff_before_imu_confirmation ... ok
+test tests::startup_invalid_imu_does_not_wait_forever_at_fifty_hz ... ok
+test tests::startup_incomplete_joint_feedback_never_uses_fast_confirmation ... ok
+test tests::startup_imu_confirmation_uses_control_period_without_writes ... ok
+test raw_stream::tests::new_viewer_gets_unchanged_startup_failure_without_reencoding ... ok
+test feetech_r9_tests::r9_startup_cadence_and_motion_use_one_bus_without_recovery ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 254 filtered out; finished in 1.17s
+

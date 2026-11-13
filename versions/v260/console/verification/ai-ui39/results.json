@@ -1,0 +1,93 @@
+{
+  "release": "V219_control.V73_AI-T1_UI39",
+  "python_ai_tests": {
+    "tests": 238,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 238,
+    "success": true
+  },
+  "frontend": [
+    {
+      "passed": true,
+      "scope": "UI21 grouped catalogs, per-axis range display, per-question images and TOF, late preview isolation, bounded scrolling"
+    },
+    {
+      "passed": true,
+      "scope": "UI24 live speech checkbox, no optimistic state, pending on/off, Zero ACK and ASR sync, old HTTP/status/event rejection, error retains confirmed state, no second mute or task switch"
+    },
+    {
+      "passed": true,
+      "scope": "UI29 action-and-scene result distinguishes completed motion from a failed camera without claiming the motion did not execute"
+    },
+    {
+      "passed": true,
+      "scope": "UI34 Walk scene receipt distinguishes stopped input, vision failure and cancelled photo without claiming measured movement completion"
+    },
+    {
+      "passed": true,
+      "scope": "UI25 shared compact credential grid, bounded question input, no obsolete 1200px gap, unique control IDs, hidden empty visual output, model-wait busy state and model completion text"
+    },
+    {
+      "passed": true,
+      "scope": "rehearsal composer, preset draft, explicit task send and clear, waiting for provider ACK; no action request from text"
+    },
+    {
+      "passed": true,
+      "scope": "live microphone bars; retained credentials and editing; Chinese skills; multi-turn chat; vision busy/error/preview/source labels; measured brightness, exposure warning and next-capture reset"
+    },
+    {
+      "passed": true,
+      "scope": "real ControlPanel and PadControls; identical Start frames; one click one press/release; HOME then hold labels from readback; disabled during takeover/maintenance/offline; keyboard repeat; suspend reset; no automatic commands"
+    },
+    {
+      "passed": true,
+      "scope": "exact native PCM WAV, 24k mono16, per-window RAM, no autoplay/persistence, explicit replay/stop/end, sequence gaps, memory eviction, URL revocation and pagehide cleanup"
+    }
+  ],
+  "changed_inherited_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_action_gate.py",
+    "ai_persona.py",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "ai_zero.py",
+    "release_identity.py",
+    "static/index.html",
+    "verification/test_ai_rehearsal_ui36.py",
+    "verification/test_ai_scene_chain_ui29.py",
+    "verification/test_ai_v200.py",
+    "verification/test_ai_walk_scene_ui34.py"
+  ],
+  "retired_active_test_files": [
+    "verification/test_ai_home_capture_ui38.py"
+  ],
+  "default_walk_steps": [
+    {
+      "vx": 0.3,
+      "vy": 0,
+      "vyaw": 0,
+      "seconds": 2
+    },
+    {
+      "vx": -0.3,
+      "vy": 0,
+      "vyaw": 0,
+      "seconds": 1
+    }
+  ],
+  "default_shake_count": 1,
+  "capture_after_final_stop_receipt": true,
+  "return_home_or_toggle_policy": false,
+  "post_walk_fixed_delay_seconds": 0.0,
+  "native_package_byte_identical_to_ui38": true,
+  "firmware_install_required_from_ui38": false,
+  "camera_target_luma_unchanged": 105.0,
+  "camera_quality_unchanged": "720p15",
+  "mouth_audio_and_primary_service_unchanged": true,
+  "hardware_tested": false,
+  "windows_tested": false,
+  "live_cloud_tested": false
+}

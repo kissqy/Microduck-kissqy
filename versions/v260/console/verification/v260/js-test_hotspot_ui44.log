@@ -1,0 +1,1 @@
+PASS hotspot confirmation/cancel, authenticated SSH without IMU, sudo submission once, busy/offline/replay gates, queued-vs-live wording, retained reconnect instructions, authenticated connection-cycle rearm without retry, rejection/unknown receipt and stale-job races

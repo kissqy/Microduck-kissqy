@@ -1,0 +1,107 @@
+COMMAND: cargo test -p robotd --bin robotd --frozen startup -- --test-threads=1
+   Compiling robotd v0.15.1 (/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.152/robotd)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 55.78s
+     Running unittests src/main.rs (/workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66)
+
+running 5 tests
+test feetech_r9_tests::r9_startup_cadence_and_motion_use_one_bus_without_recovery ... ok
+test raw_stream::tests::new_viewer_gets_unchanged_startup_failure_without_reencoding ... ok
+test tests::a_config_that_disables_walking_is_repaired_at_startup ... ok
+test tests::r17_home_hold_mouth_never_bypasses_startup_relax_fall_or_missing_sensors ... ok
+test tests::r17_startup_refuses_motion_without_queuing_it_for_later ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 253 filtered out; finished in 1.32s
+
+COMMAND: cargo test -p robotd --bin robotd --frozen cold_reopen -- --test-threads=1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.48s
+     Running unittests src/main.rs (/workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66)
+
+running 3 tests
+test tests::feetech_cold_reopen_is_finite_and_does_not_retry_configuration_or_shutdown ... ok
+test tests::feetech_cold_reopen_releases_the_failed_owner_before_new_setup ... ok
+test tests::feetech_cold_reopen_shutdown_during_settle_does_not_open_again ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 255 filtered out; finished in 0.00s
+
+COMMAND: cargo test -p robotd --bin robotd --frozen reopened_uart -- --test-threads=1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.91s
+     Running unittests src/main.rs (/workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66)
+
+running 1 test
+test tests::reopened_uart_rejects_an_acknowledgement_from_the_previous_generation ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 257 filtered out; finished in 0.00s
+
+COMMAND: cargo test -p robotd --bin robotd --frozen r17_empty_snapshot -- --test-threads=1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.52s
+     Running unittests src/main.rs (/workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66)
+
+running 1 test
+test tests::r17_empty_snapshot_and_warming_imu_do_not_accept_home ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 257 filtered out; finished in 0.06s
+
+COMMAND: cargo test -p duck-control --lib --frozen hd1910_transport_tests -- --test-threads=1
+   Compiling syn v3.0.3
+   Compiling num-traits v0.2.19
+   Compiling serde_core v1.0.229
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.2
+   Compiling indexmap v2.14.0
+   Compiling toml_parser v1.1.2+spec-1.1.0
+   Compiling syn v2.0.119
+   Compiling toml_edit v0.25.13+spec-1.1.0
+   Compiling thiserror-impl v2.0.20
+   Compiling regex-automata v0.4.16
+   Compiling thiserror v2.0.20
+   Compiling proc-macro-crate v3.5.0
+   Compiling clap_derive v4.6.4
+   Compiling regex v1.13.1
+   Compiling num_enum_derive v0.7.6
+   Compiling unescaper v0.1.10
+   Compiling num-complex v0.4.6
+   Compiling num-integer v0.1.46
+   Compiling serde_derive v1.0.229
+   Compiling bitflags v2.13.1
+   Compiling serialport v4.9.0
+   Compiling tracing-core v0.1.36
+   Compiling env_logger v0.10.2
+   Compiling serde_json v1.0.151
+   Compiling serde v1.0.229
+   Compiling ndarray v0.17.2
+   Compiling num_enum v0.7.6
+   Compiling clap v4.6.4
+   Compiling semver v1.0.28
+   Compiling tracing-attributes v0.1.31
+   Compiling smallvec v1.15.2
+   Compiling tracing v0.1.44
+   Compiling duck-ipc-proto v0.15.1 (/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.152/duck-ipc-proto)
+   Compiling ort v2.0.0-rc.11
+   Compiling rustypot v1.8.0
+   Compiling duck-control v0.15.1 (/workspace/scratch/5a402859beee/source/Microduck-Source-R17-v1.0.152/duck-control)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2m 09s
+     Running unittests src/lib.rs (/workspace/scratch/5a402859beee/build152/target-host/debug/deps/duck_control-fa371aee504c3fba)
+
+running 19 tests
+test feetech::hd1910_transport_tests::both_hip_pitch_signed_replies_reach_sensors_and_diagnostics ... ok
+test feetech::hd1910_transport_tests::complete_late_telemetry_still_rejects_expired_data_and_bad_imu ... ok
+test feetech::hd1910_transport_tests::complete_late_torque_confirmation_keeps_its_original_deadline ... ok
+test feetech::hd1910_transport_tests::console_servo_test_partial_write_remains_restorable ... ok
+test feetech::hd1910_transport_tests::console_servo_test_writes_all_fifteen_then_restores_without_eeprom_or_motion_changes ... ok
+test feetech::hd1910_transport_tests::control_status_matches_full_diagnostics_through_feedback_and_torque_changes ... ok
+test feetech::hd1910_transport_tests::diagnostic_registers_share_storage_and_refresh_only_after_a_new_inspection ... ok
+test feetech::hd1910_transport_tests::hd1910_arm_goals_and_relax_preserve_acceleration_and_eeprom ... ok
+test feetech::hd1910_transport_tests::hd1910_gain_readback_failure_never_enables_torque_and_remains_restorable ... ok
+test feetech::hd1910_transport_tests::imu_protocol_faults_and_missing_initial_feedback_stay_strict ... ok
+test feetech::hd1910_transport_tests::joint_recovery_keeps_real_timestamps_and_has_a_wall_clock_limit ... ok
+test feetech::hd1910_transport_tests::native_speed_reaches_policy_with_signed_magnitude_local_directions_and_no_current_claim ... ok
+test feetech::hd1910_transport_tests::negative_feedback_preloads_itself_but_home_targets_stay_calibrated_positive ... ok
+test feetech::hd1910_transport_tests::numeric_snapshot_matches_native_report_without_uart_or_lost_offline_counts ... ok
+test feetech::hd1910_transport_tests::restart_preserves_powered_servos_without_writing_until_explicit_init ... ok
+test feetech::hd1910_transport_tests::startup_identity_timeout_keeps_servos_limp_and_goal_channel_closed ... ok
+test feetech::hd1910_transport_tests::startup_unconfirmed_torque_never_proceeds_to_imu_or_goals ... ok
+test feetech::hd1910_transport_tests::telemetry_between_old_and_new_deadline_is_fresh_without_late_exception ... ok
+test feetech::hd1910_transport_tests::twenty_ms_missing_replies_keep_failure_identity_and_never_refresh_expired_imu ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 116 filtered out; finished in 1.01s
+

@@ -1,0 +1,136 @@
+# Any level, not just the root: running cargo inside a member directory creates a
+# nested one (updater/target), and `/target` would not match it.
+target/
+
+# ── never commit signing material ────────────────────────────────────────────
+#
+# `cargo xtask keygen` refuses to write keys inside the repo, so these patterns are
+# belt-and-braces for keys arriving some other way — copied in by hand, dropped by a
+# script, left behind by a test. A committed signing key cannot be un-leaked by
+# deleting the file: it stays in history, and every robot that trusts it must be
+# considered compromised.
+*.key
+*.pem
+secret*
+!*.pub
+
+# Release output. Contains artifacts and signatures; regenerate rather than commit.
+/dist
+/staged
+
+# Playground and scratch state (see updater/examples/playground.rs).
+/verify
+
+# Python bytecode from the demo Space, which is source rather than a build here.
+__pycache__/
+
+# Console runtime logs are local state, not source or release evidence.
+/console/logs/
+
+# A venv beside a Space's source, for running one locally. `uv venv` writes its own `.gitignore`
+# holding `*` so it self-ignores; this is for the person who reaches for `python -m venv`, which
+# does not, and it is the same accident `__pycache__` above was added for.
+.venv/
+
+# Recreated from the verified firmware archive by prepare-V167.py.
+/packaging/mediad
+/packaging/models/1c94934c6421ec72ed48079cea749668/export-data.zip
+/packaging/models/1c94934c6421ec72ed48079cea749668/policy.onnx
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/export-data.zip
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/policy.onnx
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/export-data.zip
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/policy.onnx
+/packaging/models/67ad09d82f4865d222a7ae06f250cf9f/export-data.zip
+/packaging/models/67ad09d82f4865d222a7ae06f250cf9f/policy.onnx
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/export-data.zip
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/policy.onnx
+/packaging/models/ee0376c927044cdece056ba1d3e6eac7/policy.onnx
+/packaging/onnxruntime/libonnxruntime.so.1.28.0
+/packaging/onnxruntime/libonnxruntime_providers_shared.so
+/packaging/padd
+/packaging/robotctl
+/packaging/robotd
+/packaging/roller/crouch/policy.onnx
+/packaging/roller/spin/policy.onnx
+/packaging/roller/standup/policy.onnx
+/packaging/roller/swizzle/policy.onnx
+/packaging/sounds
+/base/
+/.cache/
+/Microduck-Console-R17-V167.zip
+/Microduck-Source-*.tar.gz
+/packaging/R150.md
+/packaging/R153.md
+/packaging/R154.md
+/packaging/R155.md
+/packaging/R157-Fix2.md
+/packaging/R157-Fix4.md
+/packaging/R157-Fix6.md
+/packaging/R157.md
+
+# Consolidated reference snapshots and unused duplicate model alias.
+/packaging/models/ee0376c927044cdece056ba1d3e6eac77/
+/verification/official-reference-from146/*
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/policy.onnx
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/export-data.zip
+
+# Identical model metadata restored from canonical policies by prepare-V167.py.
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/README.en.md
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/deployment-contract.json
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/deployment-profile.toml
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/deployment-runtime.json
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/manifest.json
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/model-info.json
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/training-config.json
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/training-request.json
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/upstream-params/agent.yaml
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/upstream-params/env.yaml
+/packaging/models/b14e3a8b56ddbb8d2d831e727774a168/使用说明.md
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/README.en.md
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/deployment-execution.json
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/deployment-profile.toml
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/deployment-runtime.json
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/manifest.json
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/model-info.json
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/training-config.json
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/training-request.json
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/upstream-params/agent.yaml
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/upstream-params/env.yaml
+/packaging/models/1cbf8730eadd75a5704332c9f3c10f60/使用说明.md
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/README.en.md
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/deployment-contract.json
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/deployment-profile.toml
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/deployment-runtime.json
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/manifest.json
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/model-info.json
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/training-config.json
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/training-request.json
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/upstream-params/agent.yaml
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/upstream-params/env.yaml
+/packaging/models/a481d9f211f31d9476ab1a319fe362a2/使用说明.md
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/README.en.md
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/deployment-contract.json
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/deployment-profile.toml
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/deployment-runtime.json
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/manifest.json
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/model-info.json
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/training-config.json
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/training-request.json
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/upstream-params/agent.yaml
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/upstream-params/env.yaml
+/packaging/models/59e15d7b04d0c40e9b11b8a70bdecae6/使用说明.md
+/packaging/models/1c94934c6421ec72ed48079cea749668/deployment-contract.json
+/packaging/models/1c94934c6421ec72ed48079cea749668/deployment-runtime.json
+/packaging/models/1c94934c6421ec72ed48079cea749668/manifest.json
+/packaging/models/1c94934c6421ec72ed48079cea749668/training-request.json
+/packaging/models/1c94934c6421ec72ed48079cea749668/upstream-params/agent.yaml
+/packaging/models/1c94934c6421ec72ed48079cea749668/upstream-params/env.yaml
+/packaging/models/ee0376c927044cdece056ba1d3e6eac7/README.en.md
+/packaging/models/ee0376c927044cdece056ba1d3e6eac7/deployment-contract.json
+/packaging/models/ee0376c927044cdece056ba1d3e6eac7/deployment-profile.toml
+/packaging/models/ee0376c927044cdece056ba1d3e6eac7/manifest.json
+/packaging/models/ee0376c927044cdece056ba1d3e6eac7/training-config.json
+/packaging/models/ee0376c927044cdece056ba1d3e6eac7/training-request.json
+/packaging/models/ee0376c927044cdece056ba1d3e6eac7/upstream-params/agent.yaml
+/packaging/models/ee0376c927044cdece056ba1d3e6eac7/upstream-params/env.yaml
+/packaging/models/ee0376c927044cdece056ba1d3e6eac7/使用说明.md

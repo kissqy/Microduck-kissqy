@@ -1,0 +1,364 @@
+{
+  "console_version": "1.0.147",
+  "service_build": "1fa8438-feetech-ft6-control.30",
+  "tests": {
+    "python": 288,
+    "python_run": 288,
+    "python_skipped": 0,
+    "native_suites": {
+      "duck_control": {
+        "passed": 133,
+        "failed": 0,
+        "ignored": 0
+      },
+      "duck_ipc_proto": {
+        "passed": 53,
+        "failed": 0,
+        "ignored": 0
+      },
+      "robotd": {
+        "passed": 250,
+        "failed": 0,
+        "ignored": 2
+      },
+      "robotd_params": {
+        "passed": 97,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    "focused": {
+      "all_passed": true,
+      "commands": [
+        {
+          "command": [
+            "node",
+            "packaging/test_joint_execution_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "evidence": "frontend-joint_execution147.log"
+        },
+        {
+          "command": [
+            "node",
+            "packaging/test_manual_recovery_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "evidence": "frontend-manual_recovery147.log"
+        },
+        {
+          "command": [
+            "node",
+            "packaging/test_settings_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "evidence": "frontend-settings147.log"
+        },
+        {
+          "command": [
+            "node",
+            "packaging/test_advanced_parameters_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "evidence": "frontend-advanced_parameters147.log"
+        },
+        {
+          "command": [
+            "node",
+            "packaging/test_walk_ui.mjs",
+            "console/static"
+          ],
+          "exit_code": 0,
+          "evidence": "frontend-walk147.log"
+        }
+      ],
+      "evidence_files": [
+        "frontend-joint_execution147.log",
+        "frontend-manual_recovery147.log",
+        "frontend-settings147.log",
+        "frontend-advanced_parameters147.log",
+        "frontend-walk147.log",
+        "model-import-tests147.log",
+        "native-unfiltered-tests147.log",
+        "native-unfiltered-tests147-serial.log",
+        "native-unfiltered-tests147-final.log",
+        "restore147-cargo-zigbuild.log",
+        "restore147-cargo-fetch.log",
+        "restore147-pip-download.log",
+        "restore147-rustc-1.99.0-x86_64-unknown-linux-gnu.log",
+        "restore147-rust-std-1.99.0-x86_64-unknown-linux-gnu.log",
+        "restore147-rustfmt-1.99.0-x86_64-unknown-linux-gnu.log",
+        "restore147-cargo-1.99.0-x86_64-unknown-linux-gnu.log",
+        "restore147-rust-std-1.99.0-aarch64-unknown-linux-gnu.log",
+        "restore147-pip-install.log"
+      ],
+      "browser_rendered": false,
+      "native_prior_attempts": "Earlier unchanged PTY/deadline-sensitive tests failed under scheduling load; final unfiltered complete suite passed with no filtering or deadline changes. Prior logs retained.",
+      "generated_at_utc": "2026-10-08T04:40:50.333554+00:00"
+    },
+    "robotd_rebuilt": true,
+    "robotctl_rebuilt": true,
+    "padd_rebuilt": false,
+    "reused_binary_payload_from": "1.0.146",
+    "hardware_tested": false,
+    "full_system_integration_verified": false,
+    "integration_scope": "Real new ONNX models with synthetic inputs and fake hardware; target scale/filter/phase/return-to-Walk regressions; Python import and actual repeated payload upgrades. No robot motion, systemd/uinput activation or live GameSir test."
+  },
+  "preserved": {
+    "source_directories": {
+      "gamepad-r7": 8,
+      "padd": 6,
+      "robotctl": 12,
+      "sounds": 15,
+      "odometry": 3,
+      "firmware": 30,
+      "kinematics": 11,
+      "policies/walk": 13,
+      "policies/stand": 12,
+      "policies/sitstand": 8
+    },
+    "source_files": {
+      "Cargo.lock": "fa1668b2e909f80bb4fc6db66a634742f6b42cfe79df6b51c6d5d90db36a08cf",
+      "robotd/src/params.rs": "386305e3ce00a409f6527d2be2048a927c2b448423ed1bb9fc63f29af0ff3064",
+      "robotd/src/intents.rs": "5a047b1025457d524f7a4d2c98646acaa440ad1e0c41a4fa983fb30f53f1b78c",
+      "robotd/src/home_start.rs": "85a2736ba94bb0f725ab66c2d278954ce0c8b9625849c8998bbccb4873946fd7",
+      "robotd/src/raw_codec.rs": "6d15762bf3783867ce2025843db2d552cf0281f836f6e17b85465b1b4f1174bc",
+      "robotd/src/telemetry_system.rs": "1d509a00dbd73a30268a4cd7252c18a28285a9a18191f532353ca2fdfac2939d",
+      "robotd/src/telemetry_geometry.rs": "40a18eaf7c575a14901ba09248d6e908cde16b3a03d8be6ce8024e37bd7913c2",
+      "console/static/duck.js": "a7a5fe0e3835dc59fd9d97de2be378bbfaf87f30e1e8acebfa5af74143a2a667",
+      "console/static/webpad-controls.js": "21f07a5eeec552d9820b9ea27a38a8b98151afa0b377d15cc218d591e08362a1",
+      "console/static/raw-telemetry.js": "b89a37aa3a4aad2ad1966c31e960a37254387427addb79e24abefd459b67c83a",
+      "console/static/raw-kinematics.js": "814dc7401c3dfe76b815a721a73c57f7da9adecd4ebc787da8d3190ef90288a4",
+      "console/static/control-socket.js": "fba1cbf20eed1a6ca42a52dcded8e6b7c241e9307c50832a589bbec6ed12e954",
+      "console/raw_telemetry.py": "35f1287fc301c72b6daf9d0d3875d0672c935f1c1180b564cac2cda75b541a99",
+      "console/socket_transport.py": "26659847468f056982bcf755c8665c87aff668eaf710d45f4022b998b755aa3b",
+      "console/console.py": "f295213ca3af0f116855ae01dd4ed93d149b1ac4d975fa19e2a915044d3780d7",
+      "console/controls.py": "91d406a1edf62322518e6e427a6515c875475b92b224c379f8e47d110912cb9b",
+      "console/control_socket.py": "68b40569e6dc4981fd534d08b968d2279c96d583759d77e771beec4c456a27fd"
+    },
+    "payload_files": {
+      "padd": "78b456e7c19e720330c325fe16719e291d36373c0879911d59f77700d52f79a3",
+      "sounds": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103",
+      "uart-service.py": "7a1304ca3f076407f9db6d1ba947495f76a3ecef5aa800ee26d78971e1faddde",
+      "hd1910-calibration.robot.toml": "b208a0a89244f8906936b5b3dce585f218d59372d2f04b60117f684d22937e40",
+      "hd1910-calibration.training.toml": "bfa1045e1601199edad0a329417f0128457638bd277dd46e1196dafdd44a6bf7",
+      "hd1910-calibration.template.toml": "5f3083e48ffd21787d05d70d34eeeb928c07e30dea477204ce6c67cf9bb2fba6",
+      "gamepad-r7/gamesir-xboxd": "6f8d78d2bdcb85c2e216013c66e1af25b38813cb86d0e88a7722ef98df5d4b30",
+      "webpad.py": "27e26079612ba05f01fc47f06f506ecb3fb01ab8d5a986726963806313b1f58c",
+      "microduck-webpad.service": "0c2f25034a205423039c0cc39ac19c61d2e65b0ee807f266c215730010866166",
+      "microduck-webpad.socket": "c4f44a44d5df1f2a5e12f14f27cf0c244b66bf41f6a6a85e602273b338f048bf"
+    },
+    "uploaded_training_files": {
+      "roulade/policy.onnx": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac",
+      "roulade/deployment-contract.json": "2e40493605eac00978db51bcc0e127d6681fb78b170694f979c703bcd8dff330",
+      "roulade/training-request.json": "e6209817dd2233b249d5d516c37eacaaadf8ce3e4521812f2c600d114527fb45",
+      "roulade/manifest.json": "f097326d4331fdd298e2d4ad4e7ade8aec8d8148195b0db2e0b30b968dce15b5",
+      "roulade/deployment-profile.toml": "f34535fa1dd9623ffb891ebd43eae4e0a115556f9c0421d6c98a3de242ca7b0e",
+      "roulade/使用说明.md": "66084e3ce718d65e700d3ab827ddd814f88ee1df1fbb7ea75e5c4fcec7d710d8",
+      "roulade/training-config.json": "016c3605254508089abd97abd86ec09a780970cc48da23a5db841447728c56c2",
+      "roulade/upstream-params/agent.yaml": "1ac37d341454b9b3a5aa98c3985bca28ae075758fe05f3018bbf5ebade682ce4",
+      "roulade/upstream-params/env.yaml": "937e725e063b804b43aa70e48a5769828e471f6acc287b3e57997ed6464519ca",
+      "ground_pick/policy.onnx": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69",
+      "ground_pick/deployment-contract.json": "2d2e807aadb1f98df7b64e5f3378041db6fd939e5e286a9958f1b1540ab21fee",
+      "ground_pick/training-request.json": "bd92bd8f077fdd6186802798a27b6971522f4b7a94bc0b19e6e35da8c7dd63e6",
+      "ground_pick/manifest.json": "12d6870830a48bdc00f9c1dd961e09263919c535cb2604d31659e080ff497b83",
+      "ground_pick/deployment-profile.toml": "15fbed4125ea8fb104b9d0544540fa664fc78b8f1bbcef9a1f9bfa31064a0a15",
+      "ground_pick/使用说明.md": "1a0d36fa2d66ecce87eedb8d8984d61c0799beb3191b7323ceea8b5e47fa89a1",
+      "ground_pick/training-config.json": "9b3ed07a4f0b4d923917851a69b714232a6cc9d9395f6ad4252f455a7a2a7f3e",
+      "ground_pick/upstream-params/agent.yaml": "86ee2132d29bf6a3fdf364d250dd39860916a830c4b0ab3912fab7a848378e50",
+      "ground_pick/upstream-params/env.yaml": "461db3166b62587ac179ad5ef1c71ee21d37f773acac1753767586bc1e146aa2"
+    },
+    "legacy_fixtures": {
+      "roulade": {
+        "files": 9,
+        "runtime_shipped": false
+      },
+      "ground_pick": {
+        "files": 9,
+        "runtime_shipped": false
+      }
+    },
+    "payload_models": {
+      "1cbf8730eadd75a5704332c9f3c10f60": 13,
+      "1c94934c6421ec72ed48079cea749668": 8,
+      "a481d9f211f31d9476ab1a319fe362a2": 12
+    },
+    "onnxruntime_files": 6,
+    "hat_firmware_sha256": "d7bd2f37a6a4e0e15d1f9650a3959bcf4d8c704524d8ec319d72d8bdf104ab6d"
+  },
+  "evidence": [
+    {
+      "name": "native-tests147.log",
+      "sha256": "fbc547a643d9e21f932ac4146296817a2e6b96b9eaf5bc161fad5f3e6e874d50"
+    },
+    {
+      "name": "python-tests147.log",
+      "sha256": "b9bd921eac4154b6c3233c8e8d6053f90945b59bdc372ca0f4d8e69e9c1b732a"
+    },
+    {
+      "name": "native-build147.log",
+      "sha256": "ed789f4e27b5ef2dd170d803b55509a8fe2a972b23e7b85566f575d7eeecb491"
+    },
+    {
+      "name": "native-build-environment147.json",
+      "sha256": "70405e3f0d8754c3c9b8a1703bd2faf0acce4c84c9f96085c269d55e4c54f287"
+    },
+    {
+      "name": "focused-verification147.json",
+      "sha256": "7202fafa9c650563ccaa2213c05c9b5293cbbdc1656b446a20f0da173f749de9"
+    },
+    {
+      "name": "action-model-audit147.json",
+      "sha256": "c581d038b4b62a55a230beeb90abde86f4a5d31a33cb2fcd79dba9bfcdc4f422"
+    },
+    {
+      "name": "action-model-audit147.txt",
+      "sha256": "a844ec3a527b08882e6f566090e1bc79297b683c220abff2eadae7e0244a1032"
+    },
+    {
+      "name": "audit_action_models147.py",
+      "sha256": "d0e9ede7131ea6f9052384bcd4cc347bf578516ad6afeda6d19bf6b371f94241"
+    },
+    {
+      "name": "restore_toolchain147.py",
+      "sha256": "4ea0be2a0df6aafa0530e97176293d8e8bcd01b48840fc777888d4e82cd71b41"
+    },
+    {
+      "name": "toolchain-restore147.json",
+      "sha256": "7d752bcb39543ec88b808c3e5177c2ae1ec097e58f08307ae78d011d9e3f1c8f"
+    },
+    {
+      "name": "build_native147.py",
+      "sha256": "d8dedddcfd2ce8fbc6d29ec740fb93d659bbc85c35b4e16bdde427be7dd10456"
+    },
+    {
+      "name": "frontend-joint_execution147.log",
+      "sha256": "2e796cf7182125e191727dc8227285fcd39595d538a470e3d72a25de92206238"
+    },
+    {
+      "name": "frontend-manual_recovery147.log",
+      "sha256": "46023f6f96bda0e5f3245ea638159893df1cd439d5df7dfd4e50aefb75d4f0bf"
+    },
+    {
+      "name": "frontend-settings147.log",
+      "sha256": "9fd7bf9ed238cab4b0202d9175fb6e3ad47e823adc2ca083282d38e76b5dc982"
+    },
+    {
+      "name": "frontend-advanced_parameters147.log",
+      "sha256": "c29c4682fe5a6f79d03e4e37fb8081f0842111446ed56dde4946637db291ed8a"
+    },
+    {
+      "name": "frontend-walk147.log",
+      "sha256": "8daef52cc0221a2fb1101e5b962d72ef97daae82557daf530ecf57b7d6faa44b"
+    },
+    {
+      "name": "model-import-tests147.log",
+      "sha256": "d7b26386a01c25aa153d24e62e221bacdd08e9bfcd4cb6316d0403b7162868af"
+    },
+    {
+      "name": "native-unfiltered-tests147.log",
+      "sha256": "b734c01ed2ea4f163ab8f6a62bd9b77c4520ab0aa5b6b39b28533088eb299382"
+    },
+    {
+      "name": "native-unfiltered-tests147-serial.log",
+      "sha256": "749875114bb515086d098e4d6ef98c4425bc3f5a402813733f91b99eebe34f26"
+    },
+    {
+      "name": "native-unfiltered-tests147-final.log",
+      "sha256": "fbc547a643d9e21f932ac4146296817a2e6b96b9eaf5bc161fad5f3e6e874d50"
+    },
+    {
+      "name": "restore147-cargo-zigbuild.log",
+      "sha256": "bcf2d3276a1bb1de3a72a4d6289be1c71649e44415344b8f328420b63dfaffbc"
+    },
+    {
+      "name": "restore147-cargo-fetch.log",
+      "sha256": "93e3f9f978d7c22b4e61feaa2dd06e8cf29e02e14b3dbf9a740e8b15947a4042"
+    },
+    {
+      "name": "restore147-pip-download.log",
+      "sha256": "e925f327062c3c695432acd503be21efff5a4c606fff8cd0374726c63668bff7"
+    },
+    {
+      "name": "restore147-rustc-1.99.0-x86_64-unknown-linux-gnu.log",
+      "sha256": "0100136d28261ca95faa559f4971f6eb7e7b1192742e21ca6f0670aa14550c5d"
+    },
+    {
+      "name": "restore147-rust-std-1.99.0-x86_64-unknown-linux-gnu.log",
+      "sha256": "38f02025c339b4dc1c2d94af2f8aeeb63fe8ef505e99239ac34e5b2221b803f9"
+    },
+    {
+      "name": "restore147-rustfmt-1.99.0-x86_64-unknown-linux-gnu.log",
+      "sha256": "ff2a7ad4ca7aeec3e0346cfa437cdb5340d9bb68ec47da0aa4b0378a1d6ce6c3"
+    },
+    {
+      "name": "restore147-cargo-1.99.0-x86_64-unknown-linux-gnu.log",
+      "sha256": "80dd41d60506a1344a21a4c9647afa269a494d98d5ebe550f54e6971c6bb2f38"
+    },
+    {
+      "name": "restore147-rust-std-1.99.0-aarch64-unknown-linux-gnu.log",
+      "sha256": "80d9d7fddb6efbff778c32440e639f9a3b2eff05250d89a3274a75aa8ce4ada2"
+    },
+    {
+      "name": "restore147-pip-install.log",
+      "sha256": "84b53ff463befd065e695b0a2cbf75b48e8126540ee65b0e08a7561c12e28140"
+    }
+  ],
+  "changed_payload_files": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "configure.py",
+    "install-files.json",
+    "management-profile.json",
+    "model_packages.py",
+    "models/59e15d7b04d0c40e9b11b8a70bdecae6/deployment-contract.json",
+    "models/59e15d7b04d0c40e9b11b8a70bdecae6/deployment-profile.toml",
+    "models/59e15d7b04d0c40e9b11b8a70bdecae6/deployment-runtime.json",
+    "models/59e15d7b04d0c40e9b11b8a70bdecae6/export-data.zip",
+    "models/59e15d7b04d0c40e9b11b8a70bdecae6/manifest.json",
+    "models/59e15d7b04d0c40e9b11b8a70bdecae6/model-info.json",
+    "models/59e15d7b04d0c40e9b11b8a70bdecae6/policy.onnx",
+    "models/59e15d7b04d0c40e9b11b8a70bdecae6/training-config.json",
+    "models/59e15d7b04d0c40e9b11b8a70bdecae6/training-request.json",
+    "models/59e15d7b04d0c40e9b11b8a70bdecae6/upstream-params/agent.yaml",
+    "models/59e15d7b04d0c40e9b11b8a70bdecae6/upstream-params/env.yaml",
+    "models/59e15d7b04d0c40e9b11b8a70bdecae6/使用说明.md",
+    "models/b14e3a8b56ddbb8d2d831e727774a168/deployment-contract.json",
+    "models/b14e3a8b56ddbb8d2d831e727774a168/deployment-profile.toml",
+    "models/b14e3a8b56ddbb8d2d831e727774a168/deployment-runtime.json",
+    "models/b14e3a8b56ddbb8d2d831e727774a168/export-data.zip",
+    "models/b14e3a8b56ddbb8d2d831e727774a168/manifest.json",
+    "models/b14e3a8b56ddbb8d2d831e727774a168/model-info.json",
+    "models/b14e3a8b56ddbb8d2d831e727774a168/policy.onnx",
+    "models/b14e3a8b56ddbb8d2d831e727774a168/training-config.json",
+    "models/b14e3a8b56ddbb8d2d831e727774a168/training-request.json",
+    "models/b14e3a8b56ddbb8d2d831e727774a168/upstream-params/agent.yaml",
+    "models/b14e3a8b56ddbb8d2d831e727774a168/upstream-params/env.yaml",
+    "models/b14e3a8b56ddbb8d2d831e727774a168/使用说明.md",
+    "release_identity.py",
+    "robotd",
+    "robotd-profile.toml"
+  ],
+  "install_repeated_with_settings_preserved": true,
+  "preimported_model_preserved": true,
+  "old_actions_removed_on_ordinary_upgrade": true,
+  "only_one_walk_slot": true,
+  "runtime_models": 5,
+  "console_and_firmware_import_verified": true,
+  "payload_sha256": "ebad1f8db7207ba4d250c3163852ea0e97b0eb3ca02d963a98ccc64e31edfaea",
+  "rebuilt_binaries": [
+    "robotd",
+    "robotctl"
+  ],
+  "reused_padd_verified": true,
+  "api_version": 40,
+  "raw_schema": "r17.raw.v1",
+  "raw_envelope_changed": false,
+  "hardware_tested": false
+}

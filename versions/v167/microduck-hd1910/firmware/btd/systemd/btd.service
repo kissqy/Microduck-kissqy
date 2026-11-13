@@ -1,0 +1,93 @@
+# btd — the BLE front door onto the robot API.
+#
+# Install to /etc/systemd/system/btd.service.
+#
+# Two properties follow from btd being part of the recovery path (docs/architecture.md §1.1)
+# and must be preserved:
+#
+#   1. NO dependency on robotd or updaterd, in either direction. btd must answer when the
+#      robot does not — that is most of why it exists. It reaches both over their sockets,
+#      and a missing socket is a normal answer it reports rather than a reason not to start.
+#   2. It stays UNPRIVILEGED. btd is the process that parses bytes from anyone in radio
+#      range; configd is the one that runs as root. Putting the parser on the safe side of
+#      that boundary matters more than hardening the dispatcher.
+
+[Unit]
+Description=Robot BLE transport adapter
+Documentation=file:///opt/robot/daemon/current/docs/architecture.md
+
+# bluetoothd is a hard requirement — btd speaks to BlueZ over D-Bus and has nothing to do
+# without it. `Wants` rather than `Requires`: if bluetoothd is slow or restarts, btd waits
+# and retries for an adapter rather than failing (see ADAPTER_RETRY in src/bluez.rs).
+#
+# On the Radxa, hci0 does not exist until ~73s after power-on: aic-bluetooth.service attaches
+# the AIC8800's UART late, and bluetooth.service itself spends ~26s blocked behind dbus. So
+# ordering after bluetooth.service is necessary but nowhere near sufficient, and the retry
+# loop is what actually makes startup work.
+After=dbus.service bluetooth.service
+Wants=bluetooth.service
+
+# No network dependency: BLE is the transport that has to work when the network does not.
+After=local-fs.target
+
+[Service]
+Type=exec
+ExecStart=/opt/robot/daemon/current/bin/btd
+
+# Unprivileged, unlike robotd — btd touches no hardware directly, only D-Bus and two unix
+# sockets, so there is no excuse for root here.
+#
+# `robot` is what gets it through the 0660 sockets updaterd and robotd listen on.
+#
+# `bluetooth` is what should get it through BlueZ's D-Bus policy — but VERIFY THAT ON THE
+# BOARD before trusting it: Debian's /usr/share/dbus-1/system.d/bluetooth.conf grants
+# send_destination="org.bluez" to root and to at_console, and whether a group covers a
+# session-less daemon differs between images. If btd logs a D-Bus permission error on
+# startup, a drop-in policy granting this user access to org.bluez is the fix — not running
+# it as root.
+#
+# The users and groups must exist or the unit fails to start; see sysusers.d/btd.conf,
+# installed alongside.
+User=btd
+Group=btd
+SupplementaryGroups=robot bluetooth
+
+Restart=always
+RestartSec=5s
+
+# Tighter than robotd can be, because this process has no hardware to reach. It needs D-Bus
+# (a unix socket) and two unix sockets, and nothing else.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+CapabilityBoundingSet=
+
+# stderr → journal; level via RUST_LOG. The startup identity line (version, revision, exe
+# path) is at `warn`, so it survives RUST_LOG=warn on a long-running board.
+Environment=RUST_LOG=info
+StandardOutput=journal
+StandardError=journal
+
+# Where this daemon publishes what it is running: /run/btd/identity.json, read by
+# `robotctl health` and by updaterd's startup check.
+#
+# `RuntimeDirectory=` rather than a path this unit is granted: it is the only mechanism that both
+# creates the directory owned by this unit's User= *and* survives ProtectSystem=strict, which
+# otherwise leaves the whole filesystem read-only. systemd also removes it when the unit stops, so a
+# stopped daemon cannot leave behind an identity claiming to be running.
+RuntimeDirectory=btd
+
+[Install]
+WantedBy=multi-user.target

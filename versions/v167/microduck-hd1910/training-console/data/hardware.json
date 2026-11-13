@@ -1,0 +1,421 @@
+{
+  "updated": "2026-10-03",
+  "target_runtime": "0.15.1",
+  "robot_configuration": "官方骨架 + HD1910",
+  "joints": [
+    {
+      "name": "left_hip_yaw",
+      "id": 20,
+      "zero_raw": 2035,
+      "direction": 1,
+      "calibrated": true,
+      "min_rad": -0.4363323129985824,
+      "max_rad": 0.5235987755982988,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "left_hip_roll",
+      "id": 21,
+      "zero_raw": 2176,
+      "direction": -1,
+      "calibrated": true,
+      "min_rad": -0.3839724354387525,
+      "max_rad": 0.3839724354387525,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "left_hip_pitch",
+      "id": 22,
+      "zero_raw": 1977,
+      "direction": -1,
+      "calibrated": true,
+      "min_rad": -1.5707963267948966,
+      "max_rad": 1.5707963267948966,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "left_knee",
+      "id": 23,
+      "zero_raw": 1392,
+      "direction": -1,
+      "calibrated": true,
+      "min_rad": -1.5707963267948966,
+      "max_rad": 1.5707963267948966,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "left_ankle",
+      "id": 24,
+      "zero_raw": 1893,
+      "direction": -1,
+      "calibrated": true,
+      "min_rad": -1.2217304763960306,
+      "max_rad": 1.2217304763960306,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "neck_pitch",
+      "id": 30,
+      "zero_raw": 2100,
+      "direction": 1,
+      "calibrated": true,
+      "min_rad": -1.5707963267948966,
+      "max_rad": 1.2217304763960306,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "head_pitch",
+      "id": 31,
+      "zero_raw": 1742,
+      "direction": 1,
+      "calibrated": true,
+      "min_rad": -1.5707963267948966,
+      "max_rad": 1.5707963267948966,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "head_yaw",
+      "id": 32,
+      "zero_raw": 1952,
+      "direction": -1,
+      "calibrated": true,
+      "min_rad": -2.9670597283903604,
+      "max_rad": 2.9670597283903604,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "head_roll",
+      "id": 33,
+      "zero_raw": 1599,
+      "direction": 1,
+      "calibrated": true,
+      "min_rad": -0.3490658503988659,
+      "max_rad": 0.3490658503988659,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "mouth",
+      "id": 34,
+      "zero_raw": 1372,
+      "direction": -1,
+      "calibrated": true,
+      "min_rad": -0.08726646259971647,
+      "max_rad": 0.5235987755982988,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "right_hip_yaw",
+      "id": 10,
+      "zero_raw": 1974,
+      "direction": 1,
+      "calibrated": true,
+      "min_rad": -0.5235987755982988,
+      "max_rad": 0.4363323129985824,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "right_hip_roll",
+      "id": 11,
+      "zero_raw": 1760,
+      "direction": -1,
+      "calibrated": true,
+      "min_rad": -0.3839724354387525,
+      "max_rad": 0.3839724354387525,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "right_hip_pitch",
+      "id": 12,
+      "zero_raw": 1799,
+      "direction": -1,
+      "calibrated": true,
+      "min_rad": -1.5707963267948966,
+      "max_rad": 1.5707963267948966,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "right_knee",
+      "id": 13,
+      "zero_raw": 1908,
+      "direction": -1,
+      "calibrated": true,
+      "min_rad": -1.5707963267948966,
+      "max_rad": 1.5707963267948966,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    },
+    {
+      "name": "right_ankle",
+      "id": 14,
+      "zero_raw": 1611,
+      "direction": -1,
+      "calibrated": true,
+      "min_rad": -1.2217304763960306,
+      "max_rad": 1.2217304763960306,
+      "servo_model": "HD1910",
+      "servo_mass_g": 23
+    }
+  ],
+  "current_calibration": {
+    "data": {
+      "motion_enabled": false,
+      "imu_mount_verified": true,
+      "imu_mount_quat": [
+        0.037577263,
+        0.701353391,
+        -0.035866967,
+        0.710918372
+      ],
+      "current_ma_per_count": 0.0,
+      "units_verified": false,
+      "joints": [
+        {
+          "name": "left_hip_yaw",
+          "id": 20,
+          "zero_raw": 2035,
+          "direction": 1,
+          "calibrated": true,
+          "min_rad": -0.4363323129985824,
+          "max_rad": 0.5235987755982988
+        },
+        {
+          "name": "left_hip_roll",
+          "id": 21,
+          "zero_raw": 2176,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -0.3839724354387525,
+          "max_rad": 0.3839724354387525
+        },
+        {
+          "name": "left_hip_pitch",
+          "id": 22,
+          "zero_raw": 1977,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -1.5707963267948966,
+          "max_rad": 1.5707963267948966
+        },
+        {
+          "name": "left_knee",
+          "id": 23,
+          "zero_raw": 1392,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -1.5707963267948966,
+          "max_rad": 1.5707963267948966
+        },
+        {
+          "name": "left_ankle",
+          "id": 24,
+          "zero_raw": 1893,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -1.2217304763960306,
+          "max_rad": 1.2217304763960306
+        },
+        {
+          "name": "neck_pitch",
+          "id": 30,
+          "zero_raw": 2100,
+          "direction": 1,
+          "calibrated": true,
+          "min_rad": -1.5707963267948966,
+          "max_rad": 1.2217304763960306
+        },
+        {
+          "name": "head_pitch",
+          "id": 31,
+          "zero_raw": 1742,
+          "direction": 1,
+          "calibrated": true,
+          "min_rad": -1.5707963267948966,
+          "max_rad": 1.5707963267948966
+        },
+        {
+          "name": "head_yaw",
+          "id": 32,
+          "zero_raw": 1952,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -2.9670597283903604,
+          "max_rad": 2.9670597283903604
+        },
+        {
+          "name": "head_roll",
+          "id": 33,
+          "zero_raw": 1599,
+          "direction": 1,
+          "calibrated": true,
+          "min_rad": -0.3490658503988659,
+          "max_rad": 0.3490658503988659
+        },
+        {
+          "name": "mouth",
+          "id": 34,
+          "zero_raw": 1372,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -0.08726646259971647,
+          "max_rad": 0.5235987755982988
+        },
+        {
+          "name": "right_hip_yaw",
+          "id": 10,
+          "zero_raw": 1974,
+          "direction": 1,
+          "calibrated": true,
+          "min_rad": -0.5235987755982988,
+          "max_rad": 0.4363323129985824
+        },
+        {
+          "name": "right_hip_roll",
+          "id": 11,
+          "zero_raw": 1760,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -0.3839724354387525,
+          "max_rad": 0.3839724354387525
+        },
+        {
+          "name": "right_hip_pitch",
+          "id": 12,
+          "zero_raw": 1799,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -1.5707963267948966,
+          "max_rad": 1.5707963267948966
+        },
+        {
+          "name": "right_knee",
+          "id": 13,
+          "zero_raw": 1908,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -1.5707963267948966,
+          "max_rad": 1.5707963267948966
+        },
+        {
+          "name": "right_ankle",
+          "id": 14,
+          "zero_raw": 1611,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -1.2217304763960306,
+          "max_rad": 1.2217304763960306
+        }
+      ]
+    },
+    "source": "样机标定示例（公开发布副本）",
+    "source_sha256": "b56de58938860fa066737caa987cc0aec68a6b903ce3c74887d039c1308385aa",
+    "provenance": "由已交付样机快照保留数值；不代表当前用户的实机标定",
+    "note": "样机参考：每台实机使用前导入自己的标定；不写入实机，不修改零点、方向或限位。",
+    "zero_target": "",
+    "sync": {
+      "simulation_unchanged": true,
+      "environment_rechecked": false
+    },
+    "revision": "20261003",
+    "source_note": "参考快照，当前装配以本机实读为准。"
+  },
+  "imu": {
+    "quaternion_order": "wxyz",
+    "mount_quaternion_current": [
+      0.037577263,
+      0.701353391,
+      -0.035866967,
+      0.710918372
+    ],
+    "gravity_upright": [
+      0,
+      0,
+      -1
+    ],
+    "source": "用户最新导出模型中的标定快照；当前装配以ZERO实读为准"
+  },
+  "mass": {
+    "current_complete_mass_g": 820,
+    "battery_location": "躯干",
+    "head_addition_g": 3,
+    "trunk_addition_g": 4.75682,
+    "inertia_note": "沿用原重心，按增重比例调整原主惯量，属于分布近似"
+  },
+  "servo_mass": {
+    "reference_model": "XL330",
+    "reference_per_servo_g": 18,
+    "installed_model": "Feetech HD1910",
+    "installed_per_servo_g": 23,
+    "count": 15,
+    "difference_per_servo_g": 5,
+    "difference_total_g": 75,
+    "source": "用户2026-10-01 20:17确认",
+    "includes_mouth": true,
+    "distribution_source": "官方冻结robot_walk.xml内15处xl330舵机外壳所在刚体；不是14个策略关节均分。",
+    "status": "user_confirmed",
+    "inertia_status": "按增重部件的质量比例调整原主惯量，重心沿用，分布近似待后续校正。"
+  },
+  "runtime": {
+    "target_version": "0.15.1",
+    "control_hz": 50,
+    "observation_dim": 61,
+    "action_dim": 14,
+    "joint_order": [
+      "left_hip_yaw",
+      "left_hip_roll",
+      "left_hip_pitch",
+      "left_knee",
+      "left_ankle",
+      "neck_pitch",
+      "head_pitch",
+      "head_yaw",
+      "head_roll",
+      "right_hip_yaw",
+      "right_hip_roll",
+      "right_hip_pitch",
+      "right_knee",
+      "right_ankle"
+    ],
+    "home_rad": [
+      0.0,
+      -0.0873,
+      -0.4579,
+      -0.0049,
+      0.453,
+      0.3491,
+      0.3491,
+      0.0,
+      0.0,
+      0.0,
+      0.0873,
+      0.4579,
+      0.0049,
+      -0.453
+    ],
+    "action_scale": 1.0,
+    "head_lowpass": 1.0,
+    "legs_lowpass": 1.0,
+    "voltage_adapt": false,
+    "scope": "本包HD1910自训模型对应的部署设置；不是官方XL330预训模型默认预设；尚未实机验证"
+  },
+  "runtime_command_contract": {
+    "goal_speed_raw": 0,
+    "acceleration_register": 41,
+    "write_acceleration": false,
+    "acceleration_policy": "沿用舵机内部值；用户历史读回为0，本次未读硬件",
+    "firmware_kp_raw": 5,
+    "hardware_driver": "须使用0.15.1配套HD1910和IMU适配驱动"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "source_revision": "cb70b792312d559a4da09064d92009079671815f",
+  "onnx_sha256": "0b8f04476cab068f6db14b4b088562129b5eca3f1d6164ab5d9d34cda5ea1432",
+  "task": "Mjlab-Velocity-Flat-MicroDuck-V2-HD1910",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/velstand_v2/logs/rsl_rl/studio_v2_hd1910_walk/2026-10-03_00-00-21_console_20261003_000010_630ea2/model_9999.pt",
+  "deployment_verified": false
+}

@@ -1,0 +1,6 @@
+{
+  "passed": 19,
+  "failed": 0,
+  "hardware_tested": false,
+  "scope": "existing native model controls and saved settings; current two-column layout; four roller models and manual unbound recovery; one existing query"
+}

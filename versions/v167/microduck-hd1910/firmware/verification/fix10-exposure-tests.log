@@ -1,0 +1,22 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.13s
+     Running unittests src/lib.rs (/workspace/scratch/5a402859beee/build-tools/host-target/debug/deps/mediad-fa1679039793f28d)
+
+running 15 tests
+test exposure::tests::a_dark_picture_gets_more_light_and_a_bright_one_less ... ok
+test exposure::tests::a_format_we_cannot_read_is_not_guessed_at ... ok
+test exposure::tests::a_node_without_a_digital_gain_is_not_written_to ... ok
+test exposure::tests::a_picture_at_the_setpoint_is_left_alone ... ok
+test exposure::tests::a_room_darker_than_the_sensor_can_reach_stops_being_written_to ... ok
+test exposure::tests::a_room_that_gets_brighter_asks_for_1x_digital_gain_back ... ok
+test exposure::tests::a_run_that_has_said_nothing_yet_states_the_gain ... ok
+test exposure::tests::light_is_spent_on_the_shutter_before_the_gains ... ok
+test exposure::tests::luma_comes_from_the_luma_bytes ... ok
+test exposure::tests::the_digital_gain_is_written_on_the_way_back_down ... ok
+test exposure::tests::the_heartbeat_forgets_a_value_but_not_a_missing_control ... ok
+test exposure::tests::the_loop_converges_rather_than_ringing ... ok
+test exposure::tests::the_re_assert_writes_the_same_values_and_restarts_the_heartbeat ... ok
+test exposure::tests::the_sensor_is_only_believed_about_a_value_it_was_not_already_at ... ok
+test exposure::tests::the_shutter_never_asks_for_a_longer_frame_than_the_sensor_has ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 116 filtered out; finished in 0.04s
+

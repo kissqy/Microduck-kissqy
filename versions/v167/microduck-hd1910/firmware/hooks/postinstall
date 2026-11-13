@@ -1,0 +1,185 @@
+#!/bin/sh
+# Install the release's systemd units, so a release that adds a service works without anyone
+# touching the board.
+#
+# Not a template — nothing here needs substituting — so unlike `preinstall.in` this ships as-is.
+#
+# Runs AFTER the symlink swap and BEFORE `on_apply`'s restart (see `updater/src/hooks.rs`), which
+# is the only window where this can work: `current` already points at this release, so a unit's
+# `ExecStart` resolves; and the restart that follows finds a unit that exists.
+#
+# Why it exists. Units ship *inside* the artifact, and until now only `scripts/install.sh` copied
+# them out. So a release introducing a daemon installed its binary and left the unit in the release
+# directory, where systemd never looks — `btd.service` failed with `203/EXEC` on a board where the
+# release was complete and correct. Worse, `on_apply` could not restart a unit that was not there
+# yet, so the release which first carries a daemon could not restart anything at all. Both cost an
+# afternoon; see `docs/project/install-path-gap.md` for that one, and
+# `docs/design/updater-design.md` §9.1 for the rule it and three others since have taught:
+# anything a fresh install does to a board, a hook does too, because this is the only thing that
+# runs on every board on every update.
+#
+# A non-zero exit from a hook FAILS THE UPDATE and triggers rollback, so the rule here is: fail
+# only for things that mean the release is not installable, and warn for everything else. Copying a
+# unit is the first kind. A service refusing to start is the second — `btd` legitimately fails on a
+# board whose Bluetooth adapter has not appeared yet, and a robot that cannot update because its
+# radio is missing would be a poor trade.
+#
+# On rollback, units installed here stay behind, pointing at `current` — which by then is the older
+# release that may not contain their binaries, so they fail to start. Deliberate: the alternative is
+# recording what was added so a revert can undo it, and "this release did not take, and one service
+# is failing until the next one does" is the same situation either way. It is also self-correcting,
+# because the next successful update reinstalls whatever it ships.
+set -eu
+
+UNIT_DIR=/etc/systemd/system
+SYSUSERS_DIR=/usr/lib/sysusers.d
+SBIN_DIR=/usr/local/sbin
+
+# Hooks run with the release directory as their working directory.
+
+# The recovery scripts, copied out for the same reason as the units below and one more: they are what
+# runs when this release cannot start, so they must not be read through `current`. A warning and not
+# a failure — a release that cannot install them is still a release worth having, and `install.sh`
+# puts them there on a fresh board.
+for script in robot-rescue robot-boot-check; do
+    [ -f "scripts/${script}" ] || continue
+    mkdir -p "$SBIN_DIR"
+    install -m 755 "scripts/${script}" "${SBIN_DIR}/${script}" \
+        || echo "postinstall: cannot install ${script}; the board keeps the previous copy" >&2
+done
+
+# The login-shell files: the `robotctl` completions, the motd banner naming the release actually
+# live, and the robot's name in the prompt. `install.sh` runs this same script on a fresh board;
+# running it here is the only reason a board provisioned before one of them was written ever gets
+# it, which is the whole of `docs/design/updater-design.md` §9.1 — and its fourth instance was
+# exactly this file, missing for months on a board whose release contained the feature.
+#
+# Never fatal, and not because it is unlikely to fail: a shell prompt is not worth rolling an
+# update back for.
+script=scripts/setup-login.sh
+if [ -f "$script" ]; then
+    sh "$script" \
+        || echo "postinstall: the login-shell files did not install; they are cosmetic" >&2
+fi
+
+# Apt off the boot path: Armbian's `@reboot` simulated upgrade and the stock apt-daily timers. Here
+# rather than in setup-board.sh alone because every board in the field was provisioned with them
+# running, and this hook is what reaches those boards. Never fatal — a slower boot is not worth a
+# rollback.
+script=scripts/setup-quiet-boot.sh
+if [ -f "$script" ]; then
+    sh "$script" \
+        || echo "postinstall: could not take apt off the boot path; boot stays slower than it needs to be" >&2
+fi
+
+# The robot's voice bank, rendered from the SoC serial by the release's own generator.
+# Idempotent — a marker records the seed and bank version, and a current bank is a no-op —
+# so this runs on every install and only actually renders on the first one (or when the
+# synth's bank version bumps). A warning, not a failure: a robot without a voice walks.
+if [ -x bin/sounds ]; then
+    bin/sounds ensure-bank --dir /var/lib/robot/sounds \
+        || echo "postinstall: could not render the voice bank; the robot stays quiet" >&2
+fi
+
+# The official policy set. `robotd` reads its policies from /opt/robot/policies/current rather
+# than from inside this release, so a gait retrain does not need a daemon release; until something
+# publishes a policy bundle, the release is what fills that directory. The script explains the one
+# rule that matters — it never touches a set it did not put there — and is separate so it can be
+# tested and shellchecked like the other things this hook shells out to.
+#
+# Warned about, never fatal: a robot with no policy holds its pose and reports degraded.
+script=scripts/seed-policies.sh
+if [ -f "$script" ]; then
+    sh "$script" \
+        || echo "postinstall: policies were not seeded; robotctl health will say so" >&2
+fi
+
+# The duck detector, the same way and for the same reason: `mediad` reads it from
+# /opt/robot/detector/current, a retrain is a tag on the Hub rather than a daemon release, and the
+# seeder never touches a set it did not install. Warned about, never fatal — the detector is
+# off by default, and a robot asked to look for ducks with no model says so in mediad's journal.
+script=scripts/seed-detector.sh
+if [ -f "$script" ]; then
+    sh "$script" \
+        || echo "postinstall: the duck detector was not seeded; mediad will say so if asked for it" >&2
+fi
+
+[ -d systemd ] || exit 0
+
+# Users and groups before units: a unit naming a `User=` that does not exist fails to start, and
+# that failure reads as a broken daemon rather than a missing account.
+if [ -d systemd/sysusers.d ]; then
+    for conf in systemd/sysusers.d/*.conf; do
+        [ -f "$conf" ] || continue
+        mkdir -p "$SYSUSERS_DIR"
+        install -m 644 "$conf" "${SYSUSERS_DIR}/$(basename "$conf")" \
+            || { echo "postinstall: cannot install $(basename "$conf")" >&2; exit 1; }
+    done
+    if command -v systemd-sysusers >/dev/null 2>&1; then
+        # A warning, not fatal: the accounts may already exist, which is the common case.
+        systemd-sysusers \
+            || echo "postinstall: systemd-sysusers failed; a unit may not start" >&2
+    fi
+fi
+
+# The unit files themselves.
+#
+# Overwritten rather than merged, matching what `install.sh` does: the unit file belongs to the
+# release, and the supported way to customise one is a drop-in under
+# /etc/systemd/system/<unit>.d/, which this does not touch.
+units=""
+for unit in systemd/*.service systemd/*.timer; do
+    [ -f "$unit" ] || continue
+    name="$(basename "$unit")"
+    install -m 644 "$unit" "${UNIT_DIR}/${name}" \
+        || { echo "postinstall: cannot install ${name}" >&2; exit 1; }
+    units="${units} ${name}"
+done
+
+[ -n "$units" ] || exit 0
+
+if ! command -v systemctl >/dev/null 2>&1; then
+    # No systemd here (a container, a test). The files are in place, which is all this hook
+    # promises; whatever runs them will find them.
+    echo "postinstall: installed${units}; no systemctl to reload" >&2
+    exit 0
+fi
+
+systemctl daemon-reload || echo "postinstall: daemon-reload failed" >&2
+
+# Enable — and start — every unit the release ships.
+#
+# `install.sh` does the same on a first install, so this only differs in *when*. Enabling is what
+# makes a newly added service arrive working rather than at the next manual step, which is the
+# whole point of this hook.
+#
+# Every failure is a warning. `on_apply` restarts the units in its own list moments after this, so
+# a unit that is merely slow is not a problem; and a unit that genuinely cannot start must not fail
+# an otherwise good update.
+#
+# Two exceptions, both about not running something *now* that is meant to run at boot:
+#
+#   - a unit with no `[Install]` section cannot be enabled at all, and the recovery net's oneshot
+#     has none on purpose. `enable --now` on it would run a rollback check in the middle of the
+#     update that installed it, with daemons legitimately mid-restart — which is exactly what a
+#     rollback check reads as a release that cannot start;
+#   - a timer is enabled but not started. An `OnBootSec=` timer started past its deadline fires
+#     immediately, and this hook runs mid-update. It arms on the next boot, which is the boot it is
+#     about.
+for name in $units; do
+    if ! grep -q '^\[Install\]' "${UNIT_DIR}/${name}"; then
+        echo "postinstall: ${name} installed; it has no [Install] and is started by something else" >&2
+        continue
+    fi
+    case "$name" in
+        *.timer)
+            systemctl enable "$name" \
+                || echo "postinstall: ${name} did not enable; it arms at the next boot" >&2
+            continue
+            ;;
+    esac
+    systemctl enable --now "$name" \
+        || echo "postinstall: ${name} did not start; check: journalctl -u ${name} -b" >&2
+done
+
+echo "postinstall: installed and enabled${units}" >&2

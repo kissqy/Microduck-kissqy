@@ -1,0 +1,338 @@
+{
+  "mode": "wsl",
+  "distro": "Ubuntu",
+  "repo": "~/microduck-training-studio/engines/hd1910/software/training",
+  "op": "export",
+  "expected_revision": "25791f0bd260fd869ed841578785fa8d7e14396d",
+  "inference_scale": 1.0,
+  "task": "Mjlab-SitStand-Flat-MicroDuck",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/hd1910/software/training/logs/rsl_rl/microduck_sitstand/2026-10-01_23-51-57_console_20261001_235147_771504/model_10000.pt",
+  "source_job": "4c9ad0d71a00362f",
+  "source_label": "坐下 / 站起 · 平地",
+  "source_iteration": 10000,
+  "policy_parameters": {
+    "actor_dims": [
+      512,
+      256,
+      128
+    ],
+    "critic_dims": [
+      512,
+      256,
+      128
+    ],
+    "activation": "elu",
+    "learning_rate": 0.001,
+    "gamma": 0.99,
+    "entropy": 0.01,
+    "clip": 0.2,
+    "seed": 42,
+    "reward_weights": {},
+    "pushes": "default"
+  },
+  "studio_recipe": {
+    "schema": "microduck-training-recipe/v1",
+    "name": "官方骨架 + HD1910",
+    "baseline": "hd1910",
+    "purpose": "sim2real",
+    "overrides": [],
+    "robot": {
+      "servo_mass_model": "hd1910_820g_v1"
+    },
+    "calibration": {
+      "data": {
+        "motion_enabled": true,
+        "imu_mount_verified": true,
+        "imu_mount_quat": [
+          0.037577263,
+          0.701353391,
+          -0.035866967,
+          0.710918372
+        ],
+        "current_ma_per_count": 0,
+        "units_verified": false,
+        "joints": [
+          {
+            "name": "left_hip_yaw",
+            "id": 20,
+            "zero_raw": 2035,
+            "direction": 1,
+            "calibrated": true,
+            "min_rad": -0.4363323129985824,
+            "max_rad": 0.5235987755982988
+          },
+          {
+            "name": "left_hip_roll",
+            "id": 21,
+            "zero_raw": 2176,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -0.3839724354387525,
+            "max_rad": 0.3839724354387525
+          },
+          {
+            "name": "left_hip_pitch",
+            "id": 22,
+            "zero_raw": 1977,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -1.5707963267948966,
+            "max_rad": 1.5707963267948966
+          },
+          {
+            "name": "left_knee",
+            "id": 23,
+            "zero_raw": 1392,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -1.5707963267948966,
+            "max_rad": 1.5707963267948966
+          },
+          {
+            "name": "left_ankle",
+            "id": 24,
+            "zero_raw": 1893,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -1.2217304763960306,
+            "max_rad": 1.2217304763960306
+          },
+          {
+            "name": "neck_pitch",
+            "id": 30,
+            "zero_raw": 2100,
+            "direction": 1,
+            "calibrated": true,
+            "min_rad": -1.5707963267948966,
+            "max_rad": 1.2217304763960306
+          },
+          {
+            "name": "head_pitch",
+            "id": 31,
+            "zero_raw": 1742,
+            "direction": 1,
+            "calibrated": true,
+            "min_rad": -1.5707963267948966,
+            "max_rad": 1.5707963267948966
+          },
+          {
+            "name": "head_yaw",
+            "id": 32,
+            "zero_raw": 1952,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -2.9670597283903604,
+            "max_rad": 2.9670597283903604
+          },
+          {
+            "name": "head_roll",
+            "id": 33,
+            "zero_raw": 568,
+            "direction": 1,
+            "calibrated": true,
+            "min_rad": -0.3490658503988659,
+            "max_rad": 0.3490658503988659
+          },
+          {
+            "name": "mouth",
+            "id": 34,
+            "zero_raw": 1372,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -0.08726646259971647,
+            "max_rad": 0.5235987755982988
+          },
+          {
+            "name": "right_hip_yaw",
+            "id": 10,
+            "zero_raw": 1974,
+            "direction": 1,
+            "calibrated": true,
+            "min_rad": -0.5235987755982988,
+            "max_rad": 0.4363323129985824
+          },
+          {
+            "name": "right_hip_roll",
+            "id": 11,
+            "zero_raw": 1760,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -0.3839724354387525,
+            "max_rad": 0.3839724354387525
+          },
+          {
+            "name": "right_hip_pitch",
+            "id": 12,
+            "zero_raw": 1799,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -1.5707963267948966,
+            "max_rad": 1.5707963267948966
+          },
+          {
+            "name": "right_knee",
+            "id": 13,
+            "zero_raw": 1908,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -1.5707963267948966,
+            "max_rad": 1.5707963267948966
+          },
+          {
+            "name": "right_ankle",
+            "id": 14,
+            "zero_raw": 1611,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -1.2217304763960306,
+            "max_rad": 1.2217304763960306
+          }
+        ]
+      },
+      "source": "Microduck-calibration-20261001.toml",
+      "source_sha256": "bfa1045e1601199edad0a329417f0128457638bd277dd46e1196dafdd44a6bf7",
+      "provenance": "用户2026-10-01 19:12更新IMU安装四元数；修订4，15关节沿用修订3",
+      "imported_at": 1790853174,
+      "note": "记录用户最新完整标定，motion_enabled=true仅为实机状态快照，训练台不启用实机运动。速度固定下发0、加速度不写寄存器41的约定保持；机械零点与模型Home分别保留。",
+      "received_date": "2026-10-01 Asia/Shanghai",
+      "revision": 4
+    },
+    "evidence": {
+      "calibration_received": "2026-10-01",
+      "runtime_command_contract": {
+        "source": "用户2026-10-01确认；与R15和R16-Fix1交付说明一致。",
+        "goal_address": 42,
+        "goal_length": 6,
+        "goal_speed_raw": 0,
+        "acceleration_register": 41,
+        "write_acceleration": false,
+        "acceleration_policy": "保留舵机寄存器原值",
+        "historical_acceleration_raw": 0,
+        "current_acceleration_readback": null,
+        "file_values_control_luwu_home_policy_packets": false,
+        "note": "速度固定下发0；加速度不写寄存器41，沿用舵机里的值，历史读回是0。修订2标定已删除旧指令速度、加速度和速度换算字段；训练资料不补回这些字段。",
+        "removed_from_current_calibration": [
+          "command_acceleration_raw",
+          "command_speed_raw",
+          "speed_rad_s_per_count"
+        ]
+      },
+      "inference_recommendation": {
+        "action_scale": 0.7,
+        "stage": "inference",
+        "source": "用户转述并明确确认：推理阶段动作缩放0.7",
+        "training_baseline_modified": false,
+        "applied_to_robot_by_this_studio": false,
+        "note": "与冻结训练动作参数分别记录；后续部署时由运行系统落实，不由训练台写入固件。"
+      },
+      "smoke_run_plan": {
+        "num_envs": 64,
+        "iterations": 5,
+        "save_interval": 5,
+        "seed": 42,
+        "status": "尚未运行；导入配方后，启动值使用页面的环境短测默认项"
+      },
+      "conditions_to_record": [
+        "电池尺寸和躯干重心、各部位质量分布",
+        "供电电压/限流与带载压降",
+        "足底和地面条件"
+      ],
+      "calibration_revision": {
+        "revision": 4,
+        "source": "用户2026-10-01 19:12消息",
+        "previous_source_sha256": "0a42802bec355dd2a7244210c98f33306493ff1b7a703d55e89e8c1da42bfa4a",
+        "imu_mount_quat": {
+          "previous": [
+            0.042521921,
+            0.680813053,
+            -0.030857376,
+            0.730570528
+          ],
+          "current": [
+            0.037577263,
+            0.701353391,
+            -0.035866967,
+            0.710918372
+          ]
+        },
+        "joint_changes": [],
+        "unchanged": "15个关节名称、ID、零点、方向、限位和标定标志不变；motion_enabled=true、imu_mount_verified=true及单位状态保持上一版。"
+      },
+      "mass_measurements": {
+        "measured_historical_no_battery_g": 713,
+        "current_complete_mass_g": 820,
+        "policy": "裸机此前734g，含电池最新820g。HD1910单颗23g、XL330单颗18g，15颗差75g；通过独立舵机重量选项分配到10个原刚体。标准HD1910骨架选择后812.24318g，余7.75682g待核对；不自动补足剩余质量。",
+        "measured_no_battery_g": 734,
+        "measured_with_battery_g": 820,
+        "current_complete_condition": "含电池",
+        "battery_added_mass_g": null,
+        "battery_location": "躯干，与官方安装位置相同（用户确认）",
+        "battery_dimensions_mm": null,
+        "battery_com_body_m": null,
+        "measurement_date": "2026-10-01 20:18 Asia/Shanghai",
+        "measurement_source": "用户最新确认：实际总重820g，包含电池。",
+        "distribution_verified": false,
+        "applied_to_simulation": false,
+        "official_battery_evidence": {
+          "repository": "pollen-robotics/microduck_rl",
+          "revision": "cb70b792312d559a4da09064d92009079671815f",
+          "path": "src/mjlab_microduck/robot/microduck/robot_walk.xml",
+          "sha256": "80fc4424ed71e430ec4919110dfdb5c714dc1c4e1138e1832a16865cf31eb8c8",
+          "battery_mesh": "np_f970",
+          "body": "trunk_base",
+          "body_mass_g": 199.224,
+          "battery_mass_separately_available": false,
+          "note": "源码将电池几何放在躯干总成，躯干仅有一个显式惯性项。只能确认模型中有电池结构，不能由此拆算出作者赋予电池的独立质量。"
+        },
+        "measurement_history": [
+          {
+            "with_battery_g": 834,
+            "date": "2026-10-01 Asia/Shanghai",
+            "note": "此前834g记录，被用户2026-10-01 20:18的820g修正；此前100g是整机差值，非单独电池称量。"
+          }
+        ],
+        "complete_minus_previous_bare_g": 86,
+        "closure": {
+          "profile": "hd1910_820g_v1",
+          "target_g": 820,
+          "servo_adjusted_base_g": 812.24318,
+          "additional_body_mass_g": {
+            "jaw_soft": 3,
+            "trunk_base": 4.75682
+          },
+          "final_body_mass_g": {
+            "jaw_soft": 201.766,
+            "trunk_base": 213.98082
+          },
+          "method": "用户指定分配；沿用原重心、主惯量按质量比例缩放",
+          "status": "质量定版，重心和惯量为近似",
+          "confirmed_at": "2026-10-01 20:41 Asia/Shanghai"
+        },
+        "simulation_application": "选择hd1910_820g_v1配方后用于下一次训练；旧检查点保持原快照。"
+      },
+      "servo_mass": {
+        "reference_model": "XL330",
+        "reference_per_servo_g": 18,
+        "installed_model": "Feetech HD1910",
+        "installed_per_servo_g": 23,
+        "count": 15,
+        "difference_per_servo_g": 5,
+        "difference_total_g": 75,
+        "source": "用户2026-10-01 20:17确认",
+        "includes_mouth": true,
+        "distribution_source": "官方冻结robot_walk.xml内15处xl330舵机外壳所在刚体；不是14个策略关节均分。",
+        "status": "user_confirmed",
+        "inertia_status": "按增重部件的质量比例调整原主惯量，重心沿用，分布近似待后续校正。"
+      }
+    },
+    "notes": "官方骨架 + 15颗HD1910（23g/颗），含电池820g。舵机增重75g，头部另加3g，躯干另加4.75682g；重心沿用模型，惯量按质量比例近似。",
+    "version": 4,
+    "task_overrides": {
+      "Mjlab-Velocity-Flat-MicroDuck-HD1910": [],
+      "Mjlab-VelStand-Flat-MicroDuck": [],
+      "Mjlab-SitStand-Flat-MicroDuck": []
+    }
+  },
+  "task_adapter": "hd1910-v1",
+  "studio_recipe_hash": "62bfe7eaaecb00cdd7f3772d9bf5e29993cdb8f460790a4ed51b759d1fc82863"
+}

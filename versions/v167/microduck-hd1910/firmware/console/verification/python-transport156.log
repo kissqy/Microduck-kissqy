@@ -1,0 +1,14 @@
+test_a_different_endpoint_is_independent_and_does_not_wake_an_input_socket (test_socket_transport.TunnelTests.test_a_different_endpoint_is_independent_and_does_not_wake_an_input_socket) ... ok
+test_a_failed_bind_debug_line_is_not_readiness_and_never_connects_a_foreign_port (test_socket_transport.TunnelTests.test_a_failed_bind_debug_line_is_not_readiness_and_never_connects_a_foreign_port) ... ok
+test_endpoint_is_shared_and_last_stream_close_owns_ssh_teardown (test_socket_transport.TunnelTests.test_endpoint_is_shared_and_last_stream_close_owns_ssh_teardown) ... ok
+test_failure_does_not_retry_or_leave_a_process_and_cancellation_does_not_start_one (test_socket_transport.TunnelTests.test_failure_does_not_retry_or_leave_a_process_and_cancellation_does_not_start_one) ... ok
+test_forward_command_keeps_auth_and_loopback_only_without_a_remote_command (test_socket_transport.TunnelTests.test_forward_command_keeps_auth_and_loopback_only_without_a_remote_command) ... ok
+test_local_mode_opens_the_existing_unix_socket_without_ssh_or_payload (test_socket_transport.TunnelTests.test_local_mode_opens_the_existing_unix_socket_without_ssh_or_payload) ... ok
+test_remote_socket_transmits_unmodified_binary_and_close_wakes_a_blocked_reader (test_socket_transport.TunnelTests.test_remote_socket_transmits_unmodified_binary_and_close_wakes_a_blocked_reader) ... ok
+test_retiring_a_dead_tunnel_never_closes_a_new_generation (test_socket_transport.TunnelTests.test_retiring_a_dead_tunnel_never_closes_a_new_generation) ... ok
+test_unrelated_listener_debug_does_not_release_the_requested_endpoint (test_socket_transport.TunnelTests.test_unrelated_listener_debug_does_not_release_the_requested_endpoint) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.054s
+
+OK

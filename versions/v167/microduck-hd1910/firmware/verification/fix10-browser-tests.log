@@ -1,0 +1,7 @@
+PASS endpoint state handoff, startup snapshot/wait/failure, pre-click skill gates, disabled input, maintenance channel preservation, refusal vs transport failure, same WebSocket after rejection, redundant shortcut removal
+PASS all-four-step query gate, startup preserved at data handoff, retired process response rejected, no readiness polling
+PASS stale bus startup error, live health requirement, one-click diagnostic download, duplicate guard and no motion job
+PASS duplicate status UI removed; connection pending/first feedback neutral; real SSH, state, health and startup failures visible; stale data warning; actual banner and ServicePanel.paint agree; generation reset retires old reports; no telemetry mutation
+PASS scale-only payload, removed servo/import/LB test UI, removed redundant kick shortcut, preserved RB, and verified firmware versions 32/33/error
+PASS normal vs explicit pairing, SSH/IMU boundaries, old bond preservation, named step history, current disconnect vs last check, robot HOME state, no polling/reboot/phone enable controls
+PASS camera stays disconnected on page open, one video request, session release, idempotent page exit, fresh reconnect and sleep status

@@ -1,0 +1,7 @@
+{"kind": "voice_state", "source": "speech_control", "control_request_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "speech_revision": 1, "speech_session": "", "unlocked": true, "message": "Zero已确认：豆包说话已启用"}
+{"kind": "voice_state", "source": "speech_control", "control_request_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "speech_revision": 2, "speech_session": "", "unlocked": false, "message": "Zero已确认：豆包说话未启用，鸭叫保留"}
+{"kind": "voice_state", "source": "speech_control", "control_request_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "speech_revision": 3, "speech_session": "", "unlocked": true, "message": "Zero已确认：豆包说话已启用"}
+----------------------------------------------------------------------
+Ran 8 tests in 0.002s
+
+OK

@@ -1,0 +1,6 @@
+{
+  "passed": 6,
+  "failed": 0,
+  "hardware_tested": false,
+  "scope": "manual L3 config; upgrade/reinstall and custom settings; original exports and coefficients; unchanged service, SSH and web input"
+}

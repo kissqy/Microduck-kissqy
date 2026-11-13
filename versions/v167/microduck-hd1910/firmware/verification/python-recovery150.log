@@ -1,0 +1,63 @@
+test_actual_process_cannot_be_replaced_by_effective_unit (test_runtime.RuntimeTests.test_actual_process_cannot_be_replaced_by_effective_unit) ... ok
+test_hat_modes_and_retire_old_overrides (test_runtime.RuntimeTests.test_hat_modes_and_retire_old_overrides) ... ok
+test_merged_hooks_must_match_before_restart (test_runtime.RuntimeTests.test_merged_hooks_must_match_before_restart) ... ok
+test_only_os_submission_failure_is_reported (test_runtime.RuntimeTests.test_only_os_submission_failure_is_reported) ... ok
+test_other_installation_hook_only_and_late_override_are_retired (test_runtime.RuntimeTests.test_other_installation_hook_only_and_late_override_are_retired) ... ok
+test_power_does_not_touch_missing_input_services_or_robot_socket (test_runtime.RuntimeTests.test_power_does_not_touch_missing_input_services_or_robot_socket) ... ok
+test_power_submits_without_bus_readback (test_runtime.RuntimeTests.test_power_submits_without_bus_readback) ... ok
+test_ready_requires_bus_feedback_and_no_automatic_motion (test_runtime.RuntimeTests.test_ready_requires_bus_feedback_and_no_automatic_motion) ... ok
+test_reconnect_stop_request_accepts_missing_old_socket_and_never_sends_motion (test_runtime.RuntimeTests.test_reconnect_stop_request_accepts_missing_old_socket_and_never_sends_motion) ... ok
+test_restart_infers_mode_and_waits_only_for_safe_live_control (test_runtime.RuntimeTests.test_restart_infers_mode_and_waits_only_for_safe_live_control) ... ok
+test_complete_installer_recovers_missing_input_units_without_motion (test_upgrade_units.UpgradeUnitTests.test_complete_installer_recovers_missing_input_units_without_motion) ... ok
+test_restart_success_requires_control_readiness_without_retrying_process (test_upgrade_units.UpgradeUnitTests.test_restart_success_requires_control_readiness_without_retrying_process) ... ok
+test_same_identity_releases_barrier_only_after_settings_readback (test_uart_startup.StartupTests.test_same_identity_releases_barrier_only_after_settings_readback) ... UART 配置完成，正式服务开始初始化与采集。
+ok
+test_wrong_build_is_an_explicit_error_and_never_changes_fifo (test_uart_startup.StartupTests.test_wrong_build_is_an_explicit_error_and_never_changes_fifo) ... ok
+test_current_identity_and_no_restart_or_audio_failure_hooks (test_release_identity.IdentityTests.test_current_identity_and_no_restart_or_audio_failure_hooks) ... ok
+test_complete_input_setup_writes_once_and_does_not_start_until_caller_is_ready (test_gamepad.GamepadInstallTests.test_complete_input_setup_writes_once_and_does_not_start_until_caller_is_ready) ... R7 Xbox 输入桥配置已就绪。
+官方 padd 配置已就绪；R7 映射保持。
+网页 Xbox 输入配置已就绪。
+输入配置已集中安装；等待一次 systemd 重载和启动。
+R7 Xbox 输入桥配置已就绪。
+官方 padd 配置已就绪；R7 映射保持。
+网页 Xbox 输入配置已就绪。
+输入配置已集中安装；等待一次 systemd 重载和启动。
+ok
+test_firmware_restart_reuses_an_active_listener_without_starting_worker (test_gamepad.GamepadInstallTests.test_firmware_restart_reuses_an_active_listener_without_starting_worker) ... ok
+test_input_binary_replacement_does_not_truncate_existing_inode (test_gamepad.GamepadInstallTests.test_input_binary_replacement_does_not_truncate_existing_inode) ... ok
+test_legacy_utf16_unit_and_dropin_are_replaced_without_reading_systemctl_cat (test_gamepad.GamepadInstallTests.test_legacy_utf16_unit_and_dropin_are_replaced_without_reading_systemctl_cat) ... ok
+test_missing_padd_and_masked_webpad_are_installed_by_real_input_installers (test_gamepad.GamepadInstallTests.test_missing_padd_and_masked_webpad_are_installed_by_real_input_installers) ... ok
+test_non_utf8_command_output_does_not_abort_success_or_hide_failure_exit (test_gamepad.GamepadInstallTests.test_non_utf8_command_output_does_not_abort_success_or_hide_failure_exit) ... ok
+test_upgrade_webpad_start_does_not_wait_for_socket_readback (test_gamepad.GamepadInstallTests.test_upgrade_webpad_start_does_not_wait_for_socket_readback) ... ok
+test_install_migrates_to_socket_activation_without_status_connection (test_webpad_startup.StartupTests.test_install_migrates_to_socket_activation_without_status_connection) ... ok
+test_missing_socket_after_start_reports_unit_and_journal_instead_of_success (test_webpad_startup.StartupTests.test_missing_socket_after_start_reports_unit_and_journal_instead_of_success) ... 网页手柄监听已就绪；输入工作进程按需启动。
+官方 0.15.1 手柄客户端已配套升级；R7 输入映射保持。
+R7 标准 Xbox 输入桥已安装；映射源码不变，运行服务为 R17。
+官方 0.15.1 手柄客户端已配套升级；R7 输入映射保持。
+R17 网页 Xbox 输入监听已就绪；首次输入按需启动，真手柄连接时撤销网页输入。
+R17 网页 Xbox 输入监听已就绪；首次输入按需启动，真手柄连接时撤销网页输入。
+{"webpad_socket_verified": true, "path": "/run/microduck-webpad/input.sock"}
+R17 网页 Xbox 输入监听已就绪；首次输入按需启动，真手柄连接时撤销网页输入。
+网页手柄监听已就绪；输入工作进程按需启动。
+unit startup failed
+unit startup failed
+ok
+test_partial_install_failure_preserves_running_input_and_reports_stage (test_webpad_startup.StartupTests.test_partial_install_failure_preserves_running_input_and_reports_stage) ... ok
+test_restart_failure_includes_service_journal (test_webpad_startup.StartupTests.test_restart_failure_includes_service_journal) ... startup failed
+actual unit failure
+actual unit failure
+ok
+test_socket_readiness_rejects_a_stale_regular_file (test_webpad_startup.StartupTests.test_socket_readiness_rejects_a_stale_regular_file) ... ok
+test_input_reconnect_error_does_not_turn_installed_firmware_into_failed_upgrade (test_firmware_console.DirectUpgradeTests.test_input_reconnect_error_does_not_turn_installed_firmware_into_failed_upgrade) ... ok
+test_bundle_manifest_mismatch_and_tamper_are_refused (test_firmware_console.FirmwareTests.test_bundle_manifest_mismatch_and_tamper_are_refused) ... ok
+test_firmware_command_cannot_carry_executable_paths (test_firmware_console.FirmwareTests.test_firmware_command_cannot_carry_executable_paths) ... ok
+test_matching_local_zip_checked_before_any_remote_operation (test_firmware_console.FirmwareTests.test_matching_local_zip_checked_before_any_remote_operation) ... ok
+test_old_or_unknown_firmware_and_truncated_zip_are_rejected (test_firmware_console.FirmwareTests.test_old_or_unknown_firmware_and_truncated_zip_are_rejected) ... ok
+test_progress_received_before_management_finishes (test_firmware_console.FirmwareTests.test_progress_received_before_management_finishes) ... ok
+test_sudo_password_never_enters_progress_or_final_error (test_firmware_console.FirmwareTests.test_sudo_password_never_enters_progress_or_final_error) ... ok
+test_upgrade_works_without_fresh_robot_feedback_and_preserves_logs (test_firmware_console.FirmwareTests.test_upgrade_works_without_fresh_robot_feedback_and_preserves_logs) ... ok
+
+----------------------------------------------------------------------
+Ran 35 tests in 3.206s
+
+OK

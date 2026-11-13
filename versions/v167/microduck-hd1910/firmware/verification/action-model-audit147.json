@@ -1,0 +1,1960 @@
+{
+  "schema": "microduck-action-model-audit/v1",
+  "scope": "Read-only uploaded ZIP/JSON/ONNX audit. checkpoint.pt is CRC checked as opaque bytes only; never unpickled or executed.",
+  "baseline_archive": "/workspace/scratch/155bfcc94f4f/recovered-r17-146/宠物机器人/Microduck-Source-R17-v1.0.146.tar.gz",
+  "models": {
+    "roulade": {
+      "archive": "/workspace/scratch/155bfcc94f4f/upload/前滚翻_10000_4096_无缩放滤波.zip",
+      "archive_sha256": "759597ab98df2dc4f527b50e56cf4fdedbc3b69b29cf6d17854a64440b2da851",
+      "archive_bytes": 5200577,
+      "entries": [
+        {
+          "name": "policy.onnx",
+          "bytes": 795451,
+          "crc32": "853b1c08"
+        },
+        {
+          "name": "checkpoint.pt",
+          "bytes": 4831349,
+          "crc32": "44294740"
+        },
+        {
+          "name": "deployment-contract.json",
+          "bytes": 278563,
+          "crc32": "ca4da07b"
+        },
+        {
+          "name": "training-request.json",
+          "bytes": 171103,
+          "crc32": "496849d0"
+        },
+        {
+          "name": "manifest.json",
+          "bytes": 3879,
+          "crc32": "5db4a99f"
+        },
+        {
+          "name": "deployment-profile.toml",
+          "bytes": 397,
+          "crc32": "650737d3"
+        },
+        {
+          "name": "使用说明.md",
+          "bytes": 2848,
+          "crc32": "c0758bc7"
+        },
+        {
+          "name": "training-config.json",
+          "bytes": 142560,
+          "crc32": "1d79b9cb"
+        },
+        {
+          "name": "upstream-params/agent.yaml",
+          "bytes": 1514,
+          "crc32": "b7682710"
+        },
+        {
+          "name": "upstream-params/env.yaml",
+          "bytes": 51159,
+          "crc32": "01564ab7"
+        }
+      ],
+      "source_files": {
+        "policy.onnx": {
+          "bytes": 795451,
+          "sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac"
+        },
+        "deployment-contract.json": {
+          "bytes": 278563,
+          "sha256": "2e40493605eac00978db51bcc0e127d6681fb78b170694f979c703bcd8dff330"
+        },
+        "training-request.json": {
+          "bytes": 171103,
+          "sha256": "e6209817dd2233b249d5d516c37eacaaadf8ce3e4521812f2c600d114527fb45"
+        },
+        "manifest.json": {
+          "bytes": 3879,
+          "sha256": "f097326d4331fdd298e2d4ad4e7ade8aec8d8148195b0db2e0b30b968dce15b5"
+        },
+        "deployment-profile.toml": {
+          "bytes": 397,
+          "sha256": "f34535fa1dd9623ffb891ebd43eae4e0a115556f9c0421d6c98a3de242ca7b0e"
+        },
+        "使用说明.md": {
+          "bytes": 2848,
+          "sha256": "66084e3ce718d65e700d3ab827ddd814f88ee1df1fbb7ea75e5c4fcec7d710d8"
+        },
+        "training-config.json": {
+          "bytes": 142560,
+          "sha256": "016c3605254508089abd97abd86ec09a780970cc48da23a5db841447728c56c2"
+        },
+        "upstream-params/agent.yaml": {
+          "bytes": 1514,
+          "sha256": "1ac37d341454b9b3a5aa98c3985bca28ae075758fe05f3018bbf5ebade682ce4"
+        },
+        "upstream-params/env.yaml": {
+          "bytes": 51159,
+          "sha256": "937e725e063b804b43aa70e48a5769828e471f6acc287b3e57997ed6464519ca"
+        }
+      },
+      "onnx_sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac",
+      "model_id": "59e15d7b04d0c40e9b11b8a70bdecae6",
+      "task": "Mjlab-Roulade-Flat-MicroDuck",
+      "slot": "roulade",
+      "num_envs": 4096,
+      "training_max_iterations": 10000,
+      "source_iteration": 9999,
+      "training_commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+      "control_hz": 50.0,
+      "original_action_scale": 1.0,
+      "filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "action_ema_old_weight_field_present": false,
+      "ema_interpretation": "No legacy EMA field is supplied. Explicit current action_filter disabled / head1 / legs1 records target passthrough; do not insert a fictional legacy field into the contract.",
+      "previous_action_observation": "raw_policy_output_before_scaling_and_filtering",
+      "required_policy_settings": {
+        "head_lowpass": 1.0,
+        "legs_lowpass": 1.0,
+        "roulade_action_scale": 1.0
+      },
+      "manifest_command": {
+        "encoding": "constant",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "twist": "zeros",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "contract_command": {
+        "resampling_time_range": [
+          5.0,
+          10.0
+        ],
+        "debug_vis": false,
+        "entity_name": "robot",
+        "heading_command": false,
+        "heading_control_stiffness": 0.5,
+        "rel_standing_envs": 0.0,
+        "rel_heading_envs": 0.0,
+        "rel_world_envs": 0.0,
+        "rel_forward_envs": 0.2,
+        "init_velocity_prob": 0.0,
+        "ranges": {
+          "lin_vel_x": [
+            -0.01,
+            0.01
+          ],
+          "lin_vel_y": [
+            -0.01,
+            0.01
+          ],
+          "ang_vel_z": [
+            -0.05,
+            0.05
+          ],
+          "heading": null
+        },
+        "viz": {
+          "z_offset": 0.2,
+          "scale": 0.5
+        },
+        "rel_turn_in_place_envs": 0.0
+      },
+      "duration_s": 1.0,
+      "chain": true,
+      "joint_order": [
+        "left_hip_yaw",
+        "left_hip_roll",
+        "left_hip_pitch",
+        "left_knee",
+        "left_ankle",
+        "neck_pitch",
+        "head_pitch",
+        "head_yaw",
+        "head_roll",
+        "right_hip_yaw",
+        "right_hip_roll",
+        "right_hip_pitch",
+        "right_knee",
+        "right_ankle"
+      ],
+      "home_rad": [
+        0.0,
+        -0.0873,
+        -0.4579,
+        -0.0049,
+        0.453,
+        0.3491,
+        0.3491,
+        0.0,
+        0.0,
+        0.0,
+        0.0873,
+        0.4579,
+        0.0049,
+        -0.453
+      ],
+      "active_joint_limits": {
+        "left_hip_yaw": [
+          -0.4363323129985824,
+          0.5235987755982988
+        ],
+        "left_hip_roll": [
+          -0.3839724354386992,
+          0.38397243543880577
+        ],
+        "left_hip_pitch": [
+          -1.570796326794949,
+          1.5707963267948442
+        ],
+        "left_knee": [
+          -1.5707963267948983,
+          1.5707963267948948
+        ],
+        "left_ankle": [
+          -1.5707963267949063,
+          1.5707963267948868
+        ],
+        "neck_pitch": [
+          -1.5707963267948974,
+          1.0471975511965967
+        ],
+        "head_pitch": [
+          -1.5707963267948966,
+          1.5707963267948966
+        ],
+        "head_yaw": [
+          -2.9670597283903613,
+          2.9670597283903595
+        ],
+        "head_roll": [
+          -0.43633231299858327,
+          0.4363323129985815
+        ],
+        "right_hip_yaw": [
+          -0.523598775598297,
+          0.43633231299858416
+        ],
+        "right_hip_roll": [
+          -0.3839724354387507,
+          0.38397243543875426
+        ],
+        "right_hip_pitch": [
+          -1.57079632679494,
+          1.570796326794853
+        ],
+        "right_knee": [
+          -1.5707963267949339,
+          1.5707963267948593
+        ],
+        "right_ankle": [
+          -1.5707963267949028,
+          1.5707963267948903
+        ]
+      },
+      "gear_backlash": {
+        "enabled": false,
+        "joint_count": 0,
+        "ranges_rad": {},
+        "encoder_position": "motor",
+        "motor_velocity": "motor-side for friction and back-EMF",
+        "policy_joint_velocity": "motor"
+      },
+      "hardware_command": {
+        "goal_speed_raw": 0,
+        "write_acceleration_register_41": false,
+        "firmware_kp_raw": 5.0
+      },
+      "actuator_parameter_sha256": "ef2d51adfb1cc0831b9b02ca19aa9176fceecdf725148d084378d7d9a64afceb",
+      "actuator_properties": {
+        "implementation": "STS3215Actuator",
+        "kp_fw": 5.0,
+        "error_gain": 0.166,
+        "max_pwm": 0.97,
+        "max_current": null,
+        "kt": 0.6237611235393989,
+        "R": 4.910191564179625,
+        "armature": 0.0017819049974475338,
+        "error_gain_ratio": 1.321738701681577,
+        "max_velocity": 100.0,
+        "duty_slope_per_rad": 1.097043122395709,
+        "electrical_damping": 0.07923885130622982,
+        "compiled_force_limit_nm": 1.016271752963454,
+        "static_motor_ceiling_nm": 0.9857836003745504,
+        "fit_only_fields": [
+          "q_offset",
+          "command_delay"
+        ],
+        "note": "模型构建读回，尚未应用各环境增益/摩擦随机化；静止毛扭矩上界未扣除摩擦，不是实测堵转或连续扭矩。"
+      },
+      "total_mass_kg": 0.82,
+      "joint_count": 15,
+      "checks": {
+        "zip_safe_unique_names": true,
+        "all_zip_crcs_valid": true,
+        "required_files_present": true,
+        "onnx_sha_matches_manifest": true,
+        "task_matches_contract_manifest_request_snapshot": true,
+        "slot_matches_manifest_contract": true,
+        "onnx_metadata_matches_original_contract": true,
+        "single_float32_61_to_14_interface": true,
+        "training_action_matches_full_snapshot": true,
+        "training_commands_match_full_snapshot": true,
+        "scale_one_all_actual_task_records": true,
+        "filter_records_match": true,
+        "filter_disabled_and_alphas_one": true,
+        "required_settings_match_all_deployment_records": true,
+        "training_snapshot_declared_hash_consistent": true,
+        "joint_order_matches_onnx": true,
+        "runtime_home_matches_exact_model_joints": true,
+        "rounded_onnx_home_matches_contract": true,
+        "home_within_training_joint_limits": true,
+        "bam_expected_sha": true,
+        "p_five_matches_contract_request_actuator": true,
+        "all_onnx_weights_finite": true,
+        "all_reference_probes_finite": true,
+        "host_onnx_checker_passed": true,
+        "host_ort_all_probes_finite": true,
+        "host_ort_matches_numpy_reference": true
+      },
+      "onnx": {
+        "inputs": [
+          {
+            "name": "obs",
+            "dtype": 1,
+            "shape": [
+              1,
+              61
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "actions",
+            "dtype": 1,
+            "shape": [
+              1,
+              14
+            ]
+          }
+        ],
+        "metadata": {
+          "run_path": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/microduck_roulade/2026-10-07_23-21-43_console_20261007_232135_76625d/model_9999.pt",
+          "joint_names": "left_hip_yaw,left_hip_roll,left_hip_pitch,left_knee,left_ankle,neck_pitch,head_pitch,head_yaw,head_roll,right_hip_yaw,right_hip_roll,right_hip_pitch,right_knee,right_ankle",
+          "joint_stiffness": "1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000",
+          "joint_damping": "0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000",
+          "default_joint_pos": "0.000,-0.087,-0.458,-0.005,0.453,0.349,0.349,0.000,0.000,0.000,0.087,0.458,0.005,-0.453",
+          "command_names": "twist",
+          "observation_names": "base_ang_vel,projected_gravity,joint_pos,joint_vel,actions,command,head_command,body_command",
+          "action_scale": "1.0",
+          "microduck.action_filter": "{\"control_hz\": 50.0, \"enabled\": false, \"formula\": \"filtered = alpha * target + (1 - alpha) * previous_filtered\", \"head_alpha\": 1.0, \"head_joints\": [\"neck_pitch\", \"head_pitch\", \"head_yaw\", \"head_roll\"], \"leg_joints\": [\"left_hip_yaw\", \"left_hip_roll\", \"left_hip_pitch\", \"left_knee\", \"left_ankle\", \"right_hip_yaw\", \"right_hip_roll\", \"right_hip_pitch\", \"right_knee\", \"right_ankle\"], \"legs_alpha\": 1.0, \"onnx\": \"external_filter_not_baked_into_graph\", \"previous_action_observation\": \"raw_policy_output\", \"reset\": \"first_target_passthrough_per_environment\", \"stage\": \"joint_position_target_after_home_and_scale\", \"update\": \"once_per_policy_step\", \"version\": 1}",
+          "microduck.deployment": "{\"export_contract_revision\": 2, \"normalization\": \"embedded_in_onnx_once\", \"required_policy_settings\": {\"head_lowpass\": 1.0, \"legs_lowpass\": 1.0, \"roulade_action_scale\": 1.0}, \"runtime_only_settings\": {\"gain_and_gain_ratios\": {\"export_behavior\": \"inherit_existing_runtime_configuration\", \"keys\": [\"gain\", \"standing_gain_ratio\", \"ground_pick_gain_ratio\", \"roulade_gain_ratio\"], \"note\": \"训练BAM的实际kp_fw见hardware_command和training_physics；不能凭空推导固件增益或翻译层寄存器映射。\"}, \"voltage_adapt\": {\"export_behavior\": \"inherit_existing_runtime_configuration\", \"note\": \"供电随机化/负载掉压属于BAM训练物理；不等于运行端动态动作倍率补偿。导出不强制开启或关闭。\", \"training_action_compensation\": \"not_present_in_training_action_term\"}}, \"training_snapshot_sha256\": \"87dccaea6f9312d4b4a59c149ee467307d89da3fc6b9955a970eb21cfb6c140d\"}"
+        },
+        "ops": {
+          "Sub": 1,
+          "Div": 1,
+          "Gemm": 4,
+          "Elu": 3
+        },
+        "nodes": [
+          {
+            "op": "Sub",
+            "inputs": [
+              "obs",
+              "obs_normalizer._mean"
+            ],
+            "outputs": [
+              "/obs_normalizer/Sub_output_0"
+            ],
+            "attributes": {}
+          },
+          {
+            "op": "Div",
+            "inputs": [
+              "/obs_normalizer/Sub_output_0",
+              "onnx::Div_24"
+            ],
+            "outputs": [
+              "/obs_normalizer/Div_output_0"
+            ],
+            "attributes": {}
+          },
+          {
+            "op": "Gemm",
+            "inputs": [
+              "/obs_normalizer/Div_output_0",
+              "mlp.0.weight",
+              "mlp.0.bias"
+            ],
+            "outputs": [
+              "/mlp/mlp.0/Gemm_output_0"
+            ],
+            "attributes": {
+              "alpha": 1.0,
+              "beta": 1.0,
+              "transB": 1
+            }
+          },
+          {
+            "op": "Elu",
+            "inputs": [
+              "/mlp/mlp.0/Gemm_output_0"
+            ],
+            "outputs": [
+              "/mlp/mlp.1/Elu_output_0"
+            ],
+            "attributes": {
+              "alpha": 1.0
+            }
+          },
+          {
+            "op": "Gemm",
+            "inputs": [
+              "/mlp/mlp.1/Elu_output_0",
+              "mlp.2.weight",
+              "mlp.2.bias"
+            ],
+            "outputs": [
+              "/mlp/mlp.2/Gemm_output_0"
+            ],
+            "attributes": {
+              "alpha": 1.0,
+              "beta": 1.0,
+              "transB": 1
+            }
+          },
+          {
+            "op": "Elu",
+            "inputs": [
+              "/mlp/mlp.2/Gemm_output_0"
+            ],
+            "outputs": [
+              "/mlp/mlp.1_1/Elu_output_0"
+            ],
+            "attributes": {
+              "alpha": 1.0
+            }
+          },
+          {
+            "op": "Gemm",
+            "inputs": [
+              "/mlp/mlp.1_1/Elu_output_0",
+              "mlp.4.weight",
+              "mlp.4.bias"
+            ],
+            "outputs": [
+              "/mlp/mlp.4/Gemm_output_0"
+            ],
+            "attributes": {
+              "alpha": 1.0,
+              "beta": 1.0,
+              "transB": 1
+            }
+          },
+          {
+            "op": "Elu",
+            "inputs": [
+              "/mlp/mlp.4/Gemm_output_0"
+            ],
+            "outputs": [
+              "/mlp/mlp.1_2/Elu_output_0"
+            ],
+            "attributes": {
+              "alpha": 1.0
+            }
+          },
+          {
+            "op": "Gemm",
+            "inputs": [
+              "/mlp/mlp.1_2/Elu_output_0",
+              "mlp.6.weight",
+              "mlp.6.bias"
+            ],
+            "outputs": [
+              "actions"
+            ],
+            "attributes": {
+              "alpha": 1.0,
+              "beta": 1.0,
+              "transB": 1
+            }
+          }
+        ],
+        "initializers": [
+          {
+            "name": "obs_normalizer._mean",
+            "shape": [
+              1,
+              61
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.0.weight",
+            "shape": [
+              512,
+              61
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.0.bias",
+            "shape": [
+              512
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.2.weight",
+            "shape": [
+              256,
+              512
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.2.bias",
+            "shape": [
+              256
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.4.weight",
+            "shape": [
+              128,
+              256
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.4.bias",
+            "shape": [
+              128
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.6.weight",
+            "shape": [
+              14,
+              128
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.6.bias",
+            "shape": [
+              14
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "onnx::Div_24",
+            "shape": [
+              1,
+              61
+            ],
+            "all_finite": true
+          }
+        ],
+        "all_initializers_finite": true,
+        "normalization": "Sub and Div before MLP; normalization is embedded once.",
+        "reference_inference": "NumPy float32 evaluation of parsed ONNX Sub/Div/Gemm/Elu; independently compared with host ONNX Runtime when the optional library is available.",
+        "host_runtime_check": {
+          "available": true,
+          "onnx_checker_version": "1.23.2",
+          "onnx_checker_passed": true,
+          "onnxruntime_version": "1.28.0",
+          "provider": "CPUExecutionProvider",
+          "finite_probe_count": 4,
+          "all_match_reference": true,
+          "maximum_reference_delta": 8.21426510810852e-07
+        },
+        "probes": [
+          {
+            "tilt_deg": 0,
+            "phase": 0,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -0.5385733246803284,
+            "maximum": 0.9427659511566162,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 2.1979212760925293e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 45,
+            "phase": 0,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -1.0207839012145996,
+            "maximum": 0.8825442790985107,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 8.21426510810852e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 90,
+            "phase": 0,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -1.348341703414917,
+            "maximum": 0.9985877275466919,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 7.003545761108398e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 180,
+            "phase": 0,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -0.5712476968765259,
+            "maximum": 0.6360012292861938,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 3.5762786865234375e-07,
+            "ort_matches_reference": true
+          }
+        ],
+        "finite_probe_count": 4,
+        "probe_limits": "Synthetic snapshots only; no temporal rollout, closed-loop dynamics, recovery success or physical safety assertion."
+      },
+      "baseline_comparison": {
+        "ground_pick": {
+          "contract_sha256": "10c50749b3f5520ea8564b8cbced0ada7050919aee37eb0dff8055b1c9d8f4c4",
+          "same_runtime_joint_order": true,
+          "same_exact_home": true,
+          "same_active_joint_definitions": true,
+          "same_active_joint_ranges": true,
+          "same_calibration_data": true,
+          "same_bam_data": true,
+          "same_actuator_except_temp_path": false,
+          "actuator_field_differences_except_temp_path": {
+            "implementation": {
+              "previous": null,
+              "new": "Hd1910ActuatorCfg"
+            }
+          },
+          "same_hardware_command": true,
+          "same_total_mass": true,
+          "baseline_training_scale": 1.0,
+          "baseline_filter": null,
+          "baseline_action_ema_old_weight": 0.0,
+          "baseline_task": "Mjlab-GroundPick-Flat-MicroDuck"
+        },
+        "roulade": {
+          "contract_sha256": "ed711ad5a9d13f02d88901c0e238b56766d75a6b986ca022ca7006bbc7bed527",
+          "same_runtime_joint_order": true,
+          "same_exact_home": true,
+          "same_active_joint_definitions": true,
+          "same_active_joint_ranges": true,
+          "same_calibration_data": true,
+          "same_bam_data": true,
+          "same_actuator_except_temp_path": false,
+          "actuator_field_differences_except_temp_path": {
+            "implementation": {
+              "previous": null,
+              "new": "Hd1910ActuatorCfg"
+            }
+          },
+          "same_hardware_command": true,
+          "same_total_mass": true,
+          "baseline_training_scale": 1.0,
+          "baseline_filter": null,
+          "baseline_action_ema_old_weight": 0.0,
+          "baseline_task": "Mjlab-Roulade-Flat-MicroDuck"
+        },
+        "stand": {
+          "contract_sha256": "5db434f4255858b88f26312e0286ed8801df94fda735e13f9f290eecbd2d17a1",
+          "same_runtime_joint_order": true,
+          "same_exact_home": true,
+          "same_active_joint_definitions": true,
+          "same_active_joint_ranges": true,
+          "same_calibration_data": true,
+          "same_bam_data": true,
+          "same_actuator_except_temp_path": false,
+          "actuator_field_differences_except_temp_path": {
+            "implementation": {
+              "previous": "Hd1910BacklashActuatorCfg",
+              "new": "Hd1910ActuatorCfg"
+            }
+          },
+          "same_hardware_command": true,
+          "same_total_mass": true,
+          "baseline_training_scale": 1.0,
+          "baseline_filter": {
+            "enabled": false,
+            "head_alpha": 1.0,
+            "legs_alpha": 1.0,
+            "version": 1,
+            "control_hz": 50.0,
+            "stage": "joint_position_target_after_home_and_scale",
+            "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+            "head_joints": [
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll"
+            ],
+            "leg_joints": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "update": "once_per_policy_step",
+            "reset": "first_target_passthrough_per_environment",
+            "previous_action_observation": "raw_policy_output",
+            "onnx": "external_filter_not_baked_into_graph"
+          },
+          "baseline_action_ema_old_weight": null,
+          "baseline_task": "Mjlab-StandUp-Rough-Backlash-MicroDuck"
+        },
+        "walk": {
+          "contract_sha256": "8ac94b3903dc8af0f75b41281fb245907c0cccf85822530ff8848c8553391f1e",
+          "same_runtime_joint_order": true,
+          "same_exact_home": true,
+          "same_active_joint_definitions": true,
+          "same_active_joint_ranges": true,
+          "same_calibration_data": true,
+          "same_bam_data": true,
+          "same_actuator_except_temp_path": false,
+          "actuator_field_differences_except_temp_path": {
+            "implementation": {
+              "previous": "Hd1910BacklashActuatorCfg",
+              "new": "Hd1910ActuatorCfg"
+            }
+          },
+          "same_hardware_command": true,
+          "same_total_mass": true,
+          "baseline_training_scale": 1.0,
+          "baseline_filter": {
+            "enabled": false,
+            "head_alpha": 1.0,
+            "legs_alpha": 1.0,
+            "version": 1,
+            "control_hz": 50.0,
+            "stage": "joint_position_target_after_home_and_scale",
+            "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+            "head_joints": [
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll"
+            ],
+            "leg_joints": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "update": "once_per_policy_step",
+            "reset": "first_target_passthrough_per_environment",
+            "previous_action_observation": "raw_policy_output",
+            "onnx": "external_filter_not_baked_into_graph"
+          },
+          "baseline_action_ema_old_weight": null,
+          "baseline_task": "Mjlab-VelStand-Rough-Backlash-MicroDuck"
+        }
+      },
+      "archived_global_studio_recipe": {
+        "task": "Mjlab-Velocity-Flat-MicroDuck",
+        "training_action_scale": 0.9,
+        "interpretation": "Archived studio defaults may refer to another task. Actual task scale is confirmed by full environment snapshot, ONNX metadata, contract and task-specific policy_parameters."
+      },
+      "deployment_limits": "Original manifest deployment_verified remains false. ZIP/schema and host inference probes are not an aarch64 deployment or real Zero motion test."
+    },
+    "ground_pick": {
+      "archive": "/workspace/scratch/155bfcc94f4f/upload/低头减取_10000_4096_无缩放滤波.zip",
+      "archive_sha256": "73f96cb470b6f232a7c2f0297fa79248f0feb9e6d0f78cbb1f27641df7ec57e4",
+      "archive_bytes": 5190850,
+      "entries": [
+        {
+          "name": "policy.onnx",
+          "bytes": 795476,
+          "crc32": "ca6f09da"
+        },
+        {
+          "name": "checkpoint.pt",
+          "bytes": 4831349,
+          "crc32": "7f56c9f7"
+        },
+        {
+          "name": "deployment-contract.json",
+          "bytes": 316435,
+          "crc32": "1e4ac404"
+        },
+        {
+          "name": "training-request.json",
+          "bytes": 194293,
+          "crc32": "ff1d8156"
+        },
+        {
+          "name": "manifest.json",
+          "bytes": 5556,
+          "crc32": "7db946ef"
+        },
+        {
+          "name": "deployment-profile.toml",
+          "bytes": 426,
+          "crc32": "dec0acef"
+        },
+        {
+          "name": "使用说明.md",
+          "bytes": 4022,
+          "crc32": "7b72d4ba"
+        },
+        {
+          "name": "training-config.json",
+          "bytes": 163856,
+          "crc32": "14465ec8"
+        },
+        {
+          "name": "upstream-params/agent.yaml",
+          "bytes": 1345,
+          "crc32": "b7973f02"
+        },
+        {
+          "name": "upstream-params/env.yaml",
+          "bytes": 57627,
+          "crc32": "41f72727"
+        }
+      ],
+      "source_files": {
+        "policy.onnx": {
+          "bytes": 795476,
+          "sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69"
+        },
+        "deployment-contract.json": {
+          "bytes": 316435,
+          "sha256": "2d2e807aadb1f98df7b64e5f3378041db6fd939e5e286a9958f1b1540ab21fee"
+        },
+        "training-request.json": {
+          "bytes": 194293,
+          "sha256": "bd92bd8f077fdd6186802798a27b6971522f4b7a94bc0b19e6e35da8c7dd63e6"
+        },
+        "manifest.json": {
+          "bytes": 5556,
+          "sha256": "12d6870830a48bdc00f9c1dd961e09263919c535cb2604d31659e080ff497b83"
+        },
+        "deployment-profile.toml": {
+          "bytes": 426,
+          "sha256": "15fbed4125ea8fb104b9d0544540fa664fc78b8f1bbcef9a1f9bfa31064a0a15"
+        },
+        "使用说明.md": {
+          "bytes": 4022,
+          "sha256": "1a0d36fa2d66ecce87eedb8d8984d61c0799beb3191b7323ceea8b5e47fa89a1"
+        },
+        "training-config.json": {
+          "bytes": 163856,
+          "sha256": "9b3ed07a4f0b4d923917851a69b714232a6cc9d9395f6ad4252f455a7a2a7f3e"
+        },
+        "upstream-params/agent.yaml": {
+          "bytes": 1345,
+          "sha256": "86ee2132d29bf6a3fdf364d250dd39860916a830c4b0ab3912fab7a848378e50"
+        },
+        "upstream-params/env.yaml": {
+          "bytes": 57627,
+          "sha256": "461db3166b62587ac179ad5ef1c71ee21d37f773acac1753767586bc1e146aa2"
+        }
+      },
+      "onnx_sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69",
+      "model_id": "b14e3a8b56ddbb8d2d831e727774a168",
+      "task": "Mjlab-GroundPick-Flat-Backlash-MicroDuck",
+      "slot": "ground_pick",
+      "num_envs": 4096,
+      "training_max_iterations": 10000,
+      "source_iteration": 9999,
+      "training_commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+      "control_hz": 50.0,
+      "original_action_scale": 1.0,
+      "filter": {
+        "enabled": false,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "version": 1,
+        "control_hz": 50.0,
+        "stage": "joint_position_target_after_home_and_scale",
+        "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+        "head_joints": [
+          "neck_pitch",
+          "head_pitch",
+          "head_yaw",
+          "head_roll"
+        ],
+        "leg_joints": [
+          "left_hip_yaw",
+          "left_hip_roll",
+          "left_hip_pitch",
+          "left_knee",
+          "left_ankle",
+          "right_hip_yaw",
+          "right_hip_roll",
+          "right_hip_pitch",
+          "right_knee",
+          "right_ankle"
+        ],
+        "update": "once_per_policy_step",
+        "reset": "first_target_passthrough_per_environment",
+        "previous_action_observation": "raw_policy_output",
+        "onnx": "external_filter_not_baked_into_graph"
+      },
+      "action_ema_old_weight_field_present": false,
+      "ema_interpretation": "No legacy EMA field is supplied. Explicit current action_filter disabled / head1 / legs1 records target passthrough; do not insert a fictional legacy field into the contract.",
+      "previous_action_observation": "raw_policy_output_before_scaling_and_filtering",
+      "required_policy_settings": {
+        "head_lowpass": 1.0,
+        "legs_lowpass": 1.0,
+        "ground_pick_action_scale": 1.0,
+        "ground_pick_period": 4.0
+      },
+      "manifest_command": {
+        "encoding": "phase",
+        "idle": [
+          0,
+          0,
+          0
+        ],
+        "period_s": 4.0,
+        "end_phase": 0.7,
+        "twist": "cos(2*pi*phase), sin(2*pi*phase), 0",
+        "head": "zeros",
+        "body": "zeros"
+      },
+      "contract_command": {
+        "resampling_time_range": [
+          3.0,
+          8.0
+        ],
+        "debug_vis": true,
+        "entity_name": "robot",
+        "heading_command": true,
+        "heading_control_stiffness": 0.5,
+        "rel_standing_envs": 0.0,
+        "rel_heading_envs": 0.0,
+        "rel_world_envs": 0.0,
+        "rel_forward_envs": 0.2,
+        "init_velocity_prob": 0.0,
+        "ranges": {
+          "lin_vel_x": [
+            -1.0,
+            1.0
+          ],
+          "lin_vel_y": [
+            -1.0,
+            1.0
+          ],
+          "ang_vel_z": [
+            -0.5,
+            0.5
+          ],
+          "heading": [
+            -3.141592653589793,
+            3.141592653589793
+          ]
+        },
+        "viz": {
+          "z_offset": 0.2,
+          "scale": 0.5
+        },
+        "class_type": {
+          "callable": "mjlab_microduck.tasks.mdp.GroundPickPhaseCommand"
+        },
+        "period": 4.0,
+        "randomize_phase": true
+      },
+      "duration_s": 2.8,
+      "chain": false,
+      "joint_order": [
+        "left_hip_yaw",
+        "left_hip_roll",
+        "left_hip_pitch",
+        "left_knee",
+        "left_ankle",
+        "neck_pitch",
+        "head_pitch",
+        "head_yaw",
+        "head_roll",
+        "right_hip_yaw",
+        "right_hip_roll",
+        "right_hip_pitch",
+        "right_knee",
+        "right_ankle"
+      ],
+      "home_rad": [
+        0.0,
+        -0.0873,
+        -0.4579,
+        -0.0049,
+        0.453,
+        0.3491,
+        0.3491,
+        0.0,
+        0.0,
+        0.0,
+        0.0873,
+        0.4579,
+        0.0049,
+        -0.453
+      ],
+      "active_joint_limits": {
+        "left_hip_yaw": [
+          -0.4363323129985824,
+          0.5235987755982988
+        ],
+        "left_hip_roll": [
+          -0.3839724354386992,
+          0.38397243543880577
+        ],
+        "left_hip_pitch": [
+          -1.570796326794949,
+          1.5707963267948442
+        ],
+        "left_knee": [
+          -1.5707963267948983,
+          1.5707963267948948
+        ],
+        "left_ankle": [
+          -1.5707963267949063,
+          1.5707963267948868
+        ],
+        "neck_pitch": [
+          -1.5707963267948974,
+          1.0471975511965967
+        ],
+        "head_pitch": [
+          -1.5707963267948966,
+          1.5707963267948966
+        ],
+        "head_yaw": [
+          -2.9670597283903613,
+          2.9670597283903595
+        ],
+        "head_roll": [
+          -0.43633231299858327,
+          0.4363323129985815
+        ],
+        "right_hip_yaw": [
+          -0.523598775598297,
+          0.43633231299858416
+        ],
+        "right_hip_roll": [
+          -0.3839724354387507,
+          0.38397243543875426
+        ],
+        "right_hip_pitch": [
+          -1.57079632679494,
+          1.570796326794853
+        ],
+        "right_knee": [
+          -1.5707963267949339,
+          1.5707963267948593
+        ],
+        "right_ankle": [
+          -1.5707963267949028,
+          1.5707963267948903
+        ]
+      },
+      "gear_backlash": {
+        "enabled": true,
+        "joint_count": 14,
+        "ranges_rad": {
+          "passive_left_hip_yaw_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_left_hip_roll_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_left_hip_pitch_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_left_knee_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_left_ankle_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_neck_pitch_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_head_pitch_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_head_yaw_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_head_roll_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_right_hip_yaw_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_right_hip_roll_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_right_hip_pitch_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_right_knee_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ],
+          "passive_right_ankle_backlash": [
+            -0.017453292519943295,
+            0.017453292519943295
+          ]
+        },
+        "encoder_position": "motor + passive backlash",
+        "motor_velocity": "motor-side for friction and back-EMF",
+        "policy_joint_velocity": "motor + passive backlash"
+      },
+      "hardware_command": {
+        "goal_speed_raw": 0,
+        "write_acceleration_register_41": false,
+        "firmware_kp_raw": 5.0
+      },
+      "actuator_parameter_sha256": "ef2d51adfb1cc0831b9b02ca19aa9176fceecdf725148d084378d7d9a64afceb",
+      "actuator_properties": {
+        "implementation": "STS3215Actuator",
+        "kp_fw": 5.0,
+        "error_gain": 0.166,
+        "max_pwm": 0.97,
+        "max_current": null,
+        "kt": 0.6237611235393989,
+        "R": 4.910191564179625,
+        "armature": 0.0017819049974475338,
+        "error_gain_ratio": 1.321738701681577,
+        "max_velocity": 100.0,
+        "duty_slope_per_rad": 1.097043122395709,
+        "electrical_damping": 0.07923885130622982,
+        "compiled_force_limit_nm": 1.016271752963454,
+        "static_motor_ceiling_nm": 0.9857836003745504,
+        "fit_only_fields": [
+          "q_offset",
+          "command_delay"
+        ],
+        "note": "模型构建读回，尚未应用各环境增益/摩擦随机化；静止毛扭矩上界未扣除摩擦，不是实测堵转或连续扭矩。"
+      },
+      "total_mass_kg": 0.82,
+      "joint_count": 29,
+      "checks": {
+        "zip_safe_unique_names": true,
+        "all_zip_crcs_valid": true,
+        "required_files_present": true,
+        "onnx_sha_matches_manifest": true,
+        "task_matches_contract_manifest_request_snapshot": true,
+        "slot_matches_manifest_contract": true,
+        "onnx_metadata_matches_original_contract": true,
+        "single_float32_61_to_14_interface": true,
+        "training_action_matches_full_snapshot": true,
+        "training_commands_match_full_snapshot": true,
+        "scale_one_all_actual_task_records": true,
+        "filter_records_match": true,
+        "filter_disabled_and_alphas_one": true,
+        "required_settings_match_all_deployment_records": true,
+        "training_snapshot_declared_hash_consistent": true,
+        "joint_order_matches_onnx": true,
+        "runtime_home_matches_exact_model_joints": true,
+        "rounded_onnx_home_matches_contract": true,
+        "home_within_training_joint_limits": true,
+        "bam_expected_sha": true,
+        "p_five_matches_contract_request_actuator": true,
+        "all_onnx_weights_finite": true,
+        "all_reference_probes_finite": true,
+        "phase_duration_consistent": true,
+        "host_onnx_checker_passed": true,
+        "host_ort_all_probes_finite": true,
+        "host_ort_matches_numpy_reference": true
+      },
+      "onnx": {
+        "inputs": [
+          {
+            "name": "obs",
+            "dtype": 1,
+            "shape": [
+              1,
+              61
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "actions",
+            "dtype": 1,
+            "shape": [
+              1,
+              14
+            ]
+          }
+        ],
+        "metadata": {
+          "run_path": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/ground_pick/2026-10-08_04-17-47_console_20261008_041738_4eb094/model_9999.pt",
+          "joint_names": "left_hip_yaw,left_hip_roll,left_hip_pitch,left_knee,left_ankle,neck_pitch,head_pitch,head_yaw,head_roll,right_hip_yaw,right_hip_roll,right_hip_pitch,right_knee,right_ankle",
+          "joint_stiffness": "1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000,1.000",
+          "joint_damping": "0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000",
+          "default_joint_pos": "0.000,-0.087,-0.458,-0.005,0.453,0.349,0.349,0.000,0.000,0.000,0.087,0.458,0.005,-0.453",
+          "command_names": "twist",
+          "observation_names": "base_ang_vel,projected_gravity,joint_pos,joint_vel,actions,command,head_command,body_command",
+          "action_scale": "1.0",
+          "microduck.action_filter": "{\"control_hz\": 50.0, \"enabled\": false, \"formula\": \"filtered = alpha * target + (1 - alpha) * previous_filtered\", \"head_alpha\": 1.0, \"head_joints\": [\"neck_pitch\", \"head_pitch\", \"head_yaw\", \"head_roll\"], \"leg_joints\": [\"left_hip_yaw\", \"left_hip_roll\", \"left_hip_pitch\", \"left_knee\", \"left_ankle\", \"right_hip_yaw\", \"right_hip_roll\", \"right_hip_pitch\", \"right_knee\", \"right_ankle\"], \"legs_alpha\": 1.0, \"onnx\": \"external_filter_not_baked_into_graph\", \"previous_action_observation\": \"raw_policy_output\", \"reset\": \"first_target_passthrough_per_environment\", \"stage\": \"joint_position_target_after_home_and_scale\", \"update\": \"once_per_policy_step\", \"version\": 1}",
+          "microduck.deployment": "{\"export_contract_revision\": 2, \"normalization\": \"embedded_in_onnx_once\", \"required_policy_settings\": {\"ground_pick_action_scale\": 1.0, \"ground_pick_period\": 4.0, \"head_lowpass\": 1.0, \"legs_lowpass\": 1.0}, \"runtime_only_settings\": {\"gain_and_gain_ratios\": {\"export_behavior\": \"inherit_existing_runtime_configuration\", \"keys\": [\"gain\", \"standing_gain_ratio\", \"ground_pick_gain_ratio\", \"roulade_gain_ratio\"], \"note\": \"训练BAM的实际kp_fw见hardware_command和training_physics；不能凭空推导固件增益或翻译层寄存器映射。\"}, \"voltage_adapt\": {\"export_behavior\": \"inherit_existing_runtime_configuration\", \"note\": \"供电随机化/负载掉压属于BAM训练物理；不等于运行端动态动作倍率补偿。导出不强制开启或关闭。\", \"training_action_compensation\": \"not_present_in_training_action_term\"}}, \"training_snapshot_sha256\": \"c5bbea2177922ecbfbb848578b283292f87e24782c1295292274464a3f41c046\"}"
+        },
+        "ops": {
+          "Sub": 1,
+          "Div": 1,
+          "Gemm": 4,
+          "Elu": 3
+        },
+        "nodes": [
+          {
+            "op": "Sub",
+            "inputs": [
+              "obs",
+              "obs_normalizer._mean"
+            ],
+            "outputs": [
+              "/obs_normalizer/Sub_output_0"
+            ],
+            "attributes": {}
+          },
+          {
+            "op": "Div",
+            "inputs": [
+              "/obs_normalizer/Sub_output_0",
+              "onnx::Div_24"
+            ],
+            "outputs": [
+              "/obs_normalizer/Div_output_0"
+            ],
+            "attributes": {}
+          },
+          {
+            "op": "Gemm",
+            "inputs": [
+              "/obs_normalizer/Div_output_0",
+              "mlp.0.weight",
+              "mlp.0.bias"
+            ],
+            "outputs": [
+              "/mlp/mlp.0/Gemm_output_0"
+            ],
+            "attributes": {
+              "alpha": 1.0,
+              "beta": 1.0,
+              "transB": 1
+            }
+          },
+          {
+            "op": "Elu",
+            "inputs": [
+              "/mlp/mlp.0/Gemm_output_0"
+            ],
+            "outputs": [
+              "/mlp/mlp.1/Elu_output_0"
+            ],
+            "attributes": {
+              "alpha": 1.0
+            }
+          },
+          {
+            "op": "Gemm",
+            "inputs": [
+              "/mlp/mlp.1/Elu_output_0",
+              "mlp.2.weight",
+              "mlp.2.bias"
+            ],
+            "outputs": [
+              "/mlp/mlp.2/Gemm_output_0"
+            ],
+            "attributes": {
+              "alpha": 1.0,
+              "beta": 1.0,
+              "transB": 1
+            }
+          },
+          {
+            "op": "Elu",
+            "inputs": [
+              "/mlp/mlp.2/Gemm_output_0"
+            ],
+            "outputs": [
+              "/mlp/mlp.1_1/Elu_output_0"
+            ],
+            "attributes": {
+              "alpha": 1.0
+            }
+          },
+          {
+            "op": "Gemm",
+            "inputs": [
+              "/mlp/mlp.1_1/Elu_output_0",
+              "mlp.4.weight",
+              "mlp.4.bias"
+            ],
+            "outputs": [
+              "/mlp/mlp.4/Gemm_output_0"
+            ],
+            "attributes": {
+              "alpha": 1.0,
+              "beta": 1.0,
+              "transB": 1
+            }
+          },
+          {
+            "op": "Elu",
+            "inputs": [
+              "/mlp/mlp.4/Gemm_output_0"
+            ],
+            "outputs": [
+              "/mlp/mlp.1_2/Elu_output_0"
+            ],
+            "attributes": {
+              "alpha": 1.0
+            }
+          },
+          {
+            "op": "Gemm",
+            "inputs": [
+              "/mlp/mlp.1_2/Elu_output_0",
+              "mlp.6.weight",
+              "mlp.6.bias"
+            ],
+            "outputs": [
+              "actions"
+            ],
+            "attributes": {
+              "alpha": 1.0,
+              "beta": 1.0,
+              "transB": 1
+            }
+          }
+        ],
+        "initializers": [
+          {
+            "name": "obs_normalizer._mean",
+            "shape": [
+              1,
+              61
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.0.weight",
+            "shape": [
+              512,
+              61
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.0.bias",
+            "shape": [
+              512
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.2.weight",
+            "shape": [
+              256,
+              512
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.2.bias",
+            "shape": [
+              256
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.4.weight",
+            "shape": [
+              128,
+              256
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.4.bias",
+            "shape": [
+              128
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.6.weight",
+            "shape": [
+              14,
+              128
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "mlp.6.bias",
+            "shape": [
+              14
+            ],
+            "all_finite": true
+          },
+          {
+            "name": "onnx::Div_24",
+            "shape": [
+              1,
+              61
+            ],
+            "all_finite": true
+          }
+        ],
+        "all_initializers_finite": true,
+        "normalization": "Sub and Div before MLP; normalization is embedded once.",
+        "reference_inference": "NumPy float32 evaluation of parsed ONNX Sub/Div/Gemm/Elu; independently compared with host ONNX Runtime when the optional library is available.",
+        "host_runtime_check": {
+          "available": true,
+          "onnx_checker_version": "1.23.2",
+          "onnx_checker_passed": true,
+          "onnxruntime_version": "1.28.0",
+          "provider": "CPUExecutionProvider",
+          "finite_probe_count": 16,
+          "all_match_reference": true,
+          "maximum_reference_delta": 7.152557373046875e-07
+        },
+        "probes": [
+          {
+            "tilt_deg": 0,
+            "phase": 0,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -0.22183988988399506,
+            "maximum": 0.15265166759490967,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 1.341104507446289e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 0,
+            "phase": 0.25,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -0.5541737675666809,
+            "maximum": 0.4927419424057007,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 1.6391277313232422e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 0,
+            "phase": 0.5,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -0.06500810384750366,
+            "maximum": 0.14171594381332397,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 6.705522537231445e-08,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 0,
+            "phase": 0.7,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -0.08380230516195297,
+            "maximum": 0.12867684662342072,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 1.1920928955078125e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 45,
+            "phase": 0,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -0.5761570930480957,
+            "maximum": 0.5531625747680664,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 2.682209014892578e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 45,
+            "phase": 0.25,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -0.8018841743469238,
+            "maximum": 0.589937686920166,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 3.2782554626464844e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 45,
+            "phase": 0.5,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -0.6015021800994873,
+            "maximum": 0.6046499013900757,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 2.384185791015625e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 45,
+            "phase": 0.7,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -0.6018374562263489,
+            "maximum": 0.4702712297439575,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 2.2351741790771484e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 90,
+            "phase": 0,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -1.2016048431396484,
+            "maximum": 1.0820093154907227,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 5.327165126800537e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 90,
+            "phase": 0.25,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -0.9604327082633972,
+            "maximum": 1.2104741334915161,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 4.470348358154297e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 90,
+            "phase": 0.5,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -1.1224696636199951,
+            "maximum": 1.0761511325836182,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 2.384185791015625e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 90,
+            "phase": 0.7,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -1.492236852645874,
+            "maximum": 0.8992280960083008,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 4.76837158203125e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 180,
+            "phase": 0,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -1.2204316854476929,
+            "maximum": 1.9732142686843872,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 4.917383193969727e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 180,
+            "phase": 0.25,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -1.04445481300354,
+            "maximum": 2.072974681854248,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 5.662441253662109e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 180,
+            "phase": 0.5,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -1.1910039186477661,
+            "maximum": 1.9639233350753784,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 7.152557373046875e-07,
+            "ort_matches_reference": true
+          },
+          {
+            "tilt_deg": 180,
+            "phase": 0.7,
+            "finite": true,
+            "shape": [
+              1,
+              14
+            ],
+            "minimum": -1.3191949129104614,
+            "maximum": 1.8747283220291138,
+            "ort_finite": true,
+            "ort_shape": [
+              1,
+              14
+            ],
+            "ort_reference_max_abs_delta": 5.960464477539062e-07,
+            "ort_matches_reference": true
+          }
+        ],
+        "finite_probe_count": 16,
+        "probe_limits": "Synthetic snapshots only; no temporal rollout, closed-loop dynamics, recovery success or physical safety assertion."
+      },
+      "baseline_comparison": {
+        "ground_pick": {
+          "contract_sha256": "10c50749b3f5520ea8564b8cbced0ada7050919aee37eb0dff8055b1c9d8f4c4",
+          "same_runtime_joint_order": true,
+          "same_exact_home": true,
+          "same_active_joint_definitions": true,
+          "same_active_joint_ranges": true,
+          "same_calibration_data": true,
+          "same_bam_data": true,
+          "same_actuator_except_temp_path": false,
+          "actuator_field_differences_except_temp_path": {
+            "implementation": {
+              "previous": null,
+              "new": "Hd1910BacklashActuatorCfg"
+            }
+          },
+          "same_hardware_command": true,
+          "same_total_mass": true,
+          "baseline_training_scale": 1.0,
+          "baseline_filter": null,
+          "baseline_action_ema_old_weight": 0.0,
+          "baseline_task": "Mjlab-GroundPick-Flat-MicroDuck"
+        },
+        "roulade": {
+          "contract_sha256": "ed711ad5a9d13f02d88901c0e238b56766d75a6b986ca022ca7006bbc7bed527",
+          "same_runtime_joint_order": true,
+          "same_exact_home": true,
+          "same_active_joint_definitions": true,
+          "same_active_joint_ranges": true,
+          "same_calibration_data": true,
+          "same_bam_data": true,
+          "same_actuator_except_temp_path": false,
+          "actuator_field_differences_except_temp_path": {
+            "implementation": {
+              "previous": null,
+              "new": "Hd1910BacklashActuatorCfg"
+            }
+          },
+          "same_hardware_command": true,
+          "same_total_mass": true,
+          "baseline_training_scale": 1.0,
+          "baseline_filter": null,
+          "baseline_action_ema_old_weight": 0.0,
+          "baseline_task": "Mjlab-Roulade-Flat-MicroDuck"
+        },
+        "stand": {
+          "contract_sha256": "5db434f4255858b88f26312e0286ed8801df94fda735e13f9f290eecbd2d17a1",
+          "same_runtime_joint_order": true,
+          "same_exact_home": true,
+          "same_active_joint_definitions": true,
+          "same_active_joint_ranges": true,
+          "same_calibration_data": true,
+          "same_bam_data": true,
+          "same_actuator_except_temp_path": true,
+          "actuator_field_differences_except_temp_path": {},
+          "same_hardware_command": true,
+          "same_total_mass": true,
+          "baseline_training_scale": 1.0,
+          "baseline_filter": {
+            "enabled": false,
+            "head_alpha": 1.0,
+            "legs_alpha": 1.0,
+            "version": 1,
+            "control_hz": 50.0,
+            "stage": "joint_position_target_after_home_and_scale",
+            "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+            "head_joints": [
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll"
+            ],
+            "leg_joints": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "update": "once_per_policy_step",
+            "reset": "first_target_passthrough_per_environment",
+            "previous_action_observation": "raw_policy_output",
+            "onnx": "external_filter_not_baked_into_graph"
+          },
+          "baseline_action_ema_old_weight": null,
+          "baseline_task": "Mjlab-StandUp-Rough-Backlash-MicroDuck"
+        },
+        "walk": {
+          "contract_sha256": "8ac94b3903dc8af0f75b41281fb245907c0cccf85822530ff8848c8553391f1e",
+          "same_runtime_joint_order": true,
+          "same_exact_home": true,
+          "same_active_joint_definitions": true,
+          "same_active_joint_ranges": true,
+          "same_calibration_data": true,
+          "same_bam_data": true,
+          "same_actuator_except_temp_path": true,
+          "actuator_field_differences_except_temp_path": {},
+          "same_hardware_command": true,
+          "same_total_mass": true,
+          "baseline_training_scale": 1.0,
+          "baseline_filter": {
+            "enabled": false,
+            "head_alpha": 1.0,
+            "legs_alpha": 1.0,
+            "version": 1,
+            "control_hz": 50.0,
+            "stage": "joint_position_target_after_home_and_scale",
+            "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+            "head_joints": [
+              "neck_pitch",
+              "head_pitch",
+              "head_yaw",
+              "head_roll"
+            ],
+            "leg_joints": [
+              "left_hip_yaw",
+              "left_hip_roll",
+              "left_hip_pitch",
+              "left_knee",
+              "left_ankle",
+              "right_hip_yaw",
+              "right_hip_roll",
+              "right_hip_pitch",
+              "right_knee",
+              "right_ankle"
+            ],
+            "update": "once_per_policy_step",
+            "reset": "first_target_passthrough_per_environment",
+            "previous_action_observation": "raw_policy_output",
+            "onnx": "external_filter_not_baked_into_graph"
+          },
+          "baseline_action_ema_old_weight": null,
+          "baseline_task": "Mjlab-VelStand-Rough-Backlash-MicroDuck"
+        }
+      },
+      "archived_global_studio_recipe": {
+        "task": "Mjlab-Velocity-Flat-MicroDuck",
+        "training_action_scale": 0.9,
+        "interpretation": "Archived studio defaults may refer to another task. Actual task scale is confirmed by full environment snapshot, ONNX metadata, contract and task-specific policy_parameters."
+      },
+      "deployment_limits": "Original manifest deployment_verified remains false. ZIP/schema and host inference probes are not an aarch64 deployment or real Zero motion test."
+    }
+  },
+  "unchanged_requirements": {
+    "joint_walk": "Keep uniform .9/.5/.7 and existing SHA-bound profile",
+    "lb": "Keep independent LB11000",
+    "calibration": "Retain installed calibration; archived calibration is comparison data only."
+  },
+  "v146_compatibility_review": {
+    "source": "Recovered v146 packaging/model_packages.py read directly from source tar.",
+    "roulade": "Exact task is known, but v146 does not recognize its current target-filter contract and requires a legacy action_ema_old_weight field that this genuine export does not contain.",
+    "ground_pick": "New exact task GroundPick-Flat-Backlash is absent from the official_adapter allowlist. Needs task-specific ground_pick_action_scale mapping, current target-filter validation and backlash observation functions.",
+    "scope": "Adapt firmware/import parsing to the genuine new contracts; preserve original exported bytes. Native path review and native validation remain separate release work."
+  }
+}

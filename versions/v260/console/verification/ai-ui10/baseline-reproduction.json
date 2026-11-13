@@ -1,0 +1,9 @@
+{
+  "source": "UI9",
+  "uses_actual_local_subprocess": true,
+  "uses_real_hat": false,
+  "reproduced": true,
+  "elapsed_seconds": 1.029,
+  "reason": "HAT 扬声器播放失败：aplay: pcm_write:2178: write error: Interrupted system call。请确认 HAT 声卡及麦克风已配置，且未被其他语音程序占用。",
+  "cause_in_reproduction": "finish terminates the still-draining owned aplay process after a fixed one-second wait"
+}

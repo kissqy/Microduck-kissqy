@@ -1,0 +1,5 @@
+install: creating uninstall script at /tmp/r17-rust/toolchains/1.99.0-x86_64-unknown-linux-gnu/lib/rustlib/uninstall.sh
+install: installing component 'rust-std-x86_64-unknown-linux-gnu'
+
+    rust std installed.
+

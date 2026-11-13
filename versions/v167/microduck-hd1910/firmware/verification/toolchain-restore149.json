@@ -1,0 +1,35 @@
+{
+  "started_at_utc": "2026-10-08T05:17:34.979179+00:00",
+  "source": "/mnt/data/work149",
+  "source_build_or_test_run": false,
+  "rust_downloads": [],
+  "python_downloads": [],
+  "commands": [
+    {
+      "args": [
+        "/opt/pyvenv/bin/python3",
+        "-m",
+        "pip",
+        "download",
+        "--only-binary=:all:",
+        "--dest",
+        "/tmp/r17-toolchain-downloads/wheels",
+        "--index-url",
+        "https://pypi.org/simple",
+        "onnx==1.23.2",
+        "onnxruntime==1.28.0",
+        "ziglang==0.14.1",
+        "numpy==2.5.3",
+        "protobuf==7.36.2",
+        "typing_extensions==4.16.0",
+        "ml_dtypes==0.6.0",
+        "flatbuffers==25.12.19",
+        "packaging==26.3"
+      ],
+      "log": "/mnt/data/work149/verification/restore149-pip-download.log",
+      "cwd": null,
+      "exit_code": 1
+    }
+  ],
+  "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+}

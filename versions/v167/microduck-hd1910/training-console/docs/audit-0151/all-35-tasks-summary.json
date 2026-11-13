@@ -1,0 +1,931 @@
+{
+  "schema": "microduck-all-task-cpu-smoke-v1",
+  "source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "scope": "2 worlds; reset then 2 bounded non-policy action steps; first-step friction snapshot; no training or physical robot",
+  "settings": {
+    "num_envs": 2,
+    "firmware_p": 5,
+    "action_scale": 1,
+    "action_filter_enabled": false,
+    "steps": 2,
+    "action_bound_abs": 0.05,
+    "seed": 31
+  },
+  "completed": 35,
+  "passed": 35,
+  "failed": 0,
+  "elapsed_s": 90.588,
+  "readback_implementation": "Before terrain-detail32cap; this run validated full readbacks for all35. Targeted Rough test validates final cap separately.",
+  "tasks": [
+    {
+      "task": "Mjlab-VelStand-Flat-MicroDuck",
+      "role": "joint",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 1.479,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-VelStand-Flat-Backlash-MicroDuck",
+      "role": "joint",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.954,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-VelStand-Rough-MicroDuck",
+      "role": "joint",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 2.404,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 2501,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+      "role": "joint",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 3.105,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 2501,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-SitStand-Flat-MicroDuck",
+      "role": "sitstand",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.303,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-SitStand-Flat-Backlash-MicroDuck",
+      "role": "sitstand",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.313,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-SitStand-Rough-MicroDuck",
+      "role": "sitstand",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 1.302,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 2501,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-SitStand-Rough-Backlash-MicroDuck",
+      "role": "sitstand",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 2.039,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 2501,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-GroundPick-Flat-MicroDuck",
+      "role": "ground_pick",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.327,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-GroundPick-Flat-Backlash-MicroDuck",
+      "role": "ground_pick",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.32,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-GroundPick-Rough-MicroDuck",
+      "role": "ground_pick",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 1.292,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 2501,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-GroundPick-Rough-Backlash-MicroDuck",
+      "role": "ground_pick",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 2.047,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 2501,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-BallKickLeft-Flat-MicroDuck",
+      "role": "kick_left",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 22.714,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-BallKickLeft-Flat-Backlash-MicroDuck",
+      "role": "kick_left",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 8.27,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-BallKick-Flat-MicroDuck",
+      "role": "kick_right",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.356,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-BallKick-Flat-Backlash-MicroDuck",
+      "role": "kick_right",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.391,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-Roulade-Flat-MicroDuck",
+      "role": "roulade",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.315,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-Velocity-Flat-MicroDuck",
+      "role": "walk",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.648,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-Velocity-Flat-Backlash-MicroDuck",
+      "role": "walk",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.707,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-Velocity-Rough-MicroDuck",
+      "role": "walk",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 1.88,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 2501,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-Velocity-Rough-Backlash-MicroDuck",
+      "role": "walk",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 2.952,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 2501,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-StandUp-Flat-MicroDuck",
+      "role": "stand",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.372,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-StandUp-Flat-Backlash-MicroDuck",
+      "role": "stand",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.6,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 1,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-StandUp-Rough-MicroDuck",
+      "role": "stand",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 1.379,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 2501,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-StandUp-Rough-Backlash-MicroDuck",
+      "role": "stand",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 2.233,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 2,
+      "terrain_geom_count": 2501,
+      "wheel_count": 0,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-Velocity-Flat-MicroDuck-Rollers",
+      "role": "roller",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.335,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 4,
+      "terrain_geom_count": 1,
+      "wheel_count": 4,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-Velocity-Flat-Backlash-MicroDuck-Rollers",
+      "role": "roller",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 8.039,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 4,
+      "terrain_geom_count": 1,
+      "wheel_count": 4,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-RollerCrouch-Flat-MicroDuck",
+      "role": "crouch",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.279,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 4,
+      "terrain_geom_count": 1,
+      "wheel_count": 4,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-RollerCrouch-Flat-Backlash-MicroDuck",
+      "role": "crouch",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.325,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 4,
+      "terrain_geom_count": 1,
+      "wheel_count": 4,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-Velocity-Swizzle-MicroDuck",
+      "role": "swizzle",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.28,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 4,
+      "terrain_geom_count": 1,
+      "wheel_count": 4,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-Velocity-Swizzle-Backlash-MicroDuck",
+      "role": "swizzle",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.325,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 4,
+      "terrain_geom_count": 1,
+      "wheel_count": 4,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-RollerSlope-Flat-MicroDuck",
+      "role": "slope",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.308,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 4,
+      "terrain_geom_count": 30,
+      "wheel_count": 4,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-RollerSlope-Flat-Backlash-MicroDuck",
+      "role": "slope",
+      "backlash": true,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.328,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 4,
+      "terrain_geom_count": 30,
+      "wheel_count": 4,
+      "adapter_correction_count": 0
+    },
+    {
+      "task": "Mjlab-RollerStandUp-Flat-MicroDuck",
+      "role": "roller_stand",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.268,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 4,
+      "terrain_geom_count": 1,
+      "wheel_count": 4,
+      "adapter_correction_count": 1
+    },
+    {
+      "task": "Mjlab-Spin-Flat-MicroDuck",
+      "role": "spin",
+      "backlash": false,
+      "passed": true,
+      "steps_completed": 2,
+      "actor_shape": [
+        2,
+        61
+      ],
+      "firmware_p": [
+        5.0
+      ],
+      "action_scale": 1.0,
+      "elapsed_s": 0.282,
+      "readback_available": {
+        "foot_or_wheel_contact": true,
+        "terrain_contact": true,
+        "wheel_bearings": true
+      },
+      "motor_readback_available": true,
+      "contact_geom_count": 4,
+      "terrain_geom_count": 1,
+      "wheel_count": 4,
+      "adapter_correction_count": 0
+    }
+  ]
+}

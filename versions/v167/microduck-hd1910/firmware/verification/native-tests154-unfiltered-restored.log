@@ -1,0 +1,11 @@
+COMMAND: cargo test -p robotd --bin robotd --frozen unfiltered_skill -- --test-threads=1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.08s
+     Running unittests src/main.rs (/workspace/scratch/5a402859beee/build152/target-host/debug/deps/robotd-841120f08aa4bf66)
+
+running 3 tests
+test control::unfiltered_skill_tests::new_backlash_pick_original_onnx_keeps_phase_cutoff_and_encoder_observation ... ok
+test control::unfiltered_skill_tests::new_roulade_original_onnx_uses_direct_targets_raw_feedback_and_existing_window ... ok
+test control::unfiltered_skill_tests::new_roulade_still_chains_from_held_pad_requests_and_home_cancels ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 255 filtered out; finished in 3.30s
+

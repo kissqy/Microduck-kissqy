@@ -1,0 +1,184 @@
+{
+  "console_version": "1.0.157-Fix2",
+  "service_build": "1fa8438-feetech-ft6-control.36",
+  "firmware_sha256": "6ba875422dc2fc49cce6cc7f9b35936d9ef192dfa01fda759c76e8ac0f972eb8",
+  "production_firmware_importer": {
+    "verified": true,
+    "build": "1fa8438-feetech-ft6-control.36",
+    "console_version": "1.0.157-Fix2",
+    "official_version": "0.15.1",
+    "sha256": "6ba875422dc2fc49cce6cc7f9b35936d9ef192dfa01fda759c76e8ac0f972eb8",
+    "models": {
+      "walk": {
+        "id": "1cbf8730eadd75a5704332c9f3c10f60",
+        "sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+        "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+        "epochs": 9600,
+        "source_iteration": 9599,
+        "num_envs": 2560,
+        "source_policy_directory": "policies/walk",
+        "trained_action_scale": 1.0,
+        "trained_head_alpha": 1.0,
+        "trained_legs_alpha": 1.0,
+        "execution_profile": {
+          "schema": "microduck-runtime-execution/v1",
+          "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+          "mode": "uniform",
+          "action_scale": 1.0,
+          "head_lowpass": 0.5,
+          "legs_lowpass": 0.7
+        },
+        "deployment_verified": false
+      },
+      "sitstand": {
+        "id": "1c94934c6421ec72ed48079cea749668",
+        "sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+        "task": "Mjlab-SitStand-Flat-MicroDuck"
+      },
+      "ground_pick": {
+        "id": "b14e3a8b56ddbb8d2d831e727774a168",
+        "sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69",
+        "task": "Mjlab-GroundPick-Flat-Backlash-MicroDuck",
+        "epochs": 10000,
+        "source_iteration": 9999,
+        "num_envs": 4096,
+        "base_action_scale": 1.0,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "target_filter": "passthrough",
+        "deployment_verified": false,
+        "source_policy_directory": "policies/ground_pick"
+      },
+      "roulade": {
+        "id": "59e15d7b04d0c40e9b11b8a70bdecae6",
+        "sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac",
+        "task": "Mjlab-Roulade-Flat-MicroDuck",
+        "epochs": 10000,
+        "source_iteration": 9999,
+        "num_envs": 4096,
+        "base_action_scale": 1.0,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "target_filter": "passthrough",
+        "deployment_verified": false,
+        "source_policy_directory": "policies/roulade"
+      },
+      "kick_right": {
+        "id": "67ad09d82f4865d222a7ae06f250cf9f",
+        "sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+        "task": "Mjlab-BallKick-Flat-MicroDuck",
+        "epochs": 10000,
+        "num_envs": 4096,
+        "base_action_scale": 1.0,
+        "head_alpha": 1.0,
+        "legs_alpha": 1.0,
+        "target_filter": "passthrough",
+        "duration_seconds": 0.5,
+        "deployment_verified": false
+      }
+    },
+    "bytes": 25826046
+  },
+  "zip_files": 145,
+  "elf_ranges_checked": true,
+  "tests": {
+    "python_passed": 77,
+    "browser_scripts_passed": 8,
+    "native_focused_passed": 15,
+    "python": [
+      {
+        "name": "pc-fix",
+        "passed": 38,
+        "log": "verification/fix2-pc-fix-tests.log",
+        "sha256": "19c805562b8643f52073641886a1452e7a74258559840edee337de03f4125e55"
+      },
+      {
+        "name": "streams",
+        "passed": 32,
+        "log": "verification/fix2-streams-tests.log",
+        "sha256": "3f1ae2bf3852463b22e2c32ee017f3c891498ef3424ab169ec61230cb6cfa253"
+      },
+      {
+        "name": "complete-log",
+        "passed": 7,
+        "log": "verification/fix2-complete-log-tests.log",
+        "sha256": "36b26150469faac4331fc86f184b64fcffbfc68045be4ce4e124560cb2d329cd"
+      }
+    ],
+    "browser": [
+      {
+        "name": "test_fix157pc",
+        "exit_code": 0,
+        "log": "verification/fix2-test_fix157pc.log",
+        "sha256": "202e15d884c067ab28d84a5ebbac80a801bcf4bfab23b14779c242cd6f2cfe39"
+      },
+      {
+        "name": "test_controls154",
+        "exit_code": 0,
+        "log": "verification/fix2-test_controls154.log",
+        "sha256": "4321bee40f94b73b1772c9d4b065c570b64bfe649461aef04fc0110f687bceee"
+      },
+      {
+        "name": "test_connection_ui155",
+        "exit_code": 0,
+        "log": "verification/fix2-test_connection_ui155.log",
+        "sha256": "31fb82a79d5b448d8486231d41062e36597e9aae6ad3df4a6db10f1150d477e4"
+      },
+      {
+        "name": "test_startup_ui",
+        "exit_code": 0,
+        "log": "verification/fix2-test_startup_ui.log",
+        "sha256": "1051736a2c3c606f87fc8ca8b5ffe966e682f54386457b6c78195bcff54adc78"
+      },
+      {
+        "name": "test_joint_direction155",
+        "exit_code": 0,
+        "log": "verification/fix2-test_joint_direction155.log",
+        "sha256": "2e4a3f0a1e78453c58e0c965ba6b8692f5fa5833e68a9afa299097c48adc920c"
+      },
+      {
+        "name": "test_pose_state",
+        "exit_code": 0,
+        "log": "verification/fix2-test_pose_state.log",
+        "sha256": "a9d3d13be56ba6850d99607b037440bf1426b4709ba1b8b1ec2207f469a371b4"
+      },
+      {
+        "name": "test_calibration_reference",
+        "exit_code": 0,
+        "log": "verification/fix2-test_calibration_reference.log",
+        "sha256": "6c45e3956c81dafa99571e3e1cb6ef4d86b22c95d564fc8aa63f3e04eaaa192d"
+      },
+      {
+        "name": "test_gamepad_repair_ui",
+        "exit_code": 0,
+        "log": "verification/fix2-test_gamepad_repair_ui.log",
+        "sha256": "72d7539bf553c19352361a88a00d88bb6aaa05c85ebafeb27f99de35d5f1e1a0"
+      }
+    ],
+    "native": [
+      {
+        "name": "native-after",
+        "passed": 9,
+        "log": "verification/fix2-native-after.log",
+        "sha256": "d61b69d926b18f2f56e2669089e1532f68e365b15669dc48c71e154d16e04877"
+      },
+      {
+        "name": "imu-tests",
+        "passed": 6,
+        "log": "verification/fix2-imu-tests.log",
+        "sha256": "c12c9b050f655d3cf09de35796bf3209d73f050cd2f7904e1b0fa30a4c750bbb"
+      }
+    ],
+    "before_fix_regression": {
+      "log": "verification/fix2-native-before.log",
+      "sha256": "49ab8fd3d277be40de13d002ab301d25ec13f25152ac891b79350dea45ce6770",
+      "expected_failure": true
+    },
+    "robot_hardware_tested": false,
+    "windows_native_tested": false,
+    "full_historical_suite_rerun": false,
+    "socket_boundary_note": "Request and stream tests use loopback TCP at the OS boundary where the executor restricts AF_UNIX creation."
+  },
+  "robot_hardware_tested": false,
+  "windows_native_tested": false
+}

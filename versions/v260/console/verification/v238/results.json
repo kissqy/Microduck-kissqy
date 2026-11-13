@@ -1,0 +1,32 @@
+{
+  "release": "V238 / control.86",
+  "scope": {
+    "baseline": "V237 / control.85",
+    "scope": [
+      "Console 1.0.238 / companion firmware control.86, based on V237.",
+      "Ignore B in browser input and disable its visual button; retain all other bindings.",
+      "Filter BTN_EAST press/release in the current GameSir R7 bridge; descriptor/axes and original PADD retained.",
+      "Wi-Fi configuration/password and recovery behavior retained unchanged; default hotspot password remains 12345678."
+    ],
+    "input_bridge_source": "V237 packaged UI42 C snapshot; only xbox_key BTN_EAST rejection changed",
+    "input_bridge_compiler": "Zig 0.13.0, aarch64-linux-gnu.2.17, original EXEC type",
+    "input_bridge_source_sha256": "5594fb9983db3e40dfe38378080f2951b1c16ed522f507e1eb9caab05b9e4f08",
+    "padd_sha256": "fd9fb6b99083d9f1eeee5414910dc861d8f88c805f182e6e4a57d9c7b6834bbd",
+    "hotspot_password": "12345678",
+    "wifi_logic_changed": false,
+    "automatic_return_to_saved_wifi_added": false,
+    "hardware_verified": false,
+    "known_good": "previous hardware-verified reference retained",
+    "next_task": "target-board acceptance that B is unassigned on the webpage and current GameSir R7 input"
+  },
+  "validation": {
+    "production_c_event_path": "passed; baseline fails, modified bridge passes",
+    "native_cross_build": "AArch64 EXEC / glibc 2.17",
+    "python_input_and_ai_handoff_checks": 36,
+    "frontend_voice_layout_and_ui40": "passed",
+    "network_runtime_components_byte_equal_v237": true,
+    "real_board_acceptance": false,
+    "shipped_firmware_and_hotspot_checks": 94,
+    "padd_sha256": "fd9fb6b99083d9f1eeee5414910dc861d8f88c805f182e6e4a57d9c7b6834bbd"
+  }
+}

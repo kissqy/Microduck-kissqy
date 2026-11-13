@@ -1,0 +1,5 @@
+{
+  "passed": true,
+  "test": "verification/test_ai_hat.mjs",
+  "scope": "ascending real-volume ladder, visible dBFS/upload time, compact status, retained credentials, Chinese skills and multi-turn chat"
+}

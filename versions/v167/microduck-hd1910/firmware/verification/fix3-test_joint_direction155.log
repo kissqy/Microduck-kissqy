@@ -1,0 +1,4 @@
+PASS all fifteen physical IDs use saved directions regardless of array order or stale row metadata
+PASS missing, duplicate, mismatched, unsaved or invalid calibration never defaults to forward
+PASS actual telemetry reset and disconnect cannot carry prior robot directions into a new session
+PASS actual table renderer adds one direction cell to all fifteen rows and preserves actual angles

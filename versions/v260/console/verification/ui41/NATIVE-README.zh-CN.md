@@ -1,0 +1,1 @@
+UI41仅重编padd。相对UI40的最终差异见native-input-ui41.patch；冻结源码与UI40重建链沿用../ui40/的记录，再应用此补丁。native-source/padd/src提供与实际构建一致的三个文件。官方100ms中立心跳函数逐字节恢复；mouth_pause.rs与UI40相同。输入短租约750ms、200ms续约，首次等待精确ACK；取消标记在本次helper关闭时清理，旧token不复用。退出/取消/到期由PADD一次性清零速度和身体偏置，再回中后交还。Select/Start原路径保留。67项主机测试与ARM64构建通过；未运行ARM程序或实机。不能撤回robotd已经接收的跨socket请求。

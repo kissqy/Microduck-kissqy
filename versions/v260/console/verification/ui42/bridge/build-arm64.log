@@ -1,0 +1,4 @@
+cwd: /workspace/scratch/0587ce872ec5/native_work/Microduck-Source-R17-V186-control57
+command: /workspace/scratch/0587ce872ec5/native_toolchain/python/ziglang/zig cc -target aarch64-linux-gnu.2.28 -std=c11 -O2 -Wall -Wextra -Werror gamepad-r7/gamesir-xboxd.c -o /workspace/scratch/0587ce872ec5/ui42_bridge_evidence/gamesir-xboxd.arm64
+exit: 0
+compiler output: empty

@@ -1,0 +1,21 @@
+{
+  "sysroot": "/tmp/r17-aarch64-sysroot",
+  "index_url": "https://deb.debian.org/debian/dists/trixie/main/binary-arm64/Packages.xz",
+  "index_sha256": "be16b37b2f740f066ea93d35d56f04f94d63693e5a3eb421b052bf86fae75bcd",
+  "packages": [
+    {
+      "package": "libudev1",
+      "version": "257.13-1~deb13u1",
+      "url": "https://deb.debian.org/debian/pool/main/s/systemd/libudev1_257.13-1~deb13u1_arm64.deb",
+      "sha256": "459b1c9c17cc3c586e90d13d2a991715d498c6eed6c046cabf321021167bc380",
+      "verified": true
+    },
+    {
+      "package": "libudev-dev",
+      "version": "257.13-1~deb13u1",
+      "url": "https://deb.debian.org/debian/pool/main/s/systemd/libudev-dev_257.13-1~deb13u1_arm64.deb",
+      "sha256": "4f63c79e9eec01eadf4a450d8ef12e327b82cf49f5106abc9ac39a3353f04314",
+      "verified": true
+    }
+  ]
+}

@@ -1,0 +1,185 @@
+{
+  "schema_version": 2,
+  "model_api": 1,
+  "obs_len": 61,
+  "action_len": 14,
+  "robot": {
+    "model": "microduck",
+    "hw_rev": 1,
+    "servos": "hd1910",
+    "control_hz": 50
+  },
+  "name": "playdead",
+  "kind": "episodic",
+  "description": "独立RL装死模型：站立、坐下、躺背、抬腿、偏头，5秒。静止起步训练，无需作者私有步态库；区别于现有脚本装死。",
+  "entry_pose": "standing",
+  "command": {
+    "encoding": "constant",
+    "idle": [
+      0,
+      0,
+      0
+    ],
+    "twist": "zeros for the full 5 s skill",
+    "head": "zeros",
+    "body": "zeros",
+    "entry": "stable standing",
+    "exit": "lying on back; hand off to a tested recovery policy",
+    "duration_s": 5.0
+  },
+  "action_scale": 1.0,
+  "trained_action_scale": 1.0,
+  "action_filter": {
+    "enabled": false,
+    "head_alpha": 1.0,
+    "legs_alpha": 1.0,
+    "version": 1,
+    "control_hz": 50.0,
+    "stage": "joint_position_target_after_home_and_scale",
+    "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+    "head_joints": [
+      "neck_pitch",
+      "head_pitch",
+      "head_yaw",
+      "head_roll"
+    ],
+    "leg_joints": [
+      "left_hip_yaw",
+      "left_hip_roll",
+      "left_hip_pitch",
+      "left_knee",
+      "left_ankle",
+      "right_hip_yaw",
+      "right_hip_roll",
+      "right_hip_pitch",
+      "right_knee",
+      "right_ankle"
+    ],
+    "update": "once_per_policy_step",
+    "reset": "first_target_passthrough_per_environment",
+    "previous_action_observation": "raw_policy_output",
+    "onnx": "external_filter_not_baked_into_graph"
+  },
+  "required_policy_settings": {},
+  "required_skill_settings": null,
+  "runtime_compatibility": {
+    "native_runtime": {
+      "version": "0.15.1",
+      "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+      "route": "skill_with_recovery_handoff",
+      "support": "manual_configuration_required",
+      "limitations": [
+        "独立装死ONNX需要从稳定站姿触发，零twist/head/body运行5秒，结束时仍躺着；随后必须交给已验证起身策略。现有脚本装死不会自动调用此模型。",
+        "0.15.1没有每技能独立的头腿滤波覆盖；本模型训练为直通，接入端需落实匹配映射并恢复其它策略设置。本包不生成会全局改写Walk滤波的片段。"
+      ]
+    },
+    "r148_importer": {
+      "task_allowlisted": false,
+      "direct_import_verified": false,
+      "note": "按随包 R148 接口审计，该版本的任务白名单不接收此任务；其他实机中控版本需核对其导入合同。"
+    },
+    "requires_passive_roller_hardware": false,
+    "official_finished_weights": false,
+    "automatic_deployment": false,
+    "hd1910_importer": {
+      "support": "matching_contract_support_required",
+      "training_method": "official_v8",
+      "bam_profile": "legacy_sts3215_m6",
+      "note": "V8训练方法＋R1.5.27 BAM的组合须由运行端按真实来源接收。已审V172/V173对hd1910-v8只接受厂家81a441…，本包不伪装成旧源码模型，也不修改机器人固件。"
+    }
+  },
+  "runtime_only_settings": {
+    "voltage_adapt": {
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "training_action_compensation": "not_present_in_training_action_term",
+      "note": "供电随机化/负载掉压属于BAM训练物理；不等于运行端动态动作倍率补偿。导出不强制开启或关闭。"
+    },
+    "gain_and_gain_ratios": {
+      "keys": [
+        "gain",
+        "standing_gain_ratio",
+        "ground_pick_gain_ratio",
+        "skill[].params.gain_ratio"
+      ],
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "note": "训练BAM的实际kp_fw见hardware_command和training_physics；不能凭空推导固件增益或翻译层寄存器映射。"
+    }
+  },
+  "normalization": "embedded_in_onnx_once",
+  "export_contract_revision": 3,
+  "training_snapshot_sha256": "5253a086a1aad3246a532cc35c8552131d12fe22db07196bdc18c3c16753d193",
+  "training": {
+    "task_id": "Mjlab-PlayDead-Flat-MicroDuck",
+    "repo": "pollen-robotics/microduck_rl",
+    "commit": "b02fdea4902c2b93b7d34a83a6f05da4ececb7d3",
+    "checkpoint": 2999,
+    "source_file": "/home/radxa/microduck-training-studio/engines/official_v8/logs/rsl_rl/studio_playdead_standing/2026-10-16_20-10-55_console_20261016_201044_153979/model_2999.pt",
+    "recipe_source": {
+      "repository": "https://github.com/drfonz/microduck_rl",
+      "commit": "09724f402365302192fec504eebd85a7bd7c89b8",
+      "branch": "play-dead",
+      "license": "Apache-2.0",
+      "adapter": "studio-r1533-standing-entry",
+      "training_entry": "standing; gait_bank_spawn.prob=0 (supported upstream option)",
+      "reason": "The upstream 50% mid-walk state bank is not publicly bundled; no private bank or XL330 weights are required."
+    }
+  },
+  "target_firmware": "0.15.1",
+  "teacher_only": false,
+  "source_revision": "b02fdea4902c2b93b7d34a83a6f05da4ececb7d3",
+  "task": "Mjlab-PlayDead-Flat-MicroDuck",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/official_v8/logs/rsl_rl/studio_playdead_standing/2026-10-16_20-10-55_console_20261016_201044_153979/model_2999.pt",
+  "model_origin": {
+    "engine": "official_v8",
+    "task": "Mjlab-PlayDead-Flat-MicroDuck",
+    "baseline_pin": {
+      "revision": "b02fdea4902c2b93b7d34a83a6f05da4ececb7d3"
+    },
+    "training_adapter_revision": "R1.5.34-v8-r1527-bam",
+    "friction_randomization": "official"
+  },
+  "export_source_revision": "b02fdea4902c2b93b7d34a83a6f05da4ececb7d3",
+  "onnx_sha256": "9203bb8f5df15cffaa29f5315a722835c1bd718b940b14330f97556ccab83065",
+  "deployment_verified": false,
+  "exit_pose": "supine",
+  "required_playdead_controller_settings": {
+    "duration_s": 5.0,
+    "command": [
+      0,
+      0,
+      0
+    ],
+    "head": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "body": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "action_scale": 1.0,
+    "head_lowpass": 1.0,
+    "legs_lowpass": 1.0,
+    "entry_pose": "stable_standing",
+    "exit_pose": "supine",
+    "after": "tested_recovery_policy",
+    "chain": false,
+    "per_skill_filter_override_available_in_0151": false
+  },
+  "gear_backlash": {
+    "enabled": false,
+    "joint_count": 0,
+    "ranges_rad": {},
+    "encoder_position": "motor",
+    "motor_velocity": "motor-side for friction and back-EMF",
+    "policy_joint_velocity": "motor"
+  },
+  "duration_s": 5.0,
+  "chain": false
+}

@@ -1,0 +1,48 @@
+   Compiling padd v0.15.1 (/workspace/scratch/5a402859beee/v163-source/Microduck-Source-R17-V163-control40/padd)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.73s
+     Running unittests src/main.rs (/workspace/scratch/5a402859beee/v160-source/Microduck-Source-R17-V160-control37/target-host/debug/deps/padd-1ee51bf31d9dcfb2)
+
+running 40 tests
+test input_settings::tests::mouth_cap_keeps_raw_triggers_for_sound_and_never_opens_at_idle ... ok
+test roller_test::tests::fallen_motion_with_valid_imu_passes ... ok
+test roller_test::tests::missing_invalid_and_upright_imu_are_refused ... ok
+test roller_test::tests::standing_or_unconfirmed_fall_is_refused ... ok
+test roller_test::tests::home_limp_and_other_skills_are_refused ... ok
+test roller_test::tests::unhealthy_stale_and_frozen_feedback_are_refused ... ok
+test input_settings::tests::live_changes_confirm_pid_and_keep_previous_on_invalid_file ... ok
+test tap::tests::a_departed_subscriber_is_forgotten ... ok
+test tap::tests::a_frame_survives_the_wire ... ok
+test tap::tests::a_subscriber_arriving_mid_stream_is_told_the_imu_too ... ok
+test tap::tests::a_slow_subscriber_is_dropped_from_rather_than_blocking_the_reader ... ok
+test tap::tests::every_code_gets_a_name_or_a_number ... ok
+test tap::tests::a_subscriber_arriving_mid_stream_is_told_the_device ... ok
+test tap::tests::head_control_holds_the_imu_open_and_reads_the_filter ... ok
+test tap::tests::dropped_samples_are_not_dropped_frames ... ok
+test tap::tests::the_device_is_only_held_while_a_pad_and_a_watcher_both_exist ... ok
+test tests::a_frame_that_asks_for_motion_is_always_sent ... ok
+test tests::a_changed_frame_is_sent_at_once ... ok
+test tests::a_hold_does_not_survive_the_pad_going_away ... ok
+test tests::a_pad_dropout_after_the_shutdown_does_not_revive_the_stop ... ok
+test tests::a_two_call_frame_is_one_write_and_two_lines ... ok
+test tests::a_stationary_frame_goes_out_again_on_the_heartbeat ... ok
+test tests::an_unchanged_stationary_frame_is_not_resent ... ok
+test tests::grabbed_gamesir_raw_node_cannot_hide_the_mapped_xbox ... ok
+test tests::an_untouched_pad_in_head_mode_holds_both_intents ... ok
+test tests::inherited_buttons_wait_for_release_and_select_release_does_not_relax ... ok
+test tests::neutral_web_attachment_preserves_the_first_deliberate_start_press ... ok
+test tests::radio_reconnect_cannot_keep_head_or_body_mode_or_skip_explicit_home ... ok
+test tap::tests::an_unreadable_sibling_does_not_end_the_imu_search ... ok
+test tests::a_rate_this_loop_cannot_run_at_is_refused_rather_than_divided_by ... ok
+test tests::malformed_or_wrong_id_reply_cannot_latch_home ... ok
+test roller_test::tests::native_socket_executes_exactly_one_guarded_skill ... ok
+test tests::select_stops_on_a_short_release_and_shuts_down_on_a_long_hold ... ok
+test tests::restart_closing_the_socket_is_an_error_instead_of_successful_home ... ok
+test tests::the_head_follows_the_pad_with_the_sticks_signs_gain_and_limit ... ok
+test tests::refused_home_does_not_make_the_next_start_enable_the_policy ... ok
+test tap::tests::the_imu_is_the_accelerometer_sibling_under_the_same_hid_device ... ok
+test roller_test::tests::failed_gates_send_no_motion_or_skill_request ... ok
+test tests::y_cycles_follow_hold_follow_and_re_centres_each_time ... ok
+test tests::stalled_robotd_is_bounded_without_a_background_poll ... ok
+
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+

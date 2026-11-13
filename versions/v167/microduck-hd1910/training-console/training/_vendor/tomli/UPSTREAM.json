@@ -1,0 +1,9 @@
+{
+  "name": "tomli",
+  "version": "2.2.1",
+  "source": "https://pypi.org/project/tomli/2.2.1/",
+  "requires_python": ">=3.8",
+  "license": "MIT",
+  "wheel_sha256": "cb55c73c5f4408779d0cf3eef9f762b9c9f147a77de7b258bef0a5628adc85cc",
+  "changes": "None; source files copied verbatim into training._vendor.tomli"
+}

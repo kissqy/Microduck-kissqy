@@ -1,0 +1,1 @@
+4K UI OK: bilingual BAM/actuator fields, 110 searchable registers, immediate BAM edit, joint metrics, 10 action profiles; 2048/1024 budgets+courses; V2 teachers+joint start; no probes/JS errors

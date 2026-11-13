@@ -1,0 +1,37 @@
+35 tasks: 35 PASS / 0 FAIL; 90.588s
+P5; scale1; EMAoff;2worlds;reset+2bounded14Dactions;actor2x61/rewardsfinite;allfrictionreadbacksavailable. No training, no policy success evaluation.
+PASS Mjlab-VelStand-Flat-MicroDuck
+PASS Mjlab-VelStand-Flat-Backlash-MicroDuck
+PASS Mjlab-VelStand-Rough-MicroDuck
+PASS Mjlab-VelStand-Rough-Backlash-MicroDuck
+PASS Mjlab-SitStand-Flat-MicroDuck
+PASS Mjlab-SitStand-Flat-Backlash-MicroDuck
+PASS Mjlab-SitStand-Rough-MicroDuck
+PASS Mjlab-SitStand-Rough-Backlash-MicroDuck
+PASS Mjlab-GroundPick-Flat-MicroDuck
+PASS Mjlab-GroundPick-Flat-Backlash-MicroDuck
+PASS Mjlab-GroundPick-Rough-MicroDuck
+PASS Mjlab-GroundPick-Rough-Backlash-MicroDuck
+PASS Mjlab-BallKickLeft-Flat-MicroDuck
+PASS Mjlab-BallKickLeft-Flat-Backlash-MicroDuck
+PASS Mjlab-BallKick-Flat-MicroDuck
+PASS Mjlab-BallKick-Flat-Backlash-MicroDuck
+PASS Mjlab-Roulade-Flat-MicroDuck
+PASS Mjlab-Velocity-Flat-MicroDuck
+PASS Mjlab-Velocity-Flat-Backlash-MicroDuck
+PASS Mjlab-Velocity-Rough-MicroDuck
+PASS Mjlab-Velocity-Rough-Backlash-MicroDuck
+PASS Mjlab-StandUp-Flat-MicroDuck
+PASS Mjlab-StandUp-Flat-Backlash-MicroDuck
+PASS Mjlab-StandUp-Rough-MicroDuck
+PASS Mjlab-StandUp-Rough-Backlash-MicroDuck
+PASS Mjlab-Velocity-Flat-MicroDuck-Rollers
+PASS Mjlab-Velocity-Flat-Backlash-MicroDuck-Rollers
+PASS Mjlab-RollerCrouch-Flat-MicroDuck
+PASS Mjlab-RollerCrouch-Flat-Backlash-MicroDuck
+PASS Mjlab-Velocity-Swizzle-MicroDuck
+PASS Mjlab-Velocity-Swizzle-Backlash-MicroDuck
+PASS Mjlab-RollerSlope-Flat-MicroDuck
+PASS Mjlab-RollerSlope-Flat-Backlash-MicroDuck
+PASS Mjlab-RollerStandUp-Flat-MicroDuck
+PASS Mjlab-Spin-Flat-MicroDuck

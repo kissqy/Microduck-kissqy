@@ -1,0 +1,47 @@
+{
+  "reviewed_on": "2026-10-03",
+  "luwu_commit": "326d77a1122870bdefa2c36403937502c958e69c",
+  "joyandai_commit": "22916b9d82f250caa563ed9a56976eb33243fb91",
+  "read_only_source_hashes": {
+    "luwu-1910-m6": "ef2d51adfb1cc0831b9b02ca19aa9176fceecdf725148d084378d7d9a64afceb",
+    "joy-m5": "efddfe258661abac7cc8fc7af338c80a6b38ac83e19d2e0bc7daf3c9536b76e6",
+    "joy-m6": "bf9f4ed76fd4748498117ef22a13e9703f62eab82b5ca930e3f9580010489c49",
+    "joy-characterization": "2cd50112cf9b2d2db3254fc6c3d607513a7b39acc1ac5e3c8597bd21dbbde0c6",
+    "joy-constants": "681cbf67b729df55fd17296f4b6fca7c5d1731f1be64226c197f02b4a3f87305",
+    "joy-controller": "ce3e1978732817662a49fb83d1394df320ce9b491c5fd293cd71f8553af2ba20",
+    "xl330-inertia-pdf": "dacd173dfde3de78effa6ccb94baeea98edf378d63424aa3b26af81adc0c3df2",
+    "hd1910-c001-manufacturer-pdf": "aafd3b6a03f4902f74164bf49091d88c01418b12ddf7d5f8118cbc763f03f9a9"
+  },
+  "adopted_new_training_preset": false,
+  "sources": [
+    {
+      "name": "陆吾 / Luwu XgoDuck",
+      "configuration": "1910 M6 · STS3215 控制结构 · P=5 · 7.4～8.0 V · 延迟15～30ms",
+      "difference": "本机只沿用执行器；XgoDuck 的800g几何、Home和任务改动未照搬。",
+      "evidence": "公开源码；BAM原文件逐字节一致。该提交无XgoDuck专用双教师联合入口。",
+      "url": "https://github.com/LuwuDynamics/xgoduck_rl/tree/326d77a1122870bdefa2c36403937502c958e69c"
+    },
+    {
+      "name": "飞特复刻 / fanhao375",
+      "configuration": "陆吾M6 + 飞特目标历史复位修复",
+      "difference": "本机沿用其复位修复；原项目不是820g本机的长期实测结果。",
+      "evidence": "有GPU接入与短训练测试；仓库明确仍待实机步态验收。",
+      "url": "https://github.com/fanhao375/microduck-replica/blob/master/software/training/docs/hd1910-baseline.md"
+    },
+    {
+      "name": "OpenMicroDuck / JoyandAI",
+      "configuration": "HD1910专用控制器 · M5 · P=32 · 5V稳压 · 延迟20～35ms",
+      "difference": "供电、控制律和辨识参数均不同；P/D、限流和延迟需与其代码配套，不能只换JSON。",
+      "evidence": "72条摆锤数据与参数来源分类；D强度等仍有未验证假设，验证误差口径存在更正。",
+      "url": "https://github.com/JoyandAI/microduck_rl/tree/22916b9d82f250caa563ed9a56976eb33243fb91/vendor/bam/bam/params/hd1910"
+    },
+    {
+      "name": "OptiDuck / sim336",
+      "configuration": "HD1910训练、ONNX上板与开发记录",
+      "difference": "自建几何与运行栈，不是本机联合配置。",
+      "evidence": "作者记录上板后仍抖动/翻倒，未将其宣称为稳定步行。",
+      "url": "https://github.com/sim336/OptiDuck"
+    }
+  ],
+  "hd1910_manufacturer_source": "https://github.com/JoyandAI/OpenMicroDuck/blob/main/hardware_spec/servo/HD-1910-C001%E4%B8%B2%E5%9E%8B%E8%A7%84%E6%A0%BC%E4%B9%A6-20260907.pdf"
+}

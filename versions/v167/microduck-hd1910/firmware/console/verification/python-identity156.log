@@ -1,0 +1,6 @@
+test_current_identity_and_no_restart_or_audio_failure_hooks (test_release_identity.IdentityTests.test_current_identity_and_no_restart_or_audio_failure_hooks) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+OK

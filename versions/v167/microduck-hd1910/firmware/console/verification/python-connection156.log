@@ -1,0 +1,35 @@
+Command: python -B console/verification/test_connection_recovery.py -v
+Working directory: Microduck-Source-R17-v1.0.156
+test_close_joins_real_collector_after_releasing_callback_lock (__main__.ConnectionLifecycleTests.test_close_joins_real_collector_after_releasing_callback_lock) ... ok
+test_close_serializes_a_racing_late_connect_until_retired_collector_finishes (__main__.ConnectionLifecycleTests.test_close_serializes_a_racing_late_connect_until_retired_collector_finishes) ... ok
+test_final_close_is_idempotent_and_rejects_late_connect_without_new_transport (__main__.ConnectionLifecycleTests.test_final_close_is_idempotent_and_rejects_late_connect_without_new_transport) ... ok
+test_manual_disconnect_retires_worker_and_channel_then_allows_explicit_new_connection (__main__.ConnectionLifecycleTests.test_manual_disconnect_retires_worker_and_channel_then_allows_explicit_new_connection) ... ok
+test_reconnect_closes_old_channel_so_a_late_maintenance_request_cannot_respawn_ssh (__main__.ConnectionLifecycleTests.test_reconnect_closes_old_channel_so_a_late_maintenance_request_cannot_respawn_ssh) ... ok
+test_service_busy_rejects_connection_change_before_retiring_any_channel (__main__.ConnectionLifecycleTests.test_service_busy_rejects_connection_change_before_retiring_any_channel) ... ok
+test_actual_ssh_authentication_failure_clears_verified_login_and_retains_detail (__main__.ConnectionRecoveryTests.test_actual_ssh_authentication_failure_clears_verified_login_and_retains_detail) ... ok
+test_authenticated_forward_without_any_robot_service_still_allows_maintenance (__main__.ConnectionRecoveryTests.test_authenticated_forward_without_any_robot_service_still_allows_maintenance) ... ok
+test_old_connection_generation_cannot_restore_a_successful_ssh_status (__main__.ConnectionRecoveryTests.test_old_connection_generation_cannot_restore_a_successful_ssh_status) ... ok
+test_robotd_crash_with_live_tof_keeps_ssh_connected_and_motion_blocked (__main__.ConnectionRecoveryTests.test_robotd_crash_with_live_tof_keeps_ssh_connected_and_motion_blocked) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.035s
+
+OK
+Exit: 0
+
+Command: python -B -m unittest -v test_dashboard_connection
+Working directory: Microduck-Source-R17-v1.0.156/packaging
+test_address_password_and_camera_switch_together_without_action (test_dashboard_connection.DashboardConnectionTests.test_address_password_and_camera_switch_together_without_action) ... ok
+test_blank_password_reuses_shared_credential_and_forget_clears_both_uses (test_dashboard_connection.DashboardConnectionTests.test_blank_password_reuses_shared_credential_and_forget_clears_both_uses) ... ok
+test_disconnect_stops_collection_and_pauses_transports_without_home_or_relax (test_dashboard_connection.DashboardConnectionTests.test_disconnect_stops_collection_and_pauses_transports_without_home_or_relax) ... ok
+test_invalid_input_does_not_disconnect_current_target (test_dashboard_connection.DashboardConnectionTests.test_invalid_input_does_not_disconnect_current_target) ... ok
+test_startup_waits_for_page_connect_without_launching_process_or_collector (test_dashboard_connection.DashboardConnectionTests.test_startup_waits_for_page_connect_without_launching_process_or_collector) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.215s
+
+OK
+Exit: 0
+
+Scope: local real-thread shutdown/reconnect fixtures and existing dashboard/password semantics.
+No robot connection or hardware validation was performed.

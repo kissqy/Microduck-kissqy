@@ -1,0 +1,20 @@
+{
+  "release": "AI-T1 UI18",
+  "python_tests": 113,
+  "python_passed": true,
+  "python_seconds": 17.664,
+  "new_regressions": 5,
+  "frontend_passed": true,
+  "endpoint_owner": "Doubao native server",
+  "local_automatic_commit": false,
+  "local_silence_detector": false,
+  "local_fixed_interval_commit": false,
+  "wait_notice_only": true,
+  "connecting_notice_fix_preserved": true,
+  "manual_debug_unchanged": true,
+  "real_cloud_requested": false,
+  "zero_hardware_tested": false,
+  "firmware_byte_identical": true,
+  "firmware_reinstall_required": false,
+  "firmware_sha256": "6374b23464bcd8d2e221bd6ba3208dcab0eabcda932ed3f6cc20a5c5667fcbd2"
+}

@@ -1,0 +1,154 @@
+{
+  "schema_version": 2,
+  "model_api": 1,
+  "obs_len": 61,
+  "action_len": 14,
+  "robot": {
+    "model": "microduck",
+    "hw_rev": 1,
+    "servos": "hd1910",
+    "control_hz": 50
+  },
+  "name": "kick_right",
+  "kind": "episodic",
+  "description": "官方右脚踢球配方；运行窗口0.5秒。",
+  "entry_pose": "standing",
+  "command": {
+    "encoding": "constant",
+    "idle": [
+      0,
+      0,
+      0
+    ],
+    "twist": "zeros",
+    "head": "zeros",
+    "body": "zeros"
+  },
+  "action_scale": 1.0,
+  "action_filter": {
+    "enabled": false,
+    "head_alpha": 1.0,
+    "legs_alpha": 1.0,
+    "version": 1,
+    "control_hz": 50.0,
+    "stage": "joint_position_target_after_home_and_scale",
+    "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+    "head_joints": [
+      "neck_pitch",
+      "head_pitch",
+      "head_yaw",
+      "head_roll"
+    ],
+    "leg_joints": [
+      "left_hip_yaw",
+      "left_hip_roll",
+      "left_hip_pitch",
+      "left_knee",
+      "left_ankle",
+      "right_hip_yaw",
+      "right_hip_roll",
+      "right_hip_pitch",
+      "right_knee",
+      "right_ankle"
+    ],
+    "update": "once_per_policy_step",
+    "reset": "first_target_passthrough_per_environment",
+    "previous_action_observation": "raw_policy_output",
+    "onnx": "external_filter_not_baked_into_graph"
+  },
+  "required_policy_settings": {
+    "head_lowpass": 1.0,
+    "legs_lowpass": 1.0
+  },
+  "required_skill_settings": {
+    "name": "kick_right",
+    "duration": 0.5,
+    "command": [
+      0,
+      0,
+      0
+    ],
+    "unwind": [
+      0,
+      0,
+      0
+    ],
+    "unwind_s": 0.0,
+    "chain": false,
+    "params": {
+      "action_scale": 1.0
+    }
+  },
+  "runtime_compatibility": {
+    "native_runtime": {
+      "version": "0.15.1",
+      "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+      "route": "skill",
+      "support": "route_available",
+      "limitations": []
+    },
+    "r148_importer": {
+      "task_allowlisted": false,
+      "direct_import_verified": false,
+      "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+    },
+    "requires_passive_roller_hardware": false,
+    "official_finished_weights": false,
+    "automatic_deployment": false
+  },
+  "runtime_only_settings": {
+    "voltage_adapt": {
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "training_action_compensation": "not_present_in_training_action_term",
+      "note": "供电随机化/负载掉压属于BAM训练物理；不等于运行端动态动作倍率补偿。导出不强制开启或关闭。"
+    },
+    "gain_and_gain_ratios": {
+      "keys": [
+        "gain",
+        "standing_gain_ratio",
+        "ground_pick_gain_ratio",
+        "skill[].params.gain_ratio"
+      ],
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "note": "训练BAM的实际kp_fw见hardware_command和training_physics；不能凭空推导固件增益或翻译层寄存器映射。"
+    }
+  },
+  "normalization": "embedded_in_onnx_once",
+  "export_contract_revision": 2,
+  "training_snapshot_sha256": "d7f5ab1a25fb76bd9a172d871423095537c2b9266f2ad63c21e083911f3eac36",
+  "training": {
+    "task_id": "Mjlab-BallKick-Flat-MicroDuck",
+    "repo": "pollen-robotics/microduck_rl",
+    "commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "checkpoint": 9999,
+    "source_file": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/ball_kick_right/2026-10-08_22-19-07_console_20261008_221854_51f3bf/model_9999.pt"
+  },
+  "target_firmware": "0.15.1",
+  "teacher_only": false,
+  "source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "task": "Mjlab-BallKick-Flat-MicroDuck",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/ball_kick_right/2026-10-08_22-19-07_console_20261008_221854_51f3bf/model_9999.pt",
+  "model_origin": {
+    "engine": "official_0151",
+    "task": "Mjlab-BallKick-Flat-MicroDuck",
+    "baseline_pin": {
+      "revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+    },
+    "training_adapter_revision": "R1.5.21-verified-actions-no-ema",
+    "friction_randomization": "official"
+  },
+  "export_source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "onnx_sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+  "deployment_verified": false,
+  "slot": "kick_right",
+  "gear_backlash": {
+    "enabled": false,
+    "joint_count": 0,
+    "ranges_rad": {},
+    "encoder_position": "motor",
+    "motor_velocity": "motor-side for friction and back-EMF",
+    "policy_joint_velocity": "motor"
+  },
+  "duration_s": 0.5,
+  "chain": false
+}

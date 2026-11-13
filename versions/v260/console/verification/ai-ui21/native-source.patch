@@ -1,0 +1,485 @@
+--- /dev/null
++++ b/robotd/src/ai_expressions.rs
+@@ -0,0 +1,174 @@
++//! Named access to the existing finite expression player. No queue or bus access.
++use std::sync::atomic::{AtomicU64, Ordering};
++
++const PHASE: u64 = 7;
++const PENDING: u64 = 1;
++const PLAYING: u64 = 2;
++const COMPLETED: u64 = 3;
++const CANCELLED: u64 = 4;
++const SILENT: u64 = 1 << 8;
++const SERIAL: u64 = 1 << 16;
++
++#[derive(Default)]
++pub struct Slot(AtomicU64);
++
++impl Slot {
++    // A single CAS publishes the selection, generation and phase together. A cancel
++    // cannot leave a new selection attached to an earlier in-flight request.
++    pub fn request(&self, index: Option<usize>, silent: bool) -> Option<u64> {
++        if index.is_some_and(|i| i >= crate::emotion_cycle::CYCLE.len()) {
++            return None;
++        }
++        let mut old = self.0.load(Ordering::Acquire);
++        loop {
++            if matches!(old & PHASE, PENDING | PLAYING) {
++                return None;
++            }
++            let next = ((old & !0xffff).wrapping_add(SERIAL) & !0xffff)
++                | ((index.map_or(0, |i| i + 1) as u64) << 3)
++                | if silent { SILENT } else { 0 }
++                | PENDING;
++            match self.0.compare_exchange_weak(old, next, Ordering::AcqRel, Ordering::Acquire) {
++                Ok(_) => return Some(next >> 16),
++                Err(actual) => old = actual,
++            }
++        }
++    }
++
++    pub fn take(&self) -> bool {
++        let old = self.0.load(Ordering::Acquire);
++        old & PHASE == PENDING
++            && self.0.compare_exchange(old, (old & !PHASE) | PLAYING, Ordering::AcqRel, Ordering::Acquire).is_ok()
++    }
++
++    pub fn running(&self) -> bool {
++        self.0.load(Ordering::Acquire) & PHASE == PLAYING
++    }
++
++    pub fn selection(&self) -> (Option<usize>, bool) {
++        let value = self.0.load(Ordering::Acquire);
++        let index = ((value >> 3) & 31) as usize;
++        (index.checked_sub(1), value & SILENT != 0)
++    }
++
++    fn end(&self, phase: u64) {
++        let mut old = self.0.load(Ordering::Acquire);
++        while matches!(old & PHASE, PENDING | PLAYING) {
++            match self.0.compare_exchange_weak(old, (old & !PHASE) | phase, Ordering::AcqRel, Ordering::Acquire) {
++                Ok(_) => break,
++                Err(actual) => old = actual,
++            }
++        }
++    }
++
++    pub fn cancel(&self) { self.end(CANCELLED); }
++    pub fn finish(&self) { self.end(COMPLETED); }
++    pub fn cancel_request(&self, request_id: u64) -> bool {
++        let mut old = self.0.load(Ordering::Acquire);
++        while old >> 16 == request_id && matches!(old & PHASE, PENDING | PLAYING) {
++            match self.0.compare_exchange_weak(old, (old & !PHASE) | CANCELLED, Ordering::AcqRel, Ordering::Acquire) {
++                Ok(_) => return true,
++                Err(actual) => old = actual,
++            }
++        }
++        false
++    }
++
++    pub fn report(&self) -> serde_json::Value {
++        let value = self.0.load(Ordering::Acquire);
++        let index = (((value >> 3) & 31) as usize).checked_sub(1);
++        serde_json::json!({
++            "request_id": value >> 16,
++            "phase": match value & PHASE {
++                PENDING => "pending", PLAYING => "playing", COMPLETED => "completed",
++                CANCELLED => "cancelled", _ => "idle",
++            },
++            "name": index.and_then(|i| crate::emotion_cycle::CYCLE.get(i).map(|v| v.0)),
++            "silent": value & SILENT != 0,
++        })
++    }
++}
++
++pub fn named_skill(name: &str) -> Option<usize> {
++    let name = name.strip_prefix("emotion_silent_")?;
++    crate::emotion_cycle::CYCLE.iter().position(|v| v.0 == name)
++}
++
++pub fn catalog() -> serde_json::Value {
++    let descriptions = [
++        ("难过", "失落、伤心，低头表达难过"),
++        ("伤心欲绝", "非常难过；会坐下，结束后仍坐着"),
++        ("好奇", "发现新东西，歪头好奇地观察"),
++        ("思考", "疑惑、思索、犹豫"),
++        ("点头", "肯定、同意，正常点头"),
++        ("快速点头", "积极认同、连连点头"),
++        ("摇头", "否认、拒绝、不同意"),
++        ("生气", "不满、恼怒"),
++        ("兴奋", "发现喜欢的东西，惊喜、兴奋"),
++        ("大笑", "觉得有趣、开心大笑"),
++        ("调皮", "开玩笑、调皮地打趣"),
++        ("不服气", "倔强、傲娇、不服气"),
++        ("不耐烦", "着急、等待得不耐烦"),
++    ];
++    serde_json::Value::Array(crate::emotion_cycle::CYCLE.iter().zip(descriptions).map(|(&(name, kind), (label, meaning))| {
++        serde_json::json!({"name":name,"label":label,"meaning":meaning,
++            "skill":format!("emotion_silent_{name}"),"silent":true,
++            "seconds":crate::expressions::Expression::duration(kind).as_secs_f64(),
++            "requires":"manual_home_and_hold_walk_idle","stays_seated":name=="devastated"})
++    }).collect())
++}
++
++pub fn head_limits() -> serde_json::Value {
++    let model = kinematics::Model::alpha();
++    let axes: serde_json::Map<String, serde_json::Value> = ["neck_pitch", "head_pitch", "head_yaw", "head_roll"]
++        .into_iter().filter_map(|name| {
++            let (min, max) = model.joint_range(model.joint_index(name)?)?;
++            Some((name.to_owned(), serde_json::json!({"min":min,"max":max})))
++        }).collect();
++    serde_json::json!({"source":"kinematics::Model::alpha MJCF", "kind":"model_reference",
++        "unit":"rad", "axes":axes,
++        "note":"指令目标范围，不代表实机已到位；仍经过现有模型、标定与舵机保护。",
++        "directions":{"head_pitch":"负数抬头，正数低头", "head_yaw":"正数向鸭子自身左侧，负数向右侧"}})
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn single_slot_retains_completion_and_never_queues() {
++        let slot = Slot::default();
++        let id = slot.request(Some(6), true).unwrap();
++        assert!(slot.request(Some(8), true).is_none());
++        assert!(slot.take());
++        assert_eq!(slot.selection(), (Some(6), true));
++        assert!(slot.running() && !slot.take());
++        slot.finish();
++        assert_eq!(slot.report()["request_id"], id);
++        assert_eq!(slot.report()["phase"], "completed");
++        slot.cancel(); // Later HOME must not turn a completed request into a cancelled one.
++        assert_eq!(slot.report()["phase"], "completed");
++        assert_eq!(slot.request(Some(8), true), Some(id + 1));
++        assert!(!slot.cancel_request(id));
++        assert!(slot.cancel_request(id+1));
++        assert!(!slot.take());
++        assert_eq!(slot.report()["phase"], "cancelled");
++        assert!(slot.request(Some(13), true).is_none());
++    }
++
++    #[test]
++    fn catalog_and_ranges_come_from_the_native_player_and_model() {
++        let catalog = catalog();
++        let rows = catalog.as_array().unwrap();
++        assert_eq!(rows.len(), 13);
++        for (i, row) in rows.iter().enumerate() {
++            assert_eq!(named_skill(row["skill"].as_str().unwrap()), Some(i));
++            assert!(row["seconds"].as_f64().unwrap() > 0.0);
++        }
++        assert!(named_skill("emotion_silent_play_dead").is_none());
++        let ranges = head_limits();
++        let yaw = &ranges["axes"]["head_yaw"];
++        assert!(yaw["max"].as_f64().unwrap() > 2.9);
++        assert!(ranges["axes"]["head_roll"]["max"].as_f64().unwrap() < 0.5);
++    }
++}
+--- a/robotd/src/emotion_cycle.rs
++++ b/robotd/src/emotion_cycle.rs
+@@ -31,6 +31,11 @@
+         let selected = self.peek();
+         self.playing = Some(Expression::start(selected.1, now));
+         self.next = (self.next + 1) % CYCLE.len();
++        selected
++    }
++    pub fn start_named(&mut self, index: usize, now: Instant) -> (&'static str, Kind) {
++        let selected = CYCLE[index];
++        self.playing = Some(Expression::start(selected.1, now));
+         selected
+     }
+     pub fn stop(&mut self) {
+@@ -70,6 +75,15 @@
+         assert_eq!(p.peek().0, "sad");
+     }
+     #[test]
++    fn named_selection_does_not_advance_r3_cycle() {
++        let mut p=Player::default();let now=Instant::now();
++        assert_eq!(p.start_named(8,now).0,"excited");p.stop();
++        assert_eq!(p.peek().0,"sad");
++        p.start(now);p.stop();p.start_named(6,now);p.stop();
++        assert_eq!(p.peek().0,"devastated");
++    }
++
++    #[test]
+     fn refusals_and_cancel_do_not_consume_the_next_expression() {
+         let mut p = Player::default();
+         let now = Instant::now();
+--- a/robotd/src/intents.rs
++++ b/robotd/src/intents.rs
+@@ -202,7 +202,7 @@
+     /// Pending one-shot sound tags, a bitmask taken once per tick like the skills.
+     sounds: std::sync::atomic::AtomicU32,
+     /// 0 idle, 1 requested, 2 running. A busy press is refused, never queued.
+-    emotion: AtomicU8,
++    emotion: crate::ai_expressions::Slot,
+     play_dead: AtomicU8,
+     /// The wheee hold, as a stamped level: `padd` re-notifies while the trigger is down,
+     /// and the loop reads value + age so a dead client's ride decays instead of looping.
+@@ -308,7 +308,7 @@
+             mode_switch: AtomicU8::new(MODE_NONE),
+             policy_change: ArcSwapOption::empty(),
+             sounds: std::sync::atomic::AtomicU32::new(0),
+-            emotion: AtomicU8::new(0),
++            emotion: crate::ai_expressions::Slot::default(),
+             play_dead: AtomicU8::new(0),
+             reboot_motors: Mutex::new(None),
+             wheee: ArcSwap::from_pointee(Stamped {
+@@ -331,14 +331,17 @@
+     pub fn play_dead_running(&self) -> bool { self.play_dead.load(Ordering::Acquire) == 2 }
+     pub fn cancel_play_dead(&self) { self.play_dead.store(0, Ordering::Release); }
+ 
+-    pub fn request_emotion(&self) -> bool {
+-        self.emotion.compare_exchange(0,1,Ordering::AcqRel,Ordering::Acquire).is_ok()
+-    }
+-    pub fn take_emotion(&self) -> bool {
+-        self.emotion.compare_exchange(1,2,Ordering::AcqRel,Ordering::Acquire).is_ok()
+-    }
+-    pub fn emotion_running(&self) -> bool { self.emotion.load(Ordering::Acquire)==2 }
+-    pub fn cancel_emotion(&self) { self.emotion.store(0,Ordering::Release); }
++    pub fn request_emotion(&self) -> bool { self.emotion.request(None, false).is_some() }
++    pub fn request_named_emotion(&self, index: usize) -> Option<u64> {
++        self.emotion.request(Some(index), true)
++    }
++    pub fn take_emotion(&self) -> bool { self.emotion.take() }
++    pub fn emotion_running(&self) -> bool { self.emotion.running() }
++    pub fn emotion_selection(&self) -> (Option<usize>, bool) { self.emotion.selection() }
++    pub fn emotion_report(&self) -> serde_json::Value { self.emotion.report() }
++    pub fn cancel_emotion_request(&self, request_id: u64) -> bool { self.emotion.cancel_request(request_id) }
++    pub fn finish_emotion(&self) { self.emotion.finish(); }
++    pub fn cancel_emotion(&self) { self.emotion.cancel(); }
+ 
+     #[cfg(test)]
+     pub fn test_emotion_slot() {
+--- a/robotd/src/main.rs
++++ b/robotd/src/main.rs
+@@ -37,6 +37,7 @@
+ mod sound;
+ mod expressions;
+ mod emotion_cycle;
++mod ai_expressions;
+ mod telemetry_geometry;
+ mod telemetry_system;
+ mod theremin;
+@@ -733,6 +734,7 @@
+     moving: AtomicBool,
+     /// Published only when R3 can start a complete official expression.
+     emotion_ready: AtomicBool,
++    emotion_idle_ready: AtomicBool,
+     /// Allow a second tap to lower even though an active posture is busy.
+     flamingo_active: AtomicBool,
+     /// The HOME ramp completed and torque is on. Actual upright HOME readiness
+@@ -824,6 +826,7 @@
+             fallen: AtomicBool::new(false),
+             moving: AtomicBool::new(false),
+             emotion_ready: AtomicBool::new(false),
++            emotion_idle_ready: AtomicBool::new(false),
+             flamingo_active: AtomicBool::new(false),
+             homed: AtomicBool::new(false),
+             home_recovery: AtomicBool::new(false),
+@@ -3303,36 +3306,49 @@
+ 
+         // Official expression intents pass through the existing model and filters.
+         // Playback never writes joints, acquires torque or enables the policy.
+-        let emotion_safe = emotion_cycle::allowed(
++        let emotion_idle_safe = emotion_cycle::allowed(
+             policy_cfg.mode == Mode::Walk,
+             snapshot.enabled && bringup == Bringup::Ready && was_driving
+                 && sensors.is_some() && fresh.is_some() && safety.imu_ready() && !powered_off
+                 && shutdown_sit.is_none() && !in_limp_fall && !home_recovery && play_dead.is_none(),
+             safety.fallen(),
+-            controller.as_ref().is_none_or(|c| c.busy()),
+-            snapshot.twist_age <= Duration::from_millis(300),
++            controller.as_ref().is_none_or(|c| c.busy())
++                && !(intents.emotion_running() && emotions.playing.is_some_and(|e|
++                    e.kind() == expressions::Kind::Devastated)),
++            true,
+             snapshot.command.twist.iter().all(|v| v.abs() < 1e-6),
+         );
+-        if emotions.playing.is_some_and(|e| {
+-            !emotion_safe || !intents.emotion_running()
+-                || tick_start.duration_since(e.started()) >= expressions::Expression::duration(e.kind())
+-        }) {
+-            emotions.stop(); intents.cancel_emotion();
+-            if let Some(voice) = voice.as_mut() { voice.cancel_expression(); }
++        // A finite named request needs no client heartbeat. The sensor/IMU, motion,
++        // mode and torque guards are identical; only an old *zero* twist may persist.
++        let emotion_safe = emotion_idle_safe && snapshot.twist_age <= Duration::from_millis(300);
++        let named = intents.emotion_selection().0.is_some();
++        let playback_safe = if named { emotion_idle_safe } else { emotion_safe };
++        if let Some(e) = emotions.playing {
++            let completed = playback_safe && intents.emotion_running()
++                && tick_start.duration_since(e.started()) >= expressions::Expression::duration(e.kind());
++            if !playback_safe || !intents.emotion_running() || completed {
++                emotions.stop();
++                if completed { intents.finish_emotion(); } else { intents.cancel_emotion(); }
++                if let Some(voice) = voice.as_mut() { voice.cancel_expression(); }
++            }
+         }
+         if intents.take_emotion() {
+-            let (_, kind) = emotions.peek();
++            let (index, silent) = intents.emotion_selection();
++            let (_, kind) = index.map_or_else(|| emotions.peek(), |i| emotion_cycle::CYCLE[i]);
+             let needs_sit = kind == expressions::Kind::Devastated;
+-            let sit_ready = emotion_safe && controller.as_mut().is_some_and(|c| {
++            let sit_ready = (if index.is_some() { emotion_idle_safe } else { emotion_safe }) && controller.as_mut().is_some_and(|c| {
+                 !needs_sit || c.is_sitting() || c.sit_toggle().is_ok()
+             });
+             if sit_ready {
+-                let (name, kind) = emotions.start(tick_start);
+-                if let Some(voice) = voice.as_mut()
++                let (name, kind) = match index {
++                    Some(i) => emotions.start_named(i, tick_start),
++                    None => emotions.start(tick_start),
++                };
++                if !silent && let Some(voice) = voice.as_mut()
+                     && let Some(tag) = expressions::Expression::sound_at_start(kind) {
+                     voice.start_expression(tag);
+                 }
+-                tracing::warn!(name, "R3 官方表情开始");
++                tracing::warn!(name, silent, "官方表情开始");
+             } else {
+                 intents.cancel_emotion();
+                 tracing::warn!("R3 表情请求取消：模式、反馈或运动状态已改变；序号保留");
+@@ -3368,6 +3384,7 @@
+             snapshot.pose = intents::PoseIntent::default(); snapshot.mouth = 0.0;
+         }
+         state.emotion_ready.store(emotion_safe && emotions.playing.is_none() && play_dead.is_none(), Ordering::Release);
++        state.emotion_idle_ready.store(emotion_idle_safe && emotions.playing.is_none() && play_dead.is_none(), Ordering::Release);
+         state.flamingo_active.store(controller.as_ref().is_some_and(|c| c.flamingo_active()), Ordering::Release);
+ 
+         // Smooth the command. The limp-fall sequence holds the twist at zero outright, so
+@@ -5500,6 +5517,39 @@
+         // feedback is unavailable; the loop still arbitrates against whatever move is mid-flight, exactly as
+         // the prototype's buttons did.
+         proto::Call::RobotDo(p) => {
++            if p.skill == "emotion_status" {
++                return proto::Response::ok(Some(id), &intents.emotion_report());
++            }
++            if let Some(request_id) = p.skill.strip_prefix("emotion_cancel_").and_then(|s| s.parse::<u64>().ok()) {
++                return proto::Response::ok(Some(id), &serde_json::json!({
++                    "accepted":true,"cancelled":intents.cancel_emotion_request(request_id),
++                    "request_id":request_id,
++                }));
++            }
++            if let Some(index) = ai_expressions::named_skill(&p.skill) {
++                let reason = bus_startup_refusal(state).or_else(|| {
++                    if !intents.enabled() || !state.homed.load(Ordering::Relaxed) {
++                        Some("请由主人按 Start 先 HOME、再进入保持；AI 不自动上力".into())
++                    } else if state.mode.load(Ordering::Relaxed) != mode_code(Mode::Walk) {
++                        Some("表情需要行走／保持模式".into())
++                    } else if state.home_recovery.load(Ordering::Relaxed)
++                        || !state.emotion_idle_ready.load(Ordering::Acquire) {
++                        Some("表情播放中、其他动作未结束、非静止或反馈未就绪；本次拒绝，不排队".into())
++                    } else { None }
++                });
++                if let Some(reason) = reason {
++                    return proto::Response::ok(Some(id), &proto::IntentResult::refused(reason));
++                }
++                return match intents.request_named_emotion(index) {
++                    Some(request_id) => proto::Response::ok(Some(id), &serde_json::json!({
++                        "accepted":true,"request_id":request_id,
++                        "name":emotion_cycle::CYCLE[index].0,
++                        "seconds":expressions::Expression::duration(emotion_cycle::CYCLE[index].1).as_secs_f64(),
++                        "status":"pending","silent":true,
++                    })),
++                    None => proto::Response::ok(Some(id), &proto::IntentResult::refused("表情已请求或播放中；不排队")),
++                };
++            }
+             // Not refused for being down. A skill on a fallen robot is the human's call, and
+             // refusing it is how a robot ends up unable to do the thing that would have
+             // righted it.
+@@ -5735,7 +5785,12 @@
+ 
+         proto::Call::PadBind(p) => proto::Response::ok(Some(id), &bind_pad_request(p, state)),
+ 
+-        proto::Call::RobotSkills => proto::Response::ok(Some(id), &skills_report(state)),
++        proto::Call::RobotSkills => {
++            let mut report = serde_json::to_value(skills_report(state)).expect("skills serialize");
++            report["expressions"] = ai_expressions::catalog();
++            report["head_limits"] = ai_expressions::head_limits();
++            proto::Response::ok(Some(id), &report)
++        },
+ 
+         proto::Call::RobotSetSkill(p) => {
+             proto::Response::ok(Some(id), &set_skill_request(p, state, intents))
+@@ -7291,6 +7346,40 @@
+     }
+ 
+     #[test]
++    fn named_expression_requires_manual_hold_and_reports_exact_generation() {
++        let state=state(); let intents=Intents::new();
++        let ask=|name: &str| dispatch(&state,&intents,proto::Id::Number(1),
++            &proto::Call::RobotDo(proto::DoParams { skill:name.into() }));
++        assert!(!ask("emotion_silent_excited").result_as::<proto::IntentResult>().unwrap().accepted);
++        assert!(!intents.enabled());
++        intents.set_enabled(true); state.homed.store(true,Ordering::Relaxed);
++        state.emotion_idle_ready.store(true,Ordering::Release);
++        state.mode.store(mode_code(Mode::Roller),Ordering::Relaxed);
++        assert!(!ask("emotion_silent_excited").result_as::<proto::IntentResult>().unwrap().accepted);
++        state.mode.store(mode_code(Mode::Walk),Ordering::Relaxed);
++        let result: serde_json::Value=ask("emotion_silent_excited").result_as().unwrap();
++        assert_eq!(result["accepted"],true);
++        let id=result["request_id"].as_u64().unwrap();
++        assert_eq!(intents.emotion_selection(),(Some(8),true));
++        assert!(!ask("emotion_silent_no").result_as::<proto::IntentResult>().unwrap().accepted);
++        assert!(intents.take_emotion()); intents.finish_emotion();
++        intents.set_enabled(false); // Status stays readable after manual power-off.
++        let status: serde_json::Value=ask("emotion_status").result_as().unwrap();
++        assert_eq!(status["phase"],"completed");assert_eq!(status["request_id"],id);
++        intents.set_enabled(true);
++        let next: serde_json::Value=ask("emotion_silent_no").result_as().unwrap();
++        let cancelled:serde_json::Value=ask(&format!("emotion_cancel_{id}")).result_as().unwrap();
++        assert_eq!(cancelled["cancelled"],false);
++        assert_eq!(intents.emotion_report()["request_id"],next["request_id"]);
++        let cancelled:serde_json::Value=ask(&format!("emotion_cancel_{}",id+1)).result_as().unwrap();
++        assert_eq!(cancelled["cancelled"],true);
++        assert!(!intents.take_emotion());
++        let catalog:serde_json::Value=dispatch(&state,&intents,proto::Id::Number(1),&proto::Call::RobotSkills).result_as().unwrap();
++        assert_eq!(catalog["expressions"].as_array().unwrap().len(),13);
++        assert!(catalog["head_limits"]["axes"]["head_yaw"]["max"].as_f64().unwrap()>2.9);
++    }
++
++    #[test]
+     fn home_dispatch_still_sets_power_request_while_expression_is_pending_or_running() {
+         for running in [false, true] {
+             let state = state();
+--- a/robotd/src/feetech_commissioning.rs
++++ b/robotd/src/feetech_commissioning.rs
+@@ -19,7 +19,7 @@
+ use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
+ use tokio::sync::oneshot;
+ 
+-pub const BUILD: &str = "1fa8438-feetech-ft6-control.57";
++pub const BUILD: &str = "1fa8438-feetech-ft6-control.72";
+ const MAX_PENDING: usize = 16;
+ const POSITION_TOLERANCE: u16 = 8;
+ const SETTLE_TIMEOUT: Duration = Duration::from_secs(4);
+--- a/duck-ipc-proto/src/lib.rs
++++ b/duck-ipc-proto/src/lib.rs
+@@ -433,7 +433,12 @@
+ /// Loaded model metadata includes its validated, fixed runtime execution settings;
+ /// existing readback reports the applied scale and filters. Install the
+ /// matching R17 control.29/console bundle; the raw record envelope is unchanged.
+-pub const API_VERSION: u32 = 40;
++/// # v41 — R17 named finite expressions and model reference head ranges
++/// `robot.skills` adds the 13 native expressions and per-axis MJCF reference limits.
++/// `robot.do emotion_silent_<name>` runs that expression without a WAV, while
++/// `emotion_status` reports its generation and phase; `emotion_cancel_<id>` cancels it.
++/// Install the matching control.72 robotd. Existing clients remain usable.
++pub const API_VERSION: u32 = 41;
+ 
+ /// The observation width every policy this robot family runs is built against.
+ ///
+--- a/docs/design/robotd-design.md
++++ b/docs/design/robotd-design.md
+@@ -1,3 +1,9 @@
++## R17 control.72 — named expressions and head target metadata
++
++`robot.skills` publishes the thirteen existing `emotion_cycle::CYCLE` expressions separately from learned body skills, with Chinese meanings, native durations, and the head target ranges read from `kinematics::Model::alpha`. Those ranges are model references, not measured mechanical end stops. The console intersects them with its saved head amplitude and keeps all native calibration and actuator protection.
++
++`robot.do emotion_silent_<name>` selects that exact timeline in the same control-loop player without advancing R3's cycle and without opening another audio player. One atomic slot holds selection, generation and pending/playing/completed/cancelled phase; busy requests are refused, never queued. `emotion_status` reads it, and `emotion_cancel_<request_id>` cancels only that generation. A finite named expression does not need repeated client zero-twist writes; it still requires zero motion, fresh sensors and IMU, upright ready driving, Walk mode and an idle controller. Manual HOME, disabling, policy/mode changes, body skills, nonzero motion and sensor loss cancel playback through the existing loop. Nothing enables torque or performs HOME for AI. No new process, bus read, bus writer, or 50 Hz client loop is added. The matching native robotd update is required for the new names; API version 41 describes the extension, and version skew remains informational.
++
+ ## 当前 R17 v1.0.157-Fix6 / control.36
+ 
+ 当前实现以 [R157](../../console/docs/releases/R157.md) 为准。旧版 R17 章节保留作历史设计参考：其中 UART 启动前后钩子、配置完成 ACK、UART 代际状态文件、额外冷重开和网页虚拟 Xbox 路径已退役，不再作为当前启动或网页控制流程。

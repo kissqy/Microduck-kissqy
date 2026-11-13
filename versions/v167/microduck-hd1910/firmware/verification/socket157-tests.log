@@ -1,0 +1,10 @@
+test_single_socket_orders_press_release_and_revokes_on_disconnect (test_control_socket.SocketTests.test_single_socket_orders_press_release_and_revokes_on_disconnect) ... ok
+test_slow_http_management_does_not_queue_websocket_input (test_control_socket.SocketTests.test_slow_http_management_does_not_queue_websocket_input) ... 127.0.0.1 - - [09/Oct/2026 09:33:47] "POST /api/service/connection HTTP/1.1" 200 -
+ok
+test_unmasked_and_oversized_frames_rejected_before_json_dispatch (test_control_socket.SocketTests.test_unmasked_and_oversized_frames_rejected_before_json_dispatch) ... ok
+test_wrong_credentials_and_foreign_origin_never_dispatch (test_control_socket.SocketTests.test_wrong_credentials_and_foreign_origin_never_dispatch) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 2.592s
+
+OK

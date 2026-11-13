@@ -1,0 +1,39 @@
+{
+  "console_version": "1.0.160",
+  "build": "1fa8438-feetech-ft6-control.37",
+  "zip_bytes": 38556995,
+  "firmware_bytes": 32870460,
+  "console_manifest_verified": true,
+  "firmware_all_hashes_verified": true,
+  "production_importer_accepted": true,
+  "hardware_tested": false,
+  "baseline": "Microduck-Console-R17-V159.zip",
+  "baseline_sha256": "2658193fe4be4d82ceedca60623e5217334cf19baf301939bb3cff88dcce3856",
+  "v159_firmware_files_preserved": 123,
+  "v159_console_files_preserved": 158,
+  "ssh_password_fix_and_github_entrances_preserved": true,
+  "calibration_and_model_contract_preserved": true,
+  "native_binaries_unchanged_from_initial_control37_compile": true,
+  "changed_firmware_files": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "install-files.json",
+    "package-preflight.py",
+    "padd",
+    "release_identity.py",
+    "robotd"
+  ],
+  "added_firmware_files": [
+    "roller/crouch/deployment-contract.json",
+    "roller/crouch/manifest.json",
+    "roller/crouch/policy.onnx",
+    "roller/spin/deployment-contract.json",
+    "roller/spin/manifest.json",
+    "roller/spin/policy.onnx",
+    "roller/swizzle/deployment-contract.json",
+    "roller/swizzle/manifest.json",
+    "roller/swizzle/policy.onnx"
+  ]
+}

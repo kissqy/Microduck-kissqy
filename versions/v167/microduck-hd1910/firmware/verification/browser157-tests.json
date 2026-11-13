@@ -1,0 +1,44 @@
+[
+  {
+    "test": "console/verification/test_calibration_reference.mjs",
+    "exit_code": 0,
+    "log": "verification/test_calibration_reference-157.log",
+    "sha256": "aeadea6c4e0deafb321f5a88fe11aaf3442528e710645f4b5ef1ca78d02b0e97"
+  },
+  {
+    "test": "console/verification/test_connection_ui155.mjs",
+    "exit_code": 0,
+    "log": "verification/test_connection_ui155-157.log",
+    "sha256": "31fb82a79d5b448d8486231d41062e36597e9aae6ad3df4a6db10f1150d477e4"
+  },
+  {
+    "test": "console/verification/test_controls154.mjs",
+    "exit_code": 0,
+    "log": "verification/test_controls154-157.log",
+    "sha256": "0bbbdfeb10e2b3a9a8eb0afcaacd4954ba7393c85b1aaa25fb3e1a9e813c88e8"
+  },
+  {
+    "test": "console/verification/test_gamepad_repair_ui.mjs",
+    "exit_code": 0,
+    "log": "verification/test_gamepad_repair_ui-157.log",
+    "sha256": "72d7539bf553c19352361a88a00d88bb6aaa05c85ebafeb27f99de35d5f1e1a0"
+  },
+  {
+    "test": "console/verification/test_joint_direction155.mjs",
+    "exit_code": 0,
+    "log": "verification/test_joint_direction155-157.log",
+    "sha256": "2e4a3f0a1e78453c58e0c965ba6b8692f5fa5833e68a9afa299097c48adc920c"
+  },
+  {
+    "test": "console/verification/test_pose_state.mjs",
+    "exit_code": 0,
+    "log": "verification/test_pose_state-157.log",
+    "sha256": "a9d3d13be56ba6850d99607b037440bf1426b4709ba1b8b1ec2207f469a371b4"
+  },
+  {
+    "test": "console/verification/test_startup_ui.mjs",
+    "exit_code": 0,
+    "log": "verification/test_startup_ui-157.log",
+    "sha256": "1051736a2c3c606f87fc8ca8b5ffe966e682f54386457b6c78195bcff54adc78"
+  }
+]

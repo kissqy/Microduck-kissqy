@@ -1,0 +1,50 @@
+   Compiling syn v3.0.3
+   Compiling num-traits v0.2.19
+   Compiling hashbrown v0.17.1
+   Compiling serde_core v1.0.229
+   Compiling equivalent v1.0.2
+   Compiling indexmap v2.14.0
+   Compiling toml_parser v1.1.2+spec-1.1.0
+   Compiling syn v2.0.119
+   Compiling toml_edit v0.25.13+spec-1.1.0
+   Compiling thiserror-impl v2.0.20
+   Compiling regex-automata v0.4.16
+   Compiling thiserror v2.0.20
+   Compiling proc-macro-crate v3.5.0
+   Compiling clap_derive v4.6.4
+   Compiling num_enum_derive v0.7.6
+   Compiling regex v1.13.1
+   Compiling unescaper v0.1.10
+   Compiling num-complex v0.4.6
+   Compiling num-integer v0.1.46
+   Compiling serde_derive v1.0.229
+   Compiling bitflags v2.13.1
+   Compiling serde_json v1.0.151
+   Compiling serialport v4.9.0
+   Compiling tracing-core v0.1.36
+   Compiling env_logger v0.10.2
+   Compiling serde v1.0.229
+   Compiling ndarray v0.17.2
+   Compiling num_enum v0.7.6
+   Compiling clap v4.6.4
+   Compiling semver v1.0.28
+   Compiling tracing-attributes v0.1.31
+   Compiling smallvec v1.15.2
+   Compiling tracing v0.1.44
+   Compiling duck-ipc-proto v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/duck-ipc-proto)
+   Compiling ort v2.0.0-rc.11
+   Compiling rustypot v1.8.0
+   Compiling duck-control v0.15.1 (/workspace/scratch/5a402859beee/recovered/source/Microduck-Source-R17-v1.0.157-Fix2/duck-control)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 22.98s
+     Running unittests src/lib.rs (build157-tools/host-target/debug/deps/duck_control-e13aeb2666eb42ef)
+
+running 6 tests
+test imu::tests::gravity_stays_close_to_unit_through_a_transient ... ok
+test imu::tests::all_zero_quaternion_bytes_hold_the_last_good_value ... ok
+test imu::tests::half_precision_decodes_known_values ... ok
+test imu::tests::gyro_counts_are_signed ... ok
+test imu::tests::not_ready_until_the_chip_has_produced_output ... ok
+test imu::tests::gravity_is_a_unit_vector_in_steady_state ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 129 filtered out; finished in 0.00s
+

@@ -1,0 +1,13 @@
+{
+  "baseline": "v154 native main/intents production",
+  "active_source_unchanged": true,
+  "baseline_files": {
+    "robotd/src/main.rs": "52f3ce9435203eed3319d5803309fd7d33da77eebcd1c104360db8802590bbec",
+    "robotd/src/intents.rs": "5a047b1025457d524f7a4d2c98646acaa440ad1e0c41a4fa983fb30f53f1b78c"
+  },
+  "test_origin": "active v155 new public-RPC and control-loop regression; independent beak excluded from stance comparison",
+  "baseline_test_adaptations": [
+    "omit two private request_home_hold() no-arm assertions because v154 has no such event API"
+  ],
+  "trial": "/workspace/scratch/5a402859beee/home155-red-source"
+}

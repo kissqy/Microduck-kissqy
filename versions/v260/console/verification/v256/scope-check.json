@@ -1,0 +1,35 @@
+{
+  "baseline": "Microduck-Console-Studio-V255.zip",
+  "baseline_sha256": "af7461c69e3c85128797413e483e612f89add9315f73dd5e6b4aeabc0bf440be",
+  "firmware_changed": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "release_identity.py",
+    "robotd",
+    "runtime.py"
+  ],
+  "firmware_added": [],
+  "firmware_removed": [],
+  "only_functional_change": "runtime.py::commissioning_shutdown",
+  "static_ui_byte_identical": true,
+  "all_hotspot_payloads_byte_identical": true,
+  "all_models_and_other_native_bytes_identical": true,
+  "native_identity": {
+    "old": "1fa8438-feetech-ft6-control.97",
+    "new": "1fa8438-feetech-ft6-control.98",
+    "before_sha256": "2e5bf375d2116eef6630eadc2bc11b2fa5b9b2faba2208d32e104dcd19e080e3",
+    "after_sha256": "6961052b6075246168b19ebb181e46d152a0a93da845d38988e2d13adca95942",
+    "changed_byte_count": 1,
+    "changed_byte_offsets": [
+      621676
+    ],
+    "same_length": true,
+    "all_bytes_outside_identity_unchanged": true,
+    "native_instructions_changed": false,
+    "not_recompiled": true,
+    "hardware_tested": false
+  },
+  "hardware_tested": false
+}

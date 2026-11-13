@@ -1,0 +1,11 @@
+test_api_shutdown_needs_no_sudo_or_imu_and_success_only_confirms_request (verification.test_shutdown_ui45.NativeShutdownTests.test_api_shutdown_needs_no_sudo_or_imu_and_success_only_confirms_request) ... ok
+test_native_failure_or_ambiguous_receipt_does_not_pause_or_retry (verification.test_shutdown_ui45.NativeShutdownTests.test_native_failure_or_ambiguous_receipt_does_not_pause_or_retry) ... ok
+test_reboot_remains_one_privileged_os_command_and_shutdown_helper_is_closed (verification.test_shutdown_ui45.NativeShutdownTests.test_reboot_remains_one_privileged_os_command_and_shutdown_helper_is_closed) ... ok
+test_rejected_malformed_and_disconnected_ipc_never_use_os_fallback (verification.test_shutdown_ui45.NativeShutdownTests.test_rejected_malformed_and_disconnected_ipc_never_use_os_fallback) ... ok
+test_shutdown_crosses_the_real_relay_with_physical_select_method (verification.test_shutdown_ui45.NativeShutdownTests.test_shutdown_crosses_the_real_relay_with_physical_select_method) ... ok
+test_shutdown_does_not_grant_the_ai_lease_permission_to_power_off (verification.test_shutdown_ui45.NativeShutdownTests.test_shutdown_does_not_grant_the_ai_lease_permission_to_power_off) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.008s
+
+OK

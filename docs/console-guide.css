@@ -14,3 +14,6 @@ body{--green:#c1f577;--muted:#81918f;--line:#283135;--panel:#151c1f;font-size:15
 @media screen and (min-width:1600px){.actual-calibration{height:720px}.actual-pad{height:650px}}
 @media screen and (max-width:1000px){.layout{grid-template-columns:170px minmax(0,1fr);gap:20px}}
 @media screen and (max-width:700px){.layout{display:block}.bar,.wrap{padding-inline:16px}}
+
+/* Keep the button overview compact; open the image for its full-size text. */
+.gamepad-buttons-guide a{display:inline-block;max-width:100%;vertical-align:top}.gamepad-buttons-guide img{display:block;width:auto;max-width:100%;height:auto;max-height:400px;border:1px solid var(--line);border-radius:8px}

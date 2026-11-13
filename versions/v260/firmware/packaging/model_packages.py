@@ -1,0 +1,318 @@
+"""Validate shipped models and describe their built-in deployment metadata."""
+from __future__ import annotations
+import hashlib, json, math, os, re, shlex, subprocess
+from pathlib import Path
+import tomllib
+from model_commands import PARAM_FILES, RUNTIME_FILE, resolve as resolve_commands, encode as encode_commands
+
+BASE=Path('/opt/robot/feetech-ft5-r5')
+CONFIG=Path('/etc/robot/feetech-ft5/robotd.toml')
+CALIBRATION=CONFIG.with_name('hd1910-calibration.toml')
+NAMES=('left_hip_yaw','left_hip_roll','left_hip_pitch','left_knee','left_ankle','neck_pitch','head_pitch','head_yaw','head_roll','right_hip_yaw','right_hip_roll','right_hip_pitch','right_knee','right_ankle')
+from management_profile import PROFILE, SLOTS, LABELS, ACTION_INFO
+BAM='ef2d51adfb1cc0831b9b02ca19aa9176fceecdf725148d084378d7d9a64afceb'
+LABELS['play_dead']='装死 / PlayDead'
+PLAYDEAD_TASK='Mjlab-PlayDead-Flat-MicroDuck'
+ROUGH_TASK='Mjlab-Velocity-Rough-Backlash-MicroDuck'
+ROUGH_STAND_TASK='Mjlab-StandUp-Rough-Backlash-MicroDuck'
+ROUGH_JOINT_TASK='Mjlab-VelStand-Rough-Backlash-MicroDuck'
+BACKLASH_PICK_TASK='Mjlab-GroundPick-Flat-Backlash-MicroDuck'
+LEFT_KICK_TASK='Mjlab-BallKickLeft-Flat-Backlash-MicroDuck'
+BACKLASH_TASKS=(ROUGH_TASK,ROUGH_STAND_TASK,ROUGH_JOINT_TASK,BACKLASH_PICK_TASK,LEFT_KICK_TASK)
+EXECUTION_FILE='deployment-execution.json'
+EXPORT_FILES=('policy.onnx','deployment-contract.json','manifest.json','training-request.json')
+OPTIONAL_EXPORT_FILES=('training-config.json','export-audit.json','deployment-profile.toml','使用说明.md')
+SOURCE_FILES=(*EXPORT_FILES[1:],*PARAM_FILES,*OPTIONAL_EXPORT_FILES)
+def runtime_environment():
+    env=os.environ.copy()
+    result=subprocess.run(['systemctl','show','robotd.service','-p','Environment','--value'],capture_output=True,text=True,timeout=10)
+    if result.returncode:raise ValueError('无法读取 robotd 的 ONNX Runtime 环境')
+    for item in shlex.split(result.stdout):
+        key,sep,value=item.partition('=')
+        if sep and key in ('ORT_DYLIB_PATH','LD_LIBRARY_PATH'):env[key]=value
+    return env
+def slot_for(task):
+    if task==PLAYDEAD_TASK:return 'play_dead'
+    if task in ('Mjlab-VelStand-Flat-MicroDuck',ROUGH_JOINT_TASK):return 'walk'
+    for row in ACTION_INFO.values():
+        for prefix in row['task_prefixes']:
+            if prefix=='VelStand':continue  # Only the exact combined-task contract is implemented.
+            if isinstance(task,str) and task.startswith('Mjlab-'+prefix+'-') and 'MicroDuck' in task:return row['slot']
+    raise ValueError('当前服务尚未实现该训练任务的动作适配：'+str(task))
+
+def finite(v):
+    if isinstance(v,bool) or not isinstance(v,(int,float)):return False
+    try:return math.isfinite(v)
+    except OverflowError:return False
+def execution_profile(data,info):
+    """Validate uniform model-bound tuning without rewriting its training facts."""
+    def unique(pairs):
+        result={}
+        for key,value in pairs:
+            if key in result:raise ValueError('执行配置字段重复：'+key)
+            result[key]=value
+        return result
+    try:
+        value=json.loads(data,object_pairs_hook=unique)
+    except (ValueError,UnicodeError) as exc:
+        raise ValueError(f'{EXECUTION_FILE}: {exc}') from exc
+    def keys(row,expected):
+        if not isinstance(row,dict) or set(row)!=set(expected):
+            raise ValueError(f'{EXECUTION_FILE}: 执行配置字段缺失或尚未支持')
+    keys(value,('schema','model_sha256','mode','action_scale','head_lowpass','legs_lowpass'))
+    contract=info['contract']
+    action=contract.get('actions',{}).get('joint_pos',{})
+    filters=contract.get('action_filter',{})
+    ema=contract.get('action_ema_old_weight',0.0)
+    if (info['task']!=ROUGH_JOINT_TASK or info['slot']!='walk'
+            or not finite(action.get('scale')) or action['scale']!=1.0
+            or filters.get('enabled') is not False
+            or any(not finite(filters.get(k)) or filters[k]!=1.0 for k in ('head_alpha','legs_alpha'))
+            or not finite(ema) or ema!=0.0):
+        raise ValueError(f'{EXECUTION_FILE}: 仅适用于无缩放和滤波的粗糙地面联合 Walk 模型')
+    if (value['schema']!='microduck-runtime-execution/v1'
+            or value['mode']!='uniform'
+            or value['model_sha256']!=info['sha256']
+            or not isinstance(value['model_sha256'],str)
+            or not re.fullmatch('[a-f0-9]{64}',value['model_sha256'])):
+        raise ValueError(f'{EXECUTION_FILE}: 执行配置类型或模型 SHA256 不匹配')
+    # The same bounded settings apply in every posture; no phase switch is encoded.
+    if not finite(value['action_scale']) or not .1<=value['action_scale']<=2.0:
+        raise ValueError(f'{EXECUTION_FILE}: 统一动作系数须在 0.1 到 2.0 之间')
+    for name in ('head_lowpass','legs_lowpass'):
+        if not finite(value[name]) or not 0<value[name]<=1.0:
+            raise ValueError(f'{EXECUTION_FILE}: {name} 须大于 0 且不超过 1')
+    return value
+def fields(data):
+    def integer(i):
+        value=shift=0
+        while i<len(data):
+            byte=data[i];i+=1;value|=(byte&127)<<shift
+            if byte<128:return value,i
+            shift+=7
+            if shift>70:break
+        raise ValueError('ONNX protobuf 无效')
+    i=0
+    while i<len(data):
+        key,i=integer(i);kind=key&7
+        if kind==0:value,i=integer(i)
+        elif kind==2:
+            size,i=integer(i);value=data[i:i+size];i+=size
+            if len(value)!=size:raise ValueError('ONNX 数据截断')
+        elif kind in (1,5):
+            size=8 if kind==1 else 4;value=data[i:i+size];i+=size
+        else:raise ValueError('ONNX protobuf wire type 无效')
+        yield key>>3,value
+def one(data,key):
+    values=[v for k,v in fields(data) if k==key]
+    if len(values)!=1:raise ValueError('ONNX 字段缺失或重复')
+    return values[0]
+def graph_interface(data):
+    graph=one(data,7)
+    def outlet(v):
+        tensor=one(one(v,2),1)
+        return one(v,1).decode(),one(tensor,1),[one(dim,1) for k,dim in fields(one(tensor,2)) if k==1]
+    inputs=[outlet(v) for k,v in fields(graph) if k==11]
+    outputs=[outlet(v) for k,v in fields(graph) if k==12]
+    if inputs!=[('obs',1,[1,61])] or outputs!=[('actions',1,[1,14])]:raise ValueError('要求 float32 obs[1,61] → actions[1,14] 的完整部署模型')
+    allowed={'Sub','Div','Gemm','Elu','Tanh','Relu','Add','Mul','Clip','Identity','Constant','MatMul','LeakyRelu','Sigmoid','Softplus'}
+    for k,v in fields(graph):
+        if k==5 and any(a in (13,14) for a,_ in fields(v)):raise ValueError('不支持引用外部权重文件的 ONNX')
+        if k==1:
+            node=dict(fields(v));op=node.get(4,b'').decode();domain=node.get(7,b'').decode()
+            if domain not in ('','ai.onnx') or op not in allowed:raise ValueError('当前模型适配不支持 ONNX 运算：'+domain+':'+op)
+    return {one(v,1).decode():one(v,2).decode() for k,v in fields(data) if k==14}
+def validate_export(files):
+    if any(n not in files for n in EXPORT_FILES):raise ValueError('内置模型数据不完整：缺少模型、部署合同、manifest 或训练记录')
+    parsed={}
+    for name in ('deployment-contract.json','manifest.json'):
+        try:parsed[name]=json.loads(files[name])
+        except (ValueError,UnicodeError) as exc:raise ValueError(f'{name}: {exc}') from exc
+    c=parsed['deployment-contract.json'];m=parsed['manifest.json']
+    playdead=c.get('task')==PLAYDEAD_TASK
+    v8_adapter=(playdead and c.get('task_adapter')=='hd1910-v8'
+                and c.get('export_contract_revision')==3
+                and c.get('target_firmware',{}).get('version')=='0.15.1' and c.get('control_hz')==50)
+    official_adapter=v8_adapter or c.get('task_adapter')=='hd1910-official0151' and c.get('task') in ('Mjlab-VelStand-Flat-MicroDuck','Mjlab-GroundPick-Flat-MicroDuck','Mjlab-Roulade-Flat-MicroDuck','Mjlab-StandUp-Flat-MicroDuck','Mjlab-BallKick-Flat-MicroDuck',*BACKLASH_TASKS) and c.get('target_firmware',{}).get('version')=='0.15.1' and c.get('control_hz')==50
+    backlash=official_adapter and c.get('task') in BACKLASH_TASKS
+    # A current Roulade export is unfiltered without training backlash. Keep
+    # those independent and do not let a missing/null filter downgrade rev2.
+    current_target_contract=playdead or backlash or (official_adapter and c.get('task') in ('Mjlab-Roulade-Flat-MicroDuck','Mjlab-BallKick-Flat-MicroDuck') and ('action_filter' in c or 'export_contract_revision' in c))
+    supported_adapter=official_adapter or c.get('task_adapter')=='hd1910-v1' or (c.get('task_adapter')=='hd1910-v2' and c.get('task') in ('Mjlab-StandUp-Flat-MicroDuck-V2-HD1910','Mjlab-Velocity-Flat-MicroDuck-V2-HD1910'))
+    if c.get('schema')!='microduck-deployment-contract/v1' or not supported_adapter or (c.get('input_dim'),c.get('output_dim'))!=(61,14):raise ValueError('当前服务支持 HD1910 V1、已适配 V2，V8 装死，以及官方 0.15.1 动作合同，61 维观测、14 关节输出')
+    if c.get('obs_normalizer')!='baked_in_onnx':raise ValueError('模型须内含训练观测归一化')
+    slot=slot_for(c.get('task'))
+    digest=hashlib.sha256(files['policy.onnx']).hexdigest()
+    if digest!=m.get('onnx_sha256') or m.get('task')!=c.get('task'):raise ValueError('模型校验值或任务名称与导出记录不一致')
+    metadata=graph_interface(files['policy.onnx'])
+    if metadata!=c.get('onnx_metadata') or metadata.get('joint_names')!=','.join(NAMES):raise ValueError('ONNX 元数据、部署合同或关节顺序不一致')
+    a=c.get('actions',{}).get('joint_pos',{});scale=c.get('inference_action_scale',{})
+    if a.get('use_default_offset') is not True or a.get('offset')!=0 or a.get('clip') is not None or not finite(a.get('scale')) or not 0<a['scale']<=2:raise ValueError('当前服务不支持此动作偏置、缩放或裁剪方式')
+    if not official_adapter and (scale.get('value')!=1.0 or scale.get('baked_into_onnx') is not False):raise ValueError('当前部署固定使用推理缩放 1.0，请按当前训练台重新导出')
+    ema=c.get('action_ema_old_weight',0.0 if current_target_contract else None)
+    if not finite(ema) or not 0<=ema<1:raise ValueError('动作 EMA 参数无效')
+    settings=None
+    if current_target_contract:
+        f=c.get('action_filter',{});required=c.get('required_playdead_controller_settings',{}) if playdead else c.get('required_policy_settings',{})
+        scale_key={'ground_pick':'ground_pick_action_scale','roulade':'roulade_action_scale'}.get(slot,'action_scale')
+        expected={'version':1,'control_hz':50.0,'stage':'joint_position_target_after_home_and_scale','reset':'first_target_passthrough_per_environment','update':'once_per_policy_step','previous_action_observation':'raw_policy_output','onnx':'external_filter_not_baked_into_graph'}
+        scale_value=c.get('required_skill_settings',{}).get('params',{}).get('action_scale') if slot in ('kick_left','kick_right') else required.get(scale_key)
+        if (not isinstance(f,dict) or not isinstance(required,dict)
+                or not isinstance(f.get('enabled'),bool) or type(f.get('version')) is not int
+                or not finite(f.get('control_hz')) or any(f.get(k)!=v for k,v in expected.items())
+                or not finite(scale_value) or scale_value!=a['scale'] or ema!=0):raise ValueError('新版目标滤波与动作缩放合同不一致')
+        for name,alpha in (('head_lowpass','head_alpha'),('legs_lowpass','legs_alpha')):
+            value=f.get(alpha)
+            trained=a.get(alpha)
+            if (not finite(value) or not 0<value<=1 or not finite(required.get(name)) or required[name]!=value
+                    or (f['enabled'] and (not finite(trained) or trained!=value))
+                    or (not f['enabled'] and (value!=1.0 or (trained is not None and (not finite(trained) or trained!=1.0))))):raise ValueError('目标滤波系数与训练记录不一致')
+        settings={k:required[k] for k in ('head_lowpass','legs_lowpass')}
+        if slot not in ('kick_left','kick_right'):settings[scale_key]=required[scale_key]
+    terms=c.get('observations',{}).get('terms',{})
+    if set(terms)!=set(('base_ang_vel','projected_gravity','joint_pos','joint_vel','actions','command','head_command','body_command')):raise ValueError('当前服务不支持该观测布局')
+    suffix='_backlash' if backlash else ''
+    if any(terms[key].get('func',{}).get('callable','').rsplit('.',1)[-1]!=key+'_rel'+suffix for key in ('joint_pos','joint_vel')):raise ValueError('当前服务支持相对 HOME 的编码器关节位置与速度观测')
+    for t in terms.values():
+        if t.get('clip') is not None or t.get('scale') not in (None,1.0) or t.get('history_length') not in (None,0):raise ValueError('当前服务不支持此观测缩放、裁剪或历史长度')
+    body=terms['body_command'].get('func',{}).get('callable','')
+    if not body.endswith(('zero_command_padding','generated_commands')):raise ValueError('身体姿态观测函数尚未适配')
+    head=terms['head_command'].get('func',{}).get('callable','')
+    if not head.endswith(('zero_command_padding','generated_commands')):raise ValueError('头部姿态观测函数尚未适配')
+    for key,dim in (('head_command',4),('body_command',6)):
+        if terms[key].get('func',{}).get('callable','').endswith('zero_command_padding') and terms[key].get('params',{}).get('dim')!=dim:raise ValueError('指令零填充维度不匹配：'+key)
+    if slot=='ground_pick':
+        command=c.get('commands',{}).get('twist',{});period=command.get('period',command.get('period_s'))
+        if not command.get('class_type',{}).get('callable','').endswith('GroundPickPhaseCommand') or not finite(period) or period<=0:raise ValueError('捡取模型须使用阶段指令及有效动作周期')
+        if current_target_contract:
+            declared=c['required_policy_settings'].get('ground_pick_period')
+            if not finite(declared) or declared!=period:raise ValueError('捡取训练阶段周期与运行参数不一致')
+            settings['ground_pick_period']=period
+    actuators=c.get('model',{}).get('actuators',[])
+    if len(actuators)!=1 or actuators[0].get('parameter_file',{}).get('sha256')!=BAM:raise ValueError('模型使用了尚未适配的 BAM 参数')
+    p=actuators[0].get('kp_fw')
+    if not finite(p) or p!=int(p) or not 1<=p<=32:raise ValueError('BAM 固件 P 参数无效')
+    joints=c.get('model',{}).get('joints',[]);home={}
+    for name in NAMES:
+        found=[j for j in joints if j.get('name')==name]
+        if len(found)!=1 or not finite(found[0].get('home_rad')):raise ValueError('缺少精确训练 HOME：'+name)
+        home[name]=found[0]['home_rad']
+    metadata_home=[float(v) for v in metadata.get('default_joint_pos','').split(',')]
+    if len(metadata_home)!=14 or any(abs(home[n]-v)>0.000501 for n,v in zip(NAMES,metadata_home)):raise ValueError('训练 HOME 与 ONNX 元数据不一致')
+    info={'id':digest[:32],'sha256':digest,'task':c['task'],'slot':slot,'label':LABELS[slot],'home':home,'firmware_p':int(p),'contract':c,'source_revision':m.get('source_revision'),'deployment_verified':False}
+    if settings is not None:info['policy_settings']=settings
+    if EXECUTION_FILE in files:info['execution_profile']=execution_profile(files[EXECUTION_FILE],info)
+    if slot=='roulade':
+        # This is an official episodic skill, not a fall-recovery trigger.
+        # Carry its local manifest settings through the official [[policy.skill]] API.
+        command=m.get('command',{})
+        duration=m.get('duration_s');action_scale=m.get('action_scale')
+        if m.get('kind')!='episodic' or command.get('encoding')!='constant' or command.get('idle')!=[0,0,0] or command.get('twist')!='zeros':raise ValueError('前滚翻须使用官方一次动作窗口和零速度指令')
+        if not finite(duration) or not .02<=duration<=10 or type(m.get('chain')) is not bool or not finite(action_scale) or not .1<=action_scale<=2:raise ValueError('前滚翻动作窗口、连续执行或动作系数无效')
+        info['skill']={'name':'roulade','duration':duration,'chain':m['chain'],'command':[0.0,0.0,0.0],'unwind':[0.0,0.0,0.0],'unwind_s':0.0,'params':{'action_scale':action_scale,'gain_ratio':1.0}}
+    if slot in ('kick_left','kick_right'):
+        expected={'name':slot,'duration':.5,'command':[0,0,0],'unwind':[0,0,0],
+                  'unwind_s':0.0,'chain':False,'params':{'action_scale':1.0}}
+        if (m.get('kind')!='episodic' or m.get('name')!=slot or m.get('slot')!=slot
+                or c.get('slot')!=slot or c.get('role')!=slot
+                or m.get('duration_s')!=.5 or m.get('chain') is not False or m.get('action_scale')!=1.0
+                or m.get('required_skill_settings')!=expected or c.get('required_skill_settings')!=expected
+                or m.get('command',{}).get('encoding')!='constant' or m.get('command',{}).get('idle')!=[0,0,0]
+                or m.get('command',{}).get('twist')!='zeros' or a.get('scale')!=1.0
+                or c.get('action_filter',{}).get('enabled') is not False
+                or any(c.get('action_filter',{}).get(k)!=1.0 for k in ('head_alpha','legs_alpha'))):
+            raise ValueError('内置踢球须匹配左右脚、0.5 秒单次动作、零指令与缩放 1 的原始合同')
+        info['skill']=expected
+    if playdead:
+        required=c.get('required_playdead_controller_settings',{});command=c.get('command_contract',{})
+        if (not v8_adapter or c.get('role')!='playdead' or c.get('slot') is not None
+                or actuators[0].get('parameter_file',{}).get('data',{}).get('actuator')!='sts3215'
+                or actuators[0].get('parameter_file',{}).get('data',{}).get('model')!='m6'
+                or actuators[0].get('runtime_properties',{}).get('implementation')!='STS3215Actuator'
+                or c.get('robot_mode')!='feet' or m.get('kind')!='episodic'
+                or m.get('duration_s')!=5.0 or m.get('chain') is not False
+                or required.get('duration_s')!=5.0 or required.get('chain') is not False
+                or required.get('entry_pose')!='stable_standing' or required.get('exit_pose')!='supine'
+                or required.get('after')!='tested_recovery_policy'
+                or required.get('command')!=[0,0,0] or required.get('head')!=[0]*4 or required.get('body')!=[0]*6
+                or required.get('action_scale')!=1 or required.get('head_lowpass')!=1 or required.get('legs_lowpass')!=1
+                or c['action_filter']['enabled'] is not False or a['scale']!=1
+                or command.get('encoding')!='constant' or command.get('idle')!=[0,0,0]
+                or command.get('head')!='zeros' or command.get('body')!='zeros' or command.get('duration_s')!=5
+                or m.get('command')!=command or m.get('required_playdead_controller_settings')!=required):
+            raise ValueError('装死须匹配稳定站立起步、5 秒零指令直通与 Walk 恢复交接合同')
+        info['skill']={'name':'play_dead','duration':5.0,'chain':False,'command':[0.0]*3,
+            'unwind':[0.0]*3,'unwind_s':0.0,'params':{'action_scale':1.0,'gain_ratio':1.0}}
+        info['policy_settings']=None
+    return info
+def verify_directory(directory):
+    directory=Path(directory)
+    files={n:(directory/n).read_bytes() for n in ('policy.onnx',*SOURCE_FILES,EXECUTION_FILE) if (directory/n).is_file()}
+    try:
+        info=validate_export(files)
+        runtime=resolve_commands(files,info)
+    except (ValueError,KeyError) as exc:
+        raise ValueError(f'{directory}: {exc}') from exc
+    if runtime is not None:
+        try:saved=json.loads((directory/RUNTIME_FILE).read_bytes())
+        except (FileNotFoundError,ValueError,UnicodeError):saved=None
+        # A valid matching cache is reused without writing it again.
+        if saved!=runtime:atomic(directory/RUNTIME_FILE,encode_commands(runtime))
+    else:(directory/RUNTIME_FILE).unlink(missing_ok=True)
+    return info
+
+def atomic(path,data):
+    from configure import atomic_write
+    atomic_write(Path(path),data)
+def describe_directory(directory):
+    """Read installed metadata; startup owns model validation and derivation."""
+    directory=Path(directory)
+    contract=json.loads((directory/'deployment-contract.json').read_text())
+    manifest=json.loads((directory/'manifest.json').read_text())
+    if not (directory/'policy.onnx').is_file():raise ValueError('模型文件不存在')
+    slot=slot_for(contract.get('task'))
+    info={'slot':slot,'label':LABELS[slot],'task':contract['task'],'sha256':manifest['onnx_sha256']}
+    if (directory/EXECUTION_FILE).exists():
+        info['execution_profile']=execution_profile((directory/EXECUTION_FILE).read_bytes(),{**info,'contract':contract})
+    return info
+def catalog(base=BASE,config_path=CONFIG):
+    cfg=tomllib.loads(Path(config_path).read_text()) if Path(config_path).exists() else {};rows=[]
+    for built_in in PROFILE['builtin_models']:
+        ident=built_in['id']
+        if not isinstance(ident,str) or not re.fullmatch('[a-f0-9]{32}',ident):raise ValueError('内置模型标识无效')
+        directory=Path(base)/'models'/ident
+        try:
+            info=describe_directory(directory);meta=json.loads((directory/'model-info.json').read_text()) if (directory/'model-info.json').exists() else {}
+            active=str(directory/'policy.onnx')==cfg.get('policy',{}).get(info['slot'])
+            if info['slot']=='play_dead':
+                active=any(s.get('name')==info['slot'] and s.get('path')==str(directory/'policy.onnx') for s in cfg.get('policy',{}).get('skill',[]))
+            rows.append({'id':directory.name,'name':built_in.get('name',meta.get('name',info['label'])),'slot':info['slot'],'label':info['label'],'task':info['task'],'path':str(directory/'policy.onnx'),'active':active,'available':True,'official':False,'builtin':True,'managed':False,'deletable':False,'hidden':built_in.get('hidden',False),'sha256':info['sha256'],**({'execution_profile':info['execution_profile']} if 'execution_profile' in info else {})})
+        except (OSError,ValueError,KeyError) as e:rows.append({'id':directory.name,'name':built_in.get('name',directory.name),'slot':built_in.get('slot'),'hidden':built_in.get('hidden',False),'available':False,'active':False,'official':False,'builtin':True,'managed':False,'deletable':False,'error':str(e)})
+    # Named skill bindings are read for display; deployment comes from the bundle.
+    skills=cfg.get('policy',{}).get('skill',[]);pad=cfg.get('pad',{})
+    for row in rows:
+        path=str(Path(base)/'models'/row['id']/'policy.onnx')
+        row['skill_bindings']=[{'name':skill['name'],'buttons':[button for button,value in pad.items() if value==skill['name']],'action_scale':skill.get('params',{}).get('action_scale',1.0)} for skill in skills if skill.get('path')==path]
+    current=next((row['id'] for row in rows if row.get('active') and row.get('slot')=='walk'),None)
+    slots=[{'slot':slot,'label':LABELS[slot],'model':next((row for row in rows if row.get('active') and row.get('slot')==slot),None)} for slot in SLOTS]
+    rollers=[]
+    for name,label in (('swizzle','滑轮对称滑 10000 轮'),('crouch','滑轮蹲下 8000 轮'),('spin','滑轮原地转 8000 轮'),('standup','滑轮倒地起身 11000 轮')):
+        directory=Path(base)/'roller'/name
+        row={'id':name,'name':label,'path':str(directory/'policy.onnx'),'available':False}
+        try:
+            manifest=json.loads((directory/'manifest.json').read_text())
+            contract=json.loads((directory/'deployment-contract.json').read_text())
+            if not (directory/'policy.onnx').is_file() or contract.get('robot_mode')!='roller':
+                raise ValueError('滑轮模型文件或模式不匹配')
+            required=contract['required_policy_settings']
+            scale=contract['runtime_action_scale'] if name=='standup' else required['ground_pick_action_scale' if name in ('crouch','spin') else 'action_scale']
+            row.update(available=True,sha256=manifest['onnx_sha256'],
+                action_scale=scale,head_lowpass=required['head_lowpass'],legs_lowpass=required['legs_lowpass'],
+                trigger_bound=True,
+                deployment_status='physical_gamepad_l3_guarded_test' if name=='standup' else 'physical_gamepad',
+                trigger='L3' if name=='standup' else None,
+                test_duration_s=5.0 if name=='standup' else None,
+                checkpoint=manifest.get('training',{}).get('checkpoint'))
+        except (OSError,ValueError,KeyError) as exc:row['error']=str(exc)
+        rollers.append(row)
+    return {'models':rows,'roller_models':rollers,'slots':slots,'configured_model':current,'fixed_profile':True,'model_source':'built_in_deployment_contract'}

@@ -1,0 +1,8 @@
+{
+  "name": "低头捡物 5000",
+  "source": "低头捡物_5000.zip",
+  "id": "2b69fa681ed06f7ded9e2a2d12ba5c67",
+  "sha256": "2b69fa681ed06f7ded9e2a2d12ba5c6776ec87308ac4a299e4b8196199c17f24",
+  "slot": "ground_pick",
+  "task": "Mjlab-GroundPick-Flat-MicroDuck"
+}

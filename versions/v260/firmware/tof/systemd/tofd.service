@@ -1,0 +1,57 @@
+# The head ToF sensor daemon.
+#
+# Perception, deliberately not inside `robotd`: bringing this sensor up uploads
+# ~90 KB of firmware over I²C taking seconds, the bus is shared with the audio
+# codec, and most ducks have no sensor fitted at all — none of which belongs in
+# the process that owns the motors (architecture.md §1).
+#
+# Nothing depends on this unit. `robotd` does not read depth, and `robotctl
+# monitor` says "no depth stream" and carries on when the socket is absent, so a
+# board with no ToF simply runs one more quiet daemon.
+[Unit]
+Description=Robot head ToF sensor daemon
+Documentation=file:///opt/robot/daemon/current/docs/architecture.md
+After=local-fs.target
+# The i2c3 bus arrives with the device-tree overlay, so there is nothing to wait
+# for at the unit level — the daemon retries the bus with a backoff instead,
+# which also covers a sensor plugged in later.
+
+[Service]
+Type=exec
+ExecStart=/opt/robot/daemon/current/bin/tofd
+User=tofd
+Group=tofd
+# i2c  — /dev/i2c-* is root:i2c mode 0660, which is the whole of this daemon's
+#        privileged access
+# robot — so the depth socket can be handed to the group that may watch the
+#        robot, exactly as padd does with its pad tap
+SupplementaryGroups=i2c robot
+Restart=always
+RestartSec=5s
+
+# Same hardening as `padd`, minus the parts that would take the bus away.
+# `PrivateDevices=` is deliberately NOT set: it would replace /dev with a minimal
+# one that has no i2c node, and the failure would read as "no sensor fitted".
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+CapabilityBoundingSet=
+
+Environment=RUST_LOG=info
+StandardOutput=journal
+StandardError=journal
+RuntimeDirectory=tofd
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,142 @@
+{
+  "release": "V218_control.V73_AI-T1_UI38",
+  "python_ai_tests": {
+    "tests": 244,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 244,
+    "environment_unavailable": [],
+    "other_errors": [],
+    "success": true,
+    "available_checks_passed": true
+  },
+  "frontend": [
+    {
+      "passed": true,
+      "scope": "UI21 grouped catalogs, per-axis range display, per-question images and TOF, late preview isolation, bounded scrolling"
+    },
+    {
+      "passed": true,
+      "scope": "UI24 live speech checkbox, no optimistic state, pending on/off, Zero ACK and ASR sync, old HTTP/status/event rejection, error retains confirmed state, no second mute or task switch"
+    },
+    {
+      "passed": true,
+      "scope": "UI29 action-and-scene result distinguishes completed motion from a failed camera without claiming the motion did not execute"
+    },
+    {
+      "passed": true,
+      "scope": "UI34 Walk scene receipt distinguishes stopped input, vision failure and cancelled photo without claiming measured movement completion"
+    },
+    {
+      "passed": true,
+      "scope": "UI25 shared compact credential grid, bounded question input, no obsolete 1200px gap, unique control IDs, hidden empty visual output, model-wait busy state and model completion text"
+    },
+    {
+      "passed": true,
+      "scope": "rehearsal composer, preset draft, explicit task send and clear, waiting for provider ACK; no action request from text"
+    },
+    {
+      "passed": true,
+      "scope": "live microphone bars; retained credentials and editing; Chinese skills; multi-turn chat; vision busy/error/preview/source labels; measured brightness, exposure warning and next-capture reset"
+    },
+    {
+      "passed": true,
+      "scope": "real ControlPanel and PadControls; identical Start frames; one click one press/release; HOME then hold labels from readback; disabled during takeover/maintenance/offline; keyboard repeat; suspend reset; no automatic commands"
+    },
+    {
+      "passed": true,
+      "scope": "exact native PCM WAV, 24k mono16, per-window RAM, no autoplay/persistence, explicit replay/stop/end, sequence gaps, memory eviction, URL revocation and pagehide cleanup"
+    }
+  ],
+  "native_package": {
+    "new_package_sha256": "bd601f9cabee3ba5ed9334083f6e39742f07e15800561cd0a67722245e1b28e7",
+    "bytes": 37611219,
+    "changed_firmware_files": [
+      "BUILD.json",
+      "ELF-CHECK.json",
+      "README.zh-CN.md",
+      "SHA256SUMS",
+      "mediad"
+    ],
+    "mediad_elf": {
+      "bytes": 9147144,
+      "machine": "AArch64",
+      "load_segments": 4,
+      "sha256": "827b5359d2dff064ce95a50046c29eb92712b086fecc15ca6160beec9348dd7b",
+      "needed": [
+        "libgstwebrtc-1.0.so.0",
+        "libgstbase-1.0.so.0",
+        "libgstreamer-1.0.so.0",
+        "libgobject-2.0.so.0",
+        "libglib-2.0.so.0",
+        "libgstvideo-1.0.so.0",
+        "libgstapp-1.0.so.0",
+        "libgio-2.0.so.0",
+        "libm.so.6",
+        "libc.so.6",
+        "ld-linux-aarch64.so.1",
+        "libpthread.so.0",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.28",
+        "2.29",
+        "2.30"
+      ],
+      "revision": "1fa8438-feetech-ft6-control.73+camera105"
+    },
+    "old_mediad_sha256": "0417c8c2dc5a63dd2e1c2a65d652f31609c232abab95d50e4acbd1faab0f742b",
+    "robotd_and_padd_byte_identical": true,
+    "models_and_calibrations_byte_identical": true,
+    "native_ae_algorithm_tests_passed": 16,
+    "hardware_tested": false,
+    "source_archive": "Microduck-Source-R17-V186-control57-compiled.tar.gz",
+    "source_archive_sha256": "425c04cd829386ba934d9137a33081f11335a3404e5f22337eed47e993d1a1cb",
+    "source_patch_sha256": "fd5398325e1ebc72b44da3f9e3a9cddbeb37f2469b1181535f31969e3d0f2df9",
+    "build_toolchain": "Rust 1.99.0; cargo-zigbuild 0.23.4; Zig 0.14.1; aarch64-unknown-linux-gnu.2.31",
+    "target_luma_before": 90.0,
+    "target_luma_after": 105.0,
+    "quality_unchanged": "720p15"
+  },
+  "changed_inherited_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_action_gate.py",
+    "ai_persona.py",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "ai_vision.py",
+    "ai_zero.py",
+    "release_identity.py",
+    "static/index.html",
+    "updates/Microduck-Robotd-FT6-R17.tar.gz",
+    "verification/test_ai_camera_ui14.py",
+    "verification/test_ai_scene_chain_ui29.py",
+    "verification/test_ai_v200.py",
+    "verification/test_ai_walk_scene_ui34.py"
+  ],
+  "walk_capture_order": [
+    "walk_0.3mps_3s",
+    "stop_intent_receipt",
+    "robot.enable_off_HOME",
+    "3_distinct_measured_HOME_samples_within_existing_5deg_tolerance",
+    "fresh_camera_frame_while_HOME",
+    "restore_previously_running_policy",
+    "vision"
+  ],
+  "home_and_enable_not_offered_as_general_model_tools": true,
+  "post_walk_fixed_delay_seconds": 0.0,
+  "camera_sensor_ae_target_luma": 105.0,
+  "new_photo_postprocessing_added": false,
+  "requires_installing_bundled_camera_update": true,
+  "robotd_padd_models_unchanged_from_ui37": true,
+  "primary_service_python_unchanged": true,
+  "mouth_and_audio_unchanged": true,
+  "hardware_tested": false,
+  "windows_tested": false,
+  "live_cloud_tested": false
+}

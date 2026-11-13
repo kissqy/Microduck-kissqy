@@ -1,0 +1,55 @@
+{
+  "release": "AI-T1 UI14",
+  "generated_at_utc": "2026-10-24T03:59:29.953421+00:00",
+  "passed": true,
+  "python": {
+    "passed": true,
+    "command": "python3 -m unittest discover -s verification -p 'test_ai*.py'",
+    "tests": 84,
+    "failures": 0,
+    "errors": 0,
+    "elapsed_seconds": 15.279,
+    "new_camera_tests": 10,
+    "raw_protocol_test_transport": "real loopback TCP; AF_UNIX connection address adapted because test host denies AF_UNIX",
+    "actual_zero_unix_socket_tested": false
+  },
+  "frontend": {
+    "passed": true,
+    "node": {
+      "passed": true,
+      "scope": "live microphone bars; retained credentials and editing; Chinese skills; multi-turn chat; vision busy/error/preview/source labels; measured brightness, exposure warning and next-capture reset"
+    },
+    "html_unique_ids": 213,
+    "persona_default_matches_backend": true,
+    "default_reply_characters": 20,
+    "chat_height_bounded_in_css": true,
+    "new_browser_render_verified": false
+  },
+  "existing_device_observations": {
+    "version": "UI13 user existing console",
+    "chat_message_count": 25,
+    "chat_client_height_px": 2059,
+    "chat_scroll_height_px": 2059,
+    "dark_existing_photo_observed": true,
+    "warm_preview_and_native_frame_visually_normal": true,
+    "warm_capture_fps": 30.0,
+    "preview_disconnected_after_check": true,
+    "personal_images_saved": false
+  },
+  "ui14_hardware_capture_verified": false,
+  "real_cloud_requests_made": false,
+  "official_source_commit": "1fa84386f07884e27866411bc1ba166977bced95",
+  "exposure_source_blob": "0a0b7f4597941d1d2670176f11483a5f5d6f2255",
+  "target_luma": 90,
+  "relative_deadband": 0.12,
+  "meter_interval_s": 0.5,
+  "cold_minimum_s": 2,
+  "warm_minimum_s": 0.5,
+  "settle_limit_s": 12,
+  "software_brightness_adjustment": false,
+  "new_sensor_control_writes": false,
+  "one_final_png_upstream": true,
+  "extra_dependencies": [],
+  "firmware_byte_identical": true,
+  "firmware_sha256": "6374b23464bcd8d2e221bd6ba3208dcab0eabcda932ed3f6cc20a5c5667fcbd2"
+}

@@ -1,0 +1,27 @@
+{
+  "baseline": "Microduck-UI43",
+  "firmware_sha256": "26b8fd0f925412f675865a44c2d414a2a23e2129ff0ec9f739691f3f344e91bd",
+  "firmware_byte_identical": true,
+  "firmware_files_unchanged": 203,
+  "native_code_changed": false,
+  "robot_ipc_added": false,
+  "helper": "hotspot_control.py",
+  "r5_script_sha256": "3c4aa22015230559c7ed19e79753bdb7dcdc6f9fc1f93fdf58d9e4b12da5e519",
+  "r5_script_modified": false,
+  "original_functions_reused": [
+    "legacy_wifi_files",
+    "wifi_uuids_to_remove",
+    "write_hotspot_profile",
+    "remove_wifi_profiles"
+  ],
+  "seal_called": false,
+  "automatic_dependency_install": false,
+  "existing_portal_exact_bytes_checked": true,
+  "detached_queue_delay_seconds": 5,
+  "queue_is_not_ap_success": true,
+  "network_surgery_performed_during_tests": false,
+  "real_bash_worker_test": "only temporary filesystem and mock commands",
+  "model_calibration_mouth_recording_camera_and_fixed_speed_code_unchanged": true,
+  "all_native_binaries_unchanged": true,
+  "hardware_tested": false
+}

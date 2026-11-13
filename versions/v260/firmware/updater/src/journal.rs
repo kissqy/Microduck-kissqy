@@ -1,0 +1,970 @@
+//! Update log, single-flight lock, and boot counter — the engine's own persistent
+//! state.
+//!
+//! All of it lives in `state_dir`, which must be **outside** every component's
+//! `install_dir`: a symlink swap or rollback must not be able to destroy the
+//! record of what happened (`docs/design/updater-design.md` §5.7). [`crate::config::Config::validate`]
+//! enforces that.
+
+use std::collections::BTreeMap;
+use std::io::Write;
+use std::path::{Path, PathBuf};
+
+use crate::Error;
+use crate::fsutil::write_atomic;
+use crate::proto::{CheckAttempt, LogEntry, Outcome};
+
+/// Unix seconds now. The engine stamps log entries; nothing else in the engine
+/// depends on the clock except preflight's sanity check.
+pub fn now_unix() -> i64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_secs() as i64)
+        .unwrap_or(0)
+}
+
+/// Append-only record of update attempts.
+///
+/// The first thing support asks for when a client says "the update failed", so it
+/// records refused and rolled-back attempts too — not just successes
+/// (`docs/design/updater-design.md` §8.3).
+pub struct Journal {
+    path: PathBuf,
+    max_entries: usize,
+}
+
+impl Journal {
+    pub fn open(state_dir: &Path, max_entries: usize) -> Result<Self, Error> {
+        std::fs::create_dir_all(state_dir).map_err(|e| Error::Io {
+            path: state_dir.to_path_buf(),
+            source: e,
+        })?;
+        Ok(Self {
+            path: state_dir.join("update-log.jsonl"),
+            max_entries,
+        })
+    }
+
+    /// Append one entry.
+    ///
+    /// Durable enough to survive the power loss a failed update can itself
+    /// provoke: newline-delimited JSON, then `sync_data`. A torn final line is
+    /// tolerated on read rather than treated as corruption — losing the last entry
+    /// is acceptable; refusing to read the log because of it is not.
+    pub fn append(&self, entry: &LogEntry) -> Result<(), Error> {
+        let mut line = serde_json::to_vec(entry)
+            .map_err(|e| Error::Internal(format!("serialising log entry: {e}")))?;
+        line.push(b'\n');
+
+        {
+            let mut file = std::fs::OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open(&self.path)
+                .map_err(|e| Error::Io {
+                    path: self.path.clone(),
+                    source: e,
+                })?;
+            file.write_all(&line).map_err(|e| Error::Io {
+                path: self.path.clone(),
+                source: e,
+            })?;
+            file.sync_data().map_err(|e| Error::Io {
+                path: self.path.clone(),
+                source: e,
+            })?;
+        }
+
+        self.trim()
+    }
+
+    /// Keep the log bounded. Runs after each append; cheap at these sizes.
+    fn trim(&self) -> Result<(), Error> {
+        let all = self.read_all()?;
+        if all.len() <= self.max_entries {
+            return Ok(());
+        }
+
+        let keep = &all[all.len() - self.max_entries..];
+        let mut buf = Vec::new();
+        for entry in keep {
+            serde_json::to_writer(&mut buf, entry)
+                .map_err(|e| Error::Internal(format!("serialising log entry: {e}")))?;
+            buf.push(b'\n');
+        }
+        // Write-and-rename so a crash mid-trim can't leave a truncated log.
+        write_atomic(&self.path, &buf)
+    }
+
+    /// Every entry, oldest first. Skips unparseable lines (a torn tail).
+    fn read_all(&self) -> Result<Vec<LogEntry>, Error> {
+        let text = match std::fs::read_to_string(&self.path) {
+            Ok(t) => t,
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(Vec::new()),
+            Err(e) => {
+                return Err(Error::Io {
+                    path: self.path.clone(),
+                    source: e,
+                });
+            }
+        };
+        Ok(text
+            .lines()
+            .filter(|l| !l.trim().is_empty())
+            .filter_map(|l| serde_json::from_str(l).ok())
+            .collect())
+    }
+
+    /// Most recent entries, newest first.
+    pub fn recent(&self, limit: usize) -> Result<Vec<LogEntry>, Error> {
+        let mut all = self.read_all()?;
+        all.reverse();
+        all.truncate(limit);
+        Ok(all)
+    }
+
+    pub fn last_for(&self, component: &str) -> Result<Option<LogEntry>, Error> {
+        Ok(self
+            .read_all()?
+            .into_iter()
+            .rev()
+            .find(|e| e.component.as_str() == component))
+    }
+
+    /// Versions whose **most recent** recorded outcome for this component was a
+    /// rollback.
+    ///
+    /// Used to keep `rollback` from landing back on a release that already failed
+    /// its gate. Latest-outcome rather than ever-failed, so a version that failed
+    /// once and later succeeded is not blacklisted forever.
+    pub fn known_bad(&self, component: &str) -> Result<Vec<semver::Version>, Error> {
+        let mut seen: Vec<(semver::Version, bool)> = Vec::new();
+        // Newest first: the first outcome seen for a version is its latest.
+        for entry in self.read_all()?.into_iter().rev() {
+            if entry.component.as_str() != component {
+                continue;
+            }
+            let Some(version) = entry.to.clone() else {
+                continue;
+            };
+            if seen.iter().any(|(v, _)| *v == version) {
+                continue;
+            }
+            let bad = matches!(entry.outcome, Outcome::RolledBack { .. });
+            seen.push((version, bad));
+        }
+        Ok(seen
+            .into_iter()
+            .filter_map(|(v, bad)| bad.then_some(v))
+            .collect())
+    }
+}
+
+/// Single-flight lock, using std's advisory file locking
+/// (`File::try_lock`, stable since Rust 1.89 — no dependency needed).
+///
+/// An OS lock rather than a PID file so the kernel releases it if `updaterd` is
+/// killed — a stale PID file would leave the robot permanently unable to update,
+/// which is a worse failure than a race.
+pub struct UpdateLock {
+    /// Dropping the handle releases the lock.
+    _file: std::fs::File,
+}
+
+impl UpdateLock {
+    /// Acquire without blocking.
+    ///
+    /// `Ok(None)` when already held: "busy" is a normal answer to report to the
+    /// app, not an error.
+    pub fn try_acquire(state_dir: &Path) -> Result<Option<Self>, Error> {
+        use std::fs::TryLockError;
+
+        let path = state_dir.join("update.lock");
+        let file = std::fs::OpenOptions::new()
+            .create(true)
+            .read(true)
+            .write(true)
+            .truncate(false)
+            .open(&path)
+            .map_err(|e| Error::Io {
+                path: path.clone(),
+                source: e,
+            })?;
+
+        match file.try_lock() {
+            Ok(()) => Ok(Some(Self { _file: file })),
+            // Held by another process: report "busy", don't fail.
+            Err(TryLockError::WouldBlock) => Ok(None),
+            Err(TryLockError::Error(source)) => Err(Error::Io { path, source }),
+        }
+    }
+}
+
+/// Runtime version pins, keyed by component.
+///
+/// Kept in `state_dir` rather than written back into `updater.toml`: a pin is
+/// **device state**, so it belongs outside the shipped config (§5.7), and rewriting
+/// a human-edited TOML file in place would lose comments and formatting. The config
+/// may still carry a `pinned` value as a deployment-time default; this file
+/// overrides it.
+pub struct Pins {
+    path: PathBuf,
+}
+
+impl Pins {
+    pub fn open(state_dir: &Path) -> Self {
+        Self {
+            path: state_dir.join("pins.json"),
+        }
+    }
+
+    fn read_all(&self) -> Result<BTreeMap<String, semver::Version>, Error> {
+        match std::fs::read(&self.path) {
+            Ok(bytes) => Ok(serde_json::from_slice(&bytes).unwrap_or_default()),
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(BTreeMap::new()),
+            Err(e) => Err(Error::Io {
+                path: self.path.clone(),
+                source: e,
+            }),
+        }
+    }
+
+    pub fn get(&self, component: &str) -> Result<Option<semver::Version>, Error> {
+        Ok(self.read_all()?.remove(component))
+    }
+
+    /// Set or clear a pin. `None` unpins.
+    pub fn set(&self, component: &str, version: Option<&semver::Version>) -> Result<(), Error> {
+        let mut all = self.read_all()?;
+        match version {
+            Some(v) => {
+                all.insert(component.to_owned(), v.clone());
+            }
+            None => {
+                all.remove(component);
+            }
+        }
+        if all.is_empty() {
+            return match std::fs::remove_file(&self.path) {
+                Ok(()) => Ok(()),
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(()),
+                Err(e) => Err(Error::Io {
+                    path: self.path.clone(),
+                    source: e,
+                }),
+            };
+        }
+        let bytes = serde_json::to_vec(&all)
+            .map_err(|e| Error::Internal(format!("serialising pins: {e}")))?;
+        write_atomic(&self.path, &bytes)
+    }
+}
+
+/// When each component's update source last answered with a manifest that verified, and how the
+/// last check went.
+///
+/// A robot that cannot reach its source (a blocked host, a DNS that stopped resolving, a clock TLS
+/// will not accept) looks like a robot with nothing to install: the scheduled check fails, and
+/// every other answer about the robot stays the same. How long ago the source last answered is the
+/// one thing that differs, so it is written down here and `update.status` reports it
+/// (`docs/design/updater-design.md` §8.4.2, option 3). A source replaying an old signed manifest
+/// still answers, and this does not catch that one; expiry would.
+///
+/// Only the source's latest counts. An exact version is one a source that stopped moving still
+/// serves.
+///
+/// The last attempt is kept beside it, in its own file, because "never answered" is two states
+/// and only it tells them apart: a board whose checks have been failing, which is the loudest case
+/// there is, and an `updaterd` that has not run its first check yet, which is every board for the
+/// minute after it starts. It also carries the failure, so the robot can say *why* it has not
+/// heard from its source without anyone reading the journal.
+pub struct Checked {
+    path: PathBuf,
+    attempts: PathBuf,
+}
+
+impl Checked {
+    pub fn open(state_dir: &Path) -> Self {
+        Self {
+            path: state_dir.join("checked.json"),
+            attempts: state_dir.join("check-attempts.json"),
+        }
+    }
+
+    /// When `component`'s source last answered, in unix seconds. `None` when it never has on this
+    /// board, or the record cannot be read: this is a report riding on `update.status`, and a
+    /// report that failed the call it rides on would be worse than a missing one.
+    pub fn get(&self, component: &str) -> Option<i64> {
+        read_map(&self.path).unwrap_or_default().remove(component)
+    }
+
+    /// `component`'s last check, answered or not. `None` before the first one, and when the
+    /// record cannot be read, for the reason [`Self::get`] gives.
+    pub fn last_attempt(&self, component: &str) -> Option<CheckAttempt> {
+        read_map(&self.attempts)
+            .unwrap_or_default()
+            .remove(component)
+    }
+
+    /// Record that `component`'s source answered now.
+    pub fn record(&self, component: &str) -> Result<(), Error> {
+        let at = now_unix();
+        // The attempt first and whatever the clock says: it is the half that is not gated on it.
+        let attempt = self.record_attempt(component, at, None);
+        self.record_at(component, at)?;
+        attempt
+    }
+
+    /// Record that a check of `component`'s source did not get an answer, and why.
+    pub fn record_failure(&self, component: &str, error: &str) -> Result<(), Error> {
+        self.record_attempt(component, now_unix(), Some(error.to_owned()))
+    }
+
+    /// A clock before the preflight floor is not written down. A board with no RTC boots in 1970,
+    /// a `local_dir` source needs no TLS to answer, and a time from then would report the source as
+    /// fifty years quiet the moment the clock caught up.
+    ///
+    /// Said out loud, at debug, because the board it happens on is one where every check succeeds
+    /// and nothing is ever recorded — and the report staying empty forever is otherwise
+    /// indistinguishable from a source that has gone quiet.
+    fn record_at(&self, component: &str, at: i64) -> Result<(), Error> {
+        if at < crate::preflight::CLOCK_FLOOR_UNIX {
+            tracing::debug!(
+                component,
+                at,
+                floor = crate::preflight::CLOCK_FLOOR_UNIX,
+                "source answered, but the clock is before the preflight floor: not recorded"
+            );
+            return Ok(());
+        }
+        let mut all = read_map(&self.path)?;
+        all.insert(component.to_owned(), at);
+        write_map(&self.path, &all)
+    }
+
+    /// Unlike the answer, an attempt is recorded under any clock. A board whose clock has not
+    /// synced is the one whose HTTPS checks fail on the certificate dates, and leaving that
+    /// attempt out would report it as not having checked yet — the one reading that says nothing
+    /// is wrong. The time is what the clock said; the failure is the part that is read.
+    fn record_attempt(&self, component: &str, at: i64, error: Option<String>) -> Result<(), Error> {
+        let mut all = read_map(&self.attempts)?;
+        all.insert(component.to_owned(), CheckAttempt { at, error });
+        write_map(&self.attempts, &all)
+    }
+}
+
+/// Absent is empty; unreadable is an error, because the caller is about to write the whole map
+/// back. Swallowing an IO error here would replace every other component's entry with a map
+/// holding only the one being recorded — losing, on a transient failure, exactly the record this
+/// exists to keep. Damaged JSON is different: nothing can read any entry in it, so starting over
+/// loses nothing that was still there.
+fn read_map<T: serde::de::DeserializeOwned>(path: &Path) -> Result<BTreeMap<String, T>, Error> {
+    match std::fs::read(path) {
+        Ok(bytes) => Ok(serde_json::from_slice(&bytes).unwrap_or_else(|e| {
+            tracing::warn!(
+                path = %path.display(),
+                error = %e,
+                "check record unreadable: starting it again"
+            );
+            BTreeMap::new()
+        })),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(BTreeMap::new()),
+        Err(e) => Err(Error::Io {
+            path: path.to_path_buf(),
+            source: e,
+        }),
+    }
+}
+
+fn write_map<T: serde::Serialize>(path: &Path, all: &BTreeMap<String, T>) -> Result<(), Error> {
+    let bytes = serde_json::to_vec(all)
+        .map_err(|e| Error::Internal(format!("serialising the check record: {e}")))?;
+    write_atomic(path, &bytes)
+}
+
+/// What `scripts/robot-rescue` leaves in the state dir when it swaps `current` to golden.
+///
+/// The file it writes, verbatim:
+///
+/// ```text
+/// at=1786453421
+/// install_dir=/opt/robot/daemon
+/// from=1.2.0
+/// to=1.0.0
+/// because=boot check: robotd.service (failed, 7 restarts)
+/// ```
+///
+/// `key=value` rather than JSON because the writer is a shell script running on a board where things
+/// are already going wrong, and quoting JSON correctly in `sh` is a way to produce a record nothing
+/// can read. Which makes this the reader for it — and a lenient one on purpose: **every field is
+/// optional**. A breadcrumb that is half-written, or written by an older rescue that did not carry
+/// `install_dir`, still has to be recognised, because the alternative is a board whose loop guard
+/// never opens (`Engine::record_rescue` clears the file, and only recognises it here).
+#[derive(Debug, Default, PartialEq, Eq)]
+pub struct Breadcrumb {
+    pub at: Option<i64>,
+    pub install_dir: Option<String>,
+    pub from: Option<String>,
+    pub to: Option<String>,
+    pub because: Option<String>,
+}
+
+/// Name of that file inside the state dir.
+pub const RESCUE_BREADCRUMB: &str = "rescued";
+
+impl Breadcrumb {
+    pub fn parse(text: &str) -> Self {
+        let mut crumb = Self::default();
+        for line in text.lines() {
+            let Some((key, value)) = line.split_once('=') else {
+                continue;
+            };
+            // Trimmed, because a human may well have looked at this file — and `from=(none)` is
+            // what the rescue writes for a board that had no live release, which is not a version.
+            let value = value.trim();
+            if value.is_empty() || value == "(none)" {
+                continue;
+            }
+            match key.trim() {
+                "at" => crumb.at = value.parse().ok(),
+                "install_dir" => crumb.install_dir = Some(value.to_owned()),
+                "from" => crumb.from = Some(value.to_owned()),
+                "to" => crumb.to = Some(value.to_owned()),
+                "because" => crumb.because = Some(value.to_owned()),
+                _ => {}
+            }
+        }
+        crumb
+    }
+}
+
+/// Counts boots since an update that has not yet proven itself healthy.
+///
+/// Catches the failure the in-process health gate cannot: a release that doesn't
+/// come up at all, or wedges hard enough to take `updaterd` with it. If a pending
+/// update hasn't been confirmed after `max_attempts` boots, revert unconditionally
+/// (`docs/design/updater-design.md` §8).
+pub struct BootCounter {
+    path: PathBuf,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct PendingUpdate {
+    pub component: String,
+    pub version: semver::Version,
+    pub previous: Option<semver::Version>,
+    #[serde(default)]
+    pub boots: u32,
+}
+
+impl BootCounter {
+    pub fn open(state_dir: &Path) -> Self {
+        Self {
+            path: state_dir.join("pending.json"),
+        }
+    }
+
+    /// Record that `version` is on trial for `pending.component`.
+    ///
+    /// Written **before** the swap, so a crash between swap and health check is
+    /// still recoverable — the opposite order would leave an unrecorded bad release
+    /// live.
+    ///
+    /// Trials are **keyed by component**: a model selection must not overwrite or
+    /// clear a daemon update's trial, or a daemon release that crashed after its
+    /// swap would silently lose the record the never-brick guarantee rests on.
+    pub fn arm(&self, pending: &PendingUpdate) -> Result<(), Error> {
+        let mut all = self.read_all()?;
+        all.insert(pending.component.clone(), pending.clone());
+        self.write_all(&all)
+    }
+
+    fn read_all(&self) -> Result<BTreeMap<String, PendingUpdate>, Error> {
+        match std::fs::read(&self.path) {
+            Ok(bytes) => Ok(serde_json::from_slice(&bytes).unwrap_or_default()),
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(BTreeMap::new()),
+            Err(e) => Err(Error::Io {
+                path: self.path.clone(),
+                source: e,
+            }),
+        }
+    }
+
+    fn write_all(&self, all: &BTreeMap<String, PendingUpdate>) -> Result<(), Error> {
+        if all.is_empty() {
+            // No trials outstanding: remove the file rather than leave `{}` behind,
+            // so "is anything pending?" is answerable by existence.
+            return match std::fs::remove_file(&self.path) {
+                Ok(()) => Ok(()),
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(()),
+                Err(e) => Err(Error::Io {
+                    path: self.path.clone(),
+                    source: e,
+                }),
+            };
+        }
+        let bytes = serde_json::to_vec(all)
+            .map_err(|e| Error::Internal(format!("serialising pending updates: {e}")))?;
+        write_atomic(&self.path, &bytes)
+    }
+
+    pub fn pending_for(&self, component: &str) -> Result<Option<PendingUpdate>, Error> {
+        Ok(self.read_all()?.remove(component))
+    }
+
+    /// Every outstanding trial.
+    pub fn all(&self) -> Result<Vec<PendingUpdate>, Error> {
+        Ok(self.read_all()?.into_values().collect())
+    }
+
+    /// Clear one component's trial after a passed health gate.
+    pub fn confirm(&self, component: &str) -> Result<(), Error> {
+        let mut all = self.read_all()?;
+        all.remove(component);
+        self.write_all(&all)
+    }
+
+    /// Increment every outstanding trial and return them. Called once per boot,
+    /// before serving.
+    pub fn record_boot(&self) -> Result<Vec<PendingUpdate>, Error> {
+        let mut all = self.read_all()?;
+        if all.is_empty() {
+            return Ok(Vec::new());
+        }
+        for pending in all.values_mut() {
+            pending.boots = pending.boots.saturating_add(1);
+        }
+        self.write_all(&all)?;
+        Ok(all.into_values().collect())
+    }
+
+    /// Should we give up and revert?
+    pub fn exhausted(pending: &PendingUpdate, max_attempts: u32) -> bool {
+        pending.boots >= max_attempts
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::proto::{ComponentId, Outcome};
+
+    fn entry(component: &str, to: &str, outcome: Outcome) -> LogEntry {
+        LogEntry {
+            at: 1_700_000_000,
+            component: ComponentId::new(component),
+            from: None,
+            to: Some(semver::Version::parse(to).unwrap()),
+            outcome,
+            run: None,
+        }
+    }
+
+    #[test]
+    fn appends_and_reads_newest_first() {
+        let dir = tempfile::tempdir().unwrap();
+        let journal = Journal::open(dir.path(), 100).unwrap();
+
+        journal
+            .append(&entry("daemon", "1.0.0", Outcome::Success))
+            .unwrap();
+        journal
+            .append(&entry(
+                "daemon",
+                "1.1.0",
+                Outcome::RolledBack {
+                    reason: "health".into(),
+                },
+            ))
+            .unwrap();
+
+        let recent = journal.recent(10).unwrap();
+        assert_eq!(recent.len(), 2);
+        assert_eq!(recent[0].to, Some(semver::Version::new(1, 1, 0)));
+    }
+
+    /// Failures and refusals must be recorded too — those are exactly the entries
+    /// support needs.
+    #[test]
+    fn records_failures_not_just_successes() {
+        let dir = tempfile::tempdir().unwrap();
+        let journal = Journal::open(dir.path(), 100).unwrap();
+        journal
+            .append(&entry(
+                "daemon",
+                "1.2.0",
+                Outcome::Aborted {
+                    reason: "disk full".into(),
+                },
+            ))
+            .unwrap();
+
+        let last = journal.last_for("daemon").unwrap().unwrap();
+        assert!(matches!(last.outcome, Outcome::Aborted { .. }));
+    }
+
+    #[test]
+    fn reading_an_absent_log_is_empty_not_an_error() {
+        let dir = tempfile::tempdir().unwrap();
+        let journal = Journal::open(dir.path(), 10).unwrap();
+        assert!(journal.recent(5).unwrap().is_empty());
+        assert!(journal.last_for("daemon").unwrap().is_none());
+    }
+
+    #[test]
+    fn trims_to_max_entries_keeping_newest() {
+        let dir = tempfile::tempdir().unwrap();
+        let journal = Journal::open(dir.path(), 3).unwrap();
+
+        for minor in 0..6 {
+            journal
+                .append(&entry("daemon", &format!("1.{minor}.0"), Outcome::Success))
+                .unwrap();
+        }
+
+        let recent = journal.recent(100).unwrap();
+        assert_eq!(recent.len(), 3);
+        assert_eq!(recent[0].to, Some(semver::Version::new(1, 5, 0)));
+        assert_eq!(recent[2].to, Some(semver::Version::new(1, 3, 0)));
+    }
+
+    /// A half-written final line (power lost mid-append) must cost us that entry,
+    /// not the whole log.
+    #[test]
+    fn tolerates_torn_final_line() {
+        let dir = tempfile::tempdir().unwrap();
+        let journal = Journal::open(dir.path(), 100).unwrap();
+        journal
+            .append(&entry("daemon", "1.0.0", Outcome::Success))
+            .unwrap();
+
+        let mut file = std::fs::OpenOptions::new()
+            .append(true)
+            .open(dir.path().join("update-log.jsonl"))
+            .unwrap();
+        file.write_all(br#"{"at":1,"component":"daemon","#).unwrap();
+
+        let recent = journal.recent(10).unwrap();
+        assert_eq!(recent.len(), 1, "intact entry must still be readable");
+    }
+
+    #[test]
+    fn last_for_filters_by_component() {
+        let dir = tempfile::tempdir().unwrap();
+        let journal = Journal::open(dir.path(), 100).unwrap();
+        journal
+            .append(&entry("daemon", "1.0.0", Outcome::Success))
+            .unwrap();
+        journal
+            .append(&entry("model", "3.0.0", Outcome::Success))
+            .unwrap();
+
+        assert_eq!(
+            journal.last_for("daemon").unwrap().unwrap().to,
+            Some(semver::Version::new(1, 0, 0))
+        );
+        assert_eq!(
+            journal.last_for("model").unwrap().unwrap().to,
+            Some(semver::Version::new(3, 0, 0))
+        );
+        assert!(journal.last_for("nope").unwrap().is_none());
+    }
+
+    /// Re-acquiring within the same process must report busy, not deadlock and not
+    /// succeed twice.
+    #[test]
+    fn lock_is_exclusive_then_released_on_drop() {
+        let dir = tempfile::tempdir().unwrap();
+
+        let first = UpdateLock::try_acquire(dir.path()).unwrap();
+        assert!(first.is_some(), "first acquire should succeed");
+
+        assert!(
+            UpdateLock::try_acquire(dir.path()).unwrap().is_none(),
+            "second acquire should report busy"
+        );
+
+        drop(first);
+
+        // Closing the descriptor releases the lock, so this must succeed immediately.
+        // Distinguishing None from Err matters: "still held" and "could not open the file"
+        // have different causes and the bare assertion could not tell them apart.
+        let reacquired = match UpdateLock::try_acquire(dir.path()) {
+            Ok(Some(lock)) => Some(lock),
+            Ok(None) => panic!("lock still reported busy after the holder was dropped"),
+            Err(e) => panic!("re-acquire failed: {e}"),
+        };
+        assert!(
+            reacquired.is_some(),
+            "lock should be free once the handle is dropped (dir={})",
+            dir.path().display()
+        );
+    }
+
+    fn pending(boots: u32) -> PendingUpdate {
+        PendingUpdate {
+            component: "daemon".into(),
+            version: semver::Version::new(1, 1, 0),
+            previous: Some(semver::Version::new(1, 0, 0)),
+            boots,
+        }
+    }
+
+    /// Exactly what `scripts/robot-rescue` writes, so the two cannot drift without this failing.
+    #[test]
+    fn a_breadcrumb_is_read_the_way_the_rescue_writes_it() {
+        let crumb = Breadcrumb::parse(
+            "at=1786453421\n\
+             install_dir=/opt/robot/daemon\n\
+             from=1.2.0\n\
+             to=1.0.0\n\
+             because=boot check: robotd.service (failed, 7 restarts)\n",
+        );
+
+        assert_eq!(crumb.at, Some(1786453421));
+        assert_eq!(crumb.install_dir.as_deref(), Some("/opt/robot/daemon"));
+        assert_eq!(crumb.from.as_deref(), Some("1.2.0"));
+        assert_eq!(crumb.to.as_deref(), Some("1.0.0"));
+        assert!(crumb.because.unwrap().contains("robotd.service"));
+    }
+
+    /// Lenient on purpose. A breadcrumb this cannot read is a board whose loop guard never opens,
+    /// so a torn write, an unknown key from a newer rescue, or `from=(none)` on a board that had no
+    /// live release must all still parse.
+    #[test]
+    fn a_partial_breadcrumb_is_still_a_breadcrumb() {
+        let crumb = Breadcrumb::parse(
+            "at=1786453421\nfrom=(none)\nto=1.0.0\nsomething_new=42\nnot a pair at all\nbeca",
+        );
+
+        assert_eq!(crumb.from, None, "(none) is not a version");
+        assert_eq!(crumb.to.as_deref(), Some("1.0.0"));
+        assert_eq!(crumb.install_dir, None);
+        assert_eq!(crumb.because, None);
+    }
+
+    #[test]
+    fn boot_counter_arms_increments_and_confirms() {
+        let dir = tempfile::tempdir().unwrap();
+        let counter = BootCounter::open(dir.path());
+
+        assert!(counter.pending_for("daemon").unwrap().is_none());
+
+        counter.arm(&pending(0)).unwrap();
+        assert_eq!(counter.record_boot().unwrap()[0].boots, 1);
+        assert_eq!(counter.record_boot().unwrap()[0].boots, 2);
+
+        counter.confirm("daemon").unwrap();
+        assert!(
+            counter.pending_for("daemon").unwrap().is_none(),
+            "confirmed update must leave no pending trial"
+        );
+        // record_boot on a clean state must not invent a pending update.
+        assert!(counter.record_boot().unwrap().is_empty());
+    }
+
+    /// The bug this guards: with a single global slot, a model transition would
+    /// overwrite or clear a daemon update's trial — losing exactly the record the
+    /// never-brick guarantee depends on.
+    #[test]
+    fn trials_are_independent_per_component() {
+        let dir = tempfile::tempdir().unwrap();
+        let counter = BootCounter::open(dir.path());
+
+        counter.arm(&pending(0)).unwrap();
+        counter
+            .arm(&PendingUpdate {
+                component: "model".into(),
+                version: semver::Version::new(3, 0, 0),
+                previous: None,
+                boots: 0,
+            })
+            .unwrap();
+
+        // Confirming the model must not touch the daemon's trial.
+        counter.confirm("model").unwrap();
+
+        let daemon = counter.pending_for("daemon").unwrap();
+        assert!(daemon.is_some(), "daemon trial must survive");
+        assert_eq!(daemon.unwrap().version, semver::Version::new(1, 1, 0));
+        assert!(counter.pending_for("model").unwrap().is_none());
+    }
+
+    #[test]
+    fn record_boot_increments_every_component() {
+        let dir = tempfile::tempdir().unwrap();
+        let counter = BootCounter::open(dir.path());
+        counter.arm(&pending(0)).unwrap();
+        counter
+            .arm(&PendingUpdate {
+                component: "model".into(),
+                version: semver::Version::new(3, 0, 0),
+                previous: None,
+                boots: 0,
+            })
+            .unwrap();
+
+        let after = counter.record_boot().unwrap();
+        assert_eq!(after.len(), 2);
+        assert!(after.iter().all(|p| p.boots == 1));
+    }
+
+    /// Clearing the last trial removes the file, so "anything pending?" stays an
+    /// existence check rather than parsing `{}`.
+    #[test]
+    fn clearing_the_last_trial_removes_the_file() {
+        let dir = tempfile::tempdir().unwrap();
+        let counter = BootCounter::open(dir.path());
+        counter.arm(&pending(0)).unwrap();
+        assert!(dir.path().join("pending.json").exists());
+
+        counter.confirm("daemon").unwrap();
+        assert!(!dir.path().join("pending.json").exists());
+    }
+
+    #[test]
+    fn known_bad_tracks_latest_outcome_per_version() {
+        let dir = tempfile::tempdir().unwrap();
+        let journal = Journal::open(dir.path(), 100).unwrap();
+
+        // 1.1.0 failed, then a later attempt succeeded: not blacklisted.
+        journal
+            .append(&entry(
+                "daemon",
+                "1.1.0",
+                Outcome::RolledBack {
+                    reason: "health".into(),
+                },
+            ))
+            .unwrap();
+        journal
+            .append(&entry("daemon", "1.1.0", Outcome::Success))
+            .unwrap();
+        // 1.2.0 failed and never succeeded: blacklisted.
+        journal
+            .append(&entry(
+                "daemon",
+                "1.2.0",
+                Outcome::RolledBack {
+                    reason: "hook".into(),
+                },
+            ))
+            .unwrap();
+        // Another component's failure must not leak across.
+        journal
+            .append(&entry(
+                "model",
+                "9.0.0",
+                Outcome::RolledBack {
+                    reason: "health".into(),
+                },
+            ))
+            .unwrap();
+
+        let bad = journal.known_bad("daemon").unwrap();
+        assert_eq!(bad, vec![semver::Version::new(1, 2, 0)], "{bad:?}");
+    }
+
+    #[test]
+    fn exhaustion_is_inclusive() {
+        assert!(BootCounter::exhausted(&pending(2), 2));
+        assert!(!BootCounter::exhausted(&pending(1), 2));
+    }
+
+    /// Confirming when nothing is pending is a no-op, so recovery paths can call
+    /// it unconditionally.
+    #[test]
+    fn confirm_is_idempotent() {
+        let dir = tempfile::tempdir().unwrap();
+        let counter = BootCounter::open(dir.path());
+        counter.confirm("daemon").unwrap();
+        counter.confirm("daemon").unwrap();
+    }
+
+    /// A board that has never reached its source has nothing to report, and one component's
+    /// check says nothing about another's.
+    #[test]
+    fn a_check_is_recorded_per_component() {
+        let dir = tempfile::tempdir().unwrap();
+        let checked = Checked::open(dir.path());
+        assert_eq!(checked.get("daemon"), None);
+
+        checked.record_at("daemon", 1_800_000_000).unwrap();
+        assert_eq!(checked.get("daemon"), Some(1_800_000_000));
+        assert_eq!(checked.get("model"), None);
+
+        checked.record_at("model", 1_800_000_500).unwrap();
+        assert_eq!(
+            checked.get("daemon"),
+            Some(1_800_000_000),
+            "another component's check leaves this one alone"
+        );
+    }
+
+    /// A clock that has not synced is not a time anything happened.
+    #[test]
+    fn a_check_under_an_unsynced_clock_is_not_recorded() {
+        let dir = tempfile::tempdir().unwrap();
+        let checked = Checked::open(dir.path());
+        checked.record_at("daemon", 1_800_000_000).unwrap();
+        checked.record_at("daemon", 86_400).unwrap();
+        assert_eq!(checked.get("daemon"), Some(1_800_000_000));
+    }
+
+    /// The last attempt is kept whatever became of it, and an answer clears the failure before it:
+    /// the reason is for a source that is not answering *now*.
+    #[test]
+    fn the_last_attempt_is_kept_answered_or_not() {
+        let dir = tempfile::tempdir().unwrap();
+        let checked = Checked::open(dir.path());
+        assert_eq!(checked.last_attempt("daemon"), None);
+
+        checked
+            .record_failure("daemon", "network error: dns error")
+            .unwrap();
+        let attempt = checked.last_attempt("daemon").unwrap();
+        assert_eq!(attempt.error.as_deref(), Some("network error: dns error"));
+        assert_eq!(checked.get("daemon"), None, "a failure is not an answer");
+
+        checked.record("daemon").unwrap();
+        assert_eq!(checked.last_attempt("daemon").unwrap().error, None);
+        assert!(checked.get("daemon").is_some());
+    }
+
+    /// An attempt under a clock that has not synced is recorded, where the answer is not: that
+    /// board's checks are the ones failing on certificate dates, and without the attempt it would
+    /// read as one that has not checked yet.
+    #[test]
+    fn an_attempt_under_an_unsynced_clock_is_still_recorded() {
+        let dir = tempfile::tempdir().unwrap();
+        let checked = Checked::open(dir.path());
+        checked.record_attempt("daemon", 86_400, None).unwrap();
+        checked.record_at("daemon", 86_400).unwrap();
+        assert_eq!(checked.get("daemon"), None);
+        assert_eq!(checked.last_attempt("daemon").unwrap().at, 86_400);
+    }
+
+    /// A damaged record is a missing report, not a failed `update.status`.
+    #[test]
+    fn a_damaged_record_reads_as_nothing() {
+        let dir = tempfile::tempdir().unwrap();
+        std::fs::write(dir.path().join("checked.json"), b"{not json").unwrap();
+        assert_eq!(Checked::open(dir.path()).get("daemon"), None);
+    }
+
+    /// A record that cannot be read for a reason that is not "it is not there" refuses the write
+    /// rather than replacing the file with the one component being recorded. The engine logs the
+    /// failure; what it must not do is quietly forget when every other component last checked.
+    #[test]
+    fn an_unreadable_record_is_not_overwritten() {
+        let dir = tempfile::tempdir().unwrap();
+        // A directory where the file goes: `read` fails with something other than `NotFound`,
+        // which is what a permission change or a failing disk looks like from here.
+        std::fs::create_dir(dir.path().join("checked.json")).unwrap();
+        let checked = Checked::open(dir.path());
+        assert!(matches!(
+            checked.record_at("daemon", 1_800_000_000),
+            Err(Error::Io { .. })
+        ));
+    }
+}

@@ -1,0 +1,83 @@
+[package]
+name = "updater"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Signed, health-gated, rollback-safe updates for the robot daemon"
+
+# Library + the `updaterd` daemon binary.
+#
+# The `proto` module (the IPC contract) is deliberately self-contained and
+# depends on nothing else in this crate. Extract it into its own crate when
+# either happens:
+#   - `btd` needs to speak the protocol, or
+#   - this crate gains heavy dependencies (http, tar, zstd, crypto),
+# so that protocol clients don't inherit them. Both are event-triggered, not
+# guesses. See docs/design/architecture.md §1.1.
+[[bin]]
+name = "updaterd"
+path = "src/main.rs"
+
+[dependencies]
+duck-ipc-proto = { path = "../duck-ipc-proto" }
+# The Hugging Face device-code login. Extracted from this crate, because a robot signing in to an
+# account has nothing to do with updating one and every other robot wants the same thing.
+# `src/account.rs` is what is left here: where the credential lives on *this* robot, and how the
+# crate's answers become `proto`'s.
+hf-robot-account = "0.1"
+# For `ETXTBSY` by name in the hook-spawn retry. Already in the tree via tokio, and an errno
+# spelled 26 in our own source is the kind of thing that is fine until it is not.
+libc = "0.2.189"
+serde.workspace = true
+serde_json.workspace = true
+semver.workspace = true
+thiserror.workspace = true
+
+# Async, because updaterd is a server with a long-running background job:
+# it must keep answering status/subscribe while an update runs, and needs
+# timeouts on the health probe, the hook subprocess, and downloads. Cancellation
+# of an in-flight update is also only tractable with tasks.
+#
+# CPU-bound and fast-filesystem work (hashing, tar extraction, symlink swap)
+# stays synchronous and is called via `spawn_blocking` — see src/lib.rs.
+tokio = { workspace = true, features = [
+    "rt-multi-thread",
+    "macros",
+    "net",
+    "process",
+    "time",
+    "sync",
+    "io-util",
+    "signal",
+] }
+tokio-util = { workspace = true, features = ["codec"] }
+# `dyn Trait` with async methods is not yet supported natively; the Source and
+# RobotClient traits are used behind `dyn` so they need boxed futures.
+async-trait.workspace = true
+clap = { version = "4.6.4", features = ["derive"] }
+fs4 = { version = "1.1.0", features = ["sync"] }
+humantime-serde = "1.1.1"
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+minisign-verify = "0.2.5"
+sha2 = "0.11.0"
+tar = "0.4.46"
+zstd = "0.13.3"
+toml = "1.1.3"
+futures-util = "0.3.33"
+reqwest = { version = "0.13.4", default-features = false, features = ["rustls", "json", "stream", "http2", "charset"] }
+
+[dev-dependencies]
+test-support = { path = "../test-support" }
+async-trait.workspace = true
+axum = "0.8.9"
+clap = { version = "4.6.4", features = ["derive"] }
+minisign = "0.9.1"
+semver.workspace = true
+serde_json.workspace = true
+sha2 = "0.11.0"
+tar = "0.4.46"
+tempfile = "3.27.0"
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "net"] }
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+zstd = "0.13.3"

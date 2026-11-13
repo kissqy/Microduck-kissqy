@@ -1,0 +1,39 @@
+{
+  "release": "Microduck-UI43",
+  "console_version": "1.0.223",
+  "service_build": "1fa8438-feetech-ft6-control.74",
+  "baseline": "Microduck-UI42",
+  "python_behavior_tests": {
+    "passed": 78,
+    "failed": 0,
+    "log": "python-tests.log"
+  },
+  "installer_tests": {
+    "passed": 5,
+    "failed": 0,
+    "embedded_payload_exercised": true,
+    "log": "installer-embedded-tests.log"
+  },
+  "frontend_suites": {
+    "passed": 3,
+    "failed": 0,
+    "details": "frontend-results.json"
+  },
+  "syntax_checks": {
+    "python_files": 122,
+    "shell": "bash -n service.sh passed"
+  },
+  "firmware_checksums": {
+    "passed": 202,
+    "payload_file_count": 203,
+    "install_file_list_matches": true
+  },
+  "review": "Independent product review passed; no remaining blockers.",
+  "scope": "scope-check.json",
+  "all_native_binaries_byte_identical_to_ui42": true,
+  "unchanged_model_and_roller_files": 110,
+  "motion_profile_and_calibration_unchanged": true,
+  "hardware_tested": false,
+  "native_tests_rerun": false,
+  "notes": "harness-notes.json; initial historical import prerequisites and literal version assertion are documented and not counted as passing tests."
+}

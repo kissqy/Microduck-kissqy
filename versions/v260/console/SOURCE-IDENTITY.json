@@ -1,0 +1,14 @@
+{
+  "console_version": "1.0.260",
+  "firmware_build": "1fa843-feetech-ft6-control.102",
+  "official_version": "0.15.1",
+  "console_zip_sha256": "eda880d910db4b462e64ed778b1bf5bea471ca9ef46e45bb4ff6bcc85b6097c3",
+  "firmware_tar_sha256": "d301e5e942eae36cb38e76729cdc97c1834ddacab23b10afea6d761b530ef20d",
+  "native_source_base_sha256": "425c04cd829386ba934d9137a33081f11335a3404e5f22337eed47e993d1a1cb",
+  "hardware_tested_in_this_publication": false,
+  "publication_changes_native_logic": false,
+  "native_rebuilt_in_this_publication": [
+    "gamepad-r7/gamesir-xboxd; exact byte match"
+  ],
+  "runtime_payload_unchanged": true
+}

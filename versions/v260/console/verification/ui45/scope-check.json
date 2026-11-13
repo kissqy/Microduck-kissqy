@@ -1,0 +1,21 @@
+{
+  "baseline": "Microduck-UI44",
+  "firmware_sha256": "26b8fd0f925412f675865a44c2d414a2a23e2129ff0ec9f739691f3f344e91bd",
+  "firmware_byte_identical": true,
+  "native_code_changed": false,
+  "model_and_calibration_changed": false,
+  "shutdown_manual_rpc": "robot.shutdown",
+  "params": {},
+  "same_as": "Home-left Select/View held 2 seconds",
+  "client_extra_movement": false,
+  "client_extra_sound": false,
+  "client_fixed_wait": false,
+  "os_poweroff_fallback": false,
+  "manual_relay_addition_only": "robot.shutdown",
+  "ai_shutdown_permission_added": false,
+  "acceptance_is_not_physical_completion": true,
+  "hotspot_location": "lower power row immediately after resume",
+  "hotspot_style": "warm gold prominent button",
+  "hotspot_logic_byte_identical": true,
+  "hardware_tested": false
+}

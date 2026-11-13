@@ -1,0 +1,69 @@
+{
+  "nested_payload_changed": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "drive_settings.py",
+    "gamepad-r7/gamesir-xboxd",
+    "gamepad.py",
+    "padd",
+    "padd.service",
+    "release_identity.py"
+  ],
+  "all_other_nested_files_identical": true,
+  "preserved": {
+    "robotd": {
+      "unchanged": true,
+      "sha256": "08d22eb167167dec24779074ec49df3ea34bd1c592a834f519731b53d7f2b986"
+    },
+    "mediad": {
+      "unchanged": true,
+      "sha256": "6e31181cfb540f9ea0686227d12c0c5467f1a27aca88a804336faa963a2ea22c"
+    },
+    "robotctl": {
+      "unchanged": true,
+      "sha256": "a5034efaf6d26aaecc4a1b477c947abb7cf59d157288b9ad661706f00a700da7"
+    },
+    "sounds": {
+      "unchanged": true,
+      "sha256": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103"
+    },
+    "ai_mouth_lease.py": {
+      "unchanged": true,
+      "sha256": "044572c4c6b399b6661456f523028bb77057ea374a2480a5987ed6e2ce9a3d6b"
+    },
+    "ai_hat_audio.py": {
+      "unchanged": true,
+      "sha256": "acce67267ef7f6d15d0112bcb4b8775e5e25f990c4f2ca8fcd8d8a1d6c324fd3"
+    },
+    "ai_doubao.py": {
+      "unchanged": true,
+      "sha256": "baa5a15ce7ccbd96bb31ed813aa24178a763a3e2587678f37ff996528d4ac02d"
+    },
+    "ai_pcm.py": {
+      "unchanged": true,
+      "sha256": "93f371f816d13808d1ea9a74b93925f87bf70c0c4064da2c8d6cef0bed33f6b8"
+    },
+    "ai_vision.py": {
+      "unchanged": true,
+      "sha256": "d1c28e8a1262b30f65f8ec0850160797c668891f7fd47b31623444165919f425"
+    },
+    "ai_camera_setup.py": {
+      "unchanged": true,
+      "sha256": "8511608f07188d789bcdbe7df1c6da655a1f7a56e0eabfa0bd4b951997b2b197"
+    },
+    "ai_preferences.py": {
+      "unchanged": true,
+      "sha256": "f1568c95c1edbe5ddc5835f5e1d8c8ec01e376b7d4e567c7f0d1154b28766520"
+    },
+    "static/ai-camera.js": {
+      "unchanged": true,
+      "sha256": "9e8ab9898813284d2c7d58ed98f914ec42147a208ae89ca012f72168b9da7bfc"
+    },
+    "static/camera.js": {
+      "unchanged": true,
+      "sha256": "0a2c17a5cf72ab77a98600f3a2adc489880f906e14bcb9fb0ed00cfffc9f6bff"
+    }
+  }
+}

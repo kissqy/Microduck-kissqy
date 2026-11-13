@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "node": {
+    "passed": true,
+    "scope": "live microphone bars; retained credentials and editing; Chinese skills; multi-turn chat; vision busy/error/preview/source labels; measured brightness, exposure warning and next-capture reset"
+  },
+  "html_unique_ids": 213,
+  "persona_default_matches_backend": true,
+  "default_reply_characters": 20,
+  "chat_height_bounded_in_css": true,
+  "new_browser_render_verified": false
+}

@@ -1,0 +1,40 @@
+{
+  "label": "V200_control.V71 AI-T1 UI10",
+  "changes": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_conversation.py",
+    "ai_doubao.py",
+    "ai_hat_audio.py",
+    "ai_runtime.py",
+    "static/index.html",
+    "verification/test_ai_ui7.py"
+  ],
+  "new_test": "verification/test_ai_playback_ui10.py",
+  "python": {
+    "passed": 56,
+    "failures": 0,
+    "errors": 0,
+    "audio_report": "python-audio.json",
+    "remaining_report": "python-remaining.json"
+  },
+  "frontend_passed": true,
+  "baseline_reproduction": "baseline-reproduction.json",
+  "user_log_evidence": "log-evidence.json",
+  "automatic_forced_input_commit": false,
+  "manual_input_commit": true,
+  "audio_end_boundary": "provider audio.done only; queue gaps do not close the player",
+  "drain": "EOF, natural playback completion with duration-derived grace; explicit stop/mute cancel promptly",
+  "unexpected_playback_errors_preserved": true,
+  "new_audio_dependencies": false,
+  "firmware_and_motion_models_byte_identical": true,
+  "firmware_sha256": "6374b23464bcd8d2e221bd6ba3208dcab0eabcda932ed3f6cc20a5c5667fcbd2",
+  "motion_gate_unchanged": true,
+  "hand_controller_unchanged": true,
+  "ssh_transport_unchanged": true,
+  "real_hat_verified": false,
+  "real_cloud_ui10_verified": false,
+  "browser_render_verified": false,
+  "final_playback_rerun": "python-last-playback.json",
+  "intentional_cancel_latched_across_quick_unmute": true
+}

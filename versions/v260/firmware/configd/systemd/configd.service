@@ -1,0 +1,116 @@
+# configd — wifi and the robot's identity.
+#
+# Install to /etc/systemd/system/configd.service.
+#
+# Three properties follow from why this service exists (docs/architecture.md §3.1) and must be
+# preserved:
+#
+#   1. NO dependency on robotd, in either direction. Config must be reachable when the robot is
+#      dead — provisioning wifi is exactly what a client needs when things are broken. That is
+#      the whole reason this is not part of robotd.
+#   2. NO dependency on btd either. BLE is one front door among several; btd is a client of
+#      this socket, and an SDK or robotctl must not have to go through Bluetooth.
+#   3. The socket must be group-readable by `robot`, because that is how btd, robotctl and
+#      later mediad reach it.
+
+[Unit]
+Description=Robot config service (wifi, identity)
+Documentation=file:///opt/robot/daemon/current/docs/architecture.md
+
+# NetworkManager is what actually owns wifi, so there is nothing to serve without it. `Wants`
+# rather than `Requires`: if NM is missing, configd starts and reports net.state=unavailable,
+# which is a diagnosable answer and tells you the board is still on netplan.
+After=dbus.service NetworkManager.service
+Wants=NetworkManager.service
+
+# No network-online dependency on purpose. This service is how you *get* a network.
+After=local-fs.target
+
+[Service]
+Type=exec
+# `--allow-user btd` is load-bearing, not tidy: without it every mutating call over Bluetooth
+# is refused, because SO_PEERCRED reports only a peer's *primary* gid and btd's is its own.
+# So `SupplementaryGroups=robot` in btd.service gets btd through the socket's 0660 mode and
+# no further, which is the correct two-tier split (§2.2) — but provisioning is exactly what
+# BLE exists for, so btd is named here explicitly.
+#
+# By name rather than by uid: systemd-sysusers allocates dynamically, and a number that is
+# right on one board is wrong on the next.
+#
+# Note what is NOT here: nothing grants the `robot` group as a whole. Being able to talk to
+# configd and being able to reconfigure the robot stay separate.
+ExecStart=/opt/robot/daemon/current/bin/configd --allow-user btd
+
+# Root, and this is the one thing here that deserves justification rather than assumption.
+#
+# configd needs exactly two privileges: NetworkManager's D-Bus API (which needs polkit or root
+# to modify connections) and logind's Reboot (likewise). There is NO polkit on this image, and
+# without it systemd denies both to any session-less non-root caller. So the choice was root, or
+# installing a JS policy engine to authorise two calls.
+#
+# The trust boundary is still in the right place: btd — the process parsing bytes from anyone in
+# radio range — is unprivileged, and configd only ever sees typed JSON arriving over a
+# peer-credentialled local socket. Making the parser unprivileged matters more than making the
+# dispatcher unprivileged.
+#
+# If polkit ever arrives for another reason, this should drop to a dedicated user plus two
+# polkit rules. Until then the sandbox below is what limits it, and unlike robotd — which needs
+# raw device access — configd can be locked down properly because it touches no hardware.
+User=root
+Group=robot
+
+Restart=always
+RestartSec=2s
+
+# A narrow root. Everything here is deliberate:
+#   - ProtectSystem=strict makes the whole filesystem read-only except ReadWritePaths.
+#   - The state dir is the ONLY writable path: it holds the robot's name and must survive an
+#     update and a rollback, which is why it is under /var/lib and not in a release directory.
+#   - AF_NETLINK is absent: configd asks NetworkManager over D-Bus (a unix socket) and never
+#     touches an interface itself.
+#   - CAP_SYS_BOOT is NOT granted, because logind performs the reboot; configd only asks. A
+#     capability here would let it call reboot(2) directly, which is precisely the unclean
+#     shutdown this service exists to avoid.
+#
+# `system.logs` spawns `journalctl` (see `configd::logs`) and needs nothing added here, which is
+# worth stating so nobody loosens this file for it: /usr stays executable under
+# ProtectSystem=strict, and the journal files are 0640 root:systemd-journal — so uid 0 reads them
+# as their owner, with the capability bounding set still empty. If a future kernel or journald
+# changes that, the fix is a SupplementaryGroups=systemd-journal, not a capability.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/robot/config /run
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+CapabilityBoundingSet=
+StateDirectory=robot/config
+
+# stderr → journal; level via RUST_LOG. The startup identity line is at `warn` so it survives
+# RUST_LOG=warn on a long-running board.
+#
+# net.connect is logged, and its passphrase is NOT: NetConnectParams has a hand-written Debug
+# that redacts the key (duck-ipc-proto), with a test to keep it that way.
+Environment=RUST_LOG=info
+StandardOutput=journal
+StandardError=journal
+
+# Where this daemon publishes what it is running: /run/configd/identity.json, read by
+# `robotctl health` and by updaterd's startup check.
+#
+# `RuntimeDirectory=` rather than a path this unit is granted: it is the only mechanism that both
+# creates the directory owned by this unit's User= *and* survives ProtectSystem=strict, which
+# otherwise leaves the whole filesystem read-only. systemd also removes it when the unit stops, so a
+# stopped daemon cannot leave behind an identity claiming to be running.
+RuntimeDirectory=configd
+
+[Install]
+WantedBy=multi-user.target

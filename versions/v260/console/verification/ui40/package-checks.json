@@ -1,0 +1,18 @@
+{
+  "native_files_changed": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "mediad",
+    "padd",
+    "release_identity.py"
+  ],
+  "allowed_native_scope": true,
+  "all_model_bytes_unchanged": true,
+  "robotd_sha256": "08d22eb167167dec24779074ec49df3ea34bd1c592a834f519731b53d7f2b986",
+  "native_unit_files_unchanged": true,
+  "archive_sha256": "e992ca27767b5fde3fc06fcb1e839a80fbebc237f40de38814243d09d8e53930",
+  "heartbeat_source_unchanged": true,
+  "physical_robot_tested": false
+}

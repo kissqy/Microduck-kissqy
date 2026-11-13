@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "commands": [
+    "node verification/test_ai_hat.mjs",
+    "node verification/test_ai_camera_ui15.mjs",
+    "node verification/test_camera_ready_ui16.mjs",
+    "node verification/v198/check_startup.mjs"
+  ],
+  "html_unique_ids": 216,
+  "default_persona_matches_backend": true,
+  "default_reply_characters": 20,
+  "changed_script_syntax_passed": true,
+  "ui16_browser_render_verified": false,
+  "timing_does_not_request_unreceived_image": true,
+  "late_preview_keeps_done_state": true,
+  "bounded_same_socket_producer_wait": true,
+  "disconnect_cancels_producer_wait": true
+}

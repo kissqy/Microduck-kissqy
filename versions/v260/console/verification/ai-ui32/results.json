@@ -1,0 +1,103 @@
+{
+  "release": "V212_control.V73_AI-T1_UI32",
+  "python_ai_tests": {
+    "tests": 216,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 216,
+    "environment_unavailable": [],
+    "other_errors": [],
+    "success": true,
+    "available_checks_passed": true
+  },
+  "frontend": [
+    {
+      "passed": true,
+      "scope": "UI21 grouped catalogs, per-axis range display, per-question images and TOF, late preview isolation, bounded scrolling"
+    },
+    {
+      "passed": true,
+      "scope": "UI24 live speech checkbox, no optimistic state, pending on/off, Zero ACK and ASR sync, old HTTP/status/event rejection, error retains confirmed state, no second mute or task switch"
+    },
+    {
+      "passed": true,
+      "scope": "UI29 action-and-scene result distinguishes completed motion from a failed camera without claiming the motion did not execute"
+    },
+    {
+      "passed": true,
+      "scope": "UI25 shared compact credential grid, bounded question input, no obsolete 1200px gap, unique control IDs, hidden empty visual output, model-wait busy state and model completion text"
+    },
+    {
+      "passed": true,
+      "scope": "rehearsal composer, preset draft, explicit task send and clear, waiting for provider ACK; no action request from text"
+    },
+    {
+      "passed": true,
+      "scope": "live microphone bars; retained credentials and editing; Chinese skills; multi-turn chat; vision busy/error/preview/source labels; measured brightness, exposure warning and next-capture reset"
+    },
+    {
+      "passed": true,
+      "scope": "real ControlPanel and PadControls; identical Start frames; one click one press/release; HOME then hold labels from readback; disabled during takeover/maintenance/offline; keyboard repeat; suspend reset; no automatic commands"
+    },
+    {
+      "passed": true,
+      "scope": "exact native PCM WAV, 24k mono16, per-window RAM, no autoplay/persistence, explicit replay/stop/end, sequence gaps, memory eviction, URL revocation and pagehide cleanup"
+    }
+  ],
+  "changed_inherited_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_doubao.py",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "release_identity.py",
+    "static/index.html",
+    "verification/test_ai_camera_ui15.py",
+    "verification/test_ai_ui7.py"
+  ],
+  "new_behavior_tests": 6,
+  "latest_isolation_module_checks": {
+    "tests": 6,
+    "passed": 6
+  },
+  "ai_event_action_and_camera_setup_use_ai_owned_channel": true,
+  "ai_channel_does_not_share_primary_process_lock_pending_or_retry": true,
+  "ai_pipe_write_is_bounded_and_actions_not_replayed": true,
+  "primary_responds_while_ai_pipe_is_still_stalled": true,
+  "main_rpc_survives_ai_process_exit_upload_timeout_and_live_ai_stop": true,
+  "cloud_socket_io_timeout_seconds": 3.0,
+  "upload_failure_stage": "audio_upload",
+  "rpc_fixture": "real independent service_rpc subprocesses; robotd socket replaced by a child-local IPC fixture",
+  "unchanged_primary_native_and_motion_files": [
+    "service_channel.py",
+    "service_rpc.py",
+    "service_control.py",
+    "connection.py",
+    "controls.py",
+    "telemetry.py",
+    "ssh_connect.py",
+    "process_lifecycle.py",
+    "ai_action_gate.py",
+    "ai_persona.py",
+    "ai_zero.py",
+    "ai_hat_audio.py",
+    "ai_vision.py",
+    "ai_camera_setup.py",
+    "static/ai-panel.js",
+    "updates/Microduck-Robotd-FT6-R17.tar.gz"
+  ],
+  "camera_quality": "720p15",
+  "default_task_walk_arguments": {
+    "vx": 0,
+    "vy": 0,
+    "vyaw": -1.5,
+    "seconds": 1
+  },
+  "hardware_tested": false,
+  "windows_tested": false,
+  "live_cloud_tested": false,
+  "wifi_or_power_outage_root_cause_resolved": false,
+  "source_ui31_zip_sha256": "4219921cb82f4f9512b3c782a68e3f3a7440aabb1c07371b288f9e4216ad9e9c",
+  "firmware_sha256": "1b7376621ea40994edffcea48be9c9a4bd7bc42a19388bacdce827a0dbcab99e"
+}

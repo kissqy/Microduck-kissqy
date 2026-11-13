@@ -1,0 +1,53 @@
+{
+  "release": "V203_control.V73_AI-T1_UI23",
+  "python_ai_tests": {
+    "tests": 161,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 161,
+    "success": true
+  },
+  "frontend_modules": [
+    "test_ai_hat.mjs",
+    "test_ai_start_ui20.mjs",
+    "test_ai_replay_ui23.mjs"
+  ],
+  "changed_inherited_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_action_gate.py",
+    "ai_conversation.py",
+    "ai_doubao.py",
+    "ai_persona.py",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "ai_zero.py",
+    "console.py",
+    "release_identity.py",
+    "service_rpc.py",
+    "static/ai-panel.css",
+    "static/ai-panel.js",
+    "static/index.html",
+    "verification/test_ai_hat.mjs",
+    "verification/test_ai_hat.py"
+  ],
+  "firmware_bytes_identical_to_ui22": true,
+  "native_rebuilt": false,
+  "firmware_sha256": "1b7376621ea40994edffcea48be9c9a4bd7bc42a19388bacdce827a0dbcab99e",
+  "replay_route": "native provider PCM -> bounded live-only relay -> per-window Blob WAV -> explicit browser Audio.play",
+  "replay_no_autoplay": true,
+  "replay_no_hat_play_request": true,
+  "audio_never_in_logs_status_or_history": true,
+  "page_refresh_or_close_clears_replay": true,
+  "browser_ram_cap_bytes": 33554432,
+  "speech_unlock": "complete native microphone transcript only: 你不解释解释[吗/嘛/么]",
+  "automatic_motion_from_unlock": false,
+  "official_duck_wav_while_locked": true,
+  "global_mute_ui_removed": true,
+  "hardware_tested": false,
+  "live_cloud_tested": false,
+  "browser_render_tested": false,
+  "actual_browser_audio_device_tested": false,
+  "windows_tested": false
+}

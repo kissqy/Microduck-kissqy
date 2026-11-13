@@ -1,0 +1,39 @@
+{
+  "baseline": "Microduck-UI42",
+  "firmware_files": 203,
+  "firmware_changed": [
+    "BUILD.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "drive_settings.py",
+    "gamepad.py",
+    "release_identity.py",
+    "service.sh"
+  ],
+  "firmware_added": [],
+  "firmware_deleted": [],
+  "native_binaries_unchanged": [
+    "gamepad-r7/gamesir-xboxd",
+    "mediad",
+    "onnxruntime/libonnxruntime.so.1.28.0",
+    "onnxruntime/libonnxruntime_providers_shared.so",
+    "padd",
+    "robotctl",
+    "robotd",
+    "sounds"
+  ],
+  "models_and_roller_files_unchanged": 110,
+  "robotd_profile_and_calibration_unchanged": true,
+  "firmware_sha256": "26b8fd0f925412f675865a44c2d414a2a23e2129ff0ec9f739691f3f344e91bd",
+  "full_deflection_m_s": {
+    "forward": 0.3,
+    "backward": -0.3,
+    "left": 0.3,
+    "right": -0.3
+  },
+  "fixed_by": "PADD original CLI defaults + webpad fixed scale",
+  "turn_limit_rad_s": 1.5,
+  "old_saved_speed": "ignored, file not modified",
+  "old_clip_speed": "retained exact recorded values; re-record for new limit",
+  "hardware_tested": false
+}

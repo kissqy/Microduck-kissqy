@@ -1,0 +1,173 @@
+ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF64
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           AArch64
+  Version:                           0x1
+  Entry point address:               0x382f00
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          10918080 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               64 (bytes)
+  Size of program headers:           56 (bytes)
+  Number of program headers:         12
+  Size of section headers:           64 (bytes)
+  Number of section headers:         30
+  Section header string table index: 29
+
+
+Dynamic section at offset 0xa63798 contains 38 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000001 (NEEDED)             Shared library: [libgstwebrtc-1.0.so.0]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgstbase-1.0.so.0]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgstreamer-1.0.so.0]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgobject-2.0.so.0]
+ 0x0000000000000001 (NEEDED)             Shared library: [libglib-2.0.so.0]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgstvideo-1.0.so.0]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgstapp-1.0.so.0]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgio-2.0.so.0]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libpthread.so.0]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libdl.so.2]
+ 0x0000000000000001 (NEEDED)             Shared library: [ld-linux-aarch64.so.1]
+ 0x000000000000001e (FLAGS)              BIND_NOW
+ 0x000000006ffffffb (FLAGS_1)            Flags: NOW PIE
+ 0x0000000000000015 (DEBUG)              0x0
+ 0x0000000000000007 (RELA)               0x4c40
+ 0x0000000000000008 (RELASZ)             507480 (bytes)
+ 0x0000000000000009 (RELAENT)            24 (bytes)
+ 0x000000006ffffff9 (RELACOUNT)          21126
+ 0x0000000000000017 (JMPREL)             0x80a98
+ 0x0000000000000002 (PLTRELSZ)           8376 (bytes)
+ 0x0000000000000003 (PLTGOT)             0xa84a50
+ 0x0000000000000014 (PLTREL)             RELA
+ 0x0000000000000006 (SYMTAB)             0x320
+ 0x000000000000000b (SYMENT)             24 (bytes)
+ 0x0000000000000005 (STRTAB)             0x335c
+ 0x000000000000000a (STRSZ)              6368 (bytes)
+ 0x000000006ffffef5 (GNU_HASH)           0x2820
+ 0x0000000000000004 (HASH)               0x283c
+ 0x0000000000000019 (INIT_ARRAY)         0xa83768
+ 0x000000000000001b (INIT_ARRAYSZ)       32 (bytes)
+ 0x000000000000001a (FINI_ARRAY)         0xa83788
+ 0x000000000000001c (FINI_ARRAYSZ)       16 (bytes)
+ 0x000000006ffffff0 (VERSYM)             0x2468
+ 0x000000006ffffffe (VERNEED)            0x2730
+ 0x000000006fffffff (VERNEEDNUM)         5
+ 0x0000000000000000 (NULL)               0x0
+
+
+Version symbols section '.gnu.version' contains 355 entries:
+ Addr: 0x0000000000002468  Offset: 0x00002468  Link: 3 (.dynsym)
+  000:   0 (*local*)       2 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  004:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    1 (*global*)      1 (*global*)   
+  008:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    1 (*global*)   
+  00c:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  010:   1 (*global*)      1 (*global*)      1 (*global*)      2 (GLIBC_2.17) 
+  014:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  018:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  01c:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  020:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  024:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  028:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  02c:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  030:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  034:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  038:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  03c:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  040:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  044:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  048:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  04c:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  050:   1 (*global*)      2 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  054:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  058:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  05c:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  060:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  064:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  068:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  06c:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  070:   1 (*global*)      1 (*global*)      4 (GLIBC_2.29)    5 (GLIBC_2.17) 
+  074:   5 (GLIBC_2.17)    5 (GLIBC_2.17)    5 (GLIBC_2.17)    1 (*global*)   
+  078:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  07c:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  080:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  084:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  088:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  08c:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  090:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  094:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  098:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  09c:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  0a0:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  0a4:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  0a8:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  0ac:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  0b0:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  0b4:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  0b8:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  0bc:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  0c0:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  0c4:   1 (*global*)      1 (*global*)      2 (GLIBC_2.17)    1 (*global*)   
+  0c8:   2 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  0cc:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  0d0:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  0d4:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  0d8:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17)    1 (*global*)   
+  0dc:   1 (*global*)      1 (*global*)      1 (*global*)      1 (*global*)   
+  0e0:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  0e4:   2 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  0e8:   3 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  0ec:   3 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  0f0:   3 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  0f4:   2 (GLIBC_2.17)    6 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  0f8:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  0fc:   2 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  100:   3 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  104:   3 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  108:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  10c:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  110:   2 (GLIBC_2.17)    7 (GLIBC_2.30)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  114:   3 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  118:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  11c:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  120:   1 (*global*)      8 (GLIBC_2.29)    1 (*global*)      2 (GLIBC_2.17) 
+  124:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  128:   3 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  12c:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  130:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  134:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  138:   2 (GLIBC_2.17)    1 (*global*)      2 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  13c:   3 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  140:   3 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  144:   3 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  148:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  14c:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  150:   2 (GLIBC_2.17)    9 (GLIBC_2.28)    a (GLIBC_2.25)    b (GLIBC_2.18) 
+  154:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  158:   2 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  15c:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    5 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  160:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+
+Version needs section '.gnu.version_r' contains 5 entries:
+ Addr: 0x0000000000002730  Offset: 0x00002730  Link: 8 (.dynstr)
+  000000: Version: 1  File: libm.so.6  Cnt: 1
+  0x0050:   Name: GLIBC_2.29  Flags: none  Version: 4
+  0x0010: Version: 1  File: libpthread.so.0  Cnt: 1
+  0x0060:   Name: GLIBC_2.17  Flags: none  Version: 3
+  0x0020: Version: 1  File: libc.so.6  Cnt: 6
+  0x0070:   Name: GLIBC_2.17  Flags: none  Version: 2
+  0x0080:   Name: GLIBC_2.18  Flags: none  Version: 11
+  0x0090:   Name: GLIBC_2.25  Flags: none  Version: 10
+  0x00a0:   Name: GLIBC_2.28  Flags: none  Version: 9
+  0x00b0:   Name: GLIBC_2.29  Flags: none  Version: 8
+  0x00c0:   Name: GLIBC_2.30  Flags: none  Version: 7
+  0x0030: Version: 1  File: libdl.so.2  Cnt: 1
+  0x00d0:   Name: GLIBC_2.17  Flags: none  Version: 5
+  0x0040: Version: 1  File: ld-linux-aarch64.so.1  Cnt: 1
+  0x00e0:   Name: GLIBC_2.17  Flags: none  Version: 6

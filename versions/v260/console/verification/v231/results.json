@@ -1,0 +1,39 @@
+{
+  "release": "Microduck-Console-Studio-V231",
+  "console_version": "1.0.231",
+  "firmware": "1fa8438-feetech-ft6-control.79",
+  "baseline": "V230 / control.78 (original native executables V229)",
+  "changes": [
+    "event-triggered Wi-Fi/hotspot recovery",
+    "shared PADD ai-input/ai-mouth runtime directory permissions"
+  ],
+  "validation": {
+    "python_checks": 129,
+    "shipped_firmware_checks": 71,
+    "ai_and_ui_service_regression_checks": 58,
+    "frontend_suites": [
+      "hotspot UI44",
+      "recorder UI42",
+      "power UI45 updated for existing V230 commissioning behavior"
+    ],
+    "bash_and_changed_python_syntax": "passed",
+    "native_elf_headers": "passed",
+    "firmware_sha256_and_tar_readback_files": 215,
+    "notification_transport": "real AF_UNIX SOCK_DGRAM socketpair; pathname bind/routing fixture because executor blocks pathname sockets",
+    "padd_runtime_directory_tests": "real filesystem modes/group inheritance/recreation; cross padd/radxa execution requires target board"
+  },
+  "network_stable_periodic_queries": false,
+  "driver_firmware_kernel_bootloader_dtb_modified": false,
+  "native_changed_byte_offsets_vs_v230": [
+    621676
+  ],
+  "native_padd_mediad_models_onnx_byte_identical_to_v230": true,
+  "inherited_fixes": [
+    "startup readiness/profile load/activation readback/retry",
+    "Armbian atomic boot writer",
+    "commissioning torque-off shutdown"
+  ],
+  "hardware_verified": false,
+  "known_good": "previously hardware-verified reference card retained",
+  "next_task": "target-board V231 upgrade: real NM disconnect -> AP, AI nod, commissioning shutdown and reboot; image creation after acceptance"
+}

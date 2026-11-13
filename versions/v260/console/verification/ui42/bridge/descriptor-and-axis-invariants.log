@@ -1,0 +1,3 @@
+PASS byte-identical function bodies: create_xbox, setup_abs, add_trigger_axis, scaled, xbox_key
+PASS byte-identical run_bridge axis discovery/scaling selection before create_xbox
+No BTN_TL2/BTN_TR2 descriptor insertion; BTN_START key order unchanged.

@@ -1,0 +1,142 @@
+{
+  "emotion-sounds/angry/angry_a.wav": {
+    "sha256": "755b3e5302236139ebe89198449881ed60a89130af6ebf6fe1f8b86245cd5182",
+    "bytes": 225624
+  },
+  "emotion-sounds/angry/angry_b.wav": {
+    "sha256": "ab799be48504f247cee44b4a6c46e16c32e1eed49944bb9b09889f8d37f611f2",
+    "bytes": 216042
+  },
+  "emotion-sounds/curious/curious.wav": {
+    "sha256": "d137a4708ae0bdb342c0fd36aedb81ce2d96cdfbcc0ee5dfb00750567f6519a6",
+    "bytes": 136706
+  },
+  "emotion-sounds/defiant/defiant.wav": {
+    "sha256": "73b7689361ba2c82a37cd1a0f3c3e684c08065654d92c127cc684281a4b48a15",
+    "bytes": 134440
+  },
+  "emotion-sounds/devastated/devastated.wav": {
+    "sha256": "c0fddf1c06151191fb2f4b1b0c3ad7110856bfcd519b25640d4990026a1e27bd",
+    "bytes": 633354
+  },
+  "emotion-sounds/excited/excited.wav": {
+    "sha256": "ad39ef89b59f6862e274679d0b130599ba9751cbeb547fbef68bc3da2c4105b9",
+    "bytes": 272682
+  },
+  "emotion-sounds/impatient/impatient.wav": {
+    "sha256": "f5cd36af8e4d8ad84979956d222048a911b0446e71066bbdcac795c6eef0f4b6",
+    "bytes": 220842
+  },
+  "emotion-sounds/laugh/laugh.wav": {
+    "sha256": "ecdf67431d502a20981ab1cfc74da6457f4c8ac59e810a4c2efc5ec28be07205",
+    "bytes": 232552
+  },
+  "emotion-sounds/mmh/mmh.wav": {
+    "sha256": "616534c27c49118ca880d9c944d753565ed0bacf67acd6d85bece98142163df8",
+    "bytes": 96042
+  },
+  "emotion-sounds/mock/mock.wav": {
+    "sha256": "c41f4a859aa2bb86e3d1fdb7dd24916af3d4c63e54c20ba4b62db2ff4afb733e",
+    "bytes": 197802
+  },
+  "emotion-sounds/no/no_a.wav": {
+    "sha256": "6ae280991fcbbe4acf2c68ddfd2dbf81d7ba6c1aef561b774e4a10d828ccf360",
+    "bytes": 141162
+  },
+  "emotion-sounds/no/no_b.wav": {
+    "sha256": "9c57fd7105486c2dfcc656244fb64f1134c282e4ae5ef26ca4eda65e0c691539",
+    "bytes": 145002
+  },
+  "emotion-sounds/no/no_c.wav": {
+    "sha256": "b3dd843663a5d0eccaf1ae42d95bbb324ac2b54f2c4c781c0a2651ca8f2b5b58",
+    "bytes": 153642
+  },
+  "emotion-sounds/sad/sad.wav": {
+    "sha256": "9067f3089f1723c6e2a6c1850a1bd1eba7aa468e99b8d284d666c8e704eae560",
+    "bytes": 292138
+  },
+  "emotion-sounds/yes/yes.wav": {
+    "sha256": "0831b5f9d6b80a1f8e5893a521ed6a557069860b81b0c21333ffb312e00d2736",
+    "bytes": 76842
+  },
+  "emotion-sounds/yes_fast/yes_fast.wav": {
+    "sha256": "b1c6d456a132b3f521e0cad5f50a6f117d59fbaaf042acc0d64df50d15e95cf5",
+    "bytes": 65322
+  },
+  "gamepad-r7/gamesir-xboxd": {
+    "sha256": "19aff4331a956151514714680307e2053b1982aba820f2e5ded05f0e5b5892e3",
+    "bytes": 13992
+  },
+  "mediad": {
+    "sha256": "6e31181cfb540f9ea0686227d12c0c5467f1a27aca88a804336faa963a2ea22c",
+    "bytes": 10920000
+  },
+  "models/1c94934c6421ec72ed48079cea749668/policy.onnx": {
+    "sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+    "bytes": 793860
+  },
+  "models/1cbf8730eadd75a5704332c9f3c10f60/policy.onnx": {
+    "sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+    "bytes": 795454
+  },
+  "models/59e15d7b04d0c40e9b11b8a70bdecae6/policy.onnx": {
+    "sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac",
+    "bytes": 795451
+  },
+  "models/67ad09d82f4865d222a7ae06f250cf9f/policy.onnx": {
+    "sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+    "bytes": 795427
+  },
+  "models/9203bb8f5df15cffaa29f5315a722835/policy.onnx": {
+    "sha256": "9203bb8f5df15cffaa29f5315a722835c1bd718b940b14330f97556ccab83065",
+    "bytes": 795394
+  },
+  "models/b14e3a8b56ddbb8d2d831e727774a168/policy.onnx": {
+    "sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69",
+    "bytes": 795476
+  },
+  "models/ee0376c927044cdece056ba1d3e6eac7/policy.onnx": {
+    "sha256": "ee0376c927044cdece056ba1d3e6eac77b3e02ee3f701f1feb437c183ed39a6d",
+    "bytes": 795426
+  },
+  "onnxruntime/libonnxruntime.so.1.28.0": {
+    "sha256": "f1ec1a08eb99bd6e5401340f0a2b101381bf4694415480291dc13bcaa30f9ec7",
+    "bytes": 20591712
+  },
+  "onnxruntime/libonnxruntime_providers_shared.so": {
+    "sha256": "3b6be288fbfb7dff8770d08a23defdde18e8f7e0f5a2b344a0e5e238c999ea88",
+    "bytes": 198792
+  },
+  "padd": {
+    "sha256": "fd9fb6b99083d9f1eeee5414910dc861d8f88c805f182e6e4a57d9c7b6834bbd",
+    "bytes": 3788992
+  },
+  "robotctl": {
+    "sha256": "a5034efaf6d26aaecc4a1b477c947abb7cf59d157288b9ad661706f00a700da7",
+    "bytes": 4362264
+  },
+  "robotd": {
+    "sha256": "65bf917cd05f9304ae1d6602562f9aacc1953ae0b3d4fb067305a8f06678f7a0",
+    "bytes": 5861176
+  },
+  "roller/crouch/policy.onnx": {
+    "sha256": "82be20b115d925ab5adfd20c12188364dd841a2c533eba3bfd64fb9212fe4aa4",
+    "bytes": 795485
+  },
+  "roller/spin/policy.onnx": {
+    "sha256": "621fe9f3ae3463089033c76354f8290e23457898af7e3e78de008af4a7180569",
+    "bytes": 795476
+  },
+  "roller/standup/policy.onnx": {
+    "sha256": "2575b5894bcd8e3fdbe005b1a7b90d9491085726df32000c26cf5b92b7a10ebb",
+    "bytes": 795427
+  },
+  "roller/swizzle/policy.onnx": {
+    "sha256": "14195135fcaa60cc45c36181d31542e76f07d873261ecae41dca72c0b795fcc8",
+    "bytes": 795459
+  },
+  "sounds": {
+    "sha256": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103",
+    "bytes": 1152920
+  }
+}

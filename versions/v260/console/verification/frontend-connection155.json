@@ -1,0 +1,28 @@
+{
+  "schema": "microduck-connection-ui-verification/v1",
+  "tests": [
+    {
+      "test": "test_connection_ui155.mjs",
+      "exit": 0,
+      "output": "PASS connection pending/first feedback neutral; real SSH, state, health and startup failures visible; stale data warning; actual banner and ServicePanel.paint agree; generation reset retires old reports; no telemetry mutation\n"
+    },
+    {
+      "test": "test_startup_ui.mjs",
+      "exit": 0,
+      "output": "PASS stale bus startup error, live health requirement, one-click diagnostic download, duplicate guard and no motion job\n"
+    },
+    {
+      "test": "test_controls154.mjs",
+      "exit": 0,
+      "output": "PASS scale-only payload, removed servo/import/LB test UI, guarded built-in kick, unchanged webpad session, and verified firmware versions 32/33/error\n"
+    },
+    {
+      "test": "test_gamepad_repair_ui.mjs",
+      "exit": 0,
+      "output": "PASS placement, one submitted repair, existing sudo flow, stale IMU bypass, replay/offline/busy gates, progress and partial evidence\n"
+    }
+  ],
+  "exit": 0,
+  "extra_pollers": false,
+  "hardware_tested": false
+}

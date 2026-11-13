@@ -1,0 +1,76 @@
+{
+  "release": "V205_control.V73_AI-T1_UI25",
+  "python_ai_tests": {
+    "tests": 185,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 185,
+    "success": true
+  },
+  "frontend": [
+    {
+      "passed": true,
+      "scope": "UI21 grouped catalogs, per-axis range display, per-question images and TOF, late preview isolation, bounded scrolling"
+    },
+    {
+      "passed": true,
+      "scope": "UI24 live speech checkbox, no optimistic state, pending on/off, Zero ACK and ASR sync, old HTTP/status/event rejection, error retains confirmed state, no second mute or task switch"
+    },
+    {
+      "passed": true,
+      "scope": "UI25 shared compact credential grid, bounded question input, no obsolete 1200px gap, unique control IDs, hidden empty visual output, model-wait busy state and model completion text"
+    },
+    {
+      "passed": true,
+      "scope": "rehearsal composer, preset draft, explicit task send and clear, waiting for provider ACK; no action request from text"
+    },
+    {
+      "passed": true,
+      "scope": "live microphone bars; retained credentials and editing; Chinese skills; multi-turn chat; vision busy/error/preview/source labels; measured brightness, exposure warning and next-capture reset"
+    },
+    {
+      "passed": true,
+      "scope": "real ControlPanel and PadControls; identical Start frames; one click one press/release; HOME then hold labels from readback; disabled during takeover/maintenance/offline; keyboard repeat; suspend reset; no automatic commands"
+    },
+    {
+      "passed": true,
+      "scope": "exact native PCM WAV, 24k mono16, per-window RAM, no autoplay/persistence, explicit replay/stop/end, sequence gaps, memory eviction, URL revocation and pagehide cleanup"
+    }
+  ],
+  "changed_inherited_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_action_gate.py",
+    "ai_conversation.py",
+    "ai_persona.py",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "ai_vision.py",
+    "ai_zero.py",
+    "release_identity.py",
+    "static/ai-panel.css",
+    "static/ai-panel.js",
+    "static/index.html",
+    "verification/test_ai_hat.mjs",
+    "verification/test_ai_session_ui6.py",
+    "verification/test_ai_v200.py",
+    "verification/test_ai_vision_ui13.py"
+  ],
+  "firmware_bytes_identical_to_ui24": true,
+  "native_rebuilt": false,
+  "model_completion": "observe robot.state.policy enter the named model and exit on a newer t_ns sample; duration is only a timeout",
+  "capture_barrier": "same Zero activity lock until raw frame fetched; one read-only cached model check over existing control pipe",
+  "no_extra_head_home_or_stability_motion": true,
+  "camera_frame": "existing mediad /frame -> snapshot::fetch -> media.frame next-frame request, after model-idle receipt",
+  "no_new_robot_policy_polling_or_device_readers": true,
+  "no_pixel_processing_added": true,
+  "compact_ui": "one credential grid, five cells on wide containers, compact question input, full-width persona, no empty visual-result block",
+  "source_ui24_zip_sha256": "210b238a337411047b9ab919adab02f52bdfecd2cbe7644978f7c3237dc6d711",
+  "firmware_sha256": "1b7376621ea40994edffcea48be9c9a4bd7bc42a19388bacdce827a0dbcab99e",
+  "hardware_tested": false,
+  "live_cloud_tested": false,
+  "browser_render_tested": false,
+  "actual_browser_audio_device_tested": false,
+  "windows_tested": false
+}

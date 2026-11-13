@@ -1,0 +1,7 @@
+UI8 validation
+51 targeted Python tests passed; 0 failures, 0 errors (5.003s).
+Frontend behavior checks passed, including real-volume bars and saved-form behavior.
+Static CSS cascade passed at five viewport widths; no pixel rendering claimed.
+Windows protection branch uses mock DPAPI, not native Windows runtime.
+Firmware/motion/controller code unchanged.
+No live Zero/HAT/Doubao test in this environment.

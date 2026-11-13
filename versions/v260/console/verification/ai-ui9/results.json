@@ -1,0 +1,56 @@
+{
+  "label": "V200_control.V71 AI-T1 UI9",
+  "changes": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "static/ai-panel.css",
+    "static/ai-panel.js",
+    "static/index.html",
+    "verification/test_ai_hat.mjs"
+  ],
+  "frontend": {
+    "passed": true,
+    "test": "verification/test_ai_hat.mjs",
+    "scope": [
+      "16 visible ascending bars",
+      "actual volume determines lit count",
+      "quiet/loud/silent/full-scale cases",
+      "stale and stopped audio unlit",
+      "dBFS and uploaded seconds directly visible",
+      "repeated telemetry ignored",
+      "blank inline status hidden; errors visible",
+      "saved credentials and voice editing preserved",
+      "Chinese skills and multi-turn scroll retention"
+    ]
+  },
+  "html": {
+    "three_configuration_boxes": true,
+    "static_explanatory_paragraphs": 0,
+    "ids_unique": true,
+    "skill_list_directly_visible": true
+  },
+  "static_css_cascade": {
+    "passed": true,
+    "viewport_widths": [
+      1920,
+      1280,
+      1024,
+      800,
+      390
+    ],
+    "mic_svg_size_px": [
+      100,
+      28
+    ]
+  },
+  "backend_source_byte_identical_to_ui8": true,
+  "previous_backend_validation": {
+    "reference": "verification/ai-ui8/results.json",
+    "python_passed": 51,
+    "rerun_in_ui9": false
+  },
+  "firmware_sha256": "6374b23464bcd8d2e221bd6ba3208dcab0eabcda932ed3f6cc20a5c5667fcbd2",
+  "firmware_and_models_unchanged": true,
+  "browser_render_verified": false,
+  "hardware_verified": false
+}

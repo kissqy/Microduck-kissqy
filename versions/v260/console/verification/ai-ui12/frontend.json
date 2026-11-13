@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "test": "verification/test_ai_hat.mjs",
+  "default_editor_matches_backend": true,
+  "editor_label": "角色定位与回复规则",
+  "reply_instruction": "最多20字，含标点",
+  "config_and_editing_retained": true
+}

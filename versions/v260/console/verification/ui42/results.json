@@ -1,0 +1,81 @@
+{
+  "release": "Microduck-UI42",
+  "console_version": "1.0.222",
+  "python": {
+    "modules": [
+      "test_ai_camera_ui14",
+      "test_ai_camera_ui15",
+      "test_ai_camera_ui16",
+      "test_ai_camera_ui40",
+      "test_ai_cleanup_ui40",
+      "test_ai_connected_pad_ui26",
+      "test_ai_endpoint_ui18",
+      "test_ai_hat",
+      "test_ai_hat_permission_ui27",
+      "test_ai_input_ui11",
+      "test_ai_input_ui41",
+      "test_ai_isolation_ui32",
+      "test_ai_lifecycle_ui40",
+      "test_ai_log_cursor",
+      "test_ai_model_capture_ui25",
+      "test_ai_observability",
+      "test_ai_original_ui19",
+      "test_ai_pcm_mouth_ui37",
+      "test_ai_pcm_schedule_ui40",
+      "test_ai_playback_ui10",
+      "test_ai_preferences",
+      "test_ai_replay_ui23",
+      "test_ai_scene_chain_ui29",
+      "test_ai_session_ui6",
+      "test_ai_speech_mouth_ui35",
+      "test_ai_speech_ui23",
+      "test_ai_speech_ui24",
+      "test_ai_ui21",
+      "test_ai_ui22",
+      "test_ai_ui7",
+      "test_ai_v200",
+      "test_ai_vision_ui13",
+      "test_input157",
+      "test_pad_recorder_status_ui42"
+    ],
+    "total": 275,
+    "passed": 275,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 36.738
+  },
+  "native_host": {
+    "command": "cargo test --locked -p padd -j4 -- --test-threads=1",
+    "passed": 89,
+    "failed": 0,
+    "log": "padd-tests.log"
+  },
+  "bridge_host": {
+    "production_paths": "passed",
+    "mapping": "passed",
+    "persistent_directory_install": "passed"
+  },
+  "frontend": {
+    "passed": true,
+    "suites": [
+      "test_pad_recorder_ui42.mjs",
+      "test_ai_hat.mjs",
+      "test_ai_ui40.mjs",
+      "test_ai_camera_ui15.mjs"
+    ],
+    "known_historical_test": "test_controls154.mjs has a broad LB/起身 regex mismatch, also reproduced unmodified on UI41; not counted as passing."
+  },
+  "arm_build": [
+    "padd",
+    "gamepad-r7/gamesir-xboxd"
+  ],
+  "physical_robot": false,
+  "real_controller_button_tested": false,
+  "real_cloud_voice": false,
+  "robotd_rebuilt": false,
+  "models_changed": false,
+  "identity_check": "mode, loaded paths and skill catalog; not model weight hashes",
+  "replay_contract": "recorded intents and timing, not measured physical trajectory",
+  "clock_precision_regression": "same-millisecond ns sample accepted; true future/stale rejected"
+}

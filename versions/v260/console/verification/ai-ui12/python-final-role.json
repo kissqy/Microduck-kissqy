@@ -1,0 +1,12 @@
+{
+  "modules": [
+    "verification.test_ai_preferences",
+    "verification.test_ai_ui7"
+  ],
+  "tests_run": 15,
+  "passed": 15,
+  "failures": 0,
+  "errors": 0,
+  "successful": true,
+  "default_reply_rule": "<=20 characters including punctuation"
+}

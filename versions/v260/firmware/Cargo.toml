@@ -1,0 +1,111 @@
+# Workspace root for the robot daemon.
+#
+# One crate per service or tool, matching the service split in
+# docs/design/architecture.md §1. `robotd`, `btd` and `mediad` are all siblings now.
+[workspace]
+resolver = "3"
+members = ["btd", "configd", "duck-ble", "duck-control", "duck-detect", "duck-ether", "duck-ipc-proto", "duckctl", "kinematics", "mediad", "odometry", "pad-imu", "padd", "pet-detect", "sounds", "tof", "updater", "robotctl", "robotd", "robotd-params", "test-support", "uyvy", "xtask"]
+
+# Everything except `duckctl`, and that exception is the whole reason this key exists.
+#
+# `cargo board --bins` — in `dev-push.sh` and in the release workflow — builds every default
+# member for aarch64, which is right for a robot's daemons and wrong for the client a developer
+# runs on their own machine: it would cross-compile a Bluetooth stack for a board that must never
+# see one, on the release path, for nothing.
+#
+# The alternative was naming the binaries explicitly at each `--bins` call site. There are two of
+# them and they would have to be kept in step by hand, which is the failure this repo keeps
+# writing down. One list here, and a new daemon is picked up by both without anybody remembering.
+#
+# `--workspace` is unaffected, so CI still lints and tests `duckctl` exactly as before.
+default-members = ["btd", "configd", "duck-ble", "duck-ble", "duck-control", "duck-detect", "duck-ipc-proto", "kinematics", "mediad", "odometry", "pad-imu", "padd", "pet-detect", "sounds", "tof", "updater", "robotctl", "robotd", "robotd-params", "test-support", "uyvy", "xtask"]
+
+# ONNX Runtime, which robotd dlopens to run a policy. One source of truth: `xtask package`
+# bakes these into the release's preinstall hook, and a test asserts scripts/setup-board.sh
+# agrees with them. Two copies drifting apart is exactly how a board ended up with 1.20.1
+# against an `ort` that panics below 1.23.
+#
+# `floor` is the minimum `ort` accepts — raise it in step with the `ort` dependency.
+# `target` is what we install when a board is below the floor.
+[workspace.metadata.onnxruntime]
+floor  = "1.23"
+target = "1.28.0"
+
+# Rockchip's NPU runtime, which `duck-detect` dlopens to run the duck detector. Same shape as the
+# ONNX Runtime pin above and for the same reason — `scripts/setup-npu.sh` is fetched standalone with
+# curl and cannot read this file, so it carries a literal and a test asserts the two agree.
+#
+# The version is a tag in Rockchip's `rknn-toolkit2` repository, which is where the .so lives; it has
+# to be at least as new as the model the converter produces, because a runtime older than its model
+# fails at `rknn_init` with a number.
+[workspace.metadata.rknpu]
+runtime = "v2.3.2"
+
+# The official policy set, which `robotd` runs and which lives on the Hugging Face Hub rather
+# than in this repository — a gait retrain should not need a daemon release, and a daemon fix
+# should not re-ship six megabytes of unchanged weights.
+#
+# Same shape as the three pins above and for the same reason: `scripts/seed-policies.sh` runs from
+# inside a release and cannot read this file, so it carries the literals and a test asserts the
+# two agree.
+#
+# `version` is a tag in the Hub repo, and it is a *minimum*: what a freshly provisioned board
+# installs, and the oldest official set this daemon's defaults load — a board below it is moved
+# up to it by the post-install hook, one past it is left alone. Moving past it is `robotctl
+# policy update`, which needs no daemon release — bumping this does, since it ships inside one,
+# and it is bumped when a slot's default names a file only the new set carries.
+[workspace.metadata.policies]
+repo    = "pollen-robotics/microduck-policies"
+version = "v5"
+
+# The duck detector, the same way: trained in pollen-robotics/duck_detector, published on the Hub,
+# and seeded onto a board by `scripts/seed-detector.sh` from this pin — a floor, moved past with
+# `robotctl duck-detector update`. The model repo shares its name with the *dataset* repo; the robot only
+# ever addresses the model (`huggingface.co/<repo>/resolve/…`, `api/models/<repo>`), and the
+# dataset lives under `datasets/`, so the shared name cannot be confused on the wire.
+[workspace.metadata.detector]
+repo    = "pollen-robotics/microduck-duck-detector"
+version = "duck-v1"
+
+# The prebuilt GStreamer plugins `mediad` needs, built in CI from pinned upstream sources at
+# https://github.com/pollen-robotics/microduck-gst-plugins — `mpph264enc` (hardware H.264 through
+# Rockchip MPP) and `webrtcsink`/`webrtcsrc`, neither of which exists in any Debian suite.
+#
+# One source of truth, for the same reason `[workspace.metadata.onnxruntime]` above is one:
+# `scripts/setup-gstreamer.sh` is fetched standalone with curl and cannot read this file, so it
+# carries a literal, and a test asserts the two agree. Two copies of a version drifting apart is
+# how a board ended up with an ONNX Runtime its `ort` panics on.
+[workspace.metadata.gst-plugins]
+repo    = "pollen-robotics/microduck-gst-plugins"
+version = "v3"
+
+[workspace.package]
+version = "0.15.1"
+edition = "2024"
+# 1.99 for the atomics' `try_update` (mediad), which replaced the now-deprecated
+# `fetch_update`. That also covers `std::fs::File::try_lock` (1.89), how the single-flight
+# update lock works without a dependency (updater/src/journal.rs), and edition 2024 (1.85).
+# Declared so a teammate on an older toolchain gets "requires rustc 1.99" instead of an
+# error about a method that does not exist.
+rust-version = "1.99"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+semver = { version = "1", features = ["serde"] }
+thiserror = "2"
+tokio = "1"
+clap = { version = "4", features = ["derive"] }
+hound = "3.5"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+tokio-util = "0.7"
+async-trait = "0.1"
+url = "2"
+
+# No custom [profile.release]. Binary size is not worth optimising for: model artifacts
+# will dwarf a few MB of binary, and the tuning cost more than it bought —
+# `strip = true` in particular removes the symbol table, turning a panic backtrace in
+# journald into bare addresses, which is exactly what you need when diagnosing a robot
+# you cannot attach a debugger to. `lto`/`codegen-units` only lengthened builds.

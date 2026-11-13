@@ -1,0 +1,17 @@
+{
+  "source_ui13_sha256": "3ea25e41d5e871edffbfa7dbb9de0a8796b082a156f35ea722021bc49b660d19",
+  "changed_existing_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_runtime.py",
+    "ai_vision.py",
+    "static/ai-panel.css",
+    "static/ai-panel.js",
+    "static/index.html",
+    "verification/test_ai_hat.mjs",
+    "verification/test_ai_vision_ui13.py"
+  ],
+  "added_test": "verification/test_ai_camera_ui14.py",
+  "added_reports": "verification/ai-ui14/",
+  "firmware_and_other_manifest_files_unchanged": true
+}

@@ -1,0 +1,6 @@
+configd runs as root, so it needs no user of its own — see the justification in
+configd.service. It does need the `robot` group to exist, which
+updater/systemd/sysusers.d/robot.conf already creates.
+
+This file is a placeholder marking that absence deliberately: if configd ever drops to an
+unprivileged user (which needs polkit on the image), its sysusers entry belongs here.

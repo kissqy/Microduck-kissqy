@@ -1,0 +1,63 @@
+{
+  "baseline": "Microduck-Console-Studio-V229 / control.77",
+  "boot_repair": {
+    "url": "https://github.com/kissqy/Microduck-kissqy/pull/2",
+    "sha256": "25f9b0ed923ba8e530cb8bcea86ae2eb2249187bed4e4155ac7f7503803f3877"
+  },
+  "wifi_reference": {
+    "implementation": "R10: wait for NetworkManager and Wi-Fi readiness; connect saved Wi-Fi or start AP. No decision marker and no direct saved-keyfile parsing. Retry only while initial startup has not completed. No runtime disconnect recovery.",
+    "module_revision": "R10-boot-only",
+    "module_sha256": "3b23f4224af343b88e92410ca6bd4bcbc10165bfadf626cd5e445379b67db191",
+    "program_sha256": "71fef0e3c179e6a39f04029dbbe937515a8c446918763e1d6fc33910bf0bc0c7",
+    "disconnect_events": false,
+    "runtime_network_polling": false,
+    "automatic_service_restart": false,
+    "manual_hotspot_button_retained": true
+  },
+  "wifi_driver": "unchanged; no driver payload or installation",
+  "hardware_verified": false,
+  "release": "V260 / control.102",
+  "onboarding_install_readback": true,
+  "system_password_min_length": 6,
+  "onboarding_artwork": {
+    "input": "image(20261109-150419).png",
+    "original_sha256": "384812247910638095fc723bed48cdfc7618dc983ae126241e356f2b345e86fa",
+    "embedded_sha256": "15285ab6824ef7695dc66a16454fb24cde1b7437f2330cb6cb7c882bb8b91822",
+    "dimensions": [
+      1040,
+      585
+    ],
+    "webp_quality": 48,
+    "embedded_bytes": 54702,
+    "transport_argv_bytes": 102168,
+    "artwork_redrawn": false,
+    "image_crop": false,
+    "offline": true,
+    "asset_failure_blocks_network": false
+  },
+  "previous_hotspot": {
+    "implementation": "R9: once per boot, wait for wireless readiness and try saved infrastructure Wi-Fi. Open the AP only if none can connect; no runtime disconnect recovery.",
+    "module_revision": "R9-boot-only",
+    "module_sha256": "a2b69063bf0739a2ee68e5ad69e33deed858839bfb1f336a4faca4ba1033c82a",
+    "program_sha256": "582eeacbb3c1a871865faf9ed0f0a7f34f4584a6657a476e3d8193e3acabd19c",
+    "activation_attempts_at_initial_boot": 3,
+    "wireless_ready_timeout_seconds": 60,
+    "disconnect_events": false,
+    "runtime_network_polling": false,
+    "saved_profile_activation_attempts": "only during the initial 60-second boot connection window",
+    "automatic_service_restart": false,
+    "manual_hotspot_button_retained": true,
+    "saved_wifi_timeout_seconds": 60
+  },
+  "portal_import_checked_on_install": true,
+  "hotfix": "Remove only owned legacy captive-DNS .new files at installation/startup; use a dot-prefixed atomic staging file so dnsmasq never parses an interrupted write. R10 boot decisions unchanged.",
+  "previous_hotfix": "Restore the V252 artwork exactly; isolate optional artwork decoding; load the complete portal entry during installation. R10 network logic unchanged.",
+  "hotspot_dependency_installation": {
+    "package": "dnsmasq-base",
+    "phase": "firmware installation before stopping old robotd",
+    "installed_if_missing": true,
+    "executable_verified": true,
+    "boot_program_unchanged": true
+  },
+  "cleanup": "Delete only the old home_ready function unconditionally replaced by R10 install(globals()), and its unused connection helper. Keep active boot, dependency and DNS logic unchanged."
+}

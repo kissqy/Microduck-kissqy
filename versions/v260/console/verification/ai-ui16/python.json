@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "command": "python3 -m unittest discover -s verification -p 'test_ai*.py'",
+  "tests": 108,
+  "failures": 0,
+  "errors": 0,
+  "elapsed_seconds": 17.784,
+  "new_ui16_tests": 10
+}

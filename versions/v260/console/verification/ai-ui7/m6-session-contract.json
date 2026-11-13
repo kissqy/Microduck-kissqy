@@ -1,0 +1,30 @@
+{
+  "event_id": "fixture-event",
+  "type": "session.create",
+  "session": {
+    "model": "1.2.6.1",
+    "audio": {
+      "input": {
+        "format": {
+          "type": "pcm",
+          "rate": 16000
+        }
+      },
+      "output": {
+        "format": {
+          "type": "pcm",
+          "rate": 24000
+        },
+        "voice": "fixture",
+        "speed": 0,
+        "loudness": 0
+      }
+    },
+    "tools": []
+  },
+  "extension": {
+    "asr": {},
+    "tts": {},
+    "dialog": {}
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "binary": "/workspace/scratch/516afff932a6/qa/ui21/native-target/debug/deps/robotd-f49d995f2c66543e",
+  "passed": 30,
+  "failed": 0,
+  "tests": [
+    {
+      "test": "ai_expressions::tests::catalog_and_ranges_come_from_the_native_player_and_model",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest ai_expressions::tests::catalog_and_ranges_come_from_the_native_player_and_model ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "ai_expressions::tests::single_slot_retains_completion_and_never_queues",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest ai_expressions::tests::single_slot_retains_completion_and_never_queues ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "emotion_cycle::tests::named_selection_does_not_advance_r3_cycle",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest emotion_cycle::tests::named_selection_does_not_advance_r3_cycle ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "emotion_cycle::tests::only_fresh_upright_idle_walking_policy_may_start",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest emotion_cycle::tests::only_fresh_upright_idle_walking_policy_may_start ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "emotion_cycle::tests::pending_and_playing_presses_cannot_queue_and_cancel_drops_pending",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest emotion_cycle::tests::pending_and_playing_presses_cannot_queue_and_cancel_drops_pending ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "emotion_cycle::tests::refusals_and_cancel_do_not_consume_the_next_expression",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest emotion_cycle::tests::refusals_and_cancel_do_not_consume_the_next_expression ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "emotion_cycle::tests::thirteen_unique_emotions_wrap_without_play_dead_or_scene_commands",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest emotion_cycle::tests::thirteen_unique_emotions_wrap_without_play_dead_or_scene_commands ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::a_peck_goes_forward_twice_and_comes_back",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::a_peck_goes_forward_twice_and_comes_back ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::angry_snaps_four_times_bows_on_three_and_opens_wide_first",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::angry_snaps_four_times_bows_on_three_and_opens_wide_first ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::curious_quacks_comes_forward_tilts_right_then_left_on_the_chirps_and_comes_back",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::curious_quacks_comes_forward_tilts_right_then_left_on_the_chirps_and_comes_back ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::curious_tilts_both_ways_within_the_roll_range_and_ends_centred",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::curious_tilts_both_ways_within_the_roll_range_and_ends_centred ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::defiant_looks_up_left_then_up_right_with_a_quack_each",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::defiant_looks_up_left_then_up_right_with_a_quack_each ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::devastated_sits_droops_shakes_three_times_sobs_and_comes_back_level",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::devastated_sits_droops_shakes_three_times_sobs_and_comes_back_level ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::excited_wags_six_times_bobbing_with_the_beak_climbing",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::excited_wags_six_times_bobbing_with_the_beak_climbing ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::impatient_shakes_four_times_and_huffs",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::impatient_shakes_four_times_and_huffs ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::laugh_wags_with_the_beak_up_and_bobs_on_every_ha",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::laugh_wags_with_the_beak_up_and_bobs_on_every_ha ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::mmh_tilts_and_asks",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::mmh_tilts_and_asks ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::mock_rolls_the_head_on_the_staccato_run",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::mock_rolls_the_head_on_the_staccato_run ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::no_expression_touches_the_yaw_or_the_body",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::no_expression_touches_the_yaw_or_the_body ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::no_shakes_once_with_two_notes",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::no_shakes_once_with_two_notes ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::sad_lifts_then_droops_to_half_depth_shakes_twice_coos_and_comes_back_level",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::sad_lifts_then_droops_to_half_depth_shakes_twice_coos_and_comes_back_level ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::startled_looks_up_then_backs_away_then_settles",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::startled_looks_up_then_backs_away_then_settles ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::yes_fast_is_the_nod_with_a_curt_wak",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::yes_fast_is_the_nod_with_a_curt_wak ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "expressions::tests::yes_nods_once_and_quacks_at_the_bottom",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest expressions::tests::yes_nods_once_and_quacks_at_the_bottom ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "sound::tests::cancelled_expression_child_is_reaped_without_waiting_and_manual_audio_survives",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest sound::tests::cancelled_expression_child_is_reaped_without_waiting_and_manual_audio_survives ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "sound::tests::missing_expression_audio_is_silent_and_does_not_take_over_a_ride",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest sound::tests::missing_expression_audio_is_silent_and_does_not_take_over_a_ride ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "tests::emotion_dispatch_requires_ready_walking_and_does_not_queue_busy_clicks",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest tests::emotion_dispatch_requires_ready_walking_and_does_not_queue_busy_clicks ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "tests::home_dispatch_still_sets_power_request_while_expression_is_pending_or_running",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest tests::home_dispatch_still_sets_power_request_while_expression_is_pending_or_running ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "tests::named_expression_defaults_to_the_same_audio_choice_as_r3",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest tests::named_expression_defaults_to_the_same_audio_choice_as_r3 ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    },
+    {
+      "test": "tests::named_expression_requires_manual_hold_and_reports_exact_generation",
+      "returncode": 0,
+      "output": "\nrunning 1 test\ntest tests::named_expression_requires_manual_hold_and_reports_exact_generation ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 309 filtered out; finished in 0.00s\n\n"
+    }
+  ]
+}

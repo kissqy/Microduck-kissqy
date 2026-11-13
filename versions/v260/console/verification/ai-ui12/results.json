@@ -1,0 +1,37 @@
+{
+  "label": "V200_control.V71 AI-T1 UI12",
+  "role": "Microduck physical duck voice and action assistant",
+  "default_reply_characters_max": 20,
+  "punctuation_included": true,
+  "limit_mechanism": "system instructions sent to Doubao; live model adherence not measured",
+  "editor_label": "角色定位与回复规则",
+  "factory_ui11_style_migrated": true,
+  "custom_rules_preserved": true,
+  "key_and_voice_preserved": true,
+  "python": {
+    "passed": 26,
+    "failures": 0,
+    "errors": 0,
+    "role_report": "python-final-role.json",
+    "channel_report": "python-final-channel.json"
+  },
+  "frontend_passed": true,
+  "changed": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_persona.py",
+    "ai_preferences.py",
+    "ai_runtime.py",
+    "static/ai-panel.css",
+    "static/ai-panel.js",
+    "static/index.html",
+    "verification/test_ai_preferences.py"
+  ],
+  "audio_and_input_guard_code_unchanged": true,
+  "motion_gate_and_controls_unchanged": true,
+  "firmware_sha256": "6374b23464bcd8d2e221bd6ba3208dcab0eabcda932ed3f6cc20a5c5667fcbd2",
+  "firmware_unchanged": true,
+  "reference": "KidVoice_V6_1.0.0-dev.10-ui.25/main/dialogue_rules.hpp",
+  "browser_render_verified": false,
+  "real_cloud_reply_length_verified": false
+}

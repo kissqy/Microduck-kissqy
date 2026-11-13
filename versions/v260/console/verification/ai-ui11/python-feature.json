@@ -1,0 +1,15 @@
+{
+  "modules": [
+    "verification.test_ai_input_ui11",
+    "verification.test_ai_preferences",
+    "verification.test_ai_ui7",
+    "verification.test_ai_hat",
+    "verification.test_ai_session_ui6"
+  ],
+  "tests_run": 36,
+  "passed": 36,
+  "failures": 0,
+  "errors": 0,
+  "elapsed_seconds": 3.931,
+  "successful": true
+}

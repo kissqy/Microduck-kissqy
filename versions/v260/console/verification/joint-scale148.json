@@ -1,0 +1,195 @@
+{
+  "schema": "microduck-release-verification-v1",
+  "console_version": "1.0.148",
+  "generated_at_utc": "2026-10-07T14:31:30.009872+00:00",
+  "requested_change": "Reuse the existing slider for the joint-model base action scale; default 1.00.",
+  "ui": {
+    "label": "联合模型动作缩放",
+    "button": "应用联合缩放",
+    "default": 1.0,
+    "min": 0.1,
+    "max": 1.0,
+    "step": 0.01,
+    "draft_writes": false
+  },
+  "scale_semantics": "Profile action_scale replaces the ordinary global base scale; existing voltage compensation still applies once. Head/legs low-pass remain 0.5/0.7. Independent LB retains its own scale/filter.",
+  "backend_checks_completed_before_packaging": {
+    "initial_aggregate": {
+      "passed": 55,
+      "failed": 0,
+      "modules": [
+        "test_joint_scale_lifecycle (first 4 cases)",
+        "test_advanced_parameters",
+        "test_runtime_readback",
+        "test_rollback_scale",
+        "test_atomic_install",
+        "test_model_packages_execution",
+        "test_parameter_readback",
+        "test_calibration_restore",
+        "test_calibration_migration"
+      ]
+    },
+    "final_lifecycle": {
+      "passed": 5,
+      "failed": 0,
+      "overlap_with_initial": 4,
+      "explicit_recent_calibration_ids": [
+        10,
+        20,
+        32,
+        33
+      ]
+    }
+  },
+  "final_package_checks": [
+    {
+      "command": [
+        "node",
+        "packaging/test_joint_execution_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS joint-scale editing/default, exact apply, draft retention, saved-versus-live readback, legacy gating, replay protection, ordinary/LB restoration\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "packaging/test_advanced_parameters_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS drafts have no writes; single apply carries all four; saved/live values are distinct; empty input cannot apply\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "packaging/test_walk_ui.mjs",
+        "console/static"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS official global scale capability, active walk dispatch, stale telemetry configuration and explicit missing capability reason\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "test_console_release_compat",
+        "test_firmware_console",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_current_daemon_can_request_home_before_arrival (test_console_release_compat.ConsoleReleaseTests.test_current_daemon_can_request_home_before_arrival) ... ok\ntest_home_arrival_uses_measured_current_targets_and_keeps_error_checks (test_console_release_compat.ConsoleReleaseTests.test_home_arrival_uses_measured_current_targets_and_keeps_error_checks) ... ok\ntest_home_request_ramp_arrival_unlocks_walk_and_frontend (test_console_release_compat.ConsoleReleaseTests.test_home_request_ramp_arrival_unlocks_walk_and_frontend) ... ok\ntest_invalid_imu_and_restarted_daemon_do_not_confirm_home (test_console_release_compat.ConsoleReleaseTests.test_invalid_imu_and_restarted_daemon_do_not_confirm_home) ... ok\ntest_javascript_and_python_capabilities_match_for_new_and_legacy_reports (test_console_release_compat.ConsoleReleaseTests.test_javascript_and_python_capabilities_match_for_new_and_legacy_reports) ... ok\ntest_native_telemetry_adapts_new_build_and_actual_targets (test_console_release_compat.ConsoleReleaseTests.test_native_telemetry_adapts_new_build_and_actual_targets) ... ok\ntest_signed_positions_remain_live_and_angles_are_not_wrapped (test_console_release_compat.ConsoleReleaseTests.test_signed_positions_remain_live_and_angles_are_not_wrapped) ... ok\ntest_input_reconnect_error_does_not_turn_installed_firmware_into_failed_upgrade (test_firmware_console.DirectUpgradeTests.test_input_reconnect_error_does_not_turn_installed_firmware_into_failed_upgrade) ... ok\ntest_bundle_manifest_mismatch_and_tamper_are_refused (test_firmware_console.FirmwareTests.test_bundle_manifest_mismatch_and_tamper_are_refused) ... ok\ntest_firmware_command_cannot_carry_executable_paths (test_firmware_console.FirmwareTests.test_firmware_command_cannot_carry_executable_paths) ... ok\ntest_matching_local_zip_checked_before_any_remote_operation (test_firmware_console.FirmwareTests.test_matching_local_zip_checked_before_any_remote_operation) ... ok\ntest_old_or_unknown_firmware_and_truncated_zip_are_rejected (test_firmware_console.FirmwareTests.test_old_or_unknown_firmware_and_truncated_zip_are_rejected) ... ok\ntest_progress_received_before_management_finishes (test_firmware_console.FirmwareTests.test_progress_received_before_management_finishes) ... ok\ntest_sudo_password_never_enters_progress_or_final_error (test_firmware_console.FirmwareTests.test_sudo_password_never_enters_progress_or_final_error) ... ok\ntest_upgrade_works_without_fresh_robot_feedback_and_preserves_logs (test_firmware_console.FirmwareTests.test_upgrade_works_without_fresh_robot_feedback_and_preserves_logs) ... ok\n\n----------------------------------------------------------------------\nRan 15 tests in 0.363s\n\nOK\n"
+    }
+  ],
+  "service": {
+    "generated_at_utc": "2026-10-07T14:31:06.594312+00:00",
+    "service_package_sha256": "346d7c2f16aa5e9e5d74f193ae10d7ffa424e33446c532107975a4eeffba9c7b",
+    "service_package_bytes": 18920331,
+    "previous_service_package_sha256": "9cecf03286c608d750cee402d6a977870ba1d92a97b37cb5274abcdefd6c459a",
+    "changed_service_files": [
+      "BUILD.json",
+      "README.zh-CN.md",
+      "SHA256SUMS",
+      "configure.py",
+      "install-files.py",
+      "management-profile.json",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/deployment-execution.json",
+      "release_identity.py",
+      "runtime.py"
+    ],
+    "native_binary_hashes_unchanged": {
+      "robotd": "1c4e77c640dcbb8fa402566c39fb20306457e421a40ab6639974fb1c239fc56c",
+      "robotctl": "05ebae696ed12e8824088ddd4e7833110bf045ca9416f027481e333e4d12f00c",
+      "padd": "78b456e7c19e720330c325fe16719e291d36373c0879911d59f77700d52f79a3",
+      "sounds": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103",
+      "gamepad-r7/gamesir-xboxd": "6f8d78d2bdcb85c2e216013c66e1af25b38813cb86d0e88a7722ef98df5d4b30"
+    },
+    "unchanged_model_payload_files": [
+      "models/1c94934c6421ec72ed48079cea749668/deployment-contract.json",
+      "models/1c94934c6421ec72ed48079cea749668/deployment-runtime.json",
+      "models/1c94934c6421ec72ed48079cea749668/export-data.zip",
+      "models/1c94934c6421ec72ed48079cea749668/manifest.json",
+      "models/1c94934c6421ec72ed48079cea749668/policy.onnx",
+      "models/1c94934c6421ec72ed48079cea749668/training-request.json",
+      "models/1c94934c6421ec72ed48079cea749668/upstream-params/agent.yaml",
+      "models/1c94934c6421ec72ed48079cea749668/upstream-params/env.yaml",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/deployment-contract.json",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/deployment-profile.toml",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/deployment-runtime.json",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/export-data.zip",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/manifest.json",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/model-info.json",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/policy.onnx",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/training-config.json",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/training-request.json",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/upstream-params/agent.yaml",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/upstream-params/env.yaml",
+      "models/1cbf8730eadd75a5704332c9f3c10f60/使用说明.md",
+      "models/2b69fa681ed06f7ded9e2a2d12ba5c67/deployment-contract.json",
+      "models/2b69fa681ed06f7ded9e2a2d12ba5c67/deployment-runtime.json",
+      "models/2b69fa681ed06f7ded9e2a2d12ba5c67/export-data.zip",
+      "models/2b69fa681ed06f7ded9e2a2d12ba5c67/manifest.json",
+      "models/2b69fa681ed06f7ded9e2a2d12ba5c67/model-info.json",
+      "models/2b69fa681ed06f7ded9e2a2d12ba5c67/policy.onnx",
+      "models/2b69fa681ed06f7ded9e2a2d12ba5c67/training-request.json",
+      "models/2b69fa681ed06f7ded9e2a2d12ba5c67/upstream-params/agent.yaml",
+      "models/2b69fa681ed06f7ded9e2a2d12ba5c67/upstream-params/env.yaml",
+      "models/8fdaf12c7478a8314a63647a466bfa34/deployment-contract.json",
+      "models/8fdaf12c7478a8314a63647a466bfa34/deployment-runtime.json",
+      "models/8fdaf12c7478a8314a63647a466bfa34/export-data.zip",
+      "models/8fdaf12c7478a8314a63647a466bfa34/manifest.json",
+      "models/8fdaf12c7478a8314a63647a466bfa34/model-info.json",
+      "models/8fdaf12c7478a8314a63647a466bfa34/policy.onnx",
+      "models/8fdaf12c7478a8314a63647a466bfa34/training-request.json",
+      "models/8fdaf12c7478a8314a63647a466bfa34/upstream-params/agent.yaml",
+      "models/8fdaf12c7478a8314a63647a466bfa34/upstream-params/env.yaml",
+      "models/a481d9f211f31d9476ab1a319fe362a2/deployment-contract.json",
+      "models/a481d9f211f31d9476ab1a319fe362a2/deployment-profile.toml",
+      "models/a481d9f211f31d9476ab1a319fe362a2/deployment-runtime.json",
+      "models/a481d9f211f31d9476ab1a319fe362a2/export-data.zip",
+      "models/a481d9f211f31d9476ab1a319fe362a2/manifest.json",
+      "models/a481d9f211f31d9476ab1a319fe362a2/model-info.json",
+      "models/a481d9f211f31d9476ab1a319fe362a2/policy.onnx",
+      "models/a481d9f211f31d9476ab1a319fe362a2/training-config.json",
+      "models/a481d9f211f31d9476ab1a319fe362a2/training-request.json",
+      "models/a481d9f211f31d9476ab1a319fe362a2/upstream-params/agent.yaml",
+      "models/a481d9f211f31d9476ab1a319fe362a2/upstream-params/env.yaml",
+      "models/a481d9f211f31d9476ab1a319fe362a2/使用说明.md"
+    ],
+    "unchanged_calibration_snapshot_hashes": {
+      "calibration-config.py": "c7f003b85f727d5138c6acc3a3dacdcd986db432e3c7e7f52d26a7e777060491",
+      "hd1910-calibration.robot.toml": "b208a0a89244f8906936b5b3dce585f218d59372d2f04b60117f684d22937e40",
+      "hd1910-calibration.template.toml": "5f3083e48ffd21787d05d70d34eeeb928c07e30dea477204ce6c67cf9bb2fba6",
+      "hd1910-calibration.training.toml": "bfa1045e1601199edad0a329417f0128457638bd277dd46e1196dafdd44a6bf7",
+      "robot-calibration-source.json": "c1d7af79dbaac7ffcd692a4793f0cca3d2ebdf5c53e91667cec1f7f2b03dca3f"
+    },
+    "execution_profile": {
+      "schema": "microduck-runtime-execution/v1",
+      "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+      "mode": "uniform",
+      "action_scale": 1.0,
+      "head_lowpass": 0.5,
+      "legs_lowpass": 0.7
+    },
+    "execution_profile_sha256": "1e77b8c032cf784a7d3d059d0e8d1a32e71fa49d56e1a399aeac7ebc03e2afc9",
+    "service_checksum_manifest_verified": true
+  },
+  "r147_view_files_hash_verified_unchanged": {
+    "static/calibration-reference.js": "ee256295e0ef8580a278e2f91366c5819a1dca5e2cfb5c57ab1deb79e86dc8e1",
+    "static/calibration-view.css": "9430a5604633f1241c44ee30df8be0c09ca26f2c3c9ef44a690f845d26b7dbcf",
+    "static/calibration-view.js": "fd8d7bd1cdfcb6bd58b4ae5770dc2c9cb33b31e9dbe032d0eb4cbdb344337b4a",
+    "static/raw-kinematics.js": "814dc7401c3dfe76b815a721a73c57f7da9adecd4ebc787da8d3190ef90288a4"
+  },
+  "model_weights_changed": false,
+  "native_binary_changes": false,
+  "hardware_tested": false,
+  "physical_commands_sent": false,
+  "browser_rendering_tested_this_release": false,
+  "zero_native_preflight_executed_locally": false,
+  "install_instruction": "Use v1.0.148 console: 系统维护 → 随包固件 → 升级所选固件 once, then follow the existing HOME flow."
+}

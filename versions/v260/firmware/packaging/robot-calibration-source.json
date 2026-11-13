@@ -1,0 +1,16 @@
+{
+  "source": "duck-10e4:/etc/robot/feetech-ft5/hd1910-calibration.toml (user-provided)",
+  "source_sha256": "b736b91117826ac5eda703179baff2b3bf94bb8405c8d211ea1e24924353d191",
+  "provenance": "2026-10-10 current physical HD1910 installation calibration, supplied by owner",
+  "imported_at": 1790956669.5204604,
+  "note": "只保存到训练台；不写入实机。机械限位与模型限位分别保留，不静默相互覆盖。",
+  "zero_target": "duck-10e4",
+  "changes": {
+    "joints": [],
+    "imu_changed": false
+  },
+  "sync": {
+    "simulation_unchanged": true,
+    "environment_rechecked": false
+  }
+}

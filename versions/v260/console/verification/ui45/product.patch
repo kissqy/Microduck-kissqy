@@ -1,0 +1,206 @@
+--- UI44/service_control.py
++++ UI45/service_control.py
+@@ -27,7 +27,7 @@
+ 
+ ROOT = Path(__file__).resolve().parent
+ STOP_ACTIONS = {"relax", "reboot", "shutdown"}
+-MANAGEMENT_ACTIONS = {"chorale-prepare", "repair-gamepad", "enable-hotspot", "set-pad-settings", "set-action-scale", "switch-mode", "reconnect-service", "upgrade-service", "reboot", "shutdown"}
++MANAGEMENT_ACTIONS = {"chorale-prepare", "repair-gamepad", "enable-hotspot", "set-pad-settings", "set-action-scale", "switch-mode", "reconnect-service", "upgrade-service", "reboot"}
+ HOME_TIMEOUT = 12.0
+ HOME_RESTORE_TIMEOUT = 5.0
+ HOME_POLL_INTERVAL = .1
+@@ -160,11 +160,12 @@
+ 
+     def call(self, command):
+         timeout = (command.get("duration_ms", 0)/1000)*(15 if command["action"] == "center" else 1)+(135 if command["action"] == "center" else 15)
+-        method = {"chorale-start": "robot.chorale", "chorale-stop": "robot.chorale", "relax": "robot.relax", "init": "robot.init", "home-stop": "robot.enable"}.get(command["action"], "robot.busCommand")
++        method = {"chorale-start": "robot.chorale", "chorale-stop": "robot.chorale", "relax": "robot.relax", "shutdown": "robot.shutdown", "init": "robot.init", "home-stop": "robot.enable"}.get(command["action"], "robot.busCommand")
+         if self.log: self.log.add('服务 IPC', json.dumps({'method':method,'command':command},ensure_ascii=False))
+         reply = self.channel.request({"method":method, "params":{"active":command["action"]=="chorale-start"} if method == "robot.chorale" else command if method == "robot.busCommand" else {"on":False} if method == "robot.enable" else {},
+                                       "timeout":timeout}, timeout=timeout+12)
+         if self.log: self.log.add('服务 IPC / 回执', json.dumps(reply,ensure_ascii=False))
++        if not isinstance(reply, dict): raise ControlError("服务回执无效", 503)
+         if reply.get("error"):
+             error = reply["error"]
+             raise ControlError(error.get("message", str(error)), 503)
+@@ -275,8 +276,17 @@
+ 
+ 
+     def power(self, action, password=None):
+-        """Send one OS command through the existing SSH management channel."""
++        """Shutdown uses padd's native request; only reboot is an OS command."""
+         if action not in ('reboot', 'shutdown'): raise ControlError('电源操作无效', 400)
++        if action == 'shutdown':
++            # Exactly the same IPC as a physical Select hold. robotd owns its
++            # motion, sound, torque and power sequence; never add an OS fallback.
++            answer = self.call({'action': 'shutdown'})
++            if not isinstance(answer, dict) or answer.get('accepted') is not True:
++                raise ControlError('未取得官方关机接收确认；请检查实际状态，未自动重试', 503)
++            return {**answer, 'accepted': True, 'shutdown_requested': True,
++                    'shutdown_path': 'robot.shutdown',
++                    'message': '与 Home 左侧 Select/View 键长按相同的官方关机请求已接收；音效、卸力与关机由原服务处理，尚未确认 Zero 已关机。'}
+         from power_control import power as submit_power
+         def submit(*argv, **_):
+             return self._manage(list(argv),password=password)
+@@ -779,20 +789,24 @@
+                 answer = self.transport.manage("pad-settings", str(command["mouth_percent"]), str(command["head_rad"]), password=sudo_password)
+             elif command["action"] == "set-action-scale":
+                 answer = self.transport.manage("action-scale", command["model"], str(command["scale"]), password=sudo_password)
+-            elif command["action"] in {"reboot", "shutdown"}:
+-                answer = self.transport.power(command["action"], password=sudo_password)
+-                if not isinstance(answer,dict) or answer.get('scheduled') is not True :
++            elif command["action"] == "shutdown":
++                answer = self.transport.power('shutdown')
++                if (not isinstance(answer, dict) or answer.get('accepted') is not True
++                        or answer.get('shutdown_requested') is not True
++                        or answer.get('shutdown_path') != 'robot.shutdown'):
++                    raise ControlError('未取得官方关机接收确认；请检查实际状态，未自动重试', 503)
++                paused=getattr(self.store,'connection_paused',None)
++                if paused is not None:paused.set()
++                if self.controls:self.controls.suspend_connections()
++                if hasattr(self.transport,'channel'):self.transport.channel.disconnect()
++                if log:log.add('官方关机','robot.shutdown 已接收；原生流程继续，尚未确认已关机。自动连接已暂停，上电后点击恢复连接。')
++            elif command["action"] == "reboot":
++                answer = self.transport.power('reboot', password=sudo_password)
++                if not isinstance(answer,dict) or answer.get('scheduled') is not True:
+                     raise ControlError('未取得系统电源指令提交确认，请查看系统日志',503)
+-                if command['action']=='shutdown':
+-                    paused=getattr(self.store,'connection_paused',None)
+-                    if paused is not None:paused.set()
+-                    if self.controls:self.controls.suspend_connections()
+-                    if hasattr(self.transport,'channel'):self.transport.channel.disconnect()
+-                    if getattr(self.store,'system_log',None):self.store.system_log.add('系统关机','已提交关机；采集、手柄和服务自动连接已暂停。上电后点击恢复连接。')
+-                else:
+-                    paused=getattr(self.store,'connection_paused',None)
+-                    if paused is not None:paused.clear()
+-                    if self.controls:self.controls.resume_connections()
++                paused=getattr(self.store,'connection_paused',None)
++                if paused is not None:paused.clear()
++                if self.controls:self.controls.resume_connections()
+             elif command["action"] == "init":
+                 answer = self._run_home(command, job, epoch)
+             else:
+--- UI44/service_rpc.py
++++ UI45/service_rpc.py
+@@ -218,7 +218,7 @@
+         return {'returncode':result.returncode,
+                 'stdout':result.stdout.decode('utf-8', errors='replace'),
+                 'stderr':result.stderr.decode('utf-8', errors='replace')}
+-    allowed = {'robot.chorale', 'robot.busCommand', 'robot.relax', 'robot.init', 'robot.enable',
++    allowed = {'robot.chorale', 'robot.busCommand', 'robot.relax', 'robot.shutdown', 'robot.init', 'robot.enable',
+                'robot.skills', 'robot.policies', 'robot.do', 'robot.move', 'robot.head',
+                'robot.pose', 'robot.mouth'}
+     if request.get('method') not in allowed: raise ValueError('unsupported service method')
+--- UI44/power_control.py
++++ UI45/power_control.py
+@@ -1,4 +1,4 @@
+-"""Submit OS power directly; the operating system owns shutdown and reboot."""
++"""Submit OS reboot. Shutdown belongs to robotd's original robot.shutdown."""
+ import json
+ import subprocess
+ import sys
+@@ -12,13 +12,12 @@
+ 
+ 
+ def power(action, runner=run):
+-    if action not in ('reboot','shutdown'):
++    if action != 'reboot':
+         raise ValueError('电源操作无效')
+-    runner('/usr/bin/systemctl','--no-block',
+-           'reboot' if action=='reboot' else 'poweroff',timeout=5)
++    runner('/usr/bin/systemctl','--no-block','reboot',timeout=5)
+     return {'power_action':action,'scheduled':True,'delay_seconds':0,
+             'verified_by':'systemctl accepted power request',
+-            'message':'Zero '+('重启' if action=='reboot' else '关机')+'指令已直接提交'}
++            'message':'Zero 重启指令已直接提交'}
+ 
+ 
+ if __name__=='__main__':
+--- UI44/static/firmware.js
++++ UI45/static/firmware.js
+@@ -9,18 +9,17 @@
+     this.root.innerHTML=`<div class="panel-head"><div><span class="section-index">09</span><h2>系统维护</h2></div><span class="badge neutral">R17 · 官方 0.15.1</span></div>
+       <div class="firmware-body"><p id="firmware-runtime" class="tiny muted">实际运行版本：等待机器人回读</p>
+       <div class="firmware-toolbar"><button class="button" id="firmware-bundled">随包固件 · 正在核验</button>
+-      <div class="firmware-upload"><input id="firmware-file" type="file" accept=".zip" aria-label="本地固件 ZIP" hidden><button class="button" id="firmware-choose">选择 ZIP 文件</button><span id="firmware-filename" class="tiny muted">尚未选择文件</span></div><div class="service-action-row firmware-install-actions"><button class="button accent" id="firmware-flash" disabled>升级所选固件</button><button class="button" id="firmware-hotspot" disabled>开启热点</button></div></div>
+-      <div id="firmware-hotspot-status" class="panel-note service-job" role="status" aria-live="polite"></div>
+-      <p id="firmware-hotspot-help" class="tiny muted" hidden></p>
++      <div class="firmware-upload"><input id="firmware-file" type="file" accept=".zip" aria-label="本地固件 ZIP" hidden><button class="button" id="firmware-choose">选择 ZIP 文件</button><span id="firmware-filename" class="tiny muted">尚未选择文件</span></div><div class="service-action-row firmware-install-actions"><button class="button accent" id="firmware-flash" disabled>升级所选固件</button></div></div>
+       <p class="tiny muted">每次安装均恢复随包模型及动作配置，并清理非随包旧模型；保留本机标定。安装后不自动回 HOME 或启动策略。</p>
+       <p id="firmware-verification" class="tiny muted" role="status">正在校验随包固件…</p>
+       <div id="firmware-status" class="panel-note service-job" role="status" aria-live="polite"></div>
+       <div id="firmware-transfer" hidden><progress id="firmware-progress" max="100" value="0" aria-label="固件上传进度"></progress><p id="firmware-progress-text" class="tiny muted" role="status"></p></div>
+-      <div class="firmware-power"></div></div>`;
++      <div class="firmware-power"><button class="button hotspot-action" id="firmware-hotspot" disabled>开启热点</button><div id="firmware-hotspot-status" class="panel-note service-job" role="status" aria-live="polite"></div><p id="firmware-hotspot-help" class="tiny muted" hidden></p></div></div>`;
+     document.getElementById('diagnostics').append(this.root);this.$=id=>document.getElementById('firmware-'+id);
+     const old=panel.$('service-power-actions').closest('.service-power'),power=this.root.querySelector('.firmware-power');
+     this.root.querySelector('#firmware-flash').parentElement.append(panel.$('management-reconnect'));
+-    power.append(panel.$('service-hat'),panel.$('service-power-actions'),panel.$('service-power-state'),panel.$('service-power-job'));old.remove();
++    panel.$('service-resume').after(this.$('hotspot'));
++    power.append(panel.$('service-hat'),panel.$('service-power-actions'),this.$('hotspot-status'),this.$('hotspot-help'),panel.$('service-power-state'),panel.$('service-power-job'));old.remove();
+     this.$('bundled').onclick=()=>{this.source='bundled';this.paint();};this.$('file').onchange=()=>this.prepare();
+     this.$('choose').onclick=()=>this.$('file').click();
+     this.$('flash').onclick=()=>this.flash();
+--- UI44/static/service.js
++++ UI45/static/service.js
+@@ -117,7 +117,7 @@
+         </section>
+         <section class="panel service-power">
+           <div class="panel-head"><div><h2>Zero 电源</h2></div></div>
+-          <div class="service-setup-body"><div id="service-power-actions" class="service-power-actions"><div class="service-action-row"><button class="button" id="service-reboot">重启 Zero</button><button class="button" id="service-shutdown">关闭 Zero</button><button class="button" id="service-resume">恢复连接</button></div></div><p id="service-power-state" role="status" class="tiny muted"></p></div>
++          <div class="service-setup-body"><div id="service-power-actions" class="service-power-actions"><div class="service-action-row"><button class="button" id="service-reboot">重启 Zero</button><button class="button" id="service-shutdown" title="与 Home 左侧 Select/View 键长按相同；音效、卸力与关机由原服务处理">关闭 Zero</button><button class="button" id="service-resume">恢复连接</button></div></div><p id="service-power-state" role="status" class="tiny muted"></p></div>
+           <div id="service-power-job" class="panel-note service-job" role="status" aria-live="polite"></div>
+         </section>
+       </div>`;
+@@ -216,6 +216,7 @@
+   }
+   async post(command,keepalive=false){
+     if(!this.cfg.service_enabled||(this.options.replay&&command.action!=='relax'))return;
++    if(command.action==='shutdown'&&(this.options.offline||this.s?.connection?.active!==true||this.s?.connection?.connected!==true||this.s?.connection_paused||this.posting||this.s?.service_control?.job?.status==='running'&&['reboot','shutdown'].includes(this.s.service_control.job.action)))return;
+     if(command.action==='enable-hotspot'&&(this.options.offline||this.s?.connection?.active!==true||this.s?.connection?.connected!==true||this.s?.connection_paused||this.s?.service_operation||this.s?.service_control?.busy||this.s?.service_control?.stopping))return;
+     if(['relax','reboot','shutdown'].includes(command.action))this.centerConfirmation?.cancel();
+     const special={
+@@ -244,7 +245,7 @@
+     if(['move','center','init'].includes(command.action))this.ownsMotion=true;
+     let receiptKnown=false;
+     try{
+-      const privileged=['chorale-prepare','repair-gamepad','switch-mode','reconnect-service','upgrade-service','enable-hotspot','set-pad-settings','set-action-scale','reboot','shutdown'].includes(command.action);
++      const privileged=['chorale-prepare','repair-gamepad','switch-mode','reconnect-service','upgrade-service','enable-hotspot','set-pad-settings','set-action-scale','reboot'].includes(command.action);
+       const password=privileged?this.$('service-sudo-password').value:'';
+       if(password)command.sudo_password=password;
+       const body=JSON.stringify({client:this.client,seq:++this.seq,command});
+@@ -290,9 +291,12 @@
+     const m=b.motion,centerJob=job?.action==='center',center=m?.action==='center',centerDone=center?m.completed_ids?.length:job?.result?.completed_ids?.length;
+     set('service-center-progress',center?`归中 ${centerDone??0}/15 · 当前 ID ${m.id}`:centerJob&&job.status==='completed'?`归中完成 ${centerDone??'—'}/15 · 已松开`:centerJob&&job.status==='error'?`归中未完成 · ${job.error}`:'');
+     for(const action of ['reboot','shutdown'])this.$('service-'+action).disabled=!!(s.service_control?.job?.status==='running'&&['reboot','shutdown'].includes(s.service_control?.job?.action));
++    const shutdownConnected=s.connection?.active===true&&s.connection?.connected===true&&!s.connection_paused&&!this.options.offline&&!this.options.replay;
++    this.$('service-shutdown').disabled ||= !shutdownConnected||this.posting;
++    this.$('service-shutdown').title=shutdownConnected?'与 Home 左侧 Select/View 键长按相同；音效、卸力与关机由原服务处理':'请先连接 Zero，再使用官方关机流程';
+     this.$('service-resume').disabled=!s.connection_paused||!!(s.service_control?.busy||job?.status==='running'||this.options.replay);
+     const power=job&&['reboot','shutdown'].includes(job.action);
+-    set('service-power-state',power?(job.status==='completed'?(job.result?.reconnected?'Zero 已重新上线。':job.action==='reboot'?'重启请求已提交；等待 Zero 启动后自动重连。':'已提交关机；自动连接已暂停。Zero 再次上电后点击“恢复连接”。'):job.status==='error'?job.error:'正在提交系统电源指令…'):'关机 / 重启直接执行系统指令。');
++    set('service-power-state',power?(job.status==='completed'?(job.result?.reconnected?'Zero 已重新上线。':job.action==='reboot'?'重启请求已提交；等待 Zero 启动后自动重连。':job.result?.shutdown_requested===true&&job.result?.shutdown_path==='robot.shutdown'?'官方关机请求已接收；音效、卸力与关机由原服务处理，尚未确认关机完成。自动连接已暂停；再次上电后点击“恢复连接”。':'尚未确认官方关机请求已接收，请检查实际状态。'):job.status==='error'?job.error:job.action==='shutdown'?'正在请求官方关机流程…':'正在提交系统重启指令…'):'关闭 Zero 与 Home 左侧 Select/View 键长按相同；音效、卸力与关机由原服务处理。重启 Zero 使用系统重启。');
+     set('service-count',`${s.saved_calibrated_count??s.calibrated_count??0} / 15 已保存标定`);
+     this.$('service-joint-select').value=this.id;
+     const limits=modelJointLimits[this.id];
+@@ -322,6 +326,7 @@
+     if(job&&key!==this.lastJob){
+       this.lastJob=key;
+       const message=job.action==='init'?`Home 站姿 · ${{running:'执行中',completed:'已确认到位',error:'未完成'}[job.status]||job.status} · ${job.error||job.result?.message||job.message||'等待执行反馈'}`:
++        job.action==='shutdown'?(job.status==='error'?'官方关机请求未确认 · '+job.error:job.status==='completed'?(job.result?.shutdown_requested===true&&job.result?.shutdown_path==='robot.shutdown'?'官方关机请求已接收；尚未确认关机完成。':'未取得官方关机接收确认，请检查实际状态。'):'正在请求官方关机流程…'):
+         job.action==='enable-hotspot'?(job.status==='error'?'热点切换未完成 · '+job.error:job.status==='completed'?'热点切换请求已处理；以调度回执为准，尚未确认热点已开启。':job.message||'正在提交热点切换请求…'):
+         job.status==='completed'&&['delete-model'].includes(job.action)?job.result?.message||'模型已删除，官方模型保留':
+         `${actions[job.action]||job.action} · ${{running:'执行中，等待反馈',completed:'服务已完成',error:'未完成'}[job.status]||job.status}${job.error?' · '+job.error:''}`;
+--- UI44/static/r17-0151.css
++++ UI45/static/r17-0151.css
+@@ -198,6 +198,10 @@
+ .firmware-authorization input{width:170px;max-width:100%;font-size:11px}
+ .firmware-authorization .service-credentials span{font-size:10px;flex:1;min-width:130px}
+ .firmware-body{gap:6px}
++#service-power-actions #firmware-hotspot{min-height:34px;padding:7px 15px;margin-left:6px;background:#e8b75c;border-color:#f3ce8a;color:#19221c;font-weight:750;box-shadow:0 0 0 1px #e8b75c33}
++#service-power-actions #firmware-hotspot:hover:not(:disabled){background:#f3c872;border-color:#ffe0a2}
++#service-power-actions #firmware-hotspot:focus-visible{outline:2px solid #ffe4b3;outline-offset:3px}
++#service-power-actions #firmware-hotspot:disabled{background:#74633f;border-color:#9b8555;color:#e1d2b0;opacity:.7;box-shadow:none}
+ #firmware-progress{width:100%;height:10px;accent-color:#98b96f}
+ #firmware-progress-text{margin:3px 0;overflow-wrap:anywhere}
+ #service-editor .service-confirm-row{justify-content:flex-start;gap:8px;flex-wrap:wrap;margin:6px 0}

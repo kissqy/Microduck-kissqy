@@ -1,0 +1,89 @@
+{
+  "release": "V216_control.V73_AI-T1_UI36",
+  "python_ai_tests": {
+    "tests": 235,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 235,
+    "environment_unavailable": [],
+    "other_errors": [],
+    "success": true,
+    "available_checks_passed": true
+  },
+  "frontend": [
+    {
+      "passed": true,
+      "scope": "UI21 grouped catalogs, per-axis range display, per-question images and TOF, late preview isolation, bounded scrolling"
+    },
+    {
+      "passed": true,
+      "scope": "UI24 live speech checkbox, no optimistic state, pending on/off, Zero ACK and ASR sync, old HTTP/status/event rejection, error retains confirmed state, no second mute or task switch"
+    },
+    {
+      "passed": true,
+      "scope": "UI29 action-and-scene result distinguishes completed motion from a failed camera without claiming the motion did not execute"
+    },
+    {
+      "passed": true,
+      "scope": "UI34 Walk scene receipt distinguishes stopped input, vision failure and cancelled photo without claiming measured movement completion"
+    },
+    {
+      "passed": true,
+      "scope": "UI25 shared compact credential grid, bounded question input, no obsolete 1200px gap, unique control IDs, hidden empty visual output, model-wait busy state and model completion text"
+    },
+    {
+      "passed": true,
+      "scope": "rehearsal composer, preset draft, explicit task send and clear, waiting for provider ACK; no action request from text"
+    },
+    {
+      "passed": true,
+      "scope": "live microphone bars; retained credentials and editing; Chinese skills; multi-turn chat; vision busy/error/preview/source labels; measured brightness, exposure warning and next-capture reset"
+    },
+    {
+      "passed": true,
+      "scope": "real ControlPanel and PadControls; identical Start frames; one click one press/release; HOME then hold labels from readback; disabled during takeover/maintenance/offline; keyboard repeat; suspend reset; no automatic commands"
+    },
+    {
+      "passed": true,
+      "scope": "exact native PCM WAV, 24k mono16, per-window RAM, no autoplay/persistence, explicit replay/stop/end, sequence gaps, memory eviction, URL revocation and pagehide cleanup"
+    }
+  ],
+  "changed_inherited_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_action_gate.py",
+    "ai_doubao.py",
+    "ai_persona.py",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "release_identity.py",
+    "static/index.html",
+    "verification/test_ai_speech_mouth_ui35.py"
+  ],
+  "new_tests": 3,
+  "default_walk_sequence": [
+    {
+      "vx": 0.3,
+      "vy": 0,
+      "vyaw": 0,
+      "seconds": 3
+    }
+  ],
+  "walk_vx_schema_and_execution_limit": [
+    -0.3,
+    0.3
+  ],
+  "post_walk_fixed_delay_seconds": 0,
+  "mouth": "one open/partial-close cycle per alphanumeric character, cadence from native PCM duration, actual HAT playback only",
+  "mouth_open_fraction_of_saved_limit": 0.95,
+  "mouth_partial_close_fraction_of_saved_limit": 0.2,
+  "mouth_zero_only_after_playback_or_cancel": true,
+  "mouth_timing_is_approximate_without_per_character_acoustic_timestamps": true,
+  "native_firmware_sha256": "1b7376621ea40994edffcea48be9c9a4bd7bc42a19388bacdce827a0dbcab99e",
+  "source_ui35_zip_sha256": "ee161658b18c0a9200deba7d36a9d9762fc68f3f8319de49f944eb223d5564f2",
+  "hardware_tested": false,
+  "live_cloud_tested": false,
+  "windows_tested": false,
+  "camera": "720p15"
+}

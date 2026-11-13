@@ -1,0 +1,183 @@
+/* V239: size rules only; loaded last to reconcile the existing layout layers. */
+.workspace,main,.topbar,.top-actions,.heading-actions{min-width:0}
+.topbar{height:auto;min-height:67px;gap:10px;flex-wrap:wrap;padding-block:10px}
+.top-actions{max-width:100%;flex-wrap:wrap}
+.breadcrumb{min-width:0;overflow-wrap:anywhere}
+.panel-head{flex-wrap:wrap}
+.panel-head>div{flex-wrap:wrap}
+.panel-head h2{overflow-wrap:anywhere}
+.panel img,.panel video,dialog{max-width:100%}
+.camera-stats{flex-wrap:wrap;gap:10px 16px}
+.table-scroll{width:100%;max-width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.table-scroll:focus-visible{outline:2px solid var(--green);outline-offset:-2px}
+.service-console #motors table{min-width:1200px}
+.motor-toolbar input{min-width:0;max-width:100%}
+dialog{box-sizing:border-box;max-height:calc(100vh - 24px);max-height:calc(100svh - 24px);overflow-y:auto;margin:auto}
+#ai-voice-manager{max-height:calc(100vh - 24px);max-height:calc(100svh - 24px)}
+#service-editor .service-workbench-bottom>*{min-width:min(100%,280px);max-width:100%}
+#service-editor .service-workbench-bottom .service-imu .field{min-width:0;max-width:100%}
+.service-editor .field,.service-editor select,.service-editor input{min-width:0;max-width:100%}
+.service-editor .service-feedback-values dd{overflow-wrap:anywhere}
+#service-editor .service-target-row{grid-template-columns:minmax(90px,130px) minmax(0,1fr) minmax(75px,95px)}
+#service-editor .service-target-row>.service-action-row{grid-column:1/-1;flex-wrap:wrap}
+.service-joint-chart{height:clamp(300px,45vh,460px)!important;min-height:0}
+.service-joint-chart .joint-chart{min-height:200px}
+
+/* A shared grid row decides both heights; the workbench can grow with its fields. */
+@media(min-width:1280px){
+ #service-joint-row{align-items:stretch}
+ #service-observation{display:flex;flex-direction:column;align-self:stretch;min-height:0}
+ #service-observation>.service-joint-chart{height:auto!important;min-height:460px;flex:1}
+ #service-workbench-stack{height:auto;align-self:stretch}
+ #service-editor{height:auto}
+}
+
+/* The top three cards share one height on desktop; controller content scrolls. */
+@media(min-width:1440px){
+ .service-hero.r17-three-columns{grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-areas:"twin pad camera"}
+ .r17-three-columns>.panel{height:auto}
+ #control-panel .webpad-content{overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin}
+}
+.r17-three-columns>.twin-panel{grid-area:twin}
+.r17-three-columns>#control-panel{grid-area:pad}
+.r17-three-columns>#camera-panel{grid-area:camera}
+.r17-three-columns .camera-stage{position:relative}
+.r17-three-columns .camera-stage video{position:absolute;inset:0}
+
+/* Let the voice row retain enough space for both Switch and Add. */
+.ai-fields>.ai-voice-box{grid-column:2/4;grid-row:2}
+.ai-chat-photo{max-width:min(100%,340px)}
+.ai-chat-window{height:clamp(320px,55vh,640px);height:clamp(320px,55svh,640px);min-height:0;max-height:640px}
+.ai-chat-empty{min-height:100%;box-sizing:border-box}
+@container(min-width:1100px){.ai-fields>.ai-voice-box{grid-column:auto;grid-row:auto}}
+@container(max-width:620px){
+ .ai-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .ai-fields>label:nth-child(3),.ai-fields>label:nth-child(4),.ai-fields>.ai-mic-monitor{grid-column:auto;grid-row:auto}
+ .ai-fields>label:nth-child(3){grid-column:1/-1}
+ .ai-fields>.ai-voice-box,.ai-fields>.ai-mic-monitor{grid-column:1/-1;grid-row:auto;max-width:none}
+}
+@container(max-width:340px){
+ .ai-fields{grid-template-columns:minmax(0,1fr)}
+ .ai-fields>label:nth-child(3){grid-column:auto;grid-row:auto}
+}
+
+/* Laptops/tablets: two views together, controller across the next row. */
+@media(min-width:901px) and (max-width:1439px){
+ .service-hero.r17-three-columns{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-areas:"twin camera" "pad pad"}
+ .r17-three-columns>.panel{height:auto}
+ .r17-three-columns .twin-stage,.r17-three-columns .camera-stage{height:clamp(280px,43vh,440px)!important;flex:none}
+ #control-panel .webpad-content{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;overflow:visible}
+ #control-panel .mode-management-anchor{grid-column:1/-1}
+ #control-panel .pad-configuration-column{grid-template-columns:minmax(0,1fr);align-content:start}
+ #control-panel .official-pad{max-width:520px}
+}
+@media(max-width:1599px){
+ main{--health-columns:3}
+ .page-heading{grid-template-columns:minmax(0,1fr) minmax(340px,1fr)}
+ .page-heading>:first-child,.page-heading .heading-actions{grid-column:auto}
+}
+@media(max-width:1279px){
+ .observation-ai-grid{grid-template-columns:minmax(0,1fr)}
+ .observation-ai-grid>#sensors.operations-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .observation-ai-grid>#sensors.operations-grid>.panel:last-child{grid-column:1/-1}
+ #service-joint-row{grid-template-columns:minmax(0,1fr)}
+ #service-editor{height:auto}
+ #diagnostics{grid-template-columns:minmax(0,1fr)}
+ #diagnostics>.panel{height:auto;min-height:0}
+ #diagnostics .maintenance-streams{min-height:360px}
+ #diagnostics .events,#diagnostics>section>pre{height:clamp(240px,50vh,420px)}
+}
+@media(max-width:1100px){
+ .page-heading{grid-template-columns:minmax(0,1fr);row-gap:12px}
+ .page-heading>:first-child,.page-heading .heading-actions{grid-column:1/-1}
+ .page-heading h1{font-size:clamp(22px,3vw,30px)}
+ .heading-actions{margin:0}
+}
+@media(max-width:900px){
+ main{--health-columns:2;padding:20px 16px 0}
+ .service-hero.r17-three-columns{grid-template-columns:minmax(0,1fr)!important;grid-template-areas:"twin" "pad" "camera";gap:14px}
+ .r17-three-columns>.panel{height:auto}
+ .r17-three-columns .twin-stage,.r17-three-columns .camera-stage{height:clamp(260px,52vh,440px)!important;flex:none}
+ #control-panel .webpad-content{overflow:visible}
+ #control-panel .pad-configuration-column{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .topbar .breadcrumb{flex-basis:100%}
+ .top-actions{width:100%;justify-content:flex-start}
+ .top-actions #last-update{margin-right:auto}
+ .service-editor .service-feedback-values .register-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:680px){
+ #control-panel .pad-configuration-column{grid-template-columns:minmax(0,1fr)}
+ .observation-ai-grid>#sensors.operations-grid{grid-template-columns:minmax(0,1fr)}
+ .service-selection{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .service-selection>.field{grid-column:1/-1}
+ #service-editor .service-target-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #service-editor .service-target-row>input[type=range]{grid-column:1/-1;grid-row:2;margin:8px 0}
+ #service-editor .service-target-row>.service-action-row{grid-row:3}
+ .service-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #service-editor .service-workbench-bottom>.service-imu .field{flex-basis:100%;display:grid;gap:5px}
+ #service-editor .service-workbench-bottom>.service-imu .field input{width:100%;min-width:0}
+ .ssh-form{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #control-panel .service-mode-switch{grid-template-columns:minmax(0,1fr)}
+ #control-panel .service-mode-body>.service-action-row{grid-column:1;grid-row:auto;justify-content:flex-start;flex-wrap:wrap}
+}
+@media(max-width:600px){
+ /* Navigation becomes a labelled horizontal strip, freeing the screen width. */
+ .sidebar{position:static;width:auto;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line)}
+ .sidebar .brand{margin:0 0 8px;gap:9px}
+ .sidebar .brand>span{display:block}
+ .sidebar .brand svg{width:28px}
+ .sidebar nav{display:flex;gap:4px;margin:0;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+ .sidebar nav>a,.sidebar nav>button{flex:none;white-space:nowrap;font-size:11px;padding:8px 10px;gap:6px;min-height:36px}
+ .sidebar .nav-icon{font-size:16px}
+ .workspace{margin-left:0}
+ main{padding:16px 10px 0}
+ .topbar{min-height:54px;padding:9px 12px;gap:8px}
+ .top-actions{gap:6px}
+ .top-actions .button,.top-actions .github-source-link{font-size:11px;padding:6px 8px;min-height:34px}
+ .metric{padding:12px;min-height:118px}
+ .metric-value{font-size:28px}
+ .metric-caption{max-width:none;overflow-wrap:anywhere}
+ .panel-head{padding:11px 12px}
+ .panel-head h2{font-size:14px}
+ .webpad-content{padding:12px}
+ .service-editor-body{padding:10px}
+ .ai-layout{padding:9px;gap:9px}
+ .ai-setup,.ai-audit{padding:9px}
+ .ai-catalog-row{flex-wrap:wrap;gap:5px}
+ .ai-catalog-row h3{flex-basis:100%}
+ .ai-motion-actions{flex-wrap:wrap}
+ .ai-voice-select-row{height:34px}
+ .ai-voice-select-row>select,.ai-voice-select-row>.button{min-height:34px;height:34px}
+ .ai-voice-select-row>.button{padding-inline:9px;font-size:12px}
+ .ai-config-box{min-height:66px}
+ .ai-fields input,.ai-voice-select-row>select,.ssh-form input,.service-editor input:not([type=range]),.service-editor select,#ai-persona,#ai-vision-question{font-size:16px}
+ .ai-config-box input{height:30px}
+ .button,.text-button{min-height:34px}
+ #ai-voice-manager .button{min-height:36px}
+ #ai-voice-manager input{font-size:16px}
+ #control-panel .official-pad .xbox-body{grid-template-columns:minmax(0,1fr) 62px minmax(0,1fr);padding:16px 6px 20px;gap:12px 5px}
+ #control-panel .official-pad .pad-stick{width:78px;height:78px;max-width:100%}
+ #control-panel .official-pad .pad-abxy,#control-panel .official-pad .pad-dpad{grid-template-columns:repeat(3,26px);grid-template-rows:repeat(3,26px);gap:2px}
+ #control-panel .official-pad .pad-shoulders{grid-template-columns:repeat(3,minmax(0,1fr));padding-inline:0;gap:6px}
+ #control-panel .official-pad .pad-shoulders button{padding:5px 3px;font-size:10px;min-width:0;overflow-wrap:anywhere}
+ #control-panel .pad-brand{gap:6px;flex-wrap:wrap}
+ #control-panel .global-scale-row{min-width:0;max-width:100%}
+ #control-panel .service-credentials span{min-width:0;overflow-wrap:anywhere}
+ #service-editor .service-workbench-bottom>*{flex-basis:100%;min-width:0}
+ .motor-toolbar{padding:10px;gap:8px}
+ .motor-toolbar input{flex-basis:100%;width:100%}
+ .twin-footer{gap:8px;padding:10px 12px}
+ .pose-reference-buttons{flex-wrap:wrap}
+ #diagnostics .maintenance-streams{grid-template-columns:minmax(0,1fr)}
+ dialog{padding:18px;max-width:calc(100% - 20px)}
+ #toast{max-width:calc(100vw - 24px);bottom:12px;overflow-wrap:anywhere}
+}
+@media(max-width:360px){
+ .top-actions #last-update{flex-basis:100%}
+ .metric-value{font-size:25px}
+ .imu-body{gap:10px}
+ .attitude-dial{width:108px}
+ .tof-layout{padding:12px;gap:12px}
+ .tof-info{width:70px;flex-shrink:0}
+ .service-editor .service-feedback-values .register-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}

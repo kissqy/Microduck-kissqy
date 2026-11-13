@@ -1,0 +1,6 @@
+UI6 release validation
+51 Python tests passed, 0 failures, 0 errors.
+Frontend logic passed. HTML confirms two observation columns with AI outside the sensor stack.
+UI5 original worker reproduced fatal stdin shutdown; UI6 real subprocess return/stop/EOF all exit 0.
+Actual browser rendering unavailable; not claimed.
+No real Zero hardware or Doubao credentials used in offline verification.

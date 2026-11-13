@@ -1,0 +1,18 @@
+{
+  "static/assets/duck-visual.bin": {
+    "sha256": "2051b738abb89cc672923ee9ae4705354e0760ba90238398eb402ba453b06d98",
+    "bytes": 11681348
+  },
+  "updates/Microduck-Robotd-FT6-R17.tar.gz": {
+    "sha256": "d301e5e942eae36cb38e76729cdc97c1834ddacab23b10afea6d761b530ef20d",
+    "bytes": 29719187
+  },
+  "updates/imu_to_feetech_ReVA_FT6_SYNC15_UART_IRQ_v1.bin": {
+    "sha256": "d7bd2f37a6a4e0e15d1f9650a3959bcf4d8c704524d8ec319d72d8bdf104ab6d",
+    "bytes": 8428
+  },
+  "verification/fixtures/vision-ui16.jpg": {
+    "sha256": "d148b94284d29cfc288beaeed0072ab603b9711ff479d267e09233b6eb185c8c",
+    "bytes": 360
+  }
+}

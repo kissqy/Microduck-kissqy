@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark"><title>Microduck · 硬件观测台</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%23c1f577'/%3E%3Cpath d='M9 23h9V11h12v11h-7v9H9z' fill='%23131a17'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/control.css"><link rel="stylesheet" href="/service.css"><link rel="stylesheet" href="/r17-0151.css"><link rel="stylesheet" href="/advanced-parameters.css"><link rel="stylesheet" href="/calibration-view.css"><script type="module" src="/app.js"></script>
+  <link rel="stylesheet" href="/ai-panel.css">
+<link rel="stylesheet" href="/responsive.css">
+<link rel="stylesheet" href="/wifi-panel.css">
+</head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="#overview" aria-label="Microduck 首页"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="12"/><path d="M9 23h9V11h12v11h-7v9H9z"/></svg><span>microduck<span class="brand-sub">HARDWARE CONSOLE</span></span></a>
+  <div class="side-label">工作空间</div>
+  <nav aria-label="中控台导航">
+    <a class="active" href="#overview"><span class="nav-icon">▦</span>总览<span class="nav-tag">LIVE</span></a>
+    <a href="#control-panel"><span class="nav-icon">✥</span>鸭子控制</a>
+    <a href="#ai-agent-panel"><span class="nav-icon">◎</span>AI 智能体</a>
+    <a href="#motors"><span class="nav-icon">◈</span>舵机诊断<span class="count">15</span></a>
+    <a href="#sensors"><span class="nav-icon">⌁</span>传感器</a>
+    <a href="#camera-panel"><span class="nav-icon">▣</span>摄像头</a>
+    <a href="#diagnostics"><span class="nav-icon">≋</span>链路与系统日志</a>
+    <button id="open-recording"><span class="nav-icon">◷</span>录制与回放</button>
+  </nav>
+  <div class="side-card"><span class="tiny-label">适配版本</span><strong>0.15.1 <i class="lock-dot"></i></strong><p id="runtime-revision">运行版尚未识别</p></div>
+  <div class="side-bottom"><span class="status-dot" id="side-dot"></span><span id="side-status">等待数据源</span><small id="console-version">Console · 等待版本</small></div>
+</aside>
+<div class="workspace">
+  <header class="topbar"><div class="breadcrumb">我的 Microduck <span>/</span> 硬件观测台</div><div class="top-actions"><a class="github-source-link" href="https://github.com/kissqy/Microduck-kissqy" target="_blank" rel="noopener noreferrer" title="在 GitHub 查看 Microduck 项目源代码">★ GitHub 开源 ↗</a><span id="last-update" class="muted">等待第一帧</span><button id="export" class="button accent">↓ 导出诊断</button><span class="chip" id="mode-chip">正在连接</span><span class="chip subtle" id="access-chip">◈ 本地中控</span><button id="settings-button" class="icon-button" title="连接与数据说明" aria-label="连接与数据说明">⚙</button></div></header>
+  <main id="overview">
+    <div class="page-heading wifi-heading"><div class="heading-intro" hidden><div class="eyebrow">ROBOT OBSERVABILITY</div><h1>让每一个动作，都有据可查<span class="heading-dot">.</span></h1><p><span id="robot-name">duck-10e4</span> <span class="sep">/</span> 实时姿态 · 传感器 · 执行器诊断</p></div>
+    <section id="wifi-panel" aria-label="Zero Wi-Fi 网络">
+      <div class="wifi-controls">
+        <label class="wifi-network-field"><span class="wifi-label-row"><span>Wi-Fi 列表</span><span id="wifi-current">等待 Zero 连接</span></span><select id="wifi-networks" aria-label="Zero 周围及已保存的 Wi-Fi" disabled><option value="">连接 Zero 后点击扫描</option></select></label>
+        <label id="wifi-password-field" class="wifi-password-field" hidden>Wi-Fi 密码<input id="wifi-password" type="password" autocomplete="new-password" aria-label="所选 Wi-Fi 的密码" disabled></label>
+        <div class="wifi-buttons"><button id="wifi-scan" type="button" class="button" disabled>扫描</button><button id="wifi-connect" type="button" class="button accent" disabled>连接</button><button id="wifi-forget" type="button" class="button" disabled>取消保存</button></div>
+      </div>
+      <div class="wifi-status-row"><span id="wifi-feedback" role="status" aria-live="polite">先连接 Zero，再扫描周围 Wi-Fi。</span><span id="wifi-note">至少保留一个已保存的 Wi-Fi。</span></div>
+    </section>
+    <div class="heading-actions">
+      <form id="ssh-form" class="ssh-form" autocomplete="off">
+        <label>SSH 地址<input id="ssh-target" type="text" aria-label="SSH 地址" placeholder="radxa@192.168.6.151" spellcheck="false"></label>
+        <label>SSH / sudo 密码<input id="service-sudo-password" type="password" aria-label="SSH 和 sudo 密码" placeholder="已保存或免密可留空" autocomplete="off"></label>
+        <button id="ssh-connect" class="button accent" type="submit">连接</button><button id="ssh-disconnect" class="button" type="button" disabled>断开</button>
+        <div class="ssh-status-row"><span id="ssh-status" role="status">填写地址和密码后连接</span><span id="connection-banner" class="neutral" role="status" hidden></span><span id="service-sudo-status" class="tiny muted"></span><button id="service-sudo-forget" class="text-button" type="button" disabled>清除密码</button></div>
+      </form>
+    </div></div>
+    <section class="metrics" aria-label="总体健康指标">
+      <article class="metric"><div class="metric-title">控制循环 <span id="loop-badge" class="micro-badge">—</span></div><div class="metric-value"><span id="metric-hz">—</span><small>Hz</small></div><div class="metric-caption" id="loop-caption">目标 50 Hz · 等待数据</div><canvas class="metric-line" id="mini-loop" title="实际控制频率 · 固定 30–60 Hz 刻度" aria-label="实际控制频率，固定三十到六十 Hz 刻度"></canvas></article>
+      <article class="metric"><div class="metric-title">关节反馈 <span class="muted">JOINTS</span></div><div class="metric-value"><span id="metric-joints">—</span><small>/ 15</small></div><div class="metric-caption" id="joint-caption">未知不等于离线</div><div id="joint-dots" class="joint-dots"></div></article>
+      <article class="metric"><div class="metric-title">舵机总线电压 <span class="muted">SUPPLY</span></div><div class="metric-value"><span id="metric-volts">—</span><small>V</small></div><div class="metric-caption">舵机端实测 · 曲线 4–8 V</div><canvas class="metric-line" id="mini-volts" title="舵机端实测电压 · 固定 4–8 V 刻度" aria-label="舵机端电压，固定四到八 V 刻度"></canvas></article>
+      <article class="metric"><div class="metric-title">最高舵机温度 <span class="muted">THERMAL</span></div><div class="metric-value"><span id="metric-temp">—</span><small>°C</small></div><div class="metric-caption" id="temp-caption">等待 robot.health</div><canvas class="metric-line warm" id="mini-temp"></canvas></article>
+      <article class="metric"><div class="metric-title">ZERO 温度 <span class="muted">CPU</span></div><div class="metric-value"><span id="metric-zero-temp">—</span><small>°C</small></div><div class="metric-caption" id="zero-temp-caption">等待主板温度回读</div></article>
+    </section>
+    <div id="connection-notices">
+    <div id="mode-banner" class="banner" hidden></div>
+    </div>
+    <div class="hero-grid">
+      <section class="panel twin-panel"><div class="panel-head"><div><span class="section-index">01</span><h2>鸭子 3D 视图</h2><span id="pose-badge" class="badge neutral">等待姿态</span></div><button class="text-button" id="reset-view" title="把当前朝向设为画面零度并恢复机器人正面视角；仅影响显示">↺ 朝向归零</button></div>
+        <div class="pose-reference-toolbar">
+          <div class="pose-reference-buttons" role="group" aria-label="三维实测与独立标定参考">
+            <button type="button" id="pose-reference-measured" aria-pressed="true">实测</button><button type="button" id="pose-reference-zero" aria-pressed="false">零位 0°</button><button type="button" id="pose-reference-home" aria-pressed="false">HOME 站姿</button><button type="button" id="pose-reference-positive" aria-pressed="false">0 → +10°</button><button type="button" id="pose-reference-negative" aria-pressed="false">0 → −10°</button><span class="reference-only">参考按钮仅改变 3D</span>
+          </div><p id="pose-reference-info">请选择要核对的关节</p><p id="pose-reference-detail">独立模型参考不使用本机的方向和零点标定。</p>
+        </div>
+        <div class="twin-stage"><div id="duck-canvas"></div><div class="viewport-label"><span class="status-dot"></span><span id="pose-label">零位示意 · 等待完整关节反馈</span></div><div class="viewport-controls"><button data-view="front">正面</button><button data-view="back">背面</button><button data-view="left">左侧</button><button data-view="side">右侧</button><button data-view="top">俯视</button></div><div class="axis-legend">机身轴：<b class="red">X</b> 前 <b class="green">Y</b> 左 <b class="blue">Z</b> 上</div><div class="pose-hud" id="pose-hud"><div>ROLL <strong id="hud-roll">—</strong></div><div>PITCH <strong id="hud-pitch">—</strong></div><div>相对 YAW <strong id="hud-yaw">—</strong></div></div><div id="model-error" hidden></div></div>
+        <div class="twin-footer"><label><input type="checkbox" id="ghost" title="运动模式的实时策略目标，尚未经过逐关节机械限幅">策略目标叠加</label><label><input type="checkbox" id="heat">温度着色</label><span class="muted">拖动旋转 · 滚轮缩放 · 点选关节</span></div><div class="panel-note"><span class="calibration-coordinate">左右按鸭子自身：20–24 左腿，10–14 右腿；正面看时左右与屏幕相反。</span> 14 个可动关节；34 号嘴部固定。高度仅贴地显示。</div>
+      </section>
+      <section class="panel camera-panel" id="camera-panel"><div class="panel-head"><div><span class="section-index">03</span><h2>头部视野</h2><span id="camera-badge" class="badge neutral">未连接</span></div><span class="muted tiny">IMX219 · WebRTC</span></div>
+        <div class="camera-stage"><video id="camera" autoplay playsinline muted></video><div class="camera-placeholder" id="camera-placeholder"><div class="camera-symbol">▣</div><h3>头部摄像头</h3><p id="camera-message">等待连接</p><button class="button" id="camera-connect">连接摄像头</button></div><div class="camera-overlay" id="camera-overlay" hidden><span>● LIVE CAMERA</span><button id="camera-disconnect">断开</button></div></div>
+        <div class="camera-stats"><span>帧率<strong id="camera-fps">— <small>fps</small></strong></span><span>码率<strong id="camera-bitrate">— <small>Mb/s</small></strong></span><span>丢包累计<strong id="camera-loss">—</strong></span><label>旋转<select id="camera-rotation"><option value="0">0°</option><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select></label></div>
+        <div class="panel-note" id="camera-address"></div>
+        <div class="panel-note" id="camera-capture"></div>
+      </section>
+    </div>
+    <div class="observation-ai-grid">
+    <div class="operations-grid" id="sensors">
+    <section class="panel control-panel" id="control-panel" tabindex="0" aria-label="官方模拟手柄">
+      <div class="panel-head"><div><span class="section-index">02</span><h2>模拟手柄</h2><span class="pad-official-tag">官方手柄接口</span><span id="control-status" class="badge neutral">等待服务</span></div></div>
+      <div class="webpad-content"><div class="mode-management-anchor"></div><div class="pad-control-column"><div class="official-pad">
+        <div class="pad-shoulders"><button data-trigger="lt" title="LT：按住长叫并张嘴">LT · 长叫</button><button data-trigger="rt" title="RT：按下短叫并张嘴">RT · 短叫</button><button data-button="rb" data-requires-slot="kick_right" data-unavailable="true" title="RB：右脚踢球；等待运行模型回读">RB · 右脚踢球</button></div>
+        <div class="pad-brand"><span>R17</span><small>模拟手柄 · 实体按键映射</small><button class="xbox-mark" data-button="guide" data-unavailable="true" title="实体手柄 Logo 用于录放；此网页标志不触发录放">✥</button><i></i></div><div class="xbox-body"><div class="pad-stick" data-stick="l" tabindex="0" role="group" aria-label="左摇杆"><i></i><span>左摇杆</span></div>
+          <div class="pad-center"><button data-button="select" title="短按松开卸力；按住 2 秒坐下并关机">Select<small>卸力 / 关机</small></button><button data-button="start" title="首次回 HOME；之后启用或关闭策略">Start<small>回位 / 策略</small></button></div>
+          <div class="pad-abxy"><button class="pad-y" data-button="y" title="头部模式">Y</button><button class="pad-x" data-button="x" data-requires-slot="roulade" data-unavailable="true" title="X：前滚翻 10000 轮；等待运行模型回读">X</button><button class="pad-b" data-button="b" data-unavailable="true" disabled title="B：未分配">B</button><button class="pad-a" data-button="a" data-requires-slot="ground_pick" data-unavailable="true" title="A：低头捡物；等待运行模型回读">A</button></div>
+          <div class="pad-dpad"><button data-dpad="dy:-1" data-unavailable="true" title="仅实体手柄：仅长按 3 秒切换步行／滑轮">↑</button><button data-dpad="dx:-1" data-unavailable="true" title="仅实体手柄：← 短按装死；滑轮模式长按 2 秒切换 A 动作">←</button><button data-dpad="dx:1" data-unavailable="true" title="飞特后端不支持官方舵机重启指令">→</button><button data-dpad="dy:1" title="10000 轮起坐模型">↓</button></div>
+          <div class="pad-stick" data-stick="r" tabindex="0" role="group" aria-label="右摇杆"><i></i><span>右摇杆</span></div>
+          <div class="pad-stick-clicks"><button data-button="ls" data-unavailable="true" title="仅实体手柄：滑轮模式且 IMU 确认倒地时，按 L3 测试起身 5 秒">L3</button><button data-button="rs" data-unavailable="true" title="官方未绑定右摇杆按压">R3</button><button data-pad-center>摇杆回中</button></div>
+        </div>
+      </div><div class="pad-sliders">
+        <label>音量 <output id="control-volume-value">—</output><input id="control-volume" aria-label="音量" type="range" min="0" max="100" step="1" disabled></label>
+        <label>嘴巴最大开度 <output id="control-mouth-value">—</output><input id="control-mouth" aria-label="嘴巴最大开度" type="range" min="0" max="100" step="1" disabled></label>
+        <div class="pad-head-amplitude"><span>头部幅度</span><div role="group" aria-label="头部幅度"><button class="button" data-head-amplitude="2.5">官方 2.5 rad</button><button class="button" data-head-amplitude="1">1.0 rad</button><button class="button" data-head-amplitude="0.5">0.5 rad</button></div></div>
+      </div>
+      <section class="chorale-controls" aria-label="双鸭合唱">
+        <div class="chorale-heading"><strong>双鸭合唱</strong><span id="chorale-state" role="status">等待机器人实时状态</span></div>
+        <div class="chorale-buttons"><button class="button" id="chorale-start" disabled>开始合唱</button><button class="button" id="chorale-stop" disabled>停止合唱</button></div>
+        <details class="chorale-settings"><summary>设置 / 说明</summary><div class="chorale-help">
+          <p>两只鸭子放在附近，各自中控点“开始合唱”，自动分声部、同步节拍。要两只都退出，在各自中控点“停止合唱”。当前实体手柄没有合唱按键，LT / RT 仍是普通叫声。</p>
+          <div class="chorale-setup-row"><button class="button" id="chorale-prepare" disabled>首次启用 / 检查</button><span>首次使用：先坐稳并“停止并松开”，再启用（会重启机器人服务）；等待连接恢复后再开始合唱。</span></div>
+        </div></details>
+        <div id="chorale-feedback" class="panel-note service-job" role="status" aria-live="polite"></div>
+      </section><div class="pad-status-row"><p id="control-audio-status" class="tiny muted" role="status">音量与手柄幅度等待实际回读。</p><p id="control-reason" class="tiny muted">网页手柄与真实手柄使用官方 padd</p><p id="control-link-latency" class="tiny muted">手柄长连接未就绪</p><p id="control-model" class="tiny muted">尚未确认运行模型</p><p id="control-recorder" class="tiny muted" role="status" title="实体手柄 Logo：双击开始录制；录制中单击停止并保存；空闲单击等350ms后回放；回放中单击取消；长按忽略。">录放：等待回读</p></div><div id="control-feedback" class="panel-note service-job" role="status" aria-live="polite"></div></div><div class="pad-configuration-column"><div class="pad-model-parameters"><div class="model-management-anchor"></div><section class="runtime-parameters" aria-label="高级参数实际回读"><div class="parameter-heading"><strong>高级参数</strong><span id="parameter-status">等待实际回读</span></div><div class="parameter-grid">
+<div><span id="parameter-action-label">官方动作缩放</span><b id="parameter-action">—</b><small id="parameter-action-default">等待默认值 · 行走 / 保持</small></div>
+<div><span>起坐基础倍率</span><b id="parameter-sit">—</b><small>按官方逻辑固定 1.00</small></div>
+<div><span>当前头部滤波</span><b id="parameter-head">—</b><small id="parameter-head-desc">实际值待回读</small></div>
+<div><span>当前腿部滤波</span><b id="parameter-legs">—</b><small id="parameter-legs-desc">实际值待回读</small></div>
+<div><span>官方电压补偿</span><b id="parameter-voltage">—</b><small id="parameter-voltage-desc">等待开关与补偿系数回读</small></div>
+<div class="parameter-actual"><span>当前实际动作倍率</span><b id="parameter-actual">—</b><small id="parameter-actual-desc">基础倍率 × 电压补偿</small></div>
+</div><p id="control-readback" class="tiny muted">等待官方参数回读</p></section></div>
+<section class="pad-help"><h3>中文按键说明</h3><div class="pad-help-grid"><div><b>Start</b><span>首次 HOME；后续启用 / 关闭策略（回 HOME）。</span></div><div><b>左摇杆</b><span>行走模式：前后走 / 左右侧移。</span></div><div><b>右摇杆</b><span>行走模式：左右转向，上下未绑定。</span></div><div><b>Y · 头部模式</b><span>Y 切换头部 / 行走。左杆俯仰、转头；右杆颈部、侧倾。头部模式速度归零。</span></div><div><b>B · 未分配</b><span>B 已取消映射，不切换身体姿态模式。</span></div><div><b>方向键 ↓</b><span>10000 轮起坐：坐下 / 站起切换。</span></div><div><b>A · 低头捡物</b><span>内置捡物模型；策略启用后按一次，走官方相位流程，约 2.8 秒后回到走路模型。</span></div><div><b>X · 前滚翻</b><span>10000 轮前滚翻；启用策略后基准 1.00，按一次约 1 秒，按住连续翻滚。Walk 槽现为行走 / 起身联合模型。</span></div><div><b>左脚踢球</b><span>HOME 后启用策略，按 LB 执行 10000 轮左踢，0.5 秒单次动作，完成后回到行走模型。</span></div><div><b>右脚踢球</b><span>HOME 后启用策略，按 RB 或点击网页手柄的 RB 键。完成后回到行走模型。</span></div><div><b>LT / RT</b><span>LT 长叫，RT 短叫；扳机开嘴，松开闭嘴。嘴巴滑条限制网页及真实手柄的张嘴幅度，不缩放声音扳机、不主动开嘴。HOME 后可叫声张嘴。</span></div><div><b>Select</b><span>松开卸力；按住 2 秒坐下、卸力并关闭 Zero。</span></div></div><div class="pad-help-grid roller-help" aria-label="实体手柄滑轮操作说明"><div><b>滑轮 · ↑ 长按 3 秒</b><span>实体手柄切换行走 / 滑轮，进入滑轮默认蹲下。</span></div><div><b>滑轮 · ← 长按 2 秒</b><span>静止 HOME 时切换 A：蹲下 / 原地转。</span></div><div><b>滑轮 · A</b><span>执行当前蹲下 / 原地转模型。</span></div><div><b>滑轮 · 倒地起身</b><span>实体 L3（左摇杆按下）：仅滑轮模式、运动已启用且 IMU 确认倒地时测试起身 5 秒；Start 可取消。</span></div><div><b>滑轮 · 左 / 右摇杆</b><span>左杆前后滑行；右杆使用 IMU 航向反馈转向。</span></div></div><p>滑轮操作使用实体手柄；此处只显示说明。运动模式下先 HOME，再启用策略；切换 A 动作前关闭策略并回 HOME。网页 ↑ / ← / →、L3、R3、中央键保持不可用。</p><p>松开摇杆只回中，继续使用走路模型做零速度保持。真实手柄接入时，网页动作输入暂停。</p></section></div></div>
+    </section>
+      <section class="panel"><div class="panel-head"><div><span class="section-index">03</span><h2>IMU · 身体姿态</h2></div><span id="imu-badge" class="badge neutral">等待</span></div><div class="imu-body"><div class="attitude-dial"><svg viewBox="0 0 170 170" aria-label="姿态仪"><defs><clipPath id="dial-clip"><circle cx="85" cy="85" r="65"/></clipPath></defs><circle cx="85" cy="85" r="76" fill="none" stroke="#394346" stroke-dasharray="1 9" stroke-width="5"/><g clip-path="url(#dial-clip)"><g id="horizon"><rect x="-100" y="-150" width="400" height="235" fill="#233742"/><rect x="-100" y="85" width="400" height="260" fill="#343b29"/><path d="M-50 85H220" stroke="#bce58b" stroke-width="2"/><path d="M65 65H105M75 45H95M65 105H105M75 125H95" stroke="#91a5a4"/></g></g><path d="M40 85h28l8 7h18l8-7h28" stroke="#d4fc98" fill="none" stroke-width="3"/><path d="M80 15l5 9 5-9" fill="#cef58b"/></svg><div id="tilt-status">姿态未知</div></div><div class="imu-values"><div><span>横滚 / Roll</span><strong id="imu-roll">—</strong></div><div><span>俯仰 / Pitch</span><strong id="imu-pitch">—</strong></div><div><span>融合就绪</span><strong id="imu-ready">—</strong></div><div><span>连续旧样本</span><strong id="imu-stale">—</strong></div></div></div><div class="vector-line"><span class="muted">重力 XYZ</span><code id="imu-gravity">— / — / —</code></div><canvas class="chart sensor-chart" id="gravity-chart" aria-label="重力方向历史曲线"></canvas><div class="legend"><span class="red">● X</span><span class="green">● Y</span><span class="blue">● Z</span><span class="muted">最近 60 秒 · 单位向量</span></div><div class="raw-vectors"><div><span>陀螺仪 <small>rad/s</small></span><code id="imu-gyro">冻结版未导出</code></div><div><span>四元数 <small>wxyz</small></span><code id="imu-quat">冻结版未导出</code></div></div></section>
+      <section class="panel"><div class="panel-head"><div><span class="section-index">04</span><h2>ToF · 深度视野</h2></div><span id="tof-badge" class="badge neutral">等待</span></div><div class="tof-layout"><div id="tof-grid" class="tof-grid" aria-label="8×8 深度矩阵"></div><div class="tof-info"><span>最近有效距离</span><strong id="tof-near">—<small>mm</small></strong><span>最远距离</span><strong id="tof-far">—<small>mm</small></strong><span>有效分区</span><strong id="tof-valid">—<small>/64</small></strong><span class="tiny" id="tof-seq">尚无帧</span></div></div><div class="depth-scale"><span>近</span><i></i><span>远 · 4 m</span></div><div class="panel-note" id="tof-message" role="status">等待测距服务连接与首帧数据。</div><div class="panel-note" id="tof-detail">点击格子查看距离及状态</div></section>
+      <section class="panel"><div class="panel-head"><div><span class="section-index">05</span><h2>轨迹与系统</h2></div><span class="badge neutral">估计值</span></div><canvas id="odom-chart" class="odom-chart" aria-label="接触里程计轨迹"></canvas><div class="odom-values"><span>X <strong id="odom-x">—</strong></span><span>Y <strong id="odom-y">—</strong></span><span>θ <strong id="odom-yaw">—</strong></span></div><div class="system-lines"><div><span>CPU 使用率</span><strong id="sys-cpu">—</strong></div><div class="bar"><i id="cpu-bar"></i></div><div><span>内存使用</span><strong id="sys-memory">—</strong></div><div class="bar"><i id="memory-bar"></i></div><div><span>Zero 温度</span><strong id="sys-temp">—</strong></div><div><span>Zero 开机时长</span><strong id="sys-uptime">—</strong></div></div></section>
+    </div>
+    <section class="panel" id="ai-agent-panel" aria-label="AI智能体与完整调用日志">
+  <div class="panel-head"><div><span class="section-index" id="ai-release-version">AI · 等待版本</span><h2>AI 智能体 · 语音与视觉</h2><span id="ai-connected" class="badge neutral">○ 豆包未运行</span></div><span id="ai-lock">豆包未运行</span></div>
+  <div class="ai-layout">
+   <div class="ai-setup">
+    <div class="ai-fields" aria-label="语音与视觉配置">
+      <label class="ai-config-box"><span class="ai-field-heading">豆包密钥 <span class="ai-field-note" id="ai-key-state">尚未保存</span></span><input id="ai-api-key" type="password" autocomplete="off" placeholder="填写豆包实时语音密钥"></label>
+      <div class="ai-config-box ai-voice-box"><div class="ai-field-heading"><label for="ai-voice-id">音色</label><span class="ai-field-note" id="ai-voice-state" role="status" aria-live="polite">当前</span></div><div class="ai-voice-select-row"><select id="ai-voice-id" aria-label="选择已保存音色"><option value="zh_female_vv_jupiter_bigtts">当前音色 · zh_female_vv_jupiter_bigtts</option></select><button type="button" class="button" id="ai-voice-use">切换</button><button type="button" class="button accent ai-voice-open" id="ai-voice-manage" aria-haspopup="dialog" aria-label="添加音色" title="添加音色">添加</button></div></div>
+      <label class="ai-config-box"><span class="ai-field-heading">视觉 KEY <span class="ai-field-note" id="ai-vision-key-state">火山方舟 · 与语音 KEY 不同</span></span><input id="ai-vision-api-key" type="password" autocomplete="off" placeholder="填写火山方舟 API Key"></label>
+      <label class="ai-config-box"><span class="ai-field-heading">视觉模型<span class="ai-field-note">模型 ID / 接入点 ID</span></span><input id="ai-vision-model" spellcheck="false" value="doubao-seed-2-0-mini-260428" placeholder="填写模型 ID 或 ep- 接入点 ID"></label>
+      <div class="ai-config-box ai-mic-monitor" id="ai-mic-monitor" data-live="false" title="HAT 麦克风尚未启动" aria-label="HAT 麦克风实时收音强度">
+        <div class="ai-field-heading"><span>HAT 收音</span><span id="ai-mic-state">未启动</span></div>
+        <div class="ai-mic-content"><svg id="ai-mic-wave" viewBox="0 0 100 28" role="img" aria-label="从左到右由低到高的音量竖条，实际音量越大点亮越多"><path id="ai-mic-wave-line" d="M3,23V26M9,22V26M15,20V26M21,19V26M27,17V26M33,16V26M39,14V26M45,13V26M51,11V26M57,10V26M63,8V26M69,7V26M75,5V26M81,4V26M87,2V26M93,1V26"/><path id="ai-mic-wave-active" d=""/></svg><div class="ai-mic-values"><span id="ai-mic-db">— dBFS</span><span id="ai-mic-sent">已上传 0.0 秒</span></div></div>
+      </div>
+    </div>
+    <dialog id="ai-voice-manager" aria-labelledby="ai-voice-manager-title">
+      <div class="ai-voice-dialog-head"><h3 id="ai-voice-manager-title">音色管理</h3><button type="button" class="text-button" id="ai-voice-close" aria-label="关闭音色管理">关闭 ×</button></div>
+      <p class="ai-voice-help">保存名称和音色 ID，可手动切换，也可以对鸭鸭说“换成讲故事的声音”。</p>
+      <div id="ai-voice-list" role="list" aria-label="已保存音色"></div>
+      <div class="ai-voice-list-actions"><button type="button" class="button" id="ai-voice-remove">删除所选</button></div>
+      <div class="ai-voice-add-fields"><label for="ai-voice-name">音色名称<input id="ai-voice-name" maxlength="40" placeholder="例如：小鸭、讲故事"></label><label for="ai-voice-new-id">音色 ID<input id="ai-voice-new-id" maxlength="150" spellcheck="false" placeholder="填写已开通的音色 ID"></label></div>
+      <button type="button" class="button accent" id="ai-voice-add">添加音色</button>
+    </dialog>
+
+    <div class="ai-vision-controls"><label title="勾选后 AI 运行时保持 15 帧取景；关闭仍可按需拍照或语音识图"><input id="ai-vision-enabled" type="checkbox">摄像头常开 · 15帧</label><input id="ai-vision-question" maxlength="300" placeholder="想看什么？留空识别眼前物品" aria-label="拍照观察问题"><button class="button" type="button" id="ai-vision-capture" disabled>拍照识图</button><span class="ai-small" id="ai-camera-state">按需拍照 · 常开已关闭</span><span id="ai-vision-state" role="status">尚未拍照</span><span class="ai-small" id="ai-vision-timing" hidden></span></div>
+    <div class="ai-vision-result" id="ai-vision-display" hidden><a id="ai-vision-open" target="_blank" rel="noreferrer" hidden><img id="ai-vision-frame" alt="本次发送给视觉模型的摄像头画面"></a><p id="ai-vision-result"></p></div>
+    <label class="ai-persona-field"><span class="ai-field-heading">角色定位与回复规则<span class="ai-field-note">启动时生效</span></span><textarea id="ai-persona" rows="3" maxlength="4000" placeholder="定义它是谁、能做什么，以及每次回复的字数和表达规则" title="停止 AI 后编辑角色规则，与密钥和音色一起保存">【身份定位】你是 Microduck 实体小鸭机器人的语音与动作助手，代表这只小鸭和用户交流。你的职责是自然语音对话、理解用户意图，并通过当前会话提供的工具与小鸭的身体互动。
+【回复规则】默认使用中文口语，通常一句话；每次回复最多20字，含标点。直接回应当前问题，不反复自我介绍，不使用标题、Markdown、代码或长列表。复杂问题先给20字以内的简短结论，等待用户继续提问。
+【能力边界】只能使用当前提供且允许执行的动作工具。没有得到图像、传感器或工具反馈时，不声称看见环境、读到数据或完成动作；不确定就简短说明。</textarea></label>
+    <div class="ai-toolbar">
+      <div class="ai-actions"><button class="button accent" type="button" id="ai-start">启动 AI</button><button class="button" type="button" id="ai-stop" disabled>停止</button><span class="ai-motion-actions"><button class="button" type="button" id="ai-motion-start" data-button="start" title="与手柄 Start 相同：先回 HOME，回位完成后再点进入保持" disabled>Start · 回 HOME</button><button class="button" type="button" id="ai-motion-relax" data-button="select" title="立即卸力，复用手柄 Select 短按；此按钮长按也不关机" disabled>卸力</button></span><button class="button" type="button" id="ai-save" title="语音、视觉和角色配置保存到本机，重启后自动读取">保存配置</button><label class="ai-speech-control" title="勾选后允许 HAT 播放豆包语音；不影响官方鸭叫和电脑喇叭回听"><input id="ai-speech-enabled" type="checkbox" disabled>启用说话</label></div>
+      <p id="ai-message" role="status" hidden></p>
+    </div>
+    <div class="ai-catalog">
+      <div class="ai-catalog-content"><div class="ai-catalog-row"><h3>表情 <span class="ai-detail-count"><span id="ai-expression-count">0</span> 项</span></h3><div id="ai-expressions" aria-label="官方表情清单">尚未读取</div></div><div class="ai-catalog-row"><h3>身体动作 <span class="ai-detail-count"><span id="ai-skill-count">0</span> 项</span></h3><div id="ai-skills" aria-label="身体动作清单">尚未读取</div></div><div id="ai-head-ranges" class="tiny"></div></div><button class="text-button" type="button" id="ai-refresh" title="读取当前固件清单和头部幅度；需要主人先 HOME、再进入保持">刷新清单</button>
+    </div>
+   </div>
+   <div class="ai-audit">
+    <div class="ai-chat-heading"><h3>对话</h3><span id="ai-chat-state" role="status">尚未启动豆包对话</span></div>
+    <div id="ai-dialogue" class="ai-chat-window" role="log" aria-live="off" tabindex="0" aria-label="你与豆包的多轮对话记录"><div class="ai-chat-empty">对着 HAT 说话，识别文字、豆包回复和动作结果会留在这里。</div></div>
+    <div class="ai-chat-footer"><button class="button" id="ai-commit" type="button" title="调试用：手动请求豆包结束当前输入" disabled>结束本句</button><span>豆包自动断句</span><button class="text-button" id="ai-chat-latest" type="button" hidden>回到最新 ↓</button></div>
+    <div class="ai-debug"><div class="ai-debug-heading">运行日志 <span id="ai-stream-state">连接实时日志…</span></div>
+      <div class="ai-audit-bar"><div class="ai-audit-tools"><label><input id="ai-follow" type="checkbox" checked> 跟随日志</label><button type="button" class="button" id="ai-clear">清空日志显示</button><a class="button" href="/api/ai/log/download" download>下载完整日志</a></div></div>
+      <div id="ai-trace" role="log" aria-live="off" aria-label="语音事件、模型调用、机器人指令与回执"></div>
+    </div>
+   </div>
+  </div>
+</section>
+    </div>
+    <section class="panel motors-panel" id="motors"><div class="panel-head"><div><span class="section-index">06</span><h2>执行器 · 舵机诊断</h2><span class="badge neutral">XL330-M288-T</span></div><a class="text-button" href="/api/servos.csv" download>↓ CSV 快照</a></div>
+      <div class="motor-toolbar"><div class="segmented" id="group-filter"><button class="selected" data-group="all">全部关节</button><button data-group="left">左腿</button><button data-group="head">头部</button><button data-group="right">右腿</button></div><input id="motor-search" type="search" placeholder="搜索 ID / 关节" aria-label="搜索舵机"></div>
+      <div class="table-scroll"><table><thead><tr><th>关节 / ID</th><th>反馈状态</th><th>实际角度 °</th><th>目标 °</th><th>误差 °</th><th>速度 rpm</th><th>电流 mA</th><th>温度 °C</th><th>电压 V</th><th>电流占限值 % ⓘ</th><th>PWM %</th><th>扭矩 / 故障</th></tr></thead><tbody id="motor-rows"></tbody></table></div>
+      <div class="motor-detail"><div class="detail-heading"><div><span class="eyebrow">JOINT INSPECTOR</span><h3 id="selected-joint">左髋旋转 · ID 20</h3><div id="joint-extra" class="muted tiny">选中关节可联动 3D 模型高亮</div></div><select id="plot-field" aria-label="波形数据"><option value="angle">实际角度 / 目标角度</option><option value="current">电流 mA</option><option value="temperature">温度 °C</option><option value="velocity">速度 rpm</option><option value="error">跟随误差 °</option></select></div><canvas id="joint-chart" class="chart joint-chart" aria-label="选中舵机历史波形"></canvas><div class="legend"><span class="green" id="chart-label">● 实测角度</span><span class="blue" id="target-label">● 目标角度</span></div></div>
+      <details class="register-details"><summary>查看选中舵机的寄存器详情 <span class="muted">· 台架只读模式提供</span></summary><dl id="joint-registers" class="register-grid"></dl></details>
+      <div class="panel-note important">“电流占限值”＝|实测电流| / 读取到的 Current Limit，不是实测扭矩或机械负载百分比。逐颗电压、PWM、限值及故障寄存器在台架模式提供；原版未导出项显示「—」。</div>
+    </section>
+    <div class="diagnostics-grid" id="diagnostics"><section class="panel"><div class="panel-head"><div><span class="section-index">07</span><h2>链路与安全状态</h2></div><span id="health-badge" class="badge neutral">未知</span></div><div id="channel-list" class="channel-list"></div><div class="health-detail" id="health-detail">等待官方健康响应。</div><div class="intent-grid"><div><span>请求速度 · m/s, rad/s</span><code id="move-request">—</code></div><div><span>实际采用速度</span><code id="move-applied">—</code></div></div><div class="panel-note" id="move-limits">没有收到状态前，不判断安全限制。</div></section><section class="panel system-log-card" id="system-log"><div class="panel-head"><div><span class="section-index">08</span><h2>系统日志</h2></div><a class="text-button" href="/api/system-log/download" download>下载系统日志 ↓</a></div><div class="system-log-tools"><button class="button" id="system-log-copy">复制显示</button><label><input type="checkbox" id="system-log-follow" checked>自动滚动</label></div><p id="system-log-status" class="tiny muted" role="status">等待系统日志。</p><pre id="system-log-output" tabindex="0">尚无执行记录。</pre><section class="maintenance-events" id="maintenance-events"><h3>事件与原始报文</h3><div class="maintenance-streams"><div><h4>事件</h4><div id="events" class="events"><div class="muted">连接事件将在这里出现</div></div></div><div><h4>原始报文</h4><pre id="raw-json" tabindex="0"></pre></div></div></section></section></div>
+    <footer><span>MICRODUCK / HARDWARE CONSOLE</span><span>模型 © Pollen Robotics</span></footer>
+  </main>
+</div>
+<dialog id="settings-dialog"><form method="dialog"><button class="dialog-close" aria-label="关闭">×</button><span class="eyebrow">CONNECTION & CAPABILITIES</span><h2>连接和数据能力</h2><p>实机模式通过 Zero 的机器人服务观测与控制。当前模式：<strong id="settings-mode">—</strong></p><label class="field">摄像头主机<input id="camera-host" autocomplete="off" placeholder="duck-10e4.local"></label><label class="field">WebRTC 信令端口<input id="camera-port" type="number" min="1" max="65535" value="8443"></label><button type="button" id="camera-save" class="button accent">保存摄像头地址</button><div class="capabilities"><h3>实际数据能力</h3><p>原版：实测/目标角度、重力、运动意图、里程计、健康、总线电压、最高/平均温度、ToF。</p><p>舵机服务：15 颗舵机反馈与 IMU 姿态；运动循环运行时自动接入通信数据；未启动循环时可手动检测。</p><p>台架模式：逐颗电压、PWM、硬件错误、扭矩开关、PID、限值、零位偏移等；必须先停止 robotd，支撑好机器人。不写任何寄存器。</p><p>“负载”不是力传感器测量；界面仅报告可核实的电流及其限值占比。供电若已降压，官方电池百分比不适用。</p></div><button class="button">完成</button></form></dialog>
+<dialog id="recording-dialog"><form method="dialog"><button class="dialog-close" aria-label="关闭">×</button><span class="eyebrow">CAPTURE / REPLAY</span><h2>调试记录与回放</h2><p>默认导出精简诊断：保留启动、操作、异常与关键运行数据。完整回放保留最近约 120 秒、10 Hz 的详细快照，文件较大。</p><button type="button" class="button accent" id="export-diagnostic">↓ 导出精简诊断</button><a class="button" href="/api/recording" download>↓ 导出完整回放</a><label class="field">打开此前导出的记录<input id="replay-file" type="file" accept=".json,application/json"></label><div id="replay-controls" hidden><input id="replay-range" type="range" min="0" max="0" value="0" aria-label="回放时间点"><div class="row"><button type="button" class="button" id="replay-play">▶ 播放 / 暂停</button><button type="button" class="button" id="replay-exit">退出回放</button></div><p id="replay-label"></p></div><p id="replay-error" class="red"></p><button class="button">关闭窗口</button></form></dialog>
+<div id="toast" role="status" hidden></div>
+</body></html>

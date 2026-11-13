@@ -1,0 +1,13 @@
+test_commissioning_mode_query_crosses_the_real_unix_relay (test_commissioning_power.CommissioningPowerTests.test_commissioning_mode_query_crosses_the_real_unix_relay) ... ok
+test_commissioning_uses_existing_privileged_helper (test_commissioning_power.CommissioningPowerTests.test_commissioning_uses_existing_privileged_helper) ... ok
+test_controller_accepts_commissioning_receipt_and_pauses_after_acceptance (test_commissioning_power.CommissioningPowerTests.test_controller_accepts_commissioning_receipt_and_pauses_after_acceptance) ... ok
+test_live_commissioning_uses_native_stop_and_poweroff (test_commissioning_power.CommissioningPowerTests.test_live_commissioning_uses_native_stop_and_poweroff) ... ok
+test_mode_change_before_native_command_never_uses_os_fallback (test_commissioning_power.CommissioningPowerTests.test_mode_change_before_native_command_never_uses_os_fallback) ... ok
+test_motion_unknown_and_unconfirmed_relax_never_call_os (test_commissioning_power.CommissioningPowerTests.test_motion_unknown_and_unconfirmed_relax_never_call_os) ... ok
+test_native_motion_path_preserved (test_commissioning_power.CommissioningPowerTests.test_native_motion_path_preserved) ... ok
+test_unknown_mode_and_rejected_helper_do_not_fall_back (test_commissioning_power.CommissioningPowerTests.test_unknown_mode_and_rejected_helper_do_not_fall_back) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.011s
+
+OK

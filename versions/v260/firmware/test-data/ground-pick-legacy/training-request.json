@@ -1,0 +1,425 @@
+{
+  "mode": "wsl",
+  "distro": "Ubuntu",
+  "repo": "~/microduck-training-studio/engines/official_0151",
+  "op": "export",
+  "expected_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "task": "Mjlab-GroundPick-Flat-MicroDuck",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/ground_pick/2026-10-04_11-01-13_console_20261004_110100_f3cbc3/model_4999.pt",
+  "source_job": "339f1ca75dbb9c07",
+  "source_label": "低头捡取 / Ground pick · 平地",
+  "source_iteration": 4999,
+  "policy_parameters": {
+    "actor_dims": [
+      512,
+      256,
+      128
+    ],
+    "critic_dims": [
+      512,
+      256,
+      128
+    ],
+    "activation": "elu",
+    "learning_rate": 0.001,
+    "gamma": 0.99,
+    "entropy": 0.01,
+    "clip": 0.2,
+    "seed": 42,
+    "reward_weights": {},
+    "pushes": "default",
+    "training_action_scale": 1.0
+  },
+  "engine": "official_0151",
+  "task_adapter": "hd1910-official0151",
+  "baseline_pin": {
+    "title": "官方训练 · 适配固件 0.15.1 / HD1910",
+    "url": "https://github.com/pollen-robotics/microduck_rl.git",
+    "revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "subdir": "",
+    "repo": "~/microduck-training-studio/engines/official_0151",
+    "task": "Mjlab-Velocity-Flat-MicroDuck",
+    "motor": "HD1910 / BAM M6 · 官方骨架 820g",
+    "target_runtime": "0.15.1",
+    "runtime_revision": "1fa84386f07884e27866411bc1ba166977bced95"
+  },
+  "target_runtime": "0.15.1",
+  "studio_recipe": {
+    "schema": "microduck-training-recipe/v1",
+    "name": "官方骨架 + HD1910",
+    "baseline": "official_0151",
+    "purpose": "sim2real",
+    "overrides": [],
+    "robot": {
+      "servo_mass_model": "hd1910_820g_v1"
+    },
+    "calibration": {
+      "data": {
+        "motion_enabled": false,
+        "imu_mount_verified": true,
+        "imu_mount_quat": [
+          0.037577263,
+          0.701353391,
+          -0.035866967,
+          0.710918372
+        ],
+        "current_ma_per_count": 0.0,
+        "units_verified": false,
+        "joints": [
+          {
+            "name": "left_hip_yaw",
+            "id": 20,
+            "zero_raw": 2035,
+            "direction": 1,
+            "calibrated": true,
+            "min_rad": -0.4363323129985824,
+            "max_rad": 0.5235987755982988
+          },
+          {
+            "name": "left_hip_roll",
+            "id": 21,
+            "zero_raw": 2176,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -0.3839724354387525,
+            "max_rad": 0.3839724354387525
+          },
+          {
+            "name": "left_hip_pitch",
+            "id": 22,
+            "zero_raw": 1977,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -1.5707963267948966,
+            "max_rad": 1.5707963267948966
+          },
+          {
+            "name": "left_knee",
+            "id": 23,
+            "zero_raw": 1392,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -1.5707963267948966,
+            "max_rad": 1.5707963267948966
+          },
+          {
+            "name": "left_ankle",
+            "id": 24,
+            "zero_raw": 1893,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -1.2217304763960306,
+            "max_rad": 1.2217304763960306
+          },
+          {
+            "name": "neck_pitch",
+            "id": 30,
+            "zero_raw": 2100,
+            "direction": 1,
+            "calibrated": true,
+            "min_rad": -1.5707963267948966,
+            "max_rad": 1.2217304763960306
+          },
+          {
+            "name": "head_pitch",
+            "id": 31,
+            "zero_raw": 1742,
+            "direction": 1,
+            "calibrated": true,
+            "min_rad": -1.5707963267948966,
+            "max_rad": 1.5707963267948966
+          },
+          {
+            "name": "head_yaw",
+            "id": 32,
+            "zero_raw": 1952,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -2.9670597283903604,
+            "max_rad": 2.9670597283903604
+          },
+          {
+            "name": "head_roll",
+            "id": 33,
+            "zero_raw": 1599,
+            "direction": 1,
+            "calibrated": true,
+            "min_rad": -0.3490658503988659,
+            "max_rad": 0.3490658503988659
+          },
+          {
+            "name": "mouth",
+            "id": 34,
+            "zero_raw": 1372,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -0.08726646259971647,
+            "max_rad": 0.5235987755982988
+          },
+          {
+            "name": "right_hip_yaw",
+            "id": 10,
+            "zero_raw": 1974,
+            "direction": 1,
+            "calibrated": true,
+            "min_rad": -0.5235987755982988,
+            "max_rad": 0.4363323129985824
+          },
+          {
+            "name": "right_hip_roll",
+            "id": 11,
+            "zero_raw": 1760,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -0.3839724354387525,
+            "max_rad": 0.3839724354387525
+          },
+          {
+            "name": "right_hip_pitch",
+            "id": 12,
+            "zero_raw": 1799,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -1.5707963267948966,
+            "max_rad": 1.5707963267948966
+          },
+          {
+            "name": "right_knee",
+            "id": 13,
+            "zero_raw": 1908,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -1.5707963267948966,
+            "max_rad": 1.5707963267948966
+          },
+          {
+            "name": "right_ankle",
+            "id": 14,
+            "zero_raw": 1611,
+            "direction": -1,
+            "calibrated": true,
+            "min_rad": -1.2217304763960306,
+            "max_rad": 1.2217304763960306
+          }
+        ]
+      },
+      "source": "radxa@192.168.6.151:/etc/robot/feetech-ft5/hd1910-calibration.toml",
+      "source_sha256": "b56de58938860fa066737caa987cc0aec68a6b903ce3c74887d039c1308385aa",
+      "provenance": "从 ZERO SSH 读取已保存的完整标定",
+      "imported_at": 1790956669.5204604,
+      "note": "只保存到训练台；不写入实机。机械限位与模型限位分别保留，不静默相互覆盖。",
+      "zero_target": "radxa@192.168.6.151",
+      "changes": {
+        "joints": [
+          {
+            "name": "head_roll",
+            "id": 33,
+            "fields": {
+              "zero_raw": {
+                "before": 568,
+                "after": 1599
+              }
+            }
+          }
+        ],
+        "imu_changed": false
+      },
+      "sync": {
+        "simulation_unchanged": true,
+        "environment_rechecked": false
+      }
+    },
+    "notes": "官方0.15.1对应训练流程；HD1910、官方骨架和820g适配。标定只作部署快照，不改变训练机械零位。",
+    "version": 38,
+    "task_overrides": {
+      "Mjlab-Velocity-Flat-MicroDuck": [],
+      "Mjlab-VelStand-Flat-MicroDuck": [],
+      "Mjlab-GroundPick-Flat-MicroDuck": []
+    },
+    "training_action_scale": 1.0,
+    "task": "Mjlab-Velocity-Flat-MicroDuck"
+  },
+  "studio_recipe_hash": "b795dd6d2a71e3e5f932797789323558a4c4fbb727dfcbf4e9196572066804f3",
+  "parameter_hash": "8931c249ddd33eeefe4bdd8c766a294112636911d113cc4f7d5dd813dcaa10ee",
+  "start_parameters": {
+    "source_job": "339f1ca75dbb9c07",
+    "checkpoint": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/ground_pick/2026-10-04_11-01-13_console_20261004_110100_f3cbc3/model_4999.pt"
+  },
+  "training_calibration": {
+    "data": {
+      "motion_enabled": false,
+      "imu_mount_verified": true,
+      "imu_mount_quat": [
+        0.037577263,
+        0.701353391,
+        -0.035866967,
+        0.710918372
+      ],
+      "current_ma_per_count": 0.0,
+      "units_verified": false,
+      "joints": [
+        {
+          "name": "left_hip_yaw",
+          "id": 20,
+          "zero_raw": 2035,
+          "direction": 1,
+          "calibrated": true,
+          "min_rad": -0.4363323129985824,
+          "max_rad": 0.5235987755982988
+        },
+        {
+          "name": "left_hip_roll",
+          "id": 21,
+          "zero_raw": 2176,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -0.3839724354387525,
+          "max_rad": 0.3839724354387525
+        },
+        {
+          "name": "left_hip_pitch",
+          "id": 22,
+          "zero_raw": 1977,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -1.5707963267948966,
+          "max_rad": 1.5707963267948966
+        },
+        {
+          "name": "left_knee",
+          "id": 23,
+          "zero_raw": 1392,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -1.5707963267948966,
+          "max_rad": 1.5707963267948966
+        },
+        {
+          "name": "left_ankle",
+          "id": 24,
+          "zero_raw": 1893,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -1.2217304763960306,
+          "max_rad": 1.2217304763960306
+        },
+        {
+          "name": "neck_pitch",
+          "id": 30,
+          "zero_raw": 2100,
+          "direction": 1,
+          "calibrated": true,
+          "min_rad": -1.5707963267948966,
+          "max_rad": 1.2217304763960306
+        },
+        {
+          "name": "head_pitch",
+          "id": 31,
+          "zero_raw": 1742,
+          "direction": 1,
+          "calibrated": true,
+          "min_rad": -1.5707963267948966,
+          "max_rad": 1.5707963267948966
+        },
+        {
+          "name": "head_yaw",
+          "id": 32,
+          "zero_raw": 1952,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -2.9670597283903604,
+          "max_rad": 2.9670597283903604
+        },
+        {
+          "name": "head_roll",
+          "id": 33,
+          "zero_raw": 1599,
+          "direction": 1,
+          "calibrated": true,
+          "min_rad": -0.3490658503988659,
+          "max_rad": 0.3490658503988659
+        },
+        {
+          "name": "mouth",
+          "id": 34,
+          "zero_raw": 1372,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -0.08726646259971647,
+          "max_rad": 0.5235987755982988
+        },
+        {
+          "name": "right_hip_yaw",
+          "id": 10,
+          "zero_raw": 1974,
+          "direction": 1,
+          "calibrated": true,
+          "min_rad": -0.5235987755982988,
+          "max_rad": 0.4363323129985824
+        },
+        {
+          "name": "right_hip_roll",
+          "id": 11,
+          "zero_raw": 1760,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -0.3839724354387525,
+          "max_rad": 0.3839724354387525
+        },
+        {
+          "name": "right_hip_pitch",
+          "id": 12,
+          "zero_raw": 1799,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -1.5707963267948966,
+          "max_rad": 1.5707963267948966
+        },
+        {
+          "name": "right_knee",
+          "id": 13,
+          "zero_raw": 1908,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -1.5707963267948966,
+          "max_rad": 1.5707963267948966
+        },
+        {
+          "name": "right_ankle",
+          "id": 14,
+          "zero_raw": 1611,
+          "direction": -1,
+          "calibrated": true,
+          "min_rad": -1.2217304763960306,
+          "max_rad": 1.2217304763960306
+        }
+      ]
+    },
+    "source": "radxa@192.168.6.151:/etc/robot/feetech-ft5/hd1910-calibration.toml",
+    "source_sha256": "b56de58938860fa066737caa987cc0aec68a6b903ce3c74887d039c1308385aa",
+    "provenance": "从 ZERO SSH 读取已保存的完整标定",
+    "imported_at": 1790956669.5204604,
+    "note": "只保存到训练台；不写入实机。机械限位与模型限位分别保留，不静默相互覆盖。",
+    "zero_target": "radxa@192.168.6.151",
+    "changes": {
+      "joints": [
+        {
+          "name": "head_roll",
+          "id": 33,
+          "fields": {
+            "zero_raw": {
+              "before": 568,
+              "after": 1599
+            }
+          }
+        }
+      ],
+      "imu_changed": false
+    },
+    "sync": {
+      "simulation_unchanged": true,
+      "environment_rechecked": false
+    }
+  },
+  "training_adapter_revision": "R1.5.4-viewer-policy-fix"
+}

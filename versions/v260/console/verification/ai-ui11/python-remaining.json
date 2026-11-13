@@ -1,0 +1,13 @@
+{
+  "modules": [
+    "verification.test_ai_playback_ui10",
+    "verification.test_ai_v200",
+    "verification.test_ai_log_cursor",
+    "verification.test_ai_observability"
+  ],
+  "tests_run": 25,
+  "passed": 25,
+  "failures": 0,
+  "errors": 0,
+  "successful": true
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "suite": "test_pad_recorder_ui42.mjs",
+    "exit": 0,
+    "output": "PASS recorder labels, stale/absent/failed status, disconnect/maintenance/replay suppression and readonly Logo help\n"
+  },
+  {
+    "suite": "test_ai_ui40.mjs",
+    "exit": 0,
+    "output": "{\"passed\":true,\"scope\":\"UI40 task removal; camera default OFF; live camera-mode server acknowledgement; key-independent continuous WebRTC; on-demand recognition while OFF; profile/provider readiness; no stale poll/event regression; preserved stopped drafts; configuration stays locked\"}\n"
+  },
+  {
+    "suite": "test_gamepad_repair_ui.mjs",
+    "exit": 0,
+    "output": "PASS normal vs explicit pairing, SSH/IMU boundaries, old bond preservation, named step history, current disconnect vs last check, robot HOME state, no polling/reboot/phone enable controls\n"
+  }
+]

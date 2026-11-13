@@ -1,0 +1,17 @@
+[package]
+name = "uyvy"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "The camera's pixels: the mount turn, and UYVY sampled into RGB"
+
+# No dependencies, and that is the point of the crate existing.
+#
+# Three processes have to agree about what a camera frame looks like: `mediad` serves and encodes
+# one, `duck-detect` feeds one to a model, and `robotctl monitor` draws one in a terminal. The
+# arithmetic lived in `duck-detect`, whose manifest drags the NPU and ONNX runtimes and the `image`
+# crate — a tree a CLI on the recovery path must not link. Copying forty lines of sampler into the
+# CLI was the alternative, and a second copy of a rotation that has already been got wrong once is
+# how a picture ends up sideways in one consumer and upright in the other.
+[dependencies]

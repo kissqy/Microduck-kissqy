@@ -1,0 +1,107 @@
+ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF64
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           AArch64
+  Version:                           0x1
+  Entry point address:               0x112e80
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          3576656 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               64 (bytes)
+  Size of program headers:           56 (bytes)
+  Number of program headers:         12
+  Size of section headers:           64 (bytes)
+  Number of section headers:         29
+  Section header string table index: 28
+
+
+Dynamic section at offset 0x366f40 contains 28 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000001 (NEEDED)             Shared library: [libudev.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libpthread.so.0]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libdl.so.2]
+ 0x000000000000001e (FLAGS)              BIND_NOW
+ 0x000000006ffffffb (FLAGS_1)            Flags: NOW PIE
+ 0x0000000000000015 (DEBUG)              0x0
+ 0x0000000000000007 (RELA)               0x1c58
+ 0x0000000000000008 (RELASZ)             123192 (bytes)
+ 0x0000000000000009 (RELAENT)            24 (bytes)
+ 0x000000006ffffff9 (RELACOUNT)          5128
+ 0x0000000000000017 (JMPREL)             0x1fd90
+ 0x0000000000000002 (PLTRELSZ)           3048 (bytes)
+ 0x0000000000000003 (PLTGOT)             0x3874d8
+ 0x0000000000000014 (PLTREL)             RELA
+ 0x0000000000000006 (SYMTAB)             0x320
+ 0x000000000000000b (SYMENT)             24 (bytes)
+ 0x0000000000000005 (STRTAB)             0x155c
+ 0x000000000000000a (STRSZ)              1788 (bytes)
+ 0x000000006ffffef5 (GNU_HASH)           0x1130
+ 0x0000000000000004 (HASH)               0x114c
+ 0x0000000000000019 (INIT_ARRAY)         0x386f28
+ 0x000000000000001b (INIT_ARRAYSZ)       24 (bytes)
+ 0x000000006ffffff0 (VERSYM)             0xf38
+ 0x000000006ffffffe (VERNEED)            0x103c
+ 0x000000006fffffff (VERNEEDNUM)         5
+ 0x0000000000000000 (NULL)               0x0
+
+
+Version symbols section '.gnu.version' contains 129 entries:
+ Addr: 0x0000000000000f38  Offset: 0x00000f38  Link: 3 (.dynsym)
+  000:   0 (*local*)       2 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  004:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  008:   2 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  00c:   3 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  010:   4 (GLIBC_2.17)    4 (GLIBC_2.17)    4 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  014:   2 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  018:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17)    5 (GLIBC_2.27) 
+  01c:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    6 (LIBUDEV_183)   6 (LIBUDEV_183)
+  020:   6 (LIBUDEV_183)   6 (LIBUDEV_183)   6 (LIBUDEV_183)   6 (LIBUDEV_183)
+  024:   6 (LIBUDEV_183)   2 (GLIBC_2.17)    6 (LIBUDEV_183)   6 (LIBUDEV_183)
+  028:   6 (LIBUDEV_183)   6 (LIBUDEV_183)   6 (LIBUDEV_183)   6 (LIBUDEV_183)
+  02c:   6 (LIBUDEV_183)   2 (GLIBC_2.17)    3 (GLIBC_2.17)    6 (LIBUDEV_183)
+  030:   2 (GLIBC_2.17)    6 (LIBUDEV_183)   6 (LIBUDEV_183)   6 (LIBUDEV_183)
+  034:   6 (LIBUDEV_183)   2 (GLIBC_2.17)    6 (LIBUDEV_183)   6 (LIBUDEV_183)
+  038:   6 (LIBUDEV_183)   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  03c:   2 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17)    7 (GLIBC_2.30) 
+  040:   2 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  044:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  048:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  04c:   3 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  050:   3 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  054:   3 (GLIBC_2.17)    3 (GLIBC_2.17)    8 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  058:   3 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  05c:   3 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  060:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    3 (GLIBC_2.17) 
+  064:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  068:   2 (GLIBC_2.17)    9 (GLIBC_2.28)    a (GLIBC_2.25)    b (GLIBC_2.18) 
+  06c:   2 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  070:   2 (GLIBC_2.17)    3 (GLIBC_2.17)    3 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  074:   2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  078:   3 (GLIBC_2.17)    3 (GLIBC_2.17)    8 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  07c:   3 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17)    2 (GLIBC_2.17) 
+  080:   2 (GLIBC_2.17) 
+
+Version needs section '.gnu.version_r' contains 5 entries:
+ Addr: 0x000000000000103c  Offset: 0x0000103c  Link: 8 (.dynstr)
+  000000: Version: 1  File: libudev.so.1  Cnt: 1
+  0x0050:   Name: LIBUDEV_183  Flags: none  Version: 6
+  0x0010: Version: 1  File: libm.so.6  Cnt: 2
+  0x0060:   Name: GLIBC_2.17  Flags: none  Version: 4
+  0x0070:   Name: GLIBC_2.27  Flags: none  Version: 5
+  0x0020: Version: 1  File: libpthread.so.0  Cnt: 1
+  0x0080:   Name: GLIBC_2.17  Flags: none  Version: 3
+  0x0030: Version: 1  File: libc.so.6  Cnt: 5
+  0x0090:   Name: GLIBC_2.17  Flags: none  Version: 2
+  0x00a0:   Name: GLIBC_2.18  Flags: none  Version: 11
+  0x00b0:   Name: GLIBC_2.25  Flags: none  Version: 10
+  0x00c0:   Name: GLIBC_2.28  Flags: none  Version: 9
+  0x00d0:   Name: GLIBC_2.30  Flags: none  Version: 7
+  0x0040: Version: 1  File: libdl.so.2  Cnt: 1
+  0x00e0:   Name: GLIBC_2.17  Flags: none  Version: 8

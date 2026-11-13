@@ -1,0 +1,138 @@
+{
+  "schema_version": 2,
+  "model_api": 1,
+  "obs_len": 61,
+  "action_len": 14,
+  "robot": {
+    "model": "microduck",
+    "hw_rev": 1,
+    "servos": "hd1910",
+    "control_hz": 50
+  },
+  "name": "roller_stand",
+  "kind": "perpetual",
+  "description": "从地面恢复到滑轮站姿；需要安装滑轮。官方未注册此任务的齿隙版本。",
+  "entry_pose": "fallen",
+  "command": {
+    "encoding": "constant",
+    "idle": [
+      0,
+      0,
+      0
+    ],
+    "twist": "zeros",
+    "head": "zeros",
+    "body": "zeros"
+  },
+  "action_scale": 1.0,
+  "trained_action_scale": 1.0,
+  "action_filter": {
+    "enabled": false,
+    "head_alpha": 1.0,
+    "legs_alpha": 1.0,
+    "version": 1,
+    "control_hz": 50.0,
+    "stage": "joint_position_target_after_home_and_scale",
+    "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+    "head_joints": [
+      "neck_pitch",
+      "head_pitch",
+      "head_yaw",
+      "head_roll"
+    ],
+    "leg_joints": [
+      "left_hip_yaw",
+      "left_hip_roll",
+      "left_hip_pitch",
+      "left_knee",
+      "left_ankle",
+      "right_hip_yaw",
+      "right_hip_roll",
+      "right_hip_pitch",
+      "right_knee",
+      "right_ankle"
+    ],
+    "update": "once_per_policy_step",
+    "reset": "first_target_passthrough_per_environment",
+    "previous_action_observation": "raw_policy_output",
+    "onnx": "external_filter_not_baked_into_graph"
+  },
+  "required_policy_settings": {
+    "head_lowpass": 1.0,
+    "legs_lowpass": 1.0
+  },
+  "required_skill_settings": null,
+  "runtime_compatibility": {
+    "native_runtime": {
+      "version": "0.15.1",
+      "revision": "1fa84386f07884e27866411bc1ba166977bced95",
+      "route": "manual_skill",
+      "support": "manual_configuration_required",
+      "limitations": [
+        "Roller 模式不自动切换 Stand；只能另配零命令通用技能。官方未给出该任务的执行窗口，训练回合时长不能直接作 duration。此导出不生成可触发技能或 stand 槽。"
+      ]
+    },
+    "r148_importer": {
+      "task_allowlisted": false,
+      "direct_import_verified": false,
+      "note": "R148 当前任务白名单不接收此任务；训练导出不等于现有机器人一键导入。"
+    },
+    "requires_passive_roller_hardware": true,
+    "official_finished_weights": false,
+    "automatic_deployment": false
+  },
+  "runtime_only_settings": {
+    "voltage_adapt": {
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "training_action_compensation": "not_present_in_training_action_term",
+      "note": "供电随机化/负载掉压属于BAM训练物理；不等于运行端动态动作倍率补偿。导出不强制开启或关闭。"
+    },
+    "gain_and_gain_ratios": {
+      "keys": [
+        "gain",
+        "standing_gain_ratio",
+        "ground_pick_gain_ratio",
+        "skill[].params.gain_ratio"
+      ],
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "note": "训练BAM的实际kp_fw见hardware_command和training_physics；不能凭空推导固件增益或翻译层寄存器映射。"
+    }
+  },
+  "normalization": "embedded_in_onnx_once",
+  "export_contract_revision": 3,
+  "training_snapshot_sha256": "18b0201e04a02217715dbfd5f69f085f94ce8759fd45ce132e58600dbd512456",
+  "training": {
+    "task_id": "Mjlab-RollerStandUp-Flat-MicroDuck",
+    "repo": "pollen-robotics/microduck_rl",
+    "commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "checkpoint": 11000,
+    "source_file": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/roller_standup/2026-10-11_04-07-45_console_20261011_040735_fe8252/model_11000.pt"
+  },
+  "target_firmware": "0.15.1",
+  "teacher_only": false,
+  "source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "task": "Mjlab-RollerStandUp-Flat-MicroDuck",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/roller_standup/2026-10-11_04-07-45_console_20261011_040735_fe8252/model_11000.pt",
+  "model_origin": {
+    "engine": "official_0151",
+    "task": "Mjlab-RollerStandUp-Flat-MicroDuck",
+    "baseline_pin": {
+      "revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+    },
+    "training_adapter_revision": "R1.5.23-golden-hold-no-ema",
+    "friction_randomization": "official"
+  },
+  "export_source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "onnx_sha256": "2575b5894bcd8e3fdbe005b1a7b90d9491085726df32000c26cf5b92b7a10ebb",
+  "deployment_verified": false,
+  "mode": "roller",
+  "gear_backlash": {
+    "enabled": false,
+    "joint_count": 0,
+    "ranges_rad": {},
+    "encoder_position": "motor",
+    "motor_velocity": "motor-side for friction and back-EMF",
+    "policy_joint_velocity": "motor"
+  },
+  "duration_s": null
+}

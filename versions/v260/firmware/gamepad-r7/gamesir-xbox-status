@@ -1,0 +1,20 @@
+#!/bin/sh
+set -eu
+
+echo "bridge  $(systemctl is-active gamesir-xboxd.service 2>/dev/null || true)"
+echo "padd    $(systemctl is-active padd.service 2>/dev/null || true)"
+
+if grep -qF 'GameSir-Nova 2 Lite' /proc/bus/input/devices; then
+    echo "physical GameSir  present"
+else
+    echo "physical GameSir  absent"
+fi
+
+if grep -qF 'Xbox 360 Controller (GameSir Nova 2 Lite)' /proc/bus/input/devices; then
+    echo "virtual Xbox      present"
+else
+    echo "virtual Xbox      absent"
+fi
+
+journalctl -u gamesir-xboxd.service -n 8 --no-pager 2>/dev/null || true
+

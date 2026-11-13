@@ -1,0 +1,472 @@
+--- UI43/hotspot_control.py
++++ UI44/hotspot_control.py
+@@ -0,0 +1,200 @@
++"""Schedule one explicit Wi-Fi reset using the unchanged, installed R5 portal.
++
++Runs as root on Zero through the existing management SSH channel. No robot IPC.
++The queue receipt is deliberately not an assertion that an AP has started.
++"""
++import base64
++import fcntl
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import secrets
++import shlex
++import shutil
++import subprocess
++import sys
++import zlib
++
++R5_SHA256 = '3c4aa22015230559c7ed19e79753bdb7dcdc6f9fc1f93fdf58d9e4b12da5e519'
++SSID = 'Microduck-kissqy'
++PASSWORD = '12345678'
++PORTAL_URL = 'http://10.42.0.1:8088'
++FUNCTIONS = ('log', 'die', 'legacy_wifi_files', 'wifi_uuids_to_remove',
++             'write_hotspot_profile', 'remove_wifi_profiles')
++
++
++def run(*args, timeout=12):
++    result = subprocess.run(args, capture_output=True, text=True, timeout=timeout)
++    missing_unit = (args[:2] == ('systemctl', 'show')
++                    and '--property=ActiveState' in args
++                    and result.stdout.strip() == 'inactive')
++    if result.returncode and not missing_unit:
++        # Never copy arbitrary NetworkManager output, profile names or secrets.
++        raise RuntimeError('热点操作预检或调度失败；尚未确认执行，请查看 Zero 系统日志')
++    return result.stdout
++
++
++def decode_original(encoded):
++    if not isinstance(encoded, str) or len(encoded) > 120000:
++        raise ValueError('R5 原脚本传输长度无效')
++    packed = base64.b64decode(encoded, validate=True)
++    decoder = zlib.decompressobj(16 + zlib.MAX_WBITS)
++    source = decoder.decompress(packed, 128 * 1024 + 1)
++    if len(source) > 128 * 1024 or not decoder.eof or decoder.unused_data:
++        raise ValueError('R5 原脚本压缩格式无效')
++    if hashlib.sha256(source).hexdigest() != R5_SHA256:
++        raise ValueError('R5 原脚本校验失败；未清除 Wi-Fi')
++    return source
++
++
++def r5_portal(original):
++    return original.split(b'#__PORTAL_BEGIN__\n', 1)[1].split(b'#__PORTAL_END__', 1)[0]
++
++
++def r5_functions(original, root=Path('/')):
++    """Only these original function bodies are loaded; no installer dispatch."""
++    source = original.decode('utf-8')
++    path = lambda name: str(root / name.lstrip('/'))
++    values = {'AP_NAME': SSID, 'AP_PASSWORD': PASSWORD, 'AP_IP': '10.42.0.1',
++              'PORT': '8088', 'WIFI_DIR': path('/etc/NetworkManager/system-connections'),
++              'HOTSPOT_FILE': path('/etc/NetworkManager/system-connections/Microduck-Setup.nmconnection')}
++    header = 'set -Eeuo pipefail\numask 077\n' + ''.join(
++        key + '=' + shlex.quote(value) + '\n' for key, value in values.items())
++    bodies = []
++    for name in FUNCTIONS:
++        start = source.index(name + '(){')
++        body_start = start + len(name) + 3
++        next_function = re.search(r'^\w+\(\)\{', source[body_start:], re.M)
++        end = body_start + next_function.start() if next_function else len(source)
++        bodies.append(source[start:end].rstrip() + '\n')
++    return header + '\n'.join(bodies)
++
++
++def atomic_write(path, data, mode=0o600):
++    temporary = path.with_name('.' + path.name + '-' + secrets.token_hex(6))
++    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, mode)
++    try:
++        with os.fdopen(fd, 'wb') as output:
++            output.write(data); output.flush(); os.fsync(output.fileno())
++        os.replace(temporary, path)
++    finally:
++        temporary.unlink(missing_ok=True)
++
++
++def worker_script(library, interface, root=Path('/')):
++    quote = shlex.quote
++    state = root / 'var/lib/microduck-wifi-setup'
++    # Start the existing R5 portal before deleting saved networks. A slow or
++    # failed profile deletion must not prevent the AP recovery process starting.
++    return ('#!/bin/bash\nset -Eeuo pipefail\numask 077\n'
++            'source ' + quote(str(library)) + '\nIFACE=' + quote(interface) + '\n'
++            'systemctl is-active --quiet NetworkManager.service\n'
++            'test "$(nmcli -g WIFI-PROPERTIES.AP device show "$IFACE")" = yes\n'
++            'test -z "$(legacy_wifi_files)"\n'
++            'write_hotspot_profile\n'
++            'systemctl stop microduck-setup.service\n'
++            'rm -f -- ' + ' '.join(quote(str(state / name)) for name in
++                ('skip-until-sealed', 'provisioned', 'ap-verified')) + '\n'
++            'systemctl enable microduck-setup.service >/dev/null\n'
++            'systemctl restart microduck-setup.service\n'
++            'remove_wifi_profiles\n'
++            'nmcli -t -f UUID,TYPE connection show >/dev/null\n'
++            'if test -n "$(wifi_uuids_to_remove)"; then\n'
++            '  echo "仍有 Wi-Fi 配置未删除；R5 热点已请求启动，请查看系统日志。" >&2\n'
++            '  exit 1\nfi\n'
++            'systemctl is-active --quiet microduck-setup.service\n')
++
++
++def schedule(original, runner=run, root=Path('/'), which=shutil.which, uid=os.geteuid):
++    if uid() != 0:
++        raise RuntimeError('开启热点需要 Zero sudo 权限；未清除 Wi-Fi')
++    if hashlib.sha256(original).hexdigest() != R5_SHA256:
++        raise ValueError('R5 原脚本校验失败；未清除 Wi-Fi')
++    for command in ('nmcli', 'systemctl', 'systemd-run', 'dnsmasq', 'bash',
++                    'python3', 'chpasswd', 'ssh-keygen', 'getent'):
++        if not which(command):
++            raise RuntimeError('缺少 R5 配网依赖，请先安装原 R5 配网脚本；未清除 Wi-Fi')
++    program = root / 'usr/local/sbin/microduck-public-image'
++    portal = root / 'usr/local/libexec/microduck-setup-portal.py'
++    unit = root / 'etc/systemd/system/microduck-setup.service'
++    for path in (program, portal, unit):
++        if not path.is_file() or path.is_symlink():
++            raise RuntimeError('尚未完整安装 R5 配网组件，请先安装原 R5；未清除 Wi-Fi')
++    if program.read_bytes() != original or portal.read_bytes() != r5_portal(original):
++        raise RuntimeError('已安装配网脚本与原 R5 不一致，请先核对 R5 安装；未清除 Wi-Fi')
++    runner('systemctl', 'is-active', '--quiet', 'NetworkManager.service')
++    runner('getent', 'passwd', 'radxa')
++    devices = runner('nmcli', '-t', '-f', 'DEVICE,TYPE', 'device', 'status')
++    interfaces = [line.split(':')[0] for line in devices.splitlines()
++                  if line.endswith(':wifi')]
++    if not interfaces or not re.fullmatch(r'[A-Za-z0-9_.-]{1,32}', interfaces[0]):
++        raise RuntimeError('未找到可用 Wi-Fi 网卡；未清除 Wi-Fi')
++    interface = interfaces[0]
++    if runner('nmcli', '-g', 'WIFI-PROPERTIES.AP', 'device', 'show', interface).strip() != 'yes':
++        raise RuntimeError('未确认无线网卡支持热点；未清除 Wi-Fi')
++    starts = re.findall(r'^ExecStart=(.*)$', unit.read_text(), re.M)
++    expected = '/usr/bin/python3 ' + str(portal) + ' --serve ' + interface
++    if starts != [expected] or runner('systemctl', 'show', '--property=DropInPaths',
++                                    '--value', 'microduck-setup.service').strip():
++        raise RuntimeError('R5 配网服务启动配置不匹配；未清除 Wi-Fi')
++    state = root / 'run'
++    if (state / 'microduck-wifi-test-restore').exists():
++        raise RuntimeError('R5 热点测试尚未结束；未清除 Wi-Fi')
++    for other in ('microduck-image-seal.timer', 'microduck-ap-test.timer',
++                  'microduck-ap-test.service', 'microduck-ap-restore.timer'):
++        active = runner('systemctl', 'show', '--property=ActiveState', '--value', other).strip()
++        if active in ('active', 'activating', 'reloading'):
++            raise RuntimeError('已有 R5 测试或镜像封存任务；未清除 Wi-Fi')
++    functions = r5_functions(original, root)
++    if runner('/bin/bash', '-c', functions + '\nlegacy_wifi_files\n').strip():
++        raise RuntimeError('发现非 NetworkManager 的旧 Wi-Fi 配置，请先人工处理；未清除 Wi-Fi')
++    runtime = root / 'run/microduck-hotspot-reset'
++    runtime.mkdir(mode=0o700, parents=True, exist_ok=True)
++    if runtime.is_symlink() or runtime.stat().st_mode & 0o077:
++        raise RuntimeError('热点任务目录权限异常；未清除 Wi-Fi')
++    lock_path = runtime / 'submit.lock'
++    fd = os.open(lock_path, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
++    with os.fdopen(fd, 'r+') as lock:
++        try: fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
++        except BlockingIOError:
++            raise RuntimeError('已有热点切换请求正在提交；未重复执行') from None
++        pending = runtime / 'pending.json'
++        if pending.exists():
++            previous = json.loads(pending.read_text()).get('unit', '')
++            if not re.fullmatch(r'microduck-hotspot-reset-[0-9a-f]{16}', previous):
++                raise RuntimeError('热点任务状态无效，请重启后核对；未清除 Wi-Fi')
++            for suffix in ('.timer', '.service'):
++                active = runner('systemctl', 'show', '--property=ActiveState', '--value',
++                                previous + suffix).strip()
++                if active in ('active', 'activating', 'reloading'):
++                    raise RuntimeError('热点切换任务已调度；未重复执行')
++        name = 'microduck-hotspot-reset-' + secrets.token_hex(8)
++        task = runtime / name
++        task.mkdir(mode=0o700)
++        library = task / 'r5-functions.sh'
++        worker = task / 'reset.sh'
++        atomic_write(library, functions.encode())
++        atomic_write(worker, worker_script(library, interface, root).encode(), 0o700)
++        # Preparation loads the AP profile but does not disconnect any network.
++        runner('/bin/bash', '-c', 'source ' + shlex.quote(str(library)) +
++               '\nIFACE=' + shlex.quote(interface) + '\nwrite_hotspot_profile\n')
++        atomic_write(pending, json.dumps({'unit': name}).encode())
++        runner('systemd-run', '--quiet', '--collect', '--unit=' + name,
++               '--on-active=5s', '--timer-property=AccuracySec=1s',
++               '--property=Type=oneshot', '--property=TimeoutStartSec=120',
++               '/bin/bash', str(worker))
++        return {'accepted': True, 'queued': True, 'delay_seconds': 5,
++                'ssid': SSID, 'password': PASSWORD, 'portal_url': PORTAL_URL,
++                'unit': name, 'r5_sha256': R5_SHA256,
++                'message': '热点切换任务已调度，约5秒后断开网络；配网时需设置Zero登录密码。热点是否出现请用手机确认。'}
++
++
++if __name__ == '__main__':
++    try:
++        if len(sys.argv) != 2: raise ValueError('热点请求参数无效')
++        print(json.dumps(schedule(decode_original(sys.argv[1])), ensure_ascii=False))
++    except Exception as error:
++        print(str(error), file=sys.stderr)
++        sys.exit(1)
+--- UI43/service_control.py
++++ UI44/service_control.py
+@@ -1,5 +1,7 @@
+ """Finite commissioning jobs via robotd; relax uses an independent connection."""
+ import json
++import base64
++import gzip
+ import math
+ import re
+ import shlex
+@@ -25,7 +27,7 @@
+ 
+ ROOT = Path(__file__).resolve().parent
+ STOP_ACTIONS = {"relax", "reboot", "shutdown"}
+-MANAGEMENT_ACTIONS = {"chorale-prepare", "repair-gamepad", "set-pad-settings", "set-action-scale", "switch-mode", "reconnect-service", "upgrade-service", "reboot", "shutdown"}
++MANAGEMENT_ACTIONS = {"chorale-prepare", "repair-gamepad", "enable-hotspot", "set-pad-settings", "set-action-scale", "switch-mode", "reconnect-service", "upgrade-service", "reboot", "shutdown"}
+ HOME_TIMEOUT = 12.0
+ HOME_RESTORE_TIMEOUT = 5.0
+ HOME_POLL_INTERVAL = .1
+@@ -88,6 +90,7 @@
+               "switch-mode": {"action", "target", "supported"},
+               "reconnect-service": {"action", "supported"},
+               "repair-gamepad": {"action", "supported", "address", "operation"},
++              "enable-hotspot": {"action", "supported", "confirmed"},
+               "upgrade-service": {"action", "supported", "firmware"},
+               "set-action-scale": {"action", "model", "scale", "supported"},
+               "set-pad-settings": {"action", "mouth_percent", "head_rad", "supported"},
+@@ -101,7 +104,9 @@
+         raise ControlError("指令或参数不受支持", 400)
+     if "id" in command and (type(command["id"]) is not int or command["id"] not in IDS): raise ControlError("只能控制官方 15 个关节 ID", 400)
+     if "duration_ms" in command: numeric(command["duration_ms"], 500, 10000, True)
+-    if action in ("chorale-prepare", "init", "switch-mode", "set-pad-settings", "set-action-scale", "reconnect-service", "upgrade-service", "repair-gamepad") and command["supported"] is not True: raise ControlError("请先确认服务操作", 400)
++    if action in ("chorale-prepare", "init", "switch-mode", "set-pad-settings", "set-action-scale", "reconnect-service", "upgrade-service", "repair-gamepad", "enable-hotspot") and command["supported"] is not True: raise ControlError("请先确认服务操作", 400)
++    if action == "enable-hotspot" and command["confirmed"] is not True:
++        raise ControlError("请先确认清除已保存的 Wi-Fi 并重新配网", 400)
+     if action == 'repair-gamepad':
+         if not isinstance(command['address'], str) or command['address'] and not re.fullmatch(r'(?:[0-9A-F]{2}:){5}[0-9A-F]{2}', command['address']):
+             raise ControlError('手柄 MAC 格式无效', 400)
+@@ -185,6 +190,15 @@
+     def prepare_chorale(self, password=None):
+         source = ROOT.joinpath('chorale_setup.py').read_text(encoding='utf-8')
+         return self._manage(['python3', '-u', '-c', source, self.path], password, record_output=False)
++
++    def enable_hotspot(self, password=None):
++        source = ROOT.joinpath('hotspot_control.py').read_text(encoding='utf-8')
++        original = ROOT.joinpath('resources/wifi-r5/microduck-public-image.sh').read_bytes()
++        # Keep the exact R5 payload below Linux's per-argument limit. No shell
++        # interpolation or network credentials are included in the command.
++        compressed = base64.b64encode(gzip.compress(original, mtime=0)).decode('ascii')
++        return self._manage(['python3', '-u', '-c', source, compressed], password,
++                            record_output=False)
+ 
+     def prepare_ai_camera(self):
+         source = ROOT.joinpath('ai_camera_setup.py').read_text(encoding='utf-8')
+@@ -587,7 +601,7 @@
+                 if self.busy or self.stopping and action != 'upgrade-service': raise ControlError("已有操作执行中，请等待反馈或停止并松开")
+                 snapshot = self.store.snapshot()
+                 report = snapshot.get("bus", {})
+-                recovery = action in {"repair-gamepad", "reconnect-service", "upgrade-service", "set-action-scale"} or action == 'switch-mode'
++                recovery = action in {"repair-gamepad", "enable-hotspot", "reconnect-service", "upgrade-service", "set-action-scale"} or action == 'switch-mode'
+                 if action != "chorale-stop" and not recovery and not supports_feature(report, "supported"): raise ControlError("等待适配的正式服务提供状态")
+                 # HAT recovery and deployment must work without motor feedback.
+                 if action != "chorale-stop" and not recovery and not snapshot.get("service_sample_fresh"):
+@@ -615,8 +629,8 @@
+                     if action == 'set-pad-settings' and not supports_feature(report, 'live_pad_settings'):raise ControlError('请先安装本版配套服务，再使用运行中幅度设置',409)
+                     if action != 'upgrade-service'  and supports_feature(report, "supported") and not supports_feature(report, "management"):
+                         raise ControlError("连接与模型管理需要配套 R17 服务", 409)
+-                elif action == 'repair-gamepad':
+-                    pass  # Bluetooth recovery needs SSH, not fresh motor/IMU telemetry.
++                elif action in {'repair-gamepad', 'enable-hotspot'}:
++                    pass  # OS/network recovery needs SSH, not fresh motor/IMU telemetry.
+                 elif action == 'chorale-prepare':
+                     from chorale_setup import torque_off
+                     if not torque_off(report):
+@@ -656,7 +670,7 @@
+         restarting=getattr(self.store,'robotd_restarting',None)
+         restart=command['action'] in {'chorale-prepare','switch-mode','reconnect-service','set-action-scale'}
+         log=getattr(self.store,'system_log',None)
+-        labels={'chorale-prepare':'启用合唱','chorale-start':'开始合唱','chorale-stop':'停止合唱','switch-mode':'服务模式切换','upgrade-service':'固件安装','reconnect-service':'重启固件','set-action-scale':'动作缩放','set-pad-settings':'手柄幅度设置','init':'回 HOME','repair-gamepad':'手柄连接修复','relax':'停止并松开','reboot':'重启 Zero','shutdown':'关闭 Zero','move':'关节移动','center':'整组居中','capture':'关节标定','verify-imu':'IMU 方向保存'}
++        labels={'chorale-prepare':'启用合唱','chorale-start':'开始合唱','chorale-stop':'停止合唱','switch-mode':'服务模式切换','upgrade-service':'固件安装','reconnect-service':'重启固件','set-action-scale':'动作缩放','set-pad-settings':'手柄幅度设置','init':'回 HOME','repair-gamepad':'手柄连接修复','enable-hotspot':'开启热点','relax':'停止并松开','reboot':'重启 Zero','shutdown':'关闭 Zero','move':'关节移动','center':'整组居中','capture':'关节标定','verify-imu':'IMU 方向保存'}
+         label=labels.get(command['action'],command['action'])
+         if restart and restarting is not None:restarting.set()
+         try:
+@@ -751,6 +765,16 @@
+                         job['result'] = answer
+                         if isinstance(answer, dict): job['phase'] = answer.get('phase', 'failed')
+                     raise ControlError(answer.get('message', '手柄修复回执无效') if isinstance(answer, dict) else '手柄修复回执无效', 503)
++            elif command["action"] == "enable-hotspot":
++                answer = self.transport.enable_hotspot(password=sudo_password)
++                if (not isinstance(answer, dict) or answer.get('accepted') is not True
++                        or answer.get('queued') is not True):
++                    raise ControlError('未确认热点切换任务已调度；请先检查实际热点状态，未自动重试', 503)
++                paused = getattr(self.store, 'connection_paused', None)
++                if paused is not None: paused.set()
++                if self.controls: self.controls.suspend_connections()
++                if hasattr(self.transport, 'channel'): self.transport.channel.disconnect()
++                if log: log.add('网络切换', '热点切换任务已调度；自动连接已暂停。重新配网后填写新 IP 和登录密码再连接。')
+             elif command["action"] == "set-pad-settings":
+                 answer = self.transport.manage("pad-settings", str(command["mouth_percent"]), str(command["head_rad"]), password=sudo_password)
+             elif command["action"] == "set-action-scale":
+--- UI43/static/firmware.js
++++ UI44/static/firmware.js
+@@ -1,4 +1,6 @@
+ import {showFeedback} from './feedback.js';
++
++const HOTSPOT_HELP='连接热点 Microduck-kissqy（密码 12345678），在浏览器打开 http://10.42.0.1:8088，重新配置 Wi-Fi。配网时需设置 Zero 登录密码；联网后查找鸭子的新 IP，在中控填写新 IP 和该密码后重新连接。';
+ 
+ export class FirmwarePanel {
+   constructor(panel){
+@@ -7,7 +9,9 @@
+     this.root.innerHTML=`<div class="panel-head"><div><span class="section-index">09</span><h2>系统维护</h2></div><span class="badge neutral">R17 · 官方 0.15.1</span></div>
+       <div class="firmware-body"><p id="firmware-runtime" class="tiny muted">实际运行版本：等待机器人回读</p>
+       <div class="firmware-toolbar"><button class="button" id="firmware-bundled">随包固件 · 正在核验</button>
+-      <div class="firmware-upload"><input id="firmware-file" type="file" accept=".zip" aria-label="本地固件 ZIP" hidden><button class="button" id="firmware-choose">选择 ZIP 文件</button><span id="firmware-filename" class="tiny muted">尚未选择文件</span></div><div class="service-action-row firmware-install-actions"><button class="button accent" id="firmware-flash" disabled>升级所选固件</button></div></div>
++      <div class="firmware-upload"><input id="firmware-file" type="file" accept=".zip" aria-label="本地固件 ZIP" hidden><button class="button" id="firmware-choose">选择 ZIP 文件</button><span id="firmware-filename" class="tiny muted">尚未选择文件</span></div><div class="service-action-row firmware-install-actions"><button class="button accent" id="firmware-flash" disabled>升级所选固件</button><button class="button" id="firmware-hotspot" disabled>开启热点</button></div></div>
++      <div id="firmware-hotspot-status" class="panel-note service-job" role="status" aria-live="polite"></div>
++      <p id="firmware-hotspot-help" class="tiny muted" hidden></p>
+       <p class="tiny muted">每次安装均恢复随包模型及动作配置，并清理非随包旧模型；保留本机标定。安装后不自动回 HOME 或启动策略。</p>
+       <p id="firmware-verification" class="tiny muted" role="status">正在校验随包固件…</p>
+       <div id="firmware-status" class="panel-note service-job" role="status" aria-live="polite"></div>
+@@ -20,6 +24,7 @@
+     this.$('bundled').onclick=()=>{this.source='bundled';this.paint();};this.$('file').onchange=()=>this.prepare();
+     this.$('choose').onclick=()=>this.$('file').click();
+     this.$('flash').onclick=()=>this.flash();
++    this.$('hotspot').onclick=()=>this.enableHotspot();
+     this.root.querySelector('.firmware-body').append(document.getElementById('maintenance-events'));
+     this.verify();
+   }
+@@ -46,8 +51,62 @@
+     const selected=this.source==='local'?this.prepared:null;
+     this.panel.post({action:'upgrade-service',supported:true,firmware:selected?.token||'bundled'});
+   }
++  async enableHotspot(){
++    this.paint();
++    if(this.$('hotspot').disabled)return;
++    if(!confirm('请先停止动作并放稳机器人。\n\n开启热点会清除已保存的 Wi‑Fi 连接信息（保留配网热点），并断开当前网络和中控连接，需要重新联网。\n\n'+HOTSPOT_HELP+'\n\n确认清除 Wi‑Fi 连接信息并开启热点？'))return;
++    this.paint();
++    if(this.$('hotspot').disabled)return;
++    this.hotspotBaselineJobAt=this.s?.service_control?.job?.at;
++    this.hotspotRequested=true;this.hotspotPending=true;this.hotspotQueued=false;this.hotspotSawDisconnect=false;this.hotspotReconnected=false;
++    showFeedback(this.$('hotspot-status'),'正在提交热点切换请求…','running');
++    this.$('hotspot-help').hidden=false;this.$('hotspot-help').textContent=HOTSPOT_HELP;
++    // post checks the current button state synchronously; disable after that
++    // check, so a pending local request cannot accidentally reject itself.
++    const pending=this.panel.post({action:'enable-hotspot',supported:true,confirmed:true});
++    this.paint();
++    const receipt=await pending;
++    this.hotspotPending=false;
++    if(receipt?.accepted){
++      this.hotspotSubmitted=true;
++      this.hotspotQueued ||= receipt.queued===true||receipt.hotspot?.queued===true;
++      showFeedback(this.$('hotspot-status'),'请求已提交，正在核对并调度热点切换；尚未确认热点已开启。网络切换后中控会断开，请按下方步骤重新联网。','running');
++    }else if(receipt?.uncertain){
++      showFeedback(this.$('hotspot-status'),'提交结果未确认：'+receipt.error+'。网络可能已切换，请先检查热点是否出现；不会自动重试。','warning');
++    }else{
++      showFeedback(this.$('hotspot-status'),'热点请求未提交'+(receipt?.error?'：'+receipt.error:'；当前状态已变化，请检查连接后重试。'),'error');
++    }
++    this.renderHotspot(this.s?.service_control?.job);
++    this.observeHotspotConnection();
++    this.paint();
++  }
++  observeHotspotConnection(){
++    const s=this.s||{},o=this.options||{};
++    if(!this.hotspotRequested||o.replay)return;
++    if(s.connection_paused===true||s.connection?.active===false||s.connection?.connected===false)this.hotspotSawDisconnect=true;
++    const connected=s.connection?.active===true&&s.connection?.connected===true&&!s.connection_paused&&!o.offline;
++    if(this.hotspotQueued&&this.hotspotSubmitted&&!this.hotspotPending&&this.hotspotSawDisconnect&&connected){
++      // A reconnect only rearms the button. It never resubmits a network reset.
++      this.hotspotSubmitted=false;this.hotspotRequested=false;this.hotspotReconnected=true;
++      this.hotspotReleasedJobAt=s.service_control?.job?.at;
++      showFeedback(this.$('hotspot-status'),'Zero 已重新连接；需要再次配网时可点击“开启热点”。','info');
++    }
++  }
++  renderHotspot(job){
++    if(job?.action!=='enable-hotspot')return;
++    if(this.hotspotRequested&&job.at===this.hotspotBaselineJobAt)return;
++    if(this.hotspotReconnected&&!this.hotspotRequested&&job.at===this.hotspotReleasedJobAt)return;
++    const queued=job.result?.queued===true||job.result?.hotspot?.queued===true;
++    const previous=this.hotspotRequested?'':'上次请求：';
++    if(this.hotspotRequested){this.hotspotSubmitted=job.status!=='error';if(queued)this.hotspotQueued=true;}
++    const message=job.status==='error'?previous+'热点切换未完成：'+(job.error||'请查看实际错误'):
++      job.status==='completed'?(queued?previous+'热点切换任务已调度；等待网络切换，尚未确认热点已开启。':previous+'未收到热点切换调度回执；请先检查热点和网络状态。'):
++      previous+(job.message||'正在核对并调度热点切换…');
++    showFeedback(this.$('hotspot-status'),message,job.status==='error'?'error':job.status==='completed'?'warning':'running');
++    this.$('hotspot-help').hidden=false;this.$('hotspot-help').textContent=HOTSPOT_HELP;
++  }
+   render(s,options){
+-    this.s=s;this.options=options;this.paint();
++    this.s=s;this.options=options;this.renderHotspot(s.service_control?.job);this.observeHotspotConnection();this.paint();
+     const job=s.service_control?.job;if(job?.action!=='upgrade-service'){this.$('transfer').hidden=true;return;}
+     const input=job.result?.input,note=input?.status==='recovering'?'手柄正在恢复。':input?.status==='error'?'手柄恢复失败，请手动重新连接。':'';
+     const p=job.transfer_progress;
+@@ -61,6 +120,8 @@
+   paint(){
+     const s=this.s||{},o=this.options||{},local=this.source==='local',selected=local?this.prepared:this.info;
+     const blocked=!!(s.service_control?.busy||this.panel.posting||this.loading||this.localLoading);
++    this.$('hotspot').disabled=!this.cfg.service_enabled||s.connection?.active!==true||s.connection?.connected!==true||!!(o.replay||o.offline||s.connection_paused||s.service_control?.busy||s.service_control?.stopping||s.service_operation||this.panel.posting||this.hotspotPending||this.hotspotSubmitted);
++    this.$('hotspot').textContent=this.hotspotPending?'正在提交…':this.hotspotSubmitted?'热点切换已提交':'开启热点';
+     const bundledBuild=this.info?.build?.match(/control\.(\d+(?:\.\d+)?)$/)?.[1];
+     const bundledLabel=this.info?`V${this.info.console_version.replace(/^1\.0\./,'')}_control.V${bundledBuild}`:'';
+     this.$('bundled').textContent=this.loading?'随包固件 · 正在核验':this.bundleError?'随包固件 · 未知（核验失败）':this.info?.verified?`随包固件 · ${bundledLabel}`:'随包固件 · 未核验';
+--- UI43/static/service.js
++++ UI44/static/service.js
+@@ -10,13 +10,13 @@
+ 
+ const finite=v=>typeof v==='number'&&Number.isFinite(v);
+ const fmt=(v,n=1)=>finite(v)?v.toFixed(n):'—';
+-const actions={'chorale-prepare':'启用合唱','chorale-start':'开始合唱','chorale-stop':'停止合唱','set-pad-settings':'手柄幅度设置',move:'关节移动',center:'整组顺序居中',capture:'关节标定',init:'Home 站姿','switch-mode':'服务模式切换','reconnect-service':'重新连接 HAT','upgrade-service':'升级 R17 / 0.15.1','set-action-scale':'动作缩放应用',relax:'停止并松开', 'verify-imu':'IMU 安装方向',reboot:'重启 Zero',shutdown:'关闭 Zero','resume-connection':'恢复连接'};
++const actions={'chorale-prepare':'启用合唱','chorale-start':'开始合唱','chorale-stop':'停止合唱','set-pad-settings':'手柄幅度设置',move:'关节移动',center:'整组顺序居中',capture:'关节标定',init:'Home 站姿','switch-mode':'服务模式切换','reconnect-service':'重新连接 HAT','upgrade-service':'升级 R17 / 0.15.1','enable-hotspot':'开启热点','set-action-scale':'动作缩放应用',relax:'停止并松开', 'verify-imu':'IMU 安装方向',reboot:'重启 Zero',shutdown:'关闭 Zero','resume-connection':'恢复连接'};
+ const feedbackTargets={'chorale-prepare':'chorale-feedback','chorale-start':'chorale-feedback','chorale-stop':'chorale-feedback','repair-gamepad':'gamepad-repair-status','set-pad-settings':'control-feedback',move:'service-job',center:'service-job',capture:'service-job',init:'control-feedback',
+   'switch-mode':'service-mode-job','forget-sudo-password':'service-mode-job','verify-imu':'service-imu-job',
+   relax:'service-power-job',reboot:'service-power-job',shutdown:'service-power-job','resume-connection':'service-power-job',
+   'set-action-scale':'management-status',
+   
+-  'reconnect-service':'management-hat-status','upgrade-service':'firmware-status'};
++  'reconnect-service':'management-hat-status','upgrade-service':'firmware-status','enable-hotspot':'firmware-hotspot-status'};
+ 
+ function setModeText(panel,mode,s,torqueOff){
+   const job=s.service_control?.job;
+@@ -216,14 +216,15 @@
+   }
+   async post(command,keepalive=false){
+     if(!this.cfg.service_enabled||(this.options.replay&&command.action!=='relax'))return;
++    if(command.action==='enable-hotspot'&&(this.options.offline||this.s?.connection?.active!==true||this.s?.connection?.connected!==true||this.s?.connection_paused||this.s?.service_operation||this.s?.service_control?.busy||this.s?.service_control?.stopping))return;
+     if(['relax','reboot','shutdown'].includes(command.action))this.centerConfirmation?.cancel();
+     const special={
+       'chorale-prepare':'chorale-prepare','chorale-start':'chorale-start','chorale-stop':'chorale-stop',
+       'switch-mode':command.target==='motion'?'service-mode-motion':'service-mode-calibrate',
+-      'reconnect-service':'management-reconnect','upgrade-service':'firmware-flash',
++      'reconnect-service':'management-reconnect','upgrade-service':'firmware-flash','enable-hotspot':'firmware-hotspot',
+       'repair-gamepad':'gamepad-repair-start',
+       'set-pad-settings':'control-mouth','set-action-scale':'management-scale-apply'};
+-    const configurationAction=['chorale-prepare','chorale-stop','repair-gamepad','switch-mode','reconnect-service','upgrade-service','set-action-scale'].includes(command.action);
++    const configurationAction=['chorale-prepare','chorale-stop','repair-gamepad','switch-mode','reconnect-service','upgrade-service','enable-hotspot','set-action-scale'].includes(command.action);
+     if(!['relax','reboot','shutdown','resume-connection','forget-sudo-password'].includes(command.action)&&((special[command.action]?this.$(special[command.action]).disabled:this.blocked)||this.posting||this.centerConfirmation||document.hidden||!configurationAction&&performance.now()-this.lastSample>2000))return;
+     if(command.action==='center'){
+       if(command.unassembled!==true)return this.feedback('center','请先勾选确认全部舵机可安全回到 2048','warning');
+@@ -241,18 +242,20 @@
+     }
+     if(command.action!=='relax')this.posting=true;
+     if(['move','center','init'].includes(command.action))this.ownsMotion=true;
++    let receiptKnown=false;
+     try{
+-      const privileged=['chorale-prepare','repair-gamepad','switch-mode','reconnect-service','upgrade-service','set-pad-settings','set-action-scale','reboot','shutdown'].includes(command.action);
++      const privileged=['chorale-prepare','repair-gamepad','switch-mode','reconnect-service','upgrade-service','enable-hotspot','set-pad-settings','set-action-scale','reboot','shutdown'].includes(command.action);
+       const password=privileged?this.$('service-sudo-password').value:'';
+       if(password)command.sudo_password=password;
+       const body=JSON.stringify({client:this.client,seq:++this.seq,command});
+       delete command.sudo_password;
+       const response=await fetch('/api/service',{method:'POST',headers:{'Content-Type':'application/json','X-Control-Token':this.cfg.control_token},body,keepalive,signal:keepalive?undefined:AbortSignal.timeout(5000)});
+-      const data=await response.json();if(!response.ok||!data.accepted)throw Error(data.error||'服务未接收指令');
++      const data=await response.json();receiptKnown=true;if(!response.ok||!data.accepted)throw Error(data.error||'服务未接收指令');
+       if(['relax','reboot','shutdown'].includes(command.action))this.ownsMotion=false;
+       this.feedback(command.action,data.message,['forget-sudo-password','resume-connection'].includes(command.action)?'completed':'running');
+       if(command.action==='capture')this.$('service-known').checked=false;
+-    }catch(e){this.feedback(command.action,e.message,'error');}
++      return data;
++    }catch(e){this.feedback(command.action,e.message,'error');return {accepted:false,error:e.message,uncertain:!receiptKnown};}
+     finally{this.posting=false;this.paint();}
+   }
+   suspend(){this.centerConfirmation?.cancel();if(this.ownsMotion){this.ownsMotion=false;this.post({action:'relax'},true);}}
+@@ -319,6 +322,7 @@
+     if(job&&key!==this.lastJob){
+       this.lastJob=key;
+       const message=job.action==='init'?`Home 站姿 · ${{running:'执行中',completed:'已确认到位',error:'未完成'}[job.status]||job.status} · ${job.error||job.result?.message||job.message||'等待执行反馈'}`:
++        job.action==='enable-hotspot'?(job.status==='error'?'热点切换未完成 · '+job.error:job.status==='completed'?'热点切换请求已处理；以调度回执为准，尚未确认热点已开启。':job.message||'正在提交热点切换请求…'):
+         job.status==='completed'&&['delete-model'].includes(job.action)?job.result?.message||'模型已删除，官方模型保留':
+         `${actions[job.action]||job.action} · ${{running:'执行中，等待反馈',completed:'服务已完成',error:'未完成'}[job.status]||job.status}${job.error?' · '+job.error:''}`;
+       const input=job.result?.input,inputNote=input?.status==='recovering'?'手柄连接恢复中':input?.status==='error'?`手柄暂不可用：${input.error}`:input?.status==='ready'?'手柄连接已恢复':'';

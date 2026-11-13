@@ -1,0 +1,12 @@
+{
+  "exit_code": 0,
+  "tests_passed": 12,
+  "windows_api_simulated": true,
+  "windows_hardware_tested": false,
+  "linux_real_process_tested": true,
+  "source_sha256": {
+    "console/process_lifecycle.py": "b119a424225ec46ddd3f82be18f059991920ae88fe35c814920999b1cfbce2fd",
+    "console/verification/test_process_lifecycle156.py": "2218a165ebe02bf5505f29e868ce56ab0d8d9df40366df5b151b20f261ad250d"
+  },
+  "log_sha256": "b066b6eaace358bd484481efede0d9e9ca87db80c56285db2e603158789572c9"
+}

@@ -1,0 +1,7 @@
+   Compiling padd v0.15.1 (/workspace/scratch/0587ce872ec5/native_work/Microduck-Source-R17-V186-control57/padd)
+warning: linker stderr: ignoring deprecated linker optimization setting '1'
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `padd` (bin "padd") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 3.41s

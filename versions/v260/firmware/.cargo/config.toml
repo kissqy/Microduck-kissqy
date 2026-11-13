@@ -1,0 +1,24 @@
+# Cross-compilation for the robot board.
+#
+# Target: Radxa Zero 3 (RK3566, Cortex-A55 → aarch64) running Armbian 26.2.x.
+#
+# The host being arm64 (Apple Silicon) does *not* help: `aarch64-apple-darwin` and
+# `aarch64-unknown-linux-gnu` share a CPU but not an OS, libc or ABI.
+#
+# `cargo board` uses `cargo zigbuild`, not plain `cargo build`. `zig cc` supplies the
+# cross sysroot and — crucially — a C compiler for the one C dependency (`zstd`),
+# which plain cargo has no linker for on macOS.
+#
+# The `.2.31` suffix pins glibc (a cargo-zigbuild feature, not cargo syntax). We ship
+# Debian 13 (Trixie), which has glibc 2.41, so the floor only needs to be at or below
+# that; 2.31 buys margin for nothing.
+#
+# What the pin actually defends against is the *build host*. Unpinned, the build links
+# against whatever glibc is on the machine or the CI runner, which is newer than the
+# board's — it links fine here and dies on the board, with nothing in the build output
+# to say why. `scripts/board-test.sh` asserts the resulting floor and runs the binaries
+# on the target userland.
+
+[alias]
+# Release build for the board. Add `--bins`, `-p updater`, etc.
+board = "zigbuild --release --target aarch64-unknown-linux-gnu.2.31"

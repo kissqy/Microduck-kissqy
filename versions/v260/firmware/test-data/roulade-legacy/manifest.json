@@ -1,0 +1,55 @@
+{
+  "schema_version": 2,
+  "model_api": 1,
+  "obs_len": 61,
+  "action_len": 14,
+  "robot": {
+    "model": "microduck",
+    "hw_rev": 1,
+    "servos": "hd1910",
+    "control_hz": 50
+  },
+  "name": "roulade",
+  "kind": "episodic",
+  "description": "沿用官方翻滚接触、落地奖励和课程；使用 roulade 槽。",
+  "entry_pose": "standing",
+  "command": {
+    "encoding": "constant",
+    "idle": [
+      0,
+      0,
+      0
+    ],
+    "twist": "zeros",
+    "head": "zeros",
+    "body": "zeros"
+  },
+  "action_scale": 1.0,
+  "training": {
+    "task_id": "Mjlab-Roulade-Flat-MicroDuck",
+    "repo": "pollen-robotics/microduck_rl",
+    "commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "checkpoint": 9999,
+    "source_file": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/microduck_roulade/2026-10-04_13-29-21_console_20261004_132912_c5e62d/model_9999.pt"
+  },
+  "target_firmware": "0.15.1",
+  "teacher_only": false,
+  "source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "task": "Mjlab-Roulade-Flat-MicroDuck",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/microduck_roulade/2026-10-04_13-29-21_console_20261004_132912_c5e62d/model_9999.pt",
+  "model_origin": {
+    "engine": "official_0151",
+    "task": "Mjlab-Roulade-Flat-MicroDuck",
+    "baseline_pin": {
+      "revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+    },
+    "training_adapter_revision": "R1.5.4-viewer-policy-fix",
+    "friction_randomization": "official"
+  },
+  "export_source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "onnx_sha256": "8fdaf12c7478a8314a63647a466bfa34ba1f15a7d9a5cb3b6ffa242719666168",
+  "deployment_verified": false,
+  "slot": "roulade",
+  "duration_s": 1.0,
+  "chain": true
+}

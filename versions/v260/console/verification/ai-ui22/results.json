@@ -1,0 +1,79 @@
+{
+  "release": "V202_control.V73_AI-T1_UI22",
+  "native_source": {
+    "file": "Microduck-Source-R17-V186-control57-compiled.tar.gz",
+    "sha256": "425c04cd829386ba934d9137a33081f11335a3404e5f22337eed47e993d1a1cb",
+    "patch": "console verification/ai-ui22/native-source.patch",
+    "patch_sha256": "807f98ecaee6d58fc9375b21804309f2b3dbce0978e84cab8a0a03f26f729c97",
+    "patched_source_sha256": {
+      "robotd/src/ai_expressions.rs": "7436341ad271cffe55dbf97d2e154fdfa8b26c0525c2e4877109e65dd30a73d3",
+      "robotd/src/emotion_cycle.rs": "63a6e4302aed0a4a5b46dd9debcd17f8af3a492fe8fe3eb0c348f3695a1dcf40",
+      "robotd/src/intents.rs": "cd7d19a7d1fa628896ef38589deb0e2b08b18dadd6d56bc525ffd5c2bfb41b85",
+      "robotd/src/main.rs": "a62907e232dcdc02a24e401292a54ab2c50e9a679ac9b958287de7529bcd512b",
+      "robotd/src/feetech_commissioning.rs": "64d948d9e5e52bb2161f027cdfb99aa9ba97c4197d2f1854da04a93baead7b13",
+      "duck-ipc-proto/src/lib.rs": "23742c7d40c5ce48c158d0e4e578889af4d8b07b68860e9553f6083d47ee02f7",
+      "docs/design/robotd-design.md": "a42f26552e4277352f6f96e15d2483a04ab5799a914e578dd95d85656bbc14b3"
+    },
+    "patch_replay_verified": true
+  },
+  "robotd": {
+    "bytes": 5861176,
+    "machine": "AArch64",
+    "load_segments": 4,
+    "sha256": "08d22eb167167dec24779074ec49df3ea34bd1c592a834f519731b53d7f2b986",
+    "needed": [
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.27",
+      "2.28",
+      "2.29",
+      "2.30"
+    ]
+  },
+  "firmware_sha256": "1b7376621ea40994edffcea48be9c9a4bd7bc42a19388bacdce827a0dbcab99e",
+  "firmware_bytes": 38236934,
+  "firmware_changed_files": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "release_identity.py",
+    "robotd"
+  ],
+  "other_firmware_files_byte_identical_to_ui21": true,
+  "models_byte_identical_to_ui21": true,
+  "native_motion_curves_byte_identical": true,
+  "duck_control_and_kinematics_sources_byte_identical": true,
+  "python_ai_tests": {
+    "passed": 141,
+    "failed": 0
+  },
+  "native_expression_tests": {
+    "passed": 30,
+    "failed": 0
+  },
+  "protocol_tests": {
+    "passed": 53,
+    "failed": 0
+  },
+  "aarch64_elf_files_validated": 8,
+  "frontend_dom_tests": [
+    "test_ai_hat.mjs",
+    "test_ai_start_ui20.mjs"
+  ],
+  "hardware_tested": false,
+  "live_cloud_tested": false,
+  "browser_render_tested": false,
+  "windows_tested": false,
+  "broader_native_suite_clean": false,
+  "historical_baseline_comparison": "../ai-ui21/native-baseline-comparison.json",
+  "broader_native_suite_notes": "UI21 broad-suite limitations retained as historical evidence. UI22 runs the expression and audio-focused checks, Python AI suite, protocol suite and real frontend-module DOM tests; no claim of a clean full native suite.",
+  "final_frontend_checks": "real modules plus DOM stand-in: AI unload one Select pulse, no held shutdown, input ownership and original Start, conversations and per-question images/TOF"
+}

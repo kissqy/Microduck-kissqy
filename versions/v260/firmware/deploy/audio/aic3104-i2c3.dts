@@ -1,0 +1,92 @@
+/dts-v1/;
+/plugin/;
+
+/*
+ * TLV320AIC3104 audio codec on the Pollen Robotics RPI Robot HAT —
+ * Radxa Zero 3W, HARDWARE-I2C variant.
+ *
+ * Identical to aic3104-pihat.dts except the codec node is grafted onto
+ * the hardware i2c3 bus (see i2c3-pihat.dts) instead of the bit-banged
+ * i2c-gpio-pihat bus. Pair them:
+ *   - hw mode      (default): overlays = i2c3-pihat aic3104-i2c3
+ *   - bitbang mode (revert):  overlays = i2c-gpio-pihat aic3104-pihat
+ * install.sh selects the pair via MICRODUCK_I2C_MODE.
+ *
+ * Everything below fragment@2's target is byte-for-byte the same as the
+ * bitbang variant — see aic3104-pihat.dts for the I2S/MCLK/clocking
+ * rationale. Keep the two files in sync when touching either.
+ */
+
+/ {
+    compatible = "radxa,zero-3w", "rockchip,rk3566";
+
+    fragment@0 {
+        target = <&i2s3_2ch>;
+        __overlay__ {
+            status = "okay";
+        };
+    };
+
+    fragment@1 {
+        target-path = "/";
+        __overlay__ {
+            aic3104_mclk: aic3104-mclk {
+                compatible = "fixed-clock";
+                #clock-cells = <0>;
+                clock-frequency = <12000000>;
+            };
+        };
+    };
+
+    fragment@2 {
+        target = <&i2c3>;
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            /*
+             * Same generic "ti,tlv320aic3x" compatible as the Pi
+             * overlay (not "ti,tlv320aic3104") so the driver exposes
+             * the identical mixer-control set on both boards and
+             * aic3104-init.sh works unchanged.
+             */
+            aic3104_codec: codec@18 {
+                compatible = "ti,tlv320aic3x";
+                reg = <0x18>;
+                #sound-dai-cells = <0>;
+                clocks = <&aic3104_mclk>;
+                clock-names = "mclk";
+                status = "okay";
+            };
+        };
+    };
+
+    fragment@3 {
+        target-path = "/";
+        __overlay__ {
+            /* Card name "aic3104" matches the Pi so the runtime's
+             * plughw:aic3104 / amixer -c aic3104 work on both. */
+            sound-aic3104 {
+                compatible = "simple-audio-card";
+                simple-audio-card,name = "aic3104";
+                simple-audio-card,format = "i2s";
+                simple-audio-card,bitclock-master = <&pihat_cpu_dai>;
+                simple-audio-card,frame-master = <&pihat_cpu_dai>;
+
+                pihat_cpu_dai: simple-audio-card,cpu {
+                    sound-dai = <&i2s3_2ch>;
+                    /* Pin the I2S mclk to 256*48000. No mclk-fs on
+                     * the card: with mclk-fs, simple-card would
+                     * override the codec's sysclk with fs-derived
+                     * values that don't match the real 12 MHz MCLK,
+                     * detuning the codec PLL. */
+                    system-clock-frequency = <12288000>;
+                };
+
+                simple-audio-card,codec {
+                    sound-dai = <&aic3104_codec>;
+                };
+            };
+        };
+    };
+};

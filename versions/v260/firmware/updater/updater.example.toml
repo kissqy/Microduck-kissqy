@@ -1,0 +1,214 @@
+# Example /etc/robot/updater.toml — the annotated reference.
+#
+# The engine is generic; this file is the only robot-specific part. Adapting to
+# another robot should mean a new copy of this file, new signing keys, and
+# possibly a different health probe. See docs/design/updater-design.md §10.
+#
+# NOT what ships. `deploy/updater.toml` is the file `scripts/install.sh` installs on a
+# robot; this one documents every option, including several deliberately absent there.
+# Where the two differ, the difference is the point — read the comments in both.
+
+# Trusted minisign public keys. A signature is valid if it verifies against ANY
+# key here. A *set* rather than one key so a lost or compromised key is
+# survivable (§5.4). An empty directory is a fatal error, not an empty
+# allow-list.
+trusted_keys_dir = "/etc/robot/trusted_keys"
+
+# Single forward-compatibility guard. v1 targets one hardware configuration, so
+# this is one integer and not a capability matrix (§5.6).
+hw_rev = 1
+
+# Engine-owned state: lock, update log, boot counter.
+# MUST NOT live inside any component's install_dir — a swap or rollback would
+# otherwise destroy the record of what happened (§5.7).
+state_dir = "/var/lib/robot/updater"
+
+# Where robotd listens. One robot-wide value, used by every component whose health
+# probe is "socket" and by the safeToRestart query before a restart. Deliberately not
+# repeated per component: robotd is a single process, and a per-component copy would be
+# a second place for the same fact to be wrong.
+#
+# An absent or silent socket is a normal state, not an error — robotd may be stopped,
+# crashed, or not yet installed (architecture.md §1.1).
+robot_socket = "/run/robotd.sock"
+
+# Accept artifacts signed with a dev-only key. Never true on a client robot.
+allow_dev_keys = false
+
+# Permit `updaterd --inject-fault ...`. Never true on a client robot: it lets the
+# updater be told to fail on purpose. Fault injection is compiled into the shipped
+# binary deliberately (so a bench robot can exercise rollback), which is exactly why
+# this gate has to exist.
+allow_fault_injection = false
+
+# Who may perform MUTATING operations (apply, rollback, select, pin) over the IPC
+# socket, enforced from SO_PEERCRED.
+#
+# The uid updaterd runs as is always permitted — it can replace the daemon anyway, so
+# refusing it would protect nothing. Everyone else needs listing here.
+#
+# Read-only requests (status, log, listInstalled, check, subscribe) are NOT gated:
+# reaching the socket already requires its group (mode 0660), and support must be able
+# to inspect a robot without being authorised to change it.
+#
+# `btd`'s uid or gid belongs here once it exists — group membership says "may talk to
+# updaterd", not "may replace the firmware".
+# allow_uids = [1001]
+# allow_gids = [1002]
+
+# How often to poll each component's source. Omit to disable polling entirely —
+# which also makes `min_supported` inert, since a robot nobody taps update on never
+# learns a floor exists (§8.1).
+check_interval = "6h"
+
+# What the periodic check may install WITHOUT waiting for a client. Inert without
+# `check_interval` above — the scheduler is the only thing that applies unattended, so a
+# policy with no timer to run it does nothing (and updaterd says so at startup).
+#
+#   "off"        never; availability is logged, a mandatory release loudly.
+#   "mandatory"  (default) only a release whose manifest's `min_supported` floor says the
+#                running version must not be used. The remediation path for "we shipped a
+#                bad release": robots pull themselves forward instead of waiting for
+#                someone to open the app (§8.1). Ordinary releases still wait for a
+#                client, because when a robot restarts is its owner's decision.
+#   "all"        every available release. For canary and bench robots (§16.2 Tier 2),
+#                which track a channel and install each candidate. On a client robot this
+#                takes the restart decision away from its owner.
+#
+# One ordered setting rather than a flag per urgency, so a config cannot say "apply
+# ordinary updates automatically but not mandatory ones" — auto-updating everything except
+# the releases published to rescue a broken fleet.
+#
+# Whichever is set, an unattended apply is an ordinary apply: same preflight, so a robot
+# that is walking or streaming refuses and retries at the next interval rather than
+# restarting under someone's hands; same health gate, so a release that does not come up
+# is rolled back. And a release that already failed its gate on this robot is never
+# retried unattended, whatever the policy — that is what stops a bad release from becoming
+# an endless apply/rollback loop that re-downloads and rewrites the eMMC every interval.
+auto_apply = "mandatory"
+
+# Bounds on what an artifact may expand to. Not a security boundary — the signature
+# already established provenance — but a guard against an accidentally enormous
+# artifact filling the eMMC. Raise for model bundles: several ONNX policies are
+# legitimately far larger than a daemon binary, and a too-low ceiling rejects a
+# genuine release. Omitted = built-in defaults (2 GiB, 50k entries).
+# max_uncompressed_bytes = 2147483648
+# max_archive_entries    = 50000
+
+
+# ── daemon ────────────────────────────────────────────────────────────────────
+# Binaries. Full restart, so it briefly drops motor control.
+[component.daemon]
+install_dir   = "/opt/robot/daemon"
+keep_previous = 1
+golden        = "1.0.0"         # never pruned (§8.2)
+
+[component.daemon.source]
+type           = "github_releases"
+repo           = "ORG/robot-daemon"
+tag_prefix     = "daemon-v"
+manifest_asset = "manifest.json"
+# Tag prefix for per-branch dev builds, so `--ref my-branch` resolves to
+# `daemon-dev-my-branch`. Shown for completeness — this is the default.
+#
+# Separate from tag_prefix because the two streams must never be confusable: a dev tag
+# *moves* (it points at whatever that branch last built) while a release tag is immutable,
+# and `latest` for the fleet must never consider a dev tag. Installing one also requires
+# allow_dev_keys and the dev public key, so a client robot cannot take a branch build even
+# if it somehow resolved the tag.
+# ref_tag_prefix = "daemon-dev-"
+
+# NOTE the omissions here. `updaterd` restarts NEITHER itself NOR `btd`, even though
+# both ship in this artifact:
+#   - restarting itself would kill the executor mid-swap/mid-health-gate — the update
+#     would die at its most dangerous moment;
+#   - restarting `btd` would drop the connection reporting progress to the app.
+# Neither waits for a reboot: both are restarted 5s after the update replies, and the next
+# updaterd start checks that happened (docs/design/restart-order.md §1 and §5). This is
+# why the updater must be resident and separate from `btd` (architecture.md §1.1).
+#
+# `mediad` is absent because it needs no entry: it ships in the release with an `[Install]`
+# section, so the derived set below already carries it. Name a unit here only when the
+# release does not ship it.
+# The restart set is derived from the units the release ships (`systemd/*.service`), minus `updaterd`
+# and `btd`, which must never be restarted by an update they are carrying. Anything named here is
+# *added* to that set — use it only for a unit the release does not ship.
+[component.daemon.on_apply]
+action = "restart"
+units  = ["robotd"]
+
+# A real gate, which is what makes auto-rollback meaningful (§8). `updaterd` asks
+# `robotd` over `robot_socket` and waits for it to report healthy; if it never does, the
+# release is reverted.
+#
+# 30s is a guess until M4 measures a real boot on the Radxa. Too short reverts a healthy
+# release that merely boots slowly, so it should be raised to whatever real startup
+# takes plus generous margin — this number is a placeholder, not a decision.
+[component.daemon.health]
+probe   = "socket"
+timeout = "30s"
+
+
+# ── models ────────────────────────────────────────────────────────────────────
+# One component per model, because each is versioned independently and all of them
+# are loaded at once (walk, jump, stand, …). A component is exactly "a thing with its
+# own version line", so no special layout is needed — each gets its own rollback,
+# golden, pin, boot trial and known-bad history for free.
+#
+# `reload` rather than `restart` so swapping weights does not interrupt motor
+# control (§5.5).
+#
+# Trying an older version of one model is `robotctl update select model-walk 1.1.0` —
+# `select` repoints at any installed release without downloading.
+
+[component.model-walk]
+install_dir   = "/opt/robot/model/walk"
+keep_previous = 3
+
+[component.model-walk.source]
+type          = "hf_hub"
+repo          = "ORG/gait-walk"
+revision      = "main"
+manifest_file = "manifest.json"
+
+# Bootstrap-inert until robotd exists — see the daemon component above.
+[component.model-walk.on_apply]
+action = "none"
+# action = "reload"
+# unit   = "robotd"
+# signal = "SIGHUP"
+
+[component.model-walk.health]
+probe = "none"
+
+[component.model-jump]
+install_dir   = "/opt/robot/model/jump"
+keep_previous = 3
+
+[component.model-jump.source]
+type          = "hf_hub"
+repo          = "ORG/gait-jump"
+revision      = "main"
+
+# Bootstrap-inert until robotd exists — see the daemon component above.
+[component.model-jump.on_apply]
+action = "none"
+# action = "reload"
+# unit   = "robotd"
+# signal = "SIGHUP"
+
+[component.model-jump.health]
+probe = "none"
+
+
+# ── local (dev / CI) ──────────────────────────────────────────────────────────
+# Not a production source. Drives the real engine code path with no network, so
+# CI tests can't drift from production behaviour (§16.1), and backs the dev
+# sideload flow (§15).
+#
+# Signature verification is NOT relaxed: sideloading works because the dev key is
+# in the trusted set, not because checks are skipped.
+#
+# [component.daemon.source]
+# type = "local_dir"
+# path = "/var/tmp/robot-releases"

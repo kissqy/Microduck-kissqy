@@ -1,0 +1,14 @@
+test_active_pending_task_cannot_be_repeated (__main__.HotspotHelperTests.test_active_pending_task_cannot_be_repeated) ... ok
+test_compressed_original_is_bounded_verified_and_exact (__main__.HotspotHelperTests.test_compressed_original_is_bounded_verified_and_exact) ... ok
+test_failed_scheduler_does_not_return_a_queued_receipt (__main__.HotspotHelperTests.test_failed_scheduler_does_not_return_a_queued_receipt) ... ok
+test_missing_mismatched_or_unprivileged_components_never_queue (__main__.HotspotHelperTests.test_missing_mismatched_or_unprivileged_components_never_queue) ... ok
+test_missing_unit_inactive_is_allowed_but_manager_errors_are_not (__main__.HotspotHelperTests.test_missing_unit_inactive_is_allowed_but_manager_errors_are_not) ... ok
+test_original_function_bodies_and_generated_shell_parse (__main__.HotspotHelperTests.test_original_function_bodies_and_generated_shell_parse) ... ok
+test_queue_uses_one_detached_five_second_worker_without_clearing_wifi (__main__.HotspotHelperTests.test_queue_uses_one_detached_five_second_worker_without_clearing_wifi) ... ok
+test_radio_unit_legacy_and_other_r5_operations_fail_before_queue (__main__.HotspotHelperTests.test_radio_unit_legacy_and_other_r5_operations_fail_before_queue) ... ok
+test_real_bash_worker_uses_r5_cleanup_and_preserves_unrelated_files (__main__.HotspotHelperTests.test_real_bash_worker_uses_r5_cleanup_and_preserves_unrelated_files) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.460s
+
+OK

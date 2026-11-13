@@ -1,0 +1,37 @@
+/*
+ * Turn the RK3566's NPU on.
+ *
+ * Armbian's `rk3566-radxa-zero3.dtb` ships `npu@fde40000` with `status = "disabled"`, and the only
+ * NPU overlay it offers is one that disables it further — so the node has to be enabled by hand
+ * before any of `librknnrt.so`, `duck-detect` or the NPU driver can do anything at all.
+ *
+ * **One property.** Everything else the driver needs is already in the base node: clocks, resets,
+ * `power-domains`, `operating-points-v2`, `iommus` and `rknpu-supply`. That is what makes this safe
+ * to try — the failure mode is a driver that does not probe, which is where the board already is.
+ *
+ * Installed by `scripts/setup-npu.sh --enable-node`, which compiles it, drops it in
+ * /boot/dtb/rockchip/overlay/ and adds `npu-enable` to `overlays=` in /boot/armbianEnv.txt. It
+ * takes effect on the next boot, and it is undone by removing that word.
+ */
+/dts-v1/;
+/plugin/;
+
+/ {
+	metadata {
+		title = "Enable NPU";
+		compatible = "rockchip,rk3566", "rockchip,rk3568";
+		category = "misc";
+		description = "Enable the RKNPU, which the Radxa Zero 3 device tree ships disabled.";
+	};
+
+	fragment@0 {
+		/*
+		 * By path rather than by label: the base dtb exports no `__symbols__` entry for this node,
+		 * so `&rknpu` would not resolve at overlay-apply time.
+		 */
+		target-path = "/npu@fde40000";
+		__overlay__ {
+			status = "okay";
+		};
+	};
+};

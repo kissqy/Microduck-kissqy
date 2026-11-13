@@ -1,0 +1,21 @@
+{
+  "input_log": "AI-Dialogue-20261024-094658.jsonl",
+  "sessions": 2,
+  "final_user_transcripts": [
+    "你好。",
+    "你好。"
+  ],
+  "final_assistant_replies": [
+    "你好呀，今天过得怎么样？",
+    "你好呀，今天过得怎么样？"
+  ],
+  "input_forced_commit_events": 0,
+  "audio_end_events": 2,
+  "playback_starts": 3,
+  "playback_completions": 1,
+  "speaker_errors": [
+    "HAT 扬声器播放失败：aplay: pcm_write:2178: write error: Interrupted system call。请确认 HAT 声卡及麦克风已配置，且未被其他语音程序占用。",
+    "HAT 扬声器播放失败：aplay: pcm_write:2178: write error: Interrupted system call。请确认 HAT 声卡及麦克风已配置，且未被其他语音程序占用。"
+  ],
+  "inference": "Provider ASR/response works without a local forced commit in this log. The reproduced local drain timeout is consistent with the playback interruption; real device playback still needs validation."
+}

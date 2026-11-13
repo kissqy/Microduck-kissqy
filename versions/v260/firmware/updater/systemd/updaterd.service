@@ -1,0 +1,90 @@
+# updaterd — the robot update daemon.
+#
+# Install to /etc/systemd/system/updaterd.service.
+#
+# Two properties this unit must preserve, from docs/updater-design.md §4 and
+# docs/architecture.md §1.1:
+#
+#   1. NO dependency on robotd. updaterd is the recovery path — if it only ran when
+#      the robot was healthy, it would be unavailable in exactly the situation a
+#      client needs it.
+#   2. updaterd is never in the restart set of an update it applies: restarting
+#      itself mid-swap would kill the executor at the most dangerous moment. It is
+#      not left on the old binary either — the engine schedules its restart through
+#      a systemd transient unit 5s after the outcome is on the wire, which is a
+#      transient unit precisely so it outlives this one's cgroup.
+
+[Unit]
+Description=Robot update daemon
+# Target: Radxa Zero 3 (aarch64) running Armbian 26.2.x with the Debian 13 (Trixie)
+# userland, systemd 257+. Nothing here needs anything newer than systemd 240.
+Documentation=file:///opt/robot/daemon/current/docs/updater-design.md
+# After, not Requires: ordering only. Network being unavailable is a normal state —
+# a robot with no connectivity must still serve status and rollback locally.
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+ExecStart=/opt/robot/daemon/current/bin/updaterd \
+    --config /etc/robot/updater.toml \
+    --socket /run/updaterd.sock
+
+# No --robot-socket: that lives in updater.toml as `robot_socket`, so where robotd
+# listens is stated once. The flag still exists as an override for dev boxes running two
+# instances; passing it here would create a second place to change and a silent
+# disagreement if only one were updated.
+
+# Root is required: the updater swaps release trees, runs hooks, and calls
+# `systemctl restart`.
+#
+# `Group=robot` is load-bearing, not cosmetic: the socket inherits the process's
+# primary group, so this is what makes the 0660 mode mean "the robot group" rather
+# than "root only". Verified: the socket comes up `srw-rw---- root:robot`.
+#
+# The `robot` group must exist or the unit fails to start — see
+# systemd/sysusers.d/robot.conf, installed alongside.
+#
+# Client access is then two layers:
+#   1. socket group (0660)      — who may *talk* to updaterd at all;
+#   2. allow_uids/allow_gids    — who may *change* the robot, enforced from
+#                                 SO_PEERCRED. Root always may; anyone else needs
+#                                 listing. Read-only calls need only layer 1.
+User=root
+Group=robot
+
+# Crash-restart, but not in a tight loop: if updaterd itself is broken, hammering it
+# adds nothing and fills the journal.
+Restart=on-failure
+RestartSec=10s
+
+# The engine's own state must survive updates and rollbacks (§5.7), so it lives here
+# and not under any release directory. Matches `state_dir` in updater.toml.
+StateDirectory=robot/updater
+
+# The socket itself needs no RuntimeDirectory: it lives at /run/updaterd.sock, which root
+# creates directly, and updaterd removes a stale one on start and its own on clean shutdown.
+#
+# This directory is for something else, and unlike the `RuntimeDirectory=robot` an earlier
+# version declared and never used, it is read: /run/updaterd/identity.json, where this process
+# publishes which release it is running. `robotctl health` reports it and updaterd's own
+# startup check compares it — the one daemon that cannot restart itself into a new release is
+# the one whose identity matters most. systemd removes the directory with the unit, so a
+# stopped daemon leaves no identity behind claiming otherwise.
+RuntimeDirectory=updaterd
+
+# Modest hardening. Deliberately NOT ProtectSystem=strict: this process exists to
+# write /opt/robot and call systemctl.
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+
+# stderr → journal; level via RUST_LOG.
+Environment=RUST_LOG=info
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

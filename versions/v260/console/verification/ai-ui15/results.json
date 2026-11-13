@@ -1,0 +1,84 @@
+{
+  "release": "AI-T1 UI15",
+  "generated_at_utc": "2026-10-24T04:15:42.583803+00:00",
+  "passed": true,
+  "python": {
+    "passed": true,
+    "command": "python3 -m unittest discover -s verification -p 'test_ai*.py'",
+    "tests": 98,
+    "failures": 0,
+    "errors": 0,
+    "elapsed_seconds": 15.333,
+    "new_ui15_tests": 14
+  },
+  "frontend": {
+    "passed": true,
+    "commands": [
+      "node verification/test_ai_hat.mjs",
+      "node verification/test_ai_camera_ui15.mjs",
+      "node verification/v198/check_startup.mjs"
+    ],
+    "html_unique_ids": 215,
+    "default_persona_matches_backend": true,
+    "default_reply_characters": 20,
+    "changed_js_syntax_passed": true,
+    "new_browser_render_verified": false,
+    "cases": [
+      "AI auto-preview once per session",
+      "manual preview retained",
+      "manual disconnect respected",
+      "generation ownership",
+      "connection failure without retry",
+      "profile preparation gating",
+      "new-frame enhancement state reset",
+      "same-image display label",
+      "ServicePanel constructor and SSH form bindings"
+    ]
+  },
+  "independent_png_verification": {
+    "passed": true,
+    "decoder": "test host Pillow only; not a runtime dependency",
+    "png_filter_types": 5,
+    "full_frame_geometry": [
+      720,
+      1280
+    ],
+    "all_pixels_matched_curve": true,
+    "host_processing_seconds": 0.671,
+    "zero_processing_latency_measured": false
+  },
+  "observed_ui14": {
+    "raw_mean_luma": 96,
+    "bright_window_and_ceiling_with_dark_foreground_observed": true,
+    "backlighting_is_visual_inference": true,
+    "personal_photos_saved": false
+  },
+  "camera_profile": {
+    "quality": "720p15",
+    "geometry": [
+      1280,
+      720
+    ],
+    "target_fps": 15,
+    "official_frozen_commit": "1fa84386f07884e27866411bc1ba166977bced95",
+    "quality_source_blob": "75fbaed27559d6902562c278d6753284ae9a8595",
+    "restart_only_when_quality_changes": [
+      "mediad.service"
+    ],
+    "real_15fps_verified": false,
+    "temperature_reduction_measured": false
+  },
+  "photo": {
+    "gamma": 1.6,
+    "default_enabled": true,
+    "can_be_disabled": true,
+    "applied_only_to_requested_single_photo": true,
+    "same_bytes_preview_and_upload": true,
+    "sensor_exposure_owner_unchanged": true
+  },
+  "ui15_hardware_verified": false,
+  "real_cloud_requested": false,
+  "new_runtime_dependencies": [],
+  "firmware_byte_identical": true,
+  "firmware_sha256": "6374b23464bcd8d2e221bd6ba3208dcab0eabcda932ed3f6cc20a5c5667fcbd2"
+}

@@ -1,0 +1,51 @@
+{
+  "label": "V200_control.V71 AI-T1 UI5",
+  "input_archive": "Microduck-Console-R17-V200_control.V71_AI-T1_UI4.zip",
+  "input_sha256": "ac5241b8512c6542232b3fa7cdffeedd31dd797dfd8e8be0b5ddc31595162b43",
+  "changed_from_ui4": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "THIRD_PARTY_NOTICES.md",
+    "ai_doubao.py",
+    "ai_hat_audio.py",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "console.py",
+    "service_rpc.py",
+    "static/ai-panel.css",
+    "static/ai-panel.js",
+    "static/index.html",
+    "verification/test_ai_hat.mjs"
+  ],
+  "added": [
+    "ai_audio_meter.py",
+    "verification/test_ai_log_cursor.py",
+    "verification/test_ai_observability.py"
+  ],
+  "user_log_evidence": {
+    "provider_connect_attempts": 1,
+    "session_created": true,
+    "asr_started": true,
+    "actual_error": "provider session UUID overwrote the numeric SSE log cursor"
+  },
+  "reproduced_ui4_error": "'>' not supported between instances of 'str' and 'int'",
+  "python_tests": {
+    "passed": 44,
+    "failed": 0,
+    "duration_seconds": 5.261
+  },
+  "frontend_passed": true,
+  "validation": "Actual UUID replay and real HTTP SSE resume; official ASR/text/audio delta shapes; real PCM RMS and bounds; fake ALSA, subprocess/management-channel lifecycle, permissions and gate regression; frontend uses supplied numeric data.",
+  "official_protocol_reference": "https://docs.volcengine.com/docs/DoubaoVoice/endtoend-realtime-voice-full-duplex-version?lang=zh",
+  "firmware_byte_identical": true,
+  "firmware_sha256": "6374b23464bcd8d2e221bd6ba3208dcab0eabcda932ed3f6cc20a5c5667fcbd2",
+  "action_gate_byte_identical": true,
+  "ssh_transport_byte_identical": true,
+  "console_audio_access": false,
+  "pcm_over_console_ssh": false,
+  "live_meter_interval_ms": 100,
+  "meter_written_per_frame_to_disk": false,
+  "real_zero_meter_tested": false,
+  "full_voice_tool_loop_hardware_tested": false,
+  "next_only_task": "Verify HAT numeric waveform, live transcript, Doubao reply, tool args and robot acknowledgments on the user Zero."
+}

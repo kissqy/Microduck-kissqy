@@ -1,0 +1,10 @@
+{
+  "name": "websocket-client",
+  "version": "1.9.0",
+  "source": "https://pypi.org/project/websocket-client/1.9.0/",
+  "wheel": "websocket_client-1.9.0-py3-none-any.whl",
+  "wheel_sha256": "af248a825037ef591efbf6ed20cc5faa03d3b47b9e5a2230a529eeee1c1fc3ef",
+  "files": 16,
+  "required_runtime_dependencies": [],
+  "changes": "None; package imported under _ai_vendor namespace; tests and wheel metadata excluded."
+}

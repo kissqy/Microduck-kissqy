@@ -1,0 +1,18 @@
+# Contact-based odometry: where the robot is, from its own legs and IMU.
+#
+# A port of the prototype runtime's Rhoban-derived estimator (sole-corner
+# anchoring, IMU re-projection), with one structural change: the foot chains
+# come from the `kinematics` crate's MJCF model instead of segment tables
+# transcribed by hand — the geometry has one source of truth. No dedicated
+# service: it is a pure struct robotd ticks inside its control loop, because
+# its inputs are exactly the sample the loop already holds.
+[package]
+name = "odometry"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+duck-ipc-proto = { path = "../duck-ipc-proto" }
+kinematics = { path = "../kinematics" }

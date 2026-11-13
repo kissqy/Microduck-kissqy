@@ -1,0 +1,2457 @@
+{
+  "official_version": "0.15.1",
+  "official_revision": "1fa84386f07884e27866411bc1ba166977bced95",
+  "hardware_base": "R17 v1.0.95",
+  "models": {
+    "walk": {
+      "id": "1cbf8730eadd75a5704332c9f3c10f60",
+      "sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+      "task": "Mjlab-VelStand-Rough-Backlash-MicroDuck",
+      "epochs": 9600,
+      "source_iteration": 9599,
+      "num_envs": 2560,
+      "source_policy_directory": "policies/walk",
+      "trained_action_scale": 1.0,
+      "trained_head_alpha": 1.0,
+      "trained_legs_alpha": 1.0,
+      "execution_profile": {
+        "schema": "microduck-runtime-execution/v1",
+        "model_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+        "mode": "uniform",
+        "action_scale": 1.0,
+        "head_lowpass": 0.5,
+        "legs_lowpass": 0.7
+      },
+      "deployment_verified": false
+    },
+    "sitstand": {
+      "id": "1c94934c6421ec72ed48079cea749668",
+      "sha256": "1c94934c6421ec72ed48079cea74966868a7a59f7d732e0207d0f7bdaeed3c50",
+      "task": "Mjlab-SitStand-Flat-MicroDuck"
+    },
+    "ground_pick": {
+      "id": "b14e3a8b56ddbb8d2d831e727774a168",
+      "sha256": "b14e3a8b56ddbb8d2d831e727774a168c8f5b00194e3e431ae7593a840498c69",
+      "task": "Mjlab-GroundPick-Flat-Backlash-MicroDuck",
+      "epochs": 10000,
+      "source_iteration": 9999,
+      "num_envs": 4096,
+      "base_action_scale": 1.0,
+      "head_alpha": 1.0,
+      "legs_alpha": 1.0,
+      "target_filter": "passthrough",
+      "deployment_verified": false,
+      "source_policy_directory": "policies/ground_pick"
+    },
+    "roulade": {
+      "id": "59e15d7b04d0c40e9b11b8a70bdecae6",
+      "sha256": "59e15d7b04d0c40e9b11b8a70bdecae6da87a5e096efc204fb58eea304fcbbac",
+      "task": "Mjlab-Roulade-Flat-MicroDuck",
+      "epochs": 10000,
+      "source_iteration": 9999,
+      "num_envs": 4096,
+      "base_action_scale": 1.0,
+      "head_alpha": 1.0,
+      "legs_alpha": 1.0,
+      "target_filter": "passthrough",
+      "deployment_verified": false,
+      "source_policy_directory": "policies/roulade",
+      "runtime_duration_s": 3.0,
+      "training_export_duration_s": 1.0,
+      "duration_override_source": "robotd-profile.toml policy.skill[name=roulade].duration"
+    },
+    "kick_right": {
+      "id": "67ad09d82f4865d222a7ae06f250cf9f",
+      "sha256": "67ad09d82f4865d222a7ae06f250cf9f77f08c27e4f019ee3f7e431a764419fd",
+      "task": "Mjlab-BallKick-Flat-MicroDuck",
+      "epochs": 10000,
+      "num_envs": 4096,
+      "base_action_scale": 1.0,
+      "head_alpha": 1.0,
+      "legs_alpha": 1.0,
+      "target_filter": "passthrough",
+      "duration_seconds": 0.5,
+      "deployment_verified": false
+    },
+    "kick_left": {
+      "id": "ee0376c927044cdece056ba1d3e6eac7",
+      "sha256": "ee0376c927044cdece056ba1d3e6eac77b3e02ee3f701f1feb437c183ed39a6d",
+      "task": "Mjlab-BallKickLeft-Flat-Backlash-MicroDuck",
+      "epochs": 10000,
+      "num_envs": 4096,
+      "base_action_scale": 1.0,
+      "target_filter": "passthrough",
+      "duration_seconds": 0.5,
+      "deployment_verified": false
+    },
+    "play_dead": {
+      "id": "9203bb8f5df15cffaa29f5315a722835",
+      "sha256": "9203bb8f5df15cffaa29f5315a722835c1bd718b940b14330f97556ccab83065",
+      "task": "Mjlab-PlayDead-Flat-MicroDuck",
+      "engine": "official_v8",
+      "task_adapter": "hd1910-v8",
+      "epochs": 3000,
+      "checkpoint": 2999,
+      "num_envs": 4096,
+      "bam_profile": "legacy_sts3215_m6",
+      "runtime_actuator": "STS3215Actuator",
+      "action_scale": 1.0,
+      "head_lowpass": 1.0,
+      "legs_lowpass": 1.0,
+      "duration_s": 5.0,
+      "chain": false,
+      "finish": "existing_combined_walk_zero_command",
+      "hardware_verified": false
+    }
+  },
+  "default_global_settings": {
+    "action_scale": 0.7
+  },
+  "onnxruntime": "1.28.0",
+  "calibration_policy": "preserve current mounted calibration; never overwrite with training zeros",
+  "audio_volume": {
+    "backend": "native ALSA PCM Playback Volume + Line Playback Switch",
+    "state": "/var/lib/alsa/asound.state",
+    "save": "alsactl store aic3104",
+    "restore": "system ALSA after aic3104-init.service",
+    "robotd_startup_audio_hook": false,
+    "custom_volume_state": false
+  },
+  "native_position_fix": {
+    "encoding": "signed magnitude bit15",
+    "feedback_modulo": false,
+    "goal_turn_offset": false,
+    "observations": "signed native minus saved calibration zero",
+    "preload": "fresh signed native coordinate",
+    "home_goals": {
+      "12": 1500,
+      "22": 2276
+    },
+    "all_15_joints": true,
+    "eeprom_or_calibration_reset": false,
+    "shortest_path_guaranteed": false,
+    "hardware_tested": false
+  },
+  "retired_model_ids": [
+    "d11f8430712c35cb2416ce3948e9f8b7",
+    "388461feb3f4cd24071197ffc30d63e2",
+    "5c019c3d3d2c490947f21974f3947506",
+    "9e3ff8bde021be28a728c02dbd8e7aaf",
+    "8fdaf12c7478a8314a63647a466bfa34",
+    "2b69fa681ed06f7ded9e2a2d12ba5c67",
+    "77ef1f470960bc7eea1fdf5817ff205a",
+    "95d40b584e8c10c9d52dc63cae1c6c97"
+  ],
+  "build": "1fa843-feetech-ft6-control.102",
+  "console_version": "1.0.260",
+  "hardware_verified": false,
+  "source_distribution": "Microduck-Source-R17-V186-control57-compiled.tar.gz",
+  "built_binaries": {
+    "robotd": {
+      "bytes": 5861176,
+      "machine": "AArch64",
+      "load_segments": 4,
+      "sha256": "65bf917cd05f9304ae1d6602562f9aacc1953ae0b3d4fb067305a8f06678f7a0",
+      "needed": [
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.27",
+        "2.28",
+        "2.29",
+        "2.30"
+      ],
+      "revision": "Reuse V259 native programs; robotd deployment identity control.101 to control.102 only. Skill removal is applied through configuration and resource retirement."
+    },
+    "robotctl": {
+      "sha256": "a5034efaf6d26aaecc4a1b477c947abb7cf59d157288b9ad661706f00a700da7",
+      "machine": "AArch64",
+      "needed": [
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.28",
+        "2.29",
+        "2.30"
+      ],
+      "bytes": 4362264
+    },
+    "padd": {
+      "bytes": 3788992,
+      "machine": "AArch64",
+      "sha256": "fd9fb6b99083d9f1eeee5414910dc861d8f88c805f182e6e4a57d9c7b6834bbd",
+      "needed": [
+        "libudev.so.1",
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.27",
+        "2.28",
+        "2.30"
+      ],
+      "revision": "UI45-Rec2",
+      "package_release": "Microduck-Console-Studio-V260",
+      "reused_without_recompilation": true
+    },
+    "sounds": {
+      "sha256": "00360318eb10509e65cbb0f1be7ef8725b00b0edbb2e0b3d779149ae61284103",
+      "machine": "AArch64",
+      "needed": [
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.27",
+        "2.28",
+        "2.29",
+        "2.30"
+      ],
+      "bytes": 1152920
+    },
+    "gamepad-r7/gamesir-xboxd": {
+      "bytes": 13992,
+      "machine": "AArch64",
+      "sha256": "19aff4331a956151514714680307e2053b1982aba820f2e5ded05f0e5b5892e3",
+      "needed": [
+        "libpthread.so.0",
+        "libc.so.6"
+      ],
+      "glibc_versions": [
+        "2.17"
+      ],
+      "revision": "V238-B-unassigned",
+      "reused_without_recompilation": false,
+      "compiler": "Zig 0.13.0 aarch64-linux-gnu.2.17",
+      "source_sha256": "5594fb9983db3e40dfe38378080f2951b1c16ed522f507e1eb9caab05b9e4f08"
+    },
+    "onnxruntime/libonnxruntime.so.1.28.0": {
+      "sha256": "f1ec1a08eb99bd6e5401340f0a2b101381bf4694415480291dc13bcaa30f9ec7",
+      "machine": "AArch64",
+      "needed": [
+        "libdl.so.2",
+        "librt.so.1",
+        "libpthread.so.0",
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6",
+        "ld-linux-aarch64.so.1"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.27"
+      ],
+      "bytes": 20591712
+    },
+    "onnxruntime/libonnxruntime_providers_shared.so": {
+      "sha256": "3b6be288fbfb7dff8770d08a23defdde18e8f7e0f5a2b344a0e5e238c999ea88",
+      "machine": "AArch64",
+      "needed": [
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "glibc_versions": [
+        "2.17"
+      ],
+      "bytes": 198792
+    },
+    "mediad": {
+      "bytes": 10920000,
+      "machine": "AArch64",
+      "sha256": "6e31181cfb540f9ea0686227d12c0c5467f1a27aca88a804336faa963a2ea22c",
+      "needed": [
+        "libgstwebrtc-1.0.so.0",
+        "libgstbase-1.0.so.0",
+        "libgstreamer-1.0.so.0",
+        "libgobject-2.0.so.0",
+        "libglib-2.0.so.0",
+        "libgstvideo-1.0.so.0",
+        "libgstapp-1.0.so.0",
+        "libgio-2.0.so.0",
+        "libm.so.6",
+        "libpthread.so.0",
+        "libc.so.6",
+        "libdl.so.2",
+        "ld-linux-aarch64.so.1"
+      ],
+      "glibc_versions": [
+        "2.17",
+        "2.18",
+        "2.25",
+        "2.28",
+        "2.29",
+        "2.30"
+      ],
+      "revision": "UI40-AE90"
+    }
+  },
+  "rebuilt_binaries": [],
+  "reused_binaries": [
+    "robotctl",
+    "padd",
+    "sounds",
+    "gamepad-r7/gamesir-xboxd",
+    "onnxruntime/libonnxruntime.so.1.28.0",
+    "onnxruntime/libonnxruntime_providers_shared.so",
+    "mediad"
+  ],
+  "toolchain": "Rust 1.99.0 / cargo-zigbuild 0.23.4 / Zig 0.14.1; aarch64-unknown-linux-gnu.2.31",
+  "generated_at_utc": "2026-11-13T05:52:49.117337+00:00",
+  "release_changes": [
+    "Withdraw Flamingo from supplied model files, default skill bindings, model catalog, UI descriptions and import adaptation.",
+    "On upgrade, remove the retired skill, its aliases pointing to known retired models, and only their pad bindings; delete the explicitly retired bundled model directory.",
+    "Exclude the retired skill from AI tools even when a connected older daemon still reports it.",
+    "Preserve the other eleven ONNX weights, current motion settings, calibration, AI, gamepad, camera, shutdown and R10 hotspot behavior.",
+    "Publish the complete V260 / control.102 bundle with matched identities, install inventory and checksums."
+  ],
+  "startup_flow": {
+    "steps": [
+      "configuration_and_ipc",
+      "hardware_first_valid_sample",
+      "models_and_controller",
+      "first_completed_control_cycle"
+    ],
+    "uart_startup_hooks": false,
+    "uart_configured_ack": false,
+    "uart_generation_state_file": false,
+    "extra_cold_reopen": false,
+    "hardware_wait_interval": "existing official startup interval",
+    "ipc_available_while_hardware_waits": true,
+    "control_thread_exit_notification": true,
+    "state_transport": "robot.startupSubscribe change events plus initial snapshot",
+    "imu_ready_samples": 25,
+    "max_short_waits": 24,
+    "short_wait": "existing control period",
+    "nominal_wait_at_50hz_ms": 480,
+    "fault_backoff_seconds": 1,
+    "unchanged_ready_guard": true,
+    "startup_target_gain_torque_writes": false,
+    "new_threads_or_loops": false,
+    "steady_control_work_added": false
+  },
+  "raw_browser_input": {
+    "path": "browser WebSocket -> persistent SSH helper -> official robotd IPC",
+    "physical_pad_priority": true,
+    "device_detection": "initial snapshot plus kernel input uevents",
+    "discovery_polling": false,
+    "virtual_webpad": false,
+    "idle_wait": "blocking selector; timeout only for an active web input lease",
+    "stale_action_replay": false,
+    "input_lease_seconds": 0.6
+  },
+  "configuration_save": {
+    "startup_backup": false,
+    "save_on_actual_change": true,
+    "modified_by_owning_module": true
+  },
+  "automatic_updater_enabled": false,
+  "automatic_boot_restore_enabled": false,
+  "manual_console_upgrade_available": true,
+  "firmware_reinstall_required": true,
+  "hat_firmware_unchanged": true,
+  "uart_telemetry_unchanged": true,
+  "official_filter_algorithm_unchanged": true,
+  "padd_source_sha256": "0b134b619c4737fb98ccf5e1989612fc6380c6b278b769363996399364785c80",
+  "gamepad_binary_sha256": "fd9fb6b99083d9f1eeee5414910dc861d8f88c805f182e6e4a57d9c7b6834bbd",
+  "previous_native_build": "1fa843-feetech-ft6-control.101",
+  "media_build": "1fa8438-feetech-media-demand.1",
+  "roller_modes": {
+    "swizzle": "roller/swizzle/policy.onnx",
+    "crouch": "roller/crouch/policy.onnx",
+    "spin": "roller/spin/policy.onnx",
+    "standup": "roller/standup/policy.onnx"
+  },
+  "release_status": "release bundle; Flamingo withdrawn; no new hardware acceptance",
+  "package_baseline": "V259 / control.101",
+  "roller_standup": {
+    "path": "roller/standup/policy.onnx",
+    "sha256": "2575b5894bcd8e3fdbe005b1a7b90d9491085726df32000c26cf5b92b7a10ebb",
+    "checkpoint": 11000,
+    "trigger_bound": true,
+    "trigger": "physical_L3",
+    "route": "manual_skill",
+    "duration_seconds": 5.0,
+    "duration_source": "local manual test window; export unchanged",
+    "guards": [
+      "roller mode",
+      "motion already enabled",
+      "not limp",
+      "fresh healthy IMU",
+      "debounced fallen and consistent quaternion"
+    ],
+    "automatic_stand": false
+  },
+  "roller_execution": {
+    "swizzle": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "crouch": [
+      0.8,
+      0.5,
+      0.7
+    ],
+    "spin": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "standup": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "historical_diagnostics_record": "source distribution: verification/v160/rust-tests.json",
+  "baseline_verification_report": "verification/changes157fix10.json",
+  "padd_roller_test_sha256": "94d10284837eef693cd5470a52cc49bca0d27a362c361ddaed466e6c6a85e32b",
+  "unchanged_binaries": [
+    "gamepad-r7/gamesir-xboxd",
+    "mediad",
+    "onnxruntime/libonnxruntime.so.1.28.0",
+    "onnxruntime/libonnxruntime_providers_shared.so",
+    "robotctl",
+    "sounds"
+  ],
+  "hd1910_runtime_settings": {
+    "p": {
+      "source": "model_contract",
+      "address": 50,
+      "bytes": 1,
+      "restore_on_relax": true,
+      "existing_readback_preserved": true
+    },
+    "d": {
+      "value": 0,
+      "address": 51,
+      "bytes": 1
+    },
+    "torque_limit": {
+      "value": 1000,
+      "address": 48,
+      "bytes": 2,
+      "byte_order": "little"
+    },
+    "write_trigger": "V164 explicit arm flow",
+    "fixed_settings_readback_added": false,
+    "eeprom_changed": false
+  },
+  "expressions": {
+    "count": 13,
+    "trigger": "rear single-button mapping to R3",
+    "physical_R3_alias": true,
+    "play_dead": false,
+    "queued": false,
+    "automatic_torque": false,
+    "audio_wait_on_cancel": false,
+    "ai_named_access": {
+      "count": 13,
+      "skill_prefix": "emotion_",
+      "silent_skill_prefix": "emotion_silent_",
+      "status": "emotion_status",
+      "cancel": "emotion_cancel_<request_id>",
+      "single_slot": true,
+      "manual_home_hold_required": true,
+      "autostart_policy": false,
+      "sound_wav": true
+    }
+  },
+  "play_dead": {
+    "model_sha256": "9203bb8f5df15cffaa29f5315a722835c1bd718b940b14330f97556ccab83065",
+    "trigger": "physical_DPadLeft_release_under_500ms",
+    "duration_seconds": 5.0,
+    "finish": "existing_combined_walk_zero_command_keep_torque",
+    "walk_sha256": "1cbf8730eadd75a5704332c9f3c10f60bfa9412135b907831c9dbd731ce1795f",
+    "cancel": "all_servo_torque_off_and_policy_disabled",
+    "queued": false,
+    "model_required": true,
+    "intentional_lying_allowed": true,
+    "hardware_tested": false
+  },
+  "center184": {
+    "saved_calibration_allowed": true,
+    "confirmation_required": true,
+    "target_raw": 2048,
+    "sequential": true,
+    "saved_calibration_rewritten": false,
+    "hardware_tested": false
+  },
+  "release_label": "Microduck-Console-Studio-V260",
+  "native_logic_baseline": "V239 / control.87",
+  "native_build_method": "Reuse V259 native programs; robotd deployment identity control.101 to control.102 only. Skill removal is applied through configuration and resource retirement.",
+  "identity_updated_binaries": [
+    "robotd"
+  ],
+  "source_base": {
+    "file": "Microduck-Source-R17-V186-control57-compiled.tar.gz",
+    "sha256": "425c04cd829386ba934d9137a33081f11335a3404e5f22337eed47e993d1a1cb",
+    "patch": "console verification/ai-ui22/native-source.patch",
+    "patch_sha256": "807f98ecaee6d58fc9375b21804309f2b3dbce0978e84cab8a0a03f26f729c97",
+    "patched_source_sha256": {
+      "robotd/src/ai_expressions.rs": "7436341ad271cffe55dbf97d2e154fdfa8b26c0525c2e4877109e65dd30a73d3",
+      "robotd/src/emotion_cycle.rs": "63a6e4302aed0a4a5b46dd9debcd17f8af3a492fe8fe3eb0c348f3695a1dcf40",
+      "robotd/src/intents.rs": "cd7d19a7d1fa628896ef38589deb0e2b08b18dadd6d56bc525ffd5c2bfb41b85",
+      "robotd/src/main.rs": "a62907e232dcdc02a24e401292a54ab2c50e9a679ac9b958287de7529bcd512b",
+      "robotd/src/feetech_commissioning.rs": "64d948d9e5e52bb2161f027cdfb99aa9ba97c4197d2f1854da04a93baead7b13",
+      "duck-ipc-proto/src/lib.rs": "23742c7d40c5ce48c158d0e4e578889af4d8b07b68860e9553f6083d47ee02f7",
+      "docs/design/robotd-design.md": "a42f26552e4277352f6f96e15d2483a04ab5799a914e578dd95d85656bbc14b3"
+    },
+    "patch_replay_verified": true
+  },
+  "ui40": {
+    "native": {
+      "release": "UI40 native mouth lease and AE90",
+      "source_archive": "Microduck-Source-R17-V186-control57-compiled.tar.gz",
+      "source_archive_sha256": "425c04cd829386ba934d9137a33081f11335a3404e5f22337eed47e993d1a1cb",
+      "source_bases": {
+        "padd": "V186 frozen source + original UI37 native-input.patch",
+        "mediad": "V186 frozen source + UI38 camera-source.patch, then only target90 restoration"
+      },
+      "ui39_native_patch_sha256": {
+        "ai-ui37/native-input.patch": "c8a36df240fce2e0c2e4b270a809f1df336dd7e180f9575ca06f2ef929f1fd1f",
+        "ai-ui38/camera-source.patch": "fd5398325e1ebc72b44da3f9e3a9cddbeb37f2469b1181535f31969e3d0f2df9"
+      },
+      "shared_proto_api_version": 40,
+      "source_changes": {
+        "padd/src/main.rs": "4e2d89e0d95b88d804443d31f81833682ea733a1e312ba187733e628869a2bcd",
+        "padd/src/mouth_pause.rs": "4b3f940a0db5e5e34282a167eb9c59f8c198e4cab9a56c3b6ca6f1b8b72a6e24",
+        "mediad/src/exposure.rs": "aa781b7765b127e88469ca1f1677b7a489e3eee7be7e1904405a66228a87b39f"
+      },
+      "patch_sha256": "16a814451b5b6e3400508c3f27b7aecff7f2a6e90d5d6c949a84f1721570db52",
+      "heartbeat": {
+        "unchanged": true,
+        "ui39_sha256": "a1d531a9254c059bc66b93fc6a7f997ffbf2f576c1e9be02cdf4e155e4f7a0ae",
+        "ui40_sha256": "a1d531a9254c059bc66b93fc6a7f997ffbf2f576c1e9be02cdf4e155e4f7a0ae",
+        "note": "Entire Continuous implementation byte-identical to UI39 source, not restored to V186 heartbeat."
+      },
+      "original_ui39_binary_sha256": {
+        "robotd": "08d22eb167167dec24779074ec49df3ea34bd1c592a834f519731b53d7f2b986",
+        "padd": "76ec0e40a1c8e014987ae115dfbdd5023b9eb9efa119b8b089a39d2c57fc1fda",
+        "mediad": "827b5359d2dff064ce95a50046c29eb92712b086fecc15ca6160beec9348dd7b"
+      },
+      "binaries": {
+        "padd": {
+          "workspace_path": "/workspace/scratch/0587ce872ec5/native_work/target-arm-ui40/aarch64-unknown-linux-gnu/release/padd",
+          "bytes": 3578512,
+          "sha256": "51b2542fe860e863cd97f6421fb39b8ba7a5b4b57afa958d58b818d7eb47dd90",
+          "machine": "AArch64",
+          "needed": [
+            "libudev.so.1",
+            "libm.so.6",
+            "libpthread.so.0",
+            "libc.so.6",
+            "libdl.so.2"
+          ],
+          "glibc_versions": [
+            "2.17",
+            "2.18",
+            "2.25",
+            "2.27",
+            "2.28",
+            "2.30"
+          ],
+          "built_from_source": true,
+          "elf_manually_patched": false
+        },
+        "mediad": {
+          "workspace_path": "/workspace/scratch/0587ce872ec5/native_work/target-media-ui40/aarch64-unknown-linux-gnu/release/mediad",
+          "bytes": 10920000,
+          "sha256": "6e31181cfb540f9ea0686227d12c0c5467f1a27aca88a804336faa963a2ea22c",
+          "machine": "AArch64",
+          "needed": [
+            "libgstwebrtc-1.0.so.0",
+            "libgstbase-1.0.so.0",
+            "libgstreamer-1.0.so.0",
+            "libgobject-2.0.so.0",
+            "libglib-2.0.so.0",
+            "libgstvideo-1.0.so.0",
+            "libgstapp-1.0.so.0",
+            "libgio-2.0.so.0",
+            "libm.so.6",
+            "libpthread.so.0",
+            "libc.so.6",
+            "libdl.so.2",
+            "ld-linux-aarch64.so.1"
+          ],
+          "glibc_versions": [
+            "2.17",
+            "2.18",
+            "2.25",
+            "2.28",
+            "2.29",
+            "2.30"
+          ],
+          "built_from_source": true,
+          "elf_manually_patched": false
+        }
+      },
+      "preserve_robotd_binary_sha256": "08d22eb167167dec24779074ec49df3ea34bd1c592a834f519731b53d7f2b986",
+      "robotd_rebuilt": false,
+      "robotd_policy_imu_bus_changes": false,
+      "toolchain": {
+        "rust": "1.99.0 (b940084d7 2026-09-28)",
+        "cargo_zigbuild": "0.23.4",
+        "zig": "0.14.1",
+        "target": "aarch64-unknown-linux-gnu.2.31",
+        "fresh_target_directories": true
+      },
+      "tests": {
+        "padd_host": {
+          "passed": 52,
+          "failed": 0,
+          "existing_retained": 45,
+          "lease_tests": 7
+        },
+        "original_AE_algorithm": {
+          "passed": 15,
+          "failed": 0,
+          "pipeline_capture_stub": true
+        },
+        "arm64_cross_builds": [
+          "padd",
+          "mediad"
+        ],
+        "arm64_execution": false,
+        "physical_robot": false
+      },
+      "mouth_lease": {
+        "directory": "/run/padd/ai-mouth",
+        "token": "32 lowercase hex",
+        "lease_extension": ".lease",
+        "ack_extension": ".ack",
+        "format": "ASCII CLOCK_MONOTONIC expiry milliseconds plus newline",
+        "ttl_ms": 750,
+        "max_future_ms": 1500,
+        "poll_before_no_pad_continue": true,
+        "normal_padd_mouth": "official unconditional notification per pad tick",
+        "velocity_heartbeat_changed": false
+      },
+      "AE_target_Y": {
+        "before": 105.0,
+        "after": 90.0
+      },
+      "warnings": [
+        "Linker warns deprecated optimization setting 1; both cross builds exit0."
+      ]
+    },
+    "required_update": true,
+    "heartbeat_unchanged": true,
+    "robotd_unchanged": true,
+    "historical_release": "UI40",
+    "superseded_by": "ui41"
+  },
+  "ui41": {
+    "native": {
+      "release": "UI41 native input handoff",
+      "binary": {
+        "workspace_path": "/workspace/scratch/0587ce872ec5/native_work/target-arm-ui41/aarch64-unknown-linux-gnu/release/padd",
+        "bytes": 3599832,
+        "sha256": "00c39e63586ce1b7eff695fc8af7eaad5da0f574d3e686910f7418f908a09060",
+        "machine": "AArch64",
+        "needed": [
+          "libudev.so.1",
+          "libm.so.6",
+          "libpthread.so.0",
+          "libc.so.6",
+          "libdl.so.2"
+        ],
+        "glibc_versions": [
+          "2.17",
+          "2.18",
+          "2.25",
+          "2.27",
+          "2.28",
+          "2.30"
+        ]
+      },
+      "host_tests": {
+        "passed": 67,
+        "failed": 0,
+        "ignored": 0,
+        "new_input_lease_and_handoff_tests": 15,
+        "UI40_baseline_test_count": 52,
+        "UI40_tests_unchanged": 51,
+        "heartbeat_test_expectation_restored_to_original_100ms": true
+      },
+      "arm_cross_build": "passed",
+      "arm_execution_tested": false,
+      "hardware_tested": false,
+      "toolchain": {
+        "rust": "1.99.0",
+        "cargo_zigbuild": "0.23.4",
+        "zig": "0.14.1",
+        "target": "aarch64-unknown-linux-gnu.2.31",
+        "fresh_target_directory": true
+      },
+      "source_sha256": {
+        "src/main.rs": "e0ef76a77f42ca3dd8e2b36f62e8b12b88f30685140fb9d28bc68e16a5cdf38e",
+        "src/input_pause.rs": "7bb777863856dd5d710881d2ca1ad0adee841ff1944f906cd5603c8f0a97697a",
+        "src/mouth_pause.rs": "4b3f940a0db5e5e34282a167eb9c59f8c198e4cab9a56c3b6ca6f1b8b72a6e24"
+      },
+      "mouth_pause_byte_identical_to_UI40": true,
+      "mouth_pause_UI40_sha256": "4b3f940a0db5e5e34282a167eb9c59f8c198e4cab9a56c3b6ca6f1b8b72a6e24",
+      "official_heartbeat_function_restored_byte_identically": true,
+      "heartbeat_function_sha256": "2c3be78a30584c47e489d0321b6c9cdadd1b8f757091470b25556207d286e03a",
+      "neutral_heartbeat_ms": 100,
+      "input_lease": {
+        "directory": "/run/padd/ai-input",
+        "token": "32 lowercase hex",
+        "ttl_ms": 750,
+        "maximum_future_ms": 1500,
+        "initial_ACK": "exact expiry",
+        "renewal_ACK_failure": "continue yielding through old confirmed deadline only",
+        "owner": "single",
+        "cancel": "persistent per-token .cancel file; late renewals cannot reacquire",
+        "grant": "Drive, no pending body-pose release, no IMU following, controls neutral"
+      },
+      "handoff_cleanup": "one-time Move zero and Pose active=false on active->inactive, including no-pad expiry/manual cancellation; no head/mouth clearing",
+      "input_policy": "ordinary writes discarded during lease, Select/Start original paths preserved, held controls must neutralize after release; cancelled events not replayed",
+      "unmodified_native_components": [
+        "mouth_pause module",
+        "robotd",
+        "mediad",
+        "policy models",
+        "calibration",
+        "IMU",
+        "servo bus"
+      ],
+      "patch_sha256": "5d7ba9f9f3ba7bbf0b23c73bbf42342f8d01f67fb539fdcdd12086c9c43f96b8",
+      "limitations": [
+        "No claim to revoke robotd RPCs already in flight or queued on another socket. No robotd-level arbiter was added.",
+        "Only padd was rebuilt; no manual ELF edits.",
+        "Native tests and compile do not establish real robot movement stability."
+      ]
+    },
+    "robotd_unchanged": true,
+    "mediad_unchanged": true,
+    "models_and_motion_configuration_unchanged": true,
+    "required_update": true,
+    "historical_release": "UI41",
+    "superseded_by": "ui42"
+  },
+  "bridge_binary_sha256": "80122e9c3af7ab2269beb76b6d9d80e2c0c12eae0a2faab0dbc363f6620835b6",
+  "ui42": {
+    "native": {
+      "release": "Microduck-UI42",
+      "component": "padd",
+      "status": "built; host tests passed; not run on physical robot",
+      "created_utc": "2026-11-01T04:56:35.497116+00:00",
+      "source_base": "UI41 padd (native_work/ui41_padd_before_ui42), original frozen V186/control57 plus documented UI37/UI40/UI41 padd patches; robotd remains packaged control73 unchanged",
+      "changed_files": [
+        "padd/src/main.rs",
+        "padd/src/recorder.rs"
+      ],
+      "source_sha256": {
+        "padd/src/main.rs": "b7d65654f7ba3997063e74c170168b47622e1565b72c82f2e33dbe3f8921274e",
+        "padd/src/recorder.rs": "bb48981190a06699479dc8ed96e91bea0feadcac1f0695e40c3323bcfdb35669",
+        "padd/Cargo.toml": "52a33af37805be5c8539b20e901ce3051046fa10a20137ebe35ad02dbf846613",
+        "Cargo.lock": "fa1668b2e909f80bb4fc6db66a634742f6b42cfe79df6b51c6d5d90db36a08cf"
+      },
+      "unchanged_ui41_modules_sha256": {
+        "input_pause.rs": "7bb777863856dd5d710881d2ca1ad0adee841ff1944f906cd5603c8f0a97697a",
+        "mouth_pause.rs": "4b3f940a0db5e5e34282a167eb9c59f8c198e4cab9a56c3b6ca6f1b8b72a6e24",
+        "short_press.rs": "347f19446bc956506df70f8161b1bfe944d6288d7e316112e5b060310daa5b3f"
+      },
+      "target": "aarch64-unknown-linux-gnu.2.31",
+      "binary_path": "/workspace/scratch/0587ce872ec5/native_work/target-arm-ui42/aarch64-unknown-linux-gnu/release/padd",
+      "binary_sha256": "177f0e1b69eeb0435145a9eced68862836f04694175ee5725bd7c9aac9349a4c",
+      "binary_size": 3788440,
+      "host_tests": {
+        "command": "cargo test --locked -p padd -j4 -- --test-threads=1",
+        "passed": 89,
+        "failed": 0,
+        "log": "padd-tests.log"
+      },
+      "arm_build": {
+        "command": "cargo zigbuild --locked --release -p padd -j4 --target aarch64-unknown-linux-gnu.2.31",
+        "passed": true,
+        "log": "padd-arm-build.log",
+        "warning": "linker ignores deprecated optimization setting 1"
+      },
+      "elf": {
+        "machine": "AArch64",
+        "class": "ELF64",
+        "type": "PIE",
+        "interpreter": "/lib/ld-linux-aarch64.so.1",
+        "max_glibc_required": "2.30",
+        "needed": [
+          "libudev.so.1",
+          "libm.so.6",
+          "libpthread.so.0",
+          "libc.so.6",
+          "libdl.so.2"
+        ]
+      },
+      "patch_replay": "native-source.patch applied to UI41 backup; all changed files byte-identical; see patch-replay.json",
+      "checks": {
+        "new_module_rustfmt": true,
+        "main_formatting": "restored unchanged UI41 lexical-token spans; no unrelated module formatting retained"
+      },
+      "test_boundary": "Real AF_UNIX socket-pair end-to-end test covers monitor subscribe/response/state interleaving. UnixListener::bind is EPERM in this environment; no bind-based or hardware result claimed.",
+      "limitations": [
+        "Intent timing replay, not physical trajectory or arrival verification.",
+        "Identity compares mode, loaded model paths and skill catalog; same-path model file hash is not verified.",
+        "Finite native models have no general cancel API: later frames stop and manual safety follows the existing paths.",
+        "Accepted skill requests use the existing synchronous intent socket, bounded by its existing timeout; new events wait for the next drain.",
+        "No automatic torque enable, HOME, recovery, or mode switch.",
+        "No robotd, model, mediad, or daemon protocol changes."
+      ]
+    },
+    "bridge": {
+      "files": {
+        "source": {
+          "path": "/workspace/scratch/0587ce872ec5/native_work/Microduck-Source-R17-V186-control57/gamepad-r7/gamesir-xboxd.c",
+          "bytes": 21472,
+          "sha256": "39fc5a8e5193aae106a11aed600d143496de1802bf73d0c046f85bb4f99d59b8"
+        },
+        "arm64": {
+          "path": "/workspace/scratch/0587ce872ec5/ui42_bridge_evidence/gamesir-xboxd.arm64",
+          "bytes": 51744,
+          "sha256": "80122e9c3af7ab2269beb76b6d9d80e2c0c12eae0a2faab0dbc363f6620835b6"
+        },
+        "native_binary": {
+          "path": "/workspace/scratch/0587ce872ec5/native_work/Microduck-Source-R17-V186-control57/gamepad-r7/gamesir-xboxd",
+          "bytes": 51744,
+          "sha256": "80122e9c3af7ab2269beb76b6d9d80e2c0c12eae0a2faab0dbc363f6620835b6"
+        },
+        "stage_binary": {
+          "path": "/workspace/scratch/0587ce872ec5/ui42_firmware_stage/Microduck-Robotd-FT6-R17/gamepad-r7/gamesir-xboxd",
+          "bytes": 51744,
+          "sha256": "80122e9c3af7ab2269beb76b6d9d80e2c0c12eae0a2faab0dbc363f6620835b6"
+        },
+        "padd_service": {
+          "path": "/workspace/scratch/0587ce872ec5/ui42_firmware_stage/Microduck-Robotd-FT6-R17/padd.service",
+          "bytes": 5795,
+          "sha256": "bc6ca73b23e0c7e4fef044fe8229628973a243c87cb1651d88c371a97112e391"
+        },
+        "installer": {
+          "path": "/workspace/scratch/0587ce872ec5/ui42_firmware_stage/Microduck-Robotd-FT6-R17/gamepad.py",
+          "bytes": 9721,
+          "sha256": "d0980bcb7220c5029321a9b480e8b479c617ea0d27b2f8e64c29cf528d5957db"
+        }
+      },
+      "compiler": "0.14.1",
+      "build_command": "zig cc -target aarch64-linux-gnu.2.28 -std=c11 -O2 -Wall -Wextra -Werror gamepad-r7/gamesir-xboxd.c -o ui42_bridge_evidence/gamesir-xboxd.arm64",
+      "host_tests": "production event/error/reconnect code; real nonblocking pipes/inotify; no hardware",
+      "consumer_mapping": "KEY_HOMEPAGE and KEY_HOME -> BTN_MODE; KEY_MENU/media ignored; main BTN_START unaffected",
+      "known_boundary": "Auxiliary disconnect requires a synthetic MODE release; PADD cannot distinguish its origin through the existing virtual gamepad."
+    },
+    "recording_file": "/var/lib/padd/last.json",
+    "status_file": "/run/padd/recorder.json",
+    "required_update": true,
+    "robotd_unchanged": true,
+    "mediad_unchanged": true,
+    "models_unchanged": true,
+    "auto_play_on_boot": false
+  },
+  "drive_speed": {
+    "mode": "fixed",
+    "walking_axes": [
+      "forward",
+      "backward",
+      "left",
+      "right"
+    ],
+    "max_linear_m_s": 0.3,
+    "max_linear_backward_m_s": 0.3,
+    "proportional_sticks": true,
+    "max_angular_rad_s": 1.5,
+    "physical_padd": "original CLI defaults; installer removes retired overrides",
+    "webpad": "fixed 0.3 scaling; original signs/deadzone/turning",
+    "retired_settings_ignored": "/etc/robot/feetech-ft5/drive-settings.json",
+    "setting_ui_removed": true,
+    "setting_api_removed": true,
+    "recorder_status_retained": true,
+    "old_recordings": "exact saved values retained; re-record for new limit",
+    "roller_and_ai_explicit_parameters": "unchanged",
+    "hardware_tested": false
+  },
+  "ui43": {
+    "baseline": "Microduck-UI42",
+    "native_code_changed": false,
+    "motion_models_calibration_changed": false,
+    "requires_firmware_install": true,
+    "evidence": "verification/ui43/"
+  },
+  "recorder_source_sha256": "d6c574faefa2879a702364f2d29c460a4330b571001f81503300638da8bd94d1",
+  "recorder_rec2": {
+    "button": "physical Logo/Home/Guide (Mode), not Select/View or Start",
+    "idle_double_click": "start recording",
+    "idle_single_click": "play last once after double-click window",
+    "recording_single_click": "stop and save; atomically replace last only on success",
+    "playing_single_click": "cancel playback",
+    "click_window_ms": 350,
+    "short_press_max_ms": 600,
+    "tail_suppression_ms_after_save_or_cancel": 350,
+    "save_refusal_and_record_start_do_not_suppress_stop": true,
+    "single_file": "/var/lib/padd/last.json",
+    "file_format_unchanged": true,
+    "max_seconds": 120,
+    "native_scope": [
+      "padd/src/recorder.rs",
+      "padd/src/main.rs replay input filter only"
+    ],
+    "models_calibration_motion_settings_unchanged": true,
+    "ai_and_mouth_lease_modules_unchanged": true,
+    "evidence": "verification/rec2/results.json"
+  },
+  "handpad_recorder_v228": {
+    "button": "physical Logo/Home/Guide (Mode), not Select/View or Start",
+    "idle_double_click": "start recording",
+    "idle_single_click": "play last once after double-click window",
+    "recording_single_click": "stop and save; atomically replace last only on success",
+    "playing_single_click": "cancel playback",
+    "click_window_ms": 350,
+    "short_press_max_ms": 600,
+    "tail_suppression_ms_after_save_or_cancel": 350,
+    "save_refusal_and_record_start_do_not_suppress_stop": true,
+    "single_file": "/var/lib/padd/last.json",
+    "file_format_unchanged": true,
+    "max_seconds": 120,
+    "native_scope": [
+      "padd/src/recorder.rs",
+      "padd/src/main.rs replay input filter only"
+    ],
+    "models_calibration_motion_settings_unchanged": true,
+    "ai_and_mouth_lease_modules_unchanged": true,
+    "evidence": "verification/v228/results.json"
+  },
+  "deployment_identity": {
+    "old": "1fa843-feetech-ft6-control.101",
+    "new": "1fa843-feetech-ft6-control.102",
+    "before_sha256": "27287241b5d830326ed83a4f79eb7188e767cc21541e24818f345c2e15fa0086",
+    "after_sha256": "65bf917cd05f9304ae1d6602562f9aacc1953ae0b3d4fb067305a8f06678f7a0",
+    "changed_byte_count": 1,
+    "changed_byte_offsets": [
+      621676
+    ],
+    "same_length": true,
+    "native_instructions_changed": false,
+    "not_recompiled": true
+  },
+  "handpad_recorder_v229": {
+    "button": "physical Logo/Home/Guide (Mode), not Select/View or Start",
+    "idle_double_click": "start recording",
+    "idle_single_click": "play last once after double-click window",
+    "recording_single_click": "stop and save; atomically replace last only on success",
+    "playing_single_click": "cancel playback",
+    "click_window_ms": 350,
+    "short_press_max_ms": 600,
+    "tail_suppression_ms_after_save_or_cancel": 350,
+    "save_refusal_and_record_start_do_not_suppress_stop": true,
+    "single_file": "/var/lib/padd/last.json",
+    "file_format_unchanged": true,
+    "max_seconds": 120,
+    "native_scope": [
+      "padd/src/recorder.rs",
+      "padd/src/main.rs replay input filter only"
+    ],
+    "models_calibration_motion_settings_unchanged": true,
+    "ai_and_mouth_lease_modules_unchanged": true,
+    "evidence": "verification/v229/results.json"
+  },
+  "recorder_clock_fix_v229": {
+    "cause": "Older command receipts overwrote newer reader status; browser input events, command replies and telemetry snapshots were merged without recorder ordering.",
+    "production_files": [
+      "controls.py",
+      "static/control.js"
+    ],
+    "backend": "Only InputChannel reader publishes status; command waiters do not publish delayed responses a second time.",
+    "frontend": "Keep a display-only accepted recorder report; require advancing checked_ms and reject backwards native t_ms for the same pid. Duplicate/older receipts cannot renew 3500ms freshness.",
+    "new_recording_reset": "New source timestamps accept lower elapsed_ms; live-context loss and link epoch changes clear comparison state.",
+    "native_recorder_changed": false,
+    "validation": "verification/test_recorder_order_v229.py and verification/test_pad_recorder_ui42.mjs",
+    "baseline_test_mismatches": {
+      "test_fix157pc.py": "9 pass, 1 fail, 1 error; identical on unchanged V228: fake Worker lacks is_alive and legacy log size assertion.",
+      "test_controls154.mjs": "Identical failure on unchanged V228: old assertion forbids the existing LB button."
+    }
+  },
+  "v230": {
+    "scope": [
+      "V229 baseline; console 1.0.230 and companion firmware control.78.",
+      "Reuse existing R7: wait for managed Wi-Fi, load/create AP profile, verify active state and IP, retry with bounded intervals.",
+      "Integrate existing PR #2 Armbian boot-config writer repair.",
+      "Commissioning shutdown confirms torque OFF before system poweroff; motion shutdown retains robot.shutdown.",
+      "AIC8800 driver, firmware, kernel, bootloader and device tree are unchanged."
+    ],
+    "hardware_verified": false,
+    "wifi_driver_modified": false,
+    "native_version_only": true,
+    "source_baseline": "Microduck-Console-Studio-V229"
+  },
+  "v231": {
+    "scope": [
+      "V230 baseline; console 1.0.231 and companion firmware control.79.",
+      "NetworkManager dispatcher notifications replace periodic healthy-state Wi-Fi queries; startup readiness and failed-operation retries remain bounded.",
+      "Disconnected Wi-Fi or missing local IPv4 restores the existing setup hotspot; queued events re-read actual state and cannot interrupt accepted provisioning.",
+      "Prepare PADD AI input/mouth lease directories as padd:robot mode 2770 at installation and every PADD start; root lease code preserves that sharing.",
+      "Retain V230 AP-profile/readback/retry, Armbian boot writer and commissioning shutdown fixes.",
+      "AIC8800 driver, firmware, kernel, bootloader, device tree, native PADD and motion models remain unchanged."
+    ],
+    "hardware_verified": false,
+    "wifi_driver_modified": false,
+    "native_version_only": true,
+    "source_baseline": "Microduck-Console-Studio-V230",
+    "stable_network_periodic_polling": false,
+    "padd_shared_lease_permissions": "padd:robot 2770; prepared at install and every native PADD start"
+  },
+  "v232": {
+    "scope": [
+      "Console 1.0.232 / companion firmware control.80. Remove the V231 PADD ExecStartPre helper and retire padd_runtime.py during upgrade.",
+      "Keep the V229 native PADD and startup command. Use existing systemd RuntimeDirectory management for padd, padd/ai-input and padd/ai-mouth, User=padd, Group=robot, mode 0770 and UMask=0022.",
+      "Preserve the existing input/mouth lease and acknowledgement protocol. No SGID; root lease preparation preserves ordinary shared modes and lease files retain explicit read permissions.",
+      "Install all onboarding components with their intended modes and ownership; read back before reporting success. Hotspot mismatch errors identify the affected component.",
+      "Retain R8 NetworkManager event recovery without stable-state polling, the Armbian boot writer fix, and commissioning torque-off shutdown.",
+      "Wireless driver/firmware, kernel, bootloader, device tree, native PADD, mediad, ONNX and motion models are unchanged."
+    ],
+    "hardware_verified": false,
+    "wifi_driver_modified": false,
+    "source_baseline": "V231 with V229 PADD startup command restored",
+    "native_logic_changed": false,
+    "removed": "V231 ExecStartPre and padd_runtime.py",
+    "padd_runtime_permissions": "systemd User=padd / Group=robot / RuntimeDirectoryMode=0770",
+    "ai_handoff": "existing V229 lease/ACK/cancel behavior retained",
+    "stable_network_periodic_polling": false,
+    "onboarding_install_readback": true,
+    "known_good": "previous hardware-verified reference card; V232 remains a trial release",
+    "next_task": "target board upgrade; PADD startup, AI nod, gamepad handback, and reboot repeat"
+  },
+  "v233": {
+    "scope": [
+      "Console 1.0.233 / companion firmware control.81; based on V232.",
+      "Onboarding photo replaced by the existing kissqy GitHub outdoor-07 photo, embedded for offline use.",
+      "Onboarding heading, introduction and project attribution emphasize kissqy.",
+      "System-login password accepts 6–128 characters in both HTML and the request handler; Wi-Fi WPA passphrase remains 8–63.",
+      "PADD/AI handoff, runtime permissions, wireless event recovery, boot writer and shutdown behavior retained from V232."
+    ],
+    "photo": {
+      "repository": "kissqy/Microduck-kissqy",
+      "commit": "2c385b63ccc1bc3598534dc87689728a125219c7",
+      "path": "docs/assets/showcase/outdoor-07-thumb.webp",
+      "git_blob_sha1": "ce22ffae03b9d8c46f1502d572cf3d9dd5fda01e",
+      "sha256": "ecb1c24872ff83ce197a8526fa58b2b521272b903a42dfbbe4f825dc42de1b0a",
+      "width": 360,
+      "height": 480,
+      "embedded_offline": true
+    },
+    "system_password_min_length": 6,
+    "wifi_password_min_length": 8,
+    "source_baseline": "Microduck-Console-Studio-V232",
+    "hardware_verified": false,
+    "network_logic_changed": false,
+    "padd_ai_logic_changed": false,
+    "wifi_driver_modified": false,
+    "known_good": "previous hardware-verified reference card; V233 is not a new hardware acceptance",
+    "next_task": "target-board trial: PADD/AI handback, network-loss recovery and updated offline onboarding"
+  },
+  "v236": {
+    "source_baseline": "Microduck-Console-Studio-V233 / control.81",
+    "scope": [
+      "Console 1.0.236 / companion firmware control.84, rebuilt from V233 / control.81.",
+      "Restore all V233 console markup and styles except the compact original-position voice selector and its separate management dialog.",
+      "Add saved named voice IDs, manual selection and existing native-session AI voice switching; no tall inline voice management block.",
+      "Replace onboarding artwork with the exact user-supplied four-duck design, proportionally resized and compressed without cropping or redrawing.",
+      "Keep onboarding predominantly orange; V233 networking, form handling, six-character system password, boot, PADD and shutdown logic retained."
+    ],
+    "main_console_layout": "V233 byte-identical outside original voice cell and its hidden management dialog; all original layout CSS preserved",
+    "voice_backend_source": "V234 voice-only additions applied to V233 baseline",
+    "voice_catalog_limit": 32,
+    "artwork": {
+      "input": "image(20261109-150419).png",
+      "original_sha256": "384812247910638095fc723bed48cdfc7618dc983ae126241e356f2b345e86fa",
+      "embedded_sha256": "15285ab6824ef7695dc66a16454fb24cde1b7437f2330cb6cb7c882bb8b91822",
+      "dimensions": [
+        1040,
+        585
+      ],
+      "webp_quality": 48,
+      "embedded_bytes": 54702,
+      "transport_argv_bytes": 102168,
+      "artwork_redrawn": false,
+      "image_crop": false,
+      "offline": true
+    },
+    "network_logic_changed": false,
+    "padd_logic_changed": false,
+    "native_logic_changed": false,
+    "hardware_verified": false,
+    "known_good": "previous hardware-verified reference card retained",
+    "next_task": "target-board acceptance of V233 console layout, compact voice selection and the supplied four-duck onboarding page"
+  },
+  "v237": {
+    "baseline": "V236 / control.84",
+    "scope": [
+      "Console 1.0.237 / companion firmware control.85, based on V236.",
+      "Move Add immediately after Switch in the existing voice row; reuse the visible green accent-button style.",
+      "Remove the old tiny heading-link style; existing layout, dialog, voice logic and onboarding retained."
+    ],
+    "native_logic_changed": false,
+    "hardware_verified": false,
+    "known_good": "previous hardware-verified reference retained",
+    "next_task": "confirm the visible Add button after Switch in the existing voice row"
+  },
+  "v238": {
+    "baseline": "V237 / control.85",
+    "scope": [
+      "Console 1.0.238 / companion firmware control.86, based on V237.",
+      "Ignore B in browser input and disable its visual button; retain all other bindings.",
+      "Filter BTN_EAST press/release in the current GameSir R7 bridge; descriptor/axes and original PADD retained.",
+      "Wi-Fi configuration/password and recovery behavior retained unchanged; default hotspot password remains 12345678."
+    ],
+    "input_bridge_source": "V237 packaged UI42 C snapshot; only xbox_key BTN_EAST rejection changed",
+    "input_bridge_compiler": "Zig 0.13.0, aarch64-linux-gnu.2.17, original EXEC type",
+    "input_bridge_source_sha256": "5594fb9983db3e40dfe38378080f2951b1c16ed522f507e1eb9caab05b9e4f08",
+    "padd_sha256": "fd9fb6b99083d9f1eeee5414910dc861d8f88c805f182e6e4a57d9c7b6834bbd",
+    "hotspot_password": "12345678",
+    "wifi_logic_changed": false,
+    "automatic_return_to_saved_wifi_added": false,
+    "hardware_verified": false,
+    "known_good": "previous hardware-verified reference retained",
+    "next_task": "target-board acceptance that B is unassigned on the webpage and current GameSir R7 input"
+  },
+  "v239": {
+    "baseline": "V238 / control.86",
+    "scope": [
+      "Console 1.0.239 / companion firmware control.87, based on V238.",
+      "Add responsive sizing only: desktop equal-height three-column cards; laptop two views and full-width controller; mobile stacked cards and horizontal navigation.",
+      "Adapt SSH/AI/calibration/power layouts; retain visible voice Switch/Add actions; contain the wide servo table scroll and bound dialog height.",
+      "All V238 business JavaScript/Python, network runtime, artwork, models, PADD and GameSir R7 logic retained; firmware identity synchronized only."
+    ],
+    "validation": {
+      "css_syntax_checked": true,
+      "frontend_suites": [
+        "test_ai_voices_v234.mjs",
+        "test_ai_hat.mjs",
+        "test_ai_ui40.mjs"
+      ],
+      "browser_multi_viewport_render_tested": false,
+      "browser_limitation": "Local Chromium unavailable and Headless Shell download failed; CSS parsing and source comparison are not browser layout verification.",
+      "hardware_tested": false,
+      "native_logic_changed": false,
+      "known_good": "previous hardware-verified reference retained",
+      "next_task": "accept responsive layout on actual phone, laptop and desktop windows"
+    }
+  },
+  "historical_v239_records": {
+    "tests": {
+      "native_rebuilt": false,
+      "native_binary_reused_from_validated_gesture_build": true,
+      "padd_host_passed": 99,
+      "padd_host_failed": 0,
+      "recorder_status_python_passed": 8,
+      "frontend_suites_passed": 5,
+      "recorder_order_python_passed": 3,
+      "input_python_passed": 14,
+      "connection_retry_python_passed": 7,
+      "aarch64_build_passed": true,
+      "hardware_tested": false,
+      "native_aarch64_execution_tested": false,
+      "browser_render_tested": false
+    },
+    "release_scope_tests": {
+      "native_expression_checks": 30,
+      "python_ai_checks": 141,
+      "protocol_checks": 53,
+      "whole_native_suite_clean": false,
+      "broad_suite_comparison": "inherited UI21 report; not rerun for UI22"
+    },
+    "native_production_changes": [
+      "padd/src/recorder.rs",
+      "padd/src/main.rs replay input filter only"
+    ],
+    "installer_changes": [
+      "Use original PADD 0.3 linear defaults; ignore retired drive-settings.json.",
+      "Keep recorder metadata read-only and remove drive-speed setter command."
+    ]
+  },
+  "package_version": "1.0.260",
+  "previous_package_version": "1.0.259",
+  "native_logic_changed": false,
+  "native_binaries_changed": true,
+  "current_release": {
+    "console_version": "1.0.260",
+    "firmware_build": "1fa843-feetech-ft6-control.102",
+    "firmware_package_version": "1.0.260",
+    "hotspot_revision": "R10-boot-only",
+    "hardware_verified": false,
+    "scope": [
+      "Withdraw Flamingo from supplied model files, default skill bindings, model catalog, UI descriptions and import adaptation.",
+      "On upgrade, remove the retired skill, its aliases pointing to known retired models, and only their pad bindings; delete the explicitly retired bundled model directory.",
+      "Exclude the retired skill from AI tools even when a connected older daemon still reports it.",
+      "Preserve the other eleven ONNX weights, current motion settings, calibration, AI, gamepad, camera, shutdown and R10 hotspot behavior.",
+      "Publish the complete V260 / control.102 bundle with matched identities, install inventory and checksums."
+    ]
+  },
+  "baseline_package_sha256": "1841a8e3ef239275a62f1d7f5ce028f2faade8b4067c272101e15a73895c70ec",
+  "known_good": "previous hardware-verified reference retained",
+  "validation_scope_note": "V256 changes only commissioning shutdown plus release identity and checksums; prior versioned records are historical.",
+  "next_task": "Reference-card upgrade acceptance: retired action absent, retained actions and boot hotspot unchanged.",
+  "historical_previous_release": {
+    "current_release": {
+      "console_version": "1.0.252",
+      "firmware_build": "1fa8438-feetech-ft6-control.94",
+      "firmware_package_version": "1.0.252",
+      "hotspot_revision": "R9-boot-only",
+      "firmware_reinstall_required": true,
+      "reboot_required": true,
+      "hardware_verified": false,
+      "scope": [
+        "R9 performs one boot-only readiness and saved-Wi-Fi connection decision; confirmed IPv4 connection skips the AP, unavailable saved Wi-Fi falls back to AP.",
+        "Remove continuous disconnect recovery, periodic network monitoring and the old R8 dispatcher/event components.",
+        "Ordinary Wi-Fi management no longer stops or restarts the hotspot service; keep manual provisioning and saved-network safeguards.",
+        "Retain V251 layout, IP display, error presentation, AI/input behavior and all model/native logic; update the actual deployment identity to control.94."
+      ]
+    },
+    "release_changes": [
+      "R9 performs one boot-only readiness and saved-Wi-Fi connection decision; confirmed IPv4 connection skips the AP, unavailable saved Wi-Fi falls back to AP.",
+      "Remove continuous disconnect recovery, periodic network monitoring and the old R8 dispatcher/event components.",
+      "Ordinary Wi-Fi management no longer stops or restarts the hotspot service; keep manual provisioning and saved-network safeguards.",
+      "Retain V251 layout, IP display, error presentation, AI/input behavior and all model/native logic; update the actual deployment identity to control.94."
+    ],
+    "deployment_identity": {
+      "old": "1fa8438-feetech-ft6-control.93",
+      "new": "1fa8438-feetech-ft6-control.94",
+      "before_sha256": "1a12164eeacb1f3d77ff865cc38b35372ee5bedb1eef0a974e08dde5056b8323",
+      "after_sha256": "a2d4cc3d99ddad34a9551e88d6bae0c942bdb4b79fa33c408c959a6581b5f88f",
+      "changed_byte_count": 1,
+      "changed_byte_offsets": [
+        621676
+      ],
+      "same_length": true,
+      "native_instructions_changed": false,
+      "not_recompiled": true,
+      "hardware_tested": false
+    }
+  },
+  "reboot_required": true,
+  "hotspot_revision": "R10-boot-only",
+  "historical_v253_records": {
+    "current_release": {
+      "console_version": "1.0.253",
+      "firmware_build": "1fa8438-feetech-ft6-control.95",
+      "firmware_package_version": "1.0.253",
+      "hotspot_revision": "R10-boot-only",
+      "firmware_reinstall_required": true,
+      "reboot_required": true,
+      "hardware_verified": false,
+      "scope": [
+        "R10 waits for NetworkManager/Wi-Fi readiness, uses actual NM connectivity, and opens the AP if saved Wi-Fi cannot connect.",
+        "Remove the premature per-boot marker and direct saved-keyfile parsing; retry initial readiness/AP failures until startup completes.",
+        "Retain valid existing AP settings, repair invalid owned AP settings, and normalize nmcli output language.",
+        "Keep runtime disconnect recovery disabled and retain all V252 UI, model, input and native behavior; update deployment identity to control.95."
+      ]
+    },
+    "release_changes": [
+      "R10 waits for NetworkManager/Wi-Fi readiness, uses actual NM connectivity, and opens the AP if saved Wi-Fi cannot connect.",
+      "Remove the premature per-boot marker and direct saved-keyfile parsing; retry initial readiness/AP failures until startup completes.",
+      "Retain valid existing AP settings, repair invalid owned AP settings, and normalize nmcli output language.",
+      "Keep runtime disconnect recovery disabled and retain all V252 UI, model, input and native behavior; update deployment identity to control.95."
+    ],
+    "deployment_identity": {
+      "old": "1fa8438-feetech-ft6-control.94",
+      "new": "1fa8438-feetech-ft6-control.95",
+      "before_sha256": "a2d4cc3d99ddad34a9551e88d6bae0c942bdb4b79fa33c408c959a6581b5f88f",
+      "after_sha256": "ddddcb3e1ffe28984e2ac81a15736cacd54a87734d261c27dad7d7f7cc49b830",
+      "changed_byte_count": 1,
+      "changed_byte_offsets": [
+        621676
+      ],
+      "same_length": true,
+      "native_instructions_changed": false,
+      "not_recompiled": true,
+      "hardware_tested": false
+    }
+  },
+  "historical_v254_records": {
+    "current_release": {
+      "console_version": "1.0.254",
+      "firmware_build": "1fa8438-feetech-ft6-control.96",
+      "firmware_package_version": "1.0.254",
+      "hotspot_revision": "R10-boot-only",
+      "firmware_reinstall_required": true,
+      "reboot_required": true,
+      "hardware_verified": false,
+      "scope": [
+        "Restore the exact 54,702-byte onboarding WebP: V253 changed 14 R9 sequences inside Base64 while updating revision text.",
+        "Skip invalid optional page artwork instead of crashing the portal before Wi-Fi initialization.",
+        "Run the actual complete portal --help entry before installation; report portal_import_verified after readback.",
+        "Preserve the exact V253 R10 boot policy, service unit, UI, AI, input, models and native behavior; update deployment identity to control.96."
+      ]
+    },
+    "release_changes": [
+      "Restore the exact 54,702-byte onboarding WebP: V253 changed 14 R9 sequences inside Base64 while updating revision text.",
+      "Skip invalid optional page artwork instead of crashing the portal before Wi-Fi initialization.",
+      "Run the actual complete portal --help entry before installation; report portal_import_verified after readback.",
+      "Preserve the exact V253 R10 boot policy, service unit, UI, AI, input, models and native behavior; update deployment identity to control.96."
+    ],
+    "deployment_identity": {
+      "old": "1fa8438-feetech-ft6-control.95",
+      "new": "1fa8438-feetech-ft6-control.96",
+      "before_sha256": "ddddcb3e1ffe28984e2ac81a15736cacd54a87734d261c27dad7d7f7cc49b830",
+      "after_sha256": "e480f7a827acff1bf53360d2fe9655ff30de9dbc8e63e567ae437d462296427d",
+      "changed_byte_count": 1,
+      "changed_byte_offsets": [
+        621676
+      ],
+      "same_length": true,
+      "native_instructions_changed": false,
+      "not_recompiled": true,
+      "hardware_tested": false
+    }
+  },
+  "historical_v255_release": {
+    "current_release": {
+      "console_version": "1.0.255",
+      "firmware_build": "1fa8438-feetech-ft6-control.97",
+      "firmware_package_version": "1.0.255",
+      "hotspot_revision": "R10-boot-only",
+      "firmware_reinstall_required": true,
+      "reboot_required": true,
+      "hardware_verified": false,
+      "scope": [
+        "Remove this project's legacy visible captive-DNS .new files at installation and initial AP preparation, including the exact blocker shown in the Zero journal.",
+        "Use dot-prefixed atomic staging files so dnsmasq never parses incomplete captive-DNS writes; publish the completed official config by rename.",
+        "Preserve V254 R10 boot decisions, complete-entry validation, artwork, UI, AI, input, model and native behavior; update deployment identity to control.97."
+      ]
+    },
+    "release_changes": [
+      "Remove this project's legacy visible captive-DNS .new files at installation and initial AP preparation, including the exact blocker shown in the Zero journal.",
+      "Use dot-prefixed atomic staging files so dnsmasq never parses incomplete captive-DNS writes; publish the completed official config by rename.",
+      "Preserve V254 R10 boot decisions, complete-entry validation, artwork, UI, AI, input, model and native behavior; update deployment identity to control.97."
+    ],
+    "deployment_identity": {
+      "old": "1fa8438-feetech-ft6-control.96",
+      "new": "1fa8438-feetech-ft6-control.97",
+      "before_sha256": "e480f7a827acff1bf53360d2fe9655ff30de9dbc8e63e567ae437d462296427d",
+      "after_sha256": "2e5bf375d2116eef6630eadc2bc11b2fa5b9b2faba2208d32e104dcd19e080e3",
+      "changed_byte_count": 1,
+      "changed_byte_offsets": [
+        621676
+      ],
+      "same_length": true,
+      "native_instructions_changed": false,
+      "not_recompiled": true,
+      "hardware_tested": false
+    }
+  },
+  "historical_v256_records": {
+    "current_release": {
+      "console_version": "1.0.256",
+      "firmware_build": "1fa8438-feetech-ft6-control.98",
+      "firmware_package_version": "1.0.256",
+      "hotspot_revision": "R10-boot-only",
+      "firmware_reinstall_required": true,
+      "reboot_required": false,
+      "hardware_verified": false,
+      "scope": [
+        "Fix only commissioning shutdown: replace the motion relax/poll/OS helper sequence with the existing robot.busCommand action=shutdown.",
+        "Require the native scheduled poweroff and torque=off receipt; robotd performs the confirmed stop and reserves the power operation before returning its existing delayed-shutdown ACK.",
+        "Reuse the unchanged green completed-state feedback from motion shutdown; expected disconnection retains the accepted shutdown result.",
+        "Keep all V255 hotspot, static UI, AI, input, models, calibration, motion settings and native instructions byte-identical; increment deployment identity to control.98."
+      ]
+    },
+    "release_changes": [
+      "Fix only commissioning shutdown: replace the motion relax/poll/OS helper sequence with the existing robot.busCommand action=shutdown.",
+      "Require the native scheduled poweroff and torque=off receipt; robotd performs the confirmed stop and reserves the power operation before returning its existing delayed-shutdown ACK.",
+      "Reuse the unchanged green completed-state feedback from motion shutdown; expected disconnection retains the accepted shutdown result.",
+      "Keep all V255 hotspot, static UI, AI, input, models, calibration, motion settings and native instructions byte-identical; increment deployment identity to control.98."
+    ],
+    "deployment_identity": {
+      "old": "1fa8438-feetech-ft6-control.97",
+      "new": "1fa8438-feetech-ft6-control.98",
+      "before_sha256": "2e5bf375d2116eef6630eadc2bc11b2fa5b9b2faba2208d32e104dcd19e080e3",
+      "after_sha256": "6961052b6075246168b19ebb181e46d152a0a93da845d38988e2d13adca95942",
+      "changed_byte_count": 1,
+      "changed_byte_offsets": [
+        621676
+      ],
+      "same_length": true,
+      "all_bytes_outside_identity_unchanged": true,
+      "native_instructions_changed": false,
+      "not_recompiled": true,
+      "hardware_tested": false
+    }
+  },
+  "historical_v257_records": {
+    "current_release": {
+      "console_version": "1.0.257",
+      "firmware_build": "1fa8438-feetech-ft6-control.99",
+      "firmware_package_version": "1.0.257",
+      "hotspot_revision": "R10-boot-only",
+      "firmware_reinstall_required": true,
+      "reboot_required": true,
+      "hardware_verified": false,
+      "scope": [
+        "Provision dnsmasq-base from the target Zero system repositories when dnsmasq is missing; execute the installed helper before accepting readiness.",
+        "Prepare the hotspot dependency before stopping old robot/input services; fail installation if provisioning or executable verification fails.",
+        "Keep all V256 boot hotspot policy, portal bytes, service unit, UI, commissioning shutdown, AI, input, models and native behavior; update deployment identity to control.99."
+      ]
+    },
+    "release_changes": [
+      "Provision dnsmasq-base from the target Zero system repositories when dnsmasq is missing; execute the installed helper before accepting readiness.",
+      "Prepare the hotspot dependency before stopping old robot/input services; fail installation if provisioning or executable verification fails.",
+      "Keep all V256 boot hotspot policy, portal bytes, service unit, UI, commissioning shutdown, AI, input, models and native behavior; update deployment identity to control.99."
+    ],
+    "deployment_identity": {
+      "old": "1fa8438-feetech-ft6-control.98",
+      "new": "1fa8438-feetech-ft6-control.99",
+      "before_sha256": "6961052b6075246168b19ebb181e46d152a0a93da845d38988e2d13adca95942",
+      "after_sha256": "558b903559219d7e6a58086d3a92ed19ed95ef8d08711efbae8d1f7c824c747d",
+      "changed_byte_count": 1,
+      "changed_byte_offsets": [
+        621676
+      ],
+      "same_length": true,
+      "native_instructions_changed": false,
+      "not_recompiled": true,
+      "hardware_tested": false
+    }
+  },
+  "cleanup": {
+    "scope": "Remove only seven unused model export-data.zip backups from the release bundle.",
+    "removed": [
+      {
+        "path": "models/1c94934c6421ec72ed48079cea749668/export-data.zip",
+        "bytes": 18654,
+        "sha256": "7aea772ea83818e9359ddea4c7f181393c39dfbe4f29326c8a284c2dbc64dc1f",
+        "contents": [
+          {
+            "path": "deployment-contract.json",
+            "bytes": 75689
+          },
+          {
+            "path": "manifest.json",
+            "bytes": 414
+          },
+          {
+            "path": "training-request.json",
+            "bytes": 12274
+          },
+          {
+            "path": "upstream-params/env.yaml",
+            "bytes": 58817
+          },
+          {
+            "path": "upstream-params/agent.yaml",
+            "bytes": 1352
+          }
+        ]
+      },
+      {
+        "path": "models/1cbf8730eadd75a5704332c9f3c10f60/export-data.zip",
+        "bytes": 78914,
+        "sha256": "bebc6d0e186e54b797b3e45f138450810fdbcc53a62d05c897b65821eb184c74",
+        "contents": [
+          {
+            "path": "deployment-contract.json",
+            "bytes": 431990
+          },
+          {
+            "path": "manifest.json",
+            "bytes": 5548
+          },
+          {
+            "path": "training-request.json",
+            "bytes": 261678
+          },
+          {
+            "path": "upstream-params/env.yaml",
+            "bytes": 75657
+          },
+          {
+            "path": "upstream-params/agent.yaml",
+            "bytes": 2228
+          },
+          {
+            "path": "training-config.json",
+            "bytes": 228584
+          },
+          {
+            "path": "deployment-profile.toml",
+            "bytes": 389
+          },
+          {
+            "path": "使用说明.md",
+            "bytes": 4013
+          }
+        ]
+      },
+      {
+        "path": "models/59e15d7b04d0c40e9b11b8a70bdecae6/export-data.zip",
+        "bytes": 800167,
+        "sha256": "545ad9d3b3f848a54eb50589266255333b5f61b5dde896da2f53ff7b68311cea",
+        "contents": [
+          {
+            "path": "policy.onnx",
+            "bytes": 795451
+          },
+          {
+            "path": "deployment-contract.json",
+            "bytes": 278563
+          },
+          {
+            "path": "training-request.json",
+            "bytes": 171103
+          },
+          {
+            "path": "manifest.json",
+            "bytes": 3879
+          },
+          {
+            "path": "deployment-profile.toml",
+            "bytes": 397
+          },
+          {
+            "path": "使用说明.md",
+            "bytes": 2848
+          },
+          {
+            "path": "training-config.json",
+            "bytes": 142560
+          },
+          {
+            "path": "upstream-params/agent.yaml",
+            "bytes": 1514
+          },
+          {
+            "path": "upstream-params/env.yaml",
+            "bytes": 51159
+          }
+        ]
+      },
+      {
+        "path": "models/67ad09d82f4865d222a7ae06f250cf9f/export-data.zip",
+        "bytes": 5260460,
+        "sha256": "53f4f9d208500178b1a0e7784cd3dd9a3a5971edba25ffdb0a0576a56d6a645c",
+        "contents": [
+          {
+            "path": "policy.onnx",
+            "bytes": 795427
+          },
+          {
+            "path": "checkpoint.pt",
+            "bytes": 4868405
+          },
+          {
+            "path": "deployment-contract.json",
+            "bytes": 425308
+          },
+          {
+            "path": "training-request.json",
+            "bytes": 177837
+          },
+          {
+            "path": "manifest.json",
+            "bytes": 4666
+          },
+          {
+            "path": "deployment-profile.toml",
+            "bytes": 817
+          },
+          {
+            "path": "使用说明.md",
+            "bytes": 3534
+          },
+          {
+            "path": "training-config.json",
+            "bytes": 149515
+          },
+          {
+            "path": "upstream-params/agent.yaml",
+            "bytes": 1349
+          },
+          {
+            "path": "upstream-params/env.yaml",
+            "bytes": 51962
+          }
+        ]
+      },
+      {
+        "path": "models/9203bb8f5df15cffaa29f5315a722835/export-data.zip",
+        "bytes": 80580,
+        "sha256": "96d07298084d138e91f15cdfec5ccfe3456095d3e05e157880e40699b0785308",
+        "contents": [
+          {
+            "path": "deployment-contract.json",
+            "bytes": 439144
+          },
+          {
+            "path": "manifest.json",
+            "bytes": 6502
+          },
+          {
+            "path": "training-request.json",
+            "bytes": 186233
+          },
+          {
+            "path": "upstream-params/env.yaml",
+            "bytes": 55552
+          },
+          {
+            "path": "upstream-params/agent.yaml",
+            "bytes": 1358
+          },
+          {
+            "path": "training-config.json",
+            "bytes": 157435
+          },
+          {
+            "path": "deployment-profile.toml",
+            "bytes": 1145
+          },
+          {
+            "path": "使用说明.md",
+            "bytes": 4481
+          }
+        ]
+      },
+      {
+        "path": "models/95d40b584e8c10c9d52dc63cae1c6c97/export-data.zip",
+        "bytes": 818075,
+        "sha256": "c698fd05da8ab8e66f8ef81db9bd3bbb8006b388bbd8887aea2cab6bf7e74b3b",
+        "contents": [
+          {
+            "path": "policy.onnx",
+            "bytes": 795410
+          },
+          {
+            "path": "deployment-contract.json",
+            "bytes": 454847
+          },
+          {
+            "path": "training-request.json",
+            "bytes": 189858
+          },
+          {
+            "path": "manifest.json",
+            "bytes": 5908
+          },
+          {
+            "path": "deployment-profile.toml",
+            "bytes": 684
+          },
+          {
+            "path": "使用说明.md",
+            "bytes": 3794
+          },
+          {
+            "path": "training-config.json",
+            "bytes": 160210
+          },
+          {
+            "path": "upstream-params/agent.yaml",
+            "bytes": 1361
+          },
+          {
+            "path": "upstream-params/env.yaml",
+            "bytes": 58465
+          }
+        ]
+      },
+      {
+        "path": "models/b14e3a8b56ddbb8d2d831e727774a168/export-data.zip",
+        "bytes": 800341,
+        "sha256": "7514131033915715eed2224c4d4cbe415ed3842718aa1c030995ada0d6813bd0",
+        "contents": [
+          {
+            "path": "policy.onnx",
+            "bytes": 795476
+          },
+          {
+            "path": "deployment-contract.json",
+            "bytes": 316435
+          },
+          {
+            "path": "training-request.json",
+            "bytes": 194293
+          },
+          {
+            "path": "manifest.json",
+            "bytes": 5556
+          },
+          {
+            "path": "deployment-profile.toml",
+            "bytes": 426
+          },
+          {
+            "path": "使用说明.md",
+            "bytes": 4022
+          },
+          {
+            "path": "training-config.json",
+            "bytes": 163856
+          },
+          {
+            "path": "upstream-params/agent.yaml",
+            "bytes": 1345
+          },
+          {
+            "path": "upstream-params/env.yaml",
+            "bytes": 57627
+          }
+        ]
+      }
+    ],
+    "removed_archive_bytes": 7857191,
+    "removed_archives_read_by_current_runtime": false,
+    "active_onnx_models_preserved": 12,
+    "all_surviving_model_files_byte_identical": true,
+    "installer_user_model_preservation_policy_unchanged": true,
+    "device_files_deleted_by_this_packaging_operation": false
+  },
+  "historical_v258_records": {
+    "current_release": {
+      "console_version": "1.0.258",
+      "firmware_build": "1fa843-feetech-ft6-control.100",
+      "firmware_package_version": "1.0.258",
+      "hotspot_revision": "R10-boot-only",
+      "hardware_verified": false,
+      "scope": [
+        "Delete audited unused code paths/imports and obsolete files; retain one canonical copy of byte-identical historical evidence.",
+        "Keep surviving production function/class bodies unchanged; retain all models, native instructions, UI layout/styles and current behaviors.",
+        "Update package/deployment identity to V258 / control.100 and refresh hashes/inventories for the deletion-only cleanup."
+      ]
+    },
+    "cleanup": {
+      "code": [
+        {
+          "path": "console/console.py",
+          "reason": "Uncalled legacy SSH collector and its private decoder; dashboard dispatches raw_loop and local mode uses agent.run.",
+          "before_sha256": "1cfdabad6e44405a4c3d482f7db4ffd1ec726db4d4bc14c203f1eb86e314297e",
+          "after_sha256": "f8cd5e22212aa36e8b69edca450baad2b6fb65e5956bc5acc6eb246686d12ca8",
+          "removed_lines_net": 86
+        },
+        {
+          "path": "console/console.py",
+          "reason": "Imports used only by the deleted collector, plus already-unused imports.",
+          "before_sha256": "f8cd5e22212aa36e8b69edca450baad2b6fb65e5956bc5acc6eb246686d12ca8",
+          "after_sha256": "c5f2b22c884b513087e49796e8d2dcb7bf6b656377ec542f3cb07ba5afca22bc",
+          "removed_lines_net": 4
+        },
+        {
+          "path": "console/verification/test_ai_session_ui6.py",
+          "reason": "Remove unused retired image modules from the worker test fixture.",
+          "before_sha256": "ae82eaf8eaffbc1990fc632d64a91131a3dd5abb8133a8d75f26fc94432bdaac",
+          "after_sha256": "2c5ea9d665529d645b7063667bee72aff3e467f25ad3f0b9e5669bd1bb4b6a53",
+          "removed_lines_net": 2
+        },
+        {
+          "path": "console/verification/test_ai_camera_ui16.py",
+          "reason": "Remove the test of the retired encoder; retain original-photo camera, preview and timing regression tests.",
+          "before_sha256": "c01a564bbac52069773eff3d4ca11cd00de413a3fb46320da39d483a2ee548c2",
+          "after_sha256": "5f2cbded6869d92c31da8aa8cf0047235c5db2220de447a67b084b16f194da4c",
+          "removed_lines_net": 7
+        },
+        {
+          "path": "console/verification/test_ai_camera_ui16.py",
+          "reason": "Remove encoder-only fixture constants with no remaining readers.",
+          "before_sha256": "5f2cbded6869d92c31da8aa8cf0047235c5db2220de447a67b084b16f194da4c",
+          "after_sha256": "c3f6807df6f1856ead28920f92ccc5e00dbcedb654462096841021291efbee9c",
+          "removed_lines_net": 2
+        },
+        {
+          "path": "firmware/model_packages.py",
+          "reason": "Uncalled historical export/restore helpers; current runtime validates/describes existing directories and imports whole model packages.",
+          "before_sha256": "2f2dfa2c4adcf3a9ac03fa32d673de5af153c6ffeeabd49e42870a7517127aeb",
+          "after_sha256": "ce956b2713853dfd1ed444b66f0640393482adbe475936e6b8384705bccf56f3",
+          "removed_lines_net": 24
+        },
+        {
+          "path": "firmware/model_packages.py",
+          "reason": "Remove orphan imports and export filename constant; keep every shipped model and export-data.zip unchanged.",
+          "before_sha256": "ce956b2713853dfd1ed444b66f0640393482adbe475936e6b8384705bccf56f3",
+          "after_sha256": "003ba064aefee2274c2f21597d3f2804d72448f927d9020068e7d70901e6ef9f",
+          "removed_lines_net": 1
+        },
+        {
+          "path": "console/resources/wifi-r5/microduck-public-image.sh",
+          "reason": "Delete obsolete home_ready shadowed unconditionally by R10 install(globals()), and its unused connection helper.",
+          "before_sha256": "731c7f2c00729cf84ecdcd4286adcfe8d6af480504763724e16d1c2f90ee4fae",
+          "after_sha256": "71fef0e3c179e6a39f04029dbbe937515a8c446918763e1d6fc33910bf0bc0c7",
+          "removed_lines_net": 9
+        },
+        {
+          "path": "console/controls.py",
+          "reason": "Imports unused by all surviving code; no external production export readers.",
+          "before_sha256": "09c9322c0a48e3967322b87132bda1fd9c8e274738e365843dc5496b0f2926f7",
+          "after_sha256": "62ccd205a79b5f41ffb7a4228d1167c361b61bd483e90674a5828dfdf5aeb883",
+          "removed_lines_net": 0
+        },
+        {
+          "path": "console/service_control.py",
+          "reason": "Imports unused by all surviving code; no external production export readers.",
+          "before_sha256": "a61c07797264224cf0df8207bc764f6482b1193e81c5785b7df9be9af0f6a2c1",
+          "after_sha256": "277ca96a3b12f16ee2da2a4da8ae780fae8d896a197378cc56c5f8962997e2de",
+          "removed_lines_net": 3
+        },
+        {
+          "path": "console/service_data.py",
+          "reason": "Imports unused by all surviving code; no external production export readers.",
+          "before_sha256": "746be4ef625df2efb11a99d969d237317aad946f2cd5f310bbfbd75648c75cff",
+          "after_sha256": "ad93556ac26fd0829865fcbec03811e82003a1a9626dbca100f13c2e02a2b133",
+          "removed_lines_net": 1
+        },
+        {
+          "path": "console/wifi_manager.py",
+          "reason": "Imports unused by all surviving code; no external production export readers.",
+          "before_sha256": "2cf394019e6e1c86235d4c44b9a5f44ed9604e89ed95360c6e52ad7e70f4e117",
+          "after_sha256": "af774413eb8f9855f7667b507dd92deb4f4424628e94dcc9c386e9d8c97e6537",
+          "removed_lines_net": 2
+        },
+        {
+          "path": "firmware/calibration-config.py",
+          "reason": "Imports unused by all surviving code; no external production export readers.",
+          "before_sha256": "c7f003b85f727d5138c6acc3a3dacdcd986db432e3c7e7f52d26a7e777060491",
+          "after_sha256": "eefc443d29611f20e0cd6eb441e693da233cc14e94968757bc699f7006d8d74c",
+          "removed_lines_net": 2
+        },
+        {
+          "path": "firmware/configure.py",
+          "reason": "Imports unused by all surviving code; no external production export readers.",
+          "before_sha256": "15f93bbf04d2031b66bf5f7e2792ee7cb73149303ef57da26e2f01440c79a785",
+          "after_sha256": "8e01c0512f89eeb606e2c3c7923ab609efd95760e5d1a08db108375f78f5f853",
+          "removed_lines_net": 1
+        },
+        {
+          "path": "firmware/gamepad.py",
+          "reason": "Imports unused by all surviving code; no external production export readers.",
+          "before_sha256": "169923ba44c0c8f6c77f3a491dcbd6ac393262b7bda293bd43a38b58ece9beee",
+          "after_sha256": "8e37a40599bc9efa2cf5b686a30156a076ccf6c7a405d7000f4e736fae0c0653",
+          "removed_lines_net": 0
+        },
+        {
+          "path": "firmware/runtime.py",
+          "reason": "Imports unused by all surviving code; no external production export readers.",
+          "before_sha256": "1b9bb56d73ab6a888fc33b544b5987f8e4a839a1fcc4384db477a405d89fc0cd",
+          "after_sha256": "7ac7433f541f30636db682402b62ad350fafc87c668cdf61afd67b15452b5edd",
+          "removed_lines_net": 2
+        },
+        {
+          "path": "firmware/voice-setup.py",
+          "reason": "Imports unused by all surviving code; no external production export readers.",
+          "before_sha256": "72460983bd54b03a89b518bac9e713e4113df4686fcbf2523ce7ae2e6dc72fa0",
+          "after_sha256": "ee8e0605b2b69e9cb42523577933bd93516421f366c9f773401cf240fcd0bb37",
+          "removed_lines_net": 0
+        },
+        {
+          "path": "console/static/pose.js",
+          "reason": "Unimported, uncalled displayRootQuaternion alias; rootQuaternion remains unchanged.",
+          "before_sha256": "2ed790562837c8014d5321098c74cba14b4d0b3c2498e7bdaf3d81e045b11350",
+          "after_sha256": "08d1f72f0a5429d99a193b0798c0fc4163a5cc2e00704985668de8acbd5eea84",
+          "removed_lines_net": 6
+        }
+      ],
+      "files": [
+        {
+          "path": "console/ai_image.py",
+          "bytes": 3735,
+          "sha256": "9b194fd0edd6933f73f850d34ce9c7eacf44a89f4dc0fa5e094b8133ceae15ce",
+          "reason": "Retired image processing module: no production import/read or worker_bundle inclusion; original photo forwarding superseded it."
+        },
+        {
+          "path": "console/ai_fast_image.py",
+          "bytes": 2645,
+          "sha256": "32344373cef6da45a82a5e1809956d36550e3450c76a0f6c7f57a244d60b7364",
+          "reason": "Retired image processing module: no production import/read or worker_bundle inclusion; original photo forwarding superseded it."
+        },
+        {
+          "path": "console/verification/gamepad-repair-ui151.log",
+          "bytes": 133,
+          "sha256": "72d7539bf553c19352361a88a00d88bb6aaa05c85ebafeb27f99de35d5f1e1a0",
+          "reason": "Byte-identical redundant historical evidence; retain the newer canonical copy.",
+          "identical_retained_copy": "console/verification/frontend-gamepad153.log"
+        },
+        {
+          "path": "console/verification/frontend-gamepad152.log",
+          "bytes": 133,
+          "sha256": "72d7539bf553c19352361a88a00d88bb6aaa05c85ebafeb27f99de35d5f1e1a0",
+          "reason": "Byte-identical redundant historical evidence; retain the newer canonical copy.",
+          "identical_retained_copy": "console/verification/frontend-gamepad153.log"
+        },
+        {
+          "path": "console/verification/ai-ui37/frontend.log",
+          "bytes": 1703,
+          "sha256": "2f674998403617eec6a7b9358f9c6b0ecaba7affa0a9b201a1e1680113d9efdf",
+          "reason": "Byte-identical redundant historical evidence; retain the newer canonical copy.",
+          "identical_retained_copy": "console/verification/ai-ui39/frontend.log"
+        },
+        {
+          "path": "console/verification/ai-ui38/frontend.log",
+          "bytes": 1703,
+          "sha256": "2f674998403617eec6a7b9358f9c6b0ecaba7affa0a9b201a1e1680113d9efdf",
+          "reason": "Byte-identical redundant historical evidence; retain the newer canonical copy.",
+          "identical_retained_copy": "console/verification/ai-ui39/frontend.log"
+        },
+        {
+          "path": "console/verification/ui40/native-source/padd/src/mouth_pause.rs",
+          "bytes": 7876,
+          "sha256": "4b3f940a0db5e5e34282a167eb9c59f8c198e4cab9a56c3b6ca6f1b8b72a6e24",
+          "reason": "Byte-identical redundant historical evidence; retain the newer canonical copy.",
+          "identical_retained_copy": "console/verification/ui41/native-source/padd/src/mouth_pause.rs"
+        },
+        {
+          "path": "console/verification/v228/native-source.patch",
+          "bytes": 21989,
+          "sha256": "f7f84d76a64bd23bd5a9e27e917dfb39ba495b9f56d6880c7c23d1d64eb70a7b",
+          "reason": "Byte-identical redundant historical evidence; retain the newer canonical copy.",
+          "identical_retained_copy": "console/verification/v229/native-source.patch"
+        },
+        {
+          "path": "console/verification/v228/toolchain-versions.txt",
+          "bytes": 312,
+          "sha256": "8eaa5062df3f78a1a7c906d355bc202a4fc5a97f2eab6f890fa960fff8136b86",
+          "reason": "Byte-identical redundant historical evidence; retain the newer canonical copy.",
+          "identical_retained_copy": "console/verification/v229/toolchain-versions.txt"
+        },
+        {
+          "path": "console/verification/v228/padd-elf.txt",
+          "bytes": 8802,
+          "sha256": "fa19d94ff259d03712373d8e2528b13de4165e0658915eca20efa0b579885417",
+          "reason": "Byte-identical redundant historical evidence; retain the newer canonical copy.",
+          "identical_retained_copy": "console/verification/v229/padd-elf.txt"
+        },
+        {
+          "path": "console/verification/v228/padd-host-tests.log",
+          "bytes": 8523,
+          "sha256": "d380713c6b31662b2b6001efdabe93701cad34dd34c32cba7394543eb6a4cef2",
+          "reason": "Byte-identical redundant historical evidence; retain the newer canonical copy.",
+          "identical_retained_copy": "console/verification/v229/padd-host-tests.log"
+        },
+        {
+          "path": "console/verification/v228/padd-arm-release.log",
+          "bytes": 3272,
+          "sha256": "402d99bd0e51a72b991140cae9c78f097de50cc721a18248b62ac4e015d94a41",
+          "reason": "Byte-identical redundant historical evidence; retain the newer canonical copy.",
+          "identical_retained_copy": "console/verification/v229/padd-arm-release.log"
+        },
+        {
+          "path": "console/verification/v228/native-source/padd/src/main.rs",
+          "bytes": 116538,
+          "sha256": "0b134b619c4737fb98ccf5e1989612fc6380c6b278b769363996399364785c80",
+          "reason": "Byte-identical redundant historical evidence; retain the newer canonical copy.",
+          "identical_retained_copy": "console/verification/v229/native-source/padd/src/main.rs"
+        },
+        {
+          "path": "console/verification/v228/native-source/padd/src/recorder.rs",
+          "bytes": 80885,
+          "sha256": "d6c574faefa2879a702364f2d29c460a4330b571001f81503300638da8bd94d1",
+          "reason": "Byte-identical redundant historical evidence; retain the newer canonical copy.",
+          "identical_retained_copy": "console/verification/v229/native-source/padd/src/recorder.rs"
+        },
+        {
+          "path": "console/V169-UPLOAD-FIX.zh-CN.md",
+          "bytes": 2036,
+          "sha256": "855079a681d4839ef54baa18d0b5ed3b02e0583af1fc2c7d1a27d6facaaffeb6",
+          "reason": "Obsolete V169 upload release note, not read or linked by the current console/installer."
+        },
+        {
+          "path": "firmware/V230-CHANGES.zh-CN.md",
+          "bytes": 970,
+          "sha256": "8de46d7ea939b7120adc92c196b99ba034945aa71f405254936cd2fc84b36b94",
+          "reason": "Superseded release note, absent from all executable and installation control paths; historical release records remain in BUILD.json."
+        },
+        {
+          "path": "firmware/V231-CHANGES.zh-CN.md",
+          "bytes": 2430,
+          "sha256": "02860dda322bcc30cda3a51712327287169d2bc9062f6e9492a08e9330237955",
+          "reason": "Superseded release note, absent from all executable and installation control paths; historical release records remain in BUILD.json."
+        },
+        {
+          "path": "firmware/V232-CHANGES.zh-CN.md",
+          "bytes": 2230,
+          "sha256": "dfd2e8e09a3f75362d892df1859a4659d6766b59fd99ac03e204798fcc50e8cc",
+          "reason": "Superseded release note, absent from all executable and installation control paths; historical release records remain in BUILD.json."
+        },
+        {
+          "path": "firmware/V233-CHANGES.zh-CN.md",
+          "bytes": 1404,
+          "sha256": "52b86eedb4c05fba998228749520ad079f167ca79af5661c7c19ec11de4db89d",
+          "reason": "Superseded release note, absent from all executable and installation control paths; historical release records remain in BUILD.json."
+        },
+        {
+          "path": "firmware/V236-CHANGES.zh-CN.md",
+          "bytes": 1495,
+          "sha256": "010197678409556176d838bbbd74c375b03950993cc011dc8026362550662f43",
+          "reason": "Superseded release note, absent from all executable and installation control paths; historical release records remain in BUILD.json."
+        },
+        {
+          "path": "firmware/V237-CHANGES.zh-CN.md",
+          "bytes": 532,
+          "sha256": "43a99dd761897a05076a36de2402bb99b5f66a5c11ddd3e218668cdbd80bf896",
+          "reason": "Superseded release note, absent from all executable and installation control paths; historical release records remain in BUILD.json."
+        },
+        {
+          "path": "firmware/V238-CHANGES.zh-CN.md",
+          "bytes": 1382,
+          "sha256": "c519cc0413034f04d7873cb16bf7ce7627b642c12207b9ed6ff37bc8a8270359",
+          "reason": "Superseded release note, absent from all executable and installation control paths; historical release records remain in BUILD.json."
+        },
+        {
+          "path": "firmware/V239-CHANGES.zh-CN.md",
+          "bytes": 1530,
+          "sha256": "f953add92b577f6f6605d1bac98a68a97a83389b035e303699ba8f51eecf1da5",
+          "reason": "Superseded release note, absent from all executable and installation control paths; historical release records remain in BUILD.json."
+        }
+      ],
+      "preserved": [
+        "All ONNX weights, model metadata/export archives, robot settings, native programs and libraries",
+        "All active UI templates/styles and functions, except the unused pose alias",
+        "Current AI original-photo flow, local agent mode, raw SSH stream, web/physical input and power behavior",
+        "V257 dependency installer, R10 startup module/service, DNS temporary-file repair and artwork",
+        "Per-device deployment copies, current regression tests, licenses and original source notices"
+      ]
+    },
+    "release_changes": [
+      "Delete audited unused code paths/imports and obsolete files; retain one canonical copy of byte-identical historical evidence.",
+      "Keep surviving production function/class bodies unchanged; retain all models, native instructions, UI layout/styles and current behaviors.",
+      "Update package/deployment identity to V258 / control.100 and refresh hashes/inventories for the deletion-only cleanup."
+    ],
+    "deployment_identity": {
+      "old": "1fa8438-feetech-ft6-control.99",
+      "new": "1fa843-feetech-ft6-control.100",
+      "before_sha256": "558b903559219d7e6a58086d3a92ed19ed95ef8d08711efbae8d1f7c824c747d",
+      "after_sha256": "d414c227e8269cf4c0ff2eb0a9dac27eba7be302295f33029e88e405ec77e534",
+      "stamp_offset": 621647,
+      "stamp_length": 30,
+      "changed_byte_count": 23,
+      "changed_byte_offsets": [
+        621653,
+        621654,
+        621655,
+        621657,
+        621658,
+        621659,
+        621660,
+        621661,
+        621662,
+        621663,
+        621664,
+        621665,
+        621666,
+        621667,
+        621668,
+        621669,
+        621670,
+        621671,
+        621672,
+        621673,
+        621674,
+        621675,
+        621676
+      ],
+      "same_length": true,
+      "native_instructions_changed": false,
+      "all_bytes_outside_identity_unchanged": true,
+      "not_recompiled": true,
+      "upstream_commit_unchanged": "1fa84386f07884e27866411bc1ba166977bced95",
+      "commit_abbreviation_shortened_only_to_fit_three_digit_release": true
+    }
+  },
+  "historical_v259_records": {
+    "current_release": {
+      "console_version": "1.0.259",
+      "firmware_build": "1fa843-feetech-ft6-control.101",
+      "firmware_package_version": "1.0.259",
+      "hotspot_revision": "R10-boot-only",
+      "hardware_verified": false,
+      "scope": [
+        "Remove seven unreferenced export-data.zip model backups, including the nested checkpoint.pt.",
+        "Preserve all twelve active ONNX weights and every surviving model/configuration/program byte, except release identity metadata.",
+        "Refresh the complete V259 / control.101 release identities, archive checksums and installation inventory."
+      ]
+    },
+    "cleanup": {
+      "scope": "Remove only seven unused model export-data.zip backups from the release bundle.",
+      "removed": [
+        {
+          "path": "models/1c94934c6421ec72ed48079cea749668/export-data.zip",
+          "bytes": 18654,
+          "sha256": "7aea772ea83818e9359ddea4c7f181393c39dfbe4f29326c8a284c2dbc64dc1f",
+          "contents": [
+            {
+              "path": "deployment-contract.json",
+              "bytes": 75689
+            },
+            {
+              "path": "manifest.json",
+              "bytes": 414
+            },
+            {
+              "path": "training-request.json",
+              "bytes": 12274
+            },
+            {
+              "path": "upstream-params/env.yaml",
+              "bytes": 58817
+            },
+            {
+              "path": "upstream-params/agent.yaml",
+              "bytes": 1352
+            }
+          ]
+        },
+        {
+          "path": "models/1cbf8730eadd75a5704332c9f3c10f60/export-data.zip",
+          "bytes": 78914,
+          "sha256": "bebc6d0e186e54b797b3e45f138450810fdbcc53a62d05c897b65821eb184c74",
+          "contents": [
+            {
+              "path": "deployment-contract.json",
+              "bytes": 431990
+            },
+            {
+              "path": "manifest.json",
+              "bytes": 5548
+            },
+            {
+              "path": "training-request.json",
+              "bytes": 261678
+            },
+            {
+              "path": "upstream-params/env.yaml",
+              "bytes": 75657
+            },
+            {
+              "path": "upstream-params/agent.yaml",
+              "bytes": 2228
+            },
+            {
+              "path": "training-config.json",
+              "bytes": 228584
+            },
+            {
+              "path": "deployment-profile.toml",
+              "bytes": 389
+            },
+            {
+              "path": "使用说明.md",
+              "bytes": 4013
+            }
+          ]
+        },
+        {
+          "path": "models/59e15d7b04d0c40e9b11b8a70bdecae6/export-data.zip",
+          "bytes": 800167,
+          "sha256": "545ad9d3b3f848a54eb50589266255333b5f61b5dde896da2f53ff7b68311cea",
+          "contents": [
+            {
+              "path": "policy.onnx",
+              "bytes": 795451
+            },
+            {
+              "path": "deployment-contract.json",
+              "bytes": 278563
+            },
+            {
+              "path": "training-request.json",
+              "bytes": 171103
+            },
+            {
+              "path": "manifest.json",
+              "bytes": 3879
+            },
+            {
+              "path": "deployment-profile.toml",
+              "bytes": 397
+            },
+            {
+              "path": "使用说明.md",
+              "bytes": 2848
+            },
+            {
+              "path": "training-config.json",
+              "bytes": 142560
+            },
+            {
+              "path": "upstream-params/agent.yaml",
+              "bytes": 1514
+            },
+            {
+              "path": "upstream-params/env.yaml",
+              "bytes": 51159
+            }
+          ]
+        },
+        {
+          "path": "models/67ad09d82f4865d222a7ae06f250cf9f/export-data.zip",
+          "bytes": 5260460,
+          "sha256": "53f4f9d208500178b1a0e7784cd3dd9a3a5971edba25ffdb0a0576a56d6a645c",
+          "contents": [
+            {
+              "path": "policy.onnx",
+              "bytes": 795427
+            },
+            {
+              "path": "checkpoint.pt",
+              "bytes": 4868405
+            },
+            {
+              "path": "deployment-contract.json",
+              "bytes": 425308
+            },
+            {
+              "path": "training-request.json",
+              "bytes": 177837
+            },
+            {
+              "path": "manifest.json",
+              "bytes": 4666
+            },
+            {
+              "path": "deployment-profile.toml",
+              "bytes": 817
+            },
+            {
+              "path": "使用说明.md",
+              "bytes": 3534
+            },
+            {
+              "path": "training-config.json",
+              "bytes": 149515
+            },
+            {
+              "path": "upstream-params/agent.yaml",
+              "bytes": 1349
+            },
+            {
+              "path": "upstream-params/env.yaml",
+              "bytes": 51962
+            }
+          ]
+        },
+        {
+          "path": "models/9203bb8f5df15cffaa29f5315a722835/export-data.zip",
+          "bytes": 80580,
+          "sha256": "96d07298084d138e91f15cdfec5ccfe3456095d3e05e157880e40699b0785308",
+          "contents": [
+            {
+              "path": "deployment-contract.json",
+              "bytes": 439144
+            },
+            {
+              "path": "manifest.json",
+              "bytes": 6502
+            },
+            {
+              "path": "training-request.json",
+              "bytes": 186233
+            },
+            {
+              "path": "upstream-params/env.yaml",
+              "bytes": 55552
+            },
+            {
+              "path": "upstream-params/agent.yaml",
+              "bytes": 1358
+            },
+            {
+              "path": "training-config.json",
+              "bytes": 157435
+            },
+            {
+              "path": "deployment-profile.toml",
+              "bytes": 1145
+            },
+            {
+              "path": "使用说明.md",
+              "bytes": 4481
+            }
+          ]
+        },
+        {
+          "path": "models/95d40b584e8c10c9d52dc63cae1c6c97/export-data.zip",
+          "bytes": 818075,
+          "sha256": "c698fd05da8ab8e66f8ef81db9bd3bbb8006b388bbd8887aea2cab6bf7e74b3b",
+          "contents": [
+            {
+              "path": "policy.onnx",
+              "bytes": 795410
+            },
+            {
+              "path": "deployment-contract.json",
+              "bytes": 454847
+            },
+            {
+              "path": "training-request.json",
+              "bytes": 189858
+            },
+            {
+              "path": "manifest.json",
+              "bytes": 5908
+            },
+            {
+              "path": "deployment-profile.toml",
+              "bytes": 684
+            },
+            {
+              "path": "使用说明.md",
+              "bytes": 3794
+            },
+            {
+              "path": "training-config.json",
+              "bytes": 160210
+            },
+            {
+              "path": "upstream-params/agent.yaml",
+              "bytes": 1361
+            },
+            {
+              "path": "upstream-params/env.yaml",
+              "bytes": 58465
+            }
+          ]
+        },
+        {
+          "path": "models/b14e3a8b56ddbb8d2d831e727774a168/export-data.zip",
+          "bytes": 800341,
+          "sha256": "7514131033915715eed2224c4d4cbe415ed3842718aa1c030995ada0d6813bd0",
+          "contents": [
+            {
+              "path": "policy.onnx",
+              "bytes": 795476
+            },
+            {
+              "path": "deployment-contract.json",
+              "bytes": 316435
+            },
+            {
+              "path": "training-request.json",
+              "bytes": 194293
+            },
+            {
+              "path": "manifest.json",
+              "bytes": 5556
+            },
+            {
+              "path": "deployment-profile.toml",
+              "bytes": 426
+            },
+            {
+              "path": "使用说明.md",
+              "bytes": 4022
+            },
+            {
+              "path": "training-config.json",
+              "bytes": 163856
+            },
+            {
+              "path": "upstream-params/agent.yaml",
+              "bytes": 1345
+            },
+            {
+              "path": "upstream-params/env.yaml",
+              "bytes": 57627
+            }
+          ]
+        }
+      ],
+      "removed_archive_bytes": 7857191,
+      "removed_archives_read_by_current_runtime": false,
+      "active_onnx_models_preserved": 12,
+      "all_surviving_model_files_byte_identical": true,
+      "installer_user_model_preservation_policy_unchanged": true,
+      "device_files_deleted_by_this_packaging_operation": false
+    },
+    "release_changes": [
+      "Remove seven unreferenced export-data.zip model backups, including the nested checkpoint.pt.",
+      "Preserve all twelve active ONNX weights and every surviving model/configuration/program byte, except release identity metadata.",
+      "Refresh the complete V259 / control.101 release identities, archive checksums and installation inventory."
+    ],
+    "deployment_identity": {
+      "old": "1fa843-feetech-ft6-control.100",
+      "new": "1fa843-feetech-ft6-control.101",
+      "before_sha256": "d414c227e8269cf4c0ff2eb0a9dac27eba7be302295f33029e88e405ec77e534",
+      "after_sha256": "27287241b5d830326ed83a4f79eb7188e767cc21541e24818f345c2e15fa0086",
+      "changed_byte_count": 1,
+      "changed_byte_offsets": [
+        621676
+      ],
+      "same_length": true,
+      "native_instructions_changed": false,
+      "not_recompiled": true
+    }
+  },
+  "feature_retirement": {
+    "skill": "flamingo",
+    "model_id": "95d40b584e8c10c9d52dc63cae1c6c97",
+    "removed_files": {
+      "models/95d40b584e8c10c9d52dc63cae1c6c97/deployment-contract.json": {
+        "bytes": 455693,
+        "sha256": "3daf57e70187bd3b6db96329c7c16a059b088f7232c2bb82fb21913dc4ab2553"
+      },
+      "models/95d40b584e8c10c9d52dc63cae1c6c97/deployment-profile.toml": {
+        "bytes": 684,
+        "sha256": "0bb1d123a452f23af02b5db926329d1460f21d885f4aebca4367d93c2abd9f3c"
+      },
+      "models/95d40b584e8c10c9d52dc63cae1c6c97/deployment-runtime.json": {
+        "bytes": 471,
+        "sha256": "031b4d16b928b9311ccf6e55f9d74e9572a06a9b9fe1d409caf048ea424e01cb"
+      },
+      "models/95d40b584e8c10c9d52dc63cae1c6c97/manifest.json": {
+        "bytes": 6846,
+        "sha256": "40f4d78c8d1e15ba7a5c8176a8d85433d1354e9bcfea36eb9e209756e623a9e2"
+      },
+      "models/95d40b584e8c10c9d52dc63cae1c6c97/model-info.json": {
+        "bytes": 1073,
+        "sha256": "25a002cbfe2e5442bb9efea3b7fa38237586d00ede9407e98fa9acf1ddc04531"
+      },
+      "models/95d40b584e8c10c9d52dc63cae1c6c97/policy.onnx": {
+        "bytes": 796353,
+        "sha256": "95d40b584e8c10c9d52dc63cae1c6c9734f8a65297e432bbf99251c5b5ab3c58"
+      },
+      "models/95d40b584e8c10c9d52dc63cae1c6c97/training-config.json": {
+        "bytes": 160210,
+        "sha256": "1619bb1ed83308eae93f58b0814652d40af6a8b32f8418fa345df81c348ab71a"
+      },
+      "models/95d40b584e8c10c9d52dc63cae1c6c97/training-request.json": {
+        "bytes": 189858,
+        "sha256": "7aa86918ebdf98bc7badc307baf71facc20e16de9c92e7c677b4876019b8636e"
+      },
+      "models/95d40b584e8c10c9d52dc63cae1c6c97/upstream-params/agent.yaml": {
+        "bytes": 1361,
+        "sha256": "d8a480cf85fa1b41b4640109c5654616115d2df94e7d60d1cd112288349594f3"
+      },
+      "models/95d40b584e8c10c9d52dc63cae1c6c97/upstream-params/env.yaml": {
+        "bytes": 58465,
+        "sha256": "adf8da309ab366583036dc6c1f8644312c4faa9c4b61cacbac7fd3dd85e6f122"
+      },
+      "models/95d40b584e8c10c9d52dc63cae1c6c97/使用说明.md": {
+        "bytes": 4900,
+        "sha256": "3947f1a508e27999c16b733370d9e31540dfe0f1523a89051fd005e4ad481f70"
+      }
+    },
+    "removed_bytes": 1675914,
+    "upgrade_removes_saved_binding": true,
+    "upgrade_deletes_known_retired_model": true,
+    "ai_excludes_older_daemon_skill": true,
+    "other_onnx_preserved": 11,
+    "native_logic_recompiled": false,
+    "physical_pad_short_up": "No installed named skill remains to execute; existing long-press mode switching is preserved."
+  }
+}

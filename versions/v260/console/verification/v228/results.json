@@ -1,0 +1,170 @@
+{
+  "release": "Microduck-Console-Studio-V228",
+  "created_at_utc": "2026-11-02T14:11:28.288976+00:00",
+  "console_version": "1.0.228",
+  "service_build": "1fa8438-feetech-ft6-control.76",
+  "source_base": "UI45 package; byte-exact UI42 PADD sources reconstructed",
+  "source_sha256": {
+    "padd/src/main.rs": "0b134b619c4737fb98ccf5e1989612fc6380c6b278b769363996399364785c80",
+    "padd/src/recorder.rs": "d6c574faefa2879a702364f2d29c460a4330b571001f81503300638da8bd94d1",
+    "padd/Cargo.toml": "52a33af37805be5c8539b20e901ce3051046fa10a20137ebe35ad02dbf846613",
+    "Cargo.lock": "fa1668b2e909f80bb4fc6db66a634742f6b42cfe79df6b51c6d5d90db36a08cf"
+  },
+  "unchanged_lease_modules_sha256": {
+    "input_pause.rs": "7bb777863856dd5d710881d2ca1ad0adee841ff1944f906cd5603c8f0a97697a",
+    "mouth_pause.rs": "4b3f940a0db5e5e34282a167eb9c59f8c198e4cab9a56c3b6ca6f1b8b72a6e24",
+    "short_press.rs": "347f19446bc956506df70f8161b1bfe944d6288d7e316112e5b060310daa5b3f"
+  },
+  "binary": {
+    "bytes": 3788992,
+    "machine": "AArch64",
+    "sha256": "fd9fb6b99083d9f1eeee5414910dc861d8f88c805f182e6e4a57d9c7b6834bbd",
+    "needed": [
+      "libudev.so.1",
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ],
+    "glibc_versions": [
+      "2.17",
+      "2.18",
+      "2.25",
+      "2.27",
+      "2.28",
+      "2.30"
+    ],
+    "revision": "UI45-Rec2",
+    "package_release": "Microduck-Console-Studio-V228",
+    "reused_without_recompilation": true
+  },
+  "test_results": {
+    "native_rebuilt": false,
+    "native_binary_reused_from_validated_gesture_build": true,
+    "padd_host_passed": 99,
+    "padd_host_failed": 0,
+    "recorder_status_python_passed": 8,
+    "frontend_suites_passed": 2,
+    "aarch64_build_passed": true,
+    "hardware_tested": false,
+    "native_aarch64_execution_tested": false,
+    "browser_render_tested": false
+  },
+  "firmware_changed_files": [
+    "BUILD.json",
+    "ELF-CHECK.json",
+    "README.zh-CN.md",
+    "SHA256SUMS",
+    "padd",
+    "release_identity.py",
+    "robotd"
+  ],
+  "firmware_other_files_byte_identical": 196,
+  "deployment_identity": {
+    "task": "V228 robotd deployment version identity update only",
+    "created_at_utc": "2026-11-02T14:09:07.469915+00:00",
+    "binary": "/workspace/scratch/0587ce872ec5/v228_firmware_stage/Microduck-Robotd-FT6-R17/robotd",
+    "bytes": 5861176,
+    "architecture": "AArch64 ELF64 little endian",
+    "before_sha256": "08d22eb167167dec24779074ec49df3ea34bd1c592a834f519731b53d7f2b986",
+    "after_sha256": "a44d4309f5e0bdbb974a50bf1cf410f19478797c2dd149e87cf38d62bee5992c",
+    "old": "1fa8438-feetech-ft6-control.73",
+    "new": "1fa8438-feetech-ft6-control.76",
+    "stamp_byte_offset": 621647,
+    "stamp_length": 30,
+    "occurrences_before": 1,
+    "occurrences_after": 1,
+    "changed_byte_count": 1,
+    "changed_bytes": [
+      {
+        "offset": 621676,
+        "old_ascii": "3",
+        "new_ascii": "6",
+        "old_hex": "33",
+        "new_hex": "36"
+      }
+    ],
+    "same_length": true,
+    "all_bytes_outside_identity_unchanged": true,
+    "core_bytes_unchanged": true,
+    "not_recompiled": true,
+    "native_instructions_changed": false,
+    "containing_sections": [
+      {
+        "section": ".rodata",
+        "flags": 50,
+        "offset": 545600,
+        "size": 281096
+      }
+    ],
+    "executable_sections_byte_identical": [
+      {
+        "section": ".text",
+        "offset": 1414240,
+        "size": 4268584,
+        "sha256": "807cee35810e2a8d293f3a7a0fa2dfa8f1e57558be14eac3ac508c26a477a331"
+      },
+      {
+        "section": ".plt",
+        "offset": 5682832,
+        "size": 2640,
+        "sha256": "9af96039741462c1c39818ebb39bfe4296861fba6ee222bb389e70a4f0a742ff"
+      }
+    ],
+    "elf_structure_and_dynamic_dependencies_unchanged": true,
+    "readelf_command": [
+      "readelf",
+      "-h",
+      "-l",
+      "-S",
+      "-d"
+    ],
+    "readelf_before_after_sha256": "d5a3a182c100194c14cecbeda20913fd1a7d5bcf30aa44d3c162505346a64e6c",
+    "needed_libraries": [
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ],
+    "purpose": "The existing deployment BUILD constant is returned by deployment-info and robot.busStatus. Only its final ASCII digit was updated; no motion or control code was rebuilt or changed.",
+    "limitations": [
+      "No AArch64 execution or physical robot test performed.",
+      "The original ELF build ID, if present, is retained because this is a disclosed deployment identity stamp rather than a recompile."
+    ],
+    "robotctl_read_only_check": {
+      "sha256": "a5034efaf6d26aaecc4a1b477c947abb7cf59d157288b9ad661706f00a700da7",
+      "deployment_build_constant_occurrences": 0,
+      "modified": false,
+      "source_findings": "robotctl version uses the existing IPC daemon version/revision report. No matching ft6 control deployment constant or equality gate was found; package compatibility checks and displayed deployment build come from robotd deployment-info/robot.busStatus."
+    }
+  },
+  "source_changes": [
+    "padd/src/recorder.rs",
+    "padd/src/main.rs replay input filter only"
+  ],
+  "mapping": {
+    "button": "physical Logo/Home/Guide (Mode), not Select/View or Start",
+    "idle_double_click": "start recording",
+    "idle_single_click": "play last once after double-click window",
+    "recording_single_click": "stop and save; atomically replace last only on success",
+    "playing_single_click": "cancel playback",
+    "click_window_ms": 350,
+    "short_press_max_ms": 600,
+    "tail_suppression_ms_after_save_or_cancel": 350,
+    "save_refusal_and_record_start_do_not_suppress_stop": true,
+    "single_file": "/var/lib/padd/last.json",
+    "file_format_unchanged": true,
+    "max_seconds": 120,
+    "native_scope": [
+      "padd/src/recorder.rs",
+      "padd/src/main.rs replay input filter only"
+    ],
+    "models_calibration_motion_settings_unchanged": true,
+    "ai_and_mouth_lease_modules_unchanged": true,
+    "evidence": "verification/v228/results.json"
+  },
+  "limitations": [
+    "Not run on a physical robot.",
+    "Replay sends recorded intents; physical paths may differ."
+  ]
+}

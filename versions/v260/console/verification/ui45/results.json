@@ -1,0 +1,29 @@
+{
+  "release": "Microduck-UI45",
+  "console_version": "1.0.225",
+  "service_build": "1fa8438-feetech-ft6-control.74",
+  "python_tests": {
+    "passed": 99,
+    "failed": 0,
+    "new_shutdown_tests": 6,
+    "regression_tests": 93,
+    "log": "python-tests.log"
+  },
+  "frontend_suites": {
+    "passed": 7,
+    "failed": 0,
+    "details": "frontend-results.json"
+  },
+  "python_syntax_files": 126,
+  "official_shutdown_review": "official-shutdown-audit.json",
+  "native_request": "one robot.shutdown {} through real AF_UNIX service_rpc test",
+  "ai_shutdown_access": false,
+  "client_audio_or_movement_added": false,
+  "direct_os_shutdown_fallback": false,
+  "firmware_byte_identical_to_ui44": true,
+  "native_rebuilt": false,
+  "physical_shutdown_tested": false,
+  "actual_hotspot_tested": false,
+  "scope": "scope-check.json",
+  "independent_review": "passed; no blockers"
+}

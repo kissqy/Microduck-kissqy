@@ -1,0 +1,107 @@
+[
+  {
+    "i": 0,
+    "name": "trunk",
+    "pos_mm": 2.682209010451686e-06,
+    "rotation_error": 0.0,
+    "axis_error": 0.0
+  },
+  {
+    "i": 1,
+    "name": "left_hip_yaw",
+    "pos_mm": 1.4408737044783837e-07,
+    "rotation_error": 8.881784197001252e-16,
+    "axis_error": 0.0
+  },
+  {
+    "i": 2,
+    "name": "left_hip_roll",
+    "pos_mm": 2.066109270520552e-07,
+    "rotation_error": 4.440892098500626e-16,
+    "axis_error": 0.0
+  },
+  {
+    "i": 3,
+    "name": "left_hip_pitch",
+    "pos_mm": 4.4229096344118105e-07,
+    "rotation_error": 0.0,
+    "axis_error": 0.0
+  },
+  {
+    "i": 4,
+    "name": "left_knee",
+    "pos_mm": 6.120193456585123e-07,
+    "rotation_error": 8.881784197001252e-16,
+    "axis_error": 0.0
+  },
+  {
+    "i": 5,
+    "name": "left_ankle",
+    "pos_mm": 7.800014241844374e-07,
+    "rotation_error": 0.0,
+    "axis_error": 0.0
+  },
+  {
+    "i": 6,
+    "name": "neck_pitch",
+    "pos_mm": 1.7640264725575028e-06,
+    "rotation_error": 8.881784197001252e-16,
+    "axis_error": 0.0
+  },
+  {
+    "i": 7,
+    "name": "head_pitch",
+    "pos_mm": 7.450580569168253e-07,
+    "rotation_error": 0.0,
+    "axis_error": 0.0
+  },
+  {
+    "i": 8,
+    "name": "head_yaw",
+    "pos_mm": 7.817007070545574e-07,
+    "rotation_error": 8.881784197001252e-16,
+    "axis_error": 0.0
+  },
+  {
+    "i": 9,
+    "name": "head_roll",
+    "pos_mm": 7.349098005440839e-07,
+    "rotation_error": 4.440892098500626e-16,
+    "axis_error": 0.0
+  },
+  {
+    "i": 10,
+    "name": "right_hip_yaw",
+    "pos_mm": 1.4408737044783837e-07,
+    "rotation_error": 8.881784197001252e-16,
+    "axis_error": 0.0
+  },
+  {
+    "i": 11,
+    "name": "right_hip_roll",
+    "pos_mm": 2.066109270520552e-07,
+    "rotation_error": 8.881784197001252e-16,
+    "axis_error": 0.0
+  },
+  {
+    "i": 12,
+    "name": "right_hip_pitch",
+    "pos_mm": 4.4229096344118105e-07,
+    "rotation_error": 0.0,
+    "axis_error": 0.0
+  },
+  {
+    "i": 13,
+    "name": "right_knee",
+    "pos_mm": 6.120193456585123e-07,
+    "rotation_error": 0.0,
+    "axis_error": 0.0
+  },
+  {
+    "i": 14,
+    "name": "right_ankle",
+    "pos_mm": 7.800014241844374e-07,
+    "rotation_error": 8.881784197001252e-16,
+    "axis_error": 0.0
+  }
+]

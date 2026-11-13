@@ -1,0 +1,14 @@
+{
+  "modules": [
+    "verification.test_ai_preferences",
+    "verification.test_ai_v200",
+    "verification.test_ai_log_cursor",
+    "verification.test_ai_observability",
+    "verification.test_ai_session_ui6"
+  ],
+  "passed": 32,
+  "tests_run": 32,
+  "failures": 0,
+  "errors": 0,
+  "successful": true
+}

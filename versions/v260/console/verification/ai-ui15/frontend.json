@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "commands": [
+    "node verification/test_ai_hat.mjs",
+    "node verification/test_ai_camera_ui15.mjs",
+    "node verification/v198/check_startup.mjs"
+  ],
+  "html_unique_ids": 215,
+  "default_persona_matches_backend": true,
+  "default_reply_characters": 20,
+  "changed_js_syntax_passed": true,
+  "new_browser_render_verified": false,
+  "cases": [
+    "AI auto-preview once per session",
+    "manual preview retained",
+    "manual disconnect respected",
+    "generation ownership",
+    "connection failure without retry",
+    "profile preparation gating",
+    "new-frame enhancement state reset",
+    "same-image display label",
+    "ServicePanel constructor and SSH form bindings"
+  ]
+}

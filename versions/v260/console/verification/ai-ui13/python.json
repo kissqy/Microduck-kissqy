@@ -1,0 +1,21 @@
+{
+  "modules": [
+    "verification.test_ai_hat",
+    "verification.test_ai_input_ui11",
+    "verification.test_ai_log_cursor",
+    "verification.test_ai_observability",
+    "verification.test_ai_playback_ui10",
+    "verification.test_ai_preferences",
+    "verification.test_ai_session_ui6",
+    "verification.test_ai_ui7",
+    "verification.test_ai_v200",
+    "verification.test_ai_vision_ui13"
+  ],
+  "run": 74,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": true,
+  "hardware": false,
+  "real_cloud": false
+}

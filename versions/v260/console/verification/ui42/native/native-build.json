@@ -1,0 +1,66 @@
+{
+  "release": "Microduck-UI42",
+  "component": "padd",
+  "status": "built; host tests passed; not run on physical robot",
+  "created_utc": "2026-11-01T04:56:35.497116+00:00",
+  "source_base": "UI41 padd (native_work/ui41_padd_before_ui42), original frozen V186/control57 plus documented UI37/UI40/UI41 padd patches; robotd remains packaged control73 unchanged",
+  "changed_files": [
+    "padd/src/main.rs",
+    "padd/src/recorder.rs"
+  ],
+  "source_sha256": {
+    "padd/src/main.rs": "b7d65654f7ba3997063e74c170168b47622e1565b72c82f2e33dbe3f8921274e",
+    "padd/src/recorder.rs": "bb48981190a06699479dc8ed96e91bea0feadcac1f0695e40c3323bcfdb35669",
+    "padd/Cargo.toml": "52a33af37805be5c8539b20e901ce3051046fa10a20137ebe35ad02dbf846613",
+    "Cargo.lock": "fa1668b2e909f80bb4fc6db66a634742f6b42cfe79df6b51c6d5d90db36a08cf"
+  },
+  "unchanged_ui41_modules_sha256": {
+    "input_pause.rs": "7bb777863856dd5d710881d2ca1ad0adee841ff1944f906cd5603c8f0a97697a",
+    "mouth_pause.rs": "4b3f940a0db5e5e34282a167eb9c59f8c198e4cab9a56c3b6ca6f1b8b72a6e24",
+    "short_press.rs": "347f19446bc956506df70f8161b1bfe944d6288d7e316112e5b060310daa5b3f"
+  },
+  "target": "aarch64-unknown-linux-gnu.2.31",
+  "binary_path": "/workspace/scratch/0587ce872ec5/native_work/target-arm-ui42/aarch64-unknown-linux-gnu/release/padd",
+  "binary_sha256": "177f0e1b69eeb0435145a9eced68862836f04694175ee5725bd7c9aac9349a4c",
+  "binary_size": 3788440,
+  "host_tests": {
+    "command": "cargo test --locked -p padd -j4 -- --test-threads=1",
+    "passed": 89,
+    "failed": 0,
+    "log": "padd-tests.log"
+  },
+  "arm_build": {
+    "command": "cargo zigbuild --locked --release -p padd -j4 --target aarch64-unknown-linux-gnu.2.31",
+    "passed": true,
+    "log": "padd-arm-build.log",
+    "warning": "linker ignores deprecated optimization setting 1"
+  },
+  "elf": {
+    "machine": "AArch64",
+    "class": "ELF64",
+    "type": "PIE",
+    "interpreter": "/lib/ld-linux-aarch64.so.1",
+    "max_glibc_required": "2.30",
+    "needed": [
+      "libudev.so.1",
+      "libm.so.6",
+      "libpthread.so.0",
+      "libc.so.6",
+      "libdl.so.2"
+    ]
+  },
+  "patch_replay": "native-source.patch applied to UI41 backup; all changed files byte-identical; see patch-replay.json",
+  "checks": {
+    "new_module_rustfmt": true,
+    "main_formatting": "restored unchanged UI41 lexical-token spans; no unrelated module formatting retained"
+  },
+  "test_boundary": "Real AF_UNIX socket-pair end-to-end test covers monitor subscribe/response/state interleaving. UnixListener::bind is EPERM in this environment; no bind-based or hardware result claimed.",
+  "limitations": [
+    "Intent timing replay, not physical trajectory or arrival verification.",
+    "Identity compares mode, loaded model paths and skill catalog; same-path model file hash is not verified.",
+    "Finite native models have no general cancel API: later frames stop and manual safety follows the existing paths.",
+    "Accepted skill requests use the existing synchronous intent socket, bounded by its existing timeout; new events wait for the next drain.",
+    "No automatic torque enable, HOME, recovery, or mode switch.",
+    "No robotd, model, mediad, or daemon protocol changes."
+  ]
+}

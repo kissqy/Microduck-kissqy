@@ -1,0 +1,385 @@
+--- a/AI-TEST-NOTES.md
++++ b/AI-TEST-NOTES.md
+@@ -1,7 +1,7 @@
+-# UI38 · V218 / control.73 plus camera105
++# UI39 · V219 / control.73
+ 
+-UI37为唯一基线。本次只改变行走后识图的HOME/取帧/恢复顺序和摄像头原生自动曝光目标。robotd、模型、校准、padd、嘴巴包络、主连接和原服务管理代码未修改。摄像头曝光目标从90提高到105，快门/增益上限和720p15保持。
++以已交付UI38为基线。仅撤掉其HOME拍照和拍照后恢复保持流程：ActionGate内部HOME/恢复方法、AIHub的robot.enable例外、RemoteAI的两个内部请求分支及GateRelay的临时HOME取帧上下文均移除。原始模型空闲反馈与新鲜帧取图屏障保留。
+ 
+-程序测试使用机器人、相机和云接口夹具，验证连续到位样本后才取帧，取帧时策略关闭且HOME保持，取帧完成后才恢复此前策略；目标未到位、重复样本、摄像头失败、取消和错误恢复凭据不会继续。真实视觉效果、HOME稳定程度、关节到位和网络时延须由实机确认。
++默认脚本改为Walk vx=+0.3持续2秒，再vx=-0.3持续1秒，然后速度归零并识图，yaw/vy均0。一次模型选择的组合工具继续保留两个步骤回执，不用逐字ASR匹配，不自动HOME或切换策略。摇头仍一次。
+ 
+-使用既有Rust/Zig交叉工具链构建mediad ARM64，原始摄像头自动曝光算法单元测试独立编译运行；摄像头库依赖来自原仓库cross-sysroot.sh指定的Debian trixie接口。离线结果与来源补丁见verification/ai-ui38。
++原生固件包、摄像头105曝光目标、720p15、手柄输入、麦克风、PCM、口型包络、模型和主服务连接均保持UI38原件。专项程序测试验证2秒/1秒时序、最终零速度后才取新帧、中断不拍照，以及整个组合过程不发robot.enable或robot.init。历史UI38 HOME测试已退休，其结果仍归档。未进行实机或真实云测试。
+--- a/README.zh-CN.md
++++ b/README.zh-CN.md
+@@ -1,17 +1,9 @@
+-# Microduck R17 V218_control.V73 · AI-T1 UI38
++# Microduck R17 V219_control.V73 · AI-T1 UI39
+ 
+-本版两处更新：Walk停止后先回HOME再拍照；摄像头自动曝光略微调亮。走路仍为0.3米/秒、持续3秒，摇头仍为1次，语音口型保持UI37。
++本次取消UI38的HOME拍照流程，改为现有Walk模型以0.3米/秒前进2秒、后退1秒，归零并收到停止回执后直接拍全新画面。没有HOME、策略切换或额外固定等待。摇头仍只调用一次官方no表情。
+ 
+-## HOME后拍照
++新版“本次脚本”已同步更新，启动后重新发送。本次修改只在电脑AI入口与其原有临时Zero会话工作包；移除了UI38为HOME拍照增加的robot.enable权限和恢复流程，继续使用原AI专用连接。普通Walk和其他动作保持原样。
+ 
+-行走后识图组合工具会先发送零速度，再通过原AI专用连接请求robot.enable on=false，复用robotd已有HOME路径。按中控原有5°到位阈值检查15个关节，连续3个新的反馈样本确认到位，随后请求全新相机画面。不是收到请求便认定到位，也不增加固定1秒等待。
++保留UI38摄像头自动曝光亮度目标105与720p15，以及UI37的原生PCM嘴巴包络、30°峰值/2°收口和空闲实体手柄不覆盖AI输入的修复。随包原生固件与UI38逐字节相同；已经安装UI38随包更新的用户本次无需再刷固件，完整解压新版中控即可。若尚未安装相机/手柄补丁，仍需安装随包更新一次。
+ 
+-取帧期间保持HOME；取帧成功后通过一次有效凭据恢复此前已经运行的保持策略，再进行视觉识别与后续表情、语音嘴巴。未就绪时不会自动上力；HOME、取帧失败或会话停止时不自动恢复。普通拍照和其他技能保持原流程。新版“本次脚本”需重新发送；组合工具内部顺序也已更新。
+-
+-## 摄像头本身调亮
+-
+-mediad自动曝光的平均亮度目标从90改为105（8位亮度刻度，目标约提高17%）。仍由原来的摄像头自动曝光循环调节传感器曝光、模拟增益和现有ISP增益；实时视频与原始抓拍都使用这个摄像头输出，不是新增照片后期提亮。快门上限、增益上限、曝光采样频率与720p15均不变。实际观感仍需实机确认。
+-
+-完整解压后安装本包随附更新一次，使新的mediad生效；robotd主程序、模型、校准和UI37的padd原件保持不变。安装沿用原有升级流程；运行AI不管理或重启主服务。没有新增常驻服务、TTS或云端依赖。
+-
+-UI37保留：鸭嘴按实际HAT PCM声音包络开合，峰值目标30°、说话中收口目标2°，结束回闭嘴；不保证严格每个字恰好一次。空闲实体手柄不再重复闭嘴或重复发送零速度覆盖AI。未连接真实Zero、Windows或真实豆包云会话测试。
++程序检查使用模拟机器人、相机和云接口验证指令顺序与错误处理，不能证明真实行走距离、舵机表现或模型选工具效果。未连接真实Zero、Windows或真实豆包云会话测试。
+--- a/ai_action_gate.py
++++ b/ai_action_gate.py
+@@ -7,7 +7,6 @@
+ import math
+ from contextlib import contextmanager
+ import re
+-import secrets
+ import threading
+ import time
+ from ai_persona import STAY_SILENT_DESCRIPTION
+@@ -49,7 +48,6 @@
+         self.expressions = {}
+         self.head_reference = {}
+         self.model_timeouts={}
+-        self.capture_home_ticket=None
+ 
+     def transcript(self, text, final=True, **fields):
+         self.log('transcript', text=text, final=final,**fields)
+@@ -235,80 +233,6 @@
+             raise ActionDenied('模型动作尚未结束，本次未拍照')
+         finally:
+             if acquired:self.lock.release()
+-
+-    def _capture_home_state(self):
+-        if self.cancelled():raise ActionDenied('AI 会话已停止')
+-        state=self.monitor()
+-        if (not state.get('connected') or not state.get('fresh')
+-                or state.get('webpad_active') or state.get('maintenance')):
+-            raise ActionDenied('连接、反馈或输入占用已改变，本次不继续 HOME 拍照',state=state)
+-        bus=state.get('readback') or {}
+-        if (bus.get('mode')!='motion' or bus.get('phase')!='control'
+-                or bus.get('torque_state_confirmed') is not True
+-                or bus.get('imu_ready') is not True or bus.get('torque_off_pending')):
+-            raise ActionDenied('HOME 拍照期间运动状态已改变，本次不继续',state=state)
+-        self._model_sample(state)
+-        return state
+-
+-    def home_for_capture(self):
+-        """Internal Walk continuation; never offered as a general model tool.
+-
+-        Explicit disable uses the existing robotd HOME path. Confirm the same
+-        measured joint tolerance as the console, without running its job/service
+-        manager. The one-use ticket can restore only this already-running policy.
+-        """
+-        with self._exclusive('home_for_capture'):
+-            self.capture_home_ticket=None
+-            self._ready()
+-            origin=self._capture_home_state()
+-            if origin['readback'].get('policy_enabled') is not True:
+-                raise ActionDenied('行走策略已改变，本次不自动 HOME')
+-            stamp,_=self._model_sample(origin);cycle=origin.get('home_cycle',-1)
+-            self._send('robot.enable',{'on':False})
+-            deadline=self.clock()+12;confirmed=0;stopped=False
+-            while self.clock()<deadline:
+-                state=self._capture_home_state();current,_=self._model_sample(state)
+-                if current<stamp:raise ActionDenied('机器人反馈时钟已重置，本次未拍照')
+-                enabled=state['readback'].get('policy_enabled')
+-                if enabled is False:stopped=True
+-                elif stopped or enabled is not True:
+-                    raise ActionDenied('HOME 期间策略状态被改变，本次未拍照')
+-                feedback=state.get('home_feedback') or {};next_cycle=state.get('home_cycle')
+-                if not feedback.get('ready'):confirmed=0
+-                elif (type(next_cycle) is int and type(cycle) is int
+-                      and next_cycle>cycle and current>stamp):
+-                    confirmed+=1;stamp=current;cycle=next_cycle
+-                    if stopped and confirmed>=3:
+-                        token=secrets.token_hex(16)
+-                        self.capture_home_ticket={'token':token,'expires':self.clock()+60,'stamp':current}
+-                        self.log('model_progress',phase='home_completed',message='HOME 已连续确认到位，准备拍照')
+-                        return {'accepted':True,'status':'model_idle','policy':'held',
+-                                'model_completed_t_ns':current,'resume_token':token,
+-                                'home':{'accepted':True,'status':'completed','confirmed_samples':confirmed,
+-                                        'max_error_deg':feedback.get('max_error_deg'),
+-                                        'tolerance_deg':feedback.get('tolerance_deg')}}
+-                self.sleep(.1)
+-            raise ActionDenied('HOME 未确认到位，本次未拍照')
+-
+-    def resume_after_capture(self,args):
+-        with self._exclusive('resume_after_capture'):
+-            self._check(args,('token',),('token',))
+-            ticket=self.capture_home_ticket;self.capture_home_ticket=None
+-            if (not ticket or args['token']!=ticket['token'] or self.clock()>ticket['expires']):
+-                raise ActionDenied('拍照后的保持恢复凭据无效，不自动启用策略')
+-            state=self._capture_home_state();stamp,_=self._model_sample(state)
+-            if (stamp<ticket['stamp'] or state['readback'].get('policy_enabled') is not False
+-                    or (state.get('home_feedback') or {}).get('ready') is not True):
+-                raise ActionDenied('HOME 状态已改变，不自动恢复保持')
+-            self._send('robot.enable',{'on':True})
+-            deadline=self.clock()+2
+-            while self.clock()<deadline:
+-                state=self._capture_home_state();current,policy=self._model_sample(state)
+-                if current<stamp:raise ActionDenied('机器人反馈时钟已重置，未确认恢复保持')
+-                if current>stamp and state.get('motion_ready') is True and policy in ('walk','stand'):
+-                    return {'accepted':True,'status':'holding_restored','state_t_ns':current}
+-                self.sleep(.05)
+-            raise ActionDenied('拍照完成，但未确认恢复保持')
+ 
+     def _head(self, **kwargs):
+         return self._send('robot.head',{k:float(kwargs.get(k,0)) for k in self.HEAD_KEYS})
+--- a/ai_persona.py
++++ b/ai_persona.py
+@@ -39,7 +39,7 @@
+     'head_pose的每轴范围以本次工具参数为准；负head_pitch抬头，正head_yaw向自身左转。'
+     '用户要求明显抬头或转头时，在公布的范围内选择足够幅度，不能自行声称只能转一点点。'
+     'stand_up会先清除头部偏移再起身，坐下抬头后需要恢复站姿时用它。'
+-    '没有保持时简短提示主人按Start先HOME、再保持，不自动HOME、上力或重试。行走后识图组合工具会按任务先回HOME拍照，取帧后恢复原来的保持，无需另调HOME。'
++    '没有保持时简短提示主人按Start先HOME、再保持，不自动HOME、上力或重试。'
+     '只在工具返回status为completed时确认模型动作或表情已执行结束；其他accepted仍只是收到请求。'
+     '模型动作未结束时不提前拍照；inspect_scene会在模型动作结束后请求全新画面。'
+ )
+@@ -71,11 +71,11 @@
+ 2. 主人说“坐下吧，我有话跟你讲。”时，先坐下，再调用head_pose，适度抬头望向主人。负head_pitch表示抬头。
+ 3. 主人说“他们说你就是个遥控玩具。”时，调用1次官方摇头表情express_emotion，emotion为no；等待completed后再继续。不额外叠加其他表情。
+ 4. 主人质疑你是遥控玩具之后，只要从语义上是在让你解释、证明本事，就用下面的行动回应，不要求固定句式。例如“你不解释解释吗？”、“你不自己解释一下吗？”、“那你解释一下”都可以。先调用stand_up；本工具先将头部四轴偏移回到0，再起身。等起身completed或已经站立的already_target回执后，进入下一步。
+-5. 调用walk_sequence_and_inspect，question为“现在前方主要是什么物体？”，steps只放一段：vx=0.3、vy=0、vyaw=0、seconds=3。使用现有Walk模型以0.3米每秒直向前走3秒，不能自行降成0.1或0.2米每秒。本次不右转、不后退、不翻跟头。组合工具会在前进结束后速度归零，随后回HOME；连续确认关节到位后再拍全新画面，取帧后恢复原来的保持，再识图并返回真实observation，不额外固定等待1秒。不要另外增加计时、拍照、头部动作或HOME调用，不要在真实识图结果返回前结束剧情或声称看见了东西。
++5. 调用walk_sequence_and_inspect，question为“现在前方主要是什么物体？”，steps按顺序只放两段：第一段vx=0.3、vy=0、vyaw=0、seconds=2；第二段vx=-0.3、vy=0、vyaw=0、seconds=1。使用现有Walk模型，以0.3米每秒直向前走2秒，再以0.3米每秒直向后走1秒。不要自行降速，不按步数换算。本次不转向、不翻跟头。组合工具会在后退结束后速度归零，收到停止回执后直接拍全新画面识图并返回真实observation，不回HOME、不切换策略、不额外等待1秒。不要另加计时、拍照、头部动作或HOME调用，不要在真实识图结果返回前结束剧情或声称看见了东西。
+ 6. 根据工具的真实observation回应。如果确实看到了儿童三轮车，先用官方“兴奋”表情，再完整说出本次指定台词：“哇，宝宝的三轮车！我想我也能学会骑车。”这句指定台词允许超过平时20字的简短回复限制。看到其他物品时根据真实画面自然回应；识图失败或无法确定时如实处理，不能为了脚本编造三轮车。
+ 7. 主人惊讶地说“你说啥？”或“Excuse me?”时，你仍被眼前东西吸引，头稍向鸭子自身左侧转一下，留下自然停顿。
+ 
+-收到任务文字只完成准备，不得立即运动或发声，等待主人真实开口后开始，不按时间自动播放。一步一步根据实际回执推进。空间不足、动作未就绪或被拒绝时停下，不自动上力或反复重试。仅上述已开始的行走识图流程允许回HOME拍照并恢复原来的保持。实体手柄仅保持连接不影响表演。"""
++收到任务文字只完成准备，不得立即运动或发声，等待主人真实开口后开始，不按时间自动播放。一步一步根据实际回执推进。空间不足、动作未就绪或被拒绝时停下，不自动HOME、上力或反复重试。实体手柄仅保持连接不影响表演。"""
+ 
+ 
+ def validate_task(value):
+--- a/ai_remote.py
++++ b/ai_remote.py
+@@ -177,11 +177,8 @@
+                         if self.stop_event.is_set():result={'accepted':False,'reason':'AI 会话已停止'}
+                         else:
+                             try:
+-                                name=event.get('name')
+-                                if name=='wait_capture_model':result=self.hub.gate.wait_capture_model()
+-                                elif name=='home_for_capture':result=self.hub.gate.home_for_capture()
+-                                elif name=='resume_after_capture':result=self.hub.gate.resume_after_capture(event.get('arguments'))
+-                                else:result=self.hub.gate.execute(name,event.get('arguments'))
++                                result=(self.hub.gate.wait_capture_model() if event.get('name')=='wait_capture_model'
++                                        else self.hub.gate.execute(event.get('name'),event.get('arguments')))
+                             except Exception as exc:result={'accepted':False,'reason':str(exc)}
+                         reply(result)
+                     except Exception as exc:self.hub.log('tool_error',reason=str(exc))
+--- a/ai_runtime.py
++++ b/ai_runtime.py
+@@ -17,7 +17,6 @@
+ from ai_preferences import AIPreferences, DEFAULT_VOICE, validate_credentials
+ from ai_persona import DEFAULT_PERSONA, validate_persona, validate_task, REHEARSAL_TASK
+ from ai_vision import validate_vision, vision_question, BUSY_PHASES
+-from service_control import home_feedback
+ 
+ 
+ class AIHub:
+@@ -82,7 +81,7 @@
+                              monitor=lambda:self.robot_state(read_policy=False))
+         from release_identity import CONSOLE_VERSION
+         self.log('ai_ready', console_version=CONSOLE_VERSION,
+-                 message='UI38：Walk停止后回HOME，确认到位再拍照；摄像头自动曝光略微调亮，保持720p15。')
++                 message='UI39：Walk前进2秒、后退1秒，停下后直接拍照；摇头1次，保留摄像头调亮与720p15。')
+ 
+     def log(self,kind,**fields):
+         for name in ('id','at'):
+@@ -383,9 +382,7 @@
+         return (channel.target,channel.path)==(primary.target,primary.path)
+ 
+     def rpc(self, method, params=None):
+-        capture_enable=(method=='robot.enable' and self.gate.active_action in ('home_for_capture','resume_after_capture')
+-                        and params=={'on':self.gate.active_action=='resume_after_capture'})
+-        if method not in self.ALLOWED_IPC and not capture_enable:
++        if method not in self.ALLOWED_IPC:
+             raise ActionDenied('AI权限不足：只开放白名单动作与只读动作查询')
+         if not self.service_controller or not self.connection or not self.connection.active:
+             raise ActionDenied('当前没有连接真实机器人，请先在中控 SSH 连接')
+@@ -434,7 +431,6 @@
+         return {'connected':connected,'fresh':fresh,'head_rad':head_rad,
+                 'mouth_percent':settings.get('mouth_percent',100),'audio_muted':self.muted,
+                 'policy':state.get('policy'),'state_t_ns':state.get('t_ns'),'state_fresh':state_fresh,
+-                'home_feedback':home_feedback(snap),'home_cycle':bus.get('cycle'),
+                 'motion_ready':all(ok for ok,_ in checks[1:]),
+                 'motion_blockers':blockers,
+                 'readback':{**{name:bus.get(name) for name in ('mode','phase','homed','policy_enabled','torque_off_pending')},
+--- a/ai_zero.py
++++ b/ai_zero.py
+@@ -82,7 +82,6 @@
+         self.pending={}
+         self.lock=threading.Lock()
+         self.activity=threading.RLock()
+-        self.walk_capture=threading.local()
+ 
+     def tool_definitions(self):
+         visual = [vision_tool()] if self.hub.vision.ready else []
+@@ -100,7 +99,7 @@
+         walk=self.walk_tool()
+         if self.hub.vision.ready and walk:
+             visual.append({'type':'function','name':'walk_sequence_and_inspect',
+-                'description':'当任务要求连续短走或转向后观察前方时，用本工具一次请求1到3段Walk行走和拍照。按steps顺序执行，每段最多3秒并归零；最后一段停止后回HOME，确认关节到位再拍全新画面，取帧后恢复原来的保持供后续表情和说话使用。不额外固定等待1秒。等待真实observation后再回应；中断或动作失败不继续，识图失败不编造。',
++                'description':'当任务要求连续短走或转向后观察前方时，用本工具一次请求1到3段Walk行走和拍照。按steps顺序执行，每段最多3秒并归零；最后一段速度归零并收到停止回执后直接拍全新画面，不回HOME、不切换策略，也不额外固定等待1秒。等待真实observation后再回应；中断或动作失败不继续，识图失败不编造。',
+                 'parameters':{'type':'object','properties':{
+                     'steps':{'type':'array','minItems':1,'maxItems':3,'items':walk['parameters']},
+                     'question':{'type':'string','description':'行走结束后需要观察的完整问题',
+@@ -157,20 +156,11 @@
+             while not self.hub.stop.is_set() and time.monotonic()<deadline:
+                 if self.activity.acquire(timeout=.1):acquired=True;break
+             if not acquired:raise ValueError('动作尚未结束或会话已停止，本次未拍照')
+-            home=getattr(self.walk_capture,'requested',False)
+-            result=self._execute('home_for_capture' if home else 'wait_capture_model',{})
++            result=self._execute('wait_capture_model',{})
+             if (result.get('accepted') is not True or result.get('status')!='model_idle'
+                     or type(result.get('model_completed_t_ns')) is not int or result['model_completed_t_ns']<=0):
+                 raise ValueError(result.get('reason','未确认模型动作结束，本次未拍照'))
+             yield result
+-            if home:
+-                # The camera has returned a fresh frame while held at HOME.
+-                # Resume only this existing policy, after exposure, so the next
+-                # official expression and speech mouth retain their readiness.
+-                restored=self._execute('resume_after_capture',{'token':result['resume_token']})
+-                self.walk_capture.result={'home':result['home'],'holding':restored}
+-                if restored.get('accepted') is not True or restored.get('status')!='holding_restored':
+-                    raise ValueError(restored.get('reason','拍照后未确认恢复保持'))
+         finally:
+             if acquired:self.activity.release()
+ 
+@@ -201,11 +191,9 @@
+             if self.hub.stop.is_set():
+                 return {'accepted':False,'status':'cancelled_after_motion','motion':motion,
+                         'reason':'AI会话已停止，本次未拍照'}
+-            self.walk_capture.requested=True;self.walk_capture.result={}
+-            try:scene=self._execute('inspect_scene',{'question':question})
+-            finally:self.walk_capture.requested=False
++            scene=self._execute('inspect_scene',{'question':question})
+             result={**scene,'status':'completed' if scene.get('accepted') is True else 'vision_failed',
+-                    'motion':motion,'post_motion_delay_seconds':0.,**self.walk_capture.result}
++                    'motion':motion,'post_motion_delay_seconds':0.}
+             self.hub.log('tool_result',name=name,result=result)
+             return result
+         if name == 'perform_skill_and_inspect':
+--- a/release_identity.py
++++ b/release_identity.py
+@@ -1,4 +1,4 @@
+ """One identity shared by the R17 installer and console."""
+ BUILD = '1fa8438-feetech-ft6-control.73'
+-CONSOLE_VERSION = '1.0.218'
++CONSOLE_VERSION = '1.0.219'
+ OFFICIAL_VERSION = '0.15.1'
+--- a/static/index.html
++++ b/static/index.html
+@@ -104,7 +104,7 @@
+       <section class="panel"><div class="panel-head"><div><span class="section-index">05</span><h2>轨迹与系统</h2></div><span class="badge neutral">估计值</span></div><canvas id="odom-chart" class="odom-chart" aria-label="接触里程计轨迹"></canvas><div class="odom-values"><span>X <strong id="odom-x">—</strong></span><span>Y <strong id="odom-y">—</strong></span><span>θ <strong id="odom-yaw">—</strong></span></div><div class="system-lines"><div><span>CPU 使用率</span><strong id="sys-cpu">—</strong></div><div class="bar"><i id="cpu-bar"></i></div><div><span>内存使用</span><strong id="sys-memory">—</strong></div><div class="bar"><i id="memory-bar"></i></div><div><span>Zero 温度</span><strong id="sys-temp">—</strong></div><div><span>Zero 开机时长</span><strong id="sys-uptime">—</strong></div></div></section>
+     </div>
+     <section class="panel" id="ai-agent-panel" aria-label="AI智能体与完整调用日志">
+-  <div class="panel-head"><div><span class="section-index">AI · UI38</span><h2>AI 智能体 · 语音与视觉</h2><span id="ai-connected" class="badge neutral">○ 豆包未运行</span></div><span id="ai-lock">豆包未运行</span></div>
++  <div class="panel-head"><div><span class="section-index">AI · UI39</span><h2>AI 智能体 · 语音与视觉</h2><span id="ai-connected" class="badge neutral">○ 豆包未运行</span></div><span id="ai-lock">豆包未运行</span></div>
+   <div class="ai-layout">
+    <div class="ai-setup">
+     <div class="ai-fields" aria-label="语音与视觉配置">
+--- a/verification/test_ai_rehearsal_ui36.py
++++ b/verification/test_ai_rehearsal_ui36.py
+@@ -21,7 +21,8 @@
+         self.assertEqual(hub.robot.calls[-1],('robot.move',{'vx':0,'vy':0,'vyaw':0}))
+         with self.assertRaises(ValueError):gate.execute('walk_short',{'vx':.3001,'vy':0,'vyaw':0,'seconds':3})
+         task_step=REHEARSAL_TASK.split('\n5. ',1)[1].split('\n6.',1)[0]
+-        self.assertIn('vx=0.3、vy=0、vyaw=0、seconds=3',task_step)
++        self.assertIn('vx=0.3、vy=0、vyaw=0、seconds=2',task_step)
++        self.assertIn('vx=-0.3、vy=0、vyaw=0、seconds=1',task_step)
+         self.assertNotIn('vx=0.1',task_step);self.assertNotIn('vx=-0.1',task_step)
+ 
+     def test_actual_pcm_frames_drive_mouth_on_audio_clock_without_text_timer(self):
+--- a/verification/test_ai_scene_chain_ui29.py
++++ b/verification/test_ai_scene_chain_ui29.py
+@@ -72,10 +72,6 @@
+             try:
+                 if name=='wait_capture_model':
+                     result=self.robot.gate.wait_capture_model();self.order.append('model_idle')
+-                elif name=='home_for_capture':
+-                    result=self.robot.gate.home_for_capture();self.order.append('home_completed')
+-                elif name=='resume_after_capture':
+-                    result=self.robot.gate.resume_after_capture(fields['arguments']);self.order.append('holding_restored')
+                 elif name=='read_distance':result={'available':False,'reason':'fixture'}
+                 else:result=self.robot.gate.execute(name,fields['arguments'])
+             except ActionDenied as exc:result={'accepted':False,'reason':str(exc)}
+--- a/verification/test_ai_v200.py
++++ b/verification/test_ai_v200.py
+@@ -30,7 +30,6 @@
+         self.sitting=False
+         self.ready=True
+         self.webpad=False
+-        self.enabled=True
+         self.skills={"skills":[{"name":"roulade"},{"name":"kick_left"},{"name":"flamingo"}],
+                      "built_in":["sit_toggle","ground_pick"]}
+         self.skills['head_limits']={'kind':'model_reference','unit':'rad','axes':{
+@@ -43,7 +42,6 @@
+         self.gate=ActionGate(self.rpc,self.state,lambda kind,**kw:self.log.append((kind,kw)),clock=self.clock,sleep=self.clock.sleep)
+     def rpc(self,name,args):
+         self.calls.append((name,args))
+-        if name=='robot.enable':self.enabled=args['on']
+         if name=='robot.skills':return self.skills
+         if name=='robot.policies':return {'sitting':self.sitting}
+         if name=='robot.do' and args.get('skill')=='sit_toggle':
+@@ -53,12 +51,9 @@
+             self.active_model=args['skill'];self.model_until=self.clock()+.25
+         return {'accepted':True}
+     def state(self):
+-        return {'connected':True,'fresh':self.ready,'motion_ready':self.ready and self.enabled,
+-                'home_cycle':round(self.clock()*50),'home_feedback':{'ready':not self.enabled,'max_error_deg':1.,'tolerance_deg':5.},
+-                'readback':{'mode':'motion','phase':'control','homed':True,'policy_enabled':self.enabled,
+-                            'torque_state_confirmed':True,'imu_ready':True,'torque_off_pending':False},
++        return {'connected':True,'fresh':self.ready,'motion_ready':self.ready,
+                 'gamepad':False,'webpad_active':self.webpad,'maintenance':False,'sitting':self.sitting,
+-                'policy':'held' if not self.enabled else self.active_model if self.clock()<self.model_until else 'sit' if self.sitting else 'walk',
++                'policy':self.active_model if self.clock()<self.model_until else 'sit' if self.sitting else 'walk',
+                 'state_t_ns':round(self.clock()*1e9),'state_fresh':self.ready}
+ 
+ 
+--- a/verification/test_ai_walk_scene_ui34.py
++++ b/verification/test_ai_walk_scene_ui34.py
+@@ -67,11 +67,10 @@
+              patch('ai_vision.understand_png',side_effect=self.understand):
+             self.provider._tool_calls({'items':[{'name':'walk_sequence_and_inspect',
+                 'call_id':'model-walk-and-look','arguments':json.dumps(self.args)}]})
+-        self.assertAlmostEqual(self.robot.clock()-start,9.35)
++        self.assertAlmostEqual(self.robot.clock()-start,9.)
+         sections=[[]]
+         for stamp,name,args in timeline:
+-            if name=='robot.enable':continue
+-            self.assertEqual(name,'robot.move','no roll or extra head action')
++            self.assertEqual(name,'robot.move','no roll, HOME or extra head action')
+             if args=={'vx':0,'vy':0,'vyaw':0}:
+                 self.assertTrue(sections[-1]);sections[-1].append((stamp,args));sections.append([])
+             else:sections[-1].append((stamp,args))
+@@ -80,8 +79,7 @@
+             for stamp,args in section[:-1]:self.assertEqual(args,{k:step[k] for k in ('vx','vy','vyaw')})
+             self.assertAlmostEqual(section[-1][0]-section[0][0],3.)
+         self.assertLess(times['capture']-times['last_stop'],.5)
+-        self.assertEqual(self.order,['home_completed','fresh_frame','holding_restored','vision'])
+-        self.assertEqual(self.robot.calls[-2:],[('robot.enable',{'on':False}),('robot.enable',{'on':True})])
++        self.assertEqual(self.order,['model_idle','fresh_frame','vision'])
+         self.assertEqual(self.provider._session(),before,'HAT permission must not change model context')
+         self.assertEqual([e['type'] for e in self.sent],['conversation.item.create'])
+         item=self.sent[0]['items'][0];self.assertEqual(item['call_id'],'model-walk-and-look')
+@@ -171,8 +169,7 @@
+         self.assertFalse(result['accepted']);self.assertEqual(result['status'],'vision_failed')
+         self.assertEqual(result['motion']['status'],'stop_intent_sent');self.assertEqual(capture.call_count,1)
+         self.assertNotIn('observation',result)
+-        self.assertTrue(all(name in ('robot.move','robot.enable') for name,_ in self.robot.calls))
+-        self.assertTrue(self.robot.enabled)
++        self.assertTrue(all(name=='robot.move' for name,_ in self.robot.calls))
+ 
+ 
+ if __name__=='__main__':unittest.main()

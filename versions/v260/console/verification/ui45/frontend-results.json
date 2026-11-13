@@ -1,0 +1,37 @@
+[
+  {
+    "suite": "test_power_ui45.mjs",
+    "exit": 0,
+    "output": "PASS official Select/View shutdown without sudo or IMU dependency, disconnected/offline/replay gates, unchanged privileged reboot, requested-vs-powered-off UI and historical receipt handling\n"
+  },
+  {
+    "suite": "test_hotspot_ui44.mjs",
+    "exit": 0,
+    "output": "PASS hotspot confirmation/cancel, authenticated SSH without IMU, sudo submission once, busy/offline/replay gates, queued-vs-live wording, retained reconnect instructions, authenticated connection-cycle rearm without retry, rejection/unknown receipt and stale-job races\n"
+  },
+  {
+    "suite": "test_pad_recorder_ui42.mjs",
+    "exit": 0,
+    "output": "PASS recorder labels, stale/absent/failed status, disconnect/maintenance/replay suppression and readonly Logo help\n"
+  },
+  {
+    "suite": "test_ai_ui40.mjs",
+    "exit": 0,
+    "output": "{\"passed\":true,\"scope\":\"UI40 task removal; camera default OFF; live camera-mode server acknowledgement; key-independent continuous WebRTC; on-demand recognition while OFF; profile/provider readiness; no stale poll/event regression; preserved stopped drafts; configuration stays locked\"}\n"
+  },
+  {
+    "suite": "test_gamepad_repair_ui.mjs",
+    "exit": 0,
+    "output": "PASS normal vs explicit pairing, SSH/IMU boundaries, old bond preservation, named step history, current disconnect vs last check, robot HOME state, no polling/reboot/phone enable controls\n"
+  },
+  {
+    "suite": "test_center185.mjs",
+    "exit": 0,
+    "output": "{\"state_recheck_cases\":5,\"confirmation_does_not_stop_its_own_center\":true,\"cancel_escape_and_page_exit_send_no_center\":true,\"duplicate_submit_blocked\":true,\"fresh_state_rechecked\":true,\"explicit_and_lifecycle_stop_preserved\":true}\n"
+  },
+  {
+    "suite": "test_install_progress157.mjs",
+    "exit": 0,
+    "output": "PASS actual byte progress, retained completed transfer, per-stage status, original failure reason, manual connection recovery, no added UI polling\n"
+  }
+]

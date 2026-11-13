@@ -1,0 +1,52 @@
+{
+  "release": "Microduck-Console-Studio-V232",
+  "console_version": "1.0.232",
+  "firmware": "1fa8438-feetech-ft6-control.80",
+  "baseline": "V231, original native PADD and startup command from V229",
+  "removed": [
+    "V231 ExecStartPre",
+    "padd_runtime.py"
+  ],
+  "runtime_directories": {
+    "owner": "padd",
+    "group": "robot",
+    "mode": "0770",
+    "umask": "0022",
+    "created_by": "systemd RuntimeDirectory, no service prestart process"
+  },
+  "ai_handoff": "original V229 input/mouth lease, ACK, cancellation and handback behavior retained",
+  "onboarding_install_readback": true,
+  "validation": {
+    "distinct_python_checks": 132,
+    "checks_using_shipped_firmware_tar": 74,
+    "ai_hotspot_recorder_shutdown_regression_checks": 58,
+    "hotspot_final_recheck": 9,
+    "frontend_suites": [
+      "hotspot UI44",
+      "recorder UI42",
+      "power UI45"
+    ],
+    "real_linux_mode_bit_filter": "old SGID mode denied; ordinary directory permissions and input/mouth lease creation succeeded",
+    "systemd_unit_parser": "merged original unit + V232 drop-in accepted by systemd-analyze verify",
+    "upgrade_cleanup": "owned V231 helper removed and owned drop-in replaced",
+    "onboarding_write_failure_injection": "corrupt portal cannot report successful installation",
+    "firmware_sha256_and_tar_readback_files": 215,
+    "syntax_and_aarch64_elf_integrity": "passed"
+  },
+  "native_identity_changed_offsets_vs_v231": [
+    621675,
+    621676
+  ],
+  "native_padd_mediad_models_onnx_and_original_startup_gate_unchanged": true,
+  "wifi_driver_firmware_kernel_bootloader_dtb_modified": false,
+  "stable_network_periodic_polling": false,
+  "hardware_verified": false,
+  "test_boundaries": [
+    "real target systemd startup and padd/radxa cross-user access pending",
+    "AI nod and physical gamepad handback pending",
+    "NM pathname socket and real wireless events pending",
+    "physical power-loss reboot pending"
+  ],
+  "known_good": "previous hardware-verified reference card retained",
+  "next_task": "target-board V232 upgrade: PADD startup, AI nod, handback, and reboot repeat"
+}

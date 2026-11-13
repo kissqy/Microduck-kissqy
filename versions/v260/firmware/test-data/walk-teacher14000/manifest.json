@@ -1,0 +1,175 @@
+{
+  "schema_version": 2,
+  "model_api": 1,
+  "obs_len": 61,
+  "action_len": 14,
+  "robot": {
+    "model": "microduck",
+    "hw_rev": 1,
+    "servos": "hd1910",
+    "control_hz": 50
+  },
+  "name": "walk",
+  "kind": "perpetual",
+  "description": "联合训练的行走热启动与行走老师；单独训练不含完整倒地恢复。",
+  "entry_pose": "standing",
+  "command": {
+    "encoding": "constant",
+    "idle": [
+      0,
+      0,
+      0
+    ],
+    "twist": "vx / vy / yaw velocity",
+    "head": "neck pitch / head pitch / yaw / roll",
+    "body": "body pose command in official observation order"
+  },
+  "action_scale": 0.7,
+  "action_filter": {
+    "enabled": true,
+    "version": 1,
+    "head_alpha": 0.5,
+    "legs_alpha": 0.7,
+    "control_hz": 50.0,
+    "stage": "joint_position_target_after_home_and_scale",
+    "formula": "filtered = alpha * target + (1 - alpha) * previous_filtered",
+    "head_joints": [
+      "neck_pitch",
+      "head_pitch",
+      "head_yaw",
+      "head_roll"
+    ],
+    "leg_joints": [
+      "left_hip_yaw",
+      "left_hip_roll",
+      "left_hip_pitch",
+      "left_knee",
+      "left_ankle",
+      "right_hip_yaw",
+      "right_hip_roll",
+      "right_hip_pitch",
+      "right_knee",
+      "right_ankle"
+    ],
+    "update": "once_per_policy_step",
+    "reset": "first_target_passthrough_per_environment",
+    "previous_action_observation": "raw_policy_output",
+    "onnx": "external_filter_not_baked_into_graph"
+  },
+  "required_policy_settings": {
+    "head_lowpass": 0.5,
+    "legs_lowpass": 0.7,
+    "action_scale": 0.7
+  },
+  "runtime_only_settings": {
+    "voltage_adapt": {
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "training_action_compensation": "not_present_in_training_action_term",
+      "note": "供电随机化/负载掉压属于BAM训练物理；不等于运行端动态动作倍率补偿。导出不强制开启或关闭。"
+    },
+    "gain_and_gain_ratios": {
+      "keys": [
+        "gain",
+        "standing_gain_ratio",
+        "ground_pick_gain_ratio",
+        "roulade_gain_ratio"
+      ],
+      "export_behavior": "inherit_existing_runtime_configuration",
+      "note": "训练BAM的实际kp_fw见hardware_command和training_physics；不能凭空推导固件增益或翻译层寄存器映射。"
+    }
+  },
+  "normalization": "embedded_in_onnx_once",
+  "export_contract_revision": 2,
+  "training_snapshot_sha256": "fbd5e7bd3a4e88ff1199884d3c598585a91ca65f6689300968a8f97563b14a81",
+  "training": {
+    "task_id": "Mjlab-Velocity-Rough-Backlash-MicroDuck",
+    "repo": "pollen-robotics/microduck_rl",
+    "commit": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+    "checkpoint": 13999,
+    "source_file": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/velocity/2026-10-05_00-00-41_console_20261005_000033_75de33/model_13999.pt"
+  },
+  "target_firmware": "0.15.1",
+  "teacher_only": false,
+  "source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "task": "Mjlab-Velocity-Rough-Backlash-MicroDuck",
+  "checkpoint": "/home/radxa/microduck-training-studio/engines/official_0151/logs/rsl_rl/velocity/2026-10-05_00-00-41_console_20261005_000033_75de33/model_13999.pt",
+  "model_origin": {
+    "engine": "official_0151",
+    "task": "Mjlab-Velocity-Rough-Backlash-MicroDuck",
+    "baseline_pin": {
+      "revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec"
+    },
+    "training_adapter_revision": "R1.5.9-current-actions-backlash",
+    "friction_randomization": "official"
+  },
+  "export_source_revision": "8d0db74916a4f833d1d9b95d6a1d7f4d13b9d5ec",
+  "onnx_sha256": "9e3ff8bde021be28a728c02dbd8e7aaf9b447dd75545dacaa72ccec8e9ec7e6c",
+  "deployment_verified": false,
+  "slot": "walk",
+  "gear_backlash": {
+    "enabled": true,
+    "joint_count": 14,
+    "ranges_rad": {
+      "passive_left_hip_yaw_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_left_hip_roll_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_left_hip_pitch_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_left_knee_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_left_ankle_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_neck_pitch_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_head_pitch_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_head_yaw_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_head_roll_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_hip_yaw_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_hip_roll_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_hip_pitch_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_knee_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ],
+      "passive_right_ankle_backlash": [
+        -0.017453292519943295,
+        0.017453292519943295
+      ]
+    },
+    "encoder_position": "motor + passive backlash",
+    "motor_velocity": "motor-side for friction and back-EMF",
+    "policy_joint_velocity": "motor + passive backlash"
+  },
+  "duration_s": null
+}

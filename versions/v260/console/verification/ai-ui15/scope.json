@@ -1,0 +1,29 @@
+{
+  "source_ui14_sha256": "6cae29d009b740d37a860308ff1bdd739c92ad92158638751cc4773cda44569a",
+  "changed_existing_files": [
+    "AI-TEST-NOTES.md",
+    "README.zh-CN.md",
+    "ai_preferences.py",
+    "ai_remote.py",
+    "ai_runtime.py",
+    "ai_vision.py",
+    "service_control.py",
+    "service_rpc.py",
+    "static/ai-panel.css",
+    "static/ai-panel.js",
+    "static/app.js",
+    "static/index.html",
+    "verification/test_ai_hat.mjs",
+    "verification/test_ai_session_ui6.py"
+  ],
+  "new_runtime_files": [
+    "ai_camera_setup.py",
+    "ai_image.py",
+    "static/ai-camera.js"
+  ],
+  "new_tests": [
+    "verification/test_ai_camera_ui15.py",
+    "verification/test_ai_camera_ui15.mjs"
+  ],
+  "unchanged": "firmware, models, native voice, audio input guard, video protocol, action gate and persona"
+}

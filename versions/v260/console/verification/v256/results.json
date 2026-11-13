@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "console_version": "1.0.256",
+  "firmware_build": "1fa8438-feetech-ft6-control.98",
+  "only_functional_change": "runtime.py::commissioning_shutdown",
+  "previous_torque_off_timeout_reproduced": true,
+  "focused_python_tests": {
+    "commissioning_regression": 7,
+    "commissioning_transport_and_controller": 8,
+    "motion_shutdown": 6
+  },
+  "frontend_suites": [
+    "commissioning green feedback across expected disconnection",
+    "existing motion and commissioning power controls"
+  ],
+  "real_unix_ipc_wire_tested": true,
+  "firmware_checksum_entries_verified": 213,
+  "packaged_release_and_runtime_helper_verified": true,
+  "static_ui_and_hotspot_payloads_byte_identical": true,
+  "all_models_calibration_ai_input_and_motion_parameters_unchanged": true,
+  "native_identity": {
+    "old": "1fa8438-feetech-ft6-control.97",
+    "new": "1fa8438-feetech-ft6-control.98",
+    "before_sha256": "2e5bf375d2116eef6630eadc2bc11b2fa5b9b2faba2208d32e104dcd19e080e3",
+    "after_sha256": "6961052b6075246168b19ebb181e46d152a0a93da845d38988e2d13adca95942",
+    "changed_byte_count": 1,
+    "changed_byte_offsets": [
+      621676
+    ],
+    "same_length": true,
+    "all_bytes_outside_identity_unchanged": true,
+    "native_instructions_changed": false,
+    "not_recompiled": true,
+    "hardware_tested": false
+  },
+  "hardware_tested": false,
+  "native_aarch64_execution_tested": false,
+  "firmware_reinstall_required": true,
+  "reboot_required_for_this_fix": false,
+  "known_good": "previous hardware-verified reference retained",
+  "next_task": "Install bundled control.98; verify commissioning shutdown, torque release and the green accepted-shutdown message on the target Zero."
+}

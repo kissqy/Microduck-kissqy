@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "node": {
+    "passed": true,
+    "scope": "ascending level ladder; real-volume lights for loud/quiet/silent/full/stale/stopped audio; visible dBFS and upload time; compact status; retained credentials; Chinese skills; multi-turn chat; vision credentials, editing, busy/error, single-frame preview and source-labelled vision text"
+  },
+  "render_verified": false,
+  "html_unique_ids": 213,
+  "persona_default_matches_backend": true,
+  "default_reply_characters": 20,
+  "binary_images_excluded_from_chat_json": true,
+  "pc_camera_not_requested": true
+}

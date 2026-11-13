@@ -1,0 +1,12 @@
+test_already_off_still_uses_native_atomic_stop_and_schedule (test_commissioning_shutdown.CommissioningShutdownRegressionTests.test_already_off_still_uses_native_atomic_stop_and_schedule) ... ok
+test_missing_native_ack_is_not_retried_or_reported_as_shutdown (test_commissioning_shutdown.CommissioningShutdownRegressionTests.test_missing_native_ack_is_not_retried_or_reported_as_shutdown) ... ok
+test_motion_or_unknown_mode_never_sends_commissioning_shutdown (test_commissioning_shutdown.CommissioningShutdownRegressionTests.test_motion_or_unknown_mode_never_sends_commissioning_shutdown) ... ok
+test_native_torque_failure_or_mode_change_never_falls_back (test_commissioning_shutdown.CommissioningShutdownRegressionTests.test_native_torque_failure_or_mode_change_never_falls_back) ... ok
+test_previous_torque_timeout_uses_native_shutdown_instead (test_commissioning_shutdown.CommissioningShutdownRegressionTests.test_previous_torque_timeout_uses_native_shutdown_instead) ... ok
+test_real_unix_wire_uses_the_existing_commissioning_command (test_commissioning_shutdown.CommissioningShutdownRegressionTests.test_real_unix_wire_uses_the_existing_commissioning_command) ... ok
+test_unconfirmed_native_receipts_do_not_become_success (test_commissioning_shutdown.CommissioningShutdownRegressionTests.test_unconfirmed_native_receipts_do_not_become_success) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.007s
+
+OK

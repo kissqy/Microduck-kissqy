@@ -1,0 +1,139 @@
+======================================================================
+ERROR: test_active_pending_task_cannot_be_repeated (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_active_pending_task_cannot_be_repeated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/verification/test_hotspot_helper_ui44.py", line 88, in setUp
+    target.write_bytes((ROOT/'resources/wifi-r5'/leaf).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/resources/wifi-r5/microduck_wifi_events.py'
+
+======================================================================
+ERROR: test_compressed_original_is_bounded_verified_and_exact (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_compressed_original_is_bounded_verified_and_exact)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/verification/test_hotspot_helper_ui44.py", line 88, in setUp
+    target.write_bytes((ROOT/'resources/wifi-r5'/leaf).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/resources/wifi-r5/microduck_wifi_events.py'
+
+======================================================================
+ERROR: test_failed_scheduler_does_not_return_a_queued_receipt (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_failed_scheduler_does_not_return_a_queued_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/verification/test_hotspot_helper_ui44.py", line 88, in setUp
+    target.write_bytes((ROOT/'resources/wifi-r5'/leaf).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/resources/wifi-r5/microduck_wifi_events.py'
+
+======================================================================
+ERROR: test_missing_mismatched_or_unprivileged_components_never_queue (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_missing_mismatched_or_unprivileged_components_never_queue)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/verification/test_hotspot_helper_ui44.py", line 88, in setUp
+    target.write_bytes((ROOT/'resources/wifi-r5'/leaf).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/resources/wifi-r5/microduck_wifi_events.py'
+
+======================================================================
+ERROR: test_missing_unit_inactive_is_allowed_but_manager_errors_are_not (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_missing_unit_inactive_is_allowed_but_manager_errors_are_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/verification/test_hotspot_helper_ui44.py", line 88, in setUp
+    target.write_bytes((ROOT/'resources/wifi-r5'/leaf).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/resources/wifi-r5/microduck_wifi_events.py'
+
+======================================================================
+ERROR: test_original_function_bodies_and_generated_shell_parse (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_original_function_bodies_and_generated_shell_parse)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/verification/test_hotspot_helper_ui44.py", line 88, in setUp
+    target.write_bytes((ROOT/'resources/wifi-r5'/leaf).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/resources/wifi-r5/microduck_wifi_events.py'
+
+======================================================================
+ERROR: test_queue_uses_one_detached_five_second_worker_without_clearing_wifi (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_queue_uses_one_detached_five_second_worker_without_clearing_wifi)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/verification/test_hotspot_helper_ui44.py", line 88, in setUp
+    target.write_bytes((ROOT/'resources/wifi-r5'/leaf).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/resources/wifi-r5/microduck_wifi_events.py'
+
+======================================================================
+ERROR: test_radio_unit_legacy_and_other_r5_operations_fail_before_queue (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_radio_unit_legacy_and_other_r5_operations_fail_before_queue)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/verification/test_hotspot_helper_ui44.py", line 88, in setUp
+    target.write_bytes((ROOT/'resources/wifi-r5'/leaf).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/resources/wifi-r5/microduck_wifi_events.py'
+
+======================================================================
+ERROR: test_real_bash_worker_uses_r5_cleanup_and_preserves_unrelated_files (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_real_bash_worker_uses_r5_cleanup_and_preserves_unrelated_files)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/verification/test_hotspot_helper_ui44.py", line 88, in setUp
+    target.write_bytes((ROOT/'resources/wifi-r5'/leaf).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/scratch/bb41820a3a65/release_v260/console/Microduck-Console-Studio-V260/resources/wifi-r5/microduck_wifi_events.py'
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.006s
+
+FAILED (errors=9)

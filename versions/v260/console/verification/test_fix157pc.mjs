@@ -1,0 +1,46 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {pathToFileURL} from 'node:url';
+const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'duck-157fix-'));
+try{
+ const source=path.resolve(process.argv[2]||'static');fs.cpSync(source,path.join(tmp,'static'),{recursive:true});fs.writeFileSync(path.join(tmp,'package.json'),'{"type":"module"}');
+ const load=name=>import(pathToFileURL(path.join(tmp,'static',name)));
+ const {TelemetryStore}=await load('raw-telemetry.js'),{connectionNotice,startupFailure}=await load('startup-status.js');
+ const {ControlPanel,skillReady}=await load('control.js'),{ControlSocket}=await load('control-socket.js'),{PadControls}=await load('webpad-controls.js');
+ const cfg={mode:'service',ids:[],names:[],labels:[]};const store=new TelemetryStore(cfg);
+ store.auxiliary({connection_paused:false,connection:{active:true,connected:true}});
+ store.ingest({channel:'tof',data:{seq:42}});store.ingest({channel:'bus',error:'old robotd EOF'});store.ingest({channel:'state',error:'old robotd EOF'});
+ store.ingest({channel:'startup',data:{steps:{4:{status:'success',detail:'old cycle'}}}});
+ store.ingest({channel:'robotd_stream',data:{status:'waiting'}});
+ assert.equal(store.snapshot(false).channels.state.status,'waiting');assert.deepEqual(store.data,{tof:{seq:42}});assert.equal(store.snapshot(false).service_sample_fresh,false);
+ const startup={steps:{1:{status:'success'},2:{status:'waiting',detail:'等待有效 IMU 和关节'}}};store.ingest({channel:'startup',data:startup});
+ let s=store.snapshot(false);assert.deepEqual(s.startup,startup);assert.equal(connectionNotice(s).tone,'neutral');assert.match(connectionNotice(s).message,/第 2\/4 步.*等待有效 IMU/);
+ store.ingest({channel:'state',error:'real disconnect'});assert.equal(connectionNotice(store.snapshot(false)).tone,'warning');
+ store.ingest({channel:'robotd_stream',data:{status:'waiting'}});store.ingest({channel:'startup',data:{steps:{2:{status:'failed',detail:'actual hardware reason'}}}});
+ assert.match(startupFailure(store.snapshot(false)),/actual hardware reason/);
+ const ready={service_sample_fresh:true,bus:{mode:'motion',phase:'control',homed:true,policy_enabled:true,loaded_models:Object.fromEntries(['kick_right','roulade','ground_pick','sitstand'].map(k=>[k,{sha256:'abc'}])),native:{imu_ready:true,torque_state_confirmed:true}},capabilities:{skills:['kick_right','roulade'],ground_pick:'pick.onnx',sitstand:'sit.onnx'}};
+ for(const slot of ['kick_right','roulade','ground_pick','sitstand'])assert.equal(skillReady(ready,slot),true);
+ for(const change of [{service_sample_fresh:false},{bus:{...ready.bus,policy_enabled:false}},{bus:{...ready.bus,homed:false}},{bus:{...ready.bus,torque_off_pending:true}},{bus:{...ready.bus,native:{imu_ready:false,torque_state_confirmed:true}}},{capabilities:{skills:[]}}])assert.equal(skillReady({...ready,...change},'kick_right'),false);
+ let changes=0;const pad=Object.create(PadControls.prototype);pad.axes={};pad.buttons=new Set();pad.panel={disabled:false,change(){changes++;}};
+ const button={disabled:true,dataset:{button:'rb'},classList:{toggle(){},add(){},remove(){}},setAttribute(){}};pad.applyButton(button,true);assert.equal(pad.buttons.size,0);assert.equal(changes,0);
+ button.disabled=false;button.dataset.unavailable='true';pad.applyButton(button,true);assert.equal(changes,0);
+ button.dataset.unavailable='false';pad.applyButton(button,true);assert.ok(pad.buttons.has('rb'));pad.applyButton(button,false);assert.equal(pad.buttons.size,0);
+ globalThis.document={hidden:false};
+ let closed=0,resets=0;const c=Object.create(ControlPanel.prototype);
+ Object.assign(c,{connected:true,feedback:{textContent:''},state:{available:true},socket:{close(){closed++;}},suspend(){resets++;},paint(){},linkFeedback(){},options:{}});
+ c.render({...ready,service_operation:true,control:{connected:true,webpad:{available:true}}});assert.equal(c.connected,true);assert.equal(closed,0);assert.ok(resets>0);
+ c.render({...ready,service_operation:false,control:{connected:true,webpad:{available:true}}});assert.equal(c.connected,true);assert.equal(closed,0);
+ const nodes=new Map();const get=key=>{if(!nodes.has(key))nodes.set(key,{textContent:'',dataset:{},classList:{toggle(){},add(){},remove(){}},setAttribute(){}});return nodes.get(key);};
+ const input=Object.create(ControlPanel.prototype);Object.assign(input,{connected:true,armed:true,epoch:0,linkEpoch:1,frames:[{at:performance.now(),frame:{}}],pad:{reset(){resets++;}},feedback:get('feedback'),s:ready,options:{},post:async command=>{if(command.action==='webpad_state')throw Object.assign(Error('policy changed'),{status:409});return {};}});
+ await input.sendFrames();assert.equal(input.connected,true);assert.equal(input.armed,false);assert.equal(input.frames.length,0);
+ input.armed=true;input.frames=[{at:performance.now(),frame:{}}];input.post=async command=>{if(command.action==='webpad_state')throw Object.assign(Error('actual transport failure'),{status:503});return {};};await input.sendFrames();assert.equal(input.connected,false);
+ globalThis.location={protocol:'http:',host:'localhost'};
+ class FakeWS{static OPEN=1;constructor(){this.readyState=1;queueMicrotask(()=>this.onopen());}send(row){this.last=JSON.parse(row);}close(){this.readyState=3;closed++;}}
+ globalThis.WebSocket=FakeWS;const socket=new ControlSocket('token',()=>{throw Error('must stay open after refusal');});await socket.open();const ws=socket.ws;
+ const failure=socket.request({action:'webpad_state'});ws.onmessage({data:JSON.stringify({id:1,error:'policy off',status:409})});await assert.rejects(failure,error=>error.status===409);assert.equal(socket.ws,ws);
+ const next=socket.request({action:'webpad_state'});ws.onmessage({data:JSON.stringify({id:2,result:{accepted:true}})});assert.equal((await next).accepted,true);socket.close();
+ const management=fs.readFileSync(path.join(source,'service-management.js'),'utf8');assert.doesNotMatch(management,/management-kick-right|runKick|run-skill/);
+ const html=fs.readFileSync(path.join(source,'index.html'),'utf8');assert.match(html,/data-button="rb"/);assert.doesNotMatch(html,/system-log\/download\?detail=1/);assert.match(html,/下载完整日志/);
+ assert.doesNotMatch(management,/selectedSlot|\.onclick=e=>|management-target|createElement\('button'\)/);assert.match(management,/createElement\('span'\)/);
+ assert.match(management,/role="list"/);assert.match(management,/this\.advanced\.paint/);
+ console.log('PASS endpoint state handoff, startup snapshot/wait/failure, pre-click skill gates, disabled input, maintenance channel preservation, refusal vs transport failure, same WebSocket after rejection, redundant shortcut removal');
+}finally{fs.rmSync(tmp,{recursive:true,force:true});}

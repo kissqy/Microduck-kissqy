@@ -1,0 +1,43 @@
+{
+  "release": "Microduck-Console-Studio-V233",
+  "console_version": "1.0.233",
+  "firmware": "1fa8438-feetech-ft6-control.81",
+  "baseline": "V232 / control.80",
+  "changes": [
+    "repository outdoor photo embedded offline",
+    "kissqy page attribution",
+    "system password min 6 in form and request handler"
+  ],
+  "photo": {
+    "path": "docs/assets/showcase/outdoor-07-thumb.webp",
+    "commit": "2c385b63ccc1bc3598534dc87689728a125219c7",
+    "git_blob_sha1": "ce22ffae03b9d8c46f1502d572cf3d9dd5fda01e",
+    "bytes": 40726,
+    "width": 360,
+    "height": 480
+  },
+  "system_password_min_length": 6,
+  "wifi_password_min_length": 8,
+  "validation": {
+    "shipped_firmware_checks": 79,
+    "hotspot_helper_service_checks": 15,
+    "photo_route_exact_bytes": "passed",
+    "password_6_accepted_5_rejected": "passed",
+    "page_html_fields": "passed",
+    "portal_ast_changed_functions": [
+      "Handler.page",
+      "Handler.do_POST"
+    ],
+    "syntax_elf_tar_sha256": "passed",
+    "graphical_browser_preview": "not completed; local browser blocked by pathname socket restriction"
+  },
+  "native_identity_changed_offsets_vs_v232": [
+    621676
+  ],
+  "network_padd_ai_shutdown_behavior_changed": false,
+  "wifi_driver_changed": false,
+  "stable_network_periodic_polling": false,
+  "hardware_verified": false,
+  "known_good": "previous hardware-verified reference card retained",
+  "next_task": "target-board trial of PADD/AI handback, real disconnect hotspot recovery, offline page and password setting"
+}

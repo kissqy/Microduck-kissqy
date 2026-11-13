@@ -1,0 +1,210 @@
+test_commissioning_mode_query_crosses_the_real_unix_relay (test_commissioning_power.CommissioningPowerTests.test_commissioning_mode_query_crosses_the_real_unix_relay) ... ok
+test_commissioning_uses_existing_privileged_helper (test_commissioning_power.CommissioningPowerTests.test_commissioning_uses_existing_privileged_helper) ... ok
+test_controller_accepts_commissioning_receipt_and_pauses_after_acceptance (test_commissioning_power.CommissioningPowerTests.test_controller_accepts_commissioning_receipt_and_pauses_after_acceptance) ... ok
+test_live_commissioning_relax_then_poweroff (test_commissioning_power.CommissioningPowerTests.test_live_commissioning_relax_then_poweroff) ... ok
+test_mode_change_after_relax_never_powers_off (test_commissioning_power.CommissioningPowerTests.test_mode_change_after_relax_never_powers_off) ... ok
+test_motion_unknown_and_unconfirmed_relax_never_call_os (test_commissioning_power.CommissioningPowerTests.test_motion_unknown_and_unconfirmed_relax_never_call_os) ... ok
+test_native_motion_path_preserved (test_commissioning_power.CommissioningPowerTests.test_native_motion_path_preserved) ... ok
+test_unknown_mode_and_rejected_helper_do_not_fall_back (test_commissioning_power.CommissioningPowerTests.test_unknown_mode_and_rejected_helper_do_not_fall_back) ... ok
+test_changed_config_preserves_boot_parameters_and_metadata (test_repair_armbian_env.BootWriterTests.test_changed_config_preserves_boot_parameters_and_metadata) ... ok
+test_empty_or_missing_config_is_not_recreated (test_repair_armbian_env.BootWriterTests.test_empty_or_missing_config_is_not_recreated) ... ok
+test_failure_after_rename_reports_error_with_complete_new_file (test_repair_armbian_env.BootWriterTests.test_failure_after_rename_reports_error_with_complete_new_file) ... ok
+test_failures_before_rename_leave_original_complete (test_repair_armbian_env.BootWriterTests.test_failures_before_rename_leave_original_complete) ... ok
+test_legacy_rewrites_unchanged_config (test_repair_armbian_env.BootWriterTests.test_legacy_rewrites_unchanged_config) ... ok
+test_missing_quirks_and_newline_cleanup_preserve_all_other_fields (test_repair_armbian_env.BootWriterTests.test_missing_quirks_and_newline_cleanup_preserve_all_other_fields) ... ok
+test_no_change_does_not_rewrite_or_sync_boot_config (test_repair_armbian_env.BootWriterTests.test_no_change_does_not_rewrite_or_sync_boot_config) ... ok
+test_ambiguous_invocation_is_refused (test_repair_armbian_env.RepairTests.test_ambiguous_invocation_is_refused) ... ok
+test_backup_apply_idempotence_and_restore (test_repair_armbian_env.RepairTests.test_backup_apply_idempotence_and_restore) ... ok
+test_backup_sync_failure_does_not_install (test_repair_armbian_env.RepairTests.test_backup_sync_failure_does_not_install) ... ok
+test_check_is_read_only (test_repair_armbian_env.RepairTests.test_check_is_read_only) ... ok
+test_concurrent_vendor_update_is_not_overwritten (test_repair_armbian_env.RepairTests.test_concurrent_vendor_update_is_not_overwritten) ... ok
+test_empty_config_is_refused (test_repair_armbian_env.RepairTests.test_empty_config_is_refused) ... ok
+test_missing_script_is_not_applicable (test_repair_armbian_env.RepairTests.test_missing_script_is_not_applicable) ... ok
+test_restore_refuses_corrupted_backup (test_repair_armbian_env.RepairTests.test_restore_refuses_corrupted_backup) ... ok
+test_restore_refuses_later_vendor_update (test_repair_armbian_env.RepairTests.test_restore_refuses_later_vendor_update) ... ok
+test_symlink_is_refused (test_repair_armbian_env.RepairTests.test_symlink_is_refused) ... ok
+test_target_replace_failure_leaves_original_and_backup (test_repair_armbian_env.RepairTests.test_target_replace_failure_leaves_original_and_backup) ... ok
+test_unknown_vendor_function_is_not_overwritten (test_repair_armbian_env.RepairTests.test_unknown_vendor_function_is_not_overwritten) ... ok
+test_unrelated_board_setup_is_preserved (test_repair_armbian_env.RepairTests.test_unrelated_board_setup_is_preserved) ... ok
+test_console_expected_bytes_equal_installed_portal_and_module (test_system_install.SystemInstallTests.test_console_expected_bytes_equal_installed_portal_and_module) ... ok
+test_install_is_idempotent_keeps_home_network_and_patches_boot_writer (test_system_install.SystemInstallTests.test_install_is_idempotent_keeps_home_network_and_patches_boot_writer) ... ok
+test_already_active_does_not_reactivate (test_wifi_r7.R7Tests.test_already_active_does_not_reactivate) ... ok
+test_delayed_wireless_enumeration_waits_before_activation (test_wifi_r7.R7Tests.test_delayed_wireless_enumeration_waits_before_activation) ... [Microduck Wi-Fi R8] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_disabled_software_radio_enabled_once (test_wifi_r7.R7Tests.test_disabled_software_radio_enabled_once) ... [Microduck Wi-Fi R8] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_disk_profile_not_cached_is_loaded (test_wifi_r7.R7Tests.test_disk_profile_not_cached_is_loaded) ... [Microduck Wi-Fi R8] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_existing_bad_mode_only_permissions_fixed (test_wifi_r7.R7Tests.test_existing_bad_mode_only_permissions_fixed) ... [Microduck Wi-Fi R8] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_invalid_profile_not_overwritten (test_wifi_r7.R7Tests.test_invalid_profile_not_overwritten) ... [Microduck Wi-Fi R8] 热点激活 1/3 失败：已有热点配置无效，已保留原文件：MissingSectionHeaderError
+[Microduck Wi-Fi R8] 热点激活 2/3 失败：已有热点配置无效，已保留原文件：MissingSectionHeaderError
+[Microduck Wi-Fi R8] 热点激活 3/3 失败：已有热点配置无效，已保留原文件：MissingSectionHeaderError
+ok
+test_loading_failure_does_not_activate_stale_connection (test_wifi_r7.R7Tests.test_loading_failure_does_not_activate_stale_connection) ... [Microduck Wi-Fi R8] 热点激活 1/3 失败：load failed
+[Microduck Wi-Fi R8] 热点激活 2/3 失败：load failed
+[Microduck Wi-Fi R8] 热点激活 3/3 失败：load failed
+ok
+test_loading_uuid_not_confirmed_does_not_activate (test_wifi_r7.R7Tests.test_loading_uuid_not_confirmed_does_not_activate) ... [Microduck Wi-Fi R8] 热点激活 1/3 失败：NetworkManager 未确认加载指定热点 UUID
+[Microduck Wi-Fi R8] 热点激活 2/3 失败：NetworkManager 未确认加载指定热点 UUID
+[Microduck Wi-Fi R8] 热点激活 3/3 失败：NetworkManager 未确认加载指定热点 UUID
+ok
+test_missing_profile_created (test_wifi_r7.R7Tests.test_missing_profile_created) ... [Microduck Wi-Fi R8] 热点配置缺失，已创建本项目默认配置
+[Microduck Wi-Fi R8] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_no_robot_or_driver_restart_calls (test_wifi_r7.R7Tests.test_no_robot_or_driver_restart_calls) ... [Microduck Wi-Fi R8] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_no_saved_profiles_does_not_wait (test_wifi_r7.R7Tests.test_no_saved_profiles_does_not_wait) ... ok
+test_old_networks_have_total_wait_budget (test_wifi_r7.R7Tests.test_old_networks_have_total_wait_budget) ... [Microduck Wi-Fi R8] 旧 Wi-Fi 未连上，将在限定时间内回退热点：old Wi-Fi unavailable
+[Microduck Wi-Fi R8] 旧 Wi-Fi 未连上，将在限定时间内回退热点：old Wi-Fi unavailable
+[Microduck Wi-Fi R8] 旧 Wi-Fi 查询或等待失败，进入热点流程：旧 Wi-Fi 等待窗口已结束
+ok
+test_owner_password_and_ssid_preserved (test_wifi_r7.R7Tests.test_owner_password_and_ssid_preserved) ... [Microduck Wi-Fi R8] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_radio_request_error_does_not_hide_ready_interface (test_wifi_r7.R7Tests.test_radio_request_error_does_not_hide_ready_interface) ... [Microduck Wi-Fi R8] 软件开关请求未确认，继续核对网卡实际状态：radio request failed
+[Microduck Wi-Fi R8] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_radio_request_error_still_bounds_unavailable_interface (test_wifi_r7.R7Tests.test_radio_request_error_still_bounds_unavailable_interface) ... [Microduck Wi-Fi R8] 软件开关请求未确认，继续核对网卡实际状态：radio request failed
+ok
+test_readiness_wait_stops (test_wifi_r7.R7Tests.test_readiness_wait_stops) ... ok
+test_saved_profile_timeout_reaches_ap (test_wifi_r7.R7Tests.test_saved_profile_timeout_reaches_ap) ... [Microduck Wi-Fi R8] 旧 Wi-Fi 查询或等待失败，进入热点流程：Command '('nmcli', '-t', '-e', 'no', '-f', 'UUID,TYPE,NAME', 'connection', 'show')' timed out after 6.0 seconds
+[Microduck Wi-Fi R8] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_second_attempt_can_recover (test_wifi_r7.R7Tests.test_second_attempt_can_recover) ... [Microduck Wi-Fi R8] 热点激活 1/3 失败：activation failed
+[Microduck Wi-Fi R8] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_success_command_without_ip_does_not_pass (test_wifi_r7.R7Tests.test_success_command_without_ip_does_not_pass) ... [Microduck Wi-Fi R8] 热点激活 1/3 失败：激活命令已返回，但热点连接或 10.42.0.1 尚未就绪
+[Microduck Wi-Fi R8] 热点激活 2/3 失败：激活命令已返回，但热点连接或 10.42.0.1 尚未就绪
+[Microduck Wi-Fi R8] 热点激活 3/3 失败：激活命令已返回，但热点连接或 10.42.0.1 尚未就绪
+ok
+test_success_command_wrong_state_does_not_pass (test_wifi_r7.R7Tests.test_success_command_wrong_state_does_not_pass) ... [Microduck Wi-Fi R8] 热点激活 1/3 失败：激活命令已返回，但热点连接或 10.42.0.1 尚未就绪
+[Microduck Wi-Fi R8] 热点激活 2/3 失败：激活命令已返回，但热点连接或 10.42.0.1 尚未就绪
+[Microduck Wi-Fi R8] 热点激活 3/3 失败：激活命令已返回，但热点连接或 10.42.0.1 尚未就绪
+ok
+test_symlink_profile_rejected (test_wifi_r7.R7Tests.test_symlink_profile_rejected) ... [Microduck Wi-Fi R8] 热点激活 1/3 失败：热点配置是符号链接，拒绝覆盖或加载
+[Microduck Wi-Fi R8] 热点激活 2/3 失败：热点配置是符号链接，拒绝覆盖或加载
+[Microduck Wi-Fi R8] 热点激活 3/3 失败：热点配置是符号链接，拒绝覆盖或加载
+ok
+test_three_ap_failures_then_stop (test_wifi_r7.R7Tests.test_three_ap_failures_then_stop) ... [Microduck Wi-Fi R8] 热点激活 1/3 失败：activation failed
+[Microduck Wi-Fi R8] 热点激活 2/3 失败：activation failed
+[Microduck Wi-Fi R8] 热点激活 3/3 失败：activation failed
+ok
+test_working_home_is_preserved (test_wifi_r7.R7Tests.test_working_home_is_preserved) ... ok
+test_connected_idle_waits_for_event_without_periodic_queries (test_event_wifi.EventWifiTests.test_connected_idle_waits_for_event_without_periodic_queries) ... ok
+test_disconnect_notification_starts_hotspot_and_preserves_profile (test_event_wifi.EventWifiTests.test_disconnect_notification_starts_hotspot_and_preserves_profile) ... [Microduck Wi-Fi R8] 网络事件确认 Wi-Fi 未连接或没有 IP，恢复配网热点
+[Microduck Wi-Fi R8] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_dispatcher_and_receiver_use_real_datagrams_with_socketpair_transport (test_event_wifi.EventWifiTests.test_dispatcher_and_receiver_use_real_datagrams_with_socketpair_transport) ... ok
+test_failed_activation_backs_off_even_when_it_generates_down_events (test_event_wifi.EventWifiTests.test_failed_activation_backs_off_even_when_it_generates_down_events) ... [Microduck Wi-Fi R8] 配网恢复未完成，30 秒后再试：activation failed
+ok
+test_ip_loss_notification_is_offline_even_if_nm_state_is_connected (test_event_wifi.EventWifiTests.test_ip_loss_notification_is_offline_even_if_nm_state_is_connected) ... [Microduck Wi-Fi R8] 网络事件确认 Wi-Fi 未连接或没有 IP，恢复配网热点
+ok
+test_new_card_without_saved_network_starts_hotspot (test_event_wifi.EventWifiTests.test_new_card_without_saved_network_starts_hotspot) ... [Microduck Wi-Fi R8] 热点配置缺失，已创建本项目默认配置
+[Microduck Wi-Fi R8] 本机热点连接与配网地址已确认；手机可见性仍需现场确认
+ok
+test_notification_during_query_is_not_lost (test_event_wifi.EventWifiTests.test_notification_during_query_is_not_lost) ... ok
+test_query_error_retries_without_taking_over_a_working_connection (test_event_wifi.EventWifiTests.test_query_error_retries_without_taking_over_a_working_connection) ... ok
+test_stale_notification_reads_live_state_and_keeps_working_wifi (test_event_wifi.EventWifiTests.test_stale_notification_reads_live_state_and_keeps_working_wifi) ... ok
+test_installer_installs_executable_dispatcher (test_event_wifi.PortalEventsTests.test_installer_installs_executable_dispatcher) ... ok
+test_old_staging_marker_does_not_disable_recovery (test_event_wifi.PortalEventsTests.test_old_staging_marker_does_not_disable_recovery) ... ok
+test_portal_waits_for_events_and_does_not_interrupt_provisioning (test_event_wifi.PortalEventsTests.test_portal_waits_for_events_and_does_not_interrupt_provisioning) ... ok
+test_provisioning_notifies_after_success_and_failure (test_event_wifi.PortalEventsTests.test_provisioning_notifies_after_success_and_failure) ... ok
+test_existing_wrong_component_bytes_and_modes_are_repaired_and_read_back (test_padd_runtime_config.InstallerReadbackTests.test_existing_wrong_component_bytes_and_modes_are_repaired_and_read_back) ... ok
+test_silent_failed_install_cannot_report_success (test_padd_runtime_config.InstallerReadbackTests.test_silent_failed_install_cannot_report_success) ... ok
+test_input_lease_remains_readable_despite_restrictive_ssh_umask (test_padd_runtime_config.RuntimeConfigTests.test_input_lease_remains_readable_despite_restrictive_ssh_umask) ... ok
+test_manager_declares_all_shared_directories_without_sgid (test_padd_runtime_config.RuntimeConfigTests.test_manager_declares_all_shared_directories_without_sgid) ... [固件安装 / 安装官方 padd 配置] 开始 · 安装官方服务单元与本机手柄幅度参数
+[固件安装 / 安装官方 padd 配置] 成功 · 官方 padd 配置已就绪；R7 映射保持
+ok
+test_merged_unit_is_accepted_by_systemd_parser (test_padd_runtime_config.RuntimeConfigTests.test_merged_unit_is_accepted_by_systemd_parser) ... [固件安装 / 安装官方 padd 配置] 开始 · 安装官方服务单元与本机手柄幅度参数
+[固件安装 / 安装官方 padd 配置] 成功 · 官方 padd 配置已就绪；R7 映射保持
+ok
+test_real_sgid_filter_rejects_old_mode_but_accepts_current_leases (test_padd_runtime_config.RuntimeConfigTests.test_real_sgid_filter_rejects_old_mode_but_accepts_current_leases) ... ok
+test_upgrade_cleanup_removes_the_owned_v231_helper (test_padd_runtime_config.RuntimeConfigTests.test_upgrade_cleanup_removes_the_owned_v231_helper) ... 清理旧配套文件：padd_runtime.py
+ok
+test_upgrade_overwrites_the_owned_v231_prestart_step (test_padd_runtime_config.RuntimeConfigTests.test_upgrade_overwrites_the_owned_v231_prestart_step) ... [固件安装 / 安装官方 padd 配置] 开始 · 安装官方服务单元与本机手柄幅度参数
+[固件安装 / 安装官方 padd 配置] 成功 · 官方 padd 配置已就绪；R7 映射保持
+ok
+
+----------------------------------------------------------------------
+Ran 74 tests in 1.662s
+
+OK
+
+test_action_token_is_thread_local_and_never_inherited_by_pcm_mouth (verification.test_ai_input_ui41.ActionContextTests.test_action_token_is_thread_local_and_never_inherited_by_pcm_mouth) ... ok
+test_cancelled_walk_and_body_do_not_issue_a_tokenless_cleanup_or_mask_error (verification.test_ai_input_ui41.ActionContextTests.test_cancelled_walk_and_body_do_not_issue_a_tokenless_cleanup_or_mask_error) ... ok
+test_remote_cancelled_before_send_rejects_late_action_thread (verification.test_ai_input_ui41.ActionContextTests.test_remote_cancelled_before_send_rejects_late_action_thread) ... ok
+test_rpc_attaches_internal_token_without_altering_robotd_parameters (verification.test_ai_input_ui41.ActionContextTests.test_rpc_attaches_internal_token_without_altering_robotd_parameters) ... ok
+test_sit_confirms_only_fresh_mode_entry_and_rise_keeps_finite_completion (verification.test_ai_input_ui41.ActionContextTests.test_sit_confirms_only_fresh_mode_entry_and_rise_keeps_finite_completion) ... ok
+test_worker_bundle_contains_input_helper (verification.test_ai_input_ui41.ActionContextTests.test_worker_bundle_contains_input_helper) ... ok
+test_initial_ack_must_be_exact_but_live_previous_renewal_ack_is_valid (verification.test_ai_input_ui41.LeaseFilesTests.test_initial_ack_must_be_exact_but_live_previous_renewal_ack_is_valid) ... ok
+test_native_exact_ack_precedes_acquire_and_cancel_stops_renewal (verification.test_ai_input_ui41.LeaseFilesTests.test_native_exact_ack_precedes_acquire_and_cancel_stops_renewal) ... ok
+test_no_padd_acquire_renews_and_cleanup_invalidates_late_ack (verification.test_ai_input_ui41.LeaseFilesTests.test_no_padd_acquire_renews_and_cleanup_invalidates_late_ack) ... ok
+test_running_old_padd_never_gets_self_ack_and_native_cancel_reason_survives (verification.test_ai_input_ui41.LeaseFilesTests.test_running_old_padd_never_gets_self_ack_and_native_cancel_reason_survives) ... ok
+test_worker_and_standalone_rpc_share_the_same_fail_closed_file_rules (verification.test_ai_input_ui41.LeaseFilesTests.test_worker_and_standalone_rpc_share_the_same_fail_closed_file_rules) ... ok
+test_ack_then_request_then_result_validation_then_release (verification.test_ai_input_ui41.RelayOrderingTests.test_ack_then_request_then_result_validation_then_release) ... ok
+test_lease_cannot_enable_or_initialize_robot (verification.test_ai_input_ui41.StandaloneRPCTests.test_lease_cannot_enable_or_initialize_robot) ... ok
+test_token_is_rechecked_after_connect_and_never_enters_robotd_params (verification.test_ai_input_ui41.StandaloneRPCTests.test_token_is_rechecked_after_connect_and_never_enters_robotd_params) ... ok
+test_default_on_demand_does_not_touch_camera_and_key_allows_photo (verification.test_ai_lifecycle_ui40.HubLifecycleTests.test_default_on_demand_does_not_touch_camera_and_key_allows_photo) ... ok
+test_failed_camera_setup_does_not_enable_or_clear_warning_on_stop (verification.test_ai_lifecycle_ui40.HubLifecycleTests.test_failed_camera_setup_does_not_enable_or_clear_warning_on_stop) ... ok
+test_live_toggle_without_key_uses_only_camera_rpc_and_keeps_snapshot_private (verification.test_ai_lifecycle_ui40.HubLifecycleTests.test_live_toggle_without_key_uses_only_camera_rpc_and_keeps_snapshot_private) ... ok
+test_manual_speech_ack_uses_session_revision_without_task_state (verification.test_ai_lifecycle_ui40.HubLifecycleTests.test_manual_speech_ack_uses_session_revision_without_task_state) ... ok
+test_cancel_before_start_leaves_no_pause_and_missing_ack_is_bounded (verification.test_ai_lifecycle_ui40.MouthPauseTests.test_cancel_before_start_leaves_no_pause_and_missing_ack_is_bounded) ... ok
+test_no_padd_does_not_block_audio_and_close_only_removes_own_files (verification.test_ai_lifecycle_ui40.MouthPauseTests.test_no_padd_does_not_block_audio_and_close_only_removes_own_files) ... ok
+test_real_ack_required_before_audio_when_padd_is_running (verification.test_ai_lifecycle_ui40.MouthPauseTests.test_real_ack_required_before_audio_when_padd_is_running) ... ok
+test_speaker_releases_after_real_drain_and_on_drain_failure (verification.test_ai_lifecycle_ui40.MouthPauseTests.test_speaker_releases_after_real_drain_and_on_drain_failure) ... ok
+test_each_original_motion_check_remains_required_and_is_named (verification.test_ai_session_ui6.ReadinessTests.test_each_original_motion_check_remains_required_and_is_named) ... ok
+test_only_active_webpad_owner_blocks_ai_not_connected_physical_gamepad (verification.test_ai_session_ui6.ReadinessTests.test_only_active_webpad_owner_blocks_ai_not_connected_physical_gamepad) ... ok
+test_stale_feedback_is_identified_without_false_home_instruction (verification.test_ai_session_ui6.ReadinessTests.test_stale_feedback_is_identified_without_false_home_instruction) ... ok
+test_locked_text_and_audio_are_blocked_but_next_turn_can_use_tools (verification.test_ai_session_ui6.SpeechSessionTests.test_locked_text_and_audio_are_blocked_but_next_turn_can_use_tools) ... ok
+test_pending_tool_thread_is_released_before_worker_shutdown (verification.test_ai_session_ui6.SpeechSessionTests.test_pending_tool_thread_is_released_before_worker_shutdown) ... ok
+test_revised_asr_hypotheses_do_not_repeat_and_final_is_authoritative (verification.test_ai_session_ui6.SpeechSessionTests.test_revised_asr_hypotheses_do_not_repeat_and_final_is_authoritative) ... ok
+test_provider_return_stop_and_eof_exit_cleanly (verification.test_ai_session_ui6.ZeroShutdownTests.test_provider_return_stop_and_eof_exit_cleanly) ... ok
+test_active_pending_task_cannot_be_repeated (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_active_pending_task_cannot_be_repeated) ... ok
+test_compressed_original_is_bounded_verified_and_exact (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_compressed_original_is_bounded_verified_and_exact) ... ok
+test_failed_scheduler_does_not_return_a_queued_receipt (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_failed_scheduler_does_not_return_a_queued_receipt) ... ok
+test_missing_mismatched_or_unprivileged_components_never_queue (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_missing_mismatched_or_unprivileged_components_never_queue) ... ok
+test_missing_unit_inactive_is_allowed_but_manager_errors_are_not (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_missing_unit_inactive_is_allowed_but_manager_errors_are_not) ... ok
+test_original_function_bodies_and_generated_shell_parse (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_original_function_bodies_and_generated_shell_parse) ... ok
+test_queue_uses_one_detached_five_second_worker_without_clearing_wifi (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_queue_uses_one_detached_five_second_worker_without_clearing_wifi) ... ok
+test_radio_unit_legacy_and_other_r5_operations_fail_before_queue (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_radio_unit_legacy_and_other_r5_operations_fail_before_queue) ... ok
+test_real_bash_worker_uses_r5_cleanup_and_preserves_unrelated_files (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_real_bash_worker_uses_r5_cleanup_and_preserves_unrelated_files) ... ok
+test_existing_pause_blocks_repeat_reset_until_explicit_reconnect (verification.test_hotspot_service_ui44.HotspotServiceTests.test_existing_pause_blocks_repeat_reset_until_explicit_reconnect) ... ok
+test_failed_or_ambiguous_request_never_retries_or_pauses_connection (verification.test_hotspot_service_ui44.HotspotServiceTests.test_failed_or_ambiguous_request_never_retries_or_pauses_connection) ... ok
+test_missing_or_nonboolean_queue_confirmation_is_not_success (verification.test_hotspot_service_ui44.HotspotServiceTests.test_missing_or_nonboolean_queue_confirmation_is_not_success) ... ok
+test_no_imu_or_robotd_feedback_required_and_secrets_stay_out_of_job (verification.test_hotspot_service_ui44.HotspotServiceTests.test_no_imu_or_robotd_feedback_required_and_secrets_stay_out_of_job) ... ok
+test_requires_explicit_boolean_confirmation_and_known_fields (verification.test_hotspot_service_ui44.HotspotServiceTests.test_requires_explicit_boolean_confirmation_and_known_fields) ... ok
+test_streamed_r5_payload_uses_existing_sudo_stdin_and_single_request (verification.test_hotspot_service_ui44.HotspotServiceTests.test_streamed_r5_payload_uses_existing_sudo_stdin_and_single_request) ... ok
+test_one_hz_timeout_never_extends_input_lease (verification.test_pad_recorder_status_ui42.IdleWakeTests.test_one_hz_timeout_never_extends_input_lease) ... ok
+test_real_pad_status_refreshes_but_disconnected_idle_sleeps (verification.test_pad_recorder_status_ui42.IdleWakeTests.test_real_pad_status_refreshes_but_disconnected_idle_sleeps) ... ok
+test_bad_report_is_bounded_and_does_not_break_speed_controls (verification.test_pad_recorder_status_ui42.RecorderReportTests.test_bad_report_is_bounded_and_does_not_break_speed_controls) ... ok
+test_current_process_must_be_padd (verification.test_pad_recorder_status_ui42.RecorderReportTests.test_current_process_must_be_padd) ... ok
+test_idle_without_last_is_not_a_saved_recording (verification.test_pad_recorder_status_ui42.RecorderReportTests.test_idle_without_last_is_not_a_saved_recording) ... ok
+test_old_firmware_missing_report_is_a_support_hint (verification.test_pad_recorder_status_ui42.RecorderReportTests.test_old_firmware_missing_report_is_a_support_hint) ... ok
+test_stale_future_or_wrong_pid_report_never_becomes_saved (verification.test_pad_recorder_status_ui42.RecorderReportTests.test_stale_future_or_wrong_pid_report_never_becomes_saved) ... ok
+test_verified_pid_and_clock_keep_existing_speed_result (verification.test_pad_recorder_status_ui42.RecorderReportTests.test_verified_pid_and_clock_keep_existing_speed_result) ... ok
+test_api_shutdown_needs_no_sudo_or_imu_and_success_only_confirms_request (verification.test_shutdown_ui45.NativeShutdownTests.test_api_shutdown_needs_no_sudo_or_imu_and_success_only_confirms_request) ... ok
+test_native_failure_or_ambiguous_receipt_does_not_pause_or_retry (verification.test_shutdown_ui45.NativeShutdownTests.test_native_failure_or_ambiguous_receipt_does_not_pause_or_retry) ... ok
+test_reboot_remains_one_privileged_os_command_and_shutdown_helper_is_closed (verification.test_shutdown_ui45.NativeShutdownTests.test_reboot_remains_one_privileged_os_command_and_shutdown_helper_is_closed) ... ok
+test_rejected_malformed_and_disconnected_ipc_never_use_os_fallback (verification.test_shutdown_ui45.NativeShutdownTests.test_rejected_malformed_and_disconnected_ipc_never_use_os_fallback) ... ok
+test_shutdown_crosses_the_real_relay_with_physical_select_method (verification.test_shutdown_ui45.NativeShutdownTests.test_shutdown_crosses_the_real_relay_with_physical_select_method) ... ok
+test_shutdown_does_not_grant_the_ai_lease_permission_to_power_off (verification.test_shutdown_ui45.NativeShutdownTests.test_shutdown_does_not_grant_the_ai_lease_permission_to_power_off) ... ok
+
+----------------------------------------------------------------------
+Ran 58 tests in 4.582s
+
+OK
+
+test_active_pending_task_cannot_be_repeated (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_active_pending_task_cannot_be_repeated) ... ok
+test_compressed_original_is_bounded_verified_and_exact (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_compressed_original_is_bounded_verified_and_exact) ... ok
+test_failed_scheduler_does_not_return_a_queued_receipt (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_failed_scheduler_does_not_return_a_queued_receipt) ... ok
+test_missing_mismatched_or_unprivileged_components_never_queue (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_missing_mismatched_or_unprivileged_components_never_queue) ... ok
+test_missing_unit_inactive_is_allowed_but_manager_errors_are_not (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_missing_unit_inactive_is_allowed_but_manager_errors_are_not) ... ok
+test_original_function_bodies_and_generated_shell_parse (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_original_function_bodies_and_generated_shell_parse) ... ok
+test_queue_uses_one_detached_five_second_worker_without_clearing_wifi (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_queue_uses_one_detached_five_second_worker_without_clearing_wifi) ... ok
+test_radio_unit_legacy_and_other_r5_operations_fail_before_queue (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_radio_unit_legacy_and_other_r5_operations_fail_before_queue) ... ok
+test_real_bash_worker_uses_r5_cleanup_and_preserves_unrelated_files (verification.test_hotspot_helper_ui44.HotspotHelperTests.test_real_bash_worker_uses_r5_cleanup_and_preserves_unrelated_files) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.648s
+
+OK

@@ -1,0 +1,27 @@
+{
+  "release": "Microduck-UI44",
+  "console_version": "1.0.224",
+  "service_build": "1fa8438-feetech-ft6-control.74",
+  "python_tests": {
+    "passed": 93,
+    "failed": 0,
+    "new_hotspot_tests": 15,
+    "regression_tests": 78,
+    "log": "python-tests.log"
+  },
+  "frontend_suites": {
+    "passed": 6,
+    "failed": 0,
+    "details": "frontend-results.json"
+  },
+  "python_syntax_files_checked": 125,
+  "r5_function_shell_syntax": "passed",
+  "original_portal_extraction": "matches R5 sed byte-for-byte",
+  "compressed_argument_bytes": 83668,
+  "firmware_byte_identical_to_ui43": true,
+  "native_rebuilt": false,
+  "hardware_tested": false,
+  "actual_ap_switch_performed": false,
+  "review": "Independent R5 audit passed after dependency and radxa-account prechecks were added.",
+  "scope": "scope-check.json"
+}

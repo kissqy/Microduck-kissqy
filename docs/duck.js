@@ -1,9 +1,9 @@
-import * as T from './vendor/three.module.min.js?demo=20261013';
-import {OrbitControls} from './vendor/OrbitControls.js?demo=20261013';
-import {parseDuck,rootQuaternion} from './pose.js?demo=20261013';
-import {servoPartMap} from './joint-map.js?demo=20261013';
-import {resolvePoseSample} from './pose-state.js?demo=20261013';
-import {REFERENCE_MODES,referencePose,hasReferenceHinge} from './calibration-reference.js?demo=20261013';
+import * as T from './vendor/three.module.min.js';
+import {OrbitControls} from './vendor/OrbitControls.js';
+import {parseDuck,rootQuaternion} from './pose.js?v=v260-20261113';
+import {servoPartMap} from './joint-map.js?v=v260-20261113';
+import {resolvePoseSample} from './pose-state.js?v=v260-20261113';
+import {REFERENCE_MODES,referencePose,hasReferenceHinge} from './calibration-reference.js?v=v260-20261113';
 
 export class DuckView {
   constructor(){this.headingReference=null;this.displayYaw=null;this.referenceMode='measured';this.selected=0;this.referenceStarted=0;}
@@ -21,14 +21,14 @@ export class DuckView {
     this.controls=new OrbitControls(this.camera,this.renderer.domElement);
     this.controls.target.set(0,0,.145);this.controls.enableDamping=false;
     this.controls.minDistance=.065;this.controls.maxDistance=1.8;
-    this.controls.addEventListener('start',()=>{this.focus=null;this.initialView=null;this.overviewName=null;});
+    this.controls.addEventListener('start',()=>{this.focus=null;this.initialView=null;});
     this.scene.add(new T.HemisphereLight(0xf0f5ff,0x50565b,2));
     const key=new T.DirectionalLight(0xffffff,2.2);key.position.set(.3,-.4,.8);this.scene.add(key);
     const rim=new T.DirectionalLight(0xe3edff,.8);rim.position.set(-.5,.4,.25);this.scene.add(rim);
     const grid=new T.GridHelper(1.6,32,0x415147,0x23302d);grid.rotation.x=Math.PI/2;grid.position.z=-.001;this.scene.add(grid);
     // This legend names body axes, so its arrows must follow the body as well.
     this.bodyAxes=new T.AxesHelper(.055);this.bodyAxes.material.depthTest=false;this.bodyAxes.renderOrder=10;this.scene.add(this.bodyAxes);
-    const modelResponse=await fetch(new URL('./assets/duck-visual.bin', import.meta.url));if(!modelResponse.ok)throw Error('官方完整视觉模型读取失败');
+    const modelResponse=await fetch('./assets/duck-visual.bin');if(!modelResponse.ok)throw Error('官方完整视觉模型读取失败');
     this.model=parseDuck(await modelResponse.arrayBuffer());
     // Share immutable GPU geometry between measured and target poses.
     this.geometry=this.model.meshes.map(m=>{
@@ -52,7 +52,7 @@ export class DuckView {
       // Transparent covers/bearings must not consume a servo click.
       const hit=this.ray.intersectObjects(this.actual.servos,false)[0];if(hit)onSelect(hit.object.userData.joint);
     });
-    this.observer=new ResizeObserver(()=>{const w=container.clientWidth,h=container.clientHeight;if(w&&h){this.camera.aspect=w/h;this.camera.updateProjectionMatrix();this.renderer.setSize(w,h);if(this.overviewName)this.view(this.overviewName);}});
+    this.observer=new ResizeObserver(()=>{const w=container.clientWidth,h=container.clientHeight;if(w&&h){this.camera.aspect=w/h;this.camera.updateProjectionMatrix();this.renderer.setSize(w,h);}});
     // With no feedback, show an explicitly labelled zero reference, not HOME.
     this.observer.observe(container);this.pose(this.actual,Array(15).fill(0),[0,0,-1],0);this.view('front');this.frame();
     return this;
@@ -168,7 +168,6 @@ export class DuckView {
     });
   }
   focusJoint(joint){
-    this.overviewName=null;
     const servo=this.actual?.servos[joint];if(!servo)return;
     this.initialView=null;
     this.actual.root.updateMatrixWorld(true);
@@ -197,16 +196,7 @@ export class DuckView {
     // Only the camera moves: measured joints, heading and ground stay intact.
     const root=this.actual?.root,rotation=root?.quaternion||new T.Quaternion();
     const target=this.actual?this.actual.bodies[0].localToWorld(new T.Vector3(0,0,.025)):new T.Vector3(0,0,.145);
-    // The online preview can be a narrow column; fit the whole duck to both axes.
-    this.overviewName=name;
-    const offset=new T.Vector3(...positions[name]);
-    if(this.actual){
-      const sphere=new T.Box3().setFromObject(this.actual.root).getBoundingSphere(new T.Sphere());
-      const vertical=T.MathUtils.degToRad(this.camera.fov),horizontal=2*Math.atan(Math.tan(vertical/2)*this.camera.aspect);
-      const distance=sphere.radius/Math.sin(Math.min(vertical,horizontal)/2)*1.12;
-      offset.setLength(Math.max(offset.length(),distance));
-    }
-    this.camera.position.copy(target).add(offset.applyQuaternion(rotation));
+    this.camera.position.copy(target).add(new T.Vector3(...positions[name]).applyQuaternion(rotation));
     this.controls.target.copy(target);this.controls.update();
   }
   frame(){const now=performance.now();if(this.referenceMode!=='measured'&&this.referenceAnimating){this.renderReference(now);this.onDisplayChange?.();}this.advanceFocus(now);this.controls.update();this.updateBodyMarkers();this.renderer.render(this.scene,this.camera);requestAnimationFrame(()=>this.frame());}

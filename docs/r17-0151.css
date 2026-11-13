@@ -198,6 +198,10 @@ main{--health-columns:5;--health-gap:16px}
 .firmware-authorization input{width:170px;max-width:100%;font-size:11px}
 .firmware-authorization .service-credentials span{font-size:10px;flex:1;min-width:130px}
 .firmware-body{gap:6px}
+#service-power-actions #firmware-hotspot{min-height:34px;padding:7px 15px;margin-left:6px;background:#e8b75c;border-color:#f3ce8a;color:#19221c;font-weight:750;box-shadow:0 0 0 1px #e8b75c33}
+#service-power-actions #firmware-hotspot:hover:not(:disabled){background:#f3c872;border-color:#ffe0a2}
+#service-power-actions #firmware-hotspot:focus-visible{outline:2px solid #ffe4b3;outline-offset:3px}
+#service-power-actions #firmware-hotspot:disabled{background:#74633f;border-color:#9b8555;color:#e1d2b0;opacity:.7;box-shadow:none}
 #firmware-progress{width:100%;height:10px;accent-color:#98b96f}
 #firmware-progress-text{margin:3px 0;overflow-wrap:anywhere}
 #service-editor .service-confirm-row{justify-content:flex-start;gap:8px;flex-wrap:wrap;margin:6px 0}
@@ -359,3 +363,31 @@ main{--health-columns:5;--health-gap:16px}
 #control-panel .pad-model-parameters .model-slot{max-width:none;min-width:0}
 #control-panel .pad-help{height:auto}
 @media(max-width:650px){#control-panel .pad-configuration-column{grid-template-columns:1fr}}
+
+/* V199: keep everyday settings and chorale controls in compact rows. */
+#control-panel .pad-control-column{container:pad-controls / inline-size;min-width:0}
+#control-panel .pad-sliders{grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;gap:8px 16px;margin-top:8px;padding:0}
+#control-panel .pad-sliders>label{min-width:0}
+#control-panel .pad-head-amplitude{gap:5px 8px;min-width:0}
+#control-panel .pad-head-amplitude .button{min-height:32px;padding:5px 8px;white-space:nowrap}
+#control-panel .chorale-controls{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:4px 12px;margin:8px 0 4px;padding:8px 10px}
+#control-panel .chorale-heading{gap:4px 10px;margin:0;min-width:0;font-size:12px}
+#control-panel .chorale-heading strong{white-space:nowrap}
+#control-panel .chorale-heading span{overflow-wrap:anywhere}
+#control-panel .chorale-buttons{gap:6px}
+#control-panel .chorale-controls .button{min-height:32px;padding:5px 9px;font-size:12px;white-space:nowrap}
+#control-panel .chorale-settings{min-width:0;font-size:12px}
+#control-panel .chorale-settings summary{cursor:pointer;padding:7px 0;color:#b5c6b7;white-space:nowrap}
+#control-panel .chorale-settings[open]{grid-column:1/-1}
+#control-panel .chorale-help{padding:3px 0 5px;color:#aab9a5;line-height:1.55}
+#control-panel .chorale-help p{margin:0 0 6px;font-size:12px}
+#control-panel .chorale-setup-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin:6px 0}
+#control-panel .chorale-setup-row span{flex:1;min-width:200px}
+#control-panel .chorale-controls .service-job{grid-column:1/-1;margin:0;padding:3px 0 0;font-size:11px;font-weight:400;line-height:1.45;white-space:pre-wrap;border:0;background:none}
+#control-panel .chorale-controls .service-job:empty{display:none}
+#control-panel .chorale-controls .service-job.error{padding:6px 8px;border-radius:5px;background:#472726}
+#control-panel .chorale-controls .service-job.warning{padding:6px 8px;border-radius:5px;background:#3d341c}
+#control-panel .chorale-controls .service-job::before{width:6px;height:6px}
+@container pad-controls (min-width:900px){#control-panel .pad-sliders{grid-template-columns:minmax(120px,1fr) minmax(120px,1fr) auto}}
+@container pad-controls (max-width:600px){#control-panel .chorale-controls{grid-template-columns:minmax(0,1fr) auto}#control-panel .chorale-heading{grid-column:1/-1}#control-panel .chorale-settings{justify-self:end}#control-panel .chorale-settings[open]{justify-self:stretch}}
+@container pad-controls (max-width:440px){#control-panel .pad-sliders{grid-template-columns:minmax(0,1fr)}#control-panel .chorale-setup-row span{min-width:0;flex-basis:100%}}

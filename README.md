@@ -109,7 +109,7 @@
 | 系统镜像 R2 · Microduck 0.15.1 / control.102 | 新装 ZERO 3W：[下载 .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [镜像发布说明](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
 | 中文机器人中控 Studio V260 · 随包固件 control.102 | 连接、标定与控制实机：[前往发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [文件与使用说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |
 | V260 中控源码与固件源码 | [独立版本源码](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260) · [运行包与源码说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |
-| 强化学习训练中控 R1.5.27 · 可选 | 训练与评估新动作：[下载 ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip) |
+| 强化学习训练中控 R1.5.27 · 可选 | 训练与评估新动作：[下载 ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip) |
 
 R2 已预装 control.102 与 11 个 ONNX 运行模型。首次运动前仍需核对本机机械与 IMU 标定；已有系统升级时，使用 V260 中控安装本版随包固件。[发布基线与验证范围](microduck-hd1910/docs/BASELINE.md)；本次发布整理不扩大已记录的实机 Known-Good 范围。
 
@@ -117,14 +117,14 @@ R2 已预装 control.102 与 11 个 ONNX 运行模型。首次运动前仍需核
 <summary>历史版本：R1 / V167</summary>
 
 - [系统镜像 R1](https://github.com/kissqy/Microduck-kissqy/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz)：预装 control.40，开机配网 R5。
-- [机器人中控 R17 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip)：随包固件 control.43；[历史固件说明](release-assets/README.md#历史版本control43)。
-- V167 固件与中控源码统一从 [versions/v167/](versions/v167/) 进入；V260 源码从 [versions/v260/](versions/v260/) 进入。原根目录源码和下载地址保留兼容。
+- [机器人中控 R17 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Console-R17-V167.zip)：随包固件 control.43；[历史固件说明](versions/v167/release-assets/README.md)。
+- V167 固件与中控源码统一从 [versions/v167/](versions/v167/) 进入；V260 源码从 [versions/v260/](versions/v260/) 进入。原根目录源码保留兼容；旧根 `release-assets/` 已归并到 V167 版本目录，下载以新入口为准。
 
 </details>
 
 首次制作按 [刷机与首次行走教程](https://kissqy.github.io/Microduck-kissqy/build/start.html) 下载和操作；所需文件就在对应步骤。
 
-[📥 系统镜像 R2](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [📥 机器人中控 V260](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [固件下载与自焊 IMU 烧录](release-assets/README.md)
+[📥 系统镜像 R2](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [📥 机器人中控 V260](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [V260 固件下载](versions/v260/README.md) · [自焊 IMU 烧录](hardware/IMU-FIRMWARE.md)
 
 ## 🎮 中文机器人中控
 
@@ -159,7 +159,7 @@ HAT 连接 ZERO 3W 与舵机总线，提供供电、通信及音频外围；独�
 
 **正常复刻和日常使用无需训练，直接使用配套现成模型即可。** 只有想自己训练新动作，或学习强化学习训练流程时，再使用独立训练中控：选择任务与配方、观察训练奖励、在仿真中评估，再导出模型进行实机验证。
 
-[训练中控 R1.5.27 指南](microduck-hd1910/training-console/README.zh-CN.md) · [在线演示](https://kissqy.github.io/Microduck-kissqy/training/) · [下载训练中控](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip)
+[训练中控 R1.5.27 指南](microduck-hd1910/training-console/README.zh-CN.md) · [在线演示](https://kissqy.github.io/Microduck-kissqy/training/) · [下载训练中控](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip)
 
 <table align="center">
   <tr>
@@ -174,3 +174,4 @@ HAT 连接 ZERO 3W 与舵机总线，提供供电、通信及音频外围；独�
     </td>
   </tr>
 </table>
+

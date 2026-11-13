@@ -30,7 +30,7 @@ V260 source is grouped under `versions/v260/`; V167 source and build assets are 
 2. If the system cannot connect to saved Wi-Fi on boot, join `Microduck-kissqy` (password `12345678`), then configure home Wi-Fi and a new system login password. If the page does not open automatically, visit `http://10.42.0.1:8088`.
 3. [Open V260 release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) and download the complete Console Studio V260 package, extract everything, and run `start.cmd`; on macOS / Linux run `bash start.command`. The local page is `http://127.0.0.1:8090`.
 4. Enter your own `username@robot-IP` and SSH details. Check your robot's calibration, then follow **HOME → hold → walk**. The image preinstalls robot services; upgrade an existing system using “系统维护 → 随包固件” (System Maintenance → Bundled Firmware).
-5. For training, [download Training Studio R1.5.27](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip), run `start-training.cmd` or `bash start-training.command`, and open `http://127.0.0.1:8092`.
+5. For training, [download Training Studio R1.5.27](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip), run `start-training.cmd` or `bash start-training.command`, and open `http://127.0.0.1:8092`.
 
 Training uses an NVIDIA GPU and Linux / WSL2. Install Git and [uv](https://docs.astral.sh/uv/getting-started/installation/) first. Initial environment preparation downloads a pinned training engine and dependencies. There are currently 14 action categories and 35 task recipes; see the [training user guide](training-console/USER-GUIDE.en.md).
 
@@ -43,6 +43,6 @@ Training uses an NVIDIA GPU and Linux / WSL2. Install Git and [uv](https://docs.
 - Release versions and validation scope: [BASELINE.md](docs/BASELINE.en.md). Provenance and checksums: [PUBLICATION-MANIFEST.json](PUBLICATION-MANIFEST.json).
 - Licensing and third-party sources: [LICENSE](LICENSE) · [THIRD-PARTY.md](docs/THIRD-PARTY.en.md).
 
-[Historical R1 image](https://github.com/kissqy/Microduck-kissqy/releases/tag/public-image-r1) · [V167 console ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip) · [control.43 firmware guide](../release-assets/README.en.md#historical-release-control43). Each robot needs its own joint zero, direction, limit, and IMU checks; publication of source does not expand the original real-robot acceptance scope.
+[Historical R1 image](https://github.com/kissqy/Microduck-kissqy/releases/tag/public-image-r1) · [V167 console ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Console-R17-V167.zip) · [control.43 firmware guide](../versions/v167/release-assets/README.en.md). Each robot needs its own joint zero, direction, limit, and IMU checks; publication of source does not expand the original real-robot acceptance scope.
 
 Licensing details: [software and self-trained model rights](docs/SOFTWARE-MODEL-RIGHTS.en.md) · [model provenance](docs/MODEL-PROVENANCE.en.md) · [component licenses](LICENSE).

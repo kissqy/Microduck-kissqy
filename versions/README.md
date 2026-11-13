@@ -9,6 +9,6 @@
 
 V167、V260 的源码与配套说明分别保存在各自目录。运行包从相应版本页下载；V260 的两个运行 ZIP 与 R2 镜像保存在 [Releases](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)。源码无需重复下载或上传 ZIP。
 
-独立训练中控 **R1.5.27** 不随机器人中控版本升级，入口见 [训练中控说明](../microduck-hd1910/training-console/README.md)。根目录原有 `microduck-hd1910/`、`release-assets/` 保留兼容历史链接，新的版本选择以本目录为准。
+独立训练中控 **R1.5.27** 不随机器人中控版本升级，入口见 [训练中控说明](../microduck-hd1910/training-console/README.md)。根目录 `microduck-hd1910/` 仍作为源码兼容位置；旧根 `release-assets/` 已归并到 `versions/v167/release-assets/`，版本选择与下载以本目录为准。
 
 这次只整理仓库目录与导航，保持发布包、固件、模型和既有实机 Known-Good 记录不变。下一步唯一主任务：参考卡上的 V260 功能验收。

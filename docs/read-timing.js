@@ -1,4 +1,5 @@
 // Durations belong to the acquisition that failed, never to the latest good read.
+import {formatError} from './messages.js?v=v260-20261113';
 const finite=v=>typeof v==='number'&&Number.isFinite(v)&&v>=0;
 export const isLateRead=message=>/complete but transaction deadline exceeded/.test(message||'');
 
@@ -31,5 +32,5 @@ export function failureText(bus,failure){
   const deadline=finite(failure.deadline_us)?failure.deadline_us:knownR17?20000:null;
   const timedMissing=hasMissing&&(failure.deadline_exceeded===true||deadline!==null&&finite(failure.elapsed_us)&&failure.elapsed_us>=deadline);
   const category=timedMissing?`超时未回 ID：${failure.missing_ids.join(', ')}（不重复计缺包）\n`:failure.complete_but_late||isLateRead(failure.error)?'完整回包超时（整轮，未归因到设备）\n':'';
-  return category+failure.error+(finite(failure.elapsed_us)||isLateRead(failure.error)?`\n${readTiming(bus,failure)}`:'');
+  return category+formatError(failure.error)+(finite(failure.elapsed_us)||isLateRead(failure.error)?`\n${readTiming(bus,failure)}`:'');
 }

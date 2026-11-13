@@ -44,7 +44,7 @@
 | ❓ 刷机、标定、IMU、断网与重启 / FAQ | [中文](MICRODUCK-FAQ.md) | [English](MICRODUCK-FAQ.en.md) |
 | 🔧 装机与使用注意事项 / Assembly: 5 GHz Wi-Fi & 1000 µF input capacitor | [中文](ASSEMBLY-NOTES.md) | [English](ASSEMBLY-NOTES.en.md) |
 | 仓库目录与重复资源 | [中文](REPOSITORY-LAYOUT.md) | [English](REPOSITORY-LAYOUT.en.md) |
-| 当前固件下载与历史 control.43 安装说明 | [中文](../release-assets/README.md) | [English](../release-assets/README.en.md) |
+| 历史 V167 / control.43 下载与安装 | [中文](../versions/v167/release-assets/README.md) | [English](../versions/v167/release-assets/README.en.md) |
 | 🎬 看看鸭鸭的真实表现（7 段视频） | [中文](../README.md) | [English](../README.en.md) |
 | 🌱 作者如何从新手进阶 — 学习时间线与完整提问回顾 | [中文](AUTHOR-JOURNEY.md) | [English](AUTHOR-JOURNEY.en.md) |
 | START-HERE | [中文](../START-HERE.txt) | [English](../START-HERE.en.md) |

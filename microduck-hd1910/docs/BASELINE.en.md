@@ -20,8 +20,8 @@ Published version: **R17 V167 / control.43 + Training R1.5.27**, based on offici
 - `firmware/`: firmware source, installer scripts, models, tests and licenses.
 - `firmware/console/`: V167 console source and bundled firmware payload.
 - `training-console/`: unchanged R1.5.27 release content.
-- `release-assets/`: complete V167 console and R1.5.27 training ZIPs.
-- `release-assets/build-baselines/`: one V164 ZIP retained for reproducible packaging.
+- `versions/v167/release-assets/`: complete V167 console and R1.5.27 training ZIPs.
+- `versions/v167/release-assets/build-baselines/`: one V164 ZIP retained for reproducible packaging.
 - System image: the existing `public-image-r1` Release; after flashing, install V167 bundled firmware to upgrade to control.43.
 
 Source no longer embeds an old complete installer ZIP or a second binary copy of compiled programs, ONNX libraries and packaged models. `firmware/prepare-V167.py` verifies and restores required resources; Git ignores generated copies. See [the V167 build guide](../firmware/BUILDING-V167.en.md).

@@ -25,19 +25,57 @@ export function messageZh(value, fallback='服务返回了异常，具体报文�
   if((m=raw.match(/^reading the frame failed \(ULD status (\d+)\)$/)))return `读取测距数据失败，驱动状态码 ${m[1]}。`;
   if((m=raw.match(/^the (\S+) stopped answering between the probe and the handshake$/)))return `${m[1]} 探测后在握手过程中停止响应。`;
   if((m=raw.match(/^something at (0x[\da-f]+) answered with device (0x[\da-f]+) revision (0x[\da-f]+), which is neither a VL53L5CX nor a VL53L8CX$/i)))return `地址 ${m[1]} 的设备型号不受支持：设备码 ${m[2]}、版本码 ${m[3]}，需要 VL53L5CX 或 VL53L8CX。`;
-  if(/host key verification failed|remote host identification has changed/i.test(raw))return 'SSH 主机身份验证失败，请先在终端核验 Zero 的主机密钥。';
-  if(/permission denied.*publickey/i.test(raw))return 'SSH 密钥认证失败，请确认当前 Windows 账号可以免密登录 Zero。';
-  if(/permission denied|errno 13|access is denied/i.test(raw))return '访问权限不足，请检查登录账号读取该服务接口的权限。';
-  if(/no such file or directory|errno 2\]/i.test(raw))return '找不到对应文件或服务接口，请检查相关服务是否已启动。';
-  if(/connection refused|errno 111/i.test(raw))return '服务拒绝连接，请检查对应服务是否正在运行。';
-  if(/connection reset|broken pipe|connection closed|connection timed out|timed out/i.test(raw))return '数据连接已中断或超时，正在重试。';
-  if(/could not resolve hostname|name or service not known/i.test(raw))return '无法解析 Zero 的主机名，请检查连接地址。';
-  if(/network is unreachable|no route to host/i.test(raw))return '无法访问 Zero，请检查局域网连接。';
-  if(/python3.*(?:not found|command not found)/i.test(raw))return 'Zero 上未找到 Python 3，采集器无法启动。';
-  if(raw.startsWith('SSH 中断'))return 'SSH 数据采集已中断，正在重试；具体报文可在“查看 JSON”中查看。';
-  // Existing Chinese messages may contain identifiers/units, but not English sentences.
+  return formatError(raw,fallback);
+}
+
+/** Translate only at display boundaries; never alter replies, logs or recordings. */
+export function formatError(value,fallback='操作未完成，原始错误如下。') {
+  let raw=String(value?.message??value??'').trim();
+  if(!raw)return '';
+  // DOMException names can be the only indication of a denied device permission.
+  const name=value?.name;
+  if(/^(?:NotAllowed|NotFound|NotReadable|Overconstrained|Security|Timeout|Abort)Error$/.test(name||'')&&!raw.includes(name))raw=name+': '+raw;
+  if(raw.includes('\n原始错误：'))return raw;
+  const rules=[
+    [/host key verification failed|remote host identification has changed/i,'SSH 主机身份校验未通过，请核对 Zero 的主机密钥；重刷系统后原有记录可能已不匹配。'],
+    [/permission denied[^\n]*\([^)]*(?:publickey|password)|authentication failed|incorrect password|sorry, try again/i,'SSH 或 sudo 登录验证失败，请检查登录账号、密码或密钥。'],
+    [/read-only file system|errno\s*30\b/i,'文件系统处于只读状态，无法写入文件。'],
+    [/no space left on device|errno\s*28\b/i,'存储空间已满，无法继续写入。'],
+    [/python3[^\n]*(?:not found|command not found)/i,'Zero 上未找到 Python 3，当前功能无法启动。'],
+    [/no such file or directory|errno\s*2\]|filenotfounderror/i,'找不到所需文件或服务接口，请检查文件路径及对应服务。'],
+    [/NotAllowedError|permissiondismissed|permissiondenied|permission denied by system|user denied|permission.*(?:microphone|camera)|(?:microphone|camera).*permission/i,'浏览器未获得摄像头、麦克风或媒体播放权限，请检查浏览器权限设置。'],
+    [/NotReadableError|could not start (?:video|audio) source|device in use/i,'无法读取摄像头或麦克风，设备可能被占用或暂不可用。'],
+    [/NotFoundError|requested device not found|no (?:audio|video) input devices/i,'未找到可用的摄像头或麦克风设备。'],
+    [/OverconstrainedError|constraint.*not satisfied/i,'当前摄像头或麦克风不支持请求的采集参数。'],
+    [/SecurityError|insecure context|secure context/i,'浏览器安全限制阻止了此操作，请通过中控启动器打开页面并检查浏览器权限。'],
+    [/permission denied|errno\s*13\b|access is denied|access denied|operation not permitted|errno\s*1\]/i,'访问权限不足，当前操作未获得所需权限。'],
+    [/invalid[_ -]?api[_ -]?key|missing[^\n]*(?:api[_ -]?key|access[_ -]?token)|(?:api[_ -]?key|access[_ -]?token)[^\n]*(?:invalid|required|missing|not set)|unauthorized|invalid (?:token|credentials)/i,'AI 服务身份验证未通过，请检查对应服务的 KEY、令牌或账号配置。'],
+    [/rate[_ -]?limit|too many requests|quota exceeded|insufficient[_ ]quota/i,'服务请求次数或额度已达到限制，请检查服务额度并稍后再试。'],
+    [/HTTP\s*401\b|status(?:[_ ]code)?[\s:=]+401\b/i,'服务身份验证未通过，请检查登录凭据或 AI 服务 KEY。'],
+    [/HTTP\s*403\b|status(?:[_ ]code)?[\s:=]+403\b|forbidden/i,'服务拒绝了此请求，请检查账号权限及配置。'],
+    [/HTTP\s*404\b|status(?:[_ ]code)?[\s:=]+404\b/i,'请求的服务地址或接口不存在，请检查服务地址。'],
+    [/HTTP\s*409\b|status(?:[_ ]code)?[\s:=]+409\b/i,'当前状态与请求冲突，请查看实时状态后再操作。'],
+    [/HTTP\s*413\b|payload too large|request entity too large/i,'提交的数据或文件过大，请检查文件大小。'],
+    [/HTTP\s*429\b|status(?:[_ ]code)?[\s:=]+429\b/i,'服务请求过于频繁，请稍后再试。'],
+    [/HTTP\s*(?:400|405|422)\b|status(?:[_ ]code)?[\s:=]+(?:400|405|422)\b/i,'服务未接受请求参数或操作方式，请检查当前设置。'],
+    [/HTTP\s*5\d\d\b|status(?:[_ ]code)?[\s:=]+5\d\d\b|bad gateway|service unavailable|internal server error/i,'服务端暂时无法完成请求，请检查服务状态或稍后再试。'],
+    [/could not resolve hostname|name or service not known|temporary failure in name resolution|getaddrinfo|ENOTFOUND/i,'无法解析服务主机名，请检查地址及网络连接。'],
+    [/network is unreachable|no route to host|ENETUNREACH|EHOSTUNREACH/i,'无法访问目标设备或服务，请检查网络连接与地址。'],
+    [/connection refused|errno\s*111\b|ECONNREFUSED/i,'目标服务拒绝连接，请检查地址、端口及对应服务是否已启动。'],
+    [/connection reset|broken pipe|connection closed|connection (?:was )?lost|ECONNRESET|EPIPE/i,'连接已中断；本次操作是否完成请查看实际状态。'],
+    [/timed? out|timeout|TimeoutError|ETIMEDOUT|HTTP\s*408\b/i,'等待响应超时，尚未确认本次操作完成。'],
+    [/AbortError|operation was aborted|signal is aborted/i,'请求已取消或等待已终止，尚未确认本次操作完成。'],
+    [/failed to fetch|fetch failed|networkerror|network request failed|load failed/i,'浏览器无法访问中控或目标服务，请检查连接与启动终端。'],
+    [/RTCError|setRemoteDescription|setLocalDescription|ICE (?:failed|connection)|SDP|WebRTC.*(?:failed|error)/i,'摄像头 WebRTC 连接协商失败，请检查摄像头服务及网络连接。'],
+    [/complete but transaction deadline exceeded/i,'反馈已完整返回，但超过了本轮读取截止时间。'],
+    [/unexpected token|unexpected end of JSON|JSONDecodeError|not valid JSON|JSON\.parse/i,'收到的数据格式不完整或不是有效 JSON，请检查对应服务和原始回执。'],
+    [/Traceback \(most recent call last\)|\b(?:Runtime|Type|Value|Attribute|Key|Index|OS|Import|ModuleNotFound)Error\b/i,'程序执行出现异常，具体原因见原始错误。']
+  ];
+  const match=rules.find(([pattern])=>pattern.test(raw));
+  if(match)return match[1]+'\n原始错误：'+raw;
+  // Chinese operator messages and identifiers/units are already readable.
   if(/[\u3400-\u9fff]/.test(raw)&&!/[A-Za-z]{3,}(?:[ \t]+[A-Za-z]{3,}){2}/.test(raw))return raw;
-  return fallback;
+  return (fallback||'操作未完成，原始错误如下。')+'\n原始错误：'+raw;
 }
 
 export function tofView(snapshot) {

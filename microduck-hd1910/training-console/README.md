@@ -6,7 +6,7 @@
 
 **当前配套：Microduck 官方 0.15.1 · 官方骨架 + 飞特 HD1910 · 14 类动作、35 种任务配方。**
 
-[⬇️ 下载完整训练中控 R1.5.27](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip) · [详细训练规则](README.zh-CN.md) · [项目首页](../../README.md)
+[⬇️ 下载完整训练中控 R1.5.27](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip) · [详细训练规则](README.zh-CN.md) · [项目首页](../../README.md)
 
 ## 能做什么
 

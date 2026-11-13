@@ -1,4 +1,5 @@
-import {showFeedback} from './feedback.js?demo=20261013';
+import {showFeedback} from './feedback.js?v=v260-20261113';
+import {formatError} from './messages.js?v=v260-20261113';
 
 export class GamepadRepair {
   constructor(panel){
@@ -49,9 +50,9 @@ export class GamepadRepair {
     if(job?.action!=='repair-gamepad')return;
     const key=JSON.stringify([job.at,job.status,job.phase,job.message,job.error,job.result,job.pad_steps]);
     if(key===this.lastKey)return;this.lastKey=key;
-    showFeedback(this.$('status'),job.error||job.result?.message||job.message||'正在提交修复…',job.result?.phase==='pair_required'||job.result?.warnings?.length?'warning':job.status);
+    showFeedback(this.$('status'),job.error?formatError(job.error):job.result?.message||job.message||'正在提交修复…',job.result?.phase==='pair_required'||job.result?.warnings?.length?'warning':job.status);
     const names={checking:'目标核对',pause_input:'暂停输入',forget:'删除目标旧配对',adapter:'蓝牙适配器',scanning:'发现手柄',pairing:'配对与信任',bluetooth:'蓝牙连接',physical:'实体输入',bridge:'Xbox 桥接',padd:'padd 接入',phone_pause:'暂停手机连接服务',phone_restore:'恢复手机连接服务',connect_failed:'蓝牙连接',physical_unready:'实体输入',bridge_unready:'Xbox 桥接',padd_unready:'padd 接入',adapter_failed:'蓝牙适配器',scan_busy:'发现手柄',scan_failed:'发现手柄',not_found:'发现手柄',missing_service:'目标核对',wrong_device:'目标核对',choose_device:'目标核对',busy:'目标核对',relax_unconfirmed:'停止并松开',bridge_service:'恢复桥接服务',padd_service:'恢复 padd 服务',connection_changed:'结束核对'};
-    this.$('steps').textContent=Object.entries(job.pad_steps||{}).filter(([,v])=>v.status!=='waiting').map(([phase,v])=>`${names[phase]||'操作结果'} · ${v.status==='success'?'成功':v.status==='failed'?'失败':'提示'} · ${v.message}`).join('\n');
+    this.$('steps').textContent=Object.entries(job.pad_steps||{}).filter(([,v])=>v.status!=='waiting').map(([phase,v])=>`${names[phase]||'操作结果'} · ${v.status==='success'?'成功':v.status==='failed'?'失败':'提示'} · ${v.status==='failed'?formatError(v.message):v.message}`).join('\n');
     if(job.status==='completed'&&job.result?.phase==='ready'&&this.$('supported').checked){this.$('supported').checked=false;this.$('start').textContent='连接／修复';}
   }
 }

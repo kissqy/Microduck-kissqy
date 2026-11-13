@@ -2,7 +2,7 @@
 
 > **Independent IMU firmware FT6 (STM32):** [download, wiring, and flashing](../../hardware/IMU-FIRMWARE.en.md) · [source](firmware/imu-source/README.en.md). The control.43 package below installs on ZERO; the IMU is programmed separately with ST-LINK.
 
-> **Compiled HD1910 firmware:** control.43 is an AArch64 package ready to install. See [download and installation](../../release-assets/README.en.md); compiling source is optional.
+> **Compiled HD1910 firmware:** control.43 is an AArch64 package ready to install. See [download and installation](../../versions/v167/release-assets/README.en.md); compiling source is optional.
 
 > **Current published source: Microduck 0.15.1 / HD1910 control.43, paired with R17 V167.** V167 is paired with control.43. Update: Fixed body jitter.
 

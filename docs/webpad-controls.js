@@ -1,19 +1,13 @@
 const initial=()=>({lx:0,ly:0,rx:0,ry:0,lt:0,rt:0,dx:0,dy:0});
 export class PadControls {
   constructor(panel){
-    this.panel=panel;this.root=panel.root.querySelector('.official-pad');this.axes=initial();this.buttons=new Set();this.inputs=new Map();
+    this.panel=panel;this.root=panel.root.querySelector('.official-pad');this.axes=initial();this.buttons=new Set();this.inputs=new Map();this.boundButtons=new Set();
     for(const stick of this.root.querySelectorAll('[data-stick]')){
       stick.addEventListener('pointerdown',e=>{if(e.button||panel.disabled)return;e.preventDefault();stick.setPointerCapture(e.pointerId);this.inputs.set(e.pointerId,{stick});this.drag(stick,e);});
       stick.addEventListener('pointermove',e=>{if(this.inputs.get(e.pointerId)?.stick===stick)this.drag(stick,e);});
       stick.addEventListener('lostpointercapture',e=>this.release(e.pointerId));stick.addEventListener('contextmenu',e=>e.preventDefault());
     }
-    for(const button of this.root.querySelectorAll('[data-button],[data-dpad],[data-trigger]')){
-      button.addEventListener('pointerdown',e=>{if(e.button||button.disabled||panel.disabled)return;e.preventDefault();button.setPointerCapture(e.pointerId);this.inputs.set(e.pointerId,{button});this.applyButton(button,true);});
-      button.addEventListener('lostpointercapture',e=>this.release(e.pointerId));
-      button.addEventListener('keydown',e=>{if(['Space','Enter'].includes(e.code)&&!e.repeat&&!button.disabled&&!panel.disabled){e.preventDefault();this.applyButton(button,true);}});
-      button.addEventListener('keyup',e=>{if(['Space','Enter'].includes(e.code)){e.preventDefault();this.applyButton(button,false);}});
-      button.addEventListener('blur',()=>{if(button.classList.contains('held'))this.applyButton(button,false);});
-    }
+    for(const button of this.root.querySelectorAll('[data-button],[data-dpad],[data-trigger]'))this.bindButton(button);
     for(const trigger of this.root.querySelectorAll('[data-axis]')){
       trigger.addEventListener('input',()=>{this.axes[trigger.dataset.axis]=Number(trigger.value);panel.change();});
       for(const event of ['pointerup','pointercancel','blur'])trigger.addEventListener(event,()=>{trigger.value=0;this.axes[trigger.dataset.axis]=0;panel.change(false);});
@@ -21,8 +15,18 @@ export class PadControls {
     window.addEventListener('pointerup',e=>this.release(e.pointerId));window.addEventListener('pointercancel',e=>this.release(e.pointerId));
     this.root.querySelector('[data-pad-center]').onclick=()=>{this.reset();panel.change(false);};
   }
+  bindButton(button){
+    if(this.boundButtons.has(button))return;
+    this.boundButtons.add(button);
+    button.addEventListener('pointerdown',e=>{if(e.button||button.disabled||this.panel.disabled)return;e.preventDefault();button.setPointerCapture(e.pointerId);this.inputs.set(e.pointerId,{button});this.applyButton(button,true);});
+    button.addEventListener('lostpointercapture',e=>this.release(e.pointerId));
+    button.addEventListener('keydown',e=>{if(['Space','Enter'].includes(e.code)&&!e.repeat&&!button.disabled&&!this.panel.disabled){e.preventDefault();this.applyButton(button,true);}});
+    button.addEventListener('keyup',e=>{if(['Space','Enter'].includes(e.code)){e.preventDefault();this.applyButton(button,false);}});
+    button.addEventListener('blur',()=>{if(button.classList.contains('held'))this.applyButton(button,false);});
+  }
   applyButton(button,pressed){
     if(pressed&&(button.disabled||button.dataset.unavailable==='true'||this.panel.disabled))return;
+    if(pressed&&button===this.panel.startAlias)this.panel.releaseStartOwnerOnIdle=true;
     if(button.dataset.trigger){this.axes[button.dataset.trigger]=pressed?1:0;}
     else if(button.dataset.button){if(pressed)this.buttons.add(button.dataset.button);else this.buttons.delete(button.dataset.button);}
     else {const [axis,value]=button.dataset.dpad.split(':');this.axes[axis]=pressed?Number(value):0;}
@@ -43,11 +47,11 @@ export class PadControls {
   reset(){
     this.inputs.clear();this.axes=initial();this.buttons.clear();
     for(const dot of this.root.querySelectorAll('[data-stick] i'))dot.style.transform='translate(0,0)';
-    for(const b of this.root.querySelectorAll('.held')){b.classList.remove('held');b.setAttribute('aria-pressed','false');}
+    for(const b of this.boundButtons){b.classList.remove('held');b.setAttribute('aria-pressed','false');}
     for(const input of this.root.querySelectorAll('[data-axis]'))input.value=0;
   }
   paint(){
-    for(const button of this.root.querySelectorAll('button'))button.disabled=this.panel.disabled||button.dataset.unavailable==='true';
+    for(const button of new Set([...this.root.querySelectorAll('button'),...this.boundButtons]))button.disabled=this.panel.disabled||button.dataset.unavailable==='true';
     for(const input of this.root.querySelectorAll('input'))input.disabled=this.panel.disabled;
     for(const stick of this.root.querySelectorAll('[data-stick]'))stick.setAttribute('aria-disabled',String(this.panel.disabled));
   }

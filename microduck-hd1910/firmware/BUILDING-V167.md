@@ -8,7 +8,7 @@
 
 ## 源码与成品
 
-本目录保存源码、配置、测试、许可证和界面资源。完整中控 ZIP 在仓库根目录 `release-assets/`；独立固件保留在 `console/updates/`，供中控原有安装流程直接使用。
+本目录保存源码、配置、测试、许可证和界面资源。完整中控 ZIP 在版本归档 `versions/v167/release-assets/`；独立固件保留在 `console/updates/`，供中控原有安装流程直接使用。
 
 编译程序、ONNX 动态库及打包目录中的重复模型不再保存第二份。构建前执行：
 
@@ -20,7 +20,7 @@ python3 prepare-V167.py
 
 2026-11-12 源码清理后，重复模型元数据也从 `policies/` 的指定文件按 SHA256 恢复。准备步骤共恢复 91 个资源；完整清单见 `SOURCE-LAYOUT.json`，审计结果见[源码清理记录](../docs/SOURCE-CLEANUP-20261112.md)。
 
-V164 ZIP 仅作为复现构建基线保留一份，位置为 `../../release-assets/build-baselines/Microduck-Console-R17-V164.zip`。`package-V167.py` 和验证脚本已使用这个位置。
+V164 ZIP 仅作为复现构建基线保留一份，位置为 `../../versions/v167/release-assets/build-baselines/Microduck-Console-R17-V164.zip`。`package-V167.py` 和验证脚本已使用这个位置。
 
 ## 编译
 

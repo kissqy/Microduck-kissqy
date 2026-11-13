@@ -166,7 +166,7 @@ def build(args):
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--base',type=Path,default=SRC.parents[1]/'release-assets/build-baselines/Microduck-Console-R17-V164.zip')
+    parser.add_argument('--base',type=Path,default=SRC.parents[1]/'versions/v167/release-assets/build-baselines/Microduck-Console-R17-V164.zip')
     parser.add_argument('--robotd',type=Path,default=SRC/'packaging/robotd')
     parser.add_argument('--padd',type=Path,default=SRC/'packaging/padd')
     parser.add_argument('--output',type=Path,default=SRC/'Microduck-Console-R17-V167.zip')

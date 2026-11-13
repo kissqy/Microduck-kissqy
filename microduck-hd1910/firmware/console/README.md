@@ -6,7 +6,7 @@
 
 **当前配套：Radxa ZERO 3W · 飞特 HD1910 · Microduck 官方 0.15.1 · control.43 固件。**
 
-[⬇️ 下载完整机器人中控 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip) · [详细使用及手柄按键说明](README.zh-CN.md) · [项目首页](../../../README.md)
+[⬇️ 下载完整机器人中控 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Console-R17-V167.zip) · [详细使用及手柄按键说明](README.zh-CN.md) · [项目首页](../../../README.md)
 
 ## 能做什么
 
@@ -56,7 +56,7 @@ V167 配套固件包含 **10 份运动模型：6 个常规模型、4 个滑轮�
 
 ## 相关入口
 
-- [独立已编译固件与安装说明](../../../release-assets/README.md)
+- [独立已编译固件与安装说明](../../../versions/v167/release-assets/README.md)
 - [完整中文使用说明](README.zh-CN.md)
 - [机器人固件源码及版本说明](../README-R17.zh-CN.md)
 - [固件编译说明](../../docs/BUILD.md)

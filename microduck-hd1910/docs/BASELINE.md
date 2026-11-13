@@ -20,8 +20,8 @@
 - `firmware/`：固件源码、安装脚本、模型、测试和许可证。
 - `firmware/console/`：V167 中控源码及随包固件载荷。
 - `training-console/`：R1.5.27 训练中控，保持原发布内容。
-- `release-assets/`：V167 中控和 R1.5.27 训练中控完整 ZIP。
-- `release-assets/build-baselines/`：一份 V164 ZIP，仅用于复现构建基线。
+- `versions/v167/release-assets/`：V167 中控和 R1.5.27 训练中控完整 ZIP。
+- `versions/v167/release-assets/build-baselines/`：一份 V164 ZIP，仅用于复现构建基线。
 - 系统镜像：已有 `public-image-r1` Release；刷卡后通过 V167 中控安装随包固件，升级到 control.43。
 
 源码目录不再内嵌旧版完整 ZIP，也不保存已编译程序、ONNX 动态库及打包模型的第二份二进制。构建所需资源由 `firmware/prepare-V167.py` 校验并恢复，生成文件已加入 Git 忽略规则。说明见 [V167 构建指南](../firmware/BUILDING-V167.md)。

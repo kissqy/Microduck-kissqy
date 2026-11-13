@@ -6,7 +6,7 @@ This directory contains **control.43** source based on official Microduck **0.15
 
 V167 is paired with control.43. Update: Fixed body jitter.
 
-- [Compiled control.43 download and installation](../../release-assets/README.en.md)
+- [Compiled control.43 download and installation](../../versions/v167/release-assets/README.en.md)
 - [Robot Console startup and usage](console/USER-GUIDE.en.md)
 - [Firmware configuration, models, and installation](packaging/README.en.md)
 - [Compile from source on a new machine](../docs/BUILD.en.md)

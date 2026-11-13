@@ -60,3 +60,5 @@ main{--console-columns:minmax(0,1.65fr) repeat(3,minmax(0,1fr));--console-gap:18
 
 /* Per-device evidence remains visible on every width, including recovered faults. */
 .inspection-device small{white-space:pre-line;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;line-height:1.5}.inspection-device.warn{border-color:#78663d;background:#29251b}.inspection-device.warn b{color:var(--amber)}
+
+.service-center-dialog{color:#e2e8e8;background:#151c1f;border:1px solid #6e623c;border-radius:10px;padding:24px;width:min(480px,calc(100vw - 40px));box-sizing:border-box;box-shadow:0 20px 70px #0008}.service-center-dialog::backdrop{background:#0009}.service-center-dialog p{margin:14px 0 20px;line-height:1.8;color:#edda9f}.service-center-dialog .service-action-row{justify-content:flex-end;gap:10px}

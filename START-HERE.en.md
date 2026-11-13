@@ -25,8 +25,8 @@ No branch switching is needed. Training Studio R1.5.27 remains an independent to
 ## Historical releases
 
 - [R1 image](https://github.com/kissqy/Microduck-kissqy/releases/tag/public-image-r1): control.40 and first-boot Wi-Fi R5.
-- [Robot Console V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip): matching control.43 firmware.
+- [Robot Console V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Console-R17-V167.zip): matching control.43 firmware.
 - V167 / control.43 source is grouped in `versions/v167/microduck-hd1910/firmware/`; its console is in `console/`.
 - Training Studio source remains in `microduck-hd1910/training-console/`.
 
-V167 and V260 occupy separate directories under `versions/` and do not trigger automatic upgrades. Original root `microduck-hd1910/` and `release-assets/` paths remain compatible with historical links. See [Known-Good and validation scope](microduck-hd1910/docs/BASELINE.en.md); this publication does not add real-robot acceptance results. See `microduck-hd1910/LICENSE` for component licensing; third-party content retains its original terms.
+V167 and V260 occupy separate directories under `versions/` and do not trigger automatic upgrades. The original root `microduck-hd1910/` source path remains available. The root `release-assets/` directory has moved to `versions/v167/release-assets/`; use the updated download links. See [Known-Good and validation scope](microduck-hd1910/docs/BASELINE.en.md); this publication does not add real-robot acceptance results. See `microduck-hd1910/LICENSE` for component licensing; third-party content retains its original terms.

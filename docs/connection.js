@@ -1,4 +1,5 @@
 /** Page connection settings share the original SSH channels and sudo credential. */
+import {formatError} from './messages.js?v=v260-20261113';
 export class SSHConnection {
   constructor(cfg,beforeChange,changed){
     this.cfg=cfg;this.beforeChange=beforeChange;this.changed=changed;this.working=false;
@@ -19,13 +20,13 @@ export class SSHConnection {
       this.cfg.ssh_target=data.target;this.cfg.camera_host=data.camera_host;
       this.$('ssh-target').value=data.target;this.state=data;this.changed(data);
       this.$('ssh-status').textContent=action==='connect'?'正在连接，等待 Zero 实时数据…':'连接已暂停';
-    }catch(e){this.$('ssh-status').textContent=e.message;}
+    }catch(e){this.$('ssh-status').textContent=formatError(e);}
     finally{this.working=false;this.paint();}
   }
   render(snapshot){
     if(!snapshot.connection||this.working)return;
     this.state=snapshot.connection;
-    this.$('ssh-status').textContent=this.state.connected?'SSH 已连接':this.state.active?this.state.error||'正在连接，等待 Zero 实时数据…':'未连接，填写地址和密码后连接';
+    this.$('ssh-status').textContent=this.state.connected?'SSH 已连接':this.state.active?formatError(this.state.error)||'正在连接，等待 Zero 实时数据…':'未连接，填写地址和密码后连接';
     this.paint();
   }
   paint(){

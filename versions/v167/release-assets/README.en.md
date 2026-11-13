@@ -13,7 +13,7 @@ An **ARM64 robot-service installation package for Radxa ZERO 3W**, based on offi
 
 **Update: Fixed body jitter.**
 
-**The author's assembled IMU already has FT6 firmware and needs no initial flashing.** Use the [IMU download and flashing guide](../hardware/IMU-FIRMWARE.en.md) for self-soldered boards, replacement MCUs, maintenance or upgrades. Installing control.43 on ZERO does not program the external IMU. Calibrate each robot after installation.
+**The author's assembled IMU already has FT6 firmware and needs no initial flashing.** Use the [IMU download and flashing guide](../../../hardware/IMU-FIRMWARE.en.md) for self-soldered boards, replacement MCUs, maintenance or upgrades. Installing control.43 on ZERO does not program the external IMU. Calibrate each robot after installation.
 
 ## Image, console, and standalone firmware
 
@@ -27,7 +27,7 @@ An **ARM64 robot-service installation package for Radxa ZERO 3W**, based on offi
 
 ## Install with the console
 
-Extract the complete [Robot Console V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip), run `start.cmd` (macOS/Linux: `bash start.command`), connect to ZERO over SSH, and use **系统维护 → 随包固件** (System Maintenance → Bundled Firmware). The console already includes this payload; no separate `.tar.gz` download is needed for that flow.
+Extract the complete [Robot Console V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Console-R17-V167.zip), run `start.cmd` (macOS/Linux: `bash start.command`), connect to ZERO over SSH, and use **系统维护 → 随包固件** (System Maintenance → Bundled Firmware). The console already includes this payload; no separate `.tar.gz` download is needed for that flow.
 
 Local firmware import accepts ZIP rather than a bare `.tar.gz`. If you downloaded this standalone package, wrap the unchanged archive in ZIP using Windows PowerShell:
 

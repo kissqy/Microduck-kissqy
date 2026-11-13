@@ -1,4 +1,4 @@
-import {officialStandingDegrees} from './joint-reference.js?demo=20261013';
+import {officialStandingDegrees} from './joint-reference.js?v=v260-20261113';
 
 // These references belong to the model, never to a saved encoder calibration.
 export const REFERENCE_IDS=Object.freeze([20,21,22,23,24,30,31,32,33,34,10,11,12,13,14]);

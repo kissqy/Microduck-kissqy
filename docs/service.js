@@ -1,20 +1,23 @@
-import {modelJointLimits,referenceAngle} from './joint-reference.js?demo=20261013';
-import {supportsFeature} from './service-builds.js?demo=20261013';
-import {ServiceManagement} from './service-management.js?demo=20261013';
-import {showFeedback} from './feedback.js?demo=20261013';
-import {DeviceInspection} from './inspection.js?demo=20261013';
-import {FirmwarePanel} from './firmware.js?demo=20261013';
-import {GamepadRepair} from './gamepad-repair.js?demo=20261013';
+import {ChoralePanel} from './chorale.js?v=v260-20261113';
+import {modelJointLimits,referenceAngle} from './joint-reference.js?v=v260-20261113';
+import {supportsFeature} from './service-builds.js?v=v260-20261113';
+import {ServiceManagement} from './service-management.js?v=v260-20261113';
+import {showFeedback} from './feedback.js?v=v260-20261113';
+import {formatError} from './messages.js?v=v260-20261113';
+import {DeviceInspection} from './inspection.js?v=v260-20261113';
+import {FirmwarePanel} from './firmware.js?v=v260-20261113';
+import {GamepadRepair} from './gamepad-repair.js?v=v260-20261113';
+import {requestCenterConfirmation} from './center-confirmation.js?v=v260-20261113';
 
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const fmt=(v,n=1)=>finite(v)?v.toFixed(n):'—';
-const actions={'set-pad-settings':'手柄幅度设置',move:'关节移动',center:'整组顺序居中',capture:'关节标定',init:'Home 站姿','switch-mode':'服务模式切换','reconnect-service':'重新连接 HAT','upgrade-service':'升级 R17 / 0.15.1','set-action-scale':'动作缩放应用',relax:'停止并松开', 'verify-imu':'IMU 安装方向',reboot:'重启 Zero',shutdown:'关闭 Zero','resume-connection':'恢复连接'};
-const feedbackTargets={'repair-gamepad':'gamepad-repair-status','set-pad-settings':'control-feedback',move:'service-job',center:'service-job',capture:'service-job',init:'control-feedback',
+const actions={'chorale-prepare':'启用合唱','chorale-start':'开始合唱','chorale-stop':'停止合唱','set-pad-settings':'手柄幅度设置',move:'关节移动',center:'整组顺序居中',capture:'关节标定',init:'Home 站姿','switch-mode':'服务模式切换','reconnect-service':'重新连接 HAT','upgrade-service':'升级 R17 / 0.15.1','enable-hotspot':'开启热点','set-action-scale':'动作缩放应用',relax:'停止并松开', 'verify-imu':'IMU 安装方向',reboot:'重启 Zero',shutdown:'关闭 Zero','resume-connection':'恢复连接'};
+const feedbackTargets={'chorale-prepare':'chorale-feedback','chorale-start':'chorale-feedback','chorale-stop':'chorale-feedback','repair-gamepad':'gamepad-repair-status','set-pad-settings':'control-feedback',move:'service-job',center:'service-job',capture:'service-job',init:'control-feedback',
   'switch-mode':'service-mode-job','forget-sudo-password':'service-mode-job','verify-imu':'service-imu-job',
   relax:'service-power-job',reboot:'service-power-job',shutdown:'service-power-job','resume-connection':'service-power-job',
   'set-action-scale':'management-status',
   
-  'reconnect-service':'management-hat-status','upgrade-service':'firmware-status'};
+  'reconnect-service':'management-hat-status','upgrade-service':'firmware-status','enable-hotspot':'firmware-hotspot-status'};
 
 function setModeText(panel,mode,s,torqueOff){
   const job=s.service_control?.job;
@@ -25,7 +28,7 @@ function setModeText(panel,mode,s,torqueOff){
   panel.$('service-current-mode').className=modeClass;
   panel.$('service-mode-check').textContent=job?.action==='switch-mode'&&job.status==='running'
     ?'正在切换并等待机器人服务校验，请勿断开 Zero 电源。'
-    :job?.action==='switch-mode'&&job.status==='error'?job.error
+    :job?.action==='switch-mode'&&job.status==='error'?formatError(job.error)
     :job?.action==='switch-mode'&&job.status==='completed'&&job.command.target!==mode?'切换脚本已完成，等待新模式的实时反馈。'
     :!s.service_sample_fresh?'等待服务实时反馈。'
     :!torqueOff?'确认机身有支撑；点击切换后会先释放全部扭矩。'
@@ -35,9 +38,11 @@ function setModeText(panel,mode,s,torqueOff){
 
 export class ServicePanel {
   constructor(cfg,choose){
+    this.$=id=>document.getElementById(id);
     this.cfg=cfg;this.id=20;this.seq=0;this.client=crypto.randomUUID().replaceAll('-','');
     this.lastJob='';this.mountDirty=false;this.calibrationDirty=false;
     this.gamepadRepair=new GamepadRepair(this);
+    this.chorale=new ChoralePanel(this);
     window.addEventListener('r17-pad-settings',e=>this.post({action:'set-pad-settings',...e.detail,supported:true}));
     this.s=null;this.options={};this.dirty=false;this.ownsMotion=false;this.posting=false;this.lastSample=0;
     this.root=document.createElement('section');this.root.id='service-panel';this.root.className='service-console';this.root.hidden=!cfg.service_enabled;
@@ -87,7 +92,7 @@ export class ServicePanel {
               <p id="service-calibration-detail" class="tiny muted"></p>
             </div>
             <div class="service-center">
-              <div class="service-confirm-row"><h3>未装配居中</h3><label class="service-check"><input id="service-unassembled" type="checkbox">15 颗舵机未装到骨架，空间无遮挡</label><button class="button" id="service-center">全部顺序回到 2048</button></div>
+              <div class="service-confirm-row"><h3>全部舵机居中</h3><label class="service-check"><input id="service-unassembled" type="checkbox">已确认全部舵机可安全顺序回到 2048</label><button class="button" id="service-center">全部顺序回到 2048</button></div>
               <p id="service-center-progress" class="tiny muted" role="status"></p>
               <p class="tiny muted">2048 是编码器中心，不是装配零位。</p>
             </div>
@@ -113,11 +118,10 @@ export class ServicePanel {
         </section>
         <section class="panel service-power">
           <div class="panel-head"><div><h2>Zero 电源</h2></div></div>
-          <div class="service-setup-body"><div id="service-power-actions" class="service-power-actions"><div class="service-action-row"><button class="button" id="service-reboot">重启 Zero</button><button class="button" id="service-shutdown">关闭 Zero</button><button class="button" id="service-resume">恢复连接</button></div></div><p id="service-power-state" role="status" class="tiny muted"></p></div>
+          <div class="service-setup-body"><div id="service-power-actions" class="service-power-actions"><div class="service-action-row"><button class="button" id="service-reboot">重启 Zero</button><button class="button" id="service-shutdown" title="运动模式使用官方关机；标定模式确认卸力后关机">关闭 Zero</button><button class="button" id="service-resume">恢复连接</button></div></div><p id="service-power-state" role="status" class="tiny muted"></p></div>
           <div id="service-power-job" class="panel-note service-job" role="status" aria-live="polite"></div>
         </section>
       </div>`;
-    this.$=id=>document.getElementById(id);
     this.inspection=new DeviceInspection(cfg,this.$('service-inspection'));
     if(cfg.service_enabled){
       const stop=document.createElement('button');stop.className='button service-relax';stop.textContent='■ 停止并松开';stop.id='service-quick-stop';
@@ -165,6 +169,7 @@ export class ServicePanel {
     this.$('service-resume').onclick=()=>this.post({action:'resume-connection'});
     this.$('service-move').onclick=()=>this.move();
     this.$('service-minus').onclick=()=>this.move(-57);this.$('service-plus').onclick=()=>this.move(57);
+    this.$('service-unassembled').onchange=()=>this.paint();
     this.$('service-center').onclick=()=>this.post({action:'center',unassembled:this.$('service-unassembled').checked,duration_ms:Number(this.$('service-duration').value)});
     this.$('service-capture').onclick=()=>{
       if(!this.$('service-known').checked)return this.feedback('capture','请先确认当前实际关节角度、方向和限位','warning');
@@ -212,31 +217,50 @@ export class ServicePanel {
   }
   async post(command,keepalive=false){
     if(!this.cfg.service_enabled||(this.options.replay&&command.action!=='relax'))return;
+    if(command.action==='shutdown'&&(this.options.offline||this.s?.connection?.active!==true||this.s?.connection?.connected!==true||this.s?.connection_paused||this.posting||this.s?.service_control?.job?.status==='running'&&['reboot','shutdown'].includes(this.s.service_control.job.action)))return;
+    if(command.action==='enable-hotspot'&&(this.options.offline||this.s?.connection?.active!==true||this.s?.connection?.connected!==true||this.s?.connection_paused||this.s?.service_operation||this.s?.service_control?.busy||this.s?.service_control?.stopping))return;
+    if(['relax','reboot','shutdown'].includes(command.action))this.centerConfirmation?.cancel();
     const special={
+      'chorale-prepare':'chorale-prepare','chorale-start':'chorale-start','chorale-stop':'chorale-stop',
       'switch-mode':command.target==='motion'?'service-mode-motion':'service-mode-calibrate',
-      'reconnect-service':'management-reconnect','upgrade-service':'firmware-flash',
+      'reconnect-service':'management-reconnect','upgrade-service':'firmware-flash','enable-hotspot':'firmware-hotspot',
       'repair-gamepad':'gamepad-repair-start',
       'set-pad-settings':'control-mouth','set-action-scale':'management-scale-apply'};
-    const configurationAction=['repair-gamepad','switch-mode','reconnect-service','upgrade-service','set-action-scale'].includes(command.action);
-    if(!['relax','reboot','shutdown','resume-connection','forget-sudo-password'].includes(command.action)&&((special[command.action]?this.$(special[command.action]).disabled:this.blocked)||this.posting||document.hidden||!configurationAction&&performance.now()-this.lastSample>2000))return;
-    if(command.action==='center'&&!command.unassembled)return this.feedback('center','整组居中只适用于未装配舵机，请先确认','warning');
+    const configurationAction=['chorale-prepare','chorale-stop','repair-gamepad','switch-mode','reconnect-service','upgrade-service','enable-hotspot','set-action-scale'].includes(command.action);
+    if(!['relax','reboot','shutdown','resume-connection','forget-sudo-password'].includes(command.action)&&((special[command.action]?this.$(special[command.action]).disabled:this.blocked)||this.posting||this.centerConfirmation||document.hidden||!configurationAction&&performance.now()-this.lastSample>2000))return;
+    if(command.action==='center'){
+      if(command.unassembled!==true)return this.feedback('center','请先勾选确认全部舵机可安全回到 2048','warning');
+      let confirmation;
+      try{confirmation=requestCenterConfirmation();}
+      catch(error){return this.feedback('center','无法打开居中确认：'+error.message,'error');}
+      this.centerConfirmation=confirmation;this.paint();
+      const confirmed=await confirmation.result;
+      if(this.centerConfirmation===confirmation)this.centerConfirmation=null;
+      this.paint();
+      if(!confirmed)return;
+      // Telemetry and lifecycle events keep running while this dialog is open.
+      if(this.blocked||this.posting||this.options.replay||this.options.offline||document.hidden||performance.now()-this.lastSample>2000||!this.$('service-unassembled').checked)
+        return this.feedback('center','状态已变化，未发送居中；请确认实时连接、空闲及扭矩 OFF 后重试','warning');
+    }
     if(command.action!=='relax')this.posting=true;
     if(['move','center','init'].includes(command.action))this.ownsMotion=true;
+    let receiptKnown=false;
     try{
-      const privileged=['repair-gamepad','switch-mode','reconnect-service','upgrade-service','set-pad-settings','set-action-scale','reboot','shutdown'].includes(command.action);
+      const privileged=['chorale-prepare','repair-gamepad','switch-mode','reconnect-service','upgrade-service','enable-hotspot','set-pad-settings','set-action-scale','reboot','shutdown'].includes(command.action);
       const password=privileged?this.$('service-sudo-password').value:'';
       if(password)command.sudo_password=password;
       const body=JSON.stringify({client:this.client,seq:++this.seq,command});
       delete command.sudo_password;
       const response=await fetch('/api/service',{method:'POST',headers:{'Content-Type':'application/json','X-Control-Token':this.cfg.control_token},body,keepalive,signal:keepalive?undefined:AbortSignal.timeout(5000)});
-      const data=await response.json();if(!response.ok||!data.accepted)throw Error(data.error||'服务未接收指令');
+      const data=await response.json();receiptKnown=true;if(!response.ok||!data.accepted)throw Error(data.error||'服务未接收指令');
       if(['relax','reboot','shutdown'].includes(command.action))this.ownsMotion=false;
       this.feedback(command.action,data.message,['forget-sudo-password','resume-connection'].includes(command.action)?'completed':'running');
       if(command.action==='capture')this.$('service-known').checked=false;
-    }catch(e){this.feedback(command.action,e.message,'error');}
+      return data;
+    }catch(e){this.feedback(command.action,e.message,'error');return {accepted:false,error:e.message,uncertain:!receiptKnown};}
     finally{this.posting=false;this.paint();}
   }
-  suspend(){if(this.ownsMotion){this.ownsMotion=false;this.post({action:'relax'},true);}}
+  suspend(){this.centerConfirmation?.cancel();if(this.ownsMotion){this.ownsMotion=false;this.post({action:'relax'},true);}}
   switchMode(target){
     const password=this.$('service-sudo-password').value;
     if(!confirm(`切到${target==='motion'?'运动':'标定'}模式？请确认机身有支撑；切换会先释放扭矩，完成后不自动 HOME 或启动策略。`))return;
@@ -262,15 +286,18 @@ export class ServicePanel {
     this.$('service-mode-motion').disabled=!switchReady||mode==='motion';
     const readiness=this.management?.connection;
     if(mode==='commissioning'&&readiness?.motion_ready===false&&!s.service_control?.busy&&job?.status!=='error')
-      this.$('service-mode-check').textContent='运动预检：'+readiness.motion_readiness_message+'；切换时由本机再次核验。';
+      this.$('service-mode-check').textContent='运动预检：'+formatError(readiness.motion_readiness_message)+'；切换时由本机再次核验。';
     const set=(id,v)=>this.$(id).textContent=v;
     this.inspection.render(s,this.options);
     const m=b.motion,centerJob=job?.action==='center',center=m?.action==='center',centerDone=center?m.completed_ids?.length:job?.result?.completed_ids?.length;
-    set('service-center-progress',center?`归中 ${centerDone??0}/15 · 当前 ID ${m.id}`:centerJob&&job.status==='completed'?`归中完成 ${centerDone??'—'}/15 · 已松开`:centerJob&&job.status==='error'?`归中未完成 · ${job.error}`:'');
+    set('service-center-progress',center?`归中 ${centerDone??0}/15 · 当前 ID ${m.id}`:centerJob&&job.status==='completed'?`归中完成 ${centerDone??'—'}/15 · 已松开`:centerJob&&job.status==='error'?`归中未完成 · ${formatError(job.error)}`:'');
     for(const action of ['reboot','shutdown'])this.$('service-'+action).disabled=!!(s.service_control?.job?.status==='running'&&['reboot','shutdown'].includes(s.service_control?.job?.action));
+    const shutdownConnected=s.connection?.active===true&&s.connection?.connected===true&&!s.connection_paused&&!this.options.offline&&!this.options.replay;
+    this.$('service-shutdown').disabled ||= !shutdownConnected||this.posting;
+    this.$('service-shutdown').title=shutdownConnected?'运动模式使用官方关机；标定模式确认卸力后关机':'请先连接 Zero，再关机';
     this.$('service-resume').disabled=!s.connection_paused||!!(s.service_control?.busy||job?.status==='running'||this.options.replay);
     const power=job&&['reboot','shutdown'].includes(job.action);
-    set('service-power-state',power?(job.status==='completed'?(job.result?.reconnected?'Zero 已重新上线。':job.action==='reboot'?'重启请求已提交；等待 Zero 启动后自动重连。':'已提交关机；自动连接已暂停。Zero 再次上电后点击“恢复连接”。'):job.status==='error'?job.error:'正在提交系统电源指令…'):'关机 / 重启直接执行系统指令。');
+    set('service-power-state',power?(job.status==='completed'?(job.result?.reconnected?'Zero 已重新上线。':job.action==='reboot'?'重启请求已提交；等待 Zero 启动后自动重连。':job.result?.shutdown_requested===true&&['robot.shutdown','commissioning.systemctl'].includes(job.result?.shutdown_path)?'关机请求已接收，尚未确认关机完成。自动连接已暂停；再次上电后点击“恢复连接”。':'尚未确认关机请求已接收，请检查实际状态。'):job.status==='error'?formatError(job.error):job.action==='shutdown'?'正在提交关机请求…':'正在提交系统重启指令…'):'运动模式使用官方关机；标定模式确认卸力后关机。');
     set('service-count',`${s.saved_calibrated_count??s.calibrated_count??0} / 15 已保存标定`);
     this.$('service-joint-select').value=this.id;
     const limits=modelJointLimits[this.id];
@@ -293,18 +320,21 @@ export class ServicePanel {
     if(imuJob&&this.imuJob!==imuJob){this.mountDirty=false;this.imuJob=imuJob;}
     if(Array.isArray(q)&&this.imuKey!==imuKey&&!this.mountDirty&&document.activeElement!==this.$('service-mount')){this.$('service-mount').value=q.join(' ');this.imuKey=imuKey;}
     set('service-imu-state',saved?.imu_mount_verified===true?'已保存确认':saved?'尚未保存确认':'等待标定回读');
-    for(const id of ['service-center','service-move','service-minus','service-plus','service-capture','service-verify-imu'])this.$(id).disabled=!!(this.blocked||this.posting);
-    this.$('service-center').disabled ||= !!(s.saved_calibrated_count??s.calibrated_count);
+    for(const id of ['service-center','service-move','service-minus','service-plus','service-capture','service-verify-imu'])this.$(id).disabled=!!(this.blocked||this.posting||this.centerConfirmation);
+    this.$('service-center').disabled ||= !this.$('service-unassembled').checked;
     if(this.$('service-quick-stop'))this.$('service-quick-stop').disabled=!!this.options.replay;
     const key=job?`${job.at}:${job.action}:${job.status}:${job.error||''}:${job.result?.reconnected||''}:${job.result?.input?.status||''}:${job.action==='init'?job.phase+':'+job.message:''}`:'';
     if(job&&key!==this.lastJob){
       this.lastJob=key;
       const message=job.action==='init'?`Home 站姿 · ${{running:'执行中',completed:'已确认到位',error:'未完成'}[job.status]||job.status} · ${job.error||job.result?.message||job.message||'等待执行反馈'}`:
+        job.action==='shutdown'?(job.status==='error'?'关机请求未确认 · '+job.error:job.status==='completed'?(job.result?.shutdown_requested===true&&['robot.shutdown','commissioning.systemctl'].includes(job.result?.shutdown_path)?'关机请求已接收；尚未确认关机完成。':'未取得关机接收确认，请检查实际状态。'):'正在提交关机请求…'):
+        job.action==='enable-hotspot'?(job.status==='error'?'热点切换未完成 · '+job.error:job.status==='completed'?'热点切换请求已处理；以调度回执为准，尚未确认热点已开启。':job.message||'正在提交热点切换请求…'):
         job.status==='completed'&&['delete-model'].includes(job.action)?job.result?.message||'模型已删除，官方模型保留':
         `${actions[job.action]||job.action} · ${{running:'执行中，等待反馈',completed:'服务已完成',error:'未完成'}[job.status]||job.status}${job.error?' · '+job.error:''}`;
       const input=job.result?.input,inputNote=input?.status==='recovering'?'手柄连接恢复中':input?.status==='error'?`手柄暂不可用：${input.error}`:input?.status==='ready'?'手柄连接已恢复':'';
       this.feedback(job.action,message+(inputNote?' · '+inputNote:''),job.status,job.result?.message||'');
     }
     this.gamepadRepair.render();
+    this.chorale.render(s,this.options);
   }
 }

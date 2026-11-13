@@ -44,7 +44,7 @@ For battery power, use a banana board (not yet listed for sale), or the reposito
 | ❓ 刷机、标定、IMU、断网与重启 / FAQ | [中文](MICRODUCK-FAQ.md) | [English](MICRODUCK-FAQ.en.md) |
 | 🔧 装机与使用注意事项 / Assembly: 5 GHz Wi-Fi & 1000 µF input capacitor | [中文](ASSEMBLY-NOTES.md) | [English](ASSEMBLY-NOTES.en.md) |
 | Repository layout and repeated resources | [中文](REPOSITORY-LAYOUT.md) | [English](REPOSITORY-LAYOUT.en.md) |
-| Current downloads and historical control.43 installation | [中文](../release-assets/README.md) | [English](../release-assets/README.en.md) |
+| Historical V167 / control.43 downloads and installation | [中文](../versions/v167/release-assets/README.md) | [English](../versions/v167/release-assets/README.en.md) |
 | 🎬 See the duck in action — 7 real-robot videos | [中文](../README.md) | [English](../README.en.md) |
 | 🌱 The author's learning journey — timeline and complete question recap | [中文](AUTHOR-JOURNEY.md) | [English](AUTHOR-JOURNEY.en.md) |
 | Current public Microduck release | [中文](../START-HERE.txt) | [English](../START-HERE.en.md) |

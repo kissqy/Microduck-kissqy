@@ -107,7 +107,7 @@ Training Studio R1.5.27 remains a separate tool; its version number is independe
 | System Image R2 · Microduck 0.15.1 / control.102 | New ZERO 3W installations: [download .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
 | Robot Console Studio V260 · bundled control.102 | Connect, calibrate and control the robot: [release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [package guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |
 | V260 console and firmware source | [Independent source tree](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260) · [runtime and source guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |
-| Training Studio R1.5.27 · optional | Train and evaluate new movements: [download ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip) |
+| Training Studio R1.5.27 · optional | Train and evaluate new movements: [download ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip) |
 
 R2 includes control.102 and 11 ONNX runtime models. Verify your own mechanics and IMU calibration before movement. For an existing installation, use V260's matching bundled firmware when upgrading. [Release baseline and validation scope](microduck-hd1910/docs/BASELINE.en.md); publishing this release does not extend the recorded real-robot Known-Good scope.
 
@@ -115,14 +115,14 @@ R2 includes control.102 and 11 ONNX runtime models. Verify your own mechanics an
 <summary>Historical releases: R1 / V167</summary>
 
 - [System Image R1](https://github.com/kissqy/Microduck-kissqy/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz) includes control.40 and first-boot Wi-Fi R5.
-- [Robot Console R17 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip) includes control.43; [historical firmware guide](release-assets/README.en.md#historical-release-control43).
-- V167 firmware and console source are grouped under [versions/v167/](versions/v167/README.en.md); V260 source is under [versions/v260/](versions/v260/). The original root source and download paths remain for compatibility.
+- [Robot Console R17 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Console-R17-V167.zip) includes control.43; [historical firmware guide](versions/v167/release-assets/README.en.md).
+- V167 firmware and console source are grouped under [versions/v167/](versions/v167/README.en.md); V260 source is under [versions/v260/](versions/v260/). The original root source path remains for compatibility; the former root `release-assets/` directory is retired in favor of the V167 version archive.
 
 </details>
 
 Follow the [first-walk guide (中文)](https://kissqy.github.io/Microduck-kissqy/build/start.html); each stage provides its required download.
 
-[📥 System Image R2](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [📥 Robot Console V260](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [Firmware and DIY IMU flashing](release-assets/README.en.md)
+[📥 System Image R2](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [📥 Robot Console V260](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [V260 firmware downloads](versions/v260/README.md) · [DIY IMU flashing](hardware/IMU-FIRMWARE.en.md)
 
 ## 🎮 Chinese Robot Console
 
@@ -157,7 +157,7 @@ Original consoles, tools, documentation and HD1910 self-trained models explicitl
 
 **Normal builds and daily use require no training; use the supplied models.** Choose the separate Training Studio only if you want to train new movements or learn reinforcement learning: choose tasks and recipes, inspect rewards, evaluate in simulation and export models for real-robot testing.
 
-[Training Studio R1.5.27 guide](microduck-hd1910/training-console/USER-GUIDE.en.md) · [Online demo](https://kissqy.github.io/Microduck-kissqy/training/) · [Download Training Studio](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip)
+[Training Studio R1.5.27 guide](microduck-hd1910/training-console/USER-GUIDE.en.md) · [Online demo](https://kissqy.github.io/Microduck-kissqy/training/) · [Download Training Studio](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip)
 
 <table align="center">
   <tr>

@@ -6,7 +6,7 @@ A Chinese-language console for a real robot duck: view pose and device feedback,
 
 **Current pairing: Radxa ZERO 3 W · Feetech HD1910 · Official Microduck 0.15.1 · control.43 firmware.**
 
-[⬇️ Download the complete V167 console](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip) · [Detailed user and gamepad guide](USER-GUIDE.en.md) · [Project homepage](../../../README.en.md)
+[⬇️ Download the complete V167 console](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Console-R17-V167.zip) · [Detailed user and gamepad guide](USER-GUIDE.en.md) · [Project homepage](../../../README.en.md)
 
 ## Features
 
@@ -56,7 +56,7 @@ The released integrated image already includes robot services. To install or upg
 
 ## Related guides
 
-- [Standalone compiled firmware and installation](../../../release-assets/README.en.md)
+- [Standalone compiled firmware and installation](../../../versions/v167/release-assets/README.en.md)
 - [Detailed user guide](USER-GUIDE.en.md)
 - [Robot firmware source and version guide](../README-R17.en.md)
 - [Firmware build guide](../../docs/BUILD.en.md)

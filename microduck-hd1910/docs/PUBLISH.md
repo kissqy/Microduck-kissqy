@@ -2,12 +2,12 @@
 
 # 当前仓库的发布方式
 
-项目地址：[kissqy/Microduck-kissqy](https://github.com/kissqy/Microduck-kissqy)。用 VS Code 打开**包含根目录 README.md、microduck-hd1910 和 release-assets 的整个仓库目录**。
+项目地址：[kissqy/Microduck-kissqy](https://github.com/kissqy/Microduck-kissqy)。用 VS Code 打开**包含根目录 README.md、microduck-hd1910 和 versions 的整个仓库目录**。
 
 ## 已发布内容
 
 - `public-image-r1` Release：公开系统镜像 `microduck-zero3w-0.15.1-R1.img.xz`。
-- 根目录 `release-assets/`：机器人中控 `Microduck-Console-R17-V167.zip`、训练中控 `Microduck-Training-Studio-R1.5.27.zip`。
+- 版本归档 `versions/v167/release-assets/`：机器人中控 `Microduck-Console-R17-V167.zip`、训练中控 `Microduck-Training-Studio-R1.5.27.zip`。
 - `microduck-hd1910/firmware/`：control.43 固件源码；其中 `console/` 是 V167 中控源码。
 - `microduck-hd1910/training-console/`：R1.5.27 训练中控源码。
 
@@ -26,4 +26,4 @@ git status -sb
 
 更新时同时核对首页下载名、固件 BUILD、源码和运行 ZIP。保留既有分项 LICENSE，不另选 MIT 或 Apache 覆盖本仓库授权。
 
-新增运行包可继续上传 `release-assets/`，也可在 GitHub **Releases → 编辑发布 → 附件**中上传。大体积系统镜像通过 Releases 提供下载。发布标签固定对应一次提交，不移动旧标签来替换源码。
+新增运行包放在对应版本目录，或在 GitHub **Releases → 编辑发布 → 附件**中上传。大体积系统镜像通过 Releases 提供下载。发布标签固定对应一次提交，不移动旧标签来替换源码。

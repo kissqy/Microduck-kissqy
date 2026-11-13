@@ -16,10 +16,10 @@ R1 镜像预装 control.40，使用 V167 中控安装本版随包固件后为 co
 
 为保持原打包脚本的相对路径，V167 保留 `microduck-hd1910/firmware/console/` 内部结构；`release-assets/build-baselines/` 也保留在本版本内。源码文件、已编译固件与模型未改动。
 
-复用的源码树与资产树冻结自提交 [a192f3b](https://github.com/kissqy/Microduck-kissqy/commit/a192f3ba54d1921383afbd790fa7d94ea859a3c4)。构建时以本版本目录作为原仓库根目录，按对应构建说明操作；历史源码内部记录保留原样，公共搭建教程以项目 [当前教程](https://github.com/kissqy/Microduck-kissqy/tree/main/docs) 为准。
+原始源码和运行资源来自提交 [a192f3b](https://github.com/kissqy/Microduck-kissqy/commit/a192f3ba54d1921383afbd790fa7d94ea859a3c4)。构建时以本版本目录作为原仓库根目录，按对应构建说明操作；历史源码内部记录保留原样，公共搭建教程以项目 [当前教程](https://github.com/kissqy/Microduck-kissqy/tree/main/docs) 为准。
 
 ## 验证与许可
 
-本次核对目录对象与原冻结源码、运行包相同；没有重新编译或新增实机运动验收。原 V167 Known-Good、标定要求及验证边界继续保留。分项许可见 [原许可](microduck-hd1910/LICENSE)。
+源码、ZIP、固件与构建基线保持原文件内容；归档安装说明的导航路径按当前位置更新。没有重新编译或新增实机运动验收。原 V167 Known-Good、标定要求及验证边界继续保留。分项许可见 [原许可](microduck-hd1910/LICENSE)。
 
 [全部版本](../) · [项目首页](../../README.md)

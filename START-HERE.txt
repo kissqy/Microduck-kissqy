@@ -28,12 +28,12 @@ V260：versions/v260/
 
 历史版本保留：
 R1 镜像：https://github.com/kissqy/Microduck-kissqy/releases/tag/public-image-r1
-V167 中控：https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip
+V167 中控：https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Console-R17-V167.zip
 V167 / control.43 源码：versions/v167/microduck-hd1910/firmware/，其中中控为 console/。
 R1 仍预装 control.40 / 配网 R5；需要旧线升级时使用 V167 的随包 control.43。
 训练中控源码：microduck-hd1910/training-console/
 V167、V260 在 versions/ 内分目录保存，不触发旧线自动升级。
-原 microduck-hd1910/ 与 release-assets/ 路径保留兼容旧文档和下载链接。
+原 microduck-hd1910/ 源码路径保留；根 release-assets/ 已归并到 versions/v167/release-assets/，使用本页的新下载地址。
 
 Known-Good 与验证范围见 microduck-hd1910/docs/BASELINE.md；本次发布不新增实机验收结论。
 分项授权见 microduck-hd1910/LICENSE；第三方内容保留原许可。

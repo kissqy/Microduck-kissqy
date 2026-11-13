@@ -1,5 +1,5 @@
-import {REFERENCE_IDS,REFERENCE_LABELS,hasReferenceHinge} from './calibration-reference.js?demo=20261013';
-import {officialStandingDegrees,referenceAngle} from './joint-reference.js?demo=20261013';
+import {REFERENCE_IDS,REFERENCE_LABELS,hasReferenceHinge} from './calibration-reference.js?v=v260-20261113';
+import {officialStandingDegrees,referenceAngle} from './joint-reference.js?v=v260-20261113';
 
 const set=(id,value)=>{const el=document.getElementById(id);if(el&&el.textContent!==value)el.textContent=value;};
 export class CalibrationViewPanel{

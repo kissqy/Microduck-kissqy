@@ -1,5 +1,5 @@
-import {supportsFeature} from './service-builds.js?demo=20261013';
-import {deriveKinematics} from './raw-kinematics.js?demo=20261013';
+import {supportsFeature} from './service-builds.js?v=v260-20261113';
+import {deriveKinematics} from './raw-kinematics.js?v=v260-20261113';
 
 const TTL={state:1.5,health:5,tof:2,system:7,capabilities:20,bus:1.5,calibration:Infinity,startup:Infinity};
 const finite=v=>typeof v==='number'&&Number.isFinite(v);

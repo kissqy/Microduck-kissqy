@@ -1,16 +1,16 @@
-import {messageZh} from './messages.js?demo=20261013';
+import {messageZh,formatError} from './messages.js?v=v260-20261113';
 
 export function startupFailure(s){
   if(s?.connection_paused||s?.connection?.active===false)return '';
   if(s?.channels?.startup?.status==='live'){
     const failed=Object.entries(s.startup?.steps||{}).find(([,row])=>row.status==='failed');
-    if(failed)return `启动第 ${failed[0]}/4 步失败：${failed[1].detail||'请导出启动诊断'}`;
+    if(failed)return `启动第 ${failed[0]}/4 步失败：${formatError(failed[1].detail)||'请导出启动诊断'}`;
   }
   const bus=s?.bus||{};
   // A failed startup emits one bus report; the live health heartbeat keeps it
   // authoritative even though there can never be a fresh motion sample.
   if(bus.phase==='configuration_error'&&s.channels?.health?.status==='live')
-    return `总线启动失败：${bus.error||s.health?.reason||'请导出启动诊断'}`;
+    return `总线启动失败：${formatError(bus.error||s.health?.reason)||'请导出启动诊断'}`;
   return '';
 }
 

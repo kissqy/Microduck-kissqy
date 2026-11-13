@@ -1,18 +1,22 @@
-import {SSHConnection} from './connection.js?demo=20261013';
-let sshConnection;
-import {ServicePanel} from './service.js?demo=20261013';
-import {SystemLogPanel} from './system-log.js?demo=20261013';
+import {SSHConnection} from './connection.js?v=v260-20261113';
+import {WifiPanel} from './wifi-panel.js?v=v260-20261113';
+import {diagnosticReport} from './diagnostic-export.js?v=v260-20261113';
+let sshConnection,wifiPanel;
+import {ServicePanel} from './service.js?v=v260-20261113';
+import {SystemLogPanel} from './system-log.js?v=v260-20261113';
+import {AIPanel} from './ai-panel.js?v=v260-20261113';
 let servicePanel;
-import {Camera} from './camera.js?demo=20261013';
-import {ControlPanel} from './control.js?demo=20261013';
-import {messageZh,tofView} from './messages.js?demo=20261013';
-import {officialStandingDegrees,modelJointLimits,referenceAngle} from './joint-reference.js?demo=20261013';
-import {jointDirection} from './joint-direction.js?demo=20261013';
-import {loopHz} from './metrics.js?demo=20261013';
-import {historyFrame} from './history-frame.js?demo=20261013';
-import {RawTelemetry} from './raw-telemetry.js?demo=20261013';
-import {CalibrationViewPanel} from './calibration-view.js?demo=20261013';
-import {connectionNotice} from './startup-status.js?demo=20261013';
+import {Camera} from './camera.js?v=v260-20261113';
+import {AICamera} from './ai-camera.js?v=v260-20261113';
+import {ControlPanel} from './control.js?v=v260-20261113';
+import {messageZh,tofView,formatError} from './messages.js?v=v260-20261113';
+import {officialStandingDegrees,modelJointLimits,referenceAngle} from './joint-reference.js?v=v260-20261113';
+import {jointDirection} from './joint-direction.js?v=v260-20261113';
+import {loopHz} from './metrics.js?v=v260-20261113';
+import {historyFrame} from './history-frame.js?v=v260-20261113';
+import {RawTelemetry} from './raw-telemetry.js?v=v260-20261113';
+import {CalibrationViewPanel} from './calibration-view.js?v=v260-20261113';
+import {connectionNotice} from './startup-status.js?v=v260-20261113';
 let rawTelemetry;
 
 const $=id=>document.getElementById(id);
@@ -61,16 +65,17 @@ function plot(id,series,{mini=false,range=null}={}){
 function duration(v){if(!finite(v))return '—';const n=Math.floor(v);return `${Math.floor(n/3600)}h ${Math.floor(n%3600/60)}m ${n%60}s`;}
 function modeDisplay(s){
   const mode=replay?'replay':s.mode;
-  text('mode-chip',mode==='replay'?'REPLAY · 历史回放':mode==='service'?'DEMO · 模拟机器人':'LIVE · 实机连接');
-  text('access-chip',cfg?.control_enabled&&!replay?(mode==='service'?'✥ 关节与行走控制':'✥ 手动控制'):'◈ 在线演示');
+  text('mode-chip',mode==='replay'?'REPLAY · 历史回放':mode==='service'?'LIVE · 舵机服务':'LIVE · 实机连接');
+  text('access-chip',cfg?.control_enabled&&!replay?(mode==='service'?'✥ 关节与行走控制':'✥ 手动控制'):'◈ 只读');
   const b=$('mode-banner');b.hidden=mode!=='replay';
   if(mode==='replay')b.textContent='历史回放：画面与数值来自记录文件，不代表机器人当前状态。摄像头已断开。';
   const live=mode==='service'?s.service_sample_fresh:sourceLive(s,'state');
-  text('side-status',mode==='replay'?'历史记录':live?'模拟状态在线':'等待实机状态');
+  text('side-status',mode==='replay'?'历史记录':live?'实机状态在线':'等待实机状态');
   $('side-dot').style.background=live?'#c1f577':'#9a7755';
 }
 function render(s,addHistory=true){
   shown=s;modeDisplay(s);sshConnection?.render(s);controls?.render(s,{replay:!!replay});
+  wifiPanel?.render(s,{replay:!!replay,offline:!apiOkay});
   servicePanel?.render(s,{replay:!!replay,offline:!apiOkay||cfg.connection_ui&&!s.connection?.active});
   if(addHistory){history.push(historyFrame(s));const cutoff=s.at-60;while(history.length>650||history[0]?.at<cutoff)history.shift();}
   const hs=sourceLive(s,'health'),ss=sourceLive(s,'state'),sy=sourceLive(s,'system');
@@ -149,7 +154,7 @@ function renderSystem(s,live){
   if(s.mode==='service'){text('runtime-revision',s.bus?.build||'等待正式服务构建标识');$('runtime-revision').classList.toggle('data-warn',!s.service_compatible);}
   const camera=v.camera,cameraFresh=camera&&finite(v.camera_age_ms)&&v.camera_age_ms<5000;
   const capture=v.camera_capture;
-  text('camera-capture',capture?.status==='asleep'?'采集休眠 · mediad 在线':capture?.status==='error'?`采集错误 · ${capture.error||'请查看 mediad 日志'}`:camera?`${cameraFresh?'采集端':'采集端旧统计'} ${fmt(camera.fps)} / ${fmt(camera.targetFps,0)} fps · ${fmt(camera.width,0)}×${fmt(camera.height,0)} ${camera.format||''} · 驱动丢帧 ${fmt(camera.dropped,0)} · 接收者 ${fmt(camera.consumers,0)} · ${fmt(v.camera_age_ms,0)} ms 前`:'');
+  text('camera-capture',capture?.status==='asleep'?'采集休眠 · mediad 在线':capture?.status==='error'?`采集错误 · ${formatError(capture.error)||'请查看 mediad 日志'}`:camera?`${cameraFresh?'采集端':'采集端旧统计'} ${fmt(camera.fps)} / ${fmt(camera.targetFps,0)} fps · ${fmt(camera.width,0)}×${fmt(camera.height,0)} ${camera.format||''} · 驱动丢帧 ${fmt(camera.dropped,0)} · 接收者 ${fmt(camera.consumers,0)} · ${fmt(v.camera_age_ms,0)} ms 前`:'');
   text('sys-cpu',`${fmt(v.cpu_percent)} %`);$('cpu-bar').style.width=`${finite(v.cpu_percent)?Math.max(0,Math.min(100,v.cpu_percent)):0}%`;
   text('sys-memory',finite(used)?`${(used/2**20).toFixed(0)} / ${(total/2**20).toFixed(0)} MB`:'—');$('memory-bar').style.width=`${finite(used)&&total?used/total*100:0}%`;
   text('sys-temp',`${fmt(v.cpu_temp_c)} °C`);text('sys-uptime',duration(v.uptime_s));
@@ -203,7 +208,7 @@ function renderMotors(s){
     const savedLimits=s.mode==='service'?`<td class="saved-limit">${saved?referenceAngle(radians(cal.min_rad),2):'—'}</td><td class="saved-limit">${saved?referenceAngle(radians(cal.max_rad),2):'—'}</td>`:'';
     const direction=s.mode==='service'?jointDirection(s,r):null;
     const directionCell=direction?`<td class="saved-direction" title="${escape(direction.title)}">${escape(direction.label)}</td>`:'';
-    return `<tr data-id="${escape(r.id)}" class="${r.id===selectedId?'selected':''} ${live?'':'old-sample'}" tabindex="0" title="${escape(r.source)}；${live?'有效样本':'非实时样本'}；${escape(r.error||'')}"><td><span class="servo-id">${escape(r.id)}</span><span class="servo-name">${escape(r.label)}</span></td><td><span class="status-text ${live?'':r.status==='error'?'error':'unknown'}">${escape(statusNames[r.status]||'未知')}</span></td>${directionCell}${s.mode==='service'?`<td>${cell('position_raw',0)}</td>`:''}<td>${cell('angle_deg')}${s.mode==='service'&&!r.calibrated?'<small class="muted"> 未标定</small>':''}</td>${officialReference}${savedLimits}<td class="target-angle">${cell('target_deg')}</td><td class="${Math.abs(r.error_deg)>5?'data-warn':''}">${cell('error_deg',2)}</td><td>${cell(rawMode?'speed_raw':'velocity_rpm',rawMode?0:2)}</td><td>${cell(rawMode?'current_raw':'current_ma',0)}</td><td>${cell('temperature_c')}</td><td>${cell('voltage_v',2)}</td>${s.mode==='service'?'':`<td>${cell('current_ratio_percent')}</td><td>${cell('pwm_percent')}</td>`}<td class="${r.hardware_error?'data-warn':''}">${s.mode==='service'?torque:`${torque} / ${fault}`}</td></tr>`;
+    return `<tr data-id="${escape(r.id)}" class="${r.id===selectedId?'selected':''} ${live?'':'old-sample'}" tabindex="0" title="${escape(r.source)}；${live?'有效样本':'非实时样本'}；${escape(formatError(r.error)||'')}"><td><span class="servo-id">${escape(r.id)}</span><span class="servo-name">${escape(r.label)}</span></td><td><span class="status-text ${live?'':r.status==='error'?'error':'unknown'}">${escape(statusNames[r.status]||'未知')}</span></td>${directionCell}${s.mode==='service'?`<td>${cell('position_raw',0)}</td>`:''}<td>${cell('angle_deg')}${s.mode==='service'&&!r.calibrated?'<small class="muted"> 未标定</small>':''}</td>${officialReference}${savedLimits}<td class="target-angle">${cell('target_deg')}</td><td class="${Math.abs(r.error_deg)>5?'data-warn':''}">${cell('error_deg',2)}</td><td>${cell(rawMode?'speed_raw':'velocity_rpm',rawMode?0:2)}</td><td>${cell(rawMode?'current_raw':'current_ma',0)}</td><td>${cell('temperature_c')}</td><td>${cell('voltage_v',2)}</td>${s.mode==='service'?'':`<td>${cell('current_ratio_percent')}</td><td>${cell('pwm_percent')}</td>`}<td class="${r.hardware_error?'data-warn':''}">${s.mode==='service'?torque:`${torque} / ${fault}`}</td></tr>`;
   }).join('')||`<tr><td colspan="${s.mode==='service'?17:12}" class="muted">无匹配关节</td></tr>`);
   const chosen=s.servos.find(r=>r.id===selectedId);
   if(chosen){text('selected-joint',`${chosen.label} · ID ${chosen.id}`);text('joint-extra',chosen.model_number?`型号 ${chosen.model_number} · 固件 ${chosen.firmware??'—'} · PID ${chosen.p_gain??'—'}/${chosen.i_gain??'—'}/${chosen.d_gain??'—'} · Homing Offset ${chosen.homing_offset??'—'} · Current Limit ${chosen.current_limit_ma??'—'} mA`:`${chosen.name} · ${chosen.source} · 电流 ${chosen.current_source||'未导出'}`);}
@@ -250,11 +255,12 @@ function drawHistory(){
 }
 const camera=new Camera($('camera'),(status,message)=>{
   badge('camera-badge',status,status==='live'?'视频在线':status==='connecting'?'连接中':status==='error'?'连接失败':'未连接');
-  $('camera-placeholder').hidden=status==='live';$('camera-overlay').hidden=status!=='live';text('camera-message',message);
+  $('camera-placeholder').hidden=status==='live';$('camera-overlay').hidden=status!=='live';text('camera-message',status==='error'?formatError(message):message);
   $('camera-connect').disabled=status==='connecting';
   if(status!=='live'){text('camera-fps','— fps');text('camera-bitrate','— Mb/s');text('camera-loss','—');}
 },s=>{text('camera-fps',`${fmt(s.fps)} fps`);text('camera-bitrate',`${fmt(s.mbps,2)} Mb/s`);text('camera-loss',fmt(s.loss,0));});
 function cameraAddress(){return {host:localStorage.getItem('microduck-camera-host')||cfg.camera_host,port:Number(localStorage.getItem('microduck-camera-port')||cfg.camera_port)};}
+const aiCamera=new AICamera(camera,cameraAddress,message=>notify(formatError(message)));
 function refreshCameraAddress(){const a=cameraAddress();$('camera-host').value=a.host;$('camera-port').value=a.port;text('camera-address',`摄像头 ${a.host}:${a.port}`);}
 function openReplayAt(i){
   if(!replay)return;i=Math.max(0,Math.min(replay.frames.length-1,i));replay.index=i;
@@ -262,6 +268,7 @@ function openReplayAt(i){
   text('replay-label',`${i+1} / ${replay.frames.length} 帧 · ${new Date(s.at*1000).toLocaleTimeString()}`);
 }
 function validateRecording(data){
+  if(data?.schema==='microduck-console-diagnostic/v1')throw Error('这是精简诊断报告，不是动作回放；请使用“导出完整回放”生成的文件。');
   if(data?.schema!=='microduck-console-recording/v1'||!Array.isArray(data.frames)||!data.frames.length||data.frames.length>1500)throw Error('不是受支持的中控记录，或帧数超出上限');
   let t=-Infinity;for(const f of data.frames){if(f.schema!=='microduck-console/v1'||!finite(f.at)||f.at<t||!f.channels||!Array.isArray(f.servos)||f.servos.length>253||!f.state||!f.health||!f.system||!f.imu||!f.tof)throw Error('记录结构不完整或时间顺序异常');t=f.at;for(const k of ['state','health','tof','system'])if(!f.channels[k])throw Error('缺失数据源状态');}
   return data;
@@ -282,6 +289,14 @@ function exportRecording(){
   if(rawTelemetry)return download(JSON.stringify(rawTelemetry.store.recording()),'microduck-recording.json','application/json');
   const a=document.createElement('a');a.href='/api/recording';a.download='microduck-recording.json';a.click();
 }
+async function exportDiagnostic(){
+  if(replay)return notify('当前为回放；请退出回放后导出当前诊断');
+  try{
+    const recording=rawTelemetry?rawTelemetry.store.recording():await fetch('/api/recording').then(r=>{if(!r.ok)throw Error('诊断数据读取失败');return r.json();});
+    const current=rawTelemetry?rawTelemetry.store.snapshot(false):latest;
+    download(JSON.stringify(diagnosticReport(recording,current)),'microduck-diagnostic.json','application/json');
+  }catch(error){notify(formatError(error.message));}
+}
 function exportCSV(){
   const s=rawTelemetry.store.snapshot(false),fields=['angle_deg','target_deg','error_deg','current_ma','temperature_c','voltage_v','velocity_rpm','current_ratio_percent','position_raw','speed_raw','load_raw','current_raw','torque_enabled'];
   const rows=[['mode','timestamp','id','joint','status',...fields],...s.servos.map(row=>[s.mode,s.at,row.id,row.name,row.status,...fields.map(key=>row[key])])];
@@ -301,9 +316,10 @@ async function poll(){
   }finally{polling=false;setTimeout(poll,100);}
 }
 async function init(){
-  const r=await fetch('/api/config');cfg=await r.json();text('console-version',`Console v${cfg.version} · 在线演示`);controls=new ControlPanel(cfg,$('control-panel'));servicePanel=new ServicePanel(cfg,choose);new SystemLogPanel();document.querySelector('main footer').before($('diagnostics'));refreshCameraAddress();text('settings-mode',cfg.mode);
+  const r=await fetch('/api/config');cfg=await r.json();wifiPanel=new WifiPanel(cfg);text('console-version',`Console v${cfg.version} · 在线演示`);text('ai-release-version',`AI · V${String(cfg.version).replace(/^1\.0\./,'')}`);controls=new ControlPanel(cfg,$('control-panel'));controls.bindStartButton($('ai-motion-start'));controls.bindRelaxButton($('ai-motion-relax'));servicePanel=new ServicePanel(cfg,choose);new SystemLogPanel();try{new AIPanel({...cfg,onVisionCamera:active=>aiCamera.update(active&&!replay)});}catch(e){console.warn('AI Panel:',e);}document.querySelector('main footer').before($('diagnostics'));refreshCameraAddress();text('settings-mode',cfg.mode);
   sshConnection=new SSHConnection(cfg,()=>{
-    controls.suspend();controls.connected=false;controls.linkEpoch++;controls.socket.close();
+    wifiPanel.invalidate();
+    controls.suspend();controls.connected=false;controls.linkEpoch++;controls.socket.close();controls.resetConnectionRetry();
     controls.options={...controls.options,offline:true};camera.disconnect();
   },state=>{
     history=[];latest=null;
@@ -314,12 +330,13 @@ async function init(){
   $('camera-save').onclick=()=>{
     const host=$('camera-host').value.trim(),port=Number($('camera-port').value);
     if(!/^[a-zA-Z0-9][a-zA-Z0-9_.-]*$/.test(host)||!Number.isInteger(port)||port<1||port>65535)return notify('请检查主机名和端口');
-    camera.disconnect();localStorage.setItem('microduck-camera-host',host);localStorage.setItem('microduck-camera-port',port);refreshCameraAddress();notify('摄像头地址已保存，点击连接开始接收');
+    aiCamera.manual();camera.disconnect();localStorage.setItem('microduck-camera-host',host);localStorage.setItem('microduck-camera-port',port);refreshCameraAddress();notify('摄像头地址已保存，点击连接开始接收');
   };
-  $('camera-connect').onclick=()=>{if(replay)return notify('请先退出回放');try{const a=cameraAddress();camera.connect(a.host,a.port);}catch(e){notify(e.message);}};
-  $('camera-disconnect').onclick=()=>camera.disconnect();
+  $('camera-connect').onclick=()=>{if(replay)return notify('请先退出回放');aiCamera.manual();try{const a=cameraAddress();camera.connect(a.host,a.port);}catch(e){notify(formatError(e.message));}};
+  $('camera-disconnect').onclick=()=>{aiCamera.manual();camera.disconnect();};
   $('camera-rotation').onchange=()=>{const a=Number($('camera-rotation').value);$('camera').style.transform=`rotate(${a}deg)`;if(a===90||a===270){$('camera').style.width='65%';$('camera').style.height='150%';}else{$('camera').style.width='100%';$('camera').style.height='100%';}};
-  $('export').onclick=exportRecording;
+  $('export').onclick=exportDiagnostic;
+  $('export-diagnostic').onclick=exportDiagnostic;
   document.querySelector('a[href="/api/recording"]').onclick=e=>{e.preventDefault();exportRecording();};
   document.querySelector('a[href="/api/servos.csv"]').onclick=e=>{if(rawTelemetry){e.preventDefault();exportCSV();}};
   $('group-filter').onclick=e=>{const b=e.target.closest('button');if(!b)return;group=b.dataset.group;$('group-filter').querySelectorAll('button').forEach(x=>x.classList.toggle('selected',x===b));if(shown)renderMotors(shown);};
@@ -335,7 +352,7 @@ async function init(){
     try{const f=$('replay-file').files[0];if(!f)return;if(f.size>64*1024*1024)throw Error('记录不能超过 64 MB');
       const data=validateRecording(JSON.parse(await f.text()));clearInterval(replayTimer);replayTimer=null;controls.suspend();servicePanel.suspend();camera.disconnect();replay={frames:data.frames,index:0};
       $('replay-controls').hidden=false;$('replay-range').max=replay.frames.length-1;text('replay-error','');openReplayAt(0);notify('已进入历史回放，不会连接或控制实机');
-    }catch(e){text('replay-error',e.message);}
+    }catch(e){text('replay-error',formatError(e.message));}
   };
   $('replay-range').oninput=()=>openReplayAt(Number($('replay-range').value));
   $('replay-play').onclick=()=>{if(replayTimer){clearInterval(replayTimer);replayTimer=null;return;}if(!replay)return;replayTimer=setInterval(()=>{if(replay.index>=replay.frames.length-1){clearInterval(replayTimer);replayTimer=null;}else openReplayAt(replay.index+1);},100);};
@@ -343,10 +360,10 @@ async function init(){
   if(cfg.raw_telemetry)rawTelemetry=new RawTelemetry(cfg,s=>{latest=s;apiOkay=true;if(!replay)render(latest);},telemetryError);
   else poll();
   // Isolate renderer failure: the rest of the diagnostics must remain useful without WebGL.
-  try{const {DuckView}=await import('./duck.js?demo=20261013');duck=await new DuckView().init($('duck-canvas'),cfg.home,i=>choose(cfg.ids[i]));new CalibrationViewPanel(duck);duck.selectJoint(selected);if(shown)duck.update(shown);}
-  catch(e){$('model-error').hidden=false;text('model-error',`3D 视图不可用：${e.message}。其他数据面板仍可使用。`);console.warn('Duck view:',e);}
+  try{const {DuckView}=await import('./duck.js?v=v260-20261113');duck=await new DuckView().init($('duck-canvas'),cfg.home,i=>choose(cfg.ids[i]));new CalibrationViewPanel(duck);duck.selectJoint(selected);if(shown)duck.update(shown);}
+  catch(e){$('model-error').hidden=false;text('model-error',`3D 视图不可用：${formatError(e.message)}。其他数据面板仍可使用。`);console.warn('Duck view:',e);}
 }
 window.addEventListener('pagehide',()=>camera.disconnect(false));
-window.addEventListener('beforeunload',()=>{rawTelemetry?.close();camera.disconnect(false);});
+window.addEventListener('beforeunload',()=>{wifiPanel?.stopJobPoll();rawTelemetry?.close();camera.disconnect(false);});
 window.addEventListener('resize',()=>{drawHistory();if(shown)renderSystem(shown,sourceLive(shown,'system'));});
-init().catch(e=>{$('connection-banner').hidden=false;$('connection-banner').className='banner warning';text('connection-banner',`启动失败：${e.message}。请通过 Python 启动器打开，不要双击 HTML 文件。`);});
+init().catch(e=>{$('connection-banner').hidden=false;$('connection-banner').className='banner warning';text('connection-banner',location.protocol==='file:'?'请通过 start.cmd 或 Python 启动器打开中控，不要双击 HTML 文件。':`中控界面启动失败：${formatError(e.message)}。请刷新页面；若仍出现，请提供此提示和启动终端日志。`);console.error('Console startup:',e);});

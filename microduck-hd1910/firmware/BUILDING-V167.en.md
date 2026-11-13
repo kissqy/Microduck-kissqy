@@ -8,7 +8,7 @@ Console: `1.0.167`. Robot firmware: `1fa8438-feetech-ft6-control.43`. Official s
 
 ## Source and compiled downloads
 
-This directory keeps source, configuration, tests, licenses and interface assets. Complete console ZIPs are in the repository's `release-assets/`. The standalone firmware stays in `console/updates/` for the existing console installer.
+This directory keeps source, configuration, tests, licenses and interface assets. Complete console ZIPs are in the version archive `versions/v167/release-assets/`. The standalone firmware stays in `console/updates/` for the existing console installer.
 
 Compiled programs, ONNX shared libraries and duplicate packaged model binaries are restored from the verified firmware instead of being stored twice. Before building or running package-dependent tests:
 
@@ -18,7 +18,7 @@ python3 prepare-V167.py
 
 The script verifies pinned SHA256 values and restores the required resources. Git ignores generated copies. `--check` only checks archive hashes; `--download` retrieves missing pinned archives and verifies their hashes.
 
-The V164 ZIP is kept once as a reproducible build baseline at `../../release-assets/build-baselines/Microduck-Console-R17-V164.zip`. Packaging and verification use that location.
+The V164 ZIP is kept once as a reproducible build baseline at `../../versions/v167/release-assets/build-baselines/Microduck-Console-R17-V164.zip`. Packaging and verification use that location.
 
 After the November 12 source cleanup, duplicated model metadata is also restored from the specified canonical `policies/` files with SHA256 checks. Preparation restores 91 resources in total; see `SOURCE-LAYOUT.json` and the [source cleanup audit (中文)](../docs/SOURCE-CLEANUP-20261112.md).
 

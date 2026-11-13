@@ -1,5 +1,6 @@
-import {showFeedback} from './feedback.js?demo=20261013';
-import {readTiming,isLateRead,acceptedLateRead,failureText} from './read-timing.js?demo=20261013';
+import {showFeedback} from './feedback.js?v=v260-20261113';
+import {formatError} from './messages.js?v=v260-20261113';
+import {readTiming,isLateRead,acceptedLateRead,failureText} from './read-timing.js?v=v260-20261113';
 
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const fmt=(v,n=1)=>finite(v)?v.toFixed(n):'—';
@@ -142,8 +143,8 @@ export class DeviceInspection {
     const failureAt=finite(failure?.read)?`第 ${failure.read} 次采集`:`第 ${failure?.cycle??'—'} 轮`;
     let message='';
     if(this.requestError){message=this.requestError;tone='error';}
-    else if(context){message=`${context} · ${s.channels?.bus?.error||'当前画面不代表实时通信正常'}${historical?`\n${historicalLabel} · ${failureAt} · ${historical}`:''}`;tone='warning';}
-    else if(current){message=`${acceptedLateRead(b)?'本轮耗时提示':'当前异常'}${finite(b.cycle??b.total_cycles)?` · 第 ${b.cycle??b.total_cycles} 轮`:''} · ${current}${currentDetail}`;if(late(current))tone='warning';}
+    else if(context){message=`${context} · ${formatError(s.channels?.bus?.error)||'当前画面不代表实时通信正常'}${historical?`\n${historicalLabel} · ${failureAt} · ${historical}`:''}`;tone='warning';}
+    else if(current){message=`${acceptedLateRead(b)?'本轮耗时提示':'当前异常'}${finite(b.cycle??b.total_cycles)?` · 第 ${b.cycle??b.total_cycles} 轮`:''} · ${formatError(current)}${currentDetail}`;if(late(current))tone='warning';}
     else if(historical){message=`${historicalLabel} · ${failureAt} · ${historical}${s.service_sample_fresh?failure.accepted?'\n当前通信正常；保留该次耗时供核对。':'\n当前通信已恢复；保留最近异常供核对。':''}`;tone='warning';}
     else if((loop||this.manual)&&s.service_sample_fresh){message=loop?'通信正常 · 已自动接入运动循环反馈':'通信正常 · 手动检测中';tone='completed';}
     else{message=this.manual?'等待新鲜反馈':loop?'等待运动循环反馈':'未启动运动循环时，点击“开始检测”查看本次通信结果。';tone='info';}

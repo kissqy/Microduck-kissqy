@@ -18,7 +18,7 @@
 
 ## Download current IMU firmware
 
-**[⬇️ Download IMU FT6 `.bin` (8.2 KiB)](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/microduck-hd1910/firmware/console/updates/imu_to_feetech_ReVA_FT6_SYNC15_UART_IRQ_v1.bin)** · [SHA256 file](../release-assets/imu-ft6.sha256) · [Complete source](../microduck-hd1910/firmware/firmware/imu-source/README.en.md)
+**[⬇️ Download IMU FT6 `.bin` (8.2 KiB)](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/microduck-hd1910/firmware/console/updates/imu_to_feetech_ReVA_FT6_SYNC15_UART_IRQ_v1.bin)** · [SHA256 file](../versions/v167/release-assets/imu-ft6.sha256) · [Complete source](../microduck-hd1910/firmware/firmware/imu-source/README.en.md)
 
 | Item | Value |
 | --- | --- |

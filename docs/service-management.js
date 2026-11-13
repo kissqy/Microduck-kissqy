@@ -1,14 +1,16 @@
-import {actionSlots,supportsFeature} from './service-builds.js?demo=20261013';
-import {showFeedback} from './feedback.js?demo=20261013';
-import {AdvancedParameters} from './advanced-parameters.js?demo=20261013';
-import {jointExecutionProfile,jointProfileSummary} from './execution-profile.js?demo=20261013';
+import {actionSlots,supportsFeature} from './service-builds.js?v=v260-20261113';
+import {ConnectionRetry} from './connection-retry.js?v=v260-20261113';
+import {showFeedback} from './feedback.js?v=v260-20261113';
+import {formatError} from './messages.js?v=v260-20261113';
+import {AdvancedParameters} from './advanced-parameters.js?v=v260-20261113';
+import {jointExecutionProfile,jointProfileSummary} from './execution-profile.js?v=v260-20261113';
 
-const ACTIONS=actionSlots.map(row=>[row.slot,row.label]);
+const ACTIONS=[...actionSlots.map(row=>[row.slot,row.label]),['play_dead','装死 / PlayDead']];
 const ROLLER_NAMES={swizzle:'滑轮对称滑 / Swizzle',crouch:'滑轮蹲下 / Crouch',spin:'滑轮原地转 / Spin',standup:'滑轮倒地起身 / Stand up'};
 // Fixed HAT service recovery and policy management share the existing job channel.
 export class ServiceManagement {
   constructor(panel){
-    this.panel=panel;this.cfg=panel.cfg;this.catalog=null;this.catalogError='';this.catalogRequest=null;this.loading=false;this.retryAfter=0;this.lastJob='';this.connection=null;this.connectionLoading=false;this.connectionAfter=0;this.connectionRequest=null;
+    this.panel=panel;this.cfg=panel.cfg;this.queryRetry=new ConnectionRetry();this.processRetry=new ConnectionRetry();this.catalog=null;this.catalogError='';this.catalogRequest=null;this.loading=false;this.retryAfter=0;this.lastJob='';this.connection=null;this.connectionLoading=false;this.connectionAfter=0;this.connectionRequest=null;
     this.root=document.createElement('section');this.root.className='service-management';this.root.id='service-models';
     this.root.innerHTML=`
       <div class="management-model-actions"><div id="management-model" class="model-status-list" role="list" aria-label="内置动作模型状态"></div></div>
@@ -23,6 +25,7 @@ export class ServiceManagement {
     this.$('diagnostic').onclick=()=>this.diagnose();
   }
   invalidate(){
+    this.queryRetry=new ConnectionRetry();this.processRetry=new ConnectionRetry();
     // A response started before an install/reconnect belongs to the old service.
     this.catalogRequest?.abort();this.catalogRequest=null;this.loading=false;
     this.catalog=null;this.catalogError='';this.retryAfter=0;
@@ -30,7 +33,7 @@ export class ServiceManagement {
     this.connection=null;this.connectionAfter=0;
   }
   async refresh(silent=false){
-    if(this.loading||!this.supported)return;
+    if(this.loading||!this.supported||!this.queryRetry.ready)return;
     const request=new AbortController();this.catalogRequest=request;
     const timer=setTimeout(()=>request.abort(new DOMException('配置读取超时','TimeoutError')),25000);
     this.loading=true;this.catalogError='';this.paint();
@@ -45,6 +48,7 @@ export class ServiceManagement {
         const item=document.createElement('span');item.className='model-slot'+(current?' configured':' empty');item.setAttribute('role','listitem');
         const name=document.createElement('strong');name.textContent=label;
         const status=document.createElement('span');status.className='model-slot-name';status.textContent=current?current.name:stored?'已存入，尚未绑定':'未配置';
+        if(slot==='play_dead'&&current)status.textContent=current.name+' · 实体 ← 短按 · 模型运行 5 秒后回 Walk';
         const profile=jointExecutionProfile(current);
         item.title=`${label} · ${slot} · ${current?current.name+' · '+current.sha256:stored?'已存入 '+stored.name+'，尚未绑定':'尚未安装配套模型'}${profile?' · '+jointProfileSummary(profile):''}`;
         item.append(name,status);return item;
@@ -54,15 +58,15 @@ export class ServiceManagement {
         const name=document.createElement('strong');name.textContent=ROLLER_NAMES[row.id]||row.name;
         const status=document.createElement('span');status.className='model-slot-name';
         status.textContent=row.name+' · '+(row.available?(row.trigger_bound===false?'已安装 · 未绑定触发':'已安装 · 实体手柄切换'):'未安装');
-        item.title=row.available?`${row.name} · ${row.sha256} · 缩放 ${row.action_scale} / 头部 ${row.head_lowpass} / 腿部 ${row.legs_lowpass}`:row.error||'尚未安装滑轮模型';
+        item.title=row.available?`${row.name} · ${row.sha256} · 缩放 ${row.action_scale} / 头部 ${row.head_lowpass} / 腿部 ${row.legs_lowpass}`:formatError(row.error)||'尚未安装滑轮模型';
         item.append(name,status);return item;
       });
-      this.catalog=data;this.retryAfter=0;this.$('model').replaceChildren(...models,...rollers);
+      this.catalog=data;this.retryAfter=0;this.queryRetry.connected();this.$('model').replaceChildren(...models,...rollers);
       if(!silent)showFeedback(this.$('status'),`模型列表已刷新 · ${data.models.length+(data.roller_models||[]).length} 项`,'completed');
     }catch(error){
       if(this.catalogRequest!==request)return;
-      this.catalog=null;this.catalogError=error.message;this.retryAfter=Date.now()+30000;
-      showFeedback(this.$('status'),error.message,'error');
+      this.catalog=null;this.catalogError=error.message+'；'+this.queryRetry.failed();this.retryAfter=this.queryRetry.exhausted?Infinity:this.queryRetry.until;
+      showFeedback(this.$('status'),this.catalogError,'error');
     }finally{
       clearTimeout(timer);
       if(this.catalogRequest===request){this.catalogRequest=null;this.loading=false;this.paint();}
@@ -94,7 +98,7 @@ export class ServiceManagement {
     await this.command({action,supported:true});
   }
   async refreshConnection(){
-    if(this.connectionLoading)return;
+    if(this.connectionLoading||!this.processRetry.ready)return;
     const request=new AbortController();this.connectionRequest=request;
     const timer=setTimeout(()=>request.abort(),15000);
     this.connectionLoading=true;this.connectionAfter=Date.now()+5000;
@@ -103,9 +107,9 @@ export class ServiceManagement {
       const data=await response.json();
       if(this.connectionRequest!==request)return;
       if(!response.ok||!data.management_revision)throw Error('当前服务未提供进程核对信息。');
-      this.connection=data;this.connectionAfter=Infinity;this.connectionError='';this.supported ||= data.management_revision==='R17';
+      this.connection=data;this.processRetry.connected();this.connectionAfter=Infinity;this.connectionError='';this.supported ||= data.management_revision==='R17';
       if(this.supported&&!this.catalog&&!this.loading&&!this.recoveryBlocked)this.refresh(true);
-    }catch(error){if(this.connectionRequest!==request)return;this.connection=null;this.connectionError=error.message;this.connectionAfter=Date.now()+15000;}
+    }catch(error){if(this.connectionRequest!==request)return;this.connection=null;this.connectionError=error.message+'；'+this.processRetry.failed();this.connectionAfter=this.processRetry.exhausted?Infinity:this.processRetry.until;}
     finally{clearTimeout(timer);if(this.connectionRequest===request){this.connectionRequest=null;this.connectionLoading=false;this.paint();}}
   }
   render(snapshot,options){
@@ -133,7 +137,7 @@ export class ServiceManagement {
     const mismatch=c&&(c.process_matches!==true||c.actual_port!=='/dev/ttyS2');
     this.$('connection').textContent=`HAT · /dev/ttyS2 · ${mismatch?'进程待恢复':s.service_sample_fresh?'已连接':'等待总线'}`;
     this.$('connection').classList.toggle('connection-error',!!(mismatch||problem));
-    this.$('health').textContent=job.busy?'正在执行服务操作…':c&&c.management_revision!=='R17'?`当前服务 ${c.management_revision}；请在“09 固件与电源”中升级统一版本。`:mismatch?`实际进程${c.running?'使用 '+(c.actual_port||'未知串口'):'未运行'}；点击“重启固件”。`:problem?'R17 服务报告异常，详情见“逐设备通信”及服务操作回执。':c?`服务 R17 · HD1910 自训配置 · PID ${c.pid} · ${s.service_sample_fresh?'正在采集':'等待设备反馈'}`:this.connectionError||'正在读取服务状态…';
+    this.$('health').textContent=job.busy?'正在执行服务操作…':c&&c.management_revision!=='R17'?`当前服务 ${c.management_revision}；请在“09 固件与电源”中升级统一版本。`:mismatch?`实际进程${c.running?'使用 '+(c.actual_port||'未知串口'):'未运行'}；点击“重启固件”。`:problem?'R17 服务报告异常，详情见“逐设备通信”及服务操作回执。':c?`服务 R17 · HD1910 自训配置 · PID ${c.pid} · ${s.service_sample_fresh?'正在采集':'等待设备反馈'}`:formatError(this.connectionError)||'正在读取服务状态…';
     this.$('health').classList.toggle('connection-error',!!(mismatch||problem));
     for(const el of this.root.querySelectorAll('button,input'))el.disabled=!!this.blocked;
     this.advanced.paint(s,options);

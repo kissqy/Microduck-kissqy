@@ -6,7 +6,7 @@ An independent Chinese-language console for organizing training tasks, managing 
 
 **Current pairing: Official Microduck 0.15.1 · Official chassis + Feetech HD1910 · 14 action categories and 35 task recipes.**
 
-[⬇️ Download complete Training Studio R1.5.27](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip) · [Detailed training rules](USER-GUIDE.en.md) · [Project homepage](../../README.en.md)
+[⬇️ Download complete Training Studio R1.5.27](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip) · [Detailed training rules](USER-GUIDE.en.md) · [Project homepage](../../README.en.md)
 
 ## Features
 

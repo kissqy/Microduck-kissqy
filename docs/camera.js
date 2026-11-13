@@ -18,7 +18,16 @@ export class Camera {
     if(msg.type==='welcome')this.send({type:'list'});
     else if(msg.type==='list'){
       if(this.sessionRequested||this.sessionId)return;
-      const producer=msg.producers?.[0];if(!producer)throw Error('mediad 没有视频生产者，请检查 IMX219 和视频管线');
+      const producer=msg.producers?.[0];
+      if(!producer){
+        // A freshly restarted mediad announces welcome before codec discovery is
+        // ready. Stay on this socket within the existing 20-second deadline.
+        clearTimeout(this.producerTimer);const generation=this.generation;
+        this.onStatus('connecting','摄像头正在准备视频，等待就绪…');
+        this.producerTimer=setTimeout(()=>{if(generation===this.generation&&!this.sessionRequested)this.send({type:'list'});},250);
+        return;
+      }
+      clearTimeout(this.producerTimer);
       this.sessionRequested=true;
       this.send({type:'startSession',peerId:producer.id});
     }else if(msg.type==='sessionStarted'){
@@ -59,7 +68,7 @@ export class Camera {
   }
   fail(message){this.disconnect(false);this.onStatus('error',message);}
   disconnect(report=true){
-    this.generation++;clearTimeout(this.deadline);clearInterval(this.statsTimer);
+    this.generation++;clearTimeout(this.deadline);clearTimeout(this.producerTimer);clearInterval(this.statsTimer);
     if(this.sessionId)this.send({type:'endSession',sessionId:this.sessionId});
     if(this.pc){this.pc.onconnectionstatechange=null;this.pc.close();this.pc=null;}
     if(this.ws){this.ws.onclose=null;this.ws.onerror=null;this.ws.close();this.ws=null;}

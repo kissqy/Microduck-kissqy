@@ -8,9 +8,9 @@
     "url": "https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/microduck-hd1910/firmware/console/updates/Microduck-Robotd-FT6-R17.tar.gz"
   },
   "baseline": {
-    "local_path": "../../release-assets/build-baselines/Microduck-Console-R17-V164.zip",
+    "local_path": "../../versions/v167/release-assets/build-baselines/Microduck-Console-R17-V164.zip",
     "sha256": "5c9313b2aba04b89c5dc608644ba7d814771623597d11ddc6a10373528272d31",
-    "url": "https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/build-baselines/Microduck-Console-R17-V164.zip"
+    "url": "https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/build-baselines/Microduck-Console-R17-V164.zip"
   },
   "materialized_files": [
     {

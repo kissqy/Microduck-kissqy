@@ -1,0 +1,38 @@
+/* Scope the new connection card to the page heading; retain all view-card sizing. */
+.wifi-heading>.heading-intro{display:none}
+.wifi-heading>#wifi-panel{grid-column:-5/-3;grid-row:1;align-self:stretch;min-width:0}
+.wifi-heading>.heading-actions{grid-row:1;margin-top:0;min-width:0}
+#wifi-panel{display:grid;gap:6px;align-content:start;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);box-sizing:border-box}
+.wifi-label-row{display:flex;align-items:baseline;gap:8px;min-width:0}
+.wifi-label-row>span:first-child{flex:none}
+#wifi-current{font-size:10px;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-left:auto}
+#wifi-panel .button{min-height:30px;padding:6px 8px;font-size:11px}
+.wifi-controls{display:flex;gap:6px;align-items:end;min-width:0}
+.wifi-controls label{font-size:11px;color:var(--muted);min-width:0}
+.wifi-network-field{flex:1.3 1 0}
+.wifi-password-field{flex:1 1 0}
+.wifi-controls select,.wifi-controls input{display:block;width:100%;min-width:0;max-width:100%;height:calc(1.55em + 14px);margin-top:3px;padding:6px 7px;font-size:11px;box-sizing:border-box}
+.wifi-buttons{display:flex;gap:6px;flex:none}
+.wifi-status-row{display:flex;align-items:center;flex-wrap:wrap;gap:3px 8px;font-size:10px;line-height:1.4;overflow-wrap:anywhere}
+.page-heading #wifi-note,.page-heading #wifi-feedback{font-size:10px;margin:0;line-height:1.4}
+.page-heading #wifi-note{color:var(--muted);margin-left:auto}
+#wifi-feedback{color:#b5cbb9}
+#wifi-panel [hidden]{display:none!important}
+@media(min-width:2400px){
+ .wifi-heading>#wifi-panel{grid-column:-3/-2}
+}
+@media(max-width:1599px){
+ .wifi-heading>#wifi-panel{grid-column:1}
+ .wifi-heading>.heading-actions{grid-column:2}
+}
+@media(max-width:1100px){
+ .wifi-heading>#wifi-panel{grid-column:1/-1;grid-row:2}
+ .wifi-heading>.heading-actions{grid-column:1/-1;grid-row:1}
+}
+@media(max-width:600px){
+ .wifi-controls{flex-wrap:wrap}
+ #wifi-panel .wifi-controls select,#wifi-panel .wifi-controls input{font-size:16px}
+ .wifi-network-field{flex-basis:100%}
+ .wifi-password-field{flex-basis:100%}
+ .wifi-buttons{margin-top:2px}
+}

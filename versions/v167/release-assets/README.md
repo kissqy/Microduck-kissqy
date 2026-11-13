@@ -13,7 +13,7 @@
 
 **更新：修复鸭身抖动的问题。**
 
-**作者成品 IMU 已烧录 FT6，无需为首次装机另行烧录。** 自焊新板、换芯片或维护升级时使用 [IMU 下载与烧录指南](../hardware/IMU-FIRMWARE.md)；control.43 安装到 ZERO，不会烧录外置 IMU。成品安装后仍需完成本机标定。
+**作者成品 IMU 已烧录 FT6，无需为首次装机另行烧录。** 自焊新板、换芯片或维护升级时使用 [IMU 下载与烧录指南](../../../hardware/IMU-FIRMWARE.md)；control.43 安装到 ZERO，不会烧录外置 IMU。成品安装后仍需完成本机标定。
 
 ## 和镜像、中控是什么关系
 
@@ -27,7 +27,7 @@
 
 ## 用中控安装
 
-完整解压 [机器人中控 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip)，运行 `start.cmd`（macOS/Linux 用 `bash start.command`），通过 SSH 连接 ZERO，在 **系统维护 → 随包固件** 安装。中控已自带本页的固件，因此走此流程不用另外下载 `.tar.gz`。
+完整解压 [机器人中控 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Console-R17-V167.zip)，运行 `start.cmd`（macOS/Linux 用 `bash start.command`），通过 SSH 连接 ZERO，在 **系统维护 → 随包固件** 安装。中控已自带本页的固件，因此走此流程不用另外下载 `.tar.gz`。
 
 中控的本地固件导入接受 ZIP，不直接接受 `.tar.gz`。如果已经下载本页固件，可在 Windows PowerShell 将它原样放入 ZIP：
 

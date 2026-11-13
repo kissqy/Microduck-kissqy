@@ -1,5 +1,5 @@
 // Save the installed Walk model's action scale through the existing service job.
-import {jointExecutionProfile,jointProfileSummary} from './execution-profile.js?demo=20261013';
+import {jointExecutionProfile,jointProfileSummary} from './execution-profile.js?v=v260-20261113';
 
 export class AdvancedParameters {
   constructor(owner){

@@ -30,7 +30,7 @@ V260 源码归入 `versions/v260/`；V167 源码与构建资源归入 `versions/
 2. 开机未能连接已保存 Wi-Fi 时，连接 `Microduck-kissqy` 热点（密码 `12345678`），设置家庭 Wi-Fi 和新的系统登录密码。未自动弹出页面时访问 `http://10.42.0.1:8088`。
 3. [打开 V260 发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)，取得完整 Console Studio V260 运行包，完整解压后运行 `start.cmd`；macOS/Linux 运行 `bash start.command`。页面地址为 `http://127.0.0.1:8090`。
 4. 填写自己的 `用户名@机器人IP` 和 SSH 登录信息，连接后核对本机标定，按 **HOME → 保持 → 行走** 使用。镜像已预装机器人服务；已有系统需要升级时，可在中控“系统维护”安装随包固件。
-5. 需要训练时，[下载训练中控 R1.5.27](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip)，运行 `start-training.cmd` 或 `bash start-training.command`，打开 `http://127.0.0.1:8092`。
+5. 需要训练时，[下载训练中控 R1.5.27](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip)，运行 `start-training.cmd` 或 `bash start-training.command`，打开 `http://127.0.0.1:8092`。
 
 训练使用 NVIDIA GPU + Linux/WSL2，先安装 git 和 [uv](https://docs.astral.sh/uv/getting-started/installation/)。首次准备环境会下载固定版本的训练引擎和依赖。当前提供 14 类动作、35 种任务配方；具体使用见 [训练中控说明](training-console/README.zh-CN.md)。
 
@@ -44,4 +44,4 @@ V260 源码归入 `versions/v260/`；V167 源码与构建资源归入 `versions/
 - 原创归属与使用：[软件与自训模型权利说明](docs/SOFTWARE-MODEL-RIGHTS.md) · [逐模型来源](docs/MODEL-PROVENANCE.md)。
 - 许可与第三方来源：[LICENSE](LICENSE) · [THIRD-PARTY.md](docs/THIRD-PARTY.md)。
 
-[历史 R1 镜像](https://github.com/kissqy/Microduck-kissqy/releases/tag/public-image-r1) · [V167 中控 ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip) · [control.43 固件说明](../release-assets/README.md#历史版本control43)。每台机器人都需要核对自己的关节零位、方向、限位和 IMU；本次源码公开不扩大原有模型的实机验收范围。
+[历史 R1 镜像](https://github.com/kissqy/Microduck-kissqy/releases/tag/public-image-r1) · [V167 中控 ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Console-R17-V167.zip) · [control.43 固件说明](../versions/v167/release-assets/README.md)。每台机器人都需要核对自己的关节零位、方向、限位和 IMU；本次源码公开不扩大原有模型的实机验收范围。

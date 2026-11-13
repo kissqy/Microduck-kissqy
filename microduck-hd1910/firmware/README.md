@@ -2,7 +2,7 @@
 
 > **独立 IMU 固件 FT6（STM32）：** [下载、接线与烧录](../../hardware/IMU-FIRMWARE.md) · [源码](firmware/imu-source/)。下述 control.43 安装到 ZERO；IMU 单独使用 ST-LINK 烧录。
 
-> **已编译飞特固件：** control.43 为可直接安装的 AArch64 程序包，见[下载与安装说明](../../release-assets/README.md)，普通使用无需编译源码。
+> **已编译飞特固件：** control.43 为可直接安装的 AArch64 程序包，见[下载与安装说明](../../versions/v167/release-assets/README.md)，普通使用无需编译源码。
 
 > **当前公开源码：Microduck 0.15.1 / HD1910 control.43，配套 R17 V167 中控。** V167 更新：修复鸭身抖动的问题。请先看 [当前固件与中控说明](README-R17.zh-CN.md)、[源码编译](../docs/BUILD.md) 和 [发布基线](../docs/BASELINE.md)。下面保留上游项目介绍。
 

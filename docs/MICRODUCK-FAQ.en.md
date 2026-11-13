@@ -19,9 +19,9 @@ The [FrankenDuck printing page](../hardware/3d-print-frankenduck/README.en.md) p
 
 ## What do I download for the HD1910 build?
 
-For normal operation, download [System Image R2](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) and [Robot Console V260](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md). Add Training Studio R1.5.27 when training your own movements. Use the [Downloads table](../README.en.md#downloads-and-versions).
+For a fresh installation, download [System Image R2](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) and [Robot Console V260](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md). Add Training Studio R1.5.27 when training your own movements. Use the [Downloads table](../README.en.md#downloads-and-versions).
 
-R2 includes V260 / control.102 and pairs with Robot Console V260. For an older system, install the matching bundled firmware through V260 when adopting this release; do not import it through V167. [Historical Image R1](releases/public-image-r1.en.md) and the verified V167 / control.43 baseline remain available. This release does not replace existing real-robot Known-Good records.
+R2 includes V260 / control.102 and pairs with Robot Console V260. **Upgrading from V167 to V260 does not require reflashing the system or microSD card.** Download and fully extract Console V260, connect to ZERO, then install its bundled firmware directly through Console V260. Use the R2 image for a fresh installation or when reflashing is needed. Do not import V260 firmware through V167. [Historical Image R1](releases/public-image-r1.en.md) and the verified V167 / control.43 baseline remain available. This release does not replace existing real-robot Known-Good records.
 
 At boot, R2 waits for the Wi-Fi adapter and network service, then tries saved networks. If none connects, it opens the setup hotspot. A later disconnection does not automatically enable the hotspot; use the console to enable it manually.
 

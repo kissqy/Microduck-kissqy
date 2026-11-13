@@ -66,10 +66,12 @@ Follow the [assembly notes](ASSEMBLY-NOTES.en.md) for 5 GHz Wi-Fi and power conn
 
 **[Open the six-step first-walking route (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/start.html)** · [Illustrated console guide (Chinese)](https://kissqy.github.io/Microduck-kissqy/console-guide.html)
 
+**Upgrading from V167 to V260 does not require reflashing the system or microSD card.** Download and fully extract Console V260, connect to ZERO, then install its bundled firmware directly through Console V260. Use the R2 image for a fresh installation or when reflashing is needed. Existing V167 users can skip the fresh-installation and first-time network setup steps below and start at step 3.
+
 1. Download [System Image R2](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) and write the compressed image directly to a microSD card using Armbian Imager.
 2. At boot, wait for the Wi-Fi adapter and network service, then let ZERO try its saved networks. If no saved network connects, join the `Microduck-kissqy` hotspot and configure home Wi-Fi and a new login password. If setup does not open automatically, visit `http://10.42.0.1:8088`. A later disconnection does not automatically enable the hotspot; use the console to enable it manually.
 3. Download Robot Console V260 from [Downloads](../README.en.md#downloads-and-versions), extract the complete archive and run `start.cmd` on Windows or `start.command` on macOS.
-4. Enter your ZERO's SSH address and credentials. **Image R2 includes V260 / control.102 and pairs with Robot Console V260. For an older system, use V260 to install its bundled firmware when adopting this release. Do not import it through V167.**
+4. Enter your ZERO's SSH address and credentials. **Image R2 includes V260 / control.102 and pairs with Robot Console V260. V167 users can install the bundled firmware through V260 without reflashing. Do not import it through V167.**
 
 See the [V260 release guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) and bundled instructions for installation, logs and controls. The [historical V167 user guide](../microduck-hd1910/firmware/console/USER-GUIDE.en.md) remains available. The online demos use simulated data; actual control requires the locally running console.
 

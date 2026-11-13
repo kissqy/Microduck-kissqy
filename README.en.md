@@ -110,7 +110,9 @@ Training Studio R1.5.27 remains a separate tool; its version number is independe
 | V260 console and firmware source | [Independent source tree](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260) · [runtime and source guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |
 | Training Studio R1.5.27 · optional | Train and evaluate new movements: [download ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip) |
 
-R2 includes control.102 and 11 ONNX runtime models. Verify your own mechanics and IMU calibration before movement. For an existing installation, use V260's matching bundled firmware when upgrading. [Release baseline and validation scope](microduck-hd1910/docs/BASELINE.en.md); publishing this release does not extend the recorded real-robot Known-Good scope.
+**Upgrading from V167 to V260 does not require reflashing the system or microSD card.** Download and fully extract Console V260, connect to ZERO, then install its bundled firmware directly through Console V260. Use the R2 image for a fresh installation or when reflashing is needed.
+
+R2 includes control.102 and 11 ONNX runtime models. Verify your own mechanics and IMU calibration before movement. [Release baseline and validation scope](microduck-hd1910/docs/BASELINE.en.md); publishing this release does not extend the recorded real-robot Known-Good scope.
 
 <details>
 <summary>Historical releases: R1 / V167</summary>

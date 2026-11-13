@@ -19,9 +19,9 @@
 
 ## Microduck 飞特 HD1910 版需要下载什么？
 
-普通使用先下载[系统镜像 R2](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)和[机器人中控 V260](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)。训练自己的动作时，再下载训练中控 R1.5.27。下载统一见[首页下载区](../README.md#下载与版本)。
+首次安装系统时，下载[系统镜像 R2](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)和[机器人中控 V260](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)。训练自己的动作时，再下载训练中控 R1.5.27。下载统一见[首页下载区](../README.md#下载与版本)。
 
-R2 镜像已预装 V260 / control.102，使用配套 V260 中控。旧系统需要本版功能时，可通过 V260 中控安装本版随包固件；不要交给 V167 中控导入。[R1 历史镜像](releases/public-image-r1.md)与 V167 / control.43 已验证基线保留，新版发布不替代原有实机 Known-Good 记录。
+R2 镜像已预装 V260 / control.102，使用配套 V260 中控。**从 V167 升级到 V260 不需要重刷系统或 TF 卡。** 下载并完整解压 V260 中控，连接 ZERO 后，直接在 V260 中控内安装随包固件即可。R2 镜像用于新装系统或需要重刷时。 不要将 V260 固件交给 V167 中控导入。[R1 历史镜像](releases/public-image-r1.md)与 V167 / control.43 已验证基线保留，新版发布不替代原有实机 Known-Good 记录。
 
 R2 开机先等待网卡和网络服务就绪，再尝试已保存的 Wi-Fi；无网络可连接或连接失败时开启配网热点。运行中断网不会自动切换热点，可在中控手动开启。
 

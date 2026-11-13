@@ -64,10 +64,12 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 
 **[打开首次行走六步路线 →](https://kissqy.github.io/Microduck-kissqy/build/start.html)** · [中控图文教程](https://kissqy.github.io/Microduck-kissqy/console-guide.html)
 
+**从 V167 升级到 V260 不需要重刷系统或 TF 卡。** 下载并完整解压 V260 中控，连接 ZERO 后，直接在 V260 中控内安装随包固件即可。R2 镜像用于新装系统或需要重刷时。 已有 V167 系统的用户可跳过下面的新装刷卡与首次配网步骤，直接从第 3 步开始。
+
 1. 在[系统镜像 R2 发布页](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)下载镜像，用 Armbian Imager 将压缩镜像直接刷入 TF 卡。
 2. ZERO 启动时先等待网卡与网络服务就绪并尝试已保存的 Wi-Fi；没有可连接网络或连接失败时，连接其 `Microduck-kissqy` 热点，按提示配置家庭 Wi-Fi 和新的登录密码；未自动弹出页面时访问 `http://10.42.0.1:8088`。运行中断网不会自动切换热点，可在中控手动开启。
 3. 从[下载区](../README.md#下载与版本)取得机器人中控 V260，完整解压后运行 `start.cmd`；macOS 使用 `start.command`。
-4. 填入本机 ZERO 的 SSH 地址和登录信息。**R2 镜像预装 V260 / control.102，配套使用 V260 中控。旧系统需要本版功能时，通过 V260 中控安装本版随包固件；不要交给 V167 中控导入。**
+4. 填入本机 ZERO 的 SSH 地址和登录信息。**R2 镜像预装 V260 / control.102，配套使用 V260 中控。V167 用户无需重刷，通过 V260 中控安装本版随包固件即可；不要交给 V167 中控导入。**
 
 软件包安装和版本说明见[V260 独立发布说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)，操作以 V260 随包使用说明为准；[V167 历史使用指南](../microduck-hd1910/firmware/console/README.zh-CN.md)仍保留。网页在线演示使用模拟数据，实际连接需要本地运行中控。
 

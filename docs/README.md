@@ -4,6 +4,12 @@
 
 首页、使用指南、硬件记录与技术说明的中英文入口。当前软件界面仍为中文；英文指南保留必要的中文按钮名称。原始测试日志、源代码与正式许可保持原文。
 
+## 当前下载 · 2026-11-13
+
+默认使用 **系统镜像 R2 + Console Studio V260／control.102，开机配网 R10**。[R2 镜像](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [四类文件说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) · [V260 独立源码](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260)。
+
+V260 保存在独立分支。下方 V167／control.43 与 R1 入口保留为历史文档；main 固件源码仍为 V167。本次发布不新增实机 Known-Good 验收结论。
+
 ## 从预算到第一次行走
 
 正常复刻只需前三步，使用配套现成动作模型和机器人中控，**无需训练**。第④项为可选进阶，仅供想自训新动作或学习训练流程时探索。按当前进度进入：
@@ -31,11 +37,11 @@
 | ❓ 刷机、标定、IMU、断网与重启 / FAQ | [中文](MICRODUCK-FAQ.md) | [English](MICRODUCK-FAQ.en.md) |
 | 🔧 装机与使用注意事项 / Assembly: 5 GHz Wi-Fi & 1000 µF input capacitor | [中文](ASSEMBLY-NOTES.md) | [English](ASSEMBLY-NOTES.en.md) |
 | 仓库目录与重复资源 | [中文](REPOSITORY-LAYOUT.md) | [English](REPOSITORY-LAYOUT.en.md) |
-| 飞特已编译固件 control.43 — 下载与安装 | [中文](../release-assets/README.md) | [English](../release-assets/README.en.md) |
+| 当前固件下载与历史 control.43 安装说明 | [中文](../release-assets/README.md) | [English](../release-assets/README.en.md) |
 | 🎬 看看鸭鸭的真实表现（7 段视频） | [中文](../README.md) | [English](../README.en.md) |
 | 🌱 作者如何从新手进阶 — 学习时间线与完整提问回顾 | [中文](AUTHOR-JOURNEY.md) | [English](AUTHOR-JOURNEY.en.md) |
 | START-HERE | [中文](../START-HERE.txt) | [English](../START-HERE.en.md) |
-| 🦆 Microduck 一键系统镜像 R1 | [中文](releases/public-image-r1.md) | [English](releases/public-image-r1.en.md) |
+| 历史：Microduck 一键系统镜像 R1 | [中文](releases/public-image-r1.md) | [English](releases/public-image-r1.en.md) |
 | Microduck HD1910 | [中文](../microduck-hd1910/README.md) | [English](../microduck-hd1910/README.en.md) |
 | 发布基线与验证范围 | [中文](../microduck-hd1910/docs/BASELINE.md) | [English](../microduck-hd1910/docs/BASELINE.en.md) |
 | V167 构建与源码资源准备 | [中文](../microduck-hd1910/firmware/BUILDING-V167.md) | [English](../microduck-hd1910/firmware/BUILDING-V167.en.md) |
@@ -56,6 +62,8 @@
 | 当前 IMU FT6：协议与兼容 | [中文](../microduck-hd1910/firmware/firmware/imu-source/README_FT6_SYNC15.md) | [English](../microduck-hd1910/firmware/firmware/imu-source/README_FT6_SYNC15.en.md) |
 
 ## Robot Console / 机器人中控
+
+当前 V260：[下载与文件说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) · [中控源码](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260/console)。下表为保留的 V167 历史线。
 
 | 说明 | 中文 | English |
 | --- | --- | --- |
@@ -83,6 +91,8 @@
 | 官方轮滑六族参数审计（2026-10-07） | [中文](../microduck-hd1910/training-console/docs/audit-0151/roller-audit/official-roller-audit.zh-CN.md) | [English](../microduck-hd1910/training-console/docs/audit-0151/roller-audit/official-roller-audit.en.md) |
 
 ## Firmware and models / 固件与模型
+
+当前 control.102：[固件源码](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260/firmware) · [发布说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md)。下表保留历史固件与模型记录。
 
 | 说明 | 中文 | English |
 | --- | --- | --- |

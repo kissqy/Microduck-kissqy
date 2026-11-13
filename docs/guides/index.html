@@ -9,10 +9,10 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kissqy.github.io/Microduck-kissqy/guides/">
 <meta property="og:site_name" content="Microduck-kissqy">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://kissqy.github.io/Microduck-kissqy/guides/","name":"Microduck 复刻教程：飞特 HD1910、材料清单与中文中控 | kissqy","inLanguage":"zh-CN","dateModified":"2026-11-12","author":{"@type":"Person","name":"kissqy","url":"https://github.com/kissqy"},"about":{"@type":"SoftwareSourceCode","name":"Microduck-kissqy","codeRepository":"https://github.com/kissqy/Microduck-kissqy","url":"https://github.com/kissqy/Microduck-kissqy","description":"kissqy 的 Microduck 飞特 HD1910 实机复刻项目：Radxa ZERO 3W、现成 ONNX 动作模型、中文机器人中控、强化学习训练中控、自制 HAT／IMU／HUB、STL／3MF 打印与装配教程。","author":{"@type":"Person","name":"kissqy","url":"https://github.com/kissqy"},"license":"https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://kissqy.github.io/Microduck-kissqy/guides/","name":"Microduck 复刻教程：飞特 HD1910、材料清单与中文中控 | kissqy","inLanguage":"zh-CN","dateModified":"2026-11-13","author":{"@type":"Person","name":"kissqy","url":"https://github.com/kissqy"},"about":{"@type":"SoftwareSourceCode","name":"Microduck-kissqy","codeRepository":"https://github.com/kissqy/Microduck-kissqy","url":"https://github.com/kissqy/Microduck-kissqy","description":"kissqy 的 Microduck 飞特 HD1910 实机复刻项目：Radxa ZERO 3W、现成 ONNX 动作模型、中文机器人中控、强化学习训练中控、自制 HAT／IMU／HUB、STL／3MF 打印与装配教程。","author":{"@type":"Person","name":"kissqy","url":"https://github.com/kissqy"},"license":"https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE"}}</script>
 </head>
 <body><header><nav><a href="https://github.com/kissqy/Microduck-kissqy">🦆 Microduck-kissqy · GitHub</a><a href="en.html">English</a><a href="../assembly.html">3D 装配参考</a><a href="../">机器人中控演示</a><a href="../console-guide.html">📖 中控使用教程</a><a href="../training/">训练中控演示</a></nav>
-<h1>Microduck 飞特 HD1910 复刻教程 · kissqy</h1><p class="intro">Microduck 飞特版实机复刻教程：材料清单、复刻成本、3D 打印、HAT 与 IMU 制作、ZERO 3W 刷机、V167 中文中控、舵机标定与强化学习训练。</p><nav><a href="#build">从零搭建</a><a href="#faq">常见问题</a><a href="https://github.com/kissqy/Microduck-kissqy#下载与版本">下载稳定版 V167</a></nav></header>
+<h1>Microduck 飞特 HD1910 复刻教程 · kissqy</h1><p class="intro">Microduck 飞特版实机复刻教程：材料清单、复刻成本、3D 打印、HAT 与 IMU 制作、ZERO 3W 刷机、V260 中文中控、舵机标定与强化学习训练。</p><nav><a href="#build">从零搭建</a><a href="#faq">常见问题</a><a href="https://github.com/kissqy/Microduck-kissqy#下载与版本">下载 R2 / V260</a></nav></header>
 <main><aside class="project-notice" role="note" aria-labelledby="project-notice-title" data-project-notice>
 <div class="project-notice__heading"><svg class="project-notice__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5m0 3v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><h2 class="project-notice__title" id="project-notice-title">硬件与授权</h2></div>
 <p>仅适配本仓库开源版本的 <strong>HAT、IMU、HUB</strong>。本仓库未授权任何商业组织。</p>
@@ -20,7 +20,7 @@
 </aside><section aria-labelledby="project-overview"><h2 id="project-overview">Microduck-kissqy：飞特 HD1910 完整复刻项目</h2><p>作者 kissqy 提供 Radxa ZERO 3W 系统镜像、中文机器人中控、配套现成 ONNX 动作模型、独立强化学习训练中控、自制 HAT／独立躯干 IMU／HUB 电路板和 STL／3MF 打印文件。普通复刻完成本机标定后即可使用配套模型，训练为可选进阶。</p><p><a href="../one-leg-balance.html">作者自训单脚平衡与实机动作视频</a> · <a href="../build/">三步完整复刻路线</a> · <a href="../build/budget.html">材料预算</a> · <a href="../build/shopping.html">零件采购清单</a> · <a href="../build/assembly.html">装配与接线教程</a> · <a href="../build/start.html">刷机、配网、标定与第一次行走</a></p></section><section id="build"><p><strong>简体中文</strong> | <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-BUILD-GUIDE.en.md">English</a></p>
 <h2>Microduck 飞特版从零复刻教程：材料清单、3D 打印、刷机、标定与训练</h2>
 <p>Microduck-kissqy 是 kissqy 基于 Pollen Robotics Microduck 0.15.1、已完成实机复刻的个人项目，面向 <strong>Radxa ZERO 3W + 15 个飞特 HD1910 舵机 + 本仓库 HAT / IMU</strong>。这里提供系统镜像、中文机器人中控、独立强化学习训练中控、自制电路板工程，以及全套打印件和摆盘。</p>
-<p><strong>当前稳定公开版本：机器人中控 R17 V167 / 固件 control.43 / 训练中控 R1.5.27。</strong> 本指南更新于 2026-11-12，稳定公开软件基线保持不变。版本及验证依据见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/docs/BASELINE.md">发布基线</a>。源码可获取；作者原创部分采用个人非商业许可，官方和第三方部分保留各自许可，见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/LICENSE">分项许可</a>。</p>
+<p><strong>当前发布：系统镜像 R2 / 机器人中控 V260 / 固件 control.102 / 配网 R10。</strong> 本指南更新于 2026-11-13。<a href="https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md">新版下载与独立源码说明</a>；<a href="https://github.com/kissqy/Microduck-kissqy/releases/tag/public-image-r1">R1 历史镜像</a>及 <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/docs/BASELINE.md">V167 / control.43 已验证基线</a>保留。新版发布不替代原有实机 Known-Good 记录。作者原创部分采用个人非商业许可，官方和第三方部分保留各自许可，见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/LICENSE">分项许可</a>。</p>
 <h3>先选你的起点</h3>
 <div class="table"><table>
 <tr><td>现在的情况</td><td>从哪里开始</td></tr>
@@ -44,15 +44,15 @@
 <p>按<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/ASSEMBLY-NOTES.md">装机注意事项</a>配置 5 GHz Wi-Fi，并在总进电口并联 1000 µF 缓冲电容；电容极性、耐压和安装位置以该页说明为准。</p>
 <h3>4. 刷写系统镜像并连接中文中控</h3>
 <ol>
-<li>在<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/releases/public-image-r1.md">系统镜像 R1 页面</a>下载镜像，用 Armbian Imager 将压缩镜像直接刷入 TF 卡。</li>
-<li>ZERO 首次启动后，连接 <code>Microduck-kissqy</code> 热点，按提示配置家庭 Wi-Fi 和新的登录密码；未自动弹出页面时访问 <code>http://10.42.0.1:8088</code>。</li>
-<li>从<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/README.md#下载与版本">下载区</a>取得机器人中控 V167，完整解压后运行 <code>start.cmd</code>；macOS 使用 <code>start.command</code>。</li>
-<li>先到路由器 App / 后台的在线设备列表查机器人 IP（<a href="../console-guide.html#network">刷机后配网与查 IP 的图文步骤</a>），再在本地中控填写 <code>radxa@实际IP</code> 和配网时设置的系统登录密码。<strong>R1 镜像预装 control.40；通过 V167 中控安装随包固件，更新到 control.43。</strong></li>
+<li>在<a href="https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260">系统镜像 R2 发布页</a>下载镜像，用 Armbian Imager 将压缩镜像直接刷入 TF 卡。</li>
+<li>ZERO 启动时等待网卡和网络服务就绪并尝试已保存的 Wi-Fi；无可连接网络或连接失败时，连接 <code>Microduck-kissqy</code> 热点，按提示配置家庭 Wi-Fi 和新的登录密码；未自动弹出页面时访问 <code>http://10.42.0.1:8088</code>。运行中断网不会自动切换热点，可在中控手动开启。</li>
+<li>从<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/README.md#下载与版本">下载区</a>取得机器人中控 V260，完整解压后运行 <code>start.cmd</code>；macOS 使用 <code>start.command</code>。</li>
+<li>先到路由器 App / 后台的在线设备列表查机器人 IP（<a href="../console-guide.html#network">刷机后配网与查 IP 的图文步骤</a>），再在本地中控填写 <code>radxa@实际IP</code> 和配网时设置的系统登录密码。<strong>R2 镜像预装 V260 / control.102，配套使用 V260 中控。旧系统需要本版功能时，通过 V260 中控安装本版随包固件；不要交给 V167 中控导入。</strong></li>
 </ol>
-<p>软件包安装、日志与按键说明见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/firmware/console/README.zh-CN.md">V167 使用指南</a>。网页在线演示使用模拟数据，实际连接需要本地运行中控。</p>
+<p>软件包安装及版本说明见<a href="https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md">V260 独立发布说明</a>，操作以 V260 随包使用说明与本机提示为准；<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/firmware/console/README.zh-CN.md">V167 历史使用指南</a>仍保留。网页在线演示使用模拟数据，实际连接需要本地运行中控。</p>
 <h3>5. 标定自己的机器人，再进行运动</h3>
 <p>逐一核对 <strong>15 个关节的零位、方向、限位，以及 IMU 安装姿态</strong>。参考样机的标定不能直接替代你的机械装配标定。</p>
-<p>先检查中控的关节与姿态反馈，再按使用指南完成 HOME、保持和行走。实体手柄的模式切换、轮滑动作及条件，以<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/firmware/console/README.zh-CN.md">V167 按键说明</a>为准。遇到异常先确认发生在哪一环，见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-FAQ.md">标定与运行问题</a>。</p>
+<p>先检查中控的关节与姿态反馈，再按使用指南完成 HOME、保持和行走。实体手柄的模式切换、轮滑动作及条件，以 V260 随包说明与本机提示为准；<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/firmware/console/README.zh-CN.md">V167 历史按键说明</a>用于旧版对照。遇到异常先确认发生在哪一环，见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-FAQ.md">标定与运行问题</a>。</p>
 <h3>6. 训练自己的动作并部署到实机</h3>
 <p>普通使用可以直接使用发布包里的模型，训练中控按需安装。<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/training-console/README.zh-CN.md">训练中控 R1.5.27 指南</a>包含环境准备、训练队列、奖励曲线、仿真评估和模型导出，公开版本提供 14 类动作、35 种任务配方。</p>
 <p>训练流程是：准备环境 → 选择任务与参数 → 加入队列并开始 → 仿真评估 → 导出模型 → 核对固件和策略合同后进行实机验证。训练中控和机器人中控是两个独立工具；仿真成功不等于所有装配都能获得相同实机结果。</p>
@@ -61,12 +61,12 @@
 <p>遇到问题可在 <a href="https://github.com/kissqy/Microduck-kissqy/issues">GitHub Issues</a> 提供：硬件配置、中控版本、实际固件标识、发生步骤、日志或视频。若这些资料帮助你完成搭建，欢迎 Star 收藏仓库，后续按同一入口查看更新。</p>
 <p>作者：kissqy · <a href="https://github.com/kissqy/Microduck-kissqy">项目原始仓库</a> · <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-FAQ.md">常见问题</a> · <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/README.md">完整文档目录</a></p></section><section id="faq"><p><strong>简体中文</strong> | <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-FAQ.en.md">English</a></p>
 <h2>Microduck 飞特版复刻常见问题：刷机、标定、IMU、手柄断网与供电重启</h2>
-<p>适用：Microduck-kissqy，Radxa ZERO 3W、飞特 HD1910、机器人中控 V167 / control.43。作者：kissqy；更新：2026-10-23。<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-BUILD-GUIDE.md">从零复刻总指南</a>。</p>
+<p>适用：Microduck-kissqy，Radxa ZERO 3W、飞特 HD1910、系统镜像 R2、机器人中控 V260 / control.102、配网 R10。作者：kissqy；更新：2026-11-13。<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-BUILD-GUIDE.md">从零复刻总指南</a>。</p>
 <h3>Microduck 复刻需要多少钱？材料清单在哪里？</h3><p>本仓库按实际订单整理了<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/DUCK-SHOPPING-LIST.md">复刻材料清单与成本明细</a>，分别列出本体、HAT、IMU 与工具。价格是历史采购记录，打印件、设备、耗材、手工时间及未列价项目的计价范围以采购页为准，已列材料合计不等于每个人的最终复刻总成本。</p><h3>Microduck 复刻的 3D 打印 STL 和摆盘在哪里？</h3><p><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/3d-print-frankenduck/README.md">缝合怪打印件页</a>提供全套 STL、5 盘 3MF、预览和校验值。按自己的打印机、材料以及电池仓与 IMU 适配情况使用。</p><h3>Microduck 飞特 HD1910 版需要下载什么？</h3>
-<p>普通使用先下载系统镜像 R1 和机器人中控 V167。训练自己的动作时，再下载训练中控 R1.5.27。下载统一见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/README.md#下载与版本">首页下载区</a>。</p>
-<p>R1 镜像预装 control.40，安装 V167 随包固件后更新到 control.43；这两个版本标识分别对应镜像内容与当前稳定运行固件。</p>
+<p>普通使用先下载<a href="https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260">系统镜像 R2</a>和<a href="https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md">机器人中控 V260</a>。训练自己的动作时，再下载训练中控 R1.5.27。下载统一见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/README.md#下载与版本">首页下载区</a>。</p>
+<p>R2 镜像已预装 V260 / control.102，使用配套 V260 中控。旧系统需要本版功能时，通过 V260 中控安装本版随包固件；不要交给 V167 中控导入。R1 / V167 历史版本保留。R2 开机等待网卡与网络服务后尝试已保存 Wi-Fi，失败时开启配网热点；运行中断网不自动切换热点。</p>
 <h3>在线中控演示能连接我的鸭子吗？</h3>
-<p>不能。GitHub Pages 上的机器人中控和训练中控是模拟数据演示，用于预览界面。控制实机需要完整解压机器人中控并在本地启动，再填写 ZERO 的 SSH 地址与登录信息。见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/firmware/console/README.zh-CN.md">V167 使用说明</a>。</p>
+<p>不能。GitHub Pages 上的机器人中控和训练中控是模拟数据演示，用于预览界面。控制实机需要完整解压机器人中控并在本地启动，再填写 ZERO 的 SSH 地址与登录信息。见<a href="https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md">V260 发布与使用说明</a>。</p>
 <h3>刷了 ZERO 镜像，为什么 IMU 还需要烧录？</h3>
 <p>ZERO 系统和 IMU 上的 STM32 是不同设备。镜像与机器人服务安装在 ZERO，自制 IMU 需要单独烧录 FT6。下载、SWD 接线、烧录与通信检查统一见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/IMU-FIRMWARE.md">IMU FT6 指南</a>。</p>
 <h3>接入无线手柄后，为什么 ZERO 断网或 SSH 超时？</h3>
@@ -75,7 +75,7 @@
 <h3>舵机大负载运动时，为什么 ZERO 重启？</h3>
 <p>作者实机经验是总进电口缺少缓冲电容时，大负载瞬态容易导致 ZERO 重启。本项目装机要求在总电源输入两端<strong>并联 1000 µF 电容</strong>，接线、耐压与极性见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/ASSEMBLY-NOTES.md#总电源入口并联-1000-µf-电容">供电注意事项</a>。若仍重启，继续检查电池、电源、线材、接头与负载压降，电容不能替代足够的供电能力。</p>
 <h3>舵机动作方向或姿势不对，可以直接复制作者标定吗？</h3>
-<p>不能直接照搬。每只机器人都要核对零位、方向、限位和 IMU 安装。先比较中控关节反馈、机械实际运动与标定，再启用模型；不要用增大力度来掩盖方向或机械装配错误。<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/firmware/console/README.zh-CN.md">机器人中控指南</a>是当前版本的操作依据。</p>
+<p>不能直接照搬。每只机器人都要核对零位、方向、限位和 IMU 安装。先比较中控关节反馈、机械实际运动与标定，再启用模型；不要用增大力度来掩盖方向或机械装配错误。以<a href="https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md">V260 发布说明</a>、随包使用说明与本机提示为操作依据；<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/firmware/console/README.zh-CN.md">V167 历史指南</a>用于旧版对照。</p>
 <h3>HAT 和 IMU 有哪些接口版本？</h3>
 <p>仓库保留 EH2.5 原版和 AMP2.0 版。AMP2.0 版的舵机接口为飞特 AMP2.0，音频接口及新增 LED 见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/AMP2.0-VERSION.md">版本说明</a>。工程和购买入口见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/README.md">硬件页</a>，制作过程见 <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/HAT-TIMELINE.md">HAT</a> / <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/IMU-TIMELINE.md">IMU</a>。</p>
 <h3>换脚掌和滑轮一定要拆舵机吗？</h3>
@@ -84,4 +84,4 @@
 <p>训练中控独立运行，训练本身不要求连接 ZERO；读取当前标定时才需要按指南连接或导入。仿真与实机存在装配、标定、动力学和供电差异，仿真结果不能替代实机验证。环境、任务、评估和模型导出见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/training-console/README.zh-CN.md">训练指南</a>。</p>
 <h3>问题解决不了，反馈时需要什么？</h3>
 <p>在 <a href="https://github.com/kissqy/Microduck-kissqy/issues">Issues</a> 写清：硬件与接口版本、机器人中控版本、实际固件标识、操作步骤、异常现象及日志或视频。先区分连接失败、服务启动失败、通信异常和运动异常，有助于复现。</p>
-<p><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-BUILD-GUIDE.md">复刻总指南</a> · <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/README.md">文档目录</a> · <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/README.md">仓库首页</a></p></section></main><footer>kissqy · 2026-11-12 · 作者原创部分适用个人非商业许可；官方及第三方部分保留各自许可。 <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/LICENSE">许可范围</a> · <a href="../sitemap.xml">站点地图</a></footer></body></html>
+<p><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-BUILD-GUIDE.md">复刻总指南</a> · <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/README.md">文档目录</a> · <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/README.md">仓库首页</a></p></section></main><footer>kissqy · 2026-11-13 · 作者原创部分适用个人非商业许可；官方及第三方部分保留各自许可。 <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/LICENSE">许可范围</a> · <a href="../sitemap.xml">站点地图</a></footer></body></html>

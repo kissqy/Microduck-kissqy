@@ -74,7 +74,7 @@
 
 这是一只会**走路、坐下、捡东西、踢球、前滚翻**的小鸭。装上滑轮，还能探索**对称滑行、蹲下、原地转和倒地起身**等动作。实体手柄就能控制，配套现成模型与中文机器人中控，方便从第一次行走逐步体验更多动作。
 
-**系统镜像 R1 已通过刷卡实测**，预装官方系统、本项目机器人服务和运动模型。刷入 Radxa ZERO 3W、连接 Wi-Fi 后即可打开中文中控，无须自行编译固件。
+**系统镜像 R2 为当前下载入口**，预装 Microduck 0.15.1、control.102、运动模型与 R10 开机配网。刷入 Radxa ZERO 3W、连接 Wi-Fi 后，使用配套 V260 中文中控，无须自行编译固件。原 R1 的刷卡实测记录保留在历史版本中。
 
 ## 🧭 三步完成复刻
 
@@ -93,18 +93,29 @@
 
 ## 下载与版本
 
+**当前发布：系统镜像 R2 + Console Studio V260／control.102，开机配网 R10。** 更新于 2026-11-13。V260 独立发布，原 V167 源码与运行包保留。
 
-| 稳定公开版本 | 用途与直接下载 |
+| 当前发布版本 | 用途与下载 |
 | --- | --- |
-| 系统镜像 R1 · Microduck 0.15.1 / control.40 | 新装 ZERO 3W：[下载 .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz) |
-| 中文机器人中控 R17 V167 · 随包固件 control.43 | 连接、标定与控制实机：[下载 ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip) |
+| 系统镜像 R2 · Microduck 0.15.1 / control.102 | 新装 ZERO 3W：[下载 .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [镜像发布说明](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
+| 中文机器人中控 Studio V260 · 随包固件 control.102 | 连接、标定与控制实机：[前往发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [文件与使用说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) |
+| V260 中控源码与固件源码 | [独立版本源码](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260) · [四类文件说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) |
 | 强化学习训练中控 R1.5.27 · 可选 | 训练与评估新动作：[下载 ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Training-Studio-R1.5.27.zip) |
 
-普通复刻使用系统镜像和机器人中控，完成本机标定后使用配套模型。R1 镜像预装 control.40，V167 随包固件为 control.43；软件预装不能替代本机机械与 IMU 标定。[发布基线与验证范围](microduck-hd1910/docs/BASELINE.md)
+R2 已预装 control.102 与 11 个 ONNX 运行模型。首次运动前仍需核对本机机械与 IMU 标定；已有系统升级时，使用 V260 中控安装本版随包固件。[发布基线与验证范围](microduck-hd1910/docs/BASELINE.md)；本次发布整理不扩大已记录的实机 Known-Good 范围。
+
+<details>
+<summary>历史版本：R1 / V167</summary>
+
+- [系统镜像 R1](https://github.com/kissqy/Microduck-kissqy/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz)：预装 control.40，开机配网 R5。
+- [机器人中控 R17 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip)：随包固件 control.43；[历史固件说明](release-assets/README.md#历史版本control43)。
+- 原 V167 固件与中控源码仍位于 `microduck-hd1910/firmware/`；V260 源码位于上方独立分支。
+
+</details>
 
 首次制作按 [刷机与首次行走教程](https://kissqy.github.io/Microduck-kissqy/build/start.html) 下载和操作；所需文件就在对应步骤。
 
-[📥 系统镜像 R1](https://kissqy.github.io/Microduck-kissqy/build/start.html#flash) · [📥 机器人中控 R17 V167](https://kissqy.github.io/Microduck-kissqy/build/start.html#connect) · [固件下载与自焊 IMU 烧录](release-assets/README.md)
+[📥 系统镜像 R2](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [📥 机器人中控 V260](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [固件下载与自焊 IMU 烧录](release-assets/README.md)
 
 ## 🎮 中文机器人中控
 

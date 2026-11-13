@@ -1,6 +1,19 @@
 **简体中文** | [English](README.en.md)
 
-# 飞特 HD1910 已编译固件 · control.43
+# 飞特 HD1910 固件与中控下载
+
+**当前发布：R2 + Console Studio V260／control.102，开机配网 R10。** 更新于 2026-11-13。
+
+| 文件 | 入口与用途 |
+| --- | --- |
+| 系统镜像 R2 | [下载 .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz)；已预装 control.102 和 11 个 ONNX 模型。 |
+| 中控 Studio V260 | [前往发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)；电脑端完整运行包，包含配套固件。 |
+| V260 独立固件与两类源码包 | [四类文件说明](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) · [独立源码](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260)。 |
+| STM32 IMU FT6 | [IMU 下载与烧录](../hardware/IMU-FIRMWARE.md)；作者成品已预刷。 |
+
+升级到 V260 时使用本版随包固件。下方保留原 R1／V167 下载与说明，main 源码仍为 V167；V260 源码在独立发布分支。本次发布不新增实机 Known-Good 验收结论。
+
+## 历史版本：control.43
 
 > [!WARNING]
 > 仅适配本仓库开源版本的 **HAT、IMU、HUB**。

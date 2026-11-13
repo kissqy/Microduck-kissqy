@@ -4,6 +4,12 @@
 
 English editions of the homepage, user guides, hardware records, and technical notes. Current application interfaces remain Chinese; English guides include button labels for reference. Raw test logs, source code, and formal licenses retain their original text.
 
+## Current downloads · November 13, 2026
+
+Default setup: **System Image R2 + Console Studio V260 / control.102, Wi-Fi setup R10**. [R2 image](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [four-package guide](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) · [independent V260 source](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260).
+
+V260 lives in a separate branch. The V167 / control.43 and R1 entries below are retained historical documentation; the main firmware source remains V167. Publication does not add real-robot Known-Good results.
+
 ## From budget to first walking
 
 Normal replication takes the first three steps and uses the supplied motion models and Robot Console. **No training is required.** Entry ④ is optional, only for training new movements or learning the process. The guided pages below are in **Chinese**.
@@ -31,11 +37,11 @@ For battery power, use a banana board (not yet listed for sale), or the reposito
 | ❓ 刷机、标定、IMU、断网与重启 / FAQ | [中文](MICRODUCK-FAQ.md) | [English](MICRODUCK-FAQ.en.md) |
 | 🔧 装机与使用注意事项 / Assembly: 5 GHz Wi-Fi & 1000 µF input capacitor | [中文](ASSEMBLY-NOTES.md) | [English](ASSEMBLY-NOTES.en.md) |
 | Repository layout and repeated resources | [中文](REPOSITORY-LAYOUT.md) | [English](REPOSITORY-LAYOUT.en.md) |
-| Compiled Feetech firmware control.43 — download and install | [中文](../release-assets/README.md) | [English](../release-assets/README.en.md) |
+| Current downloads and historical control.43 installation | [中文](../release-assets/README.md) | [English](../release-assets/README.en.md) |
 | 🎬 See the duck in action — 7 real-robot videos | [中文](../README.md) | [English](../README.en.md) |
 | 🌱 The author's learning journey — timeline and complete question recap | [中文](AUTHOR-JOURNEY.md) | [English](AUTHOR-JOURNEY.en.md) |
 | Current public Microduck release | [中文](../START-HERE.txt) | [English](../START-HERE.en.md) |
-| 🦆 Microduck integrated system image R1 | [中文](releases/public-image-r1.md) | [English](releases/public-image-r1.en.md) |
+| Historical: Microduck integrated system image R1 | [中文](releases/public-image-r1.md) | [English](releases/public-image-r1.en.md) |
 | Microduck HD1910 | [中文](../microduck-hd1910/README.md) | [English](../microduck-hd1910/README.en.md) |
 | Release baseline and validation scope | [中文](../microduck-hd1910/docs/BASELINE.md) | [English](../microduck-hd1910/docs/BASELINE.en.md) |
 | V167 build and source preparation | [中文](../microduck-hd1910/firmware/BUILDING-V167.md) | [English](../microduck-hd1910/firmware/BUILDING-V167.en.md) |
@@ -56,6 +62,8 @@ For battery power, use a banana board (not yet listed for sale), or the reposito
 | Current IMU FT6: protocol and compatibility | [中文](../microduck-hd1910/firmware/firmware/imu-source/README_FT6_SYNC15.md) | [English](../microduck-hd1910/firmware/firmware/imu-source/README_FT6_SYNC15.en.md) |
 
 ## Robot Console / 机器人中控
+
+Current V260: [download and package guide](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md) · [console source](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260/console). The table below documents the retained V167 line.
 
 | Guide | 中文 | English |
 | --- | --- | --- |
@@ -83,6 +91,8 @@ Training Studio is optional after first walking. Everyday operation uses the rel
 | Official six-family roller parameter audit (October 7, 2026) | [中文](../microduck-hd1910/training-console/docs/audit-0151/roller-audit/official-roller-audit.zh-CN.md) | [English](../microduck-hd1910/training-console/docs/audit-0151/roller-audit/official-roller-audit.en.md) |
 
 ## Firmware and models / 固件与模型
+
+Current control.102: [firmware source](https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260/firmware) · [release guide](https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md). The table below retains historical firmware and model records.
 
 | Guide | 中文 | English |
 | --- | --- | --- |

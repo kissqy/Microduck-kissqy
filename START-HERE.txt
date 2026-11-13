@@ -1,25 +1,33 @@
 中文：START-HERE.txt
 English: https://github.com/kissqy/Microduck-kissqy/blob/main/START-HERE.en.md
 
-Microduck 当前公开发布
+Microduck 当前公开发布 · 2026-11-13
 
 项目：https://github.com/kissqy/Microduck-kissqy
-首页 README.md 提供系统镜像、两个中控 ZIP 和源码入口。
+默认使用：系统镜像 R2 + Microduck Console Studio V260（R17）。
+机器人固件：官方 0.15.1 / control.102
+开机配网：R10；运行模型：11 个 ONNX
+训练中控：R1.5.27，按需独立下载
 
-机器人中控：R17 V167（1.0.167）
-机器人固件：官方 0.15.1 / control.43 / API40
-训练中控：R1.5.27
-系统镜像：Public Image R1；首次配网 R5
+R2 镜像下载：https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz
+V260 发布下载：https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260
+中控、固件、两类源码说明：https://github.com/kissqy/Microduck-kissqy/blob/release/v260/versions/v260/README.md
+V260 独立源码：https://github.com/kissqy/Microduck-kissqy/tree/release/v260/versions/v260
 
-固件源码：microduck-hd1910/firmware/
-机器人中控源码：microduck-hd1910/firmware/console/
-训练中控源码：microduck-hd1910/training-console/
-两个运行 ZIP：仓库根目录 release-assets/
-系统镜像：public-image-r1 Release
-
-V167 配套 control.43 固件，更新：修复鸭身抖动的问题。
-日常使用无需编译；从源码编译见 microduck-hd1910/docs/BUILD.md。
+首次开机先尝试已保存 Wi-Fi，未能连接时开启配网热点。
+热点：Microduck-kissqy，密码：12345678
+配网页面：http://10.42.0.1:8088
+运行中断网不自动切换热点；可通过中控手动开启。
+电脑端完整解压 V260，Windows 运行 start.cmd，macOS/Linux 运行 bash start.command。
 首次运动前核对本机标定，按 HOME → 保持 → 行走 使用。
-分项授权见 microduck-hd1910/LICENSE；第三方内容保留原许可。
 
-系统镜像 R1 仍预装 control.40；通过 V167 中控安装随包固件升级到 control.43。
+历史版本保留：
+R1 镜像：https://github.com/kissqy/Microduck-kissqy/releases/tag/public-image-r1
+V167 中控：https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/release-assets/Microduck-Console-R17-V167.zip
+V167 / control.43 源码：microduck-hd1910/firmware/，其中中控为 console/。
+R1 仍预装 control.40 / 配网 R5；需要旧线升级时使用 V167 的随包 control.43。
+训练中控源码：microduck-hd1910/training-console/
+V260 独立于旧线保存，不覆盖 V167，不触发旧线自动升级。
+
+Known-Good 与验证范围见 microduck-hd1910/docs/BASELINE.md；本次发布不新增实机验收结论。
+分项授权见 microduck-hd1910/LICENSE；第三方内容保留原许可。

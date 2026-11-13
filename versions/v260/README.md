@@ -4,20 +4,20 @@
 
 本目录和 `release/v260` 分支独立保存 V260。仓库原有 **V167/control.43** 源码、运行包和系统镜像 R1 保留原样。公共入口优先展示 R2 / V260，旧版历史入口仍可访问；本次发布不触发旧线自动升级。
 
-## 四类文件分开下载
+## 运行包下载与源码
 
-请在发布页的 **Assets** 中按下表文件名选择。若未列出对应 ZIP，表示该附件尚未提供；下表入口统一打开发布页，避免跳转到不存在的附件。中控与固件源码也可直接浏览下方目录。
+两个运行 ZIP 已附在发布页，源码已直接保存在本目录，不需要重复上传源码 ZIP。
 
-| 内容 | 下载 | 用途 |
+| 内容 | 入口 | 用途 |
 | --- | --- | --- |
-| 中控运行包 | [Microduck-Console-Studio-V260.zip](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) | 电脑端完整解压运行；已含配套固件 |
-| 中控源码 | [Microduck-Console-Source-V260.zip](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [浏览源码](console/) | Python、网页、启动工具和验证代码；资源按清单恢复 |
-| ZERO 固件运行包 | [Microduck-Firmware-V260-control102.zip](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) | 内部 tar.gz 与 V260 随包固件逐字节一致，可由 V260 中控导入 |
-| ZERO 固件源码 | [Microduck-Firmware-Source-V260-control102.zip](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [浏览源码](firmware/) | Rust 工作区、安装与配网源码、模型配置及构建说明 |
+| 中控运行包 | [Microduck-Console-Studio-V260.zip](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/Microduck-Console-Studio-V260.zip) | 电脑端完整解压运行；已含配套固件 |
+| 中控源码 | [浏览中控源码](console/) | Python、网页、启动工具和验证代码；资源按清单恢复 |
+| ZERO 固件运行包 | [Microduck-Firmware-V260-control102.zip](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/Microduck-Firmware-V260-control102.zip) | 内部 tar.gz 与 V260 随包固件逐字节一致，可由 V260 中控导入 |
+| ZERO 固件源码 | [浏览固件源码](firmware/) | Rust 工作区、安装与配网源码、模型配置及构建说明 |
 
-[文件 SHA256](SHA256SUMS.txt) · [完整发布页](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)
+[文件 SHA256](SHA256SUMS.txt) · [R2 镜像与完整发布页](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)
 
-这四项均为 V260 配套软件，不是 TF 卡系统镜像，也不是 STM32 IMU 固件。不要将 V260 固件交给 V167 中控导入。普通使用者下载完整中控即可，无须另下源码或自行训练。
+运行包附件大小与 SHA256 已与原始发布清单一致核对。这两个 ZIP 均为 V260 配套软件，不是 TF 卡系统镜像，也不是 STM32 IMU 固件。不要将 V260 固件交给 V167 中控导入。普通使用者下载完整中控即可，无须另下源码或自行训练。
 
 ## 使用
 
@@ -39,4 +39,4 @@
 
 ## 项目状态
 
-本次完成 V260 独立源码保存及公共入口同步，运行包是否已发布以 Assets 实际附件为准。原 V167 Known-Good 与历史入口保留；没有新增实机验收。下一步唯一主任务：补齐并确认四类发布附件可下载，再进行参考卡上的 V260 功能验收。
+本次完成 V260 独立源码保存、两个运行 ZIP 发布及公共入口同步；R2 镜像、中控包和配套固件均已在发布页提供。原 V167 Known-Good 与历史入口保留；没有新增实机验收。下一步唯一主任务：参考卡上的 V260 功能验收。

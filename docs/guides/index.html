@@ -63,12 +63,24 @@
 <p>遇到问题可在 <a href="https://github.com/kissqy/Microduck-kissqy/issues">GitHub Issues</a> 提供：硬件配置、中控版本、实际固件标识、发生步骤、日志或视频。若这些资料帮助你完成搭建，欢迎 Star 收藏仓库，后续按同一入口查看更新。</p>
 <p>作者：kissqy · <a href="https://github.com/kissqy/Microduck-kissqy">项目原始仓库</a> · <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-FAQ.md">常见问题</a> · <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/README.md">完整文档目录</a></p></section><section id="faq"><p><strong>简体中文</strong> | <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-FAQ.en.md">English</a></p>
 <h2>Microduck 飞特版复刻常见问题：刷机、标定、IMU、手柄断网与供电重启</h2>
-<p>适用：Microduck-kissqy，Radxa ZERO 3W、飞特 HD1910、系统镜像 R2、机器人中控 V260 / control.102、配网 R10。作者：kissqy；更新：2026-11-13。<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-BUILD-GUIDE.md">从零复刻总指南</a>。</p>
+<p>适用：Microduck-kissqy，Radxa ZERO 3W、飞特 HD1910、系统镜像 R2、机器人中控 V260 / control.102、配网 R10。作者：kissqy；更新：2026-11-14。<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-BUILD-GUIDE.md">从零复刻总指南</a>。</p>
 <h3>Microduck 复刻需要多少钱？材料清单在哪里？</h3><p>本仓库按实际订单整理了<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/DUCK-SHOPPING-LIST.md">复刻材料清单与成本明细</a>，分别列出本体、HAT、IMU 与工具。价格是历史采购记录，打印件、设备、耗材、手工时间及未列价项目的计价范围以采购页为准，已列材料合计不等于每个人的最终复刻总成本。</p><h3>Microduck 复刻的 3D 打印 STL 和摆盘在哪里？</h3><p><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/3d-print-frankenduck/README.md">缝合怪打印件页</a>提供全套 STL、5 盘 3MF、预览和校验值；另有 <a href="https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553">MakerWorld 打印入口 ↗</a>。按自己的打印机、材料以及电池仓与 IMU 适配情况使用。</p><h3>Microduck 飞特 HD1910 版需要下载什么？</h3>
 <p>普通使用先下载<a href="https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260">系统镜像 R2</a>和<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md">机器人中控 V260</a>。训练自己的动作时，再下载训练中控 R1.5.27。下载统一见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/README.md#下载与版本">首页下载区</a>。</p>
 <p>R2 镜像已预装 V260 / control.102，使用配套 V260 中控。旧系统需要本版功能时，通过 V260 中控安装本版随包固件；不要交给 V167 中控导入。R1 / V167 历史版本保留。R2 开机等待网卡与网络服务后尝试已保存 Wi-Fi，失败时开启配网热点；运行中断网不自动切换热点。</p>
 <h3>在线中控演示能连接我的鸭子吗？</h3>
 <p>不能。GitHub Pages 上的机器人中控和训练中控是模拟数据演示，用于预览界面。控制实机需要完整解压机器人中控并在本地启动，再填写 ZERO 的 SSH 地址与登录信息。见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md">V260 发布与使用说明</a>。</p>
+<h3 id="linux-ssh-askpass">Linux 中控提示 ssh-askpass 权限不足，无法连接怎么办？</h3>
+<p><strong>错误表现：</strong>中控提示“SSH 或 sudo 登录验证失败”“SSH 接口转发失败”，详细日志中包含：</p>
+<pre><code>ssh_askpass: exec(.../Microduck-Console-Studio-V260/ssh-askpass): Permission denied
+Permission denied (publickey,password).</code></pre>
+<p><strong>原因：</strong>运行中控的 Linux 电脑无法执行本地 <code>ssh-askpass</code> 密码辅助脚本，常见原因是解压后缺少执行权限。这条报错不能直接说明 ZERO 的登录密码错误。</p>
+<p><strong>解决方法：</strong></p>
+<ol>
+<li>在<strong>运行中控的 Linux 电脑上</strong>，打开完整解压后的中控文件夹，并在该文件夹中打开终端。</li>
+<li>执行以下命令，为辅助脚本补上执行权限：<pre><code>chmod u+x ./ssh-askpass</code></pre></li>
+<li>返回中控，点击“重连”。</li>
+</ol>
+<p>如果仍然出现同一条 <code>ssh_askpass: exec(...): Permission denied</code>，继续检查文件及目录访问权限、所在文件系统是否禁止执行（<code>noexec</code>）。如果这条错误消失，但仍提示认证失败，再核对 ZERO 的 SSH 地址、用户名和密码。</p>
 <h3>刷了 ZERO 镜像，为什么 IMU 还需要烧录？</h3>
 <p>ZERO 系统和 IMU 上的 STM32 是不同设备。镜像与机器人服务安装在 ZERO，自制 IMU 需要单独烧录 FT6。下载、SWD 接线、烧录与通信检查统一见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/IMU-FIRMWARE.md">IMU FT6 指南</a>。</p>
 <h3>接入无线手柄后，为什么 ZERO 断网或 SSH 超时？</h3>

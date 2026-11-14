@@ -7,7 +7,7 @@
 >
 > 本仓库未授权任何商业组织。商业使用请[联系作者](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg)，并遵守[分项许可](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE)。
 
-适用：Microduck-kissqy，Radxa ZERO 3W、飞特 HD1910、系统镜像 R2、机器人中控 V260 / control.102、配网 R10。作者：kissqy；更新：2026-11-13。[从零复刻总指南](MICRODUCK-BUILD-GUIDE.md)。
+适用：Microduck-kissqy，Radxa ZERO 3W、飞特 HD1910、系统镜像 R2、机器人中控 V260 / control.102、配网 R10。作者：kissqy；更新：2026-11-14。[从零复刻总指南](MICRODUCK-BUILD-GUIDE.md)。
 
 ## Microduck 复刻需要多少钱？材料清单在哪里？
 
@@ -28,6 +28,32 @@ R2 开机先等待网卡和网络服务就绪，再尝试已保存的 Wi-Fi；�
 ## 在线中控演示能连接我的鸭子吗？
 
 不能。GitHub Pages 上的机器人中控和训练中控是模拟数据演示，用于预览界面。控制实机需要完整解压机器人中控并在本地启动，再填写 ZERO 的 SSH 地址与登录信息。见[V260 发布与使用说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)。
+
+<a id="linux-ssh-askpass"></a>
+
+## Linux 中控提示 ssh-askpass 权限不足，无法连接怎么办？
+
+**错误表现：** 中控提示“SSH 或 sudo 登录验证失败”“SSH 接口转发失败”，详细日志中包含：
+
+```text
+ssh_askpass: exec(.../Microduck-Console-Studio-V260/ssh-askpass): Permission denied
+Permission denied (publickey,password).
+```
+
+**原因：** 运行中控的 Linux 电脑无法执行本地 `ssh-askpass` 密码辅助脚本，常见原因是解压后缺少执行权限。这条报错不能直接说明 ZERO 的登录密码错误。
+
+**解决方法：**
+
+1. 在**运行中控的 Linux 电脑上**，打开完整解压后的中控文件夹，并在该文件夹中打开终端。
+2. 执行以下命令，为辅助脚本补上执行权限：
+
+   ```bash
+   chmod u+x ./ssh-askpass
+   ```
+
+3. 返回中控，点击“重连”。
+
+如果仍然出现同一条 `ssh_askpass: exec(...): Permission denied`，继续检查文件及目录访问权限、所在文件系统是否禁止执行（`noexec`）。如果这条错误消失，但仍提示认证失败，再核对 ZERO 的 SSH 地址、用户名和密码。
 
 ## 刷了 ZERO 镜像，为什么 IMU 还需要烧录？
 

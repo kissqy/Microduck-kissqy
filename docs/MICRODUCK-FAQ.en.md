@@ -7,7 +7,7 @@
 >
 > No commercial organization has been authorized. For commercial use, [contact the author](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) and follow the [license terms](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE).
 
-Scope: Microduck-kissqy, Radxa ZERO 3W, Feetech HD1910, System Image R2, Robot Console V260 / control.102 and Wi-Fi setup R10. Author: kissqy. Updated November 13, 2026. [Complete replica build guide](MICRODUCK-BUILD-GUIDE.en.md).
+Scope: Microduck-kissqy, Radxa ZERO 3W, Feetech HD1910, System Image R2, Robot Console V260 / control.102 and Wi-Fi setup R10. Author: kissqy. Updated November 14, 2026. [Complete replica build guide](MICRODUCK-BUILD-GUIDE.en.md).
 
 ## What does a Microduck replica cost, and where is the BOM?
 
@@ -28,6 +28,32 @@ At boot, R2 waits for the Wi-Fi adapter and network service, then tries saved ne
 ## Can the online demo connect to my robot?
 
 No. The GitHub Pages consoles demonstrate the interfaces with simulated data. Extract and run the local Robot Console, then enter ZERO's SSH connection details. See the [V260 release and usage guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md).
+
+<a id="linux-ssh-askpass"></a>
+
+## Why does the Linux console fail to connect with ssh-askpass permission denied?
+
+**Symptoms:** The console reports SSH/sudo authentication or SSH port-forwarding failure, and the detailed log contains:
+
+```text
+ssh_askpass: exec(.../Microduck-Console-Studio-V260/ssh-askpass): Permission denied
+Permission denied (publickey,password).
+```
+
+**Cause:** The Linux computer running the console cannot execute its local `ssh-askpass` password helper. A common cause is a missing execute permission after extraction. This error alone does not establish that ZERO's login password is wrong.
+
+**Solution:**
+
+1. On **the Linux computer running the console**, open the fully extracted console folder and open a terminal in that folder.
+2. Restore execute permission for the helper:
+
+   ```bash
+   chmod u+x ./ssh-askpass
+   ```
+
+3. Return to the console and click **Reconnect**.
+
+If the same `ssh_askpass: exec(...): Permission denied` error persists, check file and directory access permissions and whether the filesystem prohibits execution (`noexec`). If the helper error disappears but authentication still fails, verify ZERO's SSH address, username and password.
 
 ## Why flash the IMU separately after imaging ZERO?
 

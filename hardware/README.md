@@ -37,6 +37,8 @@
 
 🖨️ 鸭子本体的 [全套打印件与摆盘 · 缝合怪版](3d-print-frankenduck/) 已单独发布，含两种电池仓和不用拆舵机即可装滑轮的脚部套件。
 
+**[MakerWorld 模型与打印配置](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553)**
+
 **两种接口版本均保留，按线束选择。** [AMP2.0 版接口、LED 与用料说明](AMP2.0-VERSION.md)。
 
 | 硬件 | 原版 EH2.5 · 2026-10-07 | AMP2.0 版 · 当前工程 | 制作记录 |

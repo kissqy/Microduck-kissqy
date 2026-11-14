@@ -35,6 +35,8 @@ Check the servos, boards, printed parts, cables and accessories before assembly.
 
 Printing-service costs are additional, based on an actual quote. No printer purchase is needed. [Edition features and printing instructions](hardware/3d-print-frankenduck/README.en.md).
 
+**[MakerWorld model and print profile](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553)**
+
 - **The base table excludes printed parts or filament; printing costs are additional, based on an actual quote or filament budget. Robot-assembly labor, a computer, battery-connection parts, new-order shipping and losses are extra.** The body includes 15 HD1910 servos at ¥123 each; the microSD card and card reader are priced and included.
 - HAT, IMU and HUB are listed separately in the board purchasing table below. The HUB includes the main-power buffer capacitor; no separate capacitor purchase is needed.
 - DIY board materials use full component packs; the range covers free PCB coupons / no coupons. [Board cost breakdown](hardware/README.en.md#build-cost) · [Tool budget](docs/BUILD-TOOLS.en.md#budgeting-for-tools-from-scratch). Reuse existing tools; the assembled-board option assumes you have normal assembly hand tools.

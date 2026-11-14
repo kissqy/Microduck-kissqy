@@ -44,6 +44,8 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 
 下载[全套打印件 · 缝合怪版](../hardware/3d-print-frankenduck/README.md)：36 个 STL、1 个 3MF 项目、5 盘参考摆盘。根据实际打印机与耗材调整配置，TPU 部件使用对应材料配置。打印方向、电池仓、IMU 安装、滑轮换装、散热和装配细节的优化见上述版本说明。
 
+**[MakerWorld 模型与打印配置](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553)**
+
 电池仓有 HUB 组合版和官方式加厚卡扣版；IMU 安装位适配本仓库 IMU。2026-10-21 版增加腿部支撑斜面、去除腿外壳外侧沉孔，并整合无需拆舵机即可换装的脚掌与滑轮结构。滑轮使用 623ZZ 轴承。
 
 本页是装配流程导航，零件说明见打印件页；不把文件数量当成实际装配数量。

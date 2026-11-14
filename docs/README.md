@@ -58,6 +58,8 @@
 
 ## Hardware / 硬件
 
+**[MakerWorld 模型与打印配置](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553)**
+
 | 说明 | 中文 | English |
 | --- | --- | --- |
 | 鸭子全套打印件与摆盘 · 缝合怪版 | [中文](../hardware/3d-print-frankenduck/README.md) | [English](../hardware/3d-print-frankenduck/README.en.md) |

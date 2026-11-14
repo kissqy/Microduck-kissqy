@@ -46,6 +46,8 @@ An assembled IMU needs no programming tools. For DIY boards, see the [tool list]
 
 The [FrankenDuck printing set](../hardware/3d-print-frankenduck/README.en.md) contains 36 STLs and one 3MF project with five plates. Adapt printer and material profiles, including TPU parts. That edition page explains the print-orientation, battery-holder, IMU-mount, roller-change, cooling, and assembly improvements.
 
+**[MakerWorld model and print profile](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553)**
+
 Choose the HUB battery-holder variant or the official-style holder with thicker latches; both IMU mounts fit this repository's IMU. The October 21 update adds leg support ramps, removes outer leg-shell counterbores and integrates interchangeable feet and roller assemblies without servo removal. Rollers use 623ZZ bearings.
 
 This page links the build stages; individual part instructions are on the printing page. File counts are not assembly quantities.

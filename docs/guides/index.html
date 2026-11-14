@@ -34,7 +34,7 @@
 <p>焊接、回流和烧录工具见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/BUILD-TOOLS.md">工具清单</a>。使用其他主控或舵机时，不要默认当前镜像和结构已经适配。</p>
 <h3>2. 打印零件并装配机械结构</h3>
 <p><strong><a href="../assembly.html">打开 3D 装配参考 →</a></strong> 旋转、放大模型，按部位查看关节位置、编号与安装朝向，无须连接机器人。模型用于结构参考；飞特改件、螺丝和走线细节以打印件及硬件说明为准。</p>
-<p>下载<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/3d-print-frankenduck/README.md">全套打印件 · 缝合怪版</a>：36 个 STL、1 个 3MF 项目、5 盘参考摆盘。根据实际打印机与耗材调整配置，TPU 部件使用对应材料配置。</p>
+<p>下载<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/3d-print-frankenduck/README.md">全套打印件 · 缝合怪版</a>：36 个 STL、1 个 3MF 项目、5 盘参考摆盘。也可从 <a href="https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553">MakerWorld 打印入口 ↗</a> 获取。根据实际打印机与耗材调整配置，TPU 部件使用对应材料配置。</p>
 <p>电池仓有 HUB 组合版和官方式加厚卡扣版；IMU 安装位适配本仓库 IMU。2026-10-21 版增加腿部支撑斜面、去除腿外壳外侧沉孔，并整合无需拆舵机即可换装的脚掌与滑轮结构。滑轮使用 623ZZ 轴承。</p>
 <p>本页是装配流程导航，零件说明见打印件页；不把文件数量当成实际装配数量。</p>
 <h3>3. 准备 HAT、IMU 与供电</h3>
@@ -62,7 +62,7 @@
 <p>作者：kissqy · <a href="https://github.com/kissqy/Microduck-kissqy">项目原始仓库</a> · <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-FAQ.md">常见问题</a> · <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/README.md">完整文档目录</a></p></section><section id="faq"><p><strong>简体中文</strong> | <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-FAQ.en.md">English</a></p>
 <h2>Microduck 飞特版复刻常见问题：刷机、标定、IMU、手柄断网与供电重启</h2>
 <p>适用：Microduck-kissqy，Radxa ZERO 3W、飞特 HD1910、系统镜像 R2、机器人中控 V260 / control.102、配网 R10。作者：kissqy；更新：2026-11-13。<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-BUILD-GUIDE.md">从零复刻总指南</a>。</p>
-<h3>Microduck 复刻需要多少钱？材料清单在哪里？</h3><p>本仓库按实际订单整理了<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/DUCK-SHOPPING-LIST.md">复刻材料清单与成本明细</a>，分别列出本体、HAT、IMU 与工具。价格是历史采购记录，打印件、设备、耗材、手工时间及未列价项目的计价范围以采购页为准，已列材料合计不等于每个人的最终复刻总成本。</p><h3>Microduck 复刻的 3D 打印 STL 和摆盘在哪里？</h3><p><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/3d-print-frankenduck/README.md">缝合怪打印件页</a>提供全套 STL、5 盘 3MF、预览和校验值。按自己的打印机、材料以及电池仓与 IMU 适配情况使用。</p><h3>Microduck 飞特 HD1910 版需要下载什么？</h3>
+<h3>Microduck 复刻需要多少钱？材料清单在哪里？</h3><p>本仓库按实际订单整理了<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/DUCK-SHOPPING-LIST.md">复刻材料清单与成本明细</a>，分别列出本体、HAT、IMU 与工具。价格是历史采购记录，打印件、设备、耗材、手工时间及未列价项目的计价范围以采购页为准，已列材料合计不等于每个人的最终复刻总成本。</p><h3>Microduck 复刻的 3D 打印 STL 和摆盘在哪里？</h3><p><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/3d-print-frankenduck/README.md">缝合怪打印件页</a>提供全套 STL、5 盘 3MF、预览和校验值；另有 <a href="https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553">MakerWorld 打印入口 ↗</a>。按自己的打印机、材料以及电池仓与 IMU 适配情况使用。</p><h3>Microduck 飞特 HD1910 版需要下载什么？</h3>
 <p>普通使用先下载<a href="https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260">系统镜像 R2</a>和<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md">机器人中控 V260</a>。训练自己的动作时，再下载训练中控 R1.5.27。下载统一见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/README.md#下载与版本">首页下载区</a>。</p>
 <p>R2 镜像已预装 V260 / control.102，使用配套 V260 中控。旧系统需要本版功能时，通过 V260 中控安装本版随包固件；不要交给 V167 中控导入。R1 / V167 历史版本保留。R2 开机等待网卡与网络服务后尝试已保存 Wi-Fi，失败时开启配网热点；运行中断网不自动切换热点。</p>
 <h3>在线中控演示能连接我的鸭子吗？</h3>

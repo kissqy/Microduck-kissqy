@@ -58,6 +58,8 @@ For battery power, use a banana board (not yet listed for sale), or the reposito
 
 ## Hardware / 硬件
 
+**[MakerWorld model and print profile](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553)**
+
 | Guide | 中文 | English |
 | --- | --- | --- |
 | Complete printing set and plates · FrankenDuck | [中文](../hardware/3d-print-frankenduck/README.md) | [English](../hardware/3d-print-frankenduck/README.en.md) |

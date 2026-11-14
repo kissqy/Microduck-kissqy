@@ -37,6 +37,8 @@
 
 🖨️ The [complete FrankenDuck printing set and plate project](3d-print-frankenduck/README.en.md) is available separately, with two battery holders and a foot kit that accepts rollers without removing servos.
 
+**[MakerWorld model and print profile](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553)**
+
 **Both connector versions are retained. Choose for your wiring.** [AMP2.0 connectors, LED, and parts](AMP2.0-VERSION.en.md).
 
 | Hardware | Original EH2.5 · October 7, 2026 | AMP2.0 · current projects | Build record |

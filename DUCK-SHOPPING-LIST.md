@@ -35,6 +35,8 @@
 
 选择代打时，费用按实际报价另计，无需购买打印机。[版本特点与打印说明](hardware/3d-print-frankenduck/README.md)。
 
+**[MakerWorld 模型与打印配置](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553)**
+
 - **上表基础合计尚未计入打印件或打印耗材，按实际报价或耗材预算另计。整机装配人工、电脑、电池接入等项目，以及运费与损耗另计。** 本体已含15只 HD1910 舵机，单价 ¥123；TF 卡与读卡器已列价计入。
 - HAT、IMU、HUB 在下方板卡采购表分别列出；HUB ¥69 已带总电源缓冲电容，用于缓冲舵机瞬时负载，防止瞬时压降导致 ZERO 重启，无需单独购买电容。
 - 手焊材料按首次整包采购，区间对应 PCB 有券／无券；[板卡成本](hardware/README.md#制作成本) · [工具预算](docs/BUILD-TOOLS.md#从零配工具预算)。已有工具可复用，成品板方案的常规组装手工具自备。

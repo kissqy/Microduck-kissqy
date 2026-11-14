@@ -6,6 +6,8 @@
 
 可直接下载下方文件自己打印。[联系作者了解打印件与配色](../../docs/assets/purchase-wechat-qr.jpg)。
 
+**[MakerWorld 模型与打印配置](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553)**
+
 **[⬇️ 下载完整打印包（RAR，14.54 MiB）](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/3d-print-frankenduck/Microduck-Print-FrankenDuck-20261107.rar)** · [SHA256 校验](SHA256SUMS) · [包内文件清单](FILES.md) · [鸭子采购总清单](../../DUCK-SHOPPING-LIST.md) · [返回首页](../../README.md)
 
 发布于 **2026-10-15**。包内 **36 个 STL 文件 + 1 个 3MF 摆盘项目（5 盘）**，保留原文件名和摆盘；文件数量不等于装配数量。下载的是原始压缩包，模型与摆盘内容没有重新编辑。

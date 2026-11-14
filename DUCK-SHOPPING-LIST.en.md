@@ -49,11 +49,13 @@ The author supplied reference prices for the EAGET 32GB monitoring / dashcam mic
 | --- | ---: | --- | --- |
 | Assembled HAT<br><sub><strong>AMP2.0 servo connectors</strong>; <strong>plug-in speaker</strong>; <strong>no manual jumpers</strong>; stable communication <strong>without packet loss</strong>.<br>Power, servo communication and audio connections for ZERO.</sub> | 1 | CNY 119 | [Select HAT](https://item.taobao.com/item.htm?id=1095121548583) |
 | Assembled IMU (FT6 preflashed)<br><sub><strong>AMP2.0 interface</strong>; stable orientation <strong>without drift</strong>; <strong>FT6 preflashed</strong>.<br>Mount against the repository battery holder backplate with J1 pointing up to <strong>use the author&#x27;s IMU calibration</strong>.</sub> | 1 | CNY 99 | [Select IMU](https://item.taobao.com/item.htm?id=1095121548583) |
-| Assembled HUB (buffer capacitor included)<br><sub>Servo and battery-power distribution; onboard <strong>1000 µF buffer capacitor</strong> <strong>helps prevent ZERO resets</strong> from transient supply dips.<br>Mount above servos 10 and 20; CN1 is an XH2.54-2P power input. Connect battery positive to VIN (+), negative to GND (−).</sub> | 1 | CNY 69 | [Select HUB](https://item.taobao.com/item.htm?id=1095121548583) |
+| Assembled HUB V3 (buffer capacitor included)<br><sub>Servo and battery-power distribution; onboard <strong>1000 µF buffer capacitor</strong> <strong>helps prevent ZERO resets</strong> from transient supply dips.<br>Mount above servos 10 and 20; every V3 connector, including power, uses AMP2.0. Match wiring and polarity to the board markings.</sub> | 1 | CNY 69 | [Select HUB](https://item.taobao.com/item.htm?id=1095121548583) |
 
 ### Battery power connection
 
-The HUB's CN1 power input uses XH2.54-2P. Connect an XH2.54 power lead to the repository battery holder's M2.6 screw contacts for a quick, convenient connection; plug in a battery with a matching XH2.54 connector, voltage and polarity directly; or solder the XH2.54 lead to a banana board. Connect positive to VIN (+) and negative to GND (−), following the board markings.
+**Every HUB V3 connector uses AMP2.0, including its power input; the banana power board also uses AMP2.0.** With assembled HAT / IMU / HUB V3 boards, matching pre-made cables and the banana power board, board and power-harness connections plug together without soldering. The banana board is not listed for sale yet; availability is expected **around November 16, 2026**. [HUB V3 schematic and PCB](hardware/ProPrj_DXL_HUB_V3_2026-11-14.epro2).
+
+**Historical HUB V1 power connection:** The HUB's CN1 power input uses XH2.54-2P. Connect an XH2.54 power lead to the repository battery holder's M2.6 screw contacts for a quick, convenient connection; plug in a battery with a matching XH2.54 connector, voltage and polarity directly; or solder the XH2.54 lead to a banana board. Connect positive to VIN (+) and negative to GND (−), following the board markings.
 
 ## Duck body
 

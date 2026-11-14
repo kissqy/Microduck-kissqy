@@ -34,7 +34,9 @@ The priced purchase reference includes an EAGET 32GB microSD card at CNY 39.90 a
 
 **HAT, IMU and HUB are three separate boards. Select each board on the [same product page](https://item.taobao.com/item.htm?id=1095121548583). The HUB costs CNY 69 and includes the main-power buffer capacitor to buffer transient servo loads and help prevent ZERO restarts caused by supply voltage dips.**
 
-For battery power, use a banana board (not yet listed for sale), or the repository’s battery holder with M2.6 screws as power contacts. Connect battery positive to HUB VIN (+) and negative to GND (−), following the board markings.
+**All HUB V3 connectors use AMP2.0 and matching premade cables. The matching banana power board also uses AMP2.0; it is not yet listed for sale and is expected around November 16, 2026. With the assembled boards, cables and banana board in hand, assembly can use plug-in connections without soldering.**
+
+Legacy power reference: the repository's battery holder can use M2.6 screws as power contacts. Connect positive to the legacy HUB's VIN (+) and negative to GND (−), following its markings. XH2.54 connectors and soldered leads belong to the legacy instructions; follow the V3 board's connectors and markings for V3.
 
 ## Start here / 入门
 
@@ -66,6 +68,7 @@ For battery power, use a banana board (not yet listed for sale), or the reposito
 | HAT build timeline | [中文](../hardware/HAT-TIMELINE.md) | [English](../hardware/HAT-TIMELINE.en.md) |
 | IMU full build video and timeline | [中文](../hardware/IMU-TIMELINE.md) | [English](../hardware/IMU-TIMELINE.en.md) |
 | HAT, IMU and HUB boards | [中文](../hardware/README.md) | [English](../hardware/README.en.md) |
+| HUB V3 with all AMP2.0 connectors | [EasyEDA Pro 工程](../hardware/ProPrj_DXL_HUB_V3_2026-11-14.epro2) | [PCB project](../hardware/ProPrj_DXL_HUB_V3_2026-11-14.epro2) |
 | HAT / IMU AMP2.0 variant: HP1.25 audio and added LED | [中文](../hardware/AMP2.0-VERSION.md) | [English](../hardware/AMP2.0-VERSION.en.md) |
 | IMU firmware FT6 — download, wiring, flash, and checks | [中文](../hardware/IMU-FIRMWARE.md) | [English](../hardware/IMU-FIRMWARE.en.md) |
 | Current IMU FT6: protocol and compatibility | [中文](../versions/v167/microduck-hd1910/firmware/firmware/imu-source/README_FT6_SYNC15.md) | [English](../versions/v167/microduck-hd1910/firmware/firmware/imu-source/README_FT6_SYNC15.en.md) |

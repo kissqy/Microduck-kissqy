@@ -56,9 +56,11 @@ This page links the build stages; individual part instructions are on the printi
 
 **HAT, IMU and HUB are three separate boards. Select each board on the [same product page](https://item.taobao.com/item.htm?id=1095121548583). The HUB costs CNY 69 and includes the main-power buffer capacitor to buffer transient servo loads and help prevent ZERO restarts caused by supply voltage dips.**
 
-For battery power, use a banana board (not yet listed for sale), or the repository’s battery holder with M2.6 screws as power contacts. Connect battery positive to HUB VIN (+) and negative to GND (−), following the board markings.
+**All HUB V3 connectors use AMP2.0 and matching premade cables. The matching banana power board also uses AMP2.0; it is not yet listed for sale and is expected around November 16, 2026. With the assembled boards, cables and banana board in hand, assembly can use plug-in connections without soldering.**
 
-The [hardware guide](../hardware/README.en.md) contains PCB projects, parts tables and two connector versions. See the [HAT build record](../hardware/HAT-TIMELINE.en.md) and [IMU build record and video](../hardware/IMU-TIMELINE.en.md).
+Legacy power reference: the repository's battery holder can use M2.6 screws as power contacts. Connect positive to the legacy HUB's VIN (+) and negative to GND (−), following its markings. XH2.54 connectors and soldered leads belong to the legacy instructions; follow the V3 board's connectors and markings for V3.
+
+The [hardware guide](../hardware/README.en.md) contains PCB projects, parts tables and connector-version notes. See the [HAT build record](../hardware/HAT-TIMELINE.en.md) and [IMU build record and video](../hardware/IMU-TIMELINE.en.md).
 
 **The author's assembled IMU comes with FT6 preflashed and needs no initial flashing; calibrate it for your robot after assembly.** Use the [IMU flashing guide](../hardware/IMU-FIRMWARE.en.md) for self-soldered boards, replacement MCUs, maintenance or upgrades. Imaging ZERO or upgrading robot services does not program the external IMU.
 

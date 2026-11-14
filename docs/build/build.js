@@ -23,7 +23,7 @@ let state=readState();
 const save=field=>{try{const latest=readState();latest[field]=state[field];localStorage.setItem(storageKey,JSON.stringify(latest));}catch{}};
 const priceInput=key=>{const raw=state.costs[key];if(raw===undefined||raw==='')return null;const number=Number(raw);return Number.isFinite(number)&&number>=0&&number<=1000000?Math.round(number*100):null;};
 let data;
-try{const response=await fetch(new URL('./data.json?v=20261112-servo123',import.meta.url));if(response.ok)data=await response.json();}catch{}
+try{const response=await fetch(new URL('./data.json?v=20261114-hub-v3',import.meta.url));if(response.ok)data=await response.json();}catch{}
 if(data){
  const body=data.items.reduce((sum,item)=>sum+item.subtotalCents,0),boards=data.boards.filter(item=>!item.diyRequired).reduce((sum,item)=>sum+(item.subtotalCents??0),0),fixedBoards=data.boards.filter(item=>item.diyRequired).reduce((sum,item)=>sum+(item.subtotalCents??0),0),assembled=body+boards+fixedBoards;
  const shopping=configureShopping(data);
@@ -48,7 +48,7 @@ if(data){
   const diy=state.route.boards!=='assembled',buyTools=state.route.boards==='diy-new';
   const minimum=diy?body+fixedBoards+data.diyMaterialsMinCents+(buyTools?data.diyToolsMinCents:0):assembled;
   const maximum=diy?body+fixedBoards+data.diyMaterialsMaxCents+(buyTools?data.diyToolsMaxCents:0):assembled;
-  const basis=diy?'本体＋HUB 成品板＋首批板卡材料'+(buyTools?'＋工具与耗材预算':''):'本体＋成品 HAT／IMU／HUB';
+  const basis=diy?'本体＋HUB 成品板＋首批板卡材料'+(buyTools?'＋工具与耗材预算':''):'本体＋成品 HAT／IMU／HUB V3，搭配匹配的成品线直插免焊';
   plans.forEach(plan=>{
    const card=document.querySelector('[data-plan="'+plan.id+'"]');if(!card)return;
    const values=plan.fields.map(cost),addition=values.reduce((sum,value)=>sum+(value??0),0),needsQuote=plan.quote&&cost(plan.quote)===null,price=card.querySelector('[data-price]');

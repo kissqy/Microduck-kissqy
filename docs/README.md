@@ -34,7 +34,9 @@
 
 **HAT、IMU、HUB 为三块独立板卡，均在[同一商品页](https://item.taobao.com/item.htm?id=1095121548583)选择对应款式。HUB ¥69 已含总电源缓冲电容，用于缓冲舵机瞬时负载，防止瞬时压降导致 ZERO 重启。**
 
-电池取电可使用香蕉板（暂未上架），也可以使用仓库配套电池仓，加 M2.6 螺丝作为取电触点；取出的正极接 HUB 电源输入 VIN（+），负极接 GND（−），按实板丝印核对极性。
+**HUB V3 全部接口统一为 AMP2.0，使用配套成品线束插接。配套香蕉取电板也采用 AMP2.0，暂未上架，预计 2026-11-16 前后上架；配齐成品板、线束与香蕉板后，可全插接免焊装配。**
+
+旧版取电参考：仓库配套电池仓可加 M2.6 螺丝作为取电触点，正极接旧版 HUB 的 VIN（+），负极接 GND（−），按实板丝印核对极性。旧版 XH2.54 接头与焊线步骤按对应旧版说明使用；V3 按实板接口与丝印核对。
 
 ## Start here / 入门
 
@@ -66,6 +68,7 @@
 | HAT 制作时间线 | [中文](../hardware/HAT-TIMELINE.md) | [English](../hardware/HAT-TIMELINE.en.md) |
 | IMU 制作全过程视频与时间线 | [中文](../hardware/IMU-TIMELINE.md) | [English](../hardware/IMU-TIMELINE.en.md) |
 | HAT、IMU 与 HUB 板卡 | [中文](../hardware/README.md) | [English](../hardware/README.en.md) |
+| HUB V3 全 AMP2.0 工程 | [EasyEDA Pro 工程](../hardware/ProPrj_DXL_HUB_V3_2026-11-14.epro2) | [PCB project](../hardware/ProPrj_DXL_HUB_V3_2026-11-14.epro2) |
 | HAT / IMU AMP2.0 版：HP1.25 音频与新增 LED | [中文](../hardware/AMP2.0-VERSION.md) | [English](../hardware/AMP2.0-VERSION.en.md) |
 | IMU 固件 FT6 — 下载、接线、烧录与检查 | [中文](../hardware/IMU-FIRMWARE.md) | [English](../hardware/IMU-FIRMWARE.en.md) |
 | 当前 IMU FT6：协议与兼容 | [中文](../versions/v167/microduck-hd1910/firmware/firmware/imu-source/README_FT6_SYNC15.md) | [English](../versions/v167/microduck-hd1910/firmware/firmware/imu-source/README_FT6_SYNC15.en.md) |

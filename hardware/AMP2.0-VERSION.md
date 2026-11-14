@@ -1,8 +1,8 @@
 **简体中文** | [English](AMP2.0-VERSION.en.md)
 
-# HAT / IMU · AMP2.0 接口版
+# HAT / IMU / HUB V3 · AMP2.0 接口版
 
-**两种接口版本并行提供，按自己的线束选择。** 本页提供 **HAT 2026-10-15 版与 IMU 2026-11-13 线序更新版**；[原版 EH2.5 工程与采购表](README.md) 继续保留。
+**HAT／IMU 两种接口版本并行提供，按自己的线束选择。** 本页提供 **HAT 2026-10-15 版、IMU 2026-11-13 线序更新版与 HUB V3 2026-11-14 版**；[原版 EH2.5 工程与采购表](README.md) 继续保留。
 
 ## 下载工程
 
@@ -10,8 +10,15 @@
 | --- | --- | --- |
 | **HAT · AMP2.0** | [下载 2026-10-15 工程](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/ProPrj_HAT_REVA_SCH_2026-10-15.epro2) | 总线 AMP2.0，喇叭 / 麦克风 HP1.25，新增 D5 LED 与 R34 1kΩ 电阻。 |
 | **IMU · AMP2.0** | [下载 2026-11-13 工程](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/ProPrj_imu_to_dxl_RevA_V1_2026-11-13.epro2) | J1 总线接口改为 AMP2.0；J2 仍为 SWD 1×5。 |
+| **HUB V3 · AMP2.0** | [下载 2026-11-14 工程](ProPrj_DXL_HUB_V3_2026-11-14.epro2) | 所有接口（含电源输入）均为 AMP2.0。 |
 
-工程按作者提供的文件原样发布，均包含原理图和 PCB。源文件中 HAT 为 **86 个原理图器件 / 86 个 PCB 器件**，IMU 为 **25 / 25**；完整型号、用量及文件 SHA256 见 [AMP2.0-BOM.json](AMP2.0-BOM.json)。
+工程按作者提供的文件原样发布，均包含原理图和 PCB。源文件中 HAT 为 **86 个原理图器件 / 86 个 PCB 器件**，IMU 为 **25 / 25**；HAT／IMU 的完整型号、用量及文件 SHA256 见 [AMP2.0-BOM.json](AMP2.0-BOM.json)。
+
+## HUB V3 与免焊取电
+
+**HUB V3 的所有接口均为 AMP2.0，香蕉取电板也使用 AMP2.0。** 选择成品 HAT／IMU／HUB V3、配套成品线与香蕉取电板，板卡和取电线束可直接插接，免焊装配。香蕉取电板尚未上架，预计 **2026-11-16 前后上架**。
+
+V3 接线与极性按实板丝印核对。[历史 HUB V1](README.md#历史-hub-v1--2026-11-07) 的 XH2.54 取电说明保留供旧版使用。
 
 ## 选购接口和新增器件
 

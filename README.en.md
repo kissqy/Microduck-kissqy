@@ -141,9 +141,11 @@ Community improvements and the author's real-robot modifications are collected i
 
 [MakerWorld model and print profile →](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553) · [Printing files, plate previews and assembly notes →](hardware/3d-print-frankenduck/README.en.md)
 
-## 🔧 DIY HAT and IMU
+## 🔧 DIY HAT, IMU and HUB
 
 Designed and laid out by the author, refined through extended real-robot use and **SMT assembled by JLCPCB**.
+
+**Every HUB V3 connector uses AMP2.0, including its power input; the banana power board also uses AMP2.0.** With assembled HAT / IMU / HUB V3 boards, matching pre-made cables and the banana power board, board and power-harness connections plug together without soldering. The banana board is not listed for sale yet; availability is expected **around November 16, 2026**. [Download the complete HUB V3 project](hardware/ProPrj_DXL_HUB_V3_2026-11-14.epro2).
 
 
 **The assembled IMU comes preflashed with FT6; no initial flashing is needed.** The author's separately licensable original design material is for personal noncommercial replication; commercial reproduction, manufacture, sale or integration requires prior written permission. [Board design license](hardware/LICENSE)

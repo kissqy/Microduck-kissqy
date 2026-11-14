@@ -38,10 +38,12 @@
 <p>电池仓有 HUB 组合版和官方式加厚卡扣版；IMU 安装位适配本仓库 IMU。2026-10-21 版增加腿部支撑斜面、去除腿外壳外侧沉孔，并整合无需拆舵机即可换装的脚掌与滑轮结构。滑轮使用 623ZZ 轴承。</p>
 <p>本页是装配流程导航，零件说明见打印件页；不把文件数量当成实际装配数量。</p>
 <h3>3. 准备 HAT、IMU 与供电</h3>
-<p>HAT、IMU、HUB 为三块独立板卡，在<a href="https://item.taobao.com/item.htm?id=1095121548583">同一商品页</a>分别选择款式。电池取电可使用香蕉板（暂未上架），也可以使用仓库配套电池仓，加 M2.6 螺丝作为取电触点；取出的正极接 HUB 电源输入 VIN（+），负极接 GND（−），按实板丝印核对极性。</p>
-<p><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/README.md">HAT / IMU 硬件页</a>提供工程、采购表和两种接口版本。制作过程分别见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/HAT-TIMELINE.md">HAT 制作记录</a>和<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/IMU-TIMELINE.md">IMU 制作记录及视频</a>。</p>
+<p>HAT、IMU、HUB 为三块独立板卡，在<a href="https://item.taobao.com/item.htm?id=1095121548583">同一商品页</a>分别选择款式。</p>
+<p><strong>HUB V3 全部接口统一为 AMP2.0，使用配套成品线束插接。配套香蕉取电板也采用 AMP2.0，暂未上架，预计 2026-11-16 前后上架；配齐成品板、线束与香蕉板后，可全插接免焊装配。</strong></p>
+<p>旧版取电参考：仓库配套电池仓可加 M2.6 螺丝作为取电触点，正极接旧版 HUB 的 VIN（+），负极接 GND（−），按实板丝印核对极性。旧版 XH2.54 接头与焊线步骤按对应旧版说明使用；V3 按实板接口与丝印核对。</p>
+<p><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/README.md">HAT / IMU 硬件页</a>提供工程、采购表与各接口版本说明。制作过程分别见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/HAT-TIMELINE.md">HAT 制作记录</a>和<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/IMU-TIMELINE.md">IMU 制作记录及视频</a>。</p>
 <p><strong>自制 IMU 需要单独烧录 STM32 FT6 固件。</strong> 给 ZERO 刷系统镜像或升级机器人服务不会烧录 IMU；接线、固件下载与步骤统一见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/IMU-FIRMWARE.md">IMU 烧录指南</a>。</p>
-<p>按<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/ASSEMBLY-NOTES.md">装机注意事项</a>配置 5 GHz Wi-Fi，并在总进电口并联 1000 µF 缓冲电容；电容极性、耐压和安装位置以该页说明为准。</p>
+<p>旧版外接电容参考：按<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/ASSEMBLY-NOTES.md">装机注意事项</a>配置 5 GHz Wi-Fi，并在总进电口并联 1000 µF 缓冲电容；电容极性、耐压和安装位置以该页说明为准。</p>
 <h3>4. 刷写系统镜像并连接中文中控</h3>
 <ol>
 <li>在<a href="https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260">系统镜像 R2 发布页</a>下载镜像，用 Armbian Imager 将压缩镜像直接刷入 TF 卡。</li>

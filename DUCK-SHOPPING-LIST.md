@@ -47,11 +47,13 @@
 | --- | ---: | --- | --- |
 | HAT 成品板<br><sub><strong>AMP2.0 舵机接口</strong>；<strong>喇叭直插即用</strong>，<strong>无需自行短接</strong>；通信稳定<strong>不丢包</strong>。<br>配套 ZERO 使用，提供供电、舵机通信与音频连接。</sub> | 1 块 | ¥119 | [选择 HAT 款式](https://item.taobao.com/item.htm?id=1095121548583) |
 | IMU 成品板（已烧录 FT6）<br><sub><strong>AMP2.0 接口</strong>；姿态稳定<strong>不漂移</strong>；<strong>已预烧录 FT6</strong>，无需另行烧录。<br>配套仓库电池仓，贴合背部主安装板、J1 端子朝上固定，可<strong>直接使用作者 IMU 标定参数</strong>。</sub> | 1 块 | ¥99 | [选择 IMU 款式](https://item.taobao.com/item.htm?id=1095121548583) |
-| HUB 成品分线板（含缓冲电容）<br><sub>舵机总线与电池供电分线；板载 <strong>1000 µF 缓冲电容</strong>，<strong>防止瞬时压降导致 ZERO 重启</strong>。<br>安装在 10、20 舵机上方；CN1 为 XH2.54-2P 电源接口，电池正极接 VIN（+），负极接 GND（−）。</sub> | 1 块 | ¥69 | [选择 HUB 款式](https://item.taobao.com/item.htm?id=1095121548583) |
+| HUB V3 成品分线板（含缓冲电容）<br><sub>舵机总线与电池供电分线；板载 <strong>1000 µF 缓冲电容</strong>，<strong>防止瞬时压降导致 ZERO 重启</strong>。<br>安装在 10、20 舵机上方；V3 所有接口（含电源输入）均为 AMP2.0，按实板丝印核对接线和极性。</sub> | 1 块 | ¥69 | [选择 HUB 款式](https://item.taobao.com/item.htm?id=1095121548583) |
 
 ### 电池接入
 
-HUB 的电源输入 CN1 为 XH2.54-2P。可用 XH2.54 电源线连接仓库电池仓的 M2.6 螺丝触点，取电方便快捷；也可直接插接电压、极性匹配的 XH2.54 接口电池，或将 XH2.54 电源线焊接到香蕉板取电。正极接 VIN（+），负极接 GND（−），按实板丝印核对极性。
+**HUB V3 的所有接口均为 AMP2.0，香蕉取电板也使用 AMP2.0。** 选择成品 HAT／IMU／HUB V3、配套成品线与香蕉取电板，板卡和取电线束可直接插接，免焊装配。香蕉取电板尚未上架，预计 **2026-11-16 前后上架**。 [HUB V3 原理图与 PCB](hardware/ProPrj_DXL_HUB_V3_2026-11-14.epro2)。
+
+**历史 HUB V1 取电：**HUB 的电源输入 CN1 为 XH2.54-2P。可用 XH2.54 电源线连接仓库电池仓的 M2.6 螺丝触点，取电方便快捷；也可直接插接电压、极性匹配的 XH2.54 接口电池，或将 XH2.54 电源线焊接到香蕉板取电。正极接 VIN（+），负极接 GND（−），按实板丝印核对极性。
 
 ## 鸭子本体
 

@@ -27,7 +27,7 @@
 | --- | --- |
 | **HAT** | **Plug-in speaker**; **AMP2.0 servo connectors**; **no manual jumpers**; stable communication **without packet loss**. |
 | **IMU** | **AMP2.0 interface**; stable orientation **without drift**; **use the author's IMU calibration** with the matching repository battery holder to reduce walking problems caused by incorrect calibration. |
-| **HUB** | **Four straight AMP2.0 ports**; **1000 µF buffer capacitor**; **XH2.54 power input** supporting screw contacts, a compatible plug-in battery or a banana board. |
+| **HUB V3** | **All connectors use AMP2.0, including power**; **1000 µF buffer capacitor**. Use matching pre-made cables for plug-in connections; the upcoming banana power board also uses AMP2.0. |
 
 **[🔧 Assembly notes: 5 GHz Wi-Fi for ZERO; the HUB includes the 1000 µF main-power buffer capacitor, with no separate purchase needed; wiring and precautions](../docs/ASSEMBLY-NOTES.en.md)**
 
@@ -61,15 +61,23 @@ IMU update, 2026-11-13: J1 footprint pads 1 and 3 exchange physical positions. E
 
 **ToF → J5:** green GND, yellow VIN (3.3 V), black SDA, red SCL. **Speaker → J1:** red SPK_R_P (+), black SPK_R_N (−). [See pin numbers and photo orientation](AMP2.0-VERSION.en.md#tof-and-speaker-wiring-photo).
 
-## HUB distribution board · November 7, 2026
+## HUB V3 distribution board · November 14, 2026
+
+**[Download the complete HUB V3 project (schematic + PCB)](ProPrj_DXL_HUB_V3_2026-11-14.epro2)**. The supplied source file is published unchanged; every connector, including power, uses AMP2.0.
+
+**Every HUB V3 connector uses AMP2.0, including its power input; the banana power board also uses AMP2.0.** With assembled HAT / IMU / HUB V3 boards, matching pre-made cables and the banana power board, board and power-harness connections plug together without soldering. The banana board is not listed for sale yet; availability is expected **around November 16, 2026**.
+
+Match the pre-made power cable to the V3 board markings and polarity.
+
+### Historical HUB V1 · November 7, 2026
 
 <a href="../docs/BODY-ASSEMBLY.en.md"><img src="../docs/assets/body-assembly/01-hub-harness.jpg" width="320" alt="Four three-wire harness branches connected to the HUB" /></a>
 
 [HUB wiring, IMU mounting and torso assembly photos →](../docs/BODY-ASSEMBLY.en.md)
 
-**[Download the complete HUB project (schematic + PCB)](ProPrj_DXL_HUB_V1_2026-11-07.epro2)**. The supplied source file is published unchanged. Four bus ports use straight AMP2.0 connectors, with an onboard 1000 µF buffer capacitor and an **XH2.54-2P power input at CN1**.
+**[Historical HUB V1 project (schematic + PCB)](ProPrj_DXL_HUB_V1_2026-11-07.epro2)**. The supplied source file is published unchanged. Four bus ports use straight AMP2.0 connectors, with an onboard 1000 µF buffer capacitor and an **XH2.54-2P power input at CN1**.
 
-Three power-connection options are supported:
+The following three power-connection options describe the historical XH2.54-input HUB V1:
 
 1. **XH2.54 power lead + M2.6 screw contacts in the battery holder** for a quick, convenient connection.
 2. **A battery with an XH2.54 connector plugged in directly**, with voltage and polarity matching the robot.

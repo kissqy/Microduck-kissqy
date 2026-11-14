@@ -307,19 +307,21 @@
     },
     {
       "id": "hub",
-      "name": "HUB 成品分线板",
-      "spec": "舵机总线与电池供电分线；板载 1000 µF 缓冲电容，防止瞬时压降导致 ZERO 重启。",
+      "name": "HUB V3 成品分线板",
+      "spec": "全部接口均为 AMP2.0；舵机总线与电池供电分线；板载 1000 µF 缓冲电容，防止瞬时压降导致 ZERO 重启。",
       "unit": "块",
       "quantity": 1,
       "unitQuote": "69.00",
       "subtotalCents": 6900,
       "group": "boards",
       "url": "https://item.taobao.com/item.htm?id=1095121548583",
-      "note": "安装在 10、20 舵机上方；CN1 为 XH2.54-2P 电源接口，电池正极接 VIN（+），负极接 GND（−）。",
+      "note": "安装在 10、20 舵机上方；电源与总线均使用 AMP2.0，搭配匹配的成品线直插免焊，按实板丝印核对连接。",
       "diyRequired": true,
       "highlights": [
+        "全部接口均为 AMP2.0",
         "1000 µF 缓冲电容",
-        "防止瞬时压降导致 ZERO 重启"
+        "防止瞬时压降导致 ZERO 重启",
+        "成品线直插免焊"
       ]
     }
   ],
@@ -355,7 +357,7 @@
     {
       "id": "battery-power",
       "name": "电池接入",
-      "spec": "HUB 的电源输入 CN1 为 XH2.54-2P。可用 XH2.54 电源线连接仓库电池仓的 M2.6 螺丝触点，取电方便快捷；也可直接插接电压、极性匹配的 XH2.54 接口电池，或将 XH2.54 电源线焊接到香蕉板取电。正极接 VIN（+），负极接 GND（−），按实板丝印核对极性。",
+      "spec": "HUB V3 全部接口均为 AMP2.0；香蕉取电板也采用 AMP2.0，搭配匹配的成品线即可直插免焊。香蕉取电板暂未上架，预计 2026 年 11 月 16 日前后上架。旧版 HUB 的 XH2.54-2P、M2.6 螺丝取电及香蕉板焊线方式仅作历史参考；接线前按对应版本实板丝印核对极性。",
       "url": "https://kissqy.github.io/Microduck-kissqy/build/shopping.html#battery-power-reference",
       "purchaseLabel": "查看取电"
     },

@@ -4,6 +4,8 @@
 
 These photos cover the four-way HUB harness, torso prewiring, battery-holder and IMU mounting, the leg/torso assembly and the head/neck connection. Assemble with power disconnected. Follow the connector signals and the actual mounting positions.
 
+**Version note: these photos retain the legacy HUB for mounting, branching and cable-routing reference. All HUB V3 connectors use AMP2.0 and matching premade cables. The matching banana power board also uses AMP2.0; it is not yet listed for sale and is expected around November 16, 2026. With the assembled boards, cables and banana board in hand, assembly can use plug-in connections without soldering.**
+
 [Web assembly guide (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#body-photos) · [Inside the head](HEAD-ASSEMBLY.en.md) · [3D reference](https://kissqy.github.io/Microduck-kissqy/assembly.html)
 
 ## 01 · Prepare the four HUB branches
@@ -55,6 +57,6 @@ Do not trap spare cable between the head-shell opening and the bracket. This pho
 | Left leg | HUB → 20 → 21 → 22 → 23 → 24 |
 | IMU | HUB → IMU bus connector J1 |
 
-The four HUB bus ports share their nets. Port-to-branch positions in a photo are not mandatory. With an all-black harness, check GND, power and DATA by connector signals rather than wire color.
+The four bus ports of the legacy HUB pictured here share their nets. Port-to-branch positions in a photo are not mandatory. With an all-black harness, check GND, power and DATA by connector signals rather than wire color.
 
 [HUB hardware and power connections](../hardware/README.en.md) · [Full build guide](MICRODUCK-BUILD-GUIDE.en.md)

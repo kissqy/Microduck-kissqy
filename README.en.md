@@ -139,7 +139,7 @@ The online demo uses simulated data. Download and run Robot Console locally to c
 
 Community improvements and the author's real-robot modifications are collected into a **complete set of structural models and reference plate layouts**. Explore standard feet and roller setups, from printing and assembly to a working robot.
 
-[Printing files, plate previews and assembly notes →](hardware/3d-print-frankenduck/README.en.md)
+[MakerWorld model and print profile →](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553) · [Printing files, plate previews and assembly notes →](hardware/3d-print-frankenduck/README.en.md)
 
 ## 🔧 DIY HAT and IMU
 

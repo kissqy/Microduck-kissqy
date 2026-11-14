@@ -141,7 +141,7 @@ R2 已预装 control.102 与 11 个 ONNX 运行模型。首次运动前仍需核
 
 整合社区优化与作者实机改进，提供**全套结构模型和参考摆盘**。支持普通脚掌与滑轮玩法，方便从打印、装配一路做到实机运行。
 
-[查看打印文件、摆盘预览与装配说明 →](hardware/3d-print-frankenduck/)
+[MakerWorld 模型与打印配置 →](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553) · [查看打印文件、摆盘预览与装配说明 →](hardware/3d-print-frankenduck/)
 
 ## 🔧 自制 HAT、IMU 与 HUB 电路板
 

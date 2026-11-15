@@ -1,0 +1,21 @@
+[connection]
+id=Microduck USB
+uuid=bcdd5cb0-75eb-485a-b36a-95c48ced1d57
+type=ethernet
+interface-name=usb0
+autoconnect=true
+autoconnect-priority=100
+
+[ethernet]
+mac-address=02:4d:44:55:43:4b
+
+[ipv4]
+method=auto
+may-fail=true
+route-metric=50
+
+[ipv6]
+method=link-local
+addr-gen-mode=eui64
+ip6-privacy=0
+route-metric=500

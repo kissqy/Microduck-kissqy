@@ -1,5 +1,11 @@
 **简体中文** | [English](README.en.md)
 
+> **国内入口与文档导航**
+>
+> [Gitee 国内仓库](https://gitee.com/kissqy/microduck-kissqy) · [R2 国内发布说明](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260)
+>
+> [从零复刻](docs/MICRODUCK-BUILD-GUIDE.md) · [采购清单](DUCK-SHOPPING-LIST.md) · [硬件工程](hardware/README.md) · [打印件与摆盘](hardware/3d-print-frankenduck/README.md) · [常见问题](docs/MICRODUCK-FAQ.md) · [历史问题与 PR 归档](docs/GitHub-Issues-PR-Archive-20261116.md)
+
 <div align="center">
 
 # 🦆 Microduck 飞特 HD1910 复刻 · 从零做一只会走的机器人鸭

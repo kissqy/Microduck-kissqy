@@ -28,6 +28,7 @@ docs give the reasoning and point at it.
 | [`install-dev.md`](robot/install-dev.md) | Setting up a board for development, from nothing. |
 | [`install-by-hand.md`](robot/install-by-hand.md) | The same install as separate commands, for testing one step at a time. |
 | [`armbian-boot-config.md`](robot/armbian-boot-config.md) | Repair the known Armbian boot-config writer without an OS upgrade; check, backup, and rollback. |
+| [`one-click-calibration.md`](robot/one-click-calibration.md) | Write the current zero pose to all 15 servo EEPROMs and the TOML in one robotd job, with backup and verification. |
 
 ## `design/` — you are changing the daemon
 

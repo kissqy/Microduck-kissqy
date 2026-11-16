@@ -1,5 +1,11 @@
 [简体中文](README.md) | **English**
 
+> **China mirror and repository guides**
+>
+> [Gitee repository](https://gitee.com/kissqy/microduck-kissqy) · [R2 release notes in China](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260)
+>
+> [Build guide](docs/MICRODUCK-BUILD-GUIDE.en.md) · [Shopping list](DUCK-SHOPPING-LIST.en.md) · [Hardware projects](hardware/README.en.md) · [Printing parts and plates](hardware/3d-print-frankenduck/README.en.md) · [FAQ](docs/MICRODUCK-FAQ.en.md) · [Historical issues and PR archive](docs/GitHub-Issues-PR-Archive-20261116.md)
+
 <div align="center">
 
 # 🦆 Microduck Feetech HD1910 Replica · Build a walking robot duck

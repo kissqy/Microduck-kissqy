@@ -60,3 +60,10 @@ main{--console-columns:minmax(0,1.65fr) repeat(3,minmax(0,1fr));--console-gap:18
 
 /* Per-device evidence remains visible on every width, including recovered faults. */
 .inspection-device small{white-space:pre-line;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;line-height:1.5}.inspection-device.warn{border-color:#78663d;background:#29251b}.inspection-device.warn b{color:var(--amber)}
+
+/* Battery card: tone shows on the value, the caption and the left edge, so a low
+   pack is visible without reading the number. */
+.metric.battery-low .metric-value,.metric.battery-low .metric-caption{color:var(--warm)}
+.metric.battery-critical .metric-value,.metric.battery-critical .metric-caption{color:var(--red)}
+.metric.battery-low{border-left:3px solid var(--warm)}
+.metric.battery-critical{border-left:3px solid var(--red)}

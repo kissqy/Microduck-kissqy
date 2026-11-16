@@ -9,6 +9,7 @@ import {messageZh,tofView} from './messages.js';
 import {officialStandingDegrees,modelJointLimits,referenceAngle} from './joint-reference.js';
 import {jointDirection} from './joint-direction.js';
 import {loopHz} from './metrics.js';
+import {batteryClass,batteryCaption} from './battery.js';
 import {historyFrame} from './history-frame.js';
 import {RawTelemetry} from './raw-telemetry.js';
 import {CalibrationViewPanel} from './calibration-view.js';
@@ -88,10 +89,16 @@ function render(s,addHistory=true){
   text('joint-caption',online===15?'15 个关节均有有效反馈':`实测角度反馈 ${online}/15 · 非总线 Ping 结果`);
   if(service){text('metric-joints',sourceLive(s,'bus')?online:'—');text('joint-caption',`已标定 ${s.calibrated_count||0}/15`);}
   $('joint-dots').replaceChildren(...s.servos.slice(0,15).map(r=>{const i=document.createElement('i');i.className=r.status==='live'?'on':'';i.title=`ID ${r.id} ${statusNames[r.status]}`;return i;}));
-  const br=s.servos.filter(x=>x.status==='live');const volts=br.map(x=>x.voltage_v).filter(finite),temps=br.map(x=>x.temperature_c).filter(finite);
-  text('metric-volts',fmt(h.battery?.volts,2));text('metric-temp',fmt(h.motors?.max_c));
+  const br=s.servos.filter(x=>x.status==='live'),temps=br.map(x=>x.temperature_c).filter(finite);
+  const batteryPct=hs?h.battery?.percent:null,batteryVolts=hs?h.battery?.volts:null,busVolts=br.map(x=>x.voltage_v).filter(finite);
+  const batteryMin=busVolts.length?Math.min(...busVolts):null;
+  text('metric-battery',fmt(batteryPct,0));
+  $('battery-metric').className=batteryClass(batteryPct);
+  text('battery-caption',batteryCaption(batteryPct,batteryVolts,batteryMin));
+  $('battery-caption').title='满 8.2 V = 100%，空 6.6 V = 0%（robotd 唯一映射）；非 2S 直供电时百分比不适用。'+(busVolts.length?'最低母线电压取自 15 颗舵机自报供电。':'');
+  text('metric-temp',fmt(h.motors?.max_c));
   text('temp-caption',h.motors?`${h.motors.hottest} · 平均 ${fmt(h.motors.mean_c)} °C`:'等待 robot.health · 非逐颗温度');
-  if(service){text('metric-volts',fmt(volts.length?Math.min(...volts):null,2));text('metric-temp',fmt(temps.length?Math.max(...temps):null));text('temp-caption','舵机实测最高温度');}
+  if(service){text('metric-temp',fmt(temps.length?Math.max(...temps):null));text('temp-caption','舵机实测最高温度');}
   const gravity=s.imu?.gravity,imuLive=s.imu?.status==='live',canTilt=imuLive&&Array.isArray(gravity);
   text('hud-roll',`${fmt(canTilt?s.imu.roll_deg:null)}°`);text('hud-pitch',`${fmt(canTilt?s.imu.pitch_deg:null)}°`);
   text('imu-roll',`${fmt(canTilt?s.imu.roll_deg:null)}°`);text('imu-pitch',`${fmt(canTilt?s.imu.pitch_deg:null)}°`);
@@ -238,7 +245,7 @@ function renderDiagnostics(s){
 }
 function drawHistory(){
   plot('mini-loop',[{values:history.map(loopHz)}],{mini:true,range:[30,60]});
-  plot('mini-volts',[{values:history.map(s=>sourceLive(s,'health')?s.health.battery?.volts:null)}],{mini:true,range:[4,8]});
+  plot('mini-battery',[{values:history.map(s=>sourceLive(s,'health')?s.health.battery?.percent:null)}],{mini:true,range:[0,100]});
   plot('mini-temp',[{values:history.map(s=>sourceLive(s,'health')?s.health.motors?.max_c:null),color:'#d6b16e'}],{mini:true});
   plot('gravity-chart',[0,1,2].map((i)=>({values:history.map(s=>s.imu?.status==='live'?s.imu.gravity?.[i]:null),color:['#ed9890','#c1f577','#7caedd'][i]})),{range:[-1.15,1.15]});
   const option=$('plot-field').value,fields={raw:['position_raw','goal_position_raw'],angle:['angle_deg','target_deg'],current:['current_ma'],temperature:['temperature_c'],velocity:['velocity_rpm'],error:['error_deg']}[option];

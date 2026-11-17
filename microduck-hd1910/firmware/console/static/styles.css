@@ -61,13 +61,6 @@ main{--console-columns:minmax(0,1.65fr) repeat(3,minmax(0,1fr));--console-gap:18
 /* Per-device evidence remains visible on every width, including recovered faults. */
 .inspection-device small{white-space:pre-line;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;line-height:1.5}.inspection-device.warn{border-color:#78663d;background:#29251b}.inspection-device.warn b{color:var(--amber)}
 
-/* Battery card: tone shows on the value, the caption and the left edge, so a low
-   pack is visible without reading the number. */
-.metric.battery-low .metric-value,.metric.battery-low .metric-caption{color:var(--warm)}
-.metric.battery-critical .metric-value,.metric.battery-critical .metric-caption{color:var(--red)}
-.metric.battery-low{border-left:3px solid var(--warm)}
-.metric.battery-critical{border-left:3px solid var(--red)}
-
 /* Robot services: one row per unit, with run state, the hardware it needs and
    its boot behaviour kept as three separate answers. */
 .service-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;margin-bottom:20px}
@@ -107,3 +100,19 @@ main{--console-columns:minmax(0,1.65fr) repeat(3,minmax(0,1fr));--console-gap:18
 .sound-tools{display:flex;gap:8px;padding:10px 16px 0}
 .sound-tools .button{padding:4px 10px;font-size:11px}
 @media(max-width:1100px){.service-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Two first-class numbers on one card: charge leads, pack voltage beside it.
+   Each number keeps its unit on the same line — a "V" stranded on the next row
+   reads like a second value. */
+.metric-value.metric-dual{display:flex;align-items:baseline;gap:3px;flex-wrap:nowrap;min-width:0}
+.metric-value.metric-dual>span,.metric-value.metric-dual>small{white-space:nowrap}
+.metric-value.metric-dual .metric-volts{margin-left:12px;font-size:26px;color:#c3d2cd}
+.metric-value.metric-dual small{font-size:11px}
+/* One alarm look for every metric: amber = watch, red = act. */
+.alarm-tag{margin-left:6px;padding:0 6px;border-radius:9px;font-size:10px;letter-spacing:0;vertical-align:middle;background:#5c4a2c;color:#f0d5a8}
+.metric.alarm-warn{border-left:3px solid var(--warm)}
+.metric.alarm-warn .metric-value,.metric.alarm-warn .metric-caption{color:var(--warm)}
+.metric.alarm-critical{border-left:3px solid var(--red)}
+.metric.alarm-critical .metric-value,.metric.alarm-critical .metric-caption{color:var(--red)}
+.metric.alarm-critical .alarm-tag{background:#5e2f2b;color:#ffd9d4}
+.metric.alarm-warn .alarm-tag{background:#5c4a2c;color:#f0d5a8}

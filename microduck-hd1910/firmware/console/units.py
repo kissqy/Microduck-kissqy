@@ -33,8 +33,6 @@ UNITS = (
      "hardware": (), "autostart": True},
     {"unit": "gamesir-xboxd.service", "label": "蓝牙手柄桥", "note": "GameSir → Xbox 输入",
      "hardware": ("bluetooth", "gamepad"), "autostart": True},
-    {"unit": "duck-webpanel.service", "label": "板载轻量面板", "note": "8001 端口",
-     "hardware": (), "autostart": True},
     {"unit": "mediad.service", "label": "摄像头服务", "note": "IMX219 / WebRTC",
      "hardware": ("camera",), "autostart": True},
     {"unit": "tofd.service", "label": "ToF 测距", "note": "VL53L5CX · J5",

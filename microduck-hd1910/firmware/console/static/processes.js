@@ -231,7 +231,7 @@ export class ProcessPanel{
       node.row.remove();this.nodes.delete(unit);
     }
     if(!this.rows.length&&!list.children.length)
-      list.innerHTML='<p class="tiny muted">等待 Zero 上的 systemd 状态。</p>';
+      list.innerHTML='<p class="tiny muted">等待 Zero 上的 systemd 状态（每 2 秒一次；若中控刚重启，请刷新页面）。</p>';
     const empty=list.querySelector('p');
     if(empty)empty.hidden=this.rows.length>0;
     this.$('process-summary').textContent=this.rows.length?summary(this.rows):'等待服务状态';

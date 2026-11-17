@@ -36,9 +36,9 @@
     <section class="metrics" aria-label="总体健康指标">
       <article class="metric"><div class="metric-title">控制循环 <span id="loop-badge" class="micro-badge">—</span></div><div class="metric-value"><span id="metric-hz">—</span><small>Hz</small></div><div class="metric-caption" id="loop-caption">目标 50 Hz · 等待数据</div><canvas class="metric-line" id="mini-loop" title="实际控制频率 · 固定 30–60 Hz 刻度" aria-label="实际控制频率，固定三十到六十 Hz 刻度"></canvas></article>
       <article class="metric"><div class="metric-title">关节反馈 <span class="muted">JOINTS</span></div><div class="metric-value"><span id="metric-joints">—</span><small>/ 15</small></div><div class="metric-caption" id="joint-caption">未知不等于离线</div><div id="joint-dots" class="joint-dots"></div></article>
-      <article class="metric" id="battery-metric"><div class="metric-title">电池电量 <span class="muted">BATTERY</span></div><div class="metric-value"><span id="metric-battery">—</span><small>%</small></div><div class="metric-caption" id="battery-caption" title="百分比由 robotd 按 8.2 V 满、6.6 V 空线性映射；非 2S 直供电时百分比不适用">等待 robot.health</div><canvas class="metric-line" id="mini-battery" title="电池电量 · 固定 0–100% 刻度" aria-label="电池电量，固定零到一百百分比刻度"></canvas></article>
-      <article class="metric"><div class="metric-title">最高舵机温度 <span class="muted">THERMAL</span></div><div class="metric-value"><span id="metric-temp">—</span><small>°C</small></div><div class="metric-caption" id="temp-caption">等待 robot.health</div><canvas class="metric-line warm" id="mini-temp"></canvas></article>
-      <article class="metric"><div class="metric-title">ZERO 温度 <span class="muted">CPU</span></div><div class="metric-value"><span id="metric-zero-temp">—</span><small>°C</small></div><div class="metric-caption" id="zero-temp-caption">等待主板温度回读</div></article>
+      <article class="metric" id="battery-metric"><div class="metric-title">电池电量 <span class="muted">BATTERY</span></div><div class="metric-value metric-dual"><span id="metric-battery">—</span><small>%</small><span class="metric-volts" id="metric-volts">—</span><small>V</small></div><div class="metric-caption" id="battery-caption" title="百分比由 robotd 按 8.2 V 满、6.6 V 空线性映射；非 2S 直供电时百分比不适用">等待 robot.health</div><canvas class="metric-line" id="mini-battery" title="电池电量 · 固定 0–100% 刻度" aria-label="电池电量，固定零到一百百分比刻度"></canvas></article>
+      <article class="metric" id="thermal-metric"><div class="metric-title">最高舵机温度 <span class="muted">THERMAL</span></div><div class="metric-value"><span id="metric-temp">—</span><small>°C</small></div><div class="metric-caption" id="temp-caption">等待 robot.health</div><canvas class="metric-line warm" id="mini-temp"></canvas></article>
+      <article class="metric" id="zero-metric"><div class="metric-title">ZERO 温度 <span class="muted">CPU</span></div><div class="metric-value"><span id="metric-zero-temp">—</span><small>°C</small></div><div class="metric-caption" id="zero-temp-caption">等待主板温度回读</div></article>
     </section>
     <div id="connection-notices">
     <div id="mode-banner" class="banner" hidden></div>
@@ -97,7 +97,7 @@
       <section class="panel process-panel" id="process-panel">
         <div class="panel-head"><div><span class="section-index">09</span><h2>机器人进程与服务</h2><span id="process-summary" class="muted tiny">等待服务状态</span></div><span class="badge neutral">systemd</span></div>
         <div class="process-legend"><span><i class="status-dot live"></i>运行</span><span><i class="status-dot warn"></i>已屏蔽 / 过渡</span><span><i class="status-dot bad"></i>失败</span><span class="muted">硬件：● 在 · ○ 不在 · ◌ 未验证</span></div>
-        <div class="process-list" id="process-list"><p class="tiny muted">等待 Zero 上的 systemd 状态。</p></div>
+        <div class="process-list" id="process-list"><p class="tiny muted">等待 Zero 上的 systemd 状态（每 2 秒一次；若中控刚重启，请刷新页面）。</p></div>
         <p id="process-error" class="tiny red" hidden></p>
         <div id="process-feedback" class="panel-note service-job" role="status" aria-live="polite"></div>
         <div class="panel-note">只修改「开机自启」，不提供启动 / 停止 / 重启：停 robotd 不会自动卸力。需要重启固件请用上方「重启固件」。</div>

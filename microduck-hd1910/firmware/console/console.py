@@ -240,7 +240,7 @@ def handler_for(store, config, controller=None, service_controller=None, connect
                         # Sampled by SystemWatch, not robotd: send it when the seq
                         # moves rather than on every raw frame.
                         units_data = store.data.get('units')
-                        units_key = (units_data or {}).get('seq', id(units_data)) if units_data else None
+                        units_key = (units_data or {}).get('seq') if units_data else None
                         if units_data is not None and sent_aux.get('units') != units_key:
                             extra['units'] = units_data
                             sent_aux['units'] = units_key

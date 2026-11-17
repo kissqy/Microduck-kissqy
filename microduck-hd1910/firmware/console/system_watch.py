@@ -30,6 +30,10 @@ class SystemWatch:
         self.transport, self.log = transport, log
         self.interval = interval
         self.error = None
+        # Monotonic sample counter: the WebSocket auxiliary compares it to decide
+        # whether to resend. Comparing `id()` of a replaced dict can collide once
+        # the old one is freed, which would silently drop an update.
+        self.seq = 0
 
     def _source(self):
         return (ROOT / "system_probe.py").read_text(encoding="utf-8")
@@ -59,7 +63,8 @@ class SystemWatch:
                 data = self.sample()
                 if not isinstance(data, dict):
                     raise ValueError("探测回执不是对象")
-                self.emit({"channel": "units", "data": data})
+                self.seq += 1
+                self.emit({"channel": "units", "data": {**data, "seq": self.seq}})
                 if self.error:
                     # Report recovery once, then stay quiet: the channel's own
                     # TTL is what tells the page the numbers went stale.

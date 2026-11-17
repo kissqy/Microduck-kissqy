@@ -239,6 +239,15 @@ class AutostartPlanTests(unittest.TestCase):
     def test_unknown_unit_is_refused(self):
         self.assertEqual(units.autostart_plan("sshd.service", True, "disabled")[0], ())
 
+    def test_the_catalogue_holds_only_upstream_units(self):
+        # duck-webpanel was this project's own 8001 panel, not an upstream unit, so
+        # it is not part of the robot's service list any more.
+        self.assertNotIn("duck-webpanel.service", units.UNIT_NAMES)
+        names = [row["unit"] for row in units.UNITS]
+        self.assertEqual(len(names), len(set(names)), "no duplicate rows")
+        self.assertIn("robotd.service", names)
+        self.assertTrue(all(name.endswith(".service") for name in names))
+
     def test_enable_a_disabled_unit(self):
         commands, reason = units.autostart_plan("mediad.service", True, "disabled")
         self.assertEqual(reason, "")

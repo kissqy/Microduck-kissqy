@@ -11,7 +11,8 @@ import {messageZh,tofView} from './messages.js';
 import {officialStandingDegrees,modelJointLimits,referenceAngle} from './joint-reference.js';
 import {jointDirection} from './joint-direction.js';
 import {loopHz} from './metrics.js';
-import {batteryClass,batteryCaption} from './battery.js';
+import {batteryCaption} from './battery.js';
+import {alarmClass,alarmLabel,alarmReason,limitText} from './alarms.js';
 import {ProcessPanel} from './processes.js';
 import {SoundPanel} from './sound-test.js';
 import {historyFrame} from './history-frame.js';
@@ -31,6 +32,18 @@ let controls,cfg,latest,shown,duck,selected=0,selectedId=20,group='all',history=
 let apiOkay=true,polling=false;
 const colors=['#c1f577','#7caedd','#ed9890'];
 const statusNames={live:'实时',stale:'数据过期',error:'连接异常',waiting:'等待',unavailable:'未提供'};
+// Why WebGL is missing, in the words that help: an embedded browser usually runs
+// with the GPU switched off, which no amount of reloading will change.
+function webglUnavailable(){
+  try{
+    if(document.createElement('canvas').getContext('webgl2')||document.createElement('canvas').getContext('webgl'))return '';
+  }catch(e){return '创建上下文时抛错：'+e.message;}
+  const ua=navigator.userAgent||'';
+  if(/Electron|Code\//.test(ua))return 'VS Code 内置浏览器/Electron 通常禁用 GPU';
+  if(/HeadlessChrome/.test(ua))return '无头浏览器（无 GPU）';
+  return '浏览器禁用了硬件加速或 WebGL';
+}
+
 function badge(id,status,label){const el=$(id);el.className='badge '+(status==='live'?'':status==='error'?'bad':status==='stale'?'warn':'neutral');el.textContent=label||statusNames[status]||'未知';}
 function notify(message){text('toast',message);$('toast').hidden=false;clearTimeout(notify.timer);notify.timer=setTimeout(()=>$('toast').hidden=true,3600);}
 function valueCell(v,d=1){return finite(v)?fmt(v,d):'<span class="na" title="数据源未提供，或样本已过期">—</span>';}
@@ -83,7 +96,7 @@ function render(s,addHistory=true){
   const hs=sourceLive(s,'health'),ss=sourceLive(s,'state'),sy=sourceLive(s,'system');
   const h=hs?s.health:{},st=ss?s.state:{};
   text('robot-name',s.system?.hostname||'duck-10e4');
-  text('metric-zero-temp',sy?fmt(s.system?.cpu_temp_c):'—');text('zero-temp-caption',sy?'ZERO 主板 CPU 实测':'等待主板温度回读');
+  text('metric-zero-temp',sy?fmt(s.system?.cpu_temp_c):'—');
   text('last-update',`${replay?'记录 · ':''}${new Date(s.at*1000).toLocaleTimeString('zh-CN',{hour12:false})}`);
   const service=s.mode==='service',bus=sourceLive(s,'bus')?s.bus:{};
   const hz=loopHz(s);
@@ -98,13 +111,31 @@ function render(s,addHistory=true){
   const br=s.servos.filter(x=>x.status==='live'),temps=br.map(x=>x.temperature_c).filter(finite);
   const batteryPct=hs?h.battery?.percent:null,batteryVolts=hs?h.battery?.volts:null,busVolts=br.map(x=>x.voltage_v).filter(finite);
   const batteryMin=busVolts.length?Math.min(...busVolts):null;
+  // Charge and pack voltage are both first-class: a full-looking percentage with a
+  // sagging rail is exactly the case the voltage is there to show.
   text('metric-battery',fmt(batteryPct,0));
-  $('battery-metric').className=batteryClass(batteryPct);
+  text('metric-volts',fmt(batteryVolts,2));
+  $('battery-metric').className=hs?alarmClass('battery',batteryPct):'metric';
   text('battery-caption',batteryCaption(batteryPct,batteryVolts,batteryMin));
-  $('battery-caption').title='满 8.2 V = 100%，空 6.6 V = 0%（robotd 唯一映射）；非 2S 直供电时百分比不适用。'+(busVolts.length?'最低母线电压取自 15 颗舵机自报供电。':'');
-  text('metric-temp',fmt(h.motors?.max_c));
-  text('temp-caption',h.motors?`${h.motors.hottest} · 平均 ${fmt(h.motors.mean_c)} °C`:'等待 robot.health · 非逐颗温度');
-  if(service){text('metric-temp',fmt(temps.length?Math.max(...temps):null));text('temp-caption','舵机实测最高温度');}
+  $('battery-metric').title=`满 8.2 V = 100%，空 6.6 V = 0%（robotd 唯一映射）；告警线：${limitText('battery')}；非 2S 直供电时百分比不适用。`+(busVolts.length?'最低母线电压取自 15 颗舵机自报供电。':'');
+  const servoPeak=service?(temps.length?Math.max(...temps):null):h.motors?.max_c;
+  text('metric-temp',fmt(servoPeak));
+  $('thermal-metric').className=alarmClass('servo',servoPeak);
+  const servoReason=alarmReason('servo',servoPeak);
+  text('temp-caption',servoReason?`${servoReason} · 先停手等降温`
+    :h.motors?`${h.motors.hottest} · 平均 ${fmt(h.motors.mean_c)} °C`:'等待 robot.health · 非逐颗温度');
+  if(service&&!servoReason)text('temp-caption','舵机实测最高温度');
+  $('thermal-metric').title=`告警线：${limitText('servo')}`;
+  const zeroTemp=sy?s.system?.cpu_temp_c:null;
+  $('zero-metric').className=alarmClass('cpu',zeroTemp);
+  const zeroReason=alarmReason('cpu',zeroTemp);
+  text('zero-temp-caption',zeroReason?`${zeroReason} · RK3566 85 °C 起降频`:sy?'ZERO 主板 CPU 实测':'等待主板温度回读');
+  $('zero-metric').title=`告警线：${limitText('cpu')}`;
+  // The alarm word goes next to the title so a red number is unambiguous at a glance.
+  const alarmWord=(kind,value)=>{const label=alarmLabel(kind,value);return label?`<span class="alarm-tag">${label}</span>`:'';};
+  $('battery-metric').querySelector('.metric-title').innerHTML='电池电量 <span class="muted">BATTERY</span>'+alarmWord('battery',hs?batteryPct:null);
+  $('thermal-metric').querySelector('.metric-title').innerHTML='最高舵机温度 <span class="muted">THERMAL</span>'+alarmWord('servo',servoPeak);
+  $('zero-metric').querySelector('.metric-title').innerHTML='ZERO 温度 <span class="muted">CPU</span>'+alarmWord('cpu',zeroTemp);
   const gravity=s.imu?.gravity,imuLive=s.imu?.status==='live',canTilt=imuLive&&Array.isArray(gravity);
   text('hud-roll',`${fmt(canTilt?s.imu.roll_deg:null)}°`);text('hud-pitch',`${fmt(canTilt?s.imu.pitch_deg:null)}°`);
   text('imu-roll',`${fmt(canTilt?s.imu.roll_deg:null)}°`);text('imu-pitch',`${fmt(canTilt?s.imu.pitch_deg:null)}°`);
@@ -359,7 +390,17 @@ async function init(){
   else poll();
   // Isolate renderer failure: the rest of the diagnostics must remain useful without WebGL.
   try{const {DuckView}=await import('./duck.js');duck=await new DuckView().init($('duck-canvas'),cfg.home,i=>choose(cfg.ids[i]));new CalibrationViewPanel(duck);duck.selectJoint(selected);if(shown)duck.update(shown);}
-  catch(e){$('model-error').hidden=false;text('model-error',`3D 视图不可用：${e.message}。其他数据面板仍可使用。`);console.warn('Duck view:',e);}
+  catch(e){
+    // webglUnavailable() names the cause and the fix; anything else is a real bug
+    // and keeps its own message.
+    const hint=webglUnavailable();
+    const box=$('model-error');
+    box.hidden=false;
+    text('model-error',hint
+      ?`3D 视图需要 WebGL，但当前浏览器没有可用的 WebGL（${hint}）。${e.message}。换成 Chrome / Edge / Firefox 打开，或在 VS Code 内置浏览器里改用普通浏览器窗口。其他数据面板仍可使用。`
+      :`3D 视图不可用：${e.message}。其他数据面板仍可使用。`);
+    console.warn('Duck view:',e);
+  }
 }
 window.addEventListener('pagehide',()=>camera.disconnect(false));
 window.addEventListener('beforeunload',()=>{rawTelemetry?.close();camera.disconnect(false);});

@@ -1,7 +1,13 @@
 """R17 browser input over persistent SSH to official robotd IPC."""
-import re, select, threading, time
+import json, re, select, threading, time
+from pathlib import Path
 from input_channel import InputChannel
 from session_sequences import SequenceWindow
+
+ROOT = Path(__file__).resolve().parent
+# The daemon's SoundTag list, duplicated here only to reject a tag before it
+# leaves the console. sound_test.py keeps its own copy for the board side.
+SOUND_TAGS = ('chirp','wheee','greet','inquire','coo','alarm','peck')
 class ControlError(Exception):
     def __init__(self,message,status=409):super().__init__(message);self.status=status
 class Transport:
@@ -100,6 +106,20 @@ class Transport:
                     if self.log:self.log.add('系统音量','读取失败 · '+str(exc))
         threading.Thread(target=load,daemon=True).start()
 
+    def _sound(self, request):
+        """Run one sound request on the board; the intent goes to robotd, never aplayer."""
+        transport = self.service_transport
+        if transport is None:
+            raise ControlError('声音通道尚未就绪：请先连接 Zero', 503)
+        source = (ROOT.joinpath('sound_test.py')).read_text(encoding='utf-8')
+        result = transport._manage(['python3','-u','-c',source,json.dumps(request,ensure_ascii=False)],
+                                   privileged=False, record_output=False)
+        if not isinstance(result, dict):
+            raise ControlError('声音请求没有回执', 503)
+        if self.log:
+            self.log.add('声音测试', json.dumps(result, ensure_ascii=False)[:400])
+        return result
+
     def _local_status(self):
         return {'accepted':True,'available':True,**self.pad_status,'audio':self.audio_status}
 
@@ -125,6 +145,14 @@ class Transport:
                 raise
             if self.log:self.log.add('系统音量','设置成功 · '+str(result.get('volume',command['volume']))+'% · 已回读并保存')
             return result
+        if action in ('sound_list','play_sound'):
+            # Same official intent path as the pad's mouth trigger.
+            if action == 'sound_list':
+                return self._sound({'action':'list'})
+            tag = command.get('tag')
+            if not isinstance(tag, str) or tag not in SOUND_TAGS:
+                raise ControlError('不支持的声音', 400)
+            return self._sound({'action':'play','tag':tag})
         if action not in ('webpad_state','webpad_close'):
             raise ControlError('无效手柄操作',400)
         started = time.monotonic()
@@ -231,12 +259,13 @@ class Controller:
     def _handle(self,payload):
         if getattr(self.store,'connection_paused',None) and self.store.connection_paused.is_set():
             raise ControlError('Zero 关机已提交，自动连接已暂停；上电后点击恢复连接',409)
-        if not isinstance(payload,dict) or set(payload)-{'action','client','seq','frame','volume'}:raise ControlError('无效手柄请求',400)
+        if not isinstance(payload,dict) or set(payload)-{'action','client','seq','frame','volume','tag'}:raise ControlError('无效手柄请求',400)
         action=payload.get('action');client=payload.get('client');seq=payload.get('seq')
         if not isinstance(client,str) or not re.fullmatch(r'[A-Za-z0-9_-]{8,80}',client):raise ControlError('无效网页标识',400)
         if type(seq) is not int or not 0<=seq<=2**53:raise ControlError('无效请求序号',400)
-        if action not in ('connect','webpad_state','webpad_status','webpad_close','set_volume'):raise ControlError('此中控只使用官方手柄动作接口',400)
+        if action not in ('connect','webpad_state','webpad_status','webpad_close','set_volume','sound_list','play_sound'):raise ControlError('此中控只使用官方手柄动作接口',400)
         if action=='set_volume' and (type(payload.get('volume')) is not int or not 0<=payload['volume']<=100):raise ControlError('音量必须为 0～100 的整数',400)
+        if action=='play_sound' and (not isinstance(payload.get('tag'),str) or payload['tag'] not in SOUND_TAGS):raise ControlError('不支持的声音',400)
         with self.lock:
             lane='input' if action in ('webpad_state','webpad_close') else action
             key=(client,lane)
@@ -251,6 +280,12 @@ class Controller:
             if result.get('accepted') is not True:raise ControlError(result.get('reason','音量未确认'))
             if isinstance(result.get('audio'),dict):self.transport.audio_status=result['audio']
             return result
+        if action in ('sound_list','play_sound'):
+            # Returned as-is: a refusal from robotd is an answer the panel shows
+            # verbatim ("标定模式"), not a transport failure to retry.
+            command={'action':action}
+            if action=='play_sound':command['tag']=payload['tag']
+            return self.transport.call(command)
         def send():
             if action in ('webpad_state','webpad_close'):
                 with self.lock:

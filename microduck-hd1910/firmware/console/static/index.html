@@ -102,6 +102,15 @@
         <div id="process-feedback" class="panel-note service-job" role="status" aria-live="polite"></div>
         <div class="panel-note">只修改「开机自启」，不提供启动 / 停止 / 重启：停 robotd 不会自动卸力。需要重启固件请用上方「重启固件」。</div>
       </section>
+      <section class="panel sound-panel" id="sound-panel">
+        <div class="panel-head"><div><span class="section-index">10</span><h2>声音测试</h2><span id="sound-volume" class="muted tiny">音量未回读</span></div><span class="badge neutral">robot.sound</span></div>
+        <p class="tiny muted" id="sound-bank">音库等待回读</p>
+        <div class="sound-buttons" id="sound-buttons"></div>
+        <p class="tiny muted" id="sound-status" role="status">点击试听；实际发声由 robotd 走官方意图</p>
+        <div class="sound-tools"><button class="button" type="button" id="sound-refresh">重新读取音库</button></div>
+        <div id="sound-feedback" class="panel-note service-job" role="status" aria-live="polite"></div>
+        <div class="panel-note">与手柄 LT / RT、嘴部动作走同一条官方通道；不经过 aplay。标定模式下 robotd 会拒绝发声，切到运动模式后再试。</div>
+      </section>
     </div>
     <div class="diagnostics-grid" id="diagnostics"><section class="panel"><div class="panel-head"><div><span class="section-index">07</span><h2>链路与安全状态</h2></div><span id="health-badge" class="badge neutral">未知</span></div><div id="channel-list" class="channel-list"></div><div class="health-detail" id="health-detail">等待官方健康响应。</div><div class="intent-grid"><div><span>请求速度 · m/s, rad/s</span><code id="move-request">—</code></div><div><span>实际采用速度</span><code id="move-applied">—</code></div></div><div class="panel-note" id="move-limits">没有收到状态前，不判断安全限制。</div></section><section class="panel system-log-card" id="system-log"><div class="panel-head"><div><span class="section-index">08</span><h2>系统日志</h2></div><a class="text-button" href="/api/system-log/download" download>下载完整日志 ↓</a></div><div class="system-log-tools"><button class="button" id="system-log-copy">复制显示</button><label><input type="checkbox" id="system-log-follow" checked>自动滚动</label></div><p id="system-log-status" class="tiny muted" role="status">等待系统日志。</p><pre id="system-log-output" tabindex="0">尚无执行记录。</pre><section class="maintenance-events" id="maintenance-events"><h3>事件与原始报文</h3><div class="maintenance-streams"><div><h4>事件</h4><div id="events" class="events"><div class="muted">连接事件将在这里出现</div></div></div><div><h4>原始报文</h4><pre id="raw-json" tabindex="0"></pre></div></div></section></section></div>
     <footer><span>MICRODUCK / HARDWARE CONSOLE</span><span>模型 © Pollen Robotics</span></footer>

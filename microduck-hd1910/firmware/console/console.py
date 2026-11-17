@@ -18,6 +18,7 @@ from pathlib import Path
 from urllib.parse import urlparse, unquote, parse_qs
 
 from telemetry import BASELINE, VERSION, HOME, IDS, NAMES, LABELS, Store
+import sound_test
 import units
 from controls import Controller, ControlError
 from ssh_connect import normalize_target, ssh_command, ssh_process_options, SSHConnectError
@@ -336,6 +337,8 @@ def main(argv=None):
               "ssh_target": args.ssh,
               "service_enabled": mode == "service",
               "units": units.unit_meta(), "hardware": units.hardware_meta(),
+              "sound": {"tags": [{"tag": tag, "name": sound_test.NAMES[tag]} for tag in sound_test.TAGS],
+                        "names": dict(sound_test.NAMES)},
               "control_token": secrets.token_urlsafe(32) if control_enabled else ""}
     agent_config = {"robotd_socket": args.robotd_socket, "tofd_socket": args.tofd_socket,
                     "hz": args.hz, "service": mode == "service",

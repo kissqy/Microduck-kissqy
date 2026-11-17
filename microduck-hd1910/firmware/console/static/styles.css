@@ -98,3 +98,12 @@ main{--console-columns:minmax(0,1.65fr) repeat(3,minmax(0,1fr));--console-gap:18
   .process-hardware,.process-detail{grid-column:1/-1}
   .process-actions{grid-column:1/-1;justify-content:flex-start}
 }
+
+/* Voice test: one button per official sound tag. */
+.service-grid{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+.sound-panel .panel-note{margin-top:10px}
+.sound-buttons{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px;padding:4px 16px}
+.sound-buttons .button{justify-content:center;padding:9px 8px}
+.sound-tools{display:flex;gap:8px;padding:10px 16px 0}
+.sound-tools .button{padding:4px 10px;font-size:11px}
+@media(max-width:1100px){.service-grid{grid-template-columns:minmax(0,1fr)}}

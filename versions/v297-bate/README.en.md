@@ -8,7 +8,7 @@ Independent console pre-release for **control.102 / System Image R2 / Wi-Fi setu
 | --- | --- |
 | Features and HAT numbering guide | [V297 BATE page](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) |
 | Complete change log | [Release notes (Chinese)](../../docs/releases/console-studio-v297-bate.md) |
-| Console runtime | [Release Assets](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate); use the console runtime actually listed in Assets |
+| Console runtime · 42.2 MB | [Microduck-Console-Studio-V297-BATE.zip](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v297-bate/Microduck-Console-Studio-V297-BATE.zip) · [release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) |
 | Version file directory | [release-assets/](release-assets/) |
 | Console source | Python and frontend source are included in the console runtime. Any separate source archive will be listed in Release Assets when uploaded |
 | Matching firmware and source | [V260 / control.102](../v260/README.md) · [firmware source](../v260/firmware/) |

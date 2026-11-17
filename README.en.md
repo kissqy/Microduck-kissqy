@@ -121,7 +121,7 @@ Training Studio R1.5.27 remains a separate tool; its version number is independe
 
 | Current release | Purpose and download |
 | --- | --- |
-| V297 BATE · console pre-release | Four workspaces, HAT numbering and hardware tests: [console page](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) |
+| V297 BATE · console pre-release | Four workspaces, HAT numbering and hardware tests: [console page](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [download console ZIP](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v297-bate/Microduck-Console-Studio-V297-BATE.zip) |
 | System Image R2 · Microduck 0.15.1 / control.102 | New ZERO 3W installations: [download .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
 | Robot Console Studio V260 · bundled control.102 | Connect, calibrate and control the robot: [release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [package guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |
 | V260 console and firmware source | [Independent source tree](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260) · [runtime and source guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |

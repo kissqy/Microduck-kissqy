@@ -19,10 +19,11 @@ from management_profile import supports_feature
 from sudo_credential import SudoCredential
 from telemetry import IDS
 from firmware_packages import PreparedFirmware, bundle_info
+import units
 
 ROOT = Path(__file__).resolve().parent
 STOP_ACTIONS = {"relax", "reboot", "shutdown"}
-MANAGEMENT_ACTIONS = {"repair-gamepad", "set-pad-settings", "set-action-scale", "switch-mode", "reconnect-service", "upgrade-service", "reboot", "shutdown"}
+MANAGEMENT_ACTIONS = {"repair-gamepad", "set-pad-settings", "set-action-scale", "switch-mode", "reconnect-service", "upgrade-service", "reboot", "shutdown", "unit-autostart", "tof-probe"}
 HOME_TIMEOUT = 12.0
 HOME_RESTORE_TIMEOUT = 5.0
 HOME_POLL_INTERVAL = .1
@@ -91,13 +92,23 @@ def validate(command):
               "center": {"action", "unassembled", "duration_ms"},
               "capture": {"action", "id", "angle_deg", "direction", "min_deg", "max_deg"},
               "verify-imu": {"action", "confirmed", "mount_wxyz"},
+              "unit-autostart": {"action", "unit", "enabled", "supported"},
+              "tof-probe": {"action", "supported"},
               "forget-sudo-password": {"action"}}
     if not isinstance(action, str) or action not in fields or (set(command) != fields[action]
             and not (action in MANAGEMENT_ACTIONS and set(command) == fields[action] | {"sudo_password"})):
         raise ControlError("指令或参数不受支持", 400)
     if "id" in command and (type(command["id"]) is not int or command["id"] not in IDS): raise ControlError("只能控制官方 15 个关节 ID", 400)
     if "duration_ms" in command: numeric(command["duration_ms"], 500, 10000, True)
-    if action in ("init", "switch-mode", "set-pad-settings", "set-action-scale", "reconnect-service", "upgrade-service", "repair-gamepad") and command["supported"] is not True: raise ControlError("请先确认服务操作", 400)
+    if action in ("init", "switch-mode", "set-pad-settings", "set-action-scale", "reconnect-service", "upgrade-service", "repair-gamepad", "unit-autostart", "tof-probe") and command["supported"] is not True: raise ControlError("请先确认服务操作", 400)
+    if action == "unit-autostart":
+        # The browser sends a unit name back; only the catalogue's own strings
+        # may reach systemctl, and robotd is not in the autostart list at all.
+        if not isinstance(command["unit"], str) or command["unit"] not in units.UNIT_NAMES:
+            raise ControlError("只能修改中控列出的机器人服务", 400)
+        if type(command["enabled"]) is not bool: raise ControlError("开机自启只有开启或关闭两种", 400)
+        if command["unit"] not in units.AUTOSTART_UNITS:
+            raise ControlError("%s 只能查看，不能从中控修改开机自启" % command["unit"], 409)
     if action == 'repair-gamepad':
         if not isinstance(command['address'], str) or command['address'] and not re.fullmatch(r'(?:[0-9A-F]{2}:){5}[0-9A-F]{2}', command['address']):
             raise ControlError('手柄 MAC 格式无效', 400)
@@ -178,6 +189,50 @@ class ServiceTransport:
         source = ROOT.joinpath('startup_diagnostic.py').read_text(encoding='utf-8')
         return self._manage(['python3', '-u', '-c', source], password)
 
+    def unit_state(self, unit, password=None):
+        """Read one unit's UnitFileState, for choosing the autostart path."""
+        result = self._manage(["/bin/systemctl", "show", "--", unit, "-p", "UnitFileState", "--no-pager"],
+                             password, privileged=False, record_output=False, result_format='text')
+        match = re.search(r"^UnitFileState=(.*)$", result.get("message", ""), re.M)
+        return match[1].strip() if match else ""
+
+    def autostart(self, unit, enabled, password=None):
+        """Enable or disable one unit's boot behaviour, then read the result back.
+
+        An `enable` that leaves the unit masked would report success while the
+        service still stays off at boot, so the state is re-read and compared.
+        """
+        before = self.unit_state(unit, password)
+        commands, reason = units.autostart_plan(unit, enabled, before)
+        if reason: raise ControlError(reason, 409)
+        for argv in commands:
+            self._manage(["/bin/systemctl", *argv], password)
+        after = self.unit_state(unit, password)
+        expected = "enabled" if enabled else "disabled"
+        if after != expected:
+            raise ControlError("%s 回读为 %s，不是 %s；状态未确认，请查看系统日志"
+                               % (unit, after or "未知", expected), 503)
+        label = units.label(unit)
+        return {"accepted": True, "unit": unit, "enabled": enabled,
+                "state_before": before, "state_after": after,
+                "steps": ["systemctl " + " ".join(argv) for argv in commands],
+                "message": "%s 已%s（回读 %s）" % (label, "设为开机自启" if enabled else "取消开机自启", after)}
+
+    def tof_probe(self, password=None):
+        """One read-byte I2C scan of the head bus; never writes to the sensor."""
+        command = ["i2cdetect", "-y", "-r", "3"]
+        try:
+            result = self._manage(command, password, privileged=True,
+                                  record_output=False, result_format='text')
+        except ControlError as exc:
+            if "not found" in str(exc).lower() or "No such file" in str(exc):
+                raise ControlError("板端没有 i2cdetect；请先安装 i2c-tools", 503) from None
+            raise
+        output = result.get("message", "")
+        found = sorted(set(re.findall(r"\b(29|52)\b", output)))
+        return {"accepted": True, "output": output, "found": found,
+                "message": ("I²C3 上发现 0x" + " / 0x".join(found)) if found
+                           else "I²C3 上没有 0x29 或 0x52：ToF 模块未装或未接通"}
     def _manage(self, command, password=None, privileged=True, progress=None, record_output=True, output_handler=None, result_format='auto'):
         supplied = password is not None
         password = (password if supplied else self.credential.get()) if privileged else None
@@ -565,7 +620,7 @@ class ServiceController:
                 if self.busy or self.stopping and action != 'upgrade-service': raise ControlError("已有操作执行中，请等待反馈或停止并松开")
                 snapshot = self.store.snapshot()
                 report = snapshot.get("bus", {})
-                recovery = action in {"repair-gamepad", "reconnect-service", "upgrade-service", "set-action-scale"} or action == 'switch-mode'
+                recovery = action in {"repair-gamepad", "reconnect-service", "upgrade-service", "set-action-scale", "unit-autostart", "tof-probe"} or action == 'switch-mode'
                 if not recovery and not supports_feature(report, "supported"): raise ControlError("等待适配的正式服务提供状态")
                 # HAT recovery and deployment must work without motor feedback.
                 if not recovery and not snapshot.get("service_sample_fresh"):
@@ -595,6 +650,15 @@ class ServiceController:
                         raise ControlError("连接与模型管理需要配套 R17 服务", 409)
                 elif action == 'repair-gamepad':
                     pass  # Bluetooth recovery needs SSH, not fresh motor/IMU telemetry.
+                elif action == 'unit-autostart':
+                    pass  # Editing a unit file must work with robotd down.
+                elif action == 'tof-probe':
+                    # tofd owns I2C3 while it runs; a probe would interleave bytes
+                    # with its frame poll, so the answer is "read the frames instead".
+                    tofd = next((row for row in snapshot.get("system", {}).get("units") or []
+                                 if isinstance(row, dict) and row.get("unit") == "tofd.service"), None)
+                    if tofd and tofd.get("active") == "active":
+                        raise ControlError("tofd 正在使用 I²C3，先停止 tofd 再探测 0x29（或直接看 ToF 面板）", 409)
                 elif action == "init":
                     self._validate_home(snapshot)
                 else:
@@ -628,7 +692,7 @@ class ServiceController:
         restarting=getattr(self.store,'robotd_restarting',None)
         restart=command['action'] in {'switch-mode','upgrade-service','reconnect-service','set-action-scale'}
         log=getattr(self.store,'system_log',None)
-        labels={'switch-mode':'服务模式切换','upgrade-service':'固件安装','reconnect-service':'重启固件','set-action-scale':'动作缩放','set-pad-settings':'手柄幅度设置','init':'回 HOME','repair-gamepad':'手柄连接修复','relax':'停止并松开','reboot':'重启 Zero','shutdown':'关闭 Zero','move':'关节移动','center':'整组居中','capture':'关节标定','verify-imu':'IMU 方向保存'}
+        labels={'switch-mode':'服务模式切换','upgrade-service':'固件安装','reconnect-service':'重启固件','set-action-scale':'动作缩放','set-pad-settings':'手柄幅度设置','init':'回 HOME','repair-gamepad':'手柄连接修复','relax':'停止并松开','reboot':'重启 Zero','shutdown':'关闭 Zero','move':'关节移动','center':'整组居中','capture':'关节标定','verify-imu':'IMU 方向保存','unit-autostart':'开机自启','tof-probe':'ToF 0x29 探测'}
         label=labels.get(command['action'],command['action'])
         if restart and restarting is not None:restarting.set()
         try:
@@ -717,6 +781,11 @@ class ServiceController:
                 answer = self.transport.manage("pad-settings", str(command["mouth_percent"]), str(command["head_rad"]), password=sudo_password)
             elif command["action"] == "set-action-scale":
                 answer = self.transport.manage("action-scale", command["model"], str(command["scale"]), password=sudo_password)
+            elif command["action"] == "unit-autostart":
+                answer = self.transport.autostart(command["unit"], command["enabled"], password=sudo_password)
+                if log: log.add('开机自启', answer.get('message', ''))
+            elif command["action"] == "tof-probe":
+                answer = self.transport.tof_probe(password=sudo_password)
             elif command["action"] in {"reboot", "shutdown"}:
                 answer = self.transport.power(command["action"], password=sudo_password)
                 if not isinstance(answer,dict) or answer.get('scheduled') is not True :

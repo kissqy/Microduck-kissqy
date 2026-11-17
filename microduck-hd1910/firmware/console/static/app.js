@@ -3,6 +3,7 @@ let sshConnection;
 import {ServicePanel} from './service.js';
 import {SystemLogPanel} from './system-log.js';
 let servicePanel;
+let processPanel;
 import {Camera} from './camera.js';
 import {ControlPanel} from './control.js';
 import {messageZh,tofView} from './messages.js';
@@ -10,6 +11,7 @@ import {officialStandingDegrees,modelJointLimits,referenceAngle} from './joint-r
 import {jointDirection} from './joint-direction.js';
 import {loopHz} from './metrics.js';
 import {batteryClass,batteryCaption} from './battery.js';
+import {ProcessPanel} from './processes.js';
 import {historyFrame} from './history-frame.js';
 import {RawTelemetry} from './raw-telemetry.js';
 import {CalibrationViewPanel} from './calibration-view.js';
@@ -73,6 +75,7 @@ function modeDisplay(s){
 function render(s,addHistory=true){
   shown=s;modeDisplay(s);sshConnection?.render(s);controls?.render(s,{replay:!!replay});
   servicePanel?.render(s,{replay:!!replay,offline:!apiOkay||cfg.connection_ui&&!s.connection?.active});
+  processPanel?.render(s,{replay:!!replay,offline:!apiOkay||cfg.connection_ui&&!s.connection?.active});
   if(addHistory){history.push(historyFrame(s));const cutoff=s.at-60;while(history.length>650||history[0]?.at<cutoff)history.shift();}
   const hs=sourceLive(s,'health'),ss=sourceLive(s,'state'),sy=sourceLive(s,'system');
   const h=hs?s.health:{},st=ss?s.state:{};
@@ -276,6 +279,7 @@ function validateRecording(data){
 function telemetryError(){
   controls?.suspend();servicePanel?.suspend();apiOkay=false;
   if(latest)servicePanel?.render(latest,{replay:!!replay,offline:true});
+  if(latest)processPanel?.render(latest,{replay:!!replay,offline:true});
   if(!replay){
     $('connection-banner').hidden=false;$('connection-banner').className='banner warning';text('connection-banner','本地采集后端已断开；当前数值为旧样本。请检查启动终端。');
     if(latest){const stale=structuredClone(latest);for(const c of Object.values(stale.channels))c.status='error';for(const row of stale.servos)row.status='stale';stale.imu.status='error';render(stale,false);}
@@ -302,13 +306,13 @@ async function poll(){
     const r=await fetch('/api/snapshot',{signal:AbortSignal.timeout(2500)});if(!r.ok)throw Error(`HTTP ${r.status}`);
     latest=await r.json();apiOkay=true;if(!replay)render(latest);
   }catch(e){
-    controls?.suspend();servicePanel?.suspend();apiOkay=false;if(latest){servicePanel?.render(latest,{replay:!!replay,offline:true});}if(!replay){$('connection-banner').hidden=false;$('connection-banner').className='banner warning';text('connection-banner','本地采集后端已断开；当前数值为旧样本。请检查启动终端。');
+    controls?.suspend();servicePanel?.suspend();apiOkay=false;if(latest){servicePanel?.render(latest,{replay:!!replay,offline:true});processPanel?.render(latest,{replay:!!replay,offline:true});}if(!replay){$('connection-banner').hidden=false;$('connection-banner').className='banner warning';text('connection-banner','本地采集后端已断开；当前数值为旧样本。请检查启动终端。');
       if(latest){const stale=structuredClone(latest);for(const c of Object.values(stale.channels))c.status='error';for(const row of stale.servos)row.status='stale';stale.imu.status='error';render(stale,false);}
     }
   }finally{polling=false;setTimeout(poll,100);}
 }
 async function init(){
-  const r=await fetch('/api/config');cfg=await r.json();text('console-version',`Console v${cfg.version} · 本地运行`);controls=new ControlPanel(cfg,$('control-panel'));servicePanel=new ServicePanel(cfg,choose);new SystemLogPanel();document.querySelector('main footer').before($('diagnostics'));refreshCameraAddress();text('settings-mode',cfg.mode);
+  const r=await fetch('/api/config');cfg=await r.json();text('console-version',`Console v${cfg.version} · 本地运行`);controls=new ControlPanel(cfg,$('control-panel'));servicePanel=new ServicePanel(cfg,choose);processPanel=new ProcessPanel(cfg);new SystemLogPanel();document.querySelector('main footer').before($('diagnostics'));refreshCameraAddress();text('settings-mode',cfg.mode);
   sshConnection=new SSHConnection(cfg,()=>{
     controls.suspend();controls.connected=false;controls.linkEpoch++;controls.socket.close();
     controls.options={...controls.options,offline:true};camera.disconnect();

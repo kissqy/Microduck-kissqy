@@ -93,6 +93,16 @@
       <details class="register-details"><summary>查看选中舵机的寄存器详情 <span class="muted">· 台架只读模式提供</span></summary><dl id="joint-registers" class="register-grid"></dl></details>
       <div class="panel-note important">“电流占限值”＝|实测电流| / 读取到的 Current Limit，不是实测扭矩或机械负载百分比。逐颗电压、PWM、限值及故障寄存器在台架模式提供；原版未导出项显示「—」。</div>
     </section>
+    <div class="service-grid">
+      <section class="panel process-panel" id="process-panel">
+        <div class="panel-head"><div><span class="section-index">09</span><h2>机器人进程与服务</h2><span id="process-summary" class="muted tiny">等待服务状态</span></div><span class="badge neutral">systemd</span></div>
+        <div class="process-legend"><span><i class="status-dot live"></i>运行</span><span><i class="status-dot warn"></i>已屏蔽 / 过渡</span><span><i class="status-dot bad"></i>失败</span><span class="muted">硬件：● 在 · ○ 不在 · ◌ 未验证</span></div>
+        <div class="process-list" id="process-list"><p class="tiny muted">等待 Zero 上的 systemd 状态。</p></div>
+        <p id="process-error" class="tiny red" hidden></p>
+        <div id="process-feedback" class="panel-note service-job" role="status" aria-live="polite"></div>
+        <div class="panel-note">只修改「开机自启」，不提供启动 / 停止 / 重启：停 robotd 不会自动卸力。需要重启固件请用上方「重启固件」。</div>
+      </section>
+    </div>
     <div class="diagnostics-grid" id="diagnostics"><section class="panel"><div class="panel-head"><div><span class="section-index">07</span><h2>链路与安全状态</h2></div><span id="health-badge" class="badge neutral">未知</span></div><div id="channel-list" class="channel-list"></div><div class="health-detail" id="health-detail">等待官方健康响应。</div><div class="intent-grid"><div><span>请求速度 · m/s, rad/s</span><code id="move-request">—</code></div><div><span>实际采用速度</span><code id="move-applied">—</code></div></div><div class="panel-note" id="move-limits">没有收到状态前，不判断安全限制。</div></section><section class="panel system-log-card" id="system-log"><div class="panel-head"><div><span class="section-index">08</span><h2>系统日志</h2></div><a class="text-button" href="/api/system-log/download" download>下载完整日志 ↓</a></div><div class="system-log-tools"><button class="button" id="system-log-copy">复制显示</button><label><input type="checkbox" id="system-log-follow" checked>自动滚动</label></div><p id="system-log-status" class="tiny muted" role="status">等待系统日志。</p><pre id="system-log-output" tabindex="0">尚无执行记录。</pre><section class="maintenance-events" id="maintenance-events"><h3>事件与原始报文</h3><div class="maintenance-streams"><div><h4>事件</h4><div id="events" class="events"><div class="muted">连接事件将在这里出现</div></div></div><div><h4>原始报文</h4><pre id="raw-json" tabindex="0"></pre></div></div></section></section></div>
     <footer><span>MICRODUCK / HARDWARE CONSOLE</span><span>模型 © Pollen Robotics</span></footer>
   </main>

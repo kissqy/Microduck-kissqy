@@ -18,6 +18,7 @@ from pathlib import Path
 from urllib.parse import urlparse, unquote, parse_qs
 
 from telemetry import BASELINE, VERSION, HOME, IDS, NAMES, LABELS, Store
+import units
 from controls import Controller, ControlError
 from ssh_connect import normalize_target, ssh_command, ssh_process_options, SSHConnectError
 from process_lifecycle import retire_process, spawn_process, close_owned_processes
@@ -334,9 +335,11 @@ def main(argv=None):
               "mode": mode, "hz": args.hz, "control_enabled": control_enabled,
               "ssh_target": args.ssh,
               "service_enabled": mode == "service",
+              "units": units.unit_meta(), "hardware": units.hardware_meta(),
               "control_token": secrets.token_urlsafe(32) if control_enabled else ""}
     agent_config = {"robotd_socket": args.robotd_socket, "tofd_socket": args.tofd_socket,
-                    "hz": args.hz, "service": mode == "service"}
+                    "hz": args.hz, "service": mode == "service",
+                    "units": list(units.UNIT_NAMES)}
     connection = None
     if args.dashboard or args.ssh:
         from connection import Connection

@@ -12,6 +12,15 @@ A Feetech HD1910 adaptation based on official Microduck **0.15.1**, including ro
 
 **The author's assembled IMU is pre-flashed with FT6; no initial flashing is needed. Calibrate it after installation.** For a new self-soldered board, replacement MCU or maintenance, see the [FT6 guide](../hardware/IMU-FIRMWARE.en.md); installing robot-service firmware on ZERO does not program the external IMU.
 
+
+> [!NOTE]
+> **The V297 BATE console is available as a separate pre-release.** Four workspaces, HAT servo numbering, independent hardware tests and recovery from missing-device initialization waits.
+>
+> [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 version files](../versions/v297-bate/README.en.md)
+>
+> Existing R2 / control.102 users only replace the desktop console. Physical-robot acceptance is pending; V260 remains stable. Attachments are being added to Release Assets.
+
+
 ## Current release and separate source
 
 | Component | Version | Source or release |

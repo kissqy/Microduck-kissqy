@@ -12,6 +12,15 @@
 
 **作者成品 IMU 已预烧录 FT6，到手无需另行烧录，安装后仍需本机标定。** 自焊新板、换芯片或维护升级再看 [STM32 FT6 下载与烧录指南](../hardware/IMU-FIRMWARE.md)；ZERO 机器人服务固件不会烧录外置 IMU。
 
+
+> [!NOTE]
+> **V297 BATE 中控测试版已独立发布。** 新增四模式工作台、HAT 舵机编号与独立硬件测试，并修复缺 IMU / 缺舵机时初始化等待卡住的问题。
+>
+> [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 文件目录](../versions/v297-bate/)
+>
+> 已有 R2 / control.102 用户只需更换中控。本版实机验收待完成；V260 稳定版继续保留。附件正在补充，以 Release 的 Assets 实际上传文件为准。
+
+
 ## 当前发布与独立源码
 
 | 内容 | 版本 | 源码或发布位置 |

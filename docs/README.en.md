@@ -4,14 +4,24 @@
 
 English editions of the homepage, user guides, hardware records, and technical notes. Current application interfaces remain Chinese; English guides include button labels for reference. Raw test logs, source code, and formal licenses retain their original text.
 
+
+> [!NOTE]
+> **The V297 BATE console is available as a separate pre-release.** Four workspaces, HAT servo numbering, independent hardware tests and recovery from missing-device initialization waits.
+>
+> [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 version files](../versions/v297-bate/README.en.md)
+>
+> Existing R2 / control.102 users only replace the desktop console. Physical-robot acceptance is pending; V260 remains stable. Attachments are being added to Release Assets.
+
+
 ## Current downloads · November 13, 2026
 
 Default setup: **System Image R2 + Console Studio V260 / control.102, Wi-Fi setup R10**. [R2 image](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [runtime and source guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) · [independent V260 source](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260).
 
-Both Robot Console versions are grouped on main; no branch switching is needed.
+Robot Console versions are grouped on main; no branch switching is needed.
 
 | Version directory | Firmware and image | Entry |
 | --- | --- | --- |
+| V297 BATE · pre-release | control.102 · R2 / R10 | [V297 page and files](../versions/v297-bate/README.en.md) |
 | V260 · current | control.102 · R2 / R10 | [V260 source and downloads](../versions/v260/) |
 | V167 · historical | control.43 · R1 includes control.40 | [V167 source and downloads](../versions/v167/README.en.md) |
 

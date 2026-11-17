@@ -27,6 +27,15 @@
 
 The three build stages and optional advanced guide are in Chinese. [English build guide and FAQ](https://kissqy.github.io/Microduck-kissqy/guides/en.html) · [🎮 Robot Console demo](https://kissqy.github.io/Microduck-kissqy/) · [📖 Console tutorial (中文)](https://kissqy.github.io/Microduck-kissqy/console-guide.html) · [❓ FAQ](docs/MICRODUCK-FAQ.en.md)
 
+
+> [!NOTE]
+> **The V297 BATE console is available as a separate pre-release.** Four workspaces, HAT servo numbering, independent hardware tests and recovery from missing-device initialization waits.
+>
+> [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 version files](versions/v297-bate/README.en.md)
+>
+> Existing R2 / control.102 users only replace the desktop console. Physical-robot acceptance is pending; V260 remains stable. Attachments are being added to Release Assets.
+
+
 ## 🏆 One-legged balance · A new training milestone
 
 The author’s self-trained one-legged balance has been demonstrated on a physical HD1910 robot. The video below shows the real robot; build, calibration and training references are available in this repository.
@@ -100,10 +109,11 @@ These three stages prepare your duck to use the supplied movements. Continue fro
 
 ## Downloads and versions
 
-**Current release: System Image R2 + Console Studio V260 / control.102, first-boot Wi-Fi R10.** Updated November 13, 2026. Both versions are available under `versions/` on main; no branch switching is needed. Original V167 source and package URLs remain compatible.
+**Current release: System Image R2 + Console Studio V260 / control.102, first-boot Wi-Fi R10.** Updated November 13, 2026. All version directories are available under `versions/` on main; no branch switching is needed. Original V167 source and package URLs remain compatible.
 
 | Version directory | Firmware | System image | Entry |
 | --- | --- | --- | --- |
+| V297 BATE · pre-release | control.102 | R2 / R10 | [V297 BATE](versions/v297-bate/) |
 | V260 · current release | control.102 | R2 · Wi-Fi R10 | [versions/v260/](versions/v260/) |
 | V167 · historical release | control.43 | R1 includes control.40; V167 bundles control.43 | [versions/v167/](versions/v167/README.en.md) |
 
@@ -111,6 +121,7 @@ Training Studio R1.5.27 remains a separate tool; its version number is independe
 
 | Current release | Purpose and download |
 | --- | --- |
+| V297 BATE · console pre-release | Four workspaces, HAT numbering and hardware tests: [console page](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) |
 | System Image R2 · Microduck 0.15.1 / control.102 | New ZERO 3W installations: [download .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
 | Robot Console Studio V260 · bundled control.102 | Connect, calibrate and control the robot: [release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [package guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |
 | V260 console and firmware source | [Independent source tree](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260) · [runtime and source guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |

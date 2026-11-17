@@ -4,6 +4,15 @@
 
 首页、使用指南、硬件记录与技术说明的中英文入口。当前软件界面仍为中文；英文指南保留必要的中文按钮名称。原始测试日志、源代码与正式许可保持原文。
 
+
+> [!NOTE]
+> **V297 BATE 中控测试版已独立发布。** 新增四模式工作台、HAT 舵机编号与独立硬件测试，并修复缺 IMU / 缺舵机时初始化等待卡住的问题。
+>
+> [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 文件目录](../versions/v297-bate/)
+>
+> 已有 R2 / control.102 用户只需更换中控。本版实机验收待完成；V260 稳定版继续保留。附件正在补充，以 Release 的 Assets 实际上传文件为准。
+
+
 ## 当前下载 · 2026-11-13
 
 默认使用 **系统镜像 R2 + Console Studio V260／control.102，开机配网 R10**。[R2 镜像](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [运行包与源码说明](../versions/v260/README.md)。
@@ -12,6 +21,7 @@
 
 | 版本目录 | 固件与镜像 | 入口 |
 | --- | --- | --- |
+| V297 BATE · 独立测试版 | control.102 · R2 / R10 | [V297 说明与下载](../versions/v297-bate/) |
 | V260 · 当前发布 | control.102 · R2 / R10 | [V260 源码与下载](../versions/v260/) |
 | V167 · 历史版本 | control.43 · R1 预装 control.40 | [V167 源码与下载](../versions/v167/) |
 

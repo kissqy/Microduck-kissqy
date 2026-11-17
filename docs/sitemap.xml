@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://kissqy.github.io/Microduck-kissqy/</loc>
-    <lastmod>2026-11-12</lastmod>
+    <lastmod>2026-11-18</lastmod>
   </url>
   <url>
     <loc>https://kissqy.github.io/Microduck-kissqy/training/</loc>
@@ -10,11 +10,11 @@
   </url>
   <url>
     <loc>https://kissqy.github.io/Microduck-kissqy/guides/</loc>
-    <lastmod>2026-11-12</lastmod>
+    <lastmod>2026-11-18</lastmod>
   </url>
   <url>
     <loc>https://kissqy.github.io/Microduck-kissqy/guides/en.html</loc>
-    <lastmod>2026-11-12</lastmod>
+    <lastmod>2026-11-18</lastmod>
   </url>
   <url>
     <loc>https://kissqy.github.io/Microduck-kissqy/assembly.html</loc>
@@ -22,11 +22,11 @@
   </url>
   <url>
     <loc>https://kissqy.github.io/Microduck-kissqy/console-guide.html</loc>
-    <lastmod>2026-11-12</lastmod>
+    <lastmod>2026-11-18</lastmod>
   </url>
   <url>
     <loc>https://kissqy.github.io/Microduck-kissqy/build/</loc>
-    <lastmod>2026-11-12</lastmod>
+    <lastmod>2026-11-18</lastmod>
   </url>
   <url>
     <loc>https://kissqy.github.io/Microduck-kissqy/build/budget.html</loc>
@@ -42,7 +42,7 @@
   </url>
   <url>
     <loc>https://kissqy.github.io/Microduck-kissqy/build/start.html</loc>
-    <lastmod>2026-11-12</lastmod>
+    <lastmod>2026-11-18</lastmod>
   </url>
   <url>
     <loc>https://kissqy.github.io/Microduck-kissqy/build/advanced.html</loc>
@@ -52,4 +52,6 @@
     <loc>https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html</loc>
     <lastmod>2026-11-12</lastmod>
   </url>
+  <url><loc>https://kissqy.github.io/Microduck-kissqy/console-bate/</loc><lastmod>2026-11-18</lastmod></url>
+  <url><loc>https://kissqy.github.io/Microduck-kissqy/console-bate/en.html</loc><lastmod>2026-11-18</lastmod></url>
 </urlset>

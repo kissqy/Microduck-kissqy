@@ -27,6 +27,15 @@
 
 [📚 Microduck 完整复刻教程](https://kissqy.github.io/Microduck-kissqy/guides/) · [🚀 从零复刻路线](https://kissqy.github.io/Microduck-kissqy/build/) · [🎮 机器人中控演示](https://kissqy.github.io/Microduck-kissqy/) · [📖 中控使用教程](https://kissqy.github.io/Microduck-kissqy/console-guide.html) · [❓ 常见问题](docs/MICRODUCK-FAQ.md)
 
+
+> [!NOTE]
+> **V297 BATE 中控测试版已独立发布。** 新增四模式工作台、HAT 舵机编号与独立硬件测试，并修复缺 IMU / 缺舵机时初始化等待卡住的问题。
+>
+> [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 文件目录](versions/v297-bate/)
+>
+> 已有 R2 / control.102 用户只需更换中控。本版实机验收待完成；V260 稳定版继续保留。附件正在补充，以 Release 的 Assets 实际上传文件为准。
+
+
 ## 🏆 单脚独立 · 自训新突破
 
 作者自训的单脚平衡动作已在飞特 HD1910 实机上演示。下方视频展示真实机器人表现；训练、装配和标定资料均可从本仓库继续查阅。
@@ -102,10 +111,11 @@
 
 ## 下载与版本
 
-**当前发布：系统镜像 R2 + Console Studio V260／control.102，开机配网 R10。** 更新于 2026-11-13。两个版本均在 main 的 `versions/` 目录中，无需切换分支。原 V167 源码与运行包的旧地址继续兼容。
+**当前发布：系统镜像 R2 + Console Studio V260／control.102，开机配网 R10。** 更新于 2026-11-13。各版本均在 main 的 `versions/` 目录中，无需切换分支。原 V167 源码与运行包的旧地址继续兼容。
 
 | 版本目录 | 配套固件 | 系统镜像 | 入口 |
 | --- | --- | --- | --- |
+| V297 BATE · 测试版 | control.102 | R2 / R10 | [V297 BATE](versions/v297-bate/) |
 | V260 · 当前发布 | control.102 | R2 · 配网 R10 | [versions/v260/](versions/v260/) |
 | V167 · 历史版本 | control.43 | R1 预装 control.40；V167 随包固件为 control.43 | [versions/v167/](versions/v167/) |
 
@@ -113,6 +123,7 @@
 
 | 当前发布版本 | 用途与下载 |
 | --- | --- |
+| V297 BATE · 中控测试版 | 四模式、HAT 编号与硬件测试：[独立专页](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) |
 | 系统镜像 R2 · Microduck 0.15.1 / control.102 | 新装 ZERO 3W：[下载 .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [镜像发布说明](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
 | 中文机器人中控 Studio V260 · 随包固件 control.102 | 连接、标定与控制实机：[前往发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [文件与使用说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |
 | V260 中控源码与固件源码 | [独立版本源码](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260) · [运行包与源码说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) |

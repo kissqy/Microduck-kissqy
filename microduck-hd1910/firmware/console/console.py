@@ -18,6 +18,7 @@ from pathlib import Path
 from urllib.parse import urlparse, unquote, parse_qs
 
 from telemetry import BASELINE, VERSION, HOME, IDS, NAMES, LABELS, Store
+from system_watch import SystemWatch
 import sound_test
 import units
 from controls import Controller, ControlError
@@ -236,6 +237,13 @@ def handler_for(store, config, controller=None, service_controller=None, connect
                         if calibration is not None and sent_aux.get('calibration') is not calibration:
                             extra['calibration'] = calibration
                             sent_aux['calibration'] = calibration
+                        # Sampled by SystemWatch, not robotd: send it when the seq
+                        # moves rather than on every raw frame.
+                        units_data = store.data.get('units')
+                        units_key = (units_data or {}).get('seq', id(units_data)) if units_data else None
+                        if units_data is not None and sent_aux.get('units') != units_key:
+                            extra['units'] = units_data
+                            sent_aux['units'] = units_key
                     return {**extra,
                             'control':controller.status(snapshot) if controller else {'available':False,'connected':False},
                             'service_control':service_controller.status(snapshot) if service_controller else {'available':False},
@@ -341,8 +349,7 @@ def main(argv=None):
                         "names": dict(sound_test.NAMES)},
               "control_token": secrets.token_urlsafe(32) if control_enabled else ""}
     agent_config = {"robotd_socket": args.robotd_socket, "tofd_socket": args.tofd_socket,
-                    "hz": args.hz, "service": mode == "service",
-                    "units": list(units.UNIT_NAMES)}
+                    "hz": args.hz, "service": mode == "service"}
     connection = None
     if args.dashboard or args.ssh:
         from connection import Connection
@@ -372,6 +379,13 @@ def main(argv=None):
             if args.ssh: connection.handle({'action':'connect','target':args.ssh})
         else:
             threading.Thread(target=agent.run, args=(agent_config, store.ingest, stop), daemon=True).start()
+        # Service and hardware state has no channel of its own in robotd's
+        # telemetry, and in --feetech mode agent.py never runs; sample it here
+        # so both modes read the same way.
+        watch = SystemWatch(store, units.UNIT_NAMES,
+                            transport=service_controller.transport if service_controller else None,
+                            log=getattr(store, 'system_log', None))
+        watch.start(stop)
         if mode != "service" and not connection: threading.Thread(target=record, daemon=True).start()
         print(f"Microduck Console {VERSION} / {mode.upper()} / {access}\n{url}\n基线 {BASELINE}\n启动不发送动作；实机操作需在页面手动触发。Ctrl+C 退出。", flush=True)
         if args.open:

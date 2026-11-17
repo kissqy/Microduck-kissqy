@@ -78,12 +78,18 @@ class VoiceTests(unittest.TestCase):
         self.addCleanup(lambda: setattr(sound_test, "SOCKET", original))
         return daemon
 
-    def board(self, enabled="true", bank=True):
+    def board(self, enabled="true", bank=True, quoted=False):
         root = Path(tempfile.mkdtemp(prefix="duck-snd-"))
         self.addCleanup(lambda: __import__("shutil").rmtree(root, ignore_errors=True))
         config = root / "robotd.toml"
-        config.write_text('[audio]\n# enabled = false\nenabled = %s\ndevice = "plughw:aic3104"\n'
-                          'bank = "%s"\n' % (enabled, root / "bank"), encoding="utf-8")
+        if quoted:
+            # What the board actually ships: quoted table and quoted keys.
+            body = '["audio"]\n# "enabled" = false\n"enabled" = %s\n"device" = "plughw:aic3104"\n' \
+                   '"bank" = "%s"\n\n["policy"]\n"enabled" = false\n' % (enabled, root / "bank")
+        else:
+            body = '[audio]\n# enabled = false\nenabled = %s\ndevice = "plughw:aic3104"\n' \
+                   'bank = "%s"\n' % (enabled, root / "bank")
+        config.write_text(body, encoding="utf-8")
         if bank:
             for tag in sound_test.TAGS:
                 (root / "bank" / tag).mkdir(parents=True)
@@ -152,6 +158,16 @@ class VoiceTests(unittest.TestCase):
         self.assertEqual([row["tag"] for row in described["tags"]], list(sound_test.TAGS))
         self.assertTrue(all(row["wavs"] == 1 for row in described["tags"]))
         self.assertEqual(described["reason"], "")
+
+    def test_describe_reads_the_quoted_toml_the_board_ships(self):
+        # The board's robotd.toml uses ["audio"] and "enabled" = true; a parser
+        # that only accepts bare keys reports "no [audio] section" instead.
+        self.board(quoted=True)
+        described = sound_test.describe()
+        self.assertTrue(described["can_play"], described["reason"])
+        self.assertTrue(described["enabled"])
+        self.assertTrue(described["bank"].endswith("bank"))
+        self.assertTrue(all(row["wavs"] == 1 for row in described["tags"]))
 
     def test_describe_calls_out_a_disabled_audio_section(self):
         self.board(enabled="false")

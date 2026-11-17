@@ -77,18 +77,23 @@ def hardware_meta():
             for key, value in HARDWARE.items()]
 
 
-def autostart_plan(unit, enabled, unit_file_state):
+def autostart_plan(unit, enabled, unit_file_state, installed=True):
     """The systemctl calls needed to reach `enabled`, or a reason it cannot.
 
     Returns `(commands, reason)`; exactly one of them is empty. `masked` is a
     symlink to /dev/null, which `enable` does not clear, so it is unmasked
     first — otherwise the toggle would silently leave the unit off at boot.
+    A masked unit whose file does not exist is *not* unmasked: `enable` would
+    fail with "Unit X does not exist" and the board would be left un-masked,
+    which is a state it was not in before the click.
     """
     if unit not in AUTOSTART_UNITS:
         return (), "该服务不允许从中控修改开机自启"
     state = unit_file_state or ""
     if state in FIXED_STATES:
         return (), ("本机未安装 %s" if state == "not-found" else "%s 为内建或损坏的 unit，不能改自启") % unit
+    if not installed:
+        return (), "本机没有安装 %s（unit 文件不存在），无法设置开机自启" % unit
     if enabled:
         if state == "enabled":
             return (), "当前已经是开机自启"

@@ -37,19 +37,21 @@ def audio_settings():
 
     tomllib exists on the board's Python 3.11+, but this file is also pushed to
     whatever `python3` SSH lands on, and a syntax error in the source would be
-    indistinguishable from a connection failure.
+    indistinguishable from a connection failure. Keys and table names may be
+    quoted (`["audio"]`, `"enabled" = true`), which is what the board ships, so
+    the quotes are optional in every pattern here.
     """
     try:
         with open(CONFIG, encoding="utf-8", errors="replace") as handle:
             text = handle.read()
     except OSError:
         return {"enabled": None, "bank": None, "error": "读不到 robotd.toml"}
-    section = re.search(r"^\[audio\](.*?)(?=^\[|\Z)", text, re.M | re.S)
+    section = re.search(r"""^\s*\[\s*["']?audio["']?\s*\](.*?)(?=^\s*\[|\Z)""", text, re.M | re.S)
     if not section:
         return {"enabled": None, "bank": None, "error": "robotd.toml 没有 [audio] 段"}
     body = section[1]
-    enabled = re.search(r"^\s*enabled\s*=\s*(true|false)", body, re.M)
-    bank = re.search(r'^\s*bank\s*=\s*"([^"]+)"', body, re.M)
+    enabled = re.search(r"""^\s*["']?enabled["']?\s*=\s*(true|false)""", body, re.M)
+    bank = re.search(r"""^\s*["']?bank["']?\s*=\s*["']([^"']+)["']""", body, re.M)
     return {"enabled": enabled[1] == "true" if enabled else None,
             "bank": bank[1] if bank else None, "error": ""}
 

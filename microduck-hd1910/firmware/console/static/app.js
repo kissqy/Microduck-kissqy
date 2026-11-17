@@ -234,7 +234,7 @@ function choose(id){
 }
 function renderDiagnostics(s){
   const names={state:'robotd / 姿态状态',health:'robotd / 健康指标',tof:'tofd / 深度矩阵',system:'Zero / 系统信息',capabilities:'robotd / 可用动作'};
-  names.bus='robotd / 舵机总线';names.calibration='robotd / 已保存标定';
+  names.bus='robotd / 舵机总线';names.calibration='robotd / 已保存标定';names.units='Zero / 服务与硬件';
   const tof=tofView(s);
   $('channel-list').innerHTML=Object.entries(s.channels).filter(([k])=>k!=='bench'&&(s.mode==='service'?(s.bus?.mode!=='commissioning'||!['state','capabilities'].includes(k)):!['bus','calibration'].includes(k))).map(([k,c])=>{
     const status=k==='tof'?tof.status:c.status,label=k==='tof'?tof.label:statusNames[status];

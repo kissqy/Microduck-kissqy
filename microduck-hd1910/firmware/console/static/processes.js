@@ -22,6 +22,9 @@ export function unitState(row){
 
 export function autostartState(row){
   const state=row?.enabled||'';
+  // Masked with no unit file behind the mask: nothing to enable, and unmasking
+  // it would only fail later and leave the board changed.
+  if(row?.installed===false)return {tone:'warn',label:'已屏蔽 · 未安装'};
   if(row?.load==='not-found')return {tone:'neutral',label:'—'};
   if(state==='enabled')return {tone:'live',label:'开机自启'};
   if(state==='disabled')return {tone:'neutral',label:'不自启'};
@@ -67,6 +70,7 @@ export function memoryText(bytes){
 export function autostartCommand(row,meta,enabled){
   if(!meta?.autostart)return null;
   if(!row||row.load==='not-found'||row.enabled==='static')return null;
+  if(row.installed===false)return null;
   if(row.enabled==='masked'&&!enabled)return null;
   return {action:'unit-autostart',unit:meta.unit,enabled,supported:true};
 }
@@ -74,6 +78,7 @@ export function autostartCommand(row,meta,enabled){
 export function autostartLabel(row,meta){
   if(!meta?.autostart)return '只读';
   if(!row||row.load==='not-found')return '不可用';
+  if(row.installed===false)return '未安装';
   if(row.enabled==='static')return '内建 unit';
   if(row.enabled==='enabled')return '取消开机自启';
   if(row.enabled==='masked')return '开启开机自启（会先解除屏蔽）';
@@ -83,6 +88,7 @@ export function autostartLabel(row,meta){
 export function autostartReason(row,meta){
   if(!meta?.autostart)return '该服务只能查看，不能从中控修改开机自启';
   if(!row)return '等待服务状态';
+  if(row.installed===false)return '本机没有安装 '+meta.unit+'（只有屏蔽用的空壳），先部署该组件';
   if(row.load==='not-found')return '本机未安装 '+meta.unit;
   if(row.enabled==='static')return '内建 unit，不能改自启';
   return '';
@@ -126,7 +132,12 @@ export class ProcessPanel{
         signal:AbortSignal.timeout(30000)});
       const data=await response.json();
       if(!response.ok||data.accepted!==true)throw Error(data.error||'服务未接收指令');
-      this.feedback(data.message||'已提交','completed');
+      // The ack only says the job was queued; the answer lands when it finishes.
+      // Jobs carry their own timestamp, so remember where the log stood.
+      // Console clock and browser clock are the same machine; a job with no
+      // predecessor still needs a floor, or nothing would ever look "newer".
+      this.baseJobAt=Math.max(this.s?.service_control?.job?.at||0,Date.now()/1000-1);
+      this.feedback(data.message||'已提交','running');
     }catch(e){
       this.feedback(e.message,'error');
     }finally{this.posting=false;this.paint();}
@@ -152,16 +163,45 @@ export class ProcessPanel{
 
   render(s,options={}){
     if(!this.root)return;
+    this.s=s;
     this.offline=!!options.replay||!!options.offline;
-    const system=s?.system||{};
-    this.rows=Array.isArray(system.units)?system.units:[];
-    this.hardware=system.hardware||{};
-    this.error=system.units_error||system.hardware_error||'';
+    // A dedicated channel: in --feetech mode `system` is robotd's own
+    // telemetry and carries none of this.
+    const units=s?.units||{};
+    this.rows=Array.isArray(units.units)?units.units:[];
+    // The probe belongs to the ToF row, and tofd's own state decides whether the
+    // bus is free — not whichever row is being drawn.
+    const tofd=this.rows.find(row=>row.unit==='tofd.service');
+    this.tofdActive=tofd?.active==='active';
+    this.hardware=units.hardware||{};
+    this.error=units.error||'';
     const servos=Array.isArray(s?.servos)?s.servos:[];
     const live=servos.filter(row=>row.status==='live').length;
     this.servoCount=servos.length?live:null;
     this.tofStreaming=s?.channels?.tof?.status==='live';
     this.paint();
+    this.watchJob(s);
+  }
+
+  // Report the finished job, not the submission ack: "found 0x29" and
+  // "回读 enabled" are the answers the operator is waiting for.
+  watchJob(s){
+    const job=s?.service_control?.job;
+    if(!job||this.baseJobAt===undefined)return;
+    if(!['unit-autostart','tof-probe'].includes(job.action))return;
+    // Only a job newer than the one already on screen belongs to this click.
+    if(job.at<=this.baseJobAt)return;
+    if(job.status==='running'||job.at===this.shownJobAt)return;
+    this.shownJobAt=job.at;
+    if(job.status==='error'){
+      this.feedback(job.error||'操作失败','error');
+      return;
+    }
+    const result=job.result||{};
+    const message=job.action==='tof-probe'
+      ?(result.message||'探测完成')
+      :(result.message||'完成');
+    this.feedback(message,'completed');
   }
 
   chip(id){
@@ -247,10 +287,14 @@ export class ProcessPanel{
     node.toggle.title=reason||autostartLabel(row,meta);
     if(meta.autostart){node.toggle.dataset.unit=row.unit;node.toggle.dataset.enabled=String(row.enabled!=='enabled');}
     else{delete node.toggle.dataset.unit;delete node.toggle.dataset.enabled;}
+    // Only the ToF row owns a bus probe, and only while tofd is not using the
+    // bus. `hidden` is not enough: `.button` sets a display value, which wins
+    // over the attribute's UA rule.
     const needsProbe=meta.hardware.includes('tof');
-    node.probe.hidden=!needsProbe;
-    node.probe.disabled=this.posting||this.offline||row.active==='active';
-    node.probe.title=row.active==='active'?'tofd 正在使用 I²C3；停掉它才能探测'
+    node.probe.style.display=needsProbe?'':'none';
+    const tofdBusy=this.tofdActive===true;
+    node.probe.disabled=this.posting||this.offline||tofdBusy;
+    node.probe.title=tofdBusy?'tofd 正在使用 I²C3；停掉它才能探测'
       :this.offline?'回放或离线时不探测总线':'用 i2cdetect -y -r 3 读一次 I²C3';
   }
 }

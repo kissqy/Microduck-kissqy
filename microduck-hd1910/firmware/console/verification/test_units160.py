@@ -13,7 +13,7 @@ from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import agent
+import system_probe as probe
 import units
 from controls import ControlError
 from service_control import validate
@@ -59,7 +59,7 @@ class UnitParsingTests(unittest.TestCase):
             calls.append(command)
             return SimpleNamespace(returncode=0, stdout=text, stderr="")
 
-        rows, error = agent.read_units(names, runner=runner)
+        rows, error = probe.read_units(names, runner=runner)
         self.assertEqual(error, "")
         self.assertEqual(len(calls), 1, "one systemctl call per sample, not one per unit")
         return rows, calls[0]
@@ -103,7 +103,7 @@ class UnitParsingTests(unittest.TestCase):
         def runner(command, **kwargs):
             raise OSError("systemctl: not found")
 
-        rows, error = agent.read_units(["robotd.service"], runner=runner)
+        rows, error = probe.read_units(["robotd.service"], runner=runner)
         self.assertEqual(rows, [])
         self.assertIn("systemctl", error)
 
@@ -111,7 +111,7 @@ class UnitParsingTests(unittest.TestCase):
         def runner(command, **kwargs):
             raise AssertionError("must not run systemctl for an empty list")
 
-        self.assertEqual(agent.read_units([], runner=runner), ([], ""))
+        self.assertEqual(probe.read_units([], runner=runner), ([], ""))
 
 
 def bitmap(*bits, words=9):
@@ -137,7 +137,7 @@ class HardwareTests(unittest.TestCase):
 
     def test_empty_board_reports_absent_hardware_but_unverified_tof(self):
         root = self.board()
-        reading = agent.read_hardware(str(root))
+        reading = probe.read_hardware(str(root))
         self.assertFalse(reading["servo_bus"]["present"])
         self.assertFalse(reading["bluetooth"]["present"])
         self.assertFalse(reading["gamepad"]["present"])
@@ -153,12 +153,12 @@ class HardwareTests(unittest.TestCase):
                    "[bus]\nport = \"/dev/ttyUSB9\"\n\n[policy]\nenabled = true\n")
         (root / "dev").mkdir(exist_ok=True)
         self.write(root, "dev/ttyUSB9", "")
-        reading = agent.read_hardware(str(root))
+        reading = probe.read_hardware(str(root))
         self.assertTrue(reading["servo_bus"]["present"])
         self.assertEqual(reading["servo_bus"]["detail"], "/dev/ttyUSB9")
 
     def test_default_port_when_config_is_missing(self):
-        reading = agent.read_hardware(str(self.board()))
+        reading = probe.read_hardware(str(self.board()))
         self.assertEqual(reading["servo_bus"]["detail"], "/dev/ttyS2")
 
     def test_camera_and_i2c_are_read_from_the_device_nodes(self):
@@ -167,7 +167,7 @@ class HardwareTests(unittest.TestCase):
         self.write(root, "dev/video0", "")
         self.write(root, "dev/i2c-3", "")
         self.write(root, "sys/class/video4linux/video0/name", "imx219 10-0010\n")
-        reading = agent.read_hardware(str(root))
+        reading = probe.read_hardware(str(root))
         self.assertTrue(reading["camera"]["present"])
         self.assertIn("imx219", reading["camera"]["detail"])
         self.assertTrue(reading["i2c3"]["present"])
@@ -175,7 +175,7 @@ class HardwareTests(unittest.TestCase):
         self.assertIn("0x29", reading["tof"]["detail"])
 
     def test_tof_detail_explains_a_missing_bus(self):
-        reading = agent.read_hardware(str(self.board()))
+        reading = probe.read_hardware(str(self.board()))
         self.assertIn("总线不在", reading["tof"]["detail"])
 
     def test_audio_needs_the_codec_card_or_a_playback_pcm(self):
@@ -183,13 +183,13 @@ class HardwareTests(unittest.TestCase):
         self.write(root, "proc/asound/cards",
                    " 0 [rockchiphdmi0 ]: rockchip_hdmi0 - rockchip-hdmi0\n"
                    " 1 [aic3104       ]: aic3104 - aic3104\n")
-        self.assertTrue(agent.read_hardware(str(root))["audio_codec"]["present"])
+        self.assertTrue(probe.read_hardware(str(root))["audio_codec"]["present"])
 
     def test_audio_absent_when_only_hdmi_is_bound(self):
         root = self.board()
         self.write(root, "proc/asound/cards",
                    " 0 [rockchiphdmi0 ]: rockchip_hdmi0 - rockchip-hdmi0\n")
-        self.assertFalse(agent.read_hardware(str(root))["audio_codec"]["present"])
+        self.assertFalse(probe.read_hardware(str(root))["audio_codec"]["present"])
 
     def gamepad(self, root, name, keys, axes):
         self.write(root, "sys/class/input/event3/device/name", name + "\n")
@@ -199,23 +199,35 @@ class HardwareTests(unittest.TestCase):
     def test_gamepad_needs_a_pad_button_and_two_axes(self):
         root = self.board()
         self.gamepad(root, "GameSir Nova 2 Lite", bitmap(0x130, 0x131, 0x133), bitmap(0, 1, 0x10))
-        self.assertTrue(agent.read_hardware(str(root))["gamepad"]["present"])
+        self.assertTrue(probe.read_hardware(str(root))["gamepad"]["present"])
 
     def test_keyboard_is_not_a_gamepad(self):
         root = self.board()
         # Keys present, but no absolute axes: a keyboard.
         self.gamepad(root, "AT Keyboard", bitmap(0x130, 30, 31), "")
-        self.assertFalse(agent.read_hardware(str(root))["gamepad"]["present"])
+        self.assertFalse(probe.read_hardware(str(root))["gamepad"]["present"])
+
+    def test_unit_installed_distinguishes_a_mask_from_a_missing_unit(self):
+        root = self.board()
+        # A mask is a /dev/null symlink and is not the unit itself.
+        (root / "etc/systemd/system").mkdir(parents=True)
+        (root / "etc/systemd/system/tofd.service").symlink_to("/dev/null")
+        self.assertFalse(probe.unit_installed("tofd.service", str(root)))
+        # A real file behind the mask is.
+        (root / "usr/lib/systemd/system").mkdir(parents=True)
+        (root / "usr/lib/systemd/system/tofd.service").write_text("[Unit]\n", encoding="utf-8")
+        self.assertTrue(probe.unit_installed("tofd.service", str(root)))
+        self.assertFalse(probe.unit_installed("mediad.service", str(root)))
 
     def test_capability_bit_matches_sysfs_word_order(self):
         words = bitmap(0x130, 0x100, 3, words=9)
-        self.assertTrue(agent.capability_bit(words, 0x130))
-        self.assertTrue(agent.capability_bit(words, 0x100))
-        self.assertTrue(agent.capability_bit(words, 3))
-        self.assertFalse(agent.capability_bit(words, 0x131))
-        self.assertFalse(agent.capability_bit(words, 575), "past the last word is not a bit")
-        self.assertFalse(agent.capability_bit("", 0x130))
-        self.assertFalse(agent.capability_bit("zzzz", 0x130))
+        self.assertTrue(probe.capability_bit(words, 0x130))
+        self.assertTrue(probe.capability_bit(words, 0x100))
+        self.assertTrue(probe.capability_bit(words, 3))
+        self.assertFalse(probe.capability_bit(words, 0x131))
+        self.assertFalse(probe.capability_bit(words, 575), "past the last word is not a bit")
+        self.assertFalse(probe.capability_bit("", 0x130))
+        self.assertFalse(probe.capability_bit("zzzz", 0x130))
 
 
 class AutostartPlanTests(unittest.TestCase):
@@ -233,11 +245,24 @@ class AutostartPlanTests(unittest.TestCase):
         self.assertEqual(commands, (["enable", "--", "mediad.service"],))
 
     def test_masked_unit_is_unmasked_before_it_is_enabled(self):
-        commands, reason = units.autostart_plan("tofd.service", True, "masked")
+        commands, reason = units.autostart_plan("tofd.service", True, "masked", True)
         self.assertEqual(reason, "")
         self.assertEqual(commands, (["unmask", "--", "tofd.service"],
                                     ["enable", "--", "tofd.service"]),
                          "enable alone leaves a masked unit off at boot")
+
+    def test_masked_but_not_installed_is_never_unmasked(self):
+        # This board's tofd.service is a /dev/null symlink with no unit file
+        # behind it: unmasking then enabling fails with "does not exist" and
+        # leaves the mask removed, which is a state the click did not ask for.
+        commands, reason = units.autostart_plan("tofd.service", True, "masked", False)
+        self.assertEqual(commands, (), "no unmask, no enable")
+        self.assertIn("没有安装", reason)
+
+    def test_enable_of_a_disabled_but_missing_unit_is_refused(self):
+        commands, reason = units.autostart_plan("mediad.service", True, "disabled", False)
+        self.assertEqual(commands, ())
+        self.assertIn("没有安装", reason)
 
     def test_disable_a_masked_unit_is_refused_rather_than_faked(self):
         commands, reason = units.autostart_plan("tofd.service", False, "masked")
@@ -340,8 +365,10 @@ class FakeTransport:
 def controller_store(tofd_active="inactive"):
     return {"bus": {"mode": "commissioning", "phase": "ready", "torque_state": "off"},
             "servos": [], "service_sample_fresh": True, "service_compatible": True,
-            "system": {"units": [{"unit": "tofd.service", "active": tofd_active,
-                                  "enabled": "masked", "load": "masked"}]}}
+            # The units channel, not `system`: in --feetech mode `system` is
+            # robotd's telemetry and carries no unit rows.
+            "units": {"units": [{"unit": "tofd.service", "active": tofd_active,
+                                 "enabled": "masked", "load": "masked"}]}}
 
 
 class ControllerTests(unittest.TestCase):

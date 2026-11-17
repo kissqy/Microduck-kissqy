@@ -23,6 +23,8 @@ assert.deepEqual(autostartState({enabled:'disabled',load:'loaded'}),{tone:'neutr
 assert.deepEqual(autostartState({enabled:'masked',load:'masked'}),{tone:'warn',label:'已屏蔽'});
 assert.deepEqual(autostartState({enabled:'static',load:'loaded'}),{tone:'neutral',label:'内建'});
 assert.deepEqual(autostartState({enabled:'',load:'not-found'}),{tone:'neutral',label:'—'});
+// This board's tofd: a mask with no unit file behind it.
+assert.deepEqual(autostartState({enabled:'masked',load:'masked',installed:false}),{tone:'warn',label:'已屏蔽 · 未安装'});
 
 // Hardware is three-state: an unasked ToF is neither present nor absent.
 assert.deepEqual(hardwareChip('camera',{present:true,detail:'imx219'},HW.camera),
@@ -60,6 +62,10 @@ assert.equal(autostartCommand({load:'not-found',enabled:''},META,true),null);
 assert.equal(autostartCommand({load:'loaded',enabled:'static'},META,true),null);
 assert.equal(autostartCommand({load:'masked',enabled:'masked'},META,false),null);
 assert.equal(autostartCommand({load:'masked',enabled:'masked'},META,true).enabled,true);
+// Nothing to enable when the mask has no unit behind it.
+assert.equal(autostartCommand({load:'masked',enabled:'masked',installed:false},META,true),null);
+assert.equal(autostartLabel({load:'masked',enabled:'masked',installed:false},META),'未安装');
+assert.match(autostartReason({load:'masked',enabled:'masked',installed:false},META),/没有安装/);
 
 assert.equal(autostartLabel({enabled:'masked'},META),'开启开机自启（会先解除屏蔽）');
 assert.equal(autostartLabel({enabled:'disabled'},META),'设为开机自启');

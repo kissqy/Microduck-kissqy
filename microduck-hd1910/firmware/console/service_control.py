@@ -196,6 +196,15 @@ class ServiceTransport:
         match = re.search(r"^UnitFileState=(.*)$", result.get("message", ""), re.M)
         return match[1].strip() if match else ""
 
+    def unit_installed(self, unit, password=None):
+        """Whether a real unit file exists, read by the same probe the page polls."""
+        source = ROOT.joinpath('system_probe.py').read_text(encoding='utf-8')
+        result = self._manage(['python3', '-u', '-c', source,
+                               json.dumps({'units': [unit]})],
+                              password=password, privileged=False, record_output=False)
+        rows = result.get('units') or []
+        return bool(rows and rows[0].get('installed') is True)
+
     def autostart(self, unit, enabled, password=None):
         """Enable or disable one unit's boot behaviour, then read the result back.
 
@@ -203,7 +212,10 @@ class ServiceTransport:
         service still stays off at boot, so the state is re-read and compared.
         """
         before = self.unit_state(unit, password)
-        commands, reason = units.autostart_plan(unit, enabled, before)
+        # A masked unit may have no unit file at all on this board; unmasking it
+        # and then failing to enable would leave the mask removed.
+        installed = self.unit_installed(unit, password)
+        commands, reason = units.autostart_plan(unit, enabled, before, installed)
         if reason: raise ControlError(reason, 409)
         for argv in commands:
             self._manage(["/bin/systemctl", *argv], password)
@@ -655,7 +667,7 @@ class ServiceController:
                 elif action == 'tof-probe':
                     # tofd owns I2C3 while it runs; a probe would interleave bytes
                     # with its frame poll, so the answer is "read the frames instead".
-                    tofd = next((row for row in snapshot.get("system", {}).get("units") or []
+                    tofd = next((row for row in (snapshot.get("units") or {}).get("units") or []
                                  if isinstance(row, dict) and row.get("unit") == "tofd.service"), None)
                     if tofd and tofd.get("active") == "active":
                         raise ControlError("tofd 正在使用 I²C3，先停止 tofd 再探测 0x29（或直接看 ToF 面板）", 409)

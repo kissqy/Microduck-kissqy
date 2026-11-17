@@ -41,11 +41,21 @@ class SystemWatch:
     def _request(self):
         return json.dumps({"units": list(self.names)})
 
+    def _transport(self):
+        # `transport` may be a callable. The console replaces the service
+        # transport whenever the SSH target reconnects (`connection._connect`),
+        # and the retired object's channel is closed on purpose; sampling it
+        # afterwards reported “服务连接已关闭” forever, leaving the process panel
+        # empty until the console was restarted. A callable resolves to whatever
+        # transport is live at sample time.
+        return self.transport() if callable(self.transport) else self.transport
+
     def sample(self):
         """One reading, from the board (SSH) or from this machine (local mode)."""
         request = self._request()
-        if self.transport is not None:
-            return self.transport._manage(
+        transport = self._transport()
+        if transport is not None:
+            return transport._manage(
                 ["python3", "-u", "-c", self._source(), request],
                 privileged=False, record_output=False)
         result = subprocess.run([sys.executable, "-u", "-c", self._source(), request],

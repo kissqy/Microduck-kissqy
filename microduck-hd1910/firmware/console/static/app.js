@@ -164,7 +164,7 @@ function render(s,addHistory=true){
   }else if(apiOkay)cb.hidden=true;
 }
 function renderTof(s){
-  const view=tofView(s),live=view.status==='live',f=s.tof||{},grid=$('tof-grid');
+  const view=tofView(s,cfg?.tof_enabled!==false),live=view.status==='live',f=s.tof||{},grid=$('tof-grid');
   const validShape=view.validFrame;
   badge('tof-badge',view.status,view.label);
   text('tof-message',view.detail);
@@ -266,7 +266,7 @@ function choose(id){
 function renderDiagnostics(s){
   const names={state:'robotd / 姿态状态',health:'robotd / 健康指标',tof:'tofd / 深度矩阵',system:'Zero / 系统信息',capabilities:'robotd / 可用动作'};
   names.bus='robotd / 舵机总线';names.calibration='robotd / 已保存标定';names.units='Zero / 服务与硬件';
-  const tof=tofView(s);
+  const tof=tofView(s,cfg?.tof_enabled!==false);
   $('channel-list').innerHTML=Object.entries(s.channels).filter(([k])=>k!=='bench'&&(s.mode==='service'?(s.bus?.mode!=='commissioning'||!['state','capabilities'].includes(k)):!['bus','calibration'].includes(k))).map(([k,c])=>{
     const status=k==='tof'?tof.status:c.status,label=k==='tof'?tof.label:statusNames[status];
     const detail=k==='tof'?tof.detail:messageZh(c.error);

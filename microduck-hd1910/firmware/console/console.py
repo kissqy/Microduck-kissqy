@@ -310,7 +310,8 @@ def main(argv=None):
     modes.add_argument("--dashboard", action="store_true", help="直接打开中控，在页面填写 SSH 地址和密码连接")
     parser.add_argument("--feetech", action="store_true", help="HD1910 + FT6 正式 robotd 服务；不直接占用串口")
     parser.add_argument("--robotd-socket", default="/run/robotd.sock")
-    parser.add_argument("--tofd-socket", default="/run/tofd/tof.sock")
+    parser.add_argument("--tofd-socket", default="",
+                        help="tofd 的 Unix socket；留空（默认）表示不采集 ToF，中控不会连接 tofd")
     parser.add_argument("--camera-host", default="duck-10e4.local")
     parser.add_argument("--camera-port", type=int, default=8443)
     parser.add_argument("--hz", type=int, choices=range(1, 51), default=50,
@@ -344,6 +345,7 @@ def main(argv=None):
               "mode": mode, "hz": args.hz, "control_enabled": control_enabled,
               "ssh_target": args.ssh,
               "service_enabled": mode == "service",
+              "tof_enabled": bool(args.tofd_socket),
               "units": units.unit_meta(), "hardware": units.hardware_meta(),
               "sound": {"tags": [{"tag": tag, "name": sound_test.NAMES[tag]} for tag in sound_test.TAGS],
                         "names": dict(sound_test.NAMES)},
@@ -383,7 +385,7 @@ def main(argv=None):
         # telemetry, and in --feetech mode agent.py never runs; sample it here
         # so both modes read the same way.
         watch = SystemWatch(store, units.UNIT_NAMES,
-                            transport=service_controller.transport if service_controller else None,
+                            transport=(lambda: service_controller.transport) if service_controller else None,
                             log=getattr(store, 'system_log', None))
         watch.start(stop)
         if mode != "service" and not connection: threading.Thread(target=record, daemon=True).start()

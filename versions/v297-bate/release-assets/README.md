@@ -2,7 +2,7 @@
 
 [← 版本说明](../README.md) · [中控专页](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [Release 下载与附件](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate)
 
-本版运行包附件正在补充，以 Release 的 **Assets** 中实际上传文件为准。此目录保留本版文件归档入口。
+本版运行包统一从 Release 的 **Assets** 获取，以实际上传文件为准。此目录保留本版文件归档入口。
 
 建议运行包名称：`Microduck-Console-Studio-V297-BATE.zip`。
 

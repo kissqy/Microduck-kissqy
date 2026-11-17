@@ -10,7 +10,7 @@
 >
 > [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 文件目录](../versions/v297-bate/)
 >
-> 已有 R2 / control.102 用户只需更换中控。本版实机验收待完成；V260 稳定版继续保留。附件正在补充，以 Release 的 Assets 实际上传文件为准。
+> 已有 R2 / control.102 用户只需更换中控。本版实机验收待完成；V260 稳定版继续保留。运行包统一从 Release 的 Assets 获取。
 
 
 ## 当前下载 · 2026-11-13

@@ -4,7 +4,7 @@
 
 Updated November 13, 2026. Project: <https://github.com/kissqy/Microduck-kissqy>.
 
-V297 BATE independent console pre-release: [features and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release Assets](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate). Existing R2 / control.102 users only replace the console. Attachments are being added; physical acceptance is pending.
+V297 BATE independent console pre-release: [features and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release Assets](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate). Existing R2 / control.102 users only replace the console. Use the actual runtime in Release Assets; physical acceptance is pending.
 
 - Default setup: **System Image R2 + Microduck Console Studio V260 (R17)**.
 - Robot firmware: official Microduck 0.15.1 / control.102.

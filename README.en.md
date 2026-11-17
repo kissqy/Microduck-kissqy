@@ -33,7 +33,7 @@ The three build stages and optional advanced guide are in Chinese. [English buil
 >
 > [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 version files](versions/v297-bate/README.en.md)
 >
-> Existing R2 / control.102 users only replace the desktop console. Physical-robot acceptance is pending; V260 remains stable. Attachments are being added to Release Assets.
+> Existing R2 / control.102 users only replace the desktop console. Physical-robot acceptance is pending; V260 remains stable. Download the actual console runtime from Release Assets.
 
 
 ## 🏆 One-legged balance · A new training milestone

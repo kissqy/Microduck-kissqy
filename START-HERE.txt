@@ -6,7 +6,7 @@ Microduck 当前公开发布 · 2026-11-13
 项目：https://github.com/kissqy/Microduck-kissqy
 V297 BATE 独立中控测试版：https://kissqy.github.io/Microduck-kissqy/console-bate/
 发布与下载：https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate
-已有 R2 / control.102 只需换中控；实机验收待完成。运行包附件正在补充。
+已有 R2 / control.102 只需换中控；实机验收待完成。运行包统一从 Release 的 Assets 获取。
 
 默认使用：系统镜像 R2 + Microduck Console Studio V260（R17）。
 机器人固件：官方 0.15.1 / control.102

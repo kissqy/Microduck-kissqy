@@ -8,7 +8,7 @@
 | --- | --- |
 | 独立中控介绍与编号方法 | [V297 BATE 专页](https://kissqy.github.io/Microduck-kissqy/console-bate/) |
 | 完整更新说明 | [新增功能、修复与使用方法](../../docs/releases/console-studio-v297-bate.md) |
-| 中控运行包 | [本版 Release 的 Assets](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate)；附件正在补充，以实际上传文件为准 |
+| 中控运行包 | [本版 Release 的 Assets](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate)；请选择 Assets 中实际上传的中控运行包 |
 | 本版文件目录 | [release-assets/](release-assets/) |
 | 中控源码 | 中控运行包包含 Python 与前端源码；附件上传后完整解压查看。独立源码附件以 Release 实际上传内容为准 |
 | control.102 固件与源码 | [V260 固件说明](../v260/README.md) · [固件源码](../v260/firmware/) |

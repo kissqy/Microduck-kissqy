@@ -5,7 +5,8 @@ import * as T from './vendor/three.module.min.js?demo=20261013';
 // Native STEP mm -> frozen servo local m: (Z + 8, X, Y) / 1000.
 // The shaft axis remains local X through Y=Z=0; the two output annuli end
 // at X=+/-14.5 mm, exactly matching the pinned reference mesh's shaft planes.
-// No non-uniform scaling, parent/body transforms or joint axes are changed.
+// Selected cases may be reflected locally for installation display only;
+// parent/body transforms and joint axes remain unchanged.
 // The supplied STEP's shell thickness is 25.5 mm, although its drawing says
 // 23 mm. Preserve the supplied CAD and shaft datums rather than silently
 // stretching either the housing or the socket placement to a reference box.
@@ -65,6 +66,17 @@ function idTexture(id){
   const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;return texture;
 }
 
+function mirrorCaseAcrossShaft(geometry){
+  // Reflect about local X=0 (shaft midpoint), preserving the shaft line.
+  const mirrored=geometry.clone().scale(-1,1,1),index=mirrored.index;
+  // A baked reflection reverses triangle handedness; restore outward winding.
+  for(let i=0;i<index.count;i+=3){
+    const b=index.getX(i+1);index.setX(i+1,index.getX(i+2));index.setX(i+2,b);
+  }
+  index.needsUpdate=true;
+  mirrored.computeBoundingBox();mirrored.computeBoundingSphere();return mirrored;
+}
+
 /** Call prepareServoModels() once before attaching the 15 servo instances. */
 export function attachServoModel(servo,id){
   if(!assets)throw Error('请先加载 HD1910 舵机模型');
@@ -76,10 +88,14 @@ export function attachServoModel(servo,id){
   // Turn the complete displayed case and its details together; preserve the
   // shaft line, Mesh transform, parent links and all joint directions.
   const turnedCase=[14,24,32,33].includes(id),uprightHip=id===10||id===20;
-  const caseGeometry=turnedCase?assets.geometries[0].clone().rotateZ(Math.PI):(uprightHip?assets.hipGeometry:assets.geometries[0]);
+  // Hip-pitch and knee sockets face away from the duck on both legs.
+  // Mirror each case itself, rather than rotating its mounting/joint frame.
+  const mirroredCase=[12,13,22,23].includes(id);
+  const caseGeometry=mirroredCase?mirrorCaseAcrossShaft(assets.geometries[0]):(turnedCase?assets.geometries[0].clone().rotateZ(Math.PI):(uprightHip?assets.hipGeometry:assets.geometries[0]));
   servo.geometry=caseGeometry;
   const group=new T.Group();group.name=`servo-${id}-identification-and-ports`;servo.add(group);
   if(turnedCase||uprightHip)group.rotation.z=Math.PI;
+  if(mirroredCase)group.scale.x=-1;
   const shellMaterial=new T.MeshStandardMaterial({color:0xe7e4d9,roughness:.66,metalness:.02,side:T.DoubleSide});
   const metalMaterial=new T.MeshStandardMaterial({color:0xc9b26b,roughness:.32,metalness:.65});
   const ports={};
@@ -116,6 +132,7 @@ export function attachServoModel(servo,id){
     decal.name=`servo-id-${id}-${sign>0?'left':'right'}`;decal.renderOrder=foregroundKnee?20:0;
     decal.rotation.x=sign>0?-Math.PI/2:Math.PI/2;
     if(foregroundKnee&&sign<0)decal.rotateZ(Math.PI);
+    if(mirroredCase)decal.scale.x=-1; // Keep ID text readable after reflection.
     decal.position.set(.0005,sign*.01008,-.0175);group.add(decal);decals.push(decal);
   }
   const detail={group,ports,decals,texture,
@@ -128,7 +145,7 @@ export function attachServoModel(servo,id){
     },
     dispose(){
       group.removeFromParent();servo.geometry=originalGeometry;delete servo.userData.hd1910Assembly;
-      if(turnedCase)caseGeometry.dispose();
+      if(turnedCase||mirroredCase)caseGeometry.dispose();
       shellMaterial.dispose();metalMaterial.dispose();decalMaterial.dispose();texture?.dispose();
       group.traverse(object=>{if(object.isMesh&&object.geometry!==assets.geometries[1]&&object.geometry!==assets.geometries[2])object.geometry.dispose();});
     },

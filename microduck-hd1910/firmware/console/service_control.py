@@ -1,4 +1,5 @@
 """Finite commissioning jobs via robotd; relax uses an independent connection."""
+import copy
 import json
 import math
 import re
@@ -29,6 +30,10 @@ HOME_RESTORE_TIMEOUT = 5.0
 HOME_POLL_INTERVAL = .1
 HOME_TOLERANCE_DEG = 5.0
 HOME_CONFIRM_SAMPLES = 3
+CAL_ALL_DEFAULT_PATH = "/etc/robot/feetech-ft5/hd1910-calibration.toml"
+CAL_ALL_VERIFY_TIMEOUT = 10.0
+
+
 def home_feedback(snapshot):
     """Describe measured Home readiness; an accepted RPC or elapsed ramp is not arrival."""
     report = snapshot.get("bus") or {}
@@ -92,6 +97,7 @@ def validate(command):
               "center": {"action", "unassembled", "duration_ms"},
               "capture": {"action", "id", "angle_deg", "direction", "min_deg", "max_deg"},
               "verify-imu": {"action", "confirmed", "mount_wxyz"},
+              "calibrate-all": {"action", "confirmed"},
               "unit-autostart": {"action", "unit", "enabled", "supported"},
               "tof-probe": {"action", "supported"},
               "forget-sudo-password": {"action"}}
@@ -138,6 +144,8 @@ def validate(command):
         if type(command["direction"]) is not int or command["direction"] not in (-1, 1): raise ControlError("方向必须为 +1 或 -1", 400)
         if not command["min_deg"] <= command["angle_deg"] <= command["max_deg"] or command["min_deg"] >= command["max_deg"]:
             raise ControlError("已知角度必须在实际关节限位之内", 400)
+    if action == "calibrate-all" and command["confirmed"] is not True:
+        raise ControlError("请先确认机器人已摆到零位并有支撑", 400)
     if action == "verify-imu":
         q = command["mount_wxyz"]
         if command["confirmed"] is not True: raise ControlError("请先核对机身安装方向", 400)
@@ -161,7 +169,10 @@ class ServiceTransport:
         self.credential.forget()
 
     def call(self, command):
-        timeout = (command.get("duration_ms", 0)/1000)*(15 if command["action"] == "center" else 1)+(135 if command["action"] == "center" else 15)
+        if command["action"] == "calibrate-all":
+            timeout = 60
+        else:
+            timeout = (command.get("duration_ms", 0)/1000)*(15 if command["action"] == "center" else 1)+(135 if command["action"] == "center" else 15)
         method = {"relax": "robot.relax", "init": "robot.init", "home-stop": "robot.enable"}.get(command["action"], "robot.busCommand")
         if self.log: self.log.add('服务 IPC', json.dumps({'method':method,'command':command},ensure_ascii=False))
         reply = self.channel.request({"method":method, "params":command if method == "robot.busCommand" else {"on":False} if method == "robot.enable" else {},
@@ -466,7 +477,9 @@ class ServiceController:
                     self.power_boot_id = None
                     self.job.setdefault("result", {})["reconnected"] = True
             credential = self.transport.credential_status() if hasattr(self.transport, 'credential_status') else {}
-            return {"available": True, "busy": self.busy, "stopping": self.stopping, "job": {k:v for k,v in self.job.items() if k not in {'log','log_revision','log_truncated'}} if self.job else None,
+            job = copy.deepcopy({k:v for k,v in self.job.items()
+                                 if k not in {'log','log_revision','log_truncated'}}) if self.job else None
+            return {"available": True, "busy": self.busy, "stopping": self.stopping, "job": job,
                     **credential,
                     "home": home_feedback(snapshot),
                     "error": self.error}
@@ -490,6 +503,192 @@ class ServiceController:
                 or not isinstance(gravity, list) or len(gravity) != 3 or not all(math.isfinite(v) for v in gravity)
                 or gravity[2] > -0.8):
             raise ControlError("请将机身直立支撑，核对 IMU 重力方向和安装确认", 409)
+
+    @staticmethod
+    def _cal_all_preflight(snapshot):
+        report = snapshot.get("bus") or {}
+        rows = snapshot.get("servos") or []
+        status = snapshot.get("calibration") or {}
+        saved = status.get("calibration") or {}
+        by_id = {joint.get("id"): joint for joint in saved.get("joints", [])
+                 if isinstance(joint, dict)}
+        if report.get("mode") != "commissioning":
+            raise ControlError("请先切到标定模式", 409)
+        if report.get("phase") != "ready":
+            raise ControlError("等待标定模式就绪", 409)
+        if report.get("torque_state") != "off" or report.get("torque_off_pending"):
+            raise ControlError("请先停止并松开，等待扭矩 OFF", 409)
+        if snapshot.get("service_sample_fresh") is not True:
+            raise ControlError("等待新鲜的标定模式反馈", 409)
+        if report.get("motion") or report.get("power_pending"):
+            raise ControlError("总线移动或电源操作正在进行，请等待结束", 409)
+        ids = [row.get("id") for row in rows if isinstance(row, dict)]
+        if (len(rows) != len(IDS) or set(ids) != set(IDS)
+                or any(row.get("status") != "live" for row in rows)):
+            raise ControlError("需要 15 颗关节的实时反馈", 409)
+        if any(row.get("calibrated") is not True for row in rows):
+            raise ControlError("15 颗关节的实时标定不完整", 409)
+        if snapshot.get("saved_calibrated_count") != len(IDS) or set(by_id) != set(IDS):
+            raise ControlError("请先完成 15 个关节的保存标定，再做全关节 CAL", 409)
+        joints = []
+        for row in rows:
+            sid = row["id"]
+            cal = by_id.get(sid)
+            if not isinstance(cal, dict) or cal.get("calibrated") is not True:
+                raise ControlError(f"关节 ID {sid} 尚未保存标定", 409)
+            if cal.get("name") != row.get("name"):
+                raise ControlError(f"关节 ID {sid} 的标定名称与实际关节不一致", 409)
+            direction = cal.get("direction")
+            if type(direction) is not int or direction not in (-1, 1):
+                raise ControlError(f"关节 ID {sid} 的已保存方向无效", 409)
+            lo, hi = cal.get("min_rad"), cal.get("max_rad")
+            if (type(lo) not in (int, float) or type(hi) not in (int, float)
+                    or not math.isfinite(lo) or not math.isfinite(hi) or not lo < 0 < hi):
+                raise ControlError(f"关节 ID {sid} 的已保存限位不包含 0°，不能做全零标定", 409)
+            raw_lo = 2048 + direction * lo / math.tau * 4096
+            raw_hi = 2048 + direction * hi / math.tau * 4096
+            if not (0 <= raw_lo <= 4095 and 0 <= raw_hi <= 4095):
+                raise ControlError(f"关节 ID {sid} 的限位在 CAL 后越过单圈边界，不能做全零标定", 409)
+            zero = cal.get("zero_raw")
+            if type(zero) is not int or not 0 <= zero <= 4095:
+                raise ControlError(f"关节 ID {sid} 的已保存零位无效", 409)
+            joints.append({"id": sid, "name": row.get("name"), "direction": direction,
+                           "min_deg": math.degrees(lo), "max_deg": math.degrees(hi)})
+        path = status.get("calibration_path")
+        return {"joints": joints,
+                "path": path if isinstance(path, str) and path.startswith("/") else CAL_ALL_DEFAULT_PATH}
+
+    def _job_progress(self, job, phase, message):
+        with self.lock:
+            job.update(phase=phase, message=message)
+            self.store.record_service_command(job)
+
+    def _check_epoch(self, epoch):
+        with self.lock:
+            if self.closed or epoch != self.cancel_epoch:
+                raise ControlError("全关节标定已取消")
+
+    def _ingest_calibration(self, reply):
+        if isinstance(reply, dict) and isinstance(reply.get("calibration"), dict):
+            calibration = reply["calibration"]
+            data = reply if "joints" in calibration else calibration
+            self.store.ingest({"channel": "calibration", "data": data})
+
+    def _verify_cal_all(self, epoch, joints):
+        reply = self.transport.call({"action": "calibration-status"})
+        self._ingest_calibration(reply)
+        saved = (reply.get("calibration") if isinstance(reply, dict) else None) or {}
+        by_id = {joint.get("id"): joint for joint in saved.get("joints", [])
+                 if isinstance(joint, dict)}
+        wanted = {joint["id"] for joint in joints}
+        bad = [sid for sid in wanted if by_id.get(sid, {}).get("calibrated") is not True
+               or by_id.get(sid, {}).get("zero_raw") != 2048]
+        deadline = time.monotonic() + CAL_ALL_VERIFY_TIMEOUT
+        rows = {}
+        while time.monotonic() < deadline:
+            self._check_epoch(epoch)
+            snapshot = self.store.snapshot()
+            live = {row.get("id"): row for row in (snapshot.get("servos") or [])
+                    if row.get("status") == "live"}
+            if (snapshot.get("service_sample_fresh") is True
+                    and (snapshot.get("bus") or {}).get("mode") == "commissioning"
+                    and wanted <= set(live)):
+                rows = live
+                break
+            time.sleep(.25)
+        details = []
+        for joint in joints:
+            sid = joint["id"]
+            row = rows.get(sid) or {}
+            position, angle = row.get("position_raw"), row.get("angle_deg")
+            ok = (type(position) is int and abs(position - 2048) <= 2
+                  and row.get("calibrated") is True
+                  and isinstance(angle, (int, float)) and math.isfinite(angle) and abs(angle) <= .5)
+            if not ok and sid not in bad:
+                bad.append(sid)
+            details.append({"id": sid, "position_raw": position,
+                            "zero_raw": by_id.get(sid, {}).get("zero_raw"), "angle_deg": angle})
+        if bad:
+            raise ControlError("标定后校验未通过：ID " + ", ".join(map(str, sorted(set(bad))))
+                               + "；请保持支撑，重新摆零位后再执行一次", 503)
+        return {"joints": details}
+
+    def _run_calibrate_all(self, job, epoch):
+        origin = self.store.snapshot()
+        if (origin.get("bus") or {}).get("calibrate_all") is not True:
+            raise ControlError("当前 robotd 不支持一键标定；请先升级到 feetech-ft6-control.44 或更高版本", 409)
+        preflight = self._cal_all_preflight(origin)
+        before = [{"id": row.get("id"), "name": row.get("name"),
+                   "position_raw": row.get("position_raw"),
+                   "zero_raw": (row.get("calibration") or {}).get("zero_raw"),
+                   "angle_deg": row.get("angle_deg")}
+                  for row in (origin.get("servos") or [])]
+        with self.lock:
+            job["calibration_all"] = {"total": len(IDS), "done_ids": [], "current_id": None,
+                                      "backup": None, "cal_results": [], "sync_results": [],
+                                      "before": before}
+        return self._run_calibrate_all_native(job, epoch, preflight)
+
+    def _run_calibrate_all_native(self, job, epoch, preflight):
+        self._job_progress(job, "calibrating", "robotd 原生 CAL 执行中…")
+        result_box = {}
+
+        def call():
+            try:
+                result_box["answer"] = self.transport.call({"action": "calibrate-all"})
+            except Exception as exc:
+                result_box["error"] = exc
+
+        worker = threading.Thread(target=call, daemon=True)
+        worker.start()
+        while worker.is_alive():
+            self._check_epoch(epoch)
+            status = (self.store.snapshot().get("bus") or {}).get("calibration_all")
+            if isinstance(status, dict):
+                self._cal_all_native_progress(job, status)
+            worker.join(timeout=.25)
+        worker.join()
+        if result_box.get("error"):
+            raise result_box["error"]
+        answer = result_box.get("answer") or {}
+        if not isinstance(answer, dict):
+            raise ControlError("原生全关节标定回执无效", 503)
+        self._ingest_calibration(answer)
+        completed = [sid for sid in (answer.get("completed_ids") or []) if type(sid) is int]
+        if set(completed) != {joint["id"] for joint in preflight["joints"]}:
+            raise ControlError("原生全关节标定未返回 15 颗完整回执，需保持支撑并检查日志", 503)
+        positions = answer.get("positions") or {}
+        if any(positions.get(str(sid)) != 2048 for sid in completed):
+            raise ControlError("原生 CAL 回执中有舵机位置不是 2048，需保持支撑并检查日志", 503)
+        backup = answer.get("backup")
+        with self.lock:
+            current = job.setdefault("calibration_all", {})
+            current["done_ids"] = completed
+            current["current_id"] = None
+            current["backup"] = backup
+            current["cal_results"] = [{"id": sid, "position": positions.get(str(sid))}
+                                      for sid in completed]
+            current["sync_results"] = [{"id": sid} for sid in completed]
+            job["message"] = f"原生 CAL 完成 {len(completed)}/{len(IDS)}，正在校验…"
+            self.store.record_service_command(job)
+        self._job_progress(job, "verifying", "正在复核 15 个关节的 2048 零位…")
+        verified = self._verify_cal_all(epoch, preflight["joints"])
+        message = f"{len(verified['joints'])}/15 已写入 EEPROM 并同步标定文件"
+        self._job_progress(job, "verified", message)
+        return {"message": message, "backup": backup, "joints": verified["joints"]}
+
+    def _cal_all_native_progress(self, job, status):
+        with self.lock:
+            current = job.setdefault("calibration_all", {
+                "total": status.get("total") or len(IDS), "done_ids": [], "current_id": None,
+                "backup": None, "cal_results": [], "sync_results": [], "before": []})
+            done = status.get("done_ids") or []
+            current["done_ids"] = list(done)
+            current["current_id"] = status.get("current_id")
+            job["phase"] = "calibrating"
+            job["message"] = (f"CAL {len(done)}/{status.get('total') or len(IDS)} · "
+                               f"ID {status.get('current_id')} · {status.get('stage') or ''}").strip()
+            self.store.record_service_command(job)
 
     def _home_snapshot(self, epoch, origin=None):
         with self.lock:
@@ -610,6 +809,9 @@ class ServiceController:
         action = command["action"]
         with self.lock:
             if self.closed: raise ControlError("中控已关闭")
+            if (action in STOP_ACTIONS and self.job and self.job.get("action") == "calibrate-all"
+                    and self.job.get("status") == "running"):
+                raise ControlError("全关节标定执行中，不能中断或重启", 409)
             try:self.sequences.accept(client,seq)
             except ValueError as exc:raise ControlError(str(exc)) from None
             paused=getattr(self.store,'connection_paused',None)
@@ -676,6 +878,10 @@ class ServiceController:
                 else:
                     if report.get("mode") != "commissioning": raise ControlError("逐关节操作需要服务处于 commissioning 模式")
                     if report.get("phase") != "ready" or report.get("torque_state") != "off": raise ControlError("请先停止并松开，等待服务确认停扭矩")
+                    if action == "calibrate-all":
+                        if report.get("calibrate_all") is not True:
+                            raise ControlError("当前 robotd 不支持一键标定；请先升级到 feetech-ft6-control.44 或更高版本", 409)
+                        self._cal_all_preflight(snapshot)
                 if action == "move":
                     row = next(r for r in snapshot["servos"] if r["id"] == command["id"])
                     if row["status"] != "live": raise ControlError("所选关节没有实时反馈")
@@ -703,19 +909,22 @@ class ServiceController:
         recover_input = False
         restarting=getattr(self.store,'robotd_restarting',None)
         restart=command['action'] in {'switch-mode','upgrade-service','reconnect-service','set-action-scale'}
+        pause_input=restart or command['action']=='calibrate-all'
         log=getattr(self.store,'system_log',None)
-        labels={'switch-mode':'服务模式切换','upgrade-service':'固件安装','reconnect-service':'重启固件','set-action-scale':'动作缩放','set-pad-settings':'手柄幅度设置','init':'回 HOME','repair-gamepad':'手柄连接修复','relax':'停止并松开','reboot':'重启 Zero','shutdown':'关闭 Zero','move':'关节移动','center':'整组居中','capture':'关节标定','verify-imu':'IMU 方向保存','unit-autostart':'开机自启','tof-probe':'ToF 0x29 探测'}
+        labels={'switch-mode':'服务模式切换','upgrade-service':'固件安装','reconnect-service':'重启固件','set-action-scale':'动作缩放','set-pad-settings':'手柄幅度设置','init':'回 HOME','repair-gamepad':'手柄连接修复','relax':'停止并松开','reboot':'重启 Zero','shutdown':'关闭 Zero','move':'关节移动','center':'整组居中','capture':'关节标定','calibrate-all':'全关节 CAL 标定','verify-imu':'IMU 方向保存','unit-autostart':'开机自启','tof-probe':'ToF 0x29 探测'}
         label=labels.get(command['action'],command['action'])
         if restart and restarting is not None:restarting.set()
         try:
-            if restart and self.controls and hasattr(self.controls,'pause_input'):
+            if pause_input and self.controls and hasattr(self.controls,'pause_input'):
                 try:self.controls.pause_input()
                 except Exception as exc:
                     if log:log.add('手柄输入清除',str(exc))
             with self.lock:
                 if command["action"] not in STOP_ACTIONS and (self.closed or epoch != self.cancel_epoch):
                     raise ControlError("指令在发送前已取消")
-            if command["action"] == "switch-mode":
+            if command["action"] == "calibrate-all":
+                answer = self._run_calibrate_all(job, epoch)
+            elif command["action"] == "switch-mode":
                 answer = self.transport.switch_mode(command["target"], sudo_password)
             elif command["action"] == "upgrade-service":
                 prepared=self.prepared_firmware if command['firmware']!='bundled' else None

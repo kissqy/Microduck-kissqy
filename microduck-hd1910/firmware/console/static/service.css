@@ -96,7 +96,7 @@
   .service-movement{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:10px}
   .service-movement>.service-action-row{margin:0;flex-wrap:nowrap}
 }
-.service-calibration,.service-center{border-top:1px solid var(--line);padding-top:9px;margin-top:9px}
+.service-calibration,.service-center,.service-cal-all{border-top:1px solid var(--line);padding-top:9px;margin-top:9px}
 .service-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:7px;align-items:start}
 .service-fields>.field{align-content:start;grid-template-rows:auto 32px auto}
 @supports (grid-template-rows:subgrid){
@@ -107,7 +107,18 @@
 .service-confirm-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px}
 .service-check{display:flex;align-items:flex-start;gap:7px;color:#b0c4a2;font-size:11px;line-height:1.6;margin:0;min-width:0}
 .service-check input{margin:3px 0 0;flex:none}.service-calibration>.service-confirm-row{margin-top:8px;justify-content:space-between}
-.service-calibration>p{margin-top:5px}.service-center h3{white-space:nowrap}.service-center button{margin-left:auto}.service-center p{margin-top:4px}
+.service-calibration>p{margin-top:5px}.service-center h3,.service-cal-all h3{white-space:nowrap}.service-center button,.service-cal-all button{margin-left:auto}.service-center p,.service-cal-all p{margin-top:4px}
+.service-cal-all .service-confirm-row{align-items:flex-start}.service-cal-all .service-check{flex:1 1 320px}
+.service-cal-all-warning{margin:6px 0 0;color:#e8d48a;font-size:11px;line-height:1.6;background:#332c18;border-left:3px solid #ad8b32;padding:6px 8px;border-radius:4px}
+.service-cal-all-before{margin-top:6px}.service-cal-all-before summary{cursor:pointer;color:#a9bca0;font-size:11px}
+.service-cal-all-before table{width:100%;border-collapse:collapse;margin-top:6px;font-size:11px}
+.service-cal-all-before th,.service-cal-all-before td{padding:2px 5px;border-bottom:1px solid var(--line);text-align:right}
+.service-cal-all-before th:nth-child(1),.service-cal-all-before td:nth-child(1),.service-cal-all-before th:nth-child(2),.service-cal-all-before td:nth-child(2){text-align:left}
+.service-cal-all-next{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+@container joint-workbench (max-width:629px){
+  .service-cal-all .service-check{flex:1 1 100%}
+  .service-cal-all .service-confirm-row button{margin-left:0;width:100%}
+}
 .service-job{margin:0;margin-top:auto;padding:9px 14px;font-size:13px;font-weight:700;line-height:1.6;overflow-wrap:anywhere;white-space:pre-wrap;min-width:0}
 .service-job.info,.service-job.running,.service-job.completed,.service-job.warning,.service-job.error{display:flex;align-items:center;gap:9px;border-top:1px solid}
 .service-job.info{background:#172f3b;border-color:#47758b;color:#c9eaff}

@@ -9,7 +9,7 @@
 
 [🏠 Project homepage](README.en.md)
 
-**Assembled-board reference subtotal: CNY 2996.62**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. Printing costs are additional, based on an actual quote or filament budget. The HUB is included at CNY 69; battery-connection parts and shipping are extra.
+**Assembled-board reference subtotal: CNY 2998.53**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. Printing costs are additional, based on an actual quote or filament budget. The HUB is included at CNY 69; battery-connection parts and shipping are extra.
 
 **[Open the shopping checklist (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/shopping.html)** · [Compare budget totals (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
 
@@ -25,13 +25,13 @@ Check the servos, boards, printed parts, cables and accessories before assembly.
 
 | Item | Buy assembled boards | DIY boards, including tools |
 | --- | ---: | ---: |
-| Duck body, including gamepad, URT2 and reference spare stock | ¥2709.62 | ¥2709.62 |
+| Duck body, including gamepad, URT2 and reference spare stock | ¥2711.53 | ¥2711.53 |
 | HAT + IMU | [HAT ¥119 + IMU ¥99](https://item.taobao.com/item.htm?id=1095121548583) | ¥94.22–134.22 · first component purchase |
 | Assembled HUB (buffer capacitor included) | ¥69 | ¥69 |
 | Soldering / programming tools and consumables | No board-soldering tools; assembled IMU has FT6 preflashed | ¥800–1000 |
-| **Total without a printer** | **¥2996.62** | **¥3672.84–3912.84** |
+| **Total without a printer** | **¥2998.53** | **¥3674.75–3914.75** |
 | 3D printer allowance | +¥3500 | +¥3500 |
-| **Total including a printer** | **¥6496.62** | **¥7172.84–7412.84** |
+| **Total including a printer** | **¥6498.53** | **¥7174.75–7414.75** |
 
 Printing-service costs are additional, based on an actual quote. No printer purchase is needed. [Edition features and printing instructions](hardware/3d-print-frankenduck/README.en.md).
 
@@ -94,6 +94,7 @@ The author supplied reference prices for the EAGET 32GB monitoring / dashcam mic
 | **M2×5 十字盘头平尾自攻螺丝**<br>M2\*5[200只]镀镍；铁镀镍 / 十字圆头 / 平尾自攻 / M2×5 | 包（200个） | 1 | ¥0.00 | ¥0.00 | 固万基官方旗舰店<br>[Product](https://item.taobao.com/item.htm?id=534923831046) |
 | **M2×6 十字盘头平尾自攻螺丝**<br>M2\*6[200只]镀镍；铁镀镍 / 十字圆头 / 平尾自攻 / M2×6 | 包（200个） | 1 | ¥3.31 | ¥3.31 | 固万基官方旗舰店<br>[Product](https://item.taobao.com/item.htm?id=534923831046) |
 | **M2×8 十字盘头平尾自攻螺丝**<br>M2\*8[200只]镀镍；铁镀镍 / 十字圆头 / 平尾自攻 / M2×8 | 包（200个） | 1 | ¥3.59 | ¥3.59 | 固万基官方旗舰店<br>[Product](https://item.taobao.com/item.htm?id=534923831046) |
+| **M2×8 超薄平尾自攻螺丝**<br>HUB 板专用；超薄头防卡鸭脖；200 个包邮 | 包（200个） | 1 | ¥1.91 | ¥1.91 | 天猫<br>[Product](https://detail.tmall.com/item.htm?id=619742150926&skuId=5593142362558) |
 | **M2×12 十字盘头平尾自攻螺丝**<br>M2\*12[200只]镀镍；铁镀镍 / 十字圆头 / 平尾自攻 / M2×12 | 包（200个） | 1 | ¥3.88 | ¥3.88 | 固万基官方旗舰店<br>[Product](https://item.taobao.com/item.htm?id=534923831046) |
 | **M2.6×8 十字盘头平尾自攻螺丝**<br>M2.6\*8[200只]镀镍；铁镀镍 / 十字圆头 / 平尾自攻 / M2.6×8 | 包（200个） | 1 | ¥3.59 | ¥3.59 | 固万基官方旗舰店<br>[Product](https://item.taobao.com/item.htm?id=534923831046) |
 

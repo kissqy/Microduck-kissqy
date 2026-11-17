@@ -62,44 +62,45 @@ main{--console-columns:minmax(0,1.65fr) repeat(3,minmax(0,1fr));--console-gap:18
 .inspection-device small{white-space:pre-line;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;line-height:1.5}.inspection-device.warn{border-color:#78663d;background:#29251b}.inspection-device.warn b{color:var(--amber)}
 
 /* Robot services: one row per unit, with run state, the hardware it needs and
-   its boot behaviour kept as three separate answers. */
+   its boot behaviour kept as three separate answers. Rows wrap rather than
+   squeeze: a service name, two badges, two hardware chips and a button do not
+   fit one line on a laptop, and truncating the name to "蓝..." loses the point. */
 .service-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;margin-bottom:20px}
 .process-legend{display:flex;flex-wrap:wrap;gap:14px;padding:0 16px 10px;font-size:11px;color:#8ea09a;align-items:center}
 .process-legend .status-dot{display:inline-block;margin-right:5px}
 .process-list{display:flex;flex-direction:column;gap:1px;background:var(--line);border-top:1px solid var(--line)}
-.process-row{display:grid;grid-template-columns:minmax(150px,1.1fr) auto minmax(0,1.5fr) minmax(0,1fr) auto;gap:12px;align-items:center;background:var(--panel);padding:9px 16px}
+.process-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;background:var(--panel);padding:9px 16px}
 .process-row:hover{background:#182023}
-.process-name{display:flex;align-items:center;gap:8px;min-width:0}
-.process-name strong{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.process-name code{font-size:11px;color:#728682;white-space:nowrap}
-.process-name .status-dot{width:7px;height:7px;border-radius:50%;background:#5a6a68;flex:none}
+.process-name{display:flex;align-items:baseline;gap:8px;flex:1 1 200px;min-width:0}
+.process-name strong{font-size:13px;font-weight:500;white-space:nowrap}
+.process-name code{font-size:11px;color:#728682;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.process-name .status-dot{width:7px;height:7px;border-radius:50%;background:#5a6a68;flex:none;align-self:center}
 .process-name .status-dot.live{background:var(--green)}
 .process-name .status-dot.warn{background:var(--warm)}
 .process-name .status-dot.bad{background:var(--red)}
 .process-badges{display:flex;gap:6px;flex:none}
-.process-hardware{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
-.process-detail{font-size:11px;color:#7d918c;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.process-actions{display:flex;gap:6px;justify-content:flex-end;flex:none}
-.process-actions .button{padding:4px 10px;font-size:11px}
+.process-hardware{display:flex;flex-wrap:wrap;gap:6px;flex:1 1 240px;min-width:0}
+.process-detail{font-size:11px;color:#7d918c;flex:0 1 auto;white-space:nowrap}
+.process-actions{display:flex;gap:6px;justify-content:flex-end;flex:0 0 auto;margin-left:auto}
+.process-actions .button{padding:4px 10px;font-size:11px;white-space:nowrap}
 .hw-chip{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:20px;border:1px solid var(--line);font-size:11px;color:#b9c7c3;white-space:nowrap}
 .hw-chip small{color:#74887f;font-size:10px;max-width:150px;overflow:hidden;text-overflow:ellipsis}
 .hw-chip.live{border-color:#3c5638;color:#cfe9b4}
 .hw-chip.bad{border-color:#5c3d39;color:#f0b3ac}
 .hw-chip.neutral{border-style:dashed;color:#8d9a97}
-@media(max-width:1100px){
-  .process-row{grid-template-columns:minmax(0,1fr) auto;row-gap:6px}
-  .process-hardware,.process-detail{grid-column:1/-1}
-  .process-actions{grid-column:1/-1;justify-content:flex-start}
+/* The two panels share a row only when there is room for both. */
+@media(min-width:1280px){.service-grid{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr)}}
+@media(max-width:760px){
+  .process-detail{flex:1 1 100%;white-space:normal}
+  .process-actions{width:100%}
 }
 
 /* Voice test: one button per official sound tag. */
-.service-grid{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
 .sound-panel .panel-note{margin-top:10px}
 .sound-buttons{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px;padding:4px 16px}
 .sound-buttons .button{justify-content:center;padding:9px 8px}
 .sound-tools{display:flex;gap:8px;padding:10px 16px 0}
 .sound-tools .button{padding:4px 10px;font-size:11px}
-@media(max-width:1100px){.service-grid{grid-template-columns:minmax(0,1fr)}}
 
 /* Two first-class numbers on one card: charge leads, pack voltage beside it.
    Each number keeps its unit on the same line — a "V" stranded on the next row

@@ -78,10 +78,12 @@
       scheduleLayout();
     });
     video.addEventListener('play', () => videos.forEach(other => { if (other !== video) other.pause(); }));
-    video.addEventListener('error', () => {
+    const showVideoError = () => {
       video.closest('[data-media-card]').querySelector('.media-error').hidden = false;
       scheduleLayout();
-    });
+    };
+    video.addEventListener('error', showVideoError);
+    video.querySelectorAll('source').forEach(source => source.addEventListener('error', showVideoError));
   });
   if ('IntersectionObserver' in window) {
     const lazy = new IntersectionObserver(entries => entries.forEach(entry => {

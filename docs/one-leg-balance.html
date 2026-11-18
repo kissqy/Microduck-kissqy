@@ -1,216 +1,23 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0d1113">
-<title>Microduck 飞特 HD1910 单脚平衡实机视频与动作演示 | kissqy</title>
-<meta name="description" content="kissqy 的 Microduck 飞特 HD1910 作者自训单脚平衡实机视频，以及行走、坐下、踢球、前滚翻与户外照片。查看现成动作模型、训练说明和完整复刻教程。">
-<style>
-:root{color-scheme:dark;--bg:#0d1113;--panel:#151c1f;--panel2:#192225;--line:#2b373a;--text:#e2e8e8;--muted:#91a39b;--green:#c1f577;--warm:#e2b977;--blue:#86b8df}
-*{box-sizing:border-box}
-body{margin:0;color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);min-height:100svh}
-a{color:inherit;text-decoration:none}
-button{font:inherit;cursor:pointer}
-.topbar{max-width:none;margin:auto;background:#101619f5;border-bottom:1px solid var(--line);padding:24px 5vw;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.brand{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:850;letter-spacing:-.5px}
-.brand-mark{display:grid;place-items:center;width:38px;height:38px;background:var(--green);border-radius:13px;color:#24311e;font-size:22px}
-.back{display:flex;align-items:center;gap:9px;padding:11px 17px;border:1px solid var(--line);border-radius:100px;background:var(--panel);font-size:14px;font-weight:650}
-.back:hover{background:var(--panel2)}
-.layout{max-width:none;margin:0 auto;padding:14px 5vw 56px;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,480px);gap:clamp(32px,7vw,112px);align-items:center}
-.copy{padding-bottom:20px}
-.eyebrow{color:var(--green);display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:750;letter-spacing:2px}
-.dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px #c1f57718}
-h1{font-size:clamp(64px,8.2vw,112px);line-height:1.06;letter-spacing:-5px;margin:26px 0 24px;font-weight:900}
-h1 span{color:var(--green)}
-.description{font-size:clamp(17px,1.5vw,21px);line-height:1.9;max-width:390px;margin:0;color:var(--muted)}
-.tags{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 36px}
-.tag{font-size:14px;font-weight:650;padding:9px 14px;border-radius:100px;background:var(--panel);border:1px solid var(--line)}
-.project-link{display:inline-flex;gap:12px;align-items:center;font-size:16px;font-weight:750;border-bottom:2px solid #c1f57766;padding-bottom:7px}
-.project-link:hover{border-color:var(--green)}
-.player-wrap{position:relative;width:min(100%,calc((100svh - 210px)*9/16));justify-self:center}
-.player{position:relative;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:34px;box-shadow:0 22px 65px #0005,0 3px 8px #0003}
-video{display:block;width:100%;aspect-ratio:9/16;object-fit:contain;background:#0b1012;border-radius:25px}
-.play{position:absolute;inset:10px;border:0;border-radius:25px;display:flex;align-items:center;justify-content:center;background:linear-gradient(transparent 45%,#0003);color:white}
-.play-circle{display:grid;place-items:center;width:82px;height:82px;border-radius:50%;background:var(--green);color:#24311e;box-shadow:0 8px 32px #0005;transition:transform .2s,background .2s}
-.play:hover .play-circle{transform:scale(1.08);background:#d4ff94}
-.play svg{width:29px;height:29px;margin-left:5px}
-.play[hidden]{display:none}
-.player-actions{display:flex;align-items:center;justify-content:center;gap:24px;margin-top:18px}
-.text-button{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;color:var(--text);padding:8px 4px;font-size:14px;font-weight:650}
-.text-button:hover{color:var(--green)}
-.status{min-height:1.5em;max-width:100%;font-size:14px;text-align:center;color:var(--muted);margin:5px 0 0}
-:focus-visible{outline:3px solid var(--green);outline-offset:5px}
-@media(min-width:1600px){.layout{max-width:none;grid-template-columns:minmax(0,1fr) minmax(320px,560px)}}
-@media(max-width:720px){
-.topbar{padding:12px 16px}.brand{font-size:17px}.brand-mark{width:34px;height:34px}.back{font-size:12px;padding:9px 12px}
-.layout{display:flex;flex-direction:column;justify-content:flex-start;min-height:calc(100svh - 58px);padding:4px 16px 16px;gap:12px}
-.copy{width:100%;padding:0;text-align:center}.copy .eyebrow{font-size:12px;letter-spacing:1px}
-h1{font-size:clamp(30px,8vw,38px);line-height:1.1;letter-spacing:-1px;margin:6px 0 0}h1 br{display:none}
-.copy .description,.copy .tags,.copy .project-link{display:none}
-.player-wrap{width:min(100%,440px,calc((100svh - 218px)*9/16 + 12px))}
-.player{padding:6px;border-radius:25px}video{border-radius:19px}.play{inset:6px;border-radius:19px}.play-circle{width:66px;height:66px}
-.player-actions{margin-top:6px;gap:24px}.text-button{font-size:13px;padding:8px 4px}.status:empty{display:none}.status{font-size:12px;margin-top:2px}
-}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
-
-@media(min-width:721px){.layout{min-height:calc(100svh - 86px)}}
-.gallery{max-width:none;margin:0 auto;padding:60px 5vw 88px;border-top:1px solid var(--line)}
-.gallery-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:30px}
-.gallery-heading h2{font-size:clamp(29px,4vw,44px);line-height:1.2;letter-spacing:-1px;margin:15px 0 12px}
-.gallery-heading p{color:var(--muted);font-size:16px;line-height:1.8;margin:0}
-.gallery-grid{display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:4px;overscroll-behavior-x:contain;padding:6px 4px 20px;scrollbar-color:#5b6d60 var(--panel);scrollbar-width:thin}
-.video-card{flex:0 0 clamp(260px,29vw,350px);scroll-snap-align:start;min-width:0;align-self:start;background:var(--panel);border:1px solid var(--line);border-radius:25px;padding:12px;box-shadow:0 10px 35px #0003}
-.clip-heading{display:flex;align-items:center;gap:10px;padding:4px 5px 15px}
-.clip-number{color:var(--green);font-size:14px;font-weight:800}
-.clip-heading h3{font-size:16px;margin:0;font-weight:750}
-.video-card video{aspect-ratio:9/16;max-height:min(62svh,540px);border-radius:15px}
-.gallery-footer{margin-top:36px;text-align:center}
-@media(max-width:720px){.gallery{padding:28px 16px 36px}.gallery-heading{margin-bottom:16px}.gallery-heading h2{font-size:27px}.gallery-heading p{font-size:14px}.gallery-grid{gap:14px;margin-right:-16px;padding-right:16px}.video-card{flex-basis:min(82vw,320px);padding:10px;border-radius:22px}.gallery-footer{margin-top:24px}}
-@media(min-width:721px){
- .topbar,.layout,.gallery{padding-inline:clamp(20px,2.5vw,72px)}
- .layout{grid-template-columns:minmax(0,1fr) minmax(320px,1fr);gap:clamp(28px,4vw,90px)}
- .player-wrap{width:min(100%,calc((100svh - 150px)*9/16))}
- .description{max-width:42ch}.video-card{flex-basis:clamp(300px,25vw,460px)}
-}
-</style>
-<link rel="stylesheet" href="./project-notice.css?v=20261028">
-<link rel="stylesheet" href="./photo-gallery.css?v=20261101-dark">
-<script defer src="./photo-gallery.js?v=20261101"></script>
-<link rel="canonical" href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html">
-<meta property="og:title" content="Microduck 飞特 HD1910 单脚平衡实机视频与动作演示 | kissqy">
-<meta property="og:description" content="kissqy 的 Microduck 飞特 HD1910 作者自训单脚平衡实机视频，以及行走、坐下、踢球、前滚翻与户外照片。查看现成动作模型、训练说明和完整复刻教程。">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html">
-<meta property="og:site_name" content="Microduck-kissqy">
-</head>
-<body>
-<header class="topbar">
-<a class="brand" href="https://github.com/kissqy/Microduck-kissqy" aria-label="Microduck · kissqy 项目首页"><span class="brand-mark" aria-hidden="true">🦆</span>Microduck · kissqy</a>
-<a class="back" href="https://github.com/kissqy/Microduck-kissqy"><span aria-hidden="true">↗</span> 返回项目</a>
-</header>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101317">
+<title>Microduck-kissqy 实机视频与照片｜飞特 HD1910 机器人鸭</title><meta name="description" content="Microduck-kissqy 飞特 HD1910 机器人鸭视频专区：最新视频、作者自训单脚平衡、行走与动作演示、户外照片，视频照片瀑布流浏览。">
+<link rel="canonical" href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html"><meta property="og:title" content="Microduck-kissqy 实机视频与照片"><meta property="og:description" content="最新视频、单脚平衡与动作演示、户外照片。看看飞特 HD1910 小鸭的真实表现。"><meta property="og:type" content="website"><meta property="og:url" content="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html"><meta property="og:site_name" content="Microduck-kissqy"><meta property="og:image" content="https://kissqy.github.io/Microduck-kissqy/assets/showcase/outdoor-03.webp">
+<link rel="stylesheet" href="media-gallery.css?v=20261119-gallery"><link rel="stylesheet" href="project-notice.css?v=20261028"><script defer src="media-gallery.js?v=20261119-gallery"></script>
+</head><body>
+<header class="topbar"><div class="wrap topbar-inner"><a class="brand" href="guides/" aria-label="Microduck kissqy"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#ffad70"/><path d="M9 23h9V11h12v11h-7v9H9z" fill="#291c12"/></svg>microduck <span>· kissqy</span></a><nav aria-label="页面导航"><a class="tutorial-link" href="guides/">制作教程</a><a href="#photo-gallery">看照片</a><a class="repo-link" href="https://github.com/kissqy/Microduck-kissqy">GitHub ↗</a></nav></div></header>
+<main class="wrap"><section class="hero" aria-labelledby="media-title"><p class="eyebrow">MICRODUCK · KISSQY / 飞特 HD1910</p><h1 id="media-title">实机视频与照片</h1><p class="hero-lead">动作演示与户外记录，看看这只小鸭的真实表现。</p><div class="hero-bottom"><div class="media-stats"><span><strong>16</strong>视频</span><span><strong>7</strong>照片</span><span><strong>5</strong>新增视频</span></div><a class="balance-link" href="#balance-video">单脚独立实机演示 ↗</a></div></section>
+<section aria-label="视频与照片瀑布流"><span id="more-videos" class="anchor"></span><span id="photo-gallery" class="anchor"></span><div class="media-toolbar"><div class="media-filters" role="group" aria-label="按内容查看"><button type="button" data-media-filter="all" aria-pressed="true">全部</button><button type="button" data-media-filter="video" aria-pressed="false">视频</button><button type="button" data-media-filter="photo" aria-pressed="false">照片</button></div><p class="media-count" id="media-count" role="status" aria-live="polite">16 个视频 · 7 张照片</p></div><div class="media-wall" id="photo-track"><article class="media-card video-card" data-media-card data-kind="video" aria-label="新增视频 01"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-placeholder.svg" aria-label="新增视频 01"><source src="https://github.com/user-attachments/assets/02fb6868-f065-410f-9eaa-304ac3960e17" type="video/mp4"></video></div><div class="card-caption"><h2>新增视频 01</h2><span class="media-kind new">新增</span></div><a class="media-open" href="https://github.com/user-attachments/assets/02fb6868-f065-410f-9eaa-304ac3960e17" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="新增视频 02"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-placeholder.svg" aria-label="新增视频 02"><source src="https://github.com/user-attachments/assets/3cee1526-86f9-4763-92ae-706c8816d8e4" type="video/mp4"></video></div><div class="card-caption"><h2>新增视频 02</h2><span class="media-kind new">新增</span></div><a class="media-open" href="https://github.com/user-attachments/assets/3cee1526-86f9-4763-92ae-706c8816d8e4" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="新增视频 03"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-placeholder.svg" aria-label="新增视频 03"><source src="https://github.com/user-attachments/assets/bc18f817-871f-45aa-9c91-64fe6f04ee5f" type="video/mp4"></video></div><div class="card-caption"><h2>新增视频 03</h2><span class="media-kind new">新增</span></div><a class="media-open" href="https://github.com/user-attachments/assets/bc18f817-871f-45aa-9c91-64fe6f04ee5f" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="新增视频 04"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-placeholder.svg" aria-label="新增视频 04"><source src="https://github.com/user-attachments/assets/2d98e2c5-3135-4316-ab43-ffc6b0b2101f" type="video/mp4"></video></div><div class="card-caption"><h2>新增视频 04</h2><span class="media-kind new">新增</span></div><a class="media-open" href="https://github.com/user-attachments/assets/2d98e2c5-3135-4316-ab43-ffc6b0b2101f" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="新增视频 05"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-placeholder.svg" aria-label="新增视频 05"><source src="https://github.com/user-attachments/assets/fc265461-3bab-4ecd-8a82-e4981d8194c4" type="video/mp4"></video></div><div class="card-caption"><h2>新增视频 05</h2><span class="media-kind new">新增</span></div><a class="media-open" href="https://github.com/user-attachments/assets/fc265461-3bab-4ecd-8a82-e4981d8194c4" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="单脚独立 · 作者自训"><div class="video-stage"><video id="balance-video" controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-posters/71fc2c95-8499-49f6-924b-837df42814cf.webp" aria-label="单脚独立 · 作者自训"><source src="https://github.com/user-attachments/assets/71fc2c95-8499-49f6-924b-837df42814cf" type="video/mp4"></video></div><div class="card-caption"><h2>单脚独立 · 作者自训</h2><span class="media-kind">0:16</span></div><a class="media-open" href="https://github.com/user-attachments/assets/71fc2c95-8499-49f6-924b-837df42814cf" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="实机记录 07"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-posters/008bb58b-7bbd-4de7-9687-9b6ef2d42ed7.webp" aria-label="实机记录 07"><source src="https://github.com/user-attachments/assets/008bb58b-7bbd-4de7-9687-9b6ef2d42ed7" type="video/mp4"></video></div><div class="card-caption"><h2>实机记录 07</h2><span class="media-kind">0:25</span></div><a class="media-open" href="https://github.com/user-attachments/assets/008bb58b-7bbd-4de7-9687-9b6ef2d42ed7" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card" data-media-card data-kind="photo"><a class="photo-link" id="photo-04" href="assets/showcase/outdoor-04.webp" data-gallery-photo data-title="遇见大鸭子" data-original="assets/showcase/original/outdoor-04.jpg" aria-label="放大查看：遇见大鸭子"><img src="assets/showcase/outdoor-04-thumb.webp" srcset="assets/showcase/outdoor-04-thumb.webp 360w, assets/showcase/outdoor-04.webp 1080w" sizes="(max-width:519px) calc(100vw - 32px), (max-width:900px) 45vw, 350px" width="360" height="480" loading="lazy" decoding="async" alt="侧前方站立的白橙色 Microduck，背景是橙黄色大鸭子"><div class="card-caption"><h2>遇见大鸭子</h2><span aria-hidden="true">↗</span></div></a></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="实机记录 08"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-posters/0a3edb38-0c25-429a-b552-94ea04881bf3.webp" aria-label="实机记录 08"><source src="https://github.com/user-attachments/assets/0a3edb38-0c25-429a-b552-94ea04881bf3" type="video/mp4"></video></div><div class="card-caption"><h2>实机记录 08</h2><span class="media-kind">0:33</span></div><a class="media-open" href="https://github.com/user-attachments/assets/0a3edb38-0c25-429a-b552-94ea04881bf3" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="实机记录 09"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-posters/0ec5b46b-1ec0-483a-a95d-3b3f307e155f.webp" aria-label="实机记录 09"><source src="https://github.com/user-attachments/assets/0ec5b46b-1ec0-483a-a95d-3b3f307e155f" type="video/mp4"></video></div><div class="card-caption"><h2>实机记录 09</h2><span class="media-kind">0:22</span></div><a class="media-open" href="https://github.com/user-attachments/assets/0ec5b46b-1ec0-483a-a95d-3b3f307e155f" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card" data-media-card data-kind="photo"><a class="photo-link" id="photo-07" href="assets/showcase/outdoor-07.webp" data-gallery-photo data-title="广场上的小鸭" data-original="assets/showcase/original/outdoor-07.jpg" aria-label="放大查看：广场上的小鸭"><img src="assets/showcase/outdoor-07-thumb.webp" srcset="assets/showcase/outdoor-07-thumb.webp 360w, assets/showcase/outdoor-07.webp 1080w" sizes="(max-width:519px) calc(100vw - 32px), (max-width:900px) 45vw, 350px" width="360" height="480" loading="lazy" decoding="async" alt="白橙色 Microduck 在蓝天下的乐园广场正面站立"><div class="card-caption"><h2>广场上的小鸭</h2><span aria-hidden="true">↗</span></div></a></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="实机记录 10"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-posters/d09a6bfe-7a28-4266-ba90-de2b331472ad.webp" aria-label="实机记录 10"><source src="https://github.com/user-attachments/assets/d09a6bfe-7a28-4266-ba90-de2b331472ad" type="video/mp4"></video></div><div class="card-caption"><h2>实机记录 10</h2><span class="media-kind">0:14</span></div><a class="media-open" href="https://github.com/user-attachments/assets/d09a6bfe-7a28-4266-ba90-de2b331472ad" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="实机记录 11"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-posters/a604c0e0-af01-413f-ab00-99ccd26db8d5.webp" aria-label="实机记录 11"><source src="https://github.com/user-attachments/assets/a604c0e0-af01-413f-ab00-99ccd26db8d5" type="video/mp4"></video></div><div class="card-caption"><h2>实机记录 11</h2><span class="media-kind">0:13</span></div><a class="media-open" href="https://github.com/user-attachments/assets/a604c0e0-af01-413f-ab00-99ccd26db8d5" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card" data-media-card data-kind="photo"><a class="photo-link" id="photo-03" href="assets/showcase/outdoor-03.webp" data-gallery-photo data-title="阳光下站好" data-original="assets/showcase/original/outdoor-03.jpg" aria-label="放大查看：阳光下站好"><img src="assets/showcase/outdoor-03-thumb.webp" srcset="assets/showcase/outdoor-03-thumb.webp 360w, assets/showcase/outdoor-03.webp 1080w" sizes="(max-width:519px) calc(100vw - 32px), (max-width:900px) 45vw, 350px" width="360" height="480" loading="lazy" decoding="async" alt="阳光下的白橙色 Microduck，完整展示头部、身体与双腿"><div class="card-caption"><h2>阳光下站好</h2><span aria-hidden="true">↗</span></div></a></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="实机记录 12"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-posters/4508d91c-e91c-40f4-8c3e-5ca5a3f959c3.webp" aria-label="实机记录 12"><source src="https://github.com/user-attachments/assets/4508d91c-e91c-40f4-8c3e-5ca5a3f959c3" type="video/mp4"></video></div><div class="card-caption"><h2>实机记录 12</h2><span class="media-kind">0:54</span></div><a class="media-open" href="https://github.com/user-attachments/assets/4508d91c-e91c-40f4-8c3e-5ca5a3f959c3" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="实机记录 13"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-posters/fd0dfafd-dd02-4852-940c-33706c287e9d.webp" aria-label="实机记录 13"><source src="https://github.com/user-attachments/assets/fd0dfafd-dd02-4852-940c-33706c287e9d" type="video/mp4"></video></div><div class="card-caption"><h2>实机记录 13</h2><span class="media-kind">0:18</span></div><a class="media-open" href="https://github.com/user-attachments/assets/fd0dfafd-dd02-4852-940c-33706c287e9d" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card" data-media-card data-kind="photo"><a class="photo-link" id="photo-05" href="assets/showcase/outdoor-05.webp" data-gallery-photo data-title="换个角度认识" data-original="assets/showcase/original/outdoor-05.jpg" aria-label="放大查看：换个角度认识"><img src="assets/showcase/outdoor-05-thumb.webp" srcset="assets/showcase/outdoor-05-thumb.webp 360w, assets/showcase/outdoor-05.webp 1080w" sizes="(max-width:519px) calc(100vw - 32px), (max-width:900px) 45vw, 350px" width="360" height="480" loading="lazy" decoding="async" alt="白橙色 Microduck 的侧面，展示躯干和腿部结构"><div class="card-caption"><h2>换个角度认识</h2><span aria-hidden="true">↗</span></div></a></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="实机记录 14"><div class="video-stage"><video controls playsinline preload="none" width="720" height="1280" style="--media-ratio:720/1280" poster="assets/showcase/video-posters/693a3272-d814-42f6-86b3-be5cb3b35b0f.webp" aria-label="实机记录 14"><source src="https://github.com/user-attachments/assets/693a3272-d814-42f6-86b3-be5cb3b35b0f" type="video/mp4"></video></div><div class="card-caption"><h2>实机记录 14</h2><span class="media-kind">0:29</span></div><a class="media-open" href="https://github.com/user-attachments/assets/693a3272-d814-42f6-86b3-be5cb3b35b0f" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="实机记录 15"><div class="video-stage"><video controls playsinline preload="none" width="576" height="1024" style="--media-ratio:576/1024" poster="assets/showcase/video-posters/5cc34fe4-1858-485c-ae48-40f5e1c6180d.webp" aria-label="实机记录 15"><source src="https://github.com/user-attachments/assets/5cc34fe4-1858-485c-ae48-40f5e1c6180d" type="video/mp4"></video></div><div class="card-caption"><h2>实机记录 15</h2><span class="media-kind">0:45</span></div><a class="media-open" href="https://github.com/user-attachments/assets/5cc34fe4-1858-485c-ae48-40f5e1c6180d" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card" data-media-card data-kind="photo"><a class="photo-link" id="photo-02" href="assets/showcase/outdoor-02.webp" data-gallery-photo data-title="准备出发" data-original="assets/showcase/original/outdoor-02.jpg" aria-label="放大查看：准备出发"><img src="assets/showcase/outdoor-02-thumb.webp" srcset="assets/showcase/outdoor-02-thumb.webp 360w, assets/showcase/outdoor-02.webp 1080w" sizes="(max-width:519px) calc(100vw - 32px), (max-width:900px) 45vw, 350px" width="360" height="480" loading="lazy" decoding="async" alt="绿植和彩色建筑前站立的白橙色 Microduck"><div class="card-caption"><h2>准备出发</h2><span aria-hidden="true">↗</span></div></a></article><article class="media-card video-card" data-media-card data-kind="video" aria-label="实机记录 16"><div class="video-stage"><video controls playsinline preload="none" width="480" height="864" style="--media-ratio:480/864" poster="assets/showcase/video-posters/3f519ac0-e443-4638-9ad6-9476ee76a386.webp" aria-label="实机记录 16"><source src="https://github.com/user-attachments/assets/3f519ac0-e443-4638-9ad6-9476ee76a386" type="video/mp4"></video></div><div class="card-caption"><h2>实机记录 16</h2><span class="media-kind">0:38</span></div><a class="media-open" href="https://github.com/user-attachments/assets/3f519ac0-e443-4638-9ad6-9476ee76a386" target="_blank" rel="noopener noreferrer">打开原视频 ↗</a><p class="media-error" hidden>视频暂未加载成功，可尝试打开原视频查看。</p></article><article class="media-card" data-media-card data-kind="photo"><a class="photo-link" id="photo-06" href="assets/showcase/outdoor-06.webp" data-gallery-photo data-title="坐下歇一会" data-original="assets/showcase/original/outdoor-06.jpg" aria-label="放大查看：坐下歇一会"><img src="assets/showcase/outdoor-06-thumb.webp" srcset="assets/showcase/outdoor-06-thumb.webp 360w, assets/showcase/outdoor-06.webp 1080w" sizes="(max-width:519px) calc(100vw - 32px), (max-width:900px) 45vw, 350px" width="360" height="480" loading="lazy" decoding="async" alt="白橙色 Microduck 坐在木质长椅上，双脚朝向镜头"><div class="card-caption"><h2>坐下歇一会</h2><span aria-hidden="true">↗</span></div></a></article><article class="media-card" data-media-card data-kind="photo"><a class="photo-link" id="photo-01" href="assets/showcase/outdoor-01.webp" data-gallery-photo data-title="镜头前的合影" data-original="assets/showcase/original/outdoor-01.jpg" aria-label="放大查看：镜头前的合影"><img src="assets/showcase/outdoor-01-thumb.webp" srcset="assets/showcase/outdoor-01-thumb.webp 360w, assets/showcase/outdoor-01.webp 1080w" sizes="(max-width:519px) calc(100vw - 32px), (max-width:900px) 45vw, 350px" width="360" height="480" loading="lazy" decoding="async" alt="绿植和彩色建筑前坐着的白橙色 Microduck 正面合影"><div class="card-caption"><h2>镜头前的合影</h2><span aria-hidden="true">↗</span></div></a></article></div></section>
+<p class="media-end">继续探索：<a href="guides/">完整复刻教程</a> · <a href="compare/?v=20261118-short">为什么选择 Microduck-kissqy</a> · <a href="https://github.com/kissqy/Microduck-kissqy">仓库首页</a></p></main>
 <div class="project-notice-shell"><aside class="project-notice" role="note" aria-labelledby="project-notice-title" data-project-notice>
 <div class="project-notice__heading"><svg class="project-notice__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5m0 3v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><h2 class="project-notice__title" id="project-notice-title">硬件与授权</h2></div>
 <p>仅适配本仓库开源版本的 <strong>HAT、IMU、HUB</strong>。本仓库未授权任何商业组织。</p>
 <div class="project-notice__footer"><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg">商业授权请联系作者</a><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE">查看分项许可</a></div>
 </aside></div>
-<main class="layout">
-<section class="copy">
-<div class="eyebrow"><span class="dot" aria-hidden="true"></span>Microduck 飞特 HD1910 · kissqy 自训</div>
-<h1>单脚<br><span>独立。</span></h1>
-<p class="description">作者自训的单脚平衡，<br>在飞特 HD1910 实机上演示。</p>
-<div class="tags"><span class="tag">作者自训</span><span class="tag">实机演示</span><span class="tag">强化学习</span></div>
-<a class="project-link" href="guides/">Microduck 完整复刻教程 <span aria-hidden="true">↗</span></a>
-<a class="project-link" href="#more-videos">继续看小鸭的更多表现 <span aria-hidden="true">↓</span></a>
-</section>
-<section class="player-wrap" aria-label="单脚独立实机视频">
-<div class="player">
-<video id="balance-video" controls playsinline preload="metadata" poster="assets/one-leg-balance-poster.webp">
-<source src="https://github.com/user-attachments/assets/71fc2c95-8499-49f6-924b-837df42814cf" type="video/mp4">
-</video>
-<button id="play" class="play" type="button" aria-label="播放单脚独立实机视频"><span class="play-circle"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 3.5a1 1 0 0 1 1.5-.86l13 8a1 1 0 0 1 0 1.72l-13 8A1 1 0 0 1 6 19.5Z"/></svg></span></button>
-</div>
-<div class="player-actions"><button id="replay" class="text-button" type="button">↺ 重新播放</button><button id="fullscreen" class="text-button" type="button">⛶ 全屏观看</button></div>
-<p id="status" class="status" role="status" aria-live="polite"></p>
-</section>
-</main>
-<section id="photo-gallery" class="photo-gallery" aria-labelledby="photo-gallery-title">
-<div class="photo-gallery__heading">
-<div><h2 id="photo-gallery-title">小鸭出游。</h2><p>7 张照片 · 左右滑动，点击放大。</p></div>
-<div class="photo-gallery__controls"><button id="photo-scroll-previous" class="photo-gallery__arrow" type="button" aria-label="向前浏览照片" aria-controls="photo-track">←</button><button id="photo-scroll-next" class="photo-gallery__arrow" type="button" aria-label="向后浏览照片" aria-controls="photo-track">→</button></div>
-</div>
-<div id="photo-track" class="photo-gallery__track" role="region" aria-label="小鸭出游相册，可左右滑动" tabindex="0">
-<a class="photo-card" id="photo-04" href="assets/showcase/outdoor-04.webp" data-gallery-photo data-title="遇见大鸭子" data-original="assets/showcase/original/outdoor-04.jpg" aria-label="放大查看：遇见大鸭子">
-<img src="assets/showcase/outdoor-04-thumb.webp" srcset="assets/showcase/outdoor-04-thumb.webp 360w, assets/showcase/outdoor-04.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="侧前方站立的白橙色 Microduck，背景是橙黄色大鸭子">
-<span class="photo-card__caption"><span>遇见大鸭子</span><span aria-hidden="true">↗</span></span>
-</a>
-<a class="photo-card" id="photo-07" href="assets/showcase/outdoor-07.webp" data-gallery-photo data-title="广场上的小鸭" data-original="assets/showcase/original/outdoor-07.jpg" aria-label="放大查看：广场上的小鸭">
-<img src="assets/showcase/outdoor-07-thumb.webp" srcset="assets/showcase/outdoor-07-thumb.webp 360w, assets/showcase/outdoor-07.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="白橙色 Microduck 在蓝天下的乐园广场正面站立">
-<span class="photo-card__caption"><span>广场上的小鸭</span><span aria-hidden="true">↗</span></span>
-</a>
-<a class="photo-card" id="photo-03" href="assets/showcase/outdoor-03.webp" data-gallery-photo data-title="阳光下站好" data-original="assets/showcase/original/outdoor-03.jpg" aria-label="放大查看：阳光下站好">
-<img src="assets/showcase/outdoor-03-thumb.webp" srcset="assets/showcase/outdoor-03-thumb.webp 360w, assets/showcase/outdoor-03.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="阳光下的白橙色 Microduck，完整展示头部、身体与双腿">
-<span class="photo-card__caption"><span>阳光下站好</span><span aria-hidden="true">↗</span></span>
-</a>
-<a class="photo-card" id="photo-05" href="assets/showcase/outdoor-05.webp" data-gallery-photo data-title="换个角度认识" data-original="assets/showcase/original/outdoor-05.jpg" aria-label="放大查看：换个角度认识">
-<img src="assets/showcase/outdoor-05-thumb.webp" srcset="assets/showcase/outdoor-05-thumb.webp 360w, assets/showcase/outdoor-05.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="白橙色 Microduck 的侧面，展示躯干和腿部结构">
-<span class="photo-card__caption"><span>换个角度认识</span><span aria-hidden="true">↗</span></span>
-</a>
-<a class="photo-card" id="photo-02" href="assets/showcase/outdoor-02.webp" data-gallery-photo data-title="准备出发" data-original="assets/showcase/original/outdoor-02.jpg" aria-label="放大查看：准备出发">
-<img src="assets/showcase/outdoor-02-thumb.webp" srcset="assets/showcase/outdoor-02-thumb.webp 360w, assets/showcase/outdoor-02.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="绿植和彩色建筑前站立的白橙色 Microduck">
-<span class="photo-card__caption"><span>准备出发</span><span aria-hidden="true">↗</span></span>
-</a>
-<a class="photo-card" id="photo-06" href="assets/showcase/outdoor-06.webp" data-gallery-photo data-title="坐下歇一会" data-original="assets/showcase/original/outdoor-06.jpg" aria-label="放大查看：坐下歇一会">
-<img src="assets/showcase/outdoor-06-thumb.webp" srcset="assets/showcase/outdoor-06-thumb.webp 360w, assets/showcase/outdoor-06.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="白橙色 Microduck 坐在木质长椅上，双脚朝向镜头">
-<span class="photo-card__caption"><span>坐下歇一会</span><span aria-hidden="true">↗</span></span>
-</a>
-<a class="photo-card" id="photo-01" href="assets/showcase/outdoor-01.webp" data-gallery-photo data-title="镜头前的合影" data-original="assets/showcase/original/outdoor-01.jpg" aria-label="放大查看：镜头前的合影">
-<img src="assets/showcase/outdoor-01-thumb.webp" srcset="assets/showcase/outdoor-01-thumb.webp 360w, assets/showcase/outdoor-01.webp 1080w" sizes="(max-width:720px) 46vw, 240px" width="360" height="480" loading="lazy" decoding="async" alt="绿植和彩色建筑前坐着的白橙色 Microduck 正面合影">
-<span class="photo-card__caption"><span>镜头前的合影</span><span aria-hidden="true">↗</span></span>
-</a>
-</div>
-</section>
+<footer class="wrap site-footer"><span>Microduck-kissqy · 飞特 HD1910 个人复刻</span><a href="https://github.com/kissqy/Microduck-kissqy">项目资料与模型来源 ↗</a></footer>
 <dialog id="photo-dialog" class="photo-dialog" aria-labelledby="photo-dialog-title">
 <header class="photo-dialog__header"><h2 id="photo-dialog-title">小鸭出游</h2><button id="photo-dialog-close" class="photo-dialog__close" type="button" aria-label="关闭照片" autofocus>×</button></header>
 <div class="photo-dialog__stage"><img id="photo-dialog-image" class="photo-dialog__image" alt="" draggable="false"><button id="photo-dialog-previous" class="photo-dialog__nav photo-dialog__nav--previous" type="button" aria-label="上一张照片">‹</button><button id="photo-dialog-next" class="photo-dialog__nav photo-dialog__nav--next" type="button" aria-label="下一张照片">›</button></div>
 <footer class="photo-dialog__footer"><span id="photo-dialog-count" role="status" aria-live="polite"></span><a id="photo-dialog-original" target="_blank" rel="noopener">查看实拍原图 ↗</a></footer>
 </dialog>
-<section id="more-videos" class="gallery" aria-labelledby="gallery-title">
-<div class="gallery-heading"><div><div class="eyebrow"><span class="dot" aria-hidden="true"></span>更多实机表现</div><h2 id="gallery-title">这只小鸭，还有更多可能。</h2><p>左右滑动，继续看小鸭的更多实机表现。</p></div></div>
-<div class="gallery-grid" role="region" aria-label="实机视频，左右滑动查看" tabindex="0">
-<article class="video-card">
-<div class="clip-heading"><span class="clip-number">01</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 1"><source src="https://github.com/user-attachments/assets/008bb58b-7bbd-4de7-9687-9b6ef2d42ed7" type="video/mp4"></video>
-</article>
-<article class="video-card">
-<div class="clip-heading"><span class="clip-number">02</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 2"><source src="https://github.com/user-attachments/assets/0a3edb38-0c25-429a-b552-94ea04881bf3" type="video/mp4"></video>
-</article>
-<article class="video-card">
-<div class="clip-heading"><span class="clip-number">03</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 3"><source src="https://github.com/user-attachments/assets/0ec5b46b-1ec0-483a-a95d-3b3f307e155f" type="video/mp4"></video>
-</article>
-<article class="video-card">
-<div class="clip-heading"><span class="clip-number">04</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 4"><source src="https://github.com/user-attachments/assets/d09a6bfe-7a28-4266-ba90-de2b331472ad" type="video/mp4"></video>
-</article>
-<article class="video-card">
-<div class="clip-heading"><span class="clip-number">05</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 5"><source src="https://github.com/user-attachments/assets/a604c0e0-af01-413f-ab00-99ccd26db8d5" type="video/mp4"></video>
-</article>
-<article class="video-card">
-<div class="clip-heading"><span class="clip-number">06</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 6"><source src="https://github.com/user-attachments/assets/4508d91c-e91c-40f4-8c3e-5ca5a3f959c3" type="video/mp4"></video>
-</article>
-<article class="video-card">
-<div class="clip-heading"><span class="clip-number">07</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 7"><source src="https://github.com/user-attachments/assets/fd0dfafd-dd02-4852-940c-33706c287e9d" type="video/mp4"></video>
-</article>
-<article class="video-card">
-<div class="clip-heading"><span class="clip-number">08</span><h3>实机记录</h3></div>
-<video controls playsinline preload="metadata" aria-label="实机视频 8"><source src="https://github.com/user-attachments/assets/693a3272-d814-42f6-86b3-be5cb3b35b0f" type="video/mp4"></video>
-</article>
-</div>
-<div class="gallery-footer"><a class="project-link" href="https://github.com/kissqy/Microduck-kissqy">回到项目，开始探索 <span aria-hidden="true">↗</span></a></div>
-</section>
-
-<script>
-document.querySelectorAll('video').forEach(current=>{
-current.addEventListener('play',()=>document.querySelectorAll('video').forEach(other=>{if(other!==current)other.pause();}));
-});
-const video=document.getElementById('balance-video');
-const play=document.getElementById('play');
-const status=document.getElementById('status');
-function start(){status.textContent='';video.play().catch(()=>{play.hidden=false;status.textContent='请点击视频中的播放按钮';});}
-play.addEventListener('click',start);
-video.addEventListener('play',()=>{play.hidden=true;status.textContent='';});
-video.addEventListener('ended',()=>{play.hidden=false;});
-video.addEventListener('error',()=>{play.hidden=true;status.textContent='视频暂未加载成功，请刷新后重试';});
-document.getElementById('replay').addEventListener('click',()=>{video.currentTime=0;start();});
-document.getElementById('fullscreen').addEventListener('click',async()=>{
-try{if(video.requestFullscreen)await video.requestFullscreen();else if(video.webkitEnterFullscreen)video.webkitEnterFullscreen();}catch{}
-});
-</script>
-</body>
-</html>
-
+<noscript><style>.media-filters{display:none}</style></noscript>
+</body></html>

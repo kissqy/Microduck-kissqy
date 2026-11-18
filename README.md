@@ -1,66 +1,87 @@
-**简体中文** | [English](README.en.md)
-
-> **国内入口与文档导航**
->
-> [Gitee 国内仓库](https://gitee.com/kissqy/microduck-kissqy) · [R2 国内发布说明](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260)
->
-> [从零复刻](docs/MICRODUCK-BUILD-GUIDE.md) · [采购清单](DUCK-SHOPPING-LIST.md) · [硬件工程](hardware/README.md) · [打印件与摆盘](hardware/3d-print-frankenduck/README.md) · [常见问题](docs/MICRODUCK-FAQ.md) · [历史问题与 PR 归档](docs/GitHub-Issues-PR-Archive-20261116.md)
+**简体中文** | [English](README.en.md) · [Gitee 国内仓库](https://gitee.com/kissqy/microduck-kissqy)
 
 <div align="center">
 
-# 🦆 Microduck 飞特 HD1910 复刻 · 从零做一只会走的机器人鸭
+# 🦆 Microduck 飞特 HD1910 复刻
 
-**Microduck-kissqy 是 kissqy 基于 [Pollen Robotics Microduck](https://github.com/pollen-robotics/microduck) 0.15.1 完成的飞特 HD1910 双足机器人鸭复刻项目。** 参考硬件为 **Radxa ZERO 3W + 15 个飞特 HD1910 舵机**，提供系统镜像、中文机器人中控、配套现成 ONNX 动作模型、独立强化学习训练中控、自制 HAT／IMU／HUB 和全套 3D 打印件。
+**先玩现成动作，再探索中文 AI 和训练。**
 
-**正常复刻无需训练。配套现成动作模型，装好、刷机并完成本机标定后即可体验。**
-
-<table>
-  <tr>
-    <td width="50%" align="left"><a href="https://kissqy.github.io/Microduck-kissqy/build/budget.html"><b>① 我要花多少钱、买什么？</b></a><br>先选预算方案，再按对应清单备齐零件。</td>
-    <td width="50%" align="left"><a href="https://kissqy.github.io/Microduck-kissqy/build/assembly.html"><b>② 我要怎么装？</b></a><br>部位装配、3D 结构与端子接线。</td>
-  </tr>
-  <tr>
-    <td align="left"><a href="https://kissqy.github.io/Microduck-kissqy/build/start.html"><b>③ 我要让鸭子走起来</b></a><br>刷机、配网、标定，使用现成模型行走。</td>
-    <td align="left"><a href="https://kissqy.github.io/Microduck-kissqy/build/advanced.html"><b>④ 进阶玩法（可选）</b></a><br><b>正常复刻无需训练。</b>想自训新动作或学习训练流程时，再进入。</td>
-  </tr>
-</table>
-
-[📚 Microduck 完整复刻教程](https://kissqy.github.io/Microduck-kissqy/guides/) · [🚀 从零复刻路线](https://kissqy.github.io/Microduck-kissqy/build/) · [🎮 机器人中控演示](https://kissqy.github.io/Microduck-kissqy/) · [📖 中控使用教程](https://kissqy.github.io/Microduck-kissqy/console-guide.html) · [❓ 常见问题](docs/MICRODUCK-FAQ.md)
-
-
-<!-- replica-choice:start -->
-<div align="left">
-
-## 为什么选择 Microduck-kissqy？
-
-**面向中文用户的飞特 HD1910 个人复刻：先用现成模型走起来，再体验中文 AI、研究自己的新动作。**
-
-<table>
-  <tr>
-    <td width="50%" valign="top"><b>🦆 现成动作，正常复刻无需训练</b><br>提供行走、坐站、捡取、翻滚、左右踢球及滑轮动作资源；完成装配、刷机和本机标定后使用配套模型。</td>
-    <td width="50%" valign="top"><b>🔧 配套软硬件，按一套方案制作</b><br>自制 HAT／IMU／HUB 工程、打印件、接线说明、镜像和固件集中提供；可自行制作，也可选择成品板。</td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top"><b>🎮 中文中控，继续体验 AI 互动</b><br>标定、3D 姿态、关节反馈、摄像头、手柄和固件维护；支持中文语音、拍照识别与动作调用，AI 需配置服务并联网。</td>
-    <td width="50%" valign="top"><b>🧠 作者自训成果，进阶有训练工具</b><br>提供模型来源说明与实机展示；独立训练中控支持任务队列、奖励曲线、仿真评估和 ONNX 导出。</td>
-  </tr>
-</table>
-
-**本项目也是社区 HD1910 动作资源的来源之一。** fanhao 的镜像模型说明将其中 **10 个模型的作者标为 kissqy**，并记录保留原始权重。[查看对方的来源说明](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt)。
-
-**[打开网页版：为什么选择 kissqy？六个项目详细对比 →](https://kissqy.github.io/Microduck-kissqy/compare/)** · [文字版与来源](docs/MICRODUCK-COMPARISON.md)
-
-含官方 Microduck、陆吾 XGO-Duck、AI-FanGe、fanhao375、OpenMicroDuck 与本项目。[直接开始三步复刻 →](https://kissqy.github.io/Microduck-kissqy/build/)
+<sub>Radxa ZERO 3W · 15 × HD1910 · 配套 HAT / IMU / HUB</sub>
 
 </div>
+
+kissqy 基于 [Pollen Robotics Microduck](https://github.com/pollen-robotics/microduck) 0.15.1 完成的个人复刻项目。镜像、中文中控、动作模型、电路工程与打印资料集中提供。
+
+---
+
+## 第一次制作，从这里开始
+
+**正常复刻无需训练。**
+
+<sub>按采购 → 装配 → 刷机与标定完成制作，再使用配套现成模型。</sub>
+
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top"><b>① 预算与采购</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/budget.html">我要花多少钱、买什么？ →</a><br><sub>按预算选择对应零件清单。</sub></td>
+    <td width="50%" valign="top"><b>② 装配与接线</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/assembly.html">我要怎么装？ →</a><br><sub>部位装配、3D 结构与端子接线。</sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><b>③ 刷机与首次行走</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/start.html">让鸭子走起来 →</a><br><sub>刷机、配网、标定，使用现成模型。</sub></td>
+    <td width="50%" valign="top"><b>④ 进阶玩法 · 可选</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/advanced.html">想自己训练新动作 →</a><br><sub>需要自训或学习训练流程时再进入。</sub></td>
+  </tr>
+</table>
+
+[完整复刻教程](https://kissqy.github.io/Microduck-kissqy/guides/) · [中控演示](https://kissqy.github.io/Microduck-kissqy/) · [中控使用教程](https://kissqy.github.io/Microduck-kissqy/console-guide.html) · [常见问题](docs/MICRODUCK-FAQ.md)
+
+<details>
+<summary>国内下载与更多资料</summary>
+
+[R2 国内发布说明](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260) · [从零复刻](docs/MICRODUCK-BUILD-GUIDE.md) · [采购清单](DUCK-SHOPPING-LIST.md) · [硬件工程](hardware/README.md) · [打印件与摆盘](hardware/3d-print-frankenduck/README.md) · [历史问题与 PR 归档](docs/GitHub-Issues-PR-Archive-20261116.md)
+
+</details>
+
+---
+
+<!-- replica-choice:start -->
+## 为什么选择 Microduck-kissqy？
+
+**现成多动作 · 中文 AI · 作者自训成果 · 配套软硬件**
+
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top"><b>🦆 先玩现成动作</b><br><br>行走、坐站、捡取、翻滚、左右踢球与滑轮资源。<br><sub>装好、刷机并完成本机标定后使用。</sub></td>
+    <td width="50%" valign="top"><b>🎮 中文中控与 AI</b><br><br>图形标定与维护，中文对话、拍照识别和动作调用。<br><sub>AI 需配置服务凭据并联网。</sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><b>🔧 软硬件按一套方案做</b><br><br>HAT / IMU / HUB、打印、接线、镜像和固件集中提供。<br><sub>板卡可自行制作，也可选择成品板。</sub></td>
+    <td width="50%" valign="top"><b>🧠 从自训成果继续进阶</b><br><br>模型来源、实机展示、训练队列、仿真评估与 ONNX 导出。<br><sub>想研究新动作时，再进入独立训练中控。</sub></td>
+  </tr>
+</table>
+
+> **动作模型，直接看作者发布。**
+>
+> <sub>fanhao 镜像说明将其中 10 个模型的作者标为 kissqy，并记录保留原始权重。[查看对方署名](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt)</sub>
+
+**[六个项目对比：我们的优势，其他方案还要补什么 →](https://kissqy.github.io/Microduck-kissqy/compare/)**
+
+<sub>[文字版与逐项依据](docs/MICRODUCK-COMPARISON.md) · 含 fanhao375、OpenMicroDuck、官方 Microduck、AI-FanGe 与 XGO-Duck。</sub>
 <!-- replica-choice:end -->
 
-> **V297 BATE 中控测试版已独立发布。** 新增四模式工作台、HAT 舵机编号与独立硬件测试，无需 URT2 调试板即可给舵机编号和中位校准。
->
-> [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 文件目录](versions/v297-bate/)
->
-> 已有 R2 / control.102 用户只需更换中控。本版实机验收待完成；V260 稳定版继续保留。运行包统一从 Release 的 Assets 获取。
+---
 
+## V297 BATE · 独立中控测试版
+
+**通过 HAT 给舵机编号和中位校准，无需 URT2 调试板。**
+
+<sub>四模式工作台 · 独立硬件测试</sub>
+
+**[中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-bate/)** · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate)
+
+<sub>已有 R2 / control.102 只需更换中控；实机验收待完成。[版本文件](versions/v297-bate/)</sub>
+
+---
+
+<div align="center">
 
 ## 🏆 单脚独立 · 自训新突破
 
@@ -241,3 +262,4 @@ HAT 连接 ZERO 3W 与舵机总线，提供供电、通信及音频外围；独�
     </td>
   </tr>
 </table>
+

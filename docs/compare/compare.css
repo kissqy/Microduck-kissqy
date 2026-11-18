@@ -21,3 +21,13 @@ html[lang=en] .hero h2{font-size:clamp(38px,4.5vw,60px);line-height:1.2;letter-s
 /* Keep the route comparison at the top of the page. */
 main>.comparison-section:first-child{padding-top:32px;padding-bottom:40px}.comparison-section .section-heading h1{font-size:clamp(28px,3.2vw,37px);font-weight:760;line-height:1.4;letter-spacing:-1px;margin:13px 0 15px}main>.comparison-section:first-child .section-heading{margin-bottom:20px}
 @media(max-width:760px){main>.comparison-section:first-child{padding-top:25px;padding-bottom:30px}.comparison-section .section-heading h1{font-size:27px;letter-spacing:-.7px;margin:12px 0}}
+
+
+/* Separate decisions from supporting evidence and deployment notes. */
+.comparison-section .section-heading{max-width:960px}.comparison-section .section-heading h1{font-size:clamp(28px,3vw,37px)}
+.delta-comparison thead th:first-child{width:20%}.delta-comparison thead th:nth-child(2){width:35%}.delta-comparison thead th:nth-child(3){width:45%}
+.delta-comparison tbody th,.delta-comparison tbody td{padding:23px 20px}.delta-comparison tbody td.our-benefit{background:#ffad7009;border-left:1px solid #ffad7023;border-right:1px solid #ffad7023}
+.delta-list{list-style:none;margin:0;padding:0}.delta-list li+li{margin-top:17px;padding-top:15px;border-top:1px solid #ffffff10}.delta-list strong{display:block;color:#e6eaf0;font-size:14px;line-height:1.65;font-weight:700}.delta-list span{display:block;font-size:12px;line-height:1.85;color:#a5b0be;margin-top:6px}.delta-list.positive strong{color:#ffc596}.delta-list.positive span{color:#c8b8aa}
+.source-links{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:13px;font-size:10px;line-height:1.7;color:#9ba7b7}.source-links a{text-decoration:underline;text-underline-offset:3px}.source-links a:hover{color:var(--orange)}
+.benefit .benefit-main{font-size:15px;color:#e2e6ec;line-height:1.8;margin-bottom:9px}.benefit .benefit-detail{font-size:12px;color:#95a1b1;line-height:1.9;margin-bottom:19px}
+@media(max-width:760px){.delta-comparison tbody th,.delta-comparison tbody td{padding:16px 18px}.delta-comparison tbody td.our-benefit{border-inline:0;border-bottom:1px solid #ffad7023}.delta-list strong{font-size:13px}.delta-list span{font-size:11px}.delta-list li+li{margin-top:14px;padding-top:12px}.source-links{margin-top:10px}.comparison-section .section-heading h1{font-size:27px}.benefit .benefit-main{font-size:14px}.benefit .benefit-detail{font-size:11px}}

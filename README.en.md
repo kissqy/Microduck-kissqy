@@ -1,66 +1,89 @@
-[简体中文](README.md) | **English**
-
-> **China mirror and repository guides**
->
-> [Gitee repository](https://gitee.com/kissqy/microduck-kissqy) · [R2 release notes in China](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260)
->
-> [Build guide](docs/MICRODUCK-BUILD-GUIDE.en.md) · [Shopping list](DUCK-SHOPPING-LIST.en.md) · [Hardware projects](hardware/README.en.md) · [Printing parts and plates](hardware/3d-print-frankenduck/README.en.md) · [FAQ](docs/MICRODUCK-FAQ.en.md) · [Historical issues and PR archive](docs/GitHub-Issues-PR-Archive-20261116.md)
+[简体中文](README.md) | **English** · [Gitee](https://gitee.com/kissqy/microduck-kissqy)
 
 <div align="center">
 
-# 🦆 Microduck Feetech HD1910 Replica · Build a walking robot duck
+# 🦆 Microduck · Feetech HD1910 Replica
 
-**Microduck-kissqy is kissqy’s working Feetech HD1910 biped robot duck replica, based on [Pollen Robotics Microduck](https://github.com/pollen-robotics/microduck) 0.15.1.** The reference hardware uses a **Radxa ZERO 3W and 15 Feetech HD1910 servos**. The project includes a system image, Chinese Robot Console, ready-to-use ONNX motion models, an independent reinforcement-learning Training Studio, DIY HAT / torso IMU / HUB boards and complete 3D printing files.
+**Try supplied movements, then explore Chinese AI and training.**
 
-**No training is required for a normal build. Use the supplied movement models after assembly, flashing and calibration.**
-
-<table>
-  <tr>
-    <td width="50%" align="left"><a href="https://kissqy.github.io/Microduck-kissqy/build/budget.html"><b>① Budget and shopping</b></a><br>Choose a budget, then follow its matching parts list.</td>
-    <td width="50%" align="left"><a href="https://kissqy.github.io/Microduck-kissqy/build/assembly.html"><b>② How do I assemble it?</b></a><br>Parts, 3D structure and wiring.</td>
-  </tr>
-  <tr>
-    <td align="left"><a href="https://kissqy.github.io/Microduck-kissqy/build/start.html"><b>③ How do I make it walk?</b></a><br>Flash, connect, calibrate and use the supplied models.</td>
-    <td align="left"><a href="https://kissqy.github.io/Microduck-kissqy/build/advanced.html"><b>④ Advanced play (optional)</b></a><br><b>No training needed for a normal build.</b> Explore this only to train new movements or learn the training process.</td>
-  </tr>
-</table>
-
-The three build stages and optional advanced guide are in Chinese. [English build guide and FAQ](https://kissqy.github.io/Microduck-kissqy/guides/en.html) · [🎮 Robot Console demo](https://kissqy.github.io/Microduck-kissqy/) · [📖 Console tutorial (中文)](https://kissqy.github.io/Microduck-kissqy/console-guide.html) · [❓ FAQ](docs/MICRODUCK-FAQ.en.md)
-
-
-<!-- replica-choice:start -->
-<div align="left">
-
-## Why choose Microduck-kissqy?
-
-**A coordinated Feetech HD1910 build for people comfortable with a Chinese console: start with supplied policies, then explore Chinese AI interaction and training your own movements.**
-
-<table>
-  <tr>
-    <td width="50%" valign="top"><b>🦆 Supplied movements, no initial training</b><br>Walking, sit/stand, picking, rolling, left/right kicks and roller resources. Assemble, flash and calibrate your own robot before using the matching policies.</td>
-    <td width="50%" valign="top"><b>🔧 Coordinated hardware and software</b><br>DIY HAT / IMU / HUB projects, printing files, wiring guides, image and firmware in one project. Fabricate the boards or choose assembled boards.</td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top"><b>🎮 Chinese console and AI interaction</b><br>Calibration, live 3D pose, joint feedback, camera, gamepad and firmware maintenance. Chinese voice, image recognition and action calls require service credentials and network access.</td>
-    <td width="50%" valign="top"><b>🧠 Self-trained results and training tools</b><br>Model provenance and physical-robot demonstrations, plus a separate Training Studio for queues, reward curves, simulation evaluation and ONNX export.</td>
-  </tr>
-</table>
-
-**The project also supplies HD1910 motion resources used elsewhere in the community.** fanhao's image model notice credits **10 models to kissqy** and records that their weights were retained. [Read the project's attribution](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt).
-
-**[Open the web comparison: why choose kissqy? →](https://kissqy.github.io/Microduck-kissqy/compare/en.html)** · [Text version and sources](docs/MICRODUCK-COMPARISON.en.md)
-
-Official Microduck, Luwu XGO-Duck, AI-FanGe, fanhao375, OpenMicroDuck and this project. [Start the three-stage build guide (中文) →](https://kissqy.github.io/Microduck-kissqy/build/)
+<sub>Radxa ZERO 3W · 15 × HD1910 · Matching HAT / IMU / HUB</sub>
 
 </div>
+
+A personal replica by kissqy, based on [Pollen Robotics Microduck](https://github.com/pollen-robotics/microduck) 0.15.1. The image, Chinese console, policies, board designs and printing resources are provided together.
+
+---
+
+## Start your first build
+
+**A normal build requires no initial training.**
+
+<sub>Source the parts, assemble, flash and calibrate, then use the supplied policies.</sub>
+
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top"><b>① Budget and shopping</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/budget.html">Choose your parts →</a><br><sub>Follow the list for your chosen budget.</sub></td>
+    <td width="50%" valign="top"><b>② Assembly and wiring</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/assembly.html">Build the robot →</a><br><sub>Assembly, 3D structure and connections.</sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><b>③ Flash and first walk</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/start.html">Get the duck moving →</a><br><sub>Flash, connect and calibrate.</sub></td>
+    <td width="50%" valign="top"><b>④ Advanced · optional</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/advanced.html">Train a new movement →</a><br><sub>For learning training or a new task.</sub></td>
+  </tr>
+</table>
+
+<sub>The three-stage pages above are Chinese; English guides are linked below.</sub>
+
+[English build guide](https://kissqy.github.io/Microduck-kissqy/guides/en.html) · [Console demo](https://kissqy.github.io/Microduck-kissqy/) · [Console tutorial (中文)](https://kissqy.github.io/Microduck-kissqy/console-guide.html) · [FAQ](docs/MICRODUCK-FAQ.en.md)
+
+<details>
+<summary>China downloads and more resources</summary>
+
+[R2 China release](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260) · [Build guide](docs/MICRODUCK-BUILD-GUIDE.en.md) · [Shopping list](DUCK-SHOPPING-LIST.en.md) · [Hardware](hardware/README.en.md) · [Printing](hardware/3d-print-frankenduck/README.en.md) · [Issue / PR archive](docs/GitHub-Issues-PR-Archive-20261116.md)
+
+</details>
+
+---
+
+<!-- replica-choice:start -->
+## Why choose Microduck-kissqy?
+
+**Supplied movements · Chinese AI · Author-trained results · Matching hardware/software**
+
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top"><b>🦆 Start with supplied movements</b><br><br>Walk, sit/stand, pick, roll, left/right kicks and roller resources.<br><sub>Assemble, flash and calibrate your robot first.</sub></td>
+    <td width="50%" valign="top"><b>🎮 Chinese console and AI</b><br><br>Graphical maintenance, conversation, image recognition and action calls.<br><sub>AI needs service credentials and connectivity.</sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><b>🔧 One matching configuration</b><br><br>HAT / IMU / HUB, printing, wiring, image and firmware.<br><sub>Fabricate the boards or choose assembled ones.</sub></td>
+    <td width="50%" valign="top"><b>🧠 Continue from documented training</b><br><br>Provenance, physical demos, training queues, simulation and ONNX export.<br><sub>Use the separate Training Studio for new skills.</sub></td>
+  </tr>
+</table>
+
+> **Go directly to the policy author’s publication.**
+>
+> <sub>fanhao’s image notice credits 10 models to kissqy and records retaining their weights. [Read the attribution](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt).</sub>
+
+**[Compare six projects: our benefits and the extra work in other routes →](https://kissqy.github.io/Microduck-kissqy/compare/en.html)**
+
+<sub>[Text edition and evidence](docs/MICRODUCK-COMPARISON.en.md) · fanhao375, OpenMicroDuck, official Microduck, AI-FanGe and XGO-Duck.</sub>
 <!-- replica-choice:end -->
 
-> **The V297 BATE console is available as a separate pre-release.** Four workspaces, HAT servo numbering and independent hardware tests. Assign servo IDs and calibrate their midpoint without a URT2 programming board.
->
-> [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 version files](versions/v297-bate/README.en.md)
->
-> Existing R2 / control.102 users only replace the desktop console. Physical-robot acceptance is pending; V260 remains stable. Download the actual console runtime from Release Assets.
+---
 
+## V297 BATE · Separate console pre-release
+
+**Assign servo IDs and calibrate the midpoint through HAT, without a URT2 board.**
+
+<sub>Four workspaces · Separate hardware tests</sub>
+
+**[Features and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html)** · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate)
+
+<sub>Existing R2 / control.102 users replace the console; hardware acceptance is pending. [Version files](versions/v297-bate/README.en.md)</sub>
+
+---
+
+<div align="center">
 
 ## 🏆 One-legged balance · A new training milestone
 
@@ -239,3 +262,4 @@ Original consoles, tools, documentation and HD1910 self-trained models explicitl
     </td>
   </tr>
 </table>
+

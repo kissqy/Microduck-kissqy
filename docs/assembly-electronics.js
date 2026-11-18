@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
-import {createBoardModel} from './assembly-board-models.js?v=20261030-hub-arcs';
-import {attachHeadClearance} from './assembly-head-clearance.js?v=20261104-head-labels';
+import {createBoardModel} from './assembly-board-models.js?v=20261118-speaker-j1';
+import {attachHeadClearance} from './assembly-head-clearance.js?v=20261118-speaker-j1';
 import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261104-head-labels';
 import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261118-11-12-front-back';
 import {createHubModel} from './assembly-hub-model.js?v=20261118-amp-inward';
@@ -20,6 +20,7 @@ export const ELECTRONICS_LAYOUT=Object.freeze({
 });
 const wire=(id,from,to,label,color,region)=>Object.freeze({id,from,to,label,color,region});
 export const ELECTRONICS_WIRES=Object.freeze([
+  wire('hat-speaker','hat','speaker','HAT J1 → 3525 扬声器','#d8756c','face'),
   wire('hat-zero','hat','zero','HAT J4 ↔ ZERO 3W · 40 针配对','#8e82c3','face'),
   wire('hat-34','hat','servo34','HAT → 34','#e4aa66','face'),
   ...[[34,33],[33,32],[32,31],[31,30]].map(([a,b])=>wire(`servo-${a}-${b}`,`servo${a}`,`servo${b}`,`${a} → ${b}`,'#e4aa66','neck')),
@@ -54,7 +55,7 @@ export function parseBatterySTL(buffer){
 }
 
 const WIRE_SIGNALS=['gnd','power','data'];
-const SIGNAL_COLORS={gnd:0x465054,power:0xd8756c,data:0xe3e4da};
+const SIGNAL_COLORS={spk_p:0xd4493c,spk_n:0x242629,gnd:0x465054,power:0xd8756c,data:0xe3e4da};
 function boundsInFrame(mesh,frame){
   const box=mesh.geometry.boundingBox||mesh.geometry.computeBoundingBox()||mesh.geometry.boundingBox;
   mesh.updateWorldMatrix(true,false);frame.updateWorldMatrix(true,false);const result=new T.Box3();
@@ -199,11 +200,13 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   servoDetails.forEach(detail=>contactProxies.set(detail.group,solidProxies(detail.group)));
   contactProxies.set(batteryPort.root,solidProxies(batteryPort.root));
   solidProxies(batteryPack.group);
-  const collisionMeshes=[...printedMeshes,headClearance.speaker,...electronicsSolids];
+  contactProxies.set(headClearance.group,solidProxies(headClearance.group));
+  const collisionMeshes=[...printedMeshes,...electronicsSolids];
   const servoMeshes=[...servoDetails.values()].map(detail=>detail.group.parent);
   const wireRouter=createWireRouter(root,servoMeshes,collisionMeshes,{clearance:.00045});
   const bundleRouter=createWireRouter(root,servoMeshes,collisionMeshes,{clearance:.0010});
   const portContacts=port=>{
+    if(port===headClearance.port)return[contactProxies.get(headClearance.group)?.[1]].filter(Boolean);
     if(port===batteryPort)return[contactProxies.get(batteryPort.root)?.[1]].filter(Boolean);
     for(const component of components.values())if(Object.values(component.ports).includes(port))return[contactProxies.get(component.group)?.[1]].filter(Boolean);
     for(const detail of servoDetails.values())if(Object.values(detail.ports).includes(port))return[contactProxies.get(detail.group)?.[1]].filter(Boolean);
@@ -236,6 +239,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   chooseChain([20,21,22,23,24],components.get('hub').ports.CN5,null);
   chooseChain([10,11,12,13,14],components.get('hub').ports.CN4,null);
   const portPairs=spec=>{
+    if(spec.id==='hat-speaker')return[components.get('hat').ports.J1,headClearance.port];
     if(spec.id==='hat-zero')return[components.get('hat').ports.J4,components.get('zero').ports.gpio40];
     if(spec.id==='hat-34')return[components.get('hat').ports.J13,incoming.get(34)];
     if(spec.id==='30-hub')return[outgoing.get(30),components.get('hub').ports.CN2];
@@ -250,7 +254,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   const wires=ELECTRONICS_WIRES.map(spec=>{
     const group=new T.Group();group.name=spec.id;wireRoot.add(group);
     const[fromPort,toPort]=portPairs(spec);if(!fromPort||!toPort)throw Error(`线束 ${spec.id} 缺少端子`);
-    const header=fromPort.kind==='header40',signals=header?Array.from({length:40},(_,i)=>i):spec.id==='battery-hub'?['gnd','power']:WIRE_SIGNALS;
+    const header=fromPort.kind==='header40',signals=spec.id==='hat-speaker'?['spk_p','spk_n']:header?Array.from({length:40},(_,i)=>i):spec.id==='battery-hub'?['gnd','power']:WIRE_SIGNALS;
     const conductors=signals.map((signal,index)=>{
       const start=header?fromPort.ordered[index]:fromPort.pins[signal],end=header?toPort.ordered[index]:toPort.pins[signal];
       if(!start||!end)throw Error(`线束 ${spec.id} 缺少触点 ${signal}`);
@@ -270,7 +274,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
       item.conductors.forEach(c=>{c.mesh.material.opacity=relevant?1:.12;c.mesh.material.transparent=!relevant;c.mesh.material.depthWrite=relevant;});
     }
   }
-  function endpointVisible(id){return id.startsWith('servo')||id==='battery'?id!=='battery'||batteryVisible:components.get(id)?.visible;}
+  function endpointVisible(id){if(id==='speaker')return true;return id.startsWith('servo')||id==='battery'?id!=='battery'||batteryVisible:components.get(id)?.visible;}
   function portLead(port,pin){
     const mouth=port.mouth.getWorldPosition(new T.Vector3()),out=port.outward.getWorldPosition(new T.Vector3()),point=pin.getWorldPosition(new T.Vector3());
     // Preserve each contact's sideways position all the way out of the socket.

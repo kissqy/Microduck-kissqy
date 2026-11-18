@@ -14,7 +14,7 @@ A Feetech HD1910 adaptation based on official Microduck **0.15.1**, including ro
 
 
 > [!NOTE]
-> **The V297 BATE console is available as a separate pre-release.** Four workspaces, HAT servo numbering, independent hardware tests and recovery from missing-device initialization waits.
+> **The V297 BATE console is available as a separate pre-release.** Four workspaces, HAT servo numbering and independent hardware tests. Assign servo IDs and calibrate their midpoint without a URT2 programming board.
 >
 > [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 version files](../versions/v297-bate/README.en.md)
 >

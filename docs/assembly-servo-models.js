@@ -88,9 +88,9 @@ export function attachServoModel(servo,id){
   // Turn the complete displayed case and its details together; preserve the
   // shaft line, Mesh transform, parent links and all joint directions.
   const turnedCase=[14,24,32,33].includes(id),uprightHip=id===10||id===20;
-  // Hip-pitch and knee sockets face away from the duck on both legs.
+  // Hip-pitch/knee sockets and neck IDs 30/31 use mirrored case handedness.
   // Mirror each case itself, rather than rotating its mounting/joint frame.
-  const mirroredCase=[12,13,22,23].includes(id);
+  const mirroredCase=[12,13,22,23,30,31].includes(id);
   const caseGeometry=mirroredCase?mirrorCaseAcrossShaft(assets.geometries[0]):(turnedCase?assets.geometries[0].clone().rotateZ(Math.PI):(uprightHip?assets.hipGeometry:assets.geometries[0]));
   servo.geometry=caseGeometry;
   const group=new T.Group();group.name=`servo-${id}-identification-and-ports`;servo.add(group);

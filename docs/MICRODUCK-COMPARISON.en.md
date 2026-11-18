@@ -6,13 +6,60 @@
 
 ## Five direct comparisons
 
-| Other route | What you get with kissqy | Published gaps and extra work |
-| --- | --- | --- |
-| **[fanhao375](https://github.com/fanhao375/microduck-replica)**<br>ZERO 3W + HD1910<br>[Model notice](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt) · [README](https://github.com/fanhao375/microduck-replica) · [Training](https://github.com/fanhao375/microduck-replica/blob/master/software/training-studio/docs/verification.md) | **Use the policy author’s publication and matching Chinese AI workflow**<br>This project provides trained/adapted policies, provenance and deployment records, plus an R2 / V260 flow for conversation, image recognition and action calls. | **These supplied models are not an additional independent motion set**<br>Its image notice credits 10 models to kissqy and says the original weights were retained.<br><br>**Free-form AI conversation remains listed as unconnected**<br>Documented local fixed-command recognition does not establish conversation, image recognition or AI action calling.<br><br>**Its training workbench still needs long-training and hardware acceptance**<br>GPU checks cover short training, evaluation and export, not completed robot deployment of a newly trained skill. |
-| **[OpenMicroDuck](https://github.com/JoyandAI/OpenMicroDuck)**<br>ZERO 3W + HD1910<br>[Policies](https://github.com/JoyandAI/OpenMicroDuck/blob/main/policies/README.md) | **Matching resources for both kicks and roller tasks**<br>Alongside ordinary-foot movements, this project publishes roller swizzle, crouch, spin and get-up resources. | **Its published configuration has right kick but no left kick**<br>The policy guide explicitly sets kick_left = none; the six listed ONNX files do not include roller tasks.<br><br>**The deployment guide has version and control constraints**<br>It targets robotd 0.13.3 and locates button mappings in the padd binary. It is not an interchangeable configuration for another image or console. |
-| **[Pollen Robotics](https://github.com/pollen-robotics/microduck)**<br>Official / XL330<br>[Runtime](https://github.com/pollen-robotics/microduck) · [Adaptation](https://github.com/kissqy/Microduck-kissqy) | **The HD1910 adaptation is already a coordinated build route**<br>The ZERO 3W image, servo communication, policies and Chinese console have matching build instructions. | **The original XL330 route is not a ready-made HD1910 installation**<br>An HD1910 conversion still needs matching communication, actuator parameters and policies.<br><br>**Upstream weights are not automatically HD1910-ready gaits**<br>Renaming the servo or copying an ONNX file does not complete the hardware/policy adaptation. |
-| **[AI-FanGe](https://github.com/AI-FanGe/Microduck-build-tutorial)**<br>Pi Zero 2 W + XL330<br>[Deployment](https://github.com/AI-FanGe/Microduck-build-tutorial) | **Chinese graphical maintenance, then movements and AI**<br>Calibration, feedback, camera and firmware maintenance have console entry points, alongside matching motion and AI releases. | **Its hardware instructions do not transfer directly to HD1910**<br>The route uses Pi Zero 2 W, OpenRB-150 and XL330, rather than the ZERO 3W / HD1910 electronics and deployment.<br><br>**Its documented first-run path focuses on walk.onnx**<br>The reviewed guide uses SSH, terminal commands and a gamepad; it does not document this project’s integrated Chinese AI and multi-motion workflow. |
-| **[Luwu XGO-Duck](https://github.com/LuwuDynamics/xgoduck_hardware)**<br>UNO Q + 1910 / QMI8658A<br>[Hardware](https://github.com/LuwuDynamics/xgoduck_hardware/blob/master/README_CN.md) | **Keep the ZERO 3W and this project’s matching boards**<br>Owners or buyers of ZERO 3W and HAT / IMU / HUB can follow one reference configuration for construction and maintenance. | **Changing to this route needs more than another image**<br>It uses Arduino UNO Q, a custom expansion board and QMI8658A; an existing ZERO 3W build needs controller, IMU, wiring and software reconsidered.<br><br>**Its supplied policies still require its matching runtime**<br>Its browser interface and policies target the UNO Q environment, not this project’s image and console. |
+### Microduck-kissqy VS [fanhao375](https://github.com/fanhao375/microduck-replica)
+
+ZERO 3W + HD1910
+
+| **Microduck-kissqy · Our advantages** | **fanhao375 · Gaps in this other route** |
+| --- | --- |
+| **Use the policy author’s publication and matching Chinese AI workflow**<br>This project provides trained/adapted policies, provenance and deployment records, plus an R2 / V260 flow for conversation, image recognition and action calls. | **These supplied models are not an additional independent motion set**<br>Its image notice credits 10 models to kissqy and says the original weights were retained.<br><br>**Free-form AI conversation remains listed as unconnected**<br>Documented local fixed-command recognition does not establish conversation, image recognition or AI action calling.<br><br>**Its training workbench still needs long-training and hardware acceptance**<br>GPU checks cover short training, evaluation and export, not completed robot deployment of a newly trained skill. |
+
+Sources for this project: [Model notice](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt) · [README](https://github.com/fanhao375/microduck-replica) · [Training](https://github.com/fanhao375/microduck-replica/blob/master/software/training-studio/docs/verification.md)
+
+
+### Microduck-kissqy VS [OpenMicroDuck](https://github.com/JoyandAI/OpenMicroDuck)
+
+ZERO 3W + HD1910
+
+| **Microduck-kissqy · Our advantages** | **OpenMicroDuck · Gaps in this other route** |
+| --- | --- |
+| **Matching resources for both kicks and roller tasks**<br>Alongside ordinary-foot movements, this project publishes roller swizzle, crouch, spin and get-up resources. | **Its published configuration has right kick but no left kick**<br>The policy guide explicitly sets kick_left = none; the six listed ONNX files do not include roller tasks.<br><br>**The deployment guide has version and control constraints**<br>It targets robotd 0.13.3 and locates button mappings in the padd binary. It is not an interchangeable configuration for another image or console. |
+
+Sources for this project: [Policies](https://github.com/JoyandAI/OpenMicroDuck/blob/main/policies/README.md)
+
+
+### Microduck-kissqy VS [Pollen Robotics](https://github.com/pollen-robotics/microduck)
+
+Official / XL330
+
+| **Microduck-kissqy · Our advantages** | **Pollen Robotics · Gaps in this other route** |
+| --- | --- |
+| **The HD1910 adaptation is already a coordinated build route**<br>The ZERO 3W image, servo communication, policies and Chinese console have matching build instructions. | **The original XL330 route is not a ready-made HD1910 installation**<br>An HD1910 conversion still needs matching communication, actuator parameters and policies.<br><br>**Upstream weights are not automatically HD1910-ready gaits**<br>Renaming the servo or copying an ONNX file does not complete the hardware/policy adaptation. |
+
+Sources for this project: [Runtime](https://github.com/pollen-robotics/microduck) · [Adaptation](https://github.com/kissqy/Microduck-kissqy)
+
+
+### Microduck-kissqy VS [AI-FanGe](https://github.com/AI-FanGe/Microduck-build-tutorial)
+
+Pi Zero 2 W + XL330
+
+| **Microduck-kissqy · Our advantages** | **AI-FanGe · Gaps in this other route** |
+| --- | --- |
+| **Chinese graphical maintenance, then movements and AI**<br>Calibration, feedback, camera and firmware maintenance have console entry points, alongside matching motion and AI releases. | **Its hardware instructions do not transfer directly to HD1910**<br>The route uses Pi Zero 2 W, OpenRB-150 and XL330, rather than the ZERO 3W / HD1910 electronics and deployment.<br><br>**Its documented first-run path focuses on walk.onnx**<br>The reviewed guide uses SSH, terminal commands and a gamepad; it does not document this project’s integrated Chinese AI and multi-motion workflow. |
+
+Sources for this project: [Deployment](https://github.com/AI-FanGe/Microduck-build-tutorial)
+
+
+### Microduck-kissqy VS [Luwu XGO-Duck](https://github.com/LuwuDynamics/xgoduck_hardware)
+
+UNO Q + 1910 / QMI8658A
+
+| **Microduck-kissqy · Our advantages** | **Luwu XGO-Duck · Gaps in this other route** |
+| --- | --- |
+| **Keep the ZERO 3W and this project’s matching boards**<br>Owners or buyers of ZERO 3W and HAT / IMU / HUB can follow one reference configuration for construction and maintenance. | **Changing to this route needs more than another image**<br>It uses Arduino UNO Q, a custom expansion board and QMI8658A; an existing ZERO 3W build needs controller, IMU, wiring and software reconsidered.<br><br>**Its supplied policies still require its matching runtime**<br>Its browser interface and policies target the UNO Q environment, not this project’s image and console. |
+
+Sources for this project: [Hardware](https://github.com/LuwuDynamics/xgoduck_hardware/blob/master/README_CN.md)
+
 
 Checked **November 18, 2026**. Gaps concern the linked configurations and documents. No same-condition robot benchmark supports a claim of better gait, fewer failures or first-place performance.
 
@@ -74,3 +121,4 @@ The author’s training/adaptation builds on upstream frameworks, tasks and comm
 - [Microduck-kissqy · R2 / V260](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)
 - [Microduck-kissqy · V297 BATE](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate)
 - [Microduck-kissqy · Provenance](https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/docs/MODEL-PROVENANCE.md)
+

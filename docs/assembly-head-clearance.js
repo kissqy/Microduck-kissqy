@@ -1,14 +1,14 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
 
 // Display model based on the repository's 3525 cavity-speaker photographs.
-// Keep the joint transform; display the speaker beside/above the head so IDs remain readable.
+// Keep the original head mounting frame, with 3 mm of HD1910 case clearance.
 export function attachHeadClearance(view){
   const index=view.model.parts.findIndex(part=>part.mesh===27),speaker=view.actual.parts[index];
   if(!speaker?.geometry)throw Error('头部喇叭显示模型缺失');
   const original=speaker.geometry,root=view.actual.root;
   root.updateMatrixWorld(true);
   const origin=speaker.worldToLocal(root.localToWorld(new T.Vector3()));
-  const offset=speaker.worldToLocal(root.localToWorld(new T.Vector3(0,.032,.045))).sub(origin);
+  const offset=speaker.worldToLocal(root.localToWorld(new T.Vector3(0,0,.003))).sub(origin);
   const group=new T.Group();group.name='3525-cavity-speaker';group.position.copy(offset);speaker.add(group);
   const materials={
     shell:new T.MeshStandardMaterial({color:0x202225,roughness:.72}),
@@ -44,7 +44,7 @@ export function attachHeadClearance(view){
   const port={kind:'speaker2',pinCount:2,root:portRoot,pins,mouth,outward,sourceRef:'speaker'};
   const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute([],3));speaker.geometry=geometry;
   let disposed=false;
-  return{speaker,group,port,lift:.045,
+  return{speaker,group,port,lift:.003,
     dispose(){if(disposed)return;disposed=true;speaker.geometry=original;speaker.remove(group);group.traverse(o=>{if(o.isMesh)o.geometry.dispose();});Object.values(materials).forEach(m=>m.dispose());geometry.dispose();}
   };
 }

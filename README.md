@@ -91,7 +91,7 @@ Radxa ZERO 3W · 15 × 飞特 HD1910 · 配套 HAT / IMU / HUB
 
 fanhao 的镜像模型说明将其中 **10 个模型的作者标为 kissqy**，并记录保留原始权重。[查看对方的来源说明](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt)。
 
-**[六个项目详细对比：我们的优势，其他方案还要补什么 →](https://kissqy.github.io/Microduck-kissqy/compare/?v=20261118-complete)**
+**[先看我们的优势，再看其他仓库缺少什么 →](https://kissqy.github.io/Microduck-kissqy/compare/?v=20261118-advantages-first)**
 
 <sub>[文字版与逐项依据](docs/MICRODUCK-COMPARISON.md) · 含官方 Microduck、陆吾 XGO-Duck、AI-FanGe、fanhao375、OpenMicroDuck 与本项目。</sub>
 <!-- replica-choice:end -->

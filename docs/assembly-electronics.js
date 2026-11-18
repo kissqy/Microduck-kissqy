@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
 import {createBoardModel} from './assembly-board-models.js?v=20261118-speaker-hp125-id21';
-import {attachHeadClearance} from './assembly-head-clearance.js?v=20261118-speaker-hp125-id21';
+import {attachHeadClearance} from './assembly-head-clearance.js?v=20261118-speaker-mounted';
 import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261104-head-labels';
 import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261118-servo21-no32-horn';
 import {createHubModel} from './assembly-hub-model.js?v=20261118-amp-inward';
@@ -206,7 +206,9 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   const wireRouter=createWireRouter(root,servoMeshes,collisionMeshes,{clearance:.00045});
   const bundleRouter=createWireRouter(root,servoMeshes,collisionMeshes,{clearance:.0010});
   const portContacts=port=>{
-    if(port===headClearance.port)return[contactProxies.get(headClearance.group)?.[1]].filter(Boolean);
+    // The solder tabs sit flush against the acoustic cavity. Permit only the
+    // fixed terminal lead to leave that body; the rest still avoids its shell.
+    if(port===headClearance.port)return(contactProxies.get(headClearance.group)||[]).filter(Boolean);
     if(port===batteryPort)return[contactProxies.get(batteryPort.root)?.[1]].filter(Boolean);
     for(const component of components.values())if(Object.values(component.ports).includes(port))return[contactProxies.get(component.group)?.[1]].filter(Boolean);
     for(const detail of servoDetails.values())if(Object.values(detail.ports).includes(port))return[contactProxies.get(detail.group)?.[1]].filter(Boolean);
@@ -331,12 +333,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
         const start=starts[index],end=ends[index];
         const leadA=leadsA[index],leadB=leadsB[index];
         let curve,routing=null;
-        if(item.id==='hat-speaker'){
-          // Explicit loose audio lead: leave both terminals before looping
-          // above the head. Never silently hide the audio pair on router failure.
-          const mid=leadA.clone().lerp(leadB,.5);mid.z=Math.max(leadA.z,leadB.z)+.012;
-          curve=new T.CatmullRomCurve3([start,leadA,mid,leadB,end],false,'centripetal');
-        }else if(item.header){
+        if(item.header){
           // Forty separate contacts join the opposed HAT/Zero headers. Contact
           // order is geometric, not a GPIO pin assignment or a three-wire bus.
           curve=new T.LineCurve3(start,end);

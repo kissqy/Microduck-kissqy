@@ -1,93 +1,115 @@
-**简体中文** | [English](MICRODUCK-COMPARISON.en.md) · [网页版 / Web edition](https://kissqy.github.io/Microduck-kissqy/compare/)
+**简体中文** | [English](MICRODUCK-COMPARISON.en.md) · [网页版 / Web edition](https://kissqy.github.io/Microduck-kissqy/compare/?v=20261118-advantages-first)
 
-# 为什么选择 Microduck-kissqy：优势与方案差距
+# 为什么选择 Microduck-kissqy：我们的优势与其他仓库的缺项
 
-**面向使用中文流程、ZERO 3W 与飞特 HD1910 完成个人复刻的用户。先看差距，再看本项目的具体优势。**
+**从 0 到进阶，一套完整的鸭鸭复刻方案。**
 
-## 与五个代表项目直接比较
+面向使用中文流程、ZERO 3W 与飞特 HD1910 完成个人复刻的用户。
 
-### Microduck-kissqy VS [fanhao375](https://github.com/fanhao375/microduck-replica)
+## 我们的优势
+
+### 1. 从零制作到进阶，资料与工具完整配套
+
+**软件、硬件、现成运动模型、飞特 HD1910 适配打印件、各类教程和训练中控集中提供。**
+
+按采购、打印装配、刷机配网和本机标定开始，再继续日常玩法、中文 AI 与自训新动作。 [完整制作路线](https://kissqy.github.io/Microduck-kissqy/build/)
+
+### 2. 配套现成动作，正常复刻无需训练
+
+**行走、坐下站起、捡取、前滚翻、左右踢球，以及滑轮滑行、蹲下、原地转和倒地起身。**
+
+本项目是社区 HD1910 动作资源的主要来源。外部镜像将其中 10 个模型作者标为 kissqy；具体模型按发布包使用。 [动作模型与来源](https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/docs/MODEL-PROVENANCE.md)
+
+### 3. 中文中控与 AI，装好后继续玩
+
+**舵机与 IMU 标定、3D 姿态、关节反馈、摄像头、手柄和固件维护，都有中文操作入口。**
+
+R2 / V260 提供中文对话、拍照识别、音色角色与动作调用；AI 需配置服务凭据并联网。 [中控与 AI 用法](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)
+
+### 4. HAT、IMU、HUB，软硬件对应起来
+
+**板卡电路工程、材料清单、接线、系统镜像与固件集中提供，可自行制作，也可选择成品板。**
+
+V297 BATE 另提供 HAT 直接编号与中位校准，无需 URT2；该测试版实机验收待完成。 [配套硬件资料](https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/README.md)
+
+### 5. 飞特适配打印件与分步教程
+
+**提供面向 HD1910 复刻的 STL / 3MF 打印资料，以及预算采购、装配接线、刷机标定与常见问题教程。**
+
+围绕 ZERO 3W 与 15 个 HD1910，按同一套参考配置制作，减少自行拼接不同方案的工作。 [打印与装配资料](https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/3d-print-frankenduck/README.md)
+
+### 6. 独立训练中控，从使用走向自训
+
+**任务与配方选择、训练队列、奖励曲线、仿真评估和 ONNX 导出，形成研究新动作的操作流程。**
+
+先用现成模型完成自己的鸭子，再按需要训练；具体动作的长训练与实机结果按各自记录核对。 [训练中控教程](https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/training-console/README.zh-CN.md)
+
+## 这些仓库还缺什么？
+
+### [fanhao375](https://github.com/fanhao375/microduck-replica)
 
 ZERO 3W + HD1910
 
-| **Microduck-kissqy · 我们的优势** | **fanhao375 · 对照方案的差距** |
-| --- | --- |
-| **从 0 到进阶，一套完整方案**<br>软件、硬件、现成运动模型、飞特 HD1910 适配打印件、教程和独立训练中控集中提供，覆盖制作、使用与进阶。<br><br>**动作直接看作者发布，中文 AI 有配套流程**<br>本项目提供自训适配模型、来源与部署记录；中文对话、拍照识别和动作调用已有 R2 / V260 发布入口。 | **这批现成模型不是另一套新增动作**<br>其镜像说明将 10 个模型署名给 kissqy，并记录保留原始权重。<br><br>**自由 AI 对话仍被列为未接入**<br>公开说明中的本地固定指令识别，不能等同于自由对话、视觉识别与 AI 动作调用。<br><br>**自建训练台仍待长训与自训真机验收**<br>GPU 短试跑、评估和导出已验证，不代表新动作已经在实机训成。 |
+- **所列 10 个现成模型来自 kissqy**  
+  其镜像说明将 10 个模型署名给 kissqy，并记录保留原始权重。
 
-该项目资料依据：[模型署名](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt) · [项目说明](https://github.com/fanhao375/microduck-replica) · [训练验证](https://github.com/fanhao375/microduck-replica/blob/master/software/training-studio/docs/verification.md)
+- **没有接入自由 AI 对话**  
+  公开说明中的本地固定指令识别，不能等同于自由对话、视觉识别与 AI 动作调用。
 
+- **自训动作尚未完成长训与实机验收**  
+  GPU 短试跑、评估和导出已验证，不代表新动作已经在实机训成。
 
-### Microduck-kissqy VS [OpenMicroDuck](https://github.com/JoyandAI/OpenMicroDuck)
+资料依据：[模型署名](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt) · [项目说明](https://github.com/fanhao375/microduck-replica) · [训练验证](https://github.com/fanhao375/microduck-replica/blob/master/software/training-studio/docs/verification.md)
+
+### [OpenMicroDuck](https://github.com/JoyandAI/OpenMicroDuck)
 
 ZERO 3W + HD1910
 
-| **Microduck-kissqy · 我们的优势** | **OpenMicroDuck · 对照方案的差距** |
-| --- | --- |
-| **左右踢球和滑轮动作，都有配套资源**<br>普通脚掌动作之外，还提供滑轮滑行、蹲下、原地转和倒地起身的模型资源。 | **公开配置只有右踢，左踢为空**<br>策略说明明确写出 kick_left = none；所列 6 个 ONNX 中也未列滑轮动作。<br><br>**部署和操作存在明确版本限制**<br>这份说明按 robotd 0.13.3 编写，按键映射位于 padd 二进制中；不能直接当作与其他镜像、中控通用的配置。 |
+- **没有提供左踢模型，清单未列滑轮动作**  
+  策略说明明确写出 kick_left = none；所列 6 个 ONNX 中也未列滑轮动作。
 
-该项目资料依据：[策略配置](https://github.com/JoyandAI/OpenMicroDuck/blob/main/policies/README.md)
+- **部署仍需遵循特定运行时与按键配置**  
+  这份说明按 robotd 0.13.3 编写，按键映射位于 padd 二进制中；不能直接当作与其他镜像、中控通用的配置。
 
+资料依据：[策略配置](https://github.com/JoyandAI/OpenMicroDuck/blob/main/policies/README.md)
 
-### Microduck-kissqy VS [Pollen Robotics](https://github.com/pollen-robotics/microduck)
+### [Pollen Robotics](https://github.com/pollen-robotics/microduck)
 
 Official / XL330
 
-| **Microduck-kissqy · 我们的优势** | **Pollen Robotics · 对照方案的差距** |
-| --- | --- |
-| **HD1910 适配已经组织成配套方案**<br>ZERO 3W 镜像、舵机通信、对应动作模型与中文中控集中提供，按步骤制作即可开始验证。 | **官方原版不是 HD1910 的直接安装包**<br>原版 XL330 路线与飞特舵机不同；改用 HD1910，通信、执行器参数和策略适配还要另行完成。<br><br>**官方权重不能直接当作飞特现成步态**<br>仅替换舵机名称或复制 ONNX，不等于完成硬件与策略匹配。 |
+- **没有面向飞特 HD1910 的直接安装方案**  
+  原版 XL330 路线与飞特舵机不同；改用 HD1910，通信、执行器参数和策略适配还要另行完成。
 
-该项目资料依据：[官方运行时](https://github.com/pollen-robotics/microduck) · [HD1910 适配](https://github.com/kissqy/Microduck-kissqy)
+- **原版权重不能直接作为飞特配套步态**  
+  仅替换舵机名称或复制 ONNX，不等于完成硬件与策略匹配。
 
+资料依据：[官方运行时](https://github.com/pollen-robotics/microduck) · [HD1910 适配](https://github.com/kissqy/Microduck-kissqy)
 
-### Microduck-kissqy VS [AI-FanGe](https://github.com/AI-FanGe/Microduck-build-tutorial)
+### [AI-FanGe](https://github.com/AI-FanGe/Microduck-build-tutorial)
 
 Pi Zero 2 W + XL330
 
-| **Microduck-kissqy · 我们的优势** | **AI-FanGe · 对照方案的差距** |
-| --- | --- |
-| **中文界面维护，继续体验多动作和 AI**<br>关节与 IMU 标定、反馈、摄像头和固件维护有图形入口，动作与 AI 按配套发布使用。 | **硬件不是同一套，不能照抄到飞特鸭**<br>该路线使用 Pi Zero 2 W、OpenRB-150 与 XL330；ZERO 3W / HD1910 需要另一套电控与部署配置。<br><br>**公开上手主线集中在 walk.onnx 行走**<br>所读指南通过 SSH、终端命令和手柄完成部署；未给出本项目这套中文 AI 与多动作操作流程。 |
+- **没有 ZERO 3W + HD1910 的配套硬件路线**  
+  该路线使用 Pi Zero 2 W、OpenRB-150 与 XL330；ZERO 3W / HD1910 需要另一套电控与部署配置。
 
-该项目资料依据：[部署教程](https://github.com/AI-FanGe/Microduck-build-tutorial)
+- **所读教程未给出这套中文 AI 与多动作流程**  
+  所读指南通过 SSH、终端命令和手柄完成部署；未给出本项目这套中文 AI 与多动作操作流程。
 
+资料依据：[部署教程](https://github.com/AI-FanGe/Microduck-build-tutorial)
 
-### Microduck-kissqy VS [Luwu XGO-Duck](https://github.com/LuwuDynamics/xgoduck_hardware)
+### [Luwu XGO-Duck](https://github.com/LuwuDynamics/xgoduck_hardware)
 
 UNO Q + 1910 / QMI8658A
 
-| **Microduck-kissqy · 我们的优势** | **Luwu XGO-Duck · 对照方案的差距** |
-| --- | --- |
-| **沿用 ZERO 3W 和本项目板卡继续制作**<br>已有或准备购买 ZERO 3W、HAT / IMU / HUB 时，围绕同一套参考配置制作和维护。 | **不是换个镜像就能切过去**<br>主控为 Arduino UNO Q，配定制扩展板与 QMI8658A；已有 ZERO 3W 和本项目板卡时，主控、IMU、接线与软件都需重新核对。<br><br>**其现成策略仍要使用匹配的运行时**<br>浏览器界面和策略服务于 UNO Q 配套环境，不能直接代替本项目镜像和中控。 |
+- **不能直接沿用 ZERO 3W 与本项目板卡**  
+  主控为 Arduino UNO Q，配定制扩展板与 QMI8658A；已有 ZERO 3W 和本项目板卡时，主控、IMU、接线与软件都需重新核对。
 
-该项目资料依据：[硬件配置](https://github.com/LuwuDynamics/xgoduck_hardware/blob/master/README_CN.md)
+- **现成界面与策略依赖 UNO Q 配套运行环境**  
+  浏览器界面和策略服务于 UNO Q 配套环境，不能直接代替本项目镜像和中控。
 
+资料依据：[硬件配置](https://github.com/LuwuDynamics/xgoduck_hardware/blob/master/README_CN.md)
 
-核查日期：**2026-11-18**。差距针对所链接的具体配置与说明。本次未做同条件实机横测，不据此宣称步态更稳、故障更少或性能第一。
-
-## 选择我们，具体得到什么
-
-### 1. 从 0 到进阶的完整鸭鸭复刻方案
-
-**软件、硬件、运动模型、飞特 HD1910 适配打印件、各类教程与训练中控集中提供。**
-
-从采购、打印装配、刷机配网与本机标定开始，再继续体验现成动作、中文 AI、训练评估和 ONNX 导出。[完整制作与进阶路线](https://kissqy.github.io/Microduck-kissqy/build/)
-
-### 2. 现成动作直接找作者
-
-**普通脚掌与滑轮动作，来源和部署记录一起看。**
-
-外部镜像明确署名的 10 个模型可追溯到 kissqy；具体权重以发布包为准。 [看模型来源](https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/docs/MODEL-PROVENANCE.md)
-
-### 3. 中文 AI 有配套发布流程
-
-**中文对话、拍照识别、音色角色与动作调用。**
-
-R2 / V260 已发布对应流程；需配置服务凭据并联网。 [看 AI 功能与用法](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)
-
-### 4. HAT 直接编号与中位校准
-
-**无需 URT2 调试板，编号和标定在同一中控中衔接。**
-
-该功能在 V297 BATE 测试版；已有 R2 / control.102 用户只需更换中控，实机验收待完成。 [看 HAT 编号方法](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate)
+核查日期：**2026-11-18**。缺项与限制针对所链接的公开版本和具体配置，未列出的功能不据此认定整个项目都没有。
 
 ## 关于动作来源
 

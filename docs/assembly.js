@@ -2,7 +2,7 @@ import * as T from './vendor/three.module.min.js?demo=20261013';
 import {DuckView} from './duck.js?demo=20261013';
 import {REFERENCE_IDS,REFERENCE_LABELS} from './calibration-reference.js?demo=20261013';
 import {officialStandingDegrees,referenceAngle} from './joint-reference.js?demo=20261013';
-import {attachElectronics} from './assembly-electronics.js?v=20261118-speaker-hp125-id21';
+import {attachElectronics} from './assembly-electronics.js?v=20261118-speaker-mounted';
 import {COMPONENTS,CONNECTIONS,WIRING_NOTE} from './assembly-components.js?v=20261118-speaker-hp125-id21';
 
 const groups={

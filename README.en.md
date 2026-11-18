@@ -89,7 +89,7 @@ Software, hardware, ready-to-use motion policies, **Feetech HD1910-adapted print
 
 fanhao's image model notice credits **10 models to kissqy** and records retaining their original weights. [Read the attribution](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt).
 
-**[Compare six projects: our benefits and the extra work in other routes →](https://kissqy.github.io/Microduck-kissqy/compare/en.html?v=20261118-complete)**
+**[Our advantages first, then what other repositories are missing →](https://kissqy.github.io/Microduck-kissqy/compare/en.html?v=20261118-advantages-first)**
 
 <sub>[Text edition and evidence](docs/MICRODUCK-COMPARISON.en.md) · Official Microduck, Luwu XGO-Duck, AI-FanGe, fanhao375, OpenMicroDuck and this project.</sub>
 <!-- replica-choice:end -->

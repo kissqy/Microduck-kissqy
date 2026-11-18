@@ -29,7 +29,7 @@
 
 
 > [!NOTE]
-> **V297 BATE 中控测试版已独立发布。** 新增四模式工作台、HAT 舵机编号与独立硬件测试，并修复缺 IMU / 缺舵机时初始化等待卡住的问题。
+> **V297 BATE 中控测试版已独立发布。** 新增四模式工作台、HAT 舵机编号与独立硬件测试，无需 URT2 调试板即可给舵机编号和中位校准。
 >
 > [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 文件目录](versions/v297-bate/)
 >

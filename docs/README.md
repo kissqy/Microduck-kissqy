@@ -5,9 +5,8 @@
 首页、使用指南、硬件记录与技术说明的中英文入口。当前软件界面仍为中文；英文指南保留必要的中文按钮名称。原始测试日志、源代码与正式许可保持原文。
 
 
-**[为什么选择 kissqy？六个代表项目的详细对比 →](MICRODUCK-COMPARISON.md)** 先看现成动作、配套软硬件、中文 AI 与训练工具的区别；包含 OpenMicroDuck。
+**[为什么选择 kissqy？打开网页版对比 →](https://kissqy.github.io/Microduck-kissqy/compare/)** · [文字版与来源](MICRODUCK-COMPARISON.md) 先看现成动作、配套软硬件、中文 AI 与训练工具的区别；包含 OpenMicroDuck。
 
-> [!NOTE]
 > **V297 BATE 中控测试版已独立发布。** 新增四模式工作台、HAT 舵机编号与独立硬件测试，无需 URT2 调试板即可给舵机编号和中位校准。
 >
 > [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 文件目录](../versions/v297-bate/)

@@ -5,9 +5,8 @@
 English editions of the homepage, user guides, hardware records, and technical notes. Current application interfaces remain Chinese; English guides include button labels for reference. Raw test logs, source code, and formal licenses retain their original text.
 
 
-**[Why choose kissqy? Compare six representative projects →](MICRODUCK-COMPARISON.en.md)** Supplied policies, matching hardware/software, Chinese AI and training tools, including OpenMicroDuck.
+**[Why choose kissqy? Open the web comparison →](https://kissqy.github.io/Microduck-kissqy/compare/en.html)** · [Text version and sources](MICRODUCK-COMPARISON.en.md) Supplied policies, matching hardware/software, Chinese AI and training tools, including OpenMicroDuck.
 
-> [!NOTE]
 > **The V297 BATE console is available as a separate pre-release.** Four workspaces, HAT servo numbering and independent hardware tests. Assign servo IDs and calibrate their midpoint without a URT2 programming board.
 >
 > [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 version files](../versions/v297-bate/README.en.md)

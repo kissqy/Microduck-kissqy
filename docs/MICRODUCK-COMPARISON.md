@@ -1,4 +1,4 @@
-**简体中文** | [English](MICRODUCK-COMPARISON.en.md) · [返回项目首页](../README.md)
+**简体中文** | [English](MICRODUCK-COMPARISON.en.md) · [返回项目首页](../README.md) · [打开网页版](https://kissqy.github.io/Microduck-kissqy/compare/)
 
 # Microduck 代表项目对比与复刻路线选择
 

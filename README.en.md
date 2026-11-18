@@ -48,13 +48,13 @@ The three build stages and optional advanced guide are in Chinese. [English buil
 
 **The project also supplies HD1910 motion resources used elsewhere in the community.** fanhao's image model notice credits **10 models to kissqy** and records that their weights were retained. [Read the project's attribution](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt).
 
-**[Compare six representative projects and choose a build route →](docs/MICRODUCK-COMPARISON.en.md)**  
+**[Open the web comparison: why choose kissqy? →](https://kissqy.github.io/Microduck-kissqy/compare/en.html)** · [Text version and sources](docs/MICRODUCK-COMPARISON.en.md)
+
 Official Microduck, Luwu XGO-Duck, AI-FanGe, fanhao375, OpenMicroDuck and this project. [Start the three-stage build guide (中文) →](https://kissqy.github.io/Microduck-kissqy/build/)
 
 </div>
 <!-- replica-choice:end -->
 
-> [!NOTE]
 > **The V297 BATE console is available as a separate pre-release.** Four workspaces, HAT servo numbering and independent hardware tests. Assign servo IDs and calibrate their midpoint without a URT2 programming board.
 >
 > [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 version files](versions/v297-bate/README.en.md)
@@ -185,6 +185,25 @@ Community improvements and the author's real-robot modifications are collected i
 [MakerWorld model and print profile →](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553) · [Printing files, plate previews and assembly notes →](hardware/3d-print-frankenduck/README.en.md)
 
 ## 🔧 DIY HAT, IMU and HUB
+
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="25%" align="center">HAT</th>
+      <th width="25%" align="center">HUB</th>
+      <th width="25%" align="center">IMU</th>
+      <th width="25%" align="center">Banana power board</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><a href="docs/assets/boards/hat-white.png"><img src="docs/assets/boards/hat-white.png" width="200" alt="HAT board, front and back on a white background" /></a></td>
+      <td align="center"><a href="docs/assets/boards/hub-white.png"><img src="docs/assets/boards/hub-white.png" width="200" alt="HUB board, three views on a white background" /></a></td>
+      <td align="center"><a href="docs/assets/boards/imu-white.png"><img src="docs/assets/boards/imu-white.png" width="200" alt="IMU board on a white background" /></a></td>
+      <td align="center">&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
 
 Designed and laid out by the author, refined through extended real-robot use and **SMT assembled by JLCPCB**.
 

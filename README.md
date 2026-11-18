@@ -48,13 +48,13 @@
 
 **本项目也是社区 HD1910 动作资源的来源之一。** fanhao 的镜像模型说明将其中 **10 个模型的作者标为 kissqy**，并记录保留原始权重。[查看对方的来源说明](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt)。
 
-**[查看六个代表项目的详细对比与选择理由 →](docs/MICRODUCK-COMPARISON.md)**  
+**[打开网页版：为什么选择 kissqy？六个项目详细对比 →](https://kissqy.github.io/Microduck-kissqy/compare/)** · [文字版与来源](docs/MICRODUCK-COMPARISON.md)
+
 含官方 Microduck、陆吾 XGO-Duck、AI-FanGe、fanhao375、OpenMicroDuck 与本项目。[直接开始三步复刻 →](https://kissqy.github.io/Microduck-kissqy/build/)
 
 </div>
 <!-- replica-choice:end -->
 
-> [!NOTE]
 > **V297 BATE 中控测试版已独立发布。** 新增四模式工作台、HAT 舵机编号与独立硬件测试，无需 URT2 调试板即可给舵机编号和中位校准。
 >
 > [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 文件目录](versions/v297-bate/)
@@ -187,6 +187,25 @@ R2 已预装 control.102 与 11 个 ONNX 运行模型。首次运动前仍需核
 [MakerWorld 模型与打印配置 →](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553) · [查看打印文件、摆盘预览与装配说明 →](hardware/3d-print-frankenduck/)
 
 ## 🔧 自制 HAT、IMU 与 HUB 电路板
+
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="25%" align="center">HAT</th>
+      <th width="25%" align="center">HUB</th>
+      <th width="25%" align="center">IMU</th>
+      <th width="25%" align="center">香蕉板</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><a href="docs/assets/boards/hat-white.png"><img src="docs/assets/boards/hat-white.png" width="200" alt="HAT 电路板正反面白底图" /></a></td>
+      <td align="center"><a href="docs/assets/boards/hub-white.png"><img src="docs/assets/boards/hub-white.png" width="200" alt="HUB 分线板三视图白底图" /></a></td>
+      <td align="center"><a href="docs/assets/boards/imu-white.png"><img src="docs/assets/boards/imu-white.png" width="200" alt="IMU 姿态传感器板白底图" /></a></td>
+      <td align="center">&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
 
 HAT 连接 ZERO 3W 与舵机总线，提供供电、通信及音频外围；独立躯干 IMU 提供身体姿态反馈；HUB 分接舵机与电源，并带 1000 µF 缓冲电容。板卡由作者自行设计绘制，经真机使用与迭代验证，由**嘉立创 SMT 贴片生产**。提供电路工程、材料清单与制作记录。
 

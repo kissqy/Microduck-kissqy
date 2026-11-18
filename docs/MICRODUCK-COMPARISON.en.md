@@ -1,4 +1,4 @@
-[简体中文](MICRODUCK-COMPARISON.md) | **English** · [Project homepage](../README.en.md)
+[简体中文](MICRODUCK-COMPARISON.md) | **English** · [Project homepage](../README.en.md) · [Open web edition](https://kissqy.github.io/Microduck-kissqy/compare/en.html)
 
 # Microduck project comparison and build route selection
 

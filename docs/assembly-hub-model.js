@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
-import {HUB_LAYOUT} from './assembly-hub-layout.js?v=20261118-amp-cad-shape';
+import {HUB_LAYOUT} from './assembly-hub-layout.js?v=20261118-amp-inward';
 const MM=.001,HALF=HUB_LAYOUT.thickness/2;
 const mat=(color,metalness=.04)=>new T.MeshStandardMaterial({color,roughness:metalness>.5?.33:.65,metalness});
 const signal=net=>net==='GND'?'gnd':net==='VIN'?'power':'data';

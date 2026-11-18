@@ -434,7 +434,7 @@
         0,
         -13.4
       ],
-      "angle": 0,
+      "angle": 180,
       "bottom": false,
       "pads": [
         {
@@ -532,7 +532,7 @@
       "sha256": "d913e47b75139581cbc46a2cbef0277fafcf6bc71b564dabb66b6595744fb1d7"
     }
   ],
-  "assemblyClarification": "CN1 exterior reconstructed from the V3 connector footprint and CJT A2007WR drawing (7.96 mm width, 4 mm height, 2 mm contact pitch). V3 uses a right-angle through-hole part; this corrects the earlier two-pin SMT approximation.",
+  "assemblyClarification": "CN1 exterior reconstructed from the V3 connector footprint and CJT A2007WR drawing (7.96 mm width, 4 mm height, 2 mm contact pitch). V3 uses a right-angle through-hole part; this corrects the earlier two-pin SMT approximation. Author orientation correction: CN1 mouth faces inward towards board centre.",
   "connectorReference": {
     "part": "A2007WR-3P",
     "datasheet": "https://www.cjt.com/upload/A2007.pdf",

@@ -1,8 +1,8 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
-import {createBoardModel} from './assembly-board-models.js?v=20261118-speaker-j1';
-import {attachHeadClearance} from './assembly-head-clearance.js?v=20261118-speaker-j1';
+import {createBoardModel} from './assembly-board-models.js?v=20261118-speaker-hp125';
+import {attachHeadClearance} from './assembly-head-clearance.js?v=20261118-speaker-hp125';
 import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261104-head-labels';
-import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261118-11-12-front-back';
+import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261118-no32-top-horn';
 import {createHubModel} from './assembly-hub-model.js?v=20261118-amp-inward';
 import {createBatteryPack,createBatteryPickup,BATTERY_PICKUP} from './assembly-battery-model.js?v=20261103-contact-hip';
 import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261104-head-orientation';
@@ -177,7 +177,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   root.updateMatrixWorld(true);
   batteryMount.add(batteryPack.group);
   const batteryPort=createBatteryPickup();batteryMount.add(batteryPort.root);
-  const wireRoot=new T.Group();wireRoot.name='assembly-wiring-route-reference';root.add(wireRoot);wireRoot.visible=false;
+  const wireRoot=new T.Group();wireRoot.name='assembly-wiring-route-reference';root.add(wireRoot);wireRoot.visible=true;
   const printedMeshes=view.model.parts.flatMap((part,index)=>PRINTED_MESH_NAMES[part.mesh]?[view.actual.parts[index]]:[]);
   if(batteryMesh)printedMeshes.push(batteryMesh);
   // Include board bodies, connector housings and capacitor cans, not only the
@@ -270,7 +270,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
 
   function applyWireFocus(){
     for(const item of wires){
-      const relevant=!wireFocus||item.from===wireFocus||item.to===wireFocus||item.region===wireFocus||(wireFocus==='head'&&['face','neck','trunk'].includes(item.region));
+      const relevant=item.id==='hat-speaker'||!wireFocus||item.from===wireFocus||item.to===wireFocus||item.region===wireFocus||(wireFocus==='head'&&['face','neck','trunk'].includes(item.region));
       item.conductors.forEach(c=>{c.mesh.material.opacity=relevant?1:.12;c.mesh.material.transparent=!relevant;c.mesh.material.depthWrite=relevant;});
     }
   }
@@ -284,7 +284,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     return root.worldToLocal(point.addScaledVector(direction,distance));
   }
   function updateWires(){
-    if(!wiringVisible)return;
+    // The speaker lead stays visible even when bus wiring is hidden.
     if(coverAmount!==coverTo&&wires.every(item=>item.last))return;
     root.updateMatrixWorld(true);
     wireRouter.update();bundleRouter.update();
@@ -292,7 +292,8 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     const cacheState=wireCache.get(wireRouter.signature);
     batteryPort.root.visible=batteryVisible;
     for(const item of wires){
-      item.group.visible=endpointVisible(item.from)&&endpointVisible(item.to);
+      item.group.visible=(wiringVisible||item.id==='hat-speaker')&&endpointVisible(item.from)&&endpointVisible(item.to);
+      if(!item.group.visible)continue;
       const positions=item.conductors.flatMap(c=>[...c.start.getWorldPosition(new T.Vector3()).toArray(),...c.end.getWorldPosition(new T.Vector3()).toArray()]);
       // Include connector direction so rotating a socket about a fixed contact
       // centre still updates the exit bend.
@@ -307,7 +308,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
       const owner=id=>id.startsWith('servo')?servoDetails.get(Number(id.slice(5))).group.parent:null;
       const coreSpec=index=>({start:starts[index],leadA:leadsA[index],leadB:leadsB[index],end:ends[index],fromServo:owner(item.from),toServo:owner(item.to),fromContacts:item.fromContacts,toContacts:item.toContacts,lane:index-(item.conductors.length-1)/2});
       let bundles=null;
-      if(!item.header&&!cacheHit){
+      if(item.id!=='hat-speaker'&&!item.header&&!cacheHit){
         const outsideLead=(port,points)=>{
           const center=mean(points),dir=port.outward.getWorldPosition(new T.Vector3()).sub(port.mouth.getWorldPosition(new T.Vector3())).transformDirection(root.matrixWorld.clone().invert());
           if(bundleRouter.clearSegment(center,center))return center;
@@ -330,7 +331,12 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
         const start=starts[index],end=ends[index];
         const leadA=leadsA[index],leadB=leadsB[index];
         let curve,routing=null;
-        if(item.header){
+        if(item.id==='hat-speaker'){
+          // Explicit loose audio lead: leave both terminals before looping
+          // above the head. Never silently hide the audio pair on router failure.
+          const mid=leadA.clone().lerp(leadB,.5);mid.z=Math.max(leadA.z,leadB.z)+.012;
+          curve=new T.CatmullRomCurve3([start,leadA,mid,leadB,end],false,'centripetal');
+        }else if(item.header){
           // Forty separate contacts join the opposed HAT/Zero headers. Contact
           // order is geometric, not a GPIO pin assignment or a three-wire bus.
           curve=new T.LineCurve3(start,end);
@@ -397,7 +403,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     setBatteryVisible(visible){batteryVisible=!!visible;if(batteryMesh)batteryMesh.visible=batteryVisible;batteryPack.group.visible=batteryVisible&&batteryPackVisible;frame();return batteryVisible;},
     setBatteryPackVisible(visible){batteryPackVisible=!!visible;batteryPack.group.visible=batteryVisible&&batteryPackVisible;return batteryPackVisible;},
     setWireFocus(value){wireFocus=value&&value!=='all'?value:null;applyWireFocus();},
-    setWiringVisible(visible){wiringVisible=!!visible;wireRoot.visible=wiringVisible;batteryPort.root.visible=batteryVisible;frame();return wiringVisible;},
+    setWiringVisible(visible){wiringVisible=!!visible;wireRoot.visible=true;batteryPort.root.visible=batteryVisible;frame();return wiringVisible;},
     setServoIdsVisible(visible){servoIdsVisible=!!visible;servoDetails.forEach(s=>s.decals.forEach(d=>{d.visible=servoIdsVisible;}));updateLabels();return servoIdsVisible;},
     setExploded(expanded){
       explosion.setExpanded(expanded);frame();

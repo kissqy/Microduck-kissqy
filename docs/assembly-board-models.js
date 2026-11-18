@@ -113,10 +113,12 @@ function addHeaderPort(parent,c,{name=c.ref,count=40,rows=2,pitch=2.54,female=fa
 }
 function addSpeakerPort(parent,c){
   const root=portObject(parent,'J1-speaker-connector',c.x,c.y,0);root.rotation.z=c.angle*Math.PI/180;
-  const z=THICK/2+3.5*.65;
+  const z=THICK/2+6.4;
   // J1 pin 1 = SPK_R_P, pin 2 = SPK_R_N (differential audio, not GND).
   const pins={spk_p:portObject(root,'J1-SPK_R_P',.625,.45,z),spk_n:portObject(root,'J1-SPK_R_N',-.625,.45,z)};
-  const mouth=portObject(root,'J1-mouth',0,.45,THICK/2+3.5),outward=portObject(root,'J1-outward',0,.45,THICK/2+7.5);
+  const plug=new T.Mesh(new T.BoxGeometry(.0042,.0032,.003),new T.MeshStandardMaterial({color:0xf0eee2,roughness:.65}));
+  plug.name='HP1.25-2P-speaker-plug';plug.position.set(0,.00045,(THICK/2+4.9)*MM);plug.userData.hubSolid=false;root.add(plug);
+  const mouth=portObject(root,'J1-mouth',0,.45,z),outward=portObject(root,'J1-outward',0,.45,z+4);
   return{kind:'speaker2',pinCount:2,root,pins,mouth,outward,sourceRef:'J1'};
 }
 function pcbPorts(parent,layout,id){

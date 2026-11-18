@@ -9,6 +9,18 @@ import {GamepadRepair} from './gamepad-repair.js';
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const fmt=(v,n=1)=>finite(v)?v.toFixed(n):'—';
 const htmlText=value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+const IMU_LEVEL_MIN_DEG=1;
+const quatMul=(a,b)=>{const[aw,ax,ay,az]=a,[bw,bx,by,bz]=b;return[aw*bw-ax*bx-ay*by-az*bz,aw*bx+ax*bw+ay*bz-az*by,aw*by-ax*bz+ay*bw+az*bx,aw*bz+ax*by-ay*bx+az*bw];};
+const quatNorm=q=>{const n=Math.hypot(...q);return n>0?q.map(v=>v/n):null;};
+const gravityAngles=g=>{if(!Array.isArray(g)||g.length!==3||!g.every(finite))return null;const n=Math.hypot(g[0],g[1],g[2]);if(!(n>.5))return null;const u=g.map(v=>v/n);
+  return{tilt:Math.acos(Math.max(-1,Math.min(1,-u[2])))*180/Math.PI,roll:Math.atan2(-u[1],-u[2])*180/Math.PI,pitch:Math.atan2(u[0],Math.hypot(u[1],u[2]))*180/Math.PI};};
+const levelMount=(g,quat)=>{const angles=gravityAngles(g);if(!angles||!Array.isArray(quat)||quat.length!==4)return null;
+  const n=Math.hypot(g[0],g[1],g[2]),u=g.map(v=>v/n),target=[0,0,-1];
+  const angle=Math.acos(Math.max(-1,Math.min(1,u[0]*target[0]+u[1]*target[1]+u[2]*target[2])));
+  let axis=[u[1]*target[2]-u[2]*target[1],u[2]*target[0]-u[0]*target[2],u[0]*target[1]-u[1]*target[0]];
+  const len=Math.hypot(...axis);if(!(len>1e-9))return null;axis=axis.map(v=>v/len);
+  const s=Math.sin(angle/2),fix=[Math.cos(angle/2),axis[0]*s,axis[1]*s,axis[2]*s];
+  const out=quatNorm(quatMul(fix,quat));return out?(out[0]<0?out.map(v=>-v):out):null;};
 const actions={'set-pad-settings':'手柄幅度设置',move:'关节移动',center:'整组顺序居中',capture:'关节标定','calibrate-all':'全关节 CAL 标定',init:'Home 站姿','switch-mode':'服务模式切换','reconnect-service':'重新连接 HAT','upgrade-service':'升级 R17 / 0.15.1','set-action-scale':'动作缩放应用',relax:'停止并松开', 'verify-imu':'IMU 安装方向',reboot:'重启 Zero',shutdown:'关闭 Zero','resume-connection':'恢复连接'};
 const feedbackTargets={'repair-gamepad':'gamepad-repair-status','set-pad-settings':'control-feedback',move:'service-job',center:'service-job',capture:'service-job','calibrate-all':'service-cal-all-feedback',init:'control-feedback',
   'switch-mode':'service-mode-job','forget-sudo-password':'service-mode-job','verify-imu':'service-imu-job',
@@ -94,12 +106,12 @@ export class ServicePanel {
             </div>
             <div class="service-cal-all">
               <div class="service-confirm-row"><h3>全关节 CAL 标定</h3><label class="service-check"><input id="service-cal-all-ready" type="checkbox" disabled>已摆到“零位 0°”（不是 HOME）、机身有支撑、周围无遮挡</label><button class="button accent" id="service-cal-all" disabled>一键标定全部 15 颗</button></div>
+              <div class="service-cal-all-next" id="service-cal-all-next" hidden><p class="tiny muted">标定完成。切回运动模式会重启 robotd；请确认姿态安全，避免意外站起。</p><button class="button accent" id="service-cal-all-motion" type="button">切回运动模式</button></div>
               <p class="service-cal-all-warning">页面角度按<strong>旧标定</strong>计算，标定前<strong>不要追页面 0°</strong>；请以 3D「零位 0°」的物理姿态为准。CAL 会把当前姿态写成 2048。</p>
               <p id="service-cal-all-progress" class="tiny muted" role="status"></p>
               <p id="service-cal-all-feedback" class="tiny muted" role="status"></p>
               <details class="service-cal-all-before" id="service-cal-all-before-wrap" hidden><summary>标定前快照（当前 raw / 旧 zero / 偏差）</summary><div id="service-cal-all-before"></div></details>
               <p class="tiny muted">写舵机 EEPROM（CAL 0x0B）并同步 TOML；robotd 不重启，遥测不中断。需要 <code>feetech-ft6-control.44</code> 或更高版本。回滚 TOML 不能撤销 CAL；标定后 motion_enabled 会变 false。若某个关节限位不含 0°，请先用上方「保存当前关节」单独处理。<button class="text-button" id="service-cal-all-zero" type="button">查看零位 0°</button></p>
-              <div class="service-cal-all-next" id="service-cal-all-next" hidden><p class="tiny muted">标定完成。切回运动模式会重启 robotd；请确认姿态安全，避免意外站起。</p><button class="button" id="service-cal-all-motion" type="button">切回运动模式</button></div>
             </div>
           </div>
           <div class="panel-note service-job" id="service-job" role="status" aria-live="polite"></div>
@@ -116,6 +128,10 @@ export class ServicePanel {
         <section class="panel service-imu">
           <div class="panel-head"><div><h2>IMU 安装核对</h2><span id="service-imu-state" class="badge neutral">尚未确认</span></div></div>
           <div class="service-setup-body">
+            <p id="service-imu-tilt" class="tiny muted" role="status">安装角校准：等待 IMU 重力反馈</p>
+            <label class="service-check"><input id="service-imu-level" type="checkbox">已把机身放在水平面并摆成零位姿态（不是 HOME）</label>
+            <div class="service-action-row"><button class="button accent" id="service-imu-calibrate" type="button" disabled>校准 IMU（按当前姿态归零）</button></div>
+            <p class="tiny muted">按实测重力把安装四元数修正到「零位时 gravity ≈ (0, 0, −1)」。只改安装角，不动关节零位；拆装或支撑面变了要重做。</p>
             <label class="field">安装四元数 / w x y z<input id="service-mount" placeholder="等待服务配置" spellcheck="false" title="按实际安装方向填写；直立时重力约为 [0, 0, −1]"></label>
             <label class="service-check"><input id="service-mount-confirmed" type="checkbox">已固定并核对坐标轴与倾斜方向</label>
             <button class="button" id="service-verify-imu">保存安装确认</button>
@@ -193,6 +209,8 @@ export class ServicePanel {
       const q=this.$('service-mount').value.trim().split(/[ ,，]+/).map(Number);
       this.post({action:'verify-imu',confirmed:true,mount_wxyz:q});
     };
+    this.$('service-imu-calibrate').onclick=()=>this.calibrateImu();
+    this.$('service-imu-level').checked=false;
     if(cfg.service_enabled){
       const nav=document.querySelector('nav a[href="#control-panel"]');
       const calibrationNav=nav.cloneNode(true);calibrationNav.href='#service-editor';calibrationNav.childNodes[1].textContent='关节标定';nav.after(calibrationNav);
@@ -222,6 +240,17 @@ export class ServicePanel {
     if(!this.$('service-cal-all-ready').checked)return this.feedback('calibrate-all','请先确认机器人已摆到“零位 0°”并有支撑','warning');
     if(!confirm('将对 15 颗舵机写 CAL(0x0B)，随后同步 TOML。\n\n请确认：机器人已摆到“零位 0°”（不是 HOME）、机身有支撑、周围无遮挡。\n\nCAL 写入舵机 EEPROM，回滚 TOML 不能撤销。'))return;
     this.post({action:'calibrate-all',confirmed:true});
+  }
+  calibrateImu(){
+    const angles=gravityAngles(this.s?.imu?.gravity),quat=this.s?.calibration?.calibration?.imu_mount_quat;
+    if(this.s?.imu?.status!=='live'||!angles)return this.feedback('verify-imu','还没有可用的 IMU 重力反馈','warning');
+    if(!Array.isArray(quat)||quat.length!==4||!quat.every(finite))return this.feedback('verify-imu','读不到已保存的安装四元数','warning');
+    if(this.blocked)return this.feedback('verify-imu','需要标定模式、扭矩 OFF 和新鲜反馈','warning');
+    if(angles.tilt<IMU_LEVEL_MIN_DEG)return this.feedback('verify-imu',`当前倾角只有 ${angles.tilt.toFixed(2)}°（< ${IMU_LEVEL_MIN_DEG}°），不需要校准`,'info');
+    const next=levelMount(this.s.imu.gravity,quat.map(Number));
+    if(!next)return this.feedback('verify-imu','重力向量无效，无法计算安装角','error');
+    if(!confirm(`将按当前姿态把 IMU 安装角修正 ${angles.tilt.toFixed(2)}°。\n\n前提：机身确实放在水平面上、摆成零位姿态。\n新四元数：${next.map(v=>v.toFixed(6)).join(' ')}\n\n修正后当前重力应变成 (0, 0, −1)；只写标定文件，robotd 不需要重启。`))return;
+    this.post({action:'verify-imu',confirmed:true,mount_wxyz:next});
   }
   move(delta){
     const row=this.s?.servos.find(r=>r.id===this.id),value=delta===undefined?this.$('service-position').value.trim():null;
@@ -325,6 +354,9 @@ export class ServicePanel {
     if(imuJob&&this.imuJob!==imuJob){this.mountDirty=false;this.imuJob=imuJob;}
     if(Array.isArray(q)&&this.imuKey!==imuKey&&!this.mountDirty&&document.activeElement!==this.$('service-mount')){this.$('service-mount').value=q.join(' ');this.imuKey=imuKey;}
     set('service-imu-state',saved?.imu_mount_verified===true?'已保存确认':saved?'尚未保存确认':'等待标定回读');
+    const imuAngles=gravityAngles(s.imu?.gravity),imuCalReady=!!(s.imu?.status==='live'&&imuAngles&&imuAngles.tilt>=IMU_LEVEL_MIN_DEG&&!this.blocked&&!this.posting&&this.$('service-imu-level').checked);
+    this.$('service-imu-calibrate').disabled=!imuCalReady;
+    set('service-imu-tilt',imuAngles?`安装角校准：当前倾角 ${imuAngles.tilt.toFixed(2)}°（roll ${imuAngles.roll.toFixed(2)}° / pitch ${imuAngles.pitch.toFixed(2)}°）${imuAngles.tilt<IMU_LEVEL_MIN_DEG?` · 已水平（< ${IMU_LEVEL_MIN_DEG}°），无需校准`:this.blocked?' · 需切到标定模式并松开扭矩':''}`:'安装角校准：等待 IMU 重力反馈（需标定模式、扭矩 OFF）');
     for(const id of ['service-center','service-move','service-minus','service-plus','service-capture','service-verify-imu'])this.$(id).disabled=!!(this.blocked||this.posting);
     this.$('service-center').disabled ||= !!(s.saved_calibrated_count??s.calibrated_count);
     const calAllReady=!this.blocked&&b.calibrate_all===true&&calAllSaved===15&&!this.posting;

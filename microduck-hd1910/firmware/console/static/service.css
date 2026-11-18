@@ -114,10 +114,13 @@
 .service-cal-all-before table{width:100%;border-collapse:collapse;margin-top:6px;font-size:11px}
 .service-cal-all-before th,.service-cal-all-before td{padding:2px 5px;border-bottom:1px solid var(--line);text-align:right}
 .service-cal-all-before th:nth-child(1),.service-cal-all-before td:nth-child(1),.service-cal-all-before th:nth-child(2),.service-cal-all-before td:nth-child(2){text-align:left}
-.service-cal-all-next{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.service-cal-all-next{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin-top:8px;padding:8px 10px;border:1px solid #597a41;border-left:3px solid var(--green);border-radius:5px;background:#1f2b22}
+.service-cal-all-next p{margin:0;flex:1 1 220px;color:#cfe3bd}
+.service-cal-all-next .button{margin-left:auto}
 @container joint-workbench (max-width:629px){
   .service-cal-all .service-check{flex:1 1 100%}
   .service-cal-all .service-confirm-row button{margin-left:0;width:100%}
+  .service-cal-all-next .button{margin-left:0;width:100%}
 }
 .service-job{margin:0;margin-top:auto;padding:9px 14px;font-size:13px;font-weight:700;line-height:1.6;overflow-wrap:anywhere;white-space:pre-wrap;min-width:0}
 .service-job.info,.service-job.running,.service-job.completed,.service-job.warning,.service-job.error{display:flex;align-items:center;gap:9px;border-top:1px solid}

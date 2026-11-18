@@ -22,12 +22,12 @@ A personal replica by kissqy, based on [Pollen Robotics Microduck](https://githu
 
 <table width="100%">
   <tr>
-    <td width="50%" valign="top"><b>① Budget and shopping</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/budget.html">Choose your parts →</a><br><sub>Follow the list for your chosen budget.</sub></td>
-    <td width="50%" valign="top"><b>② Assembly and wiring</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/assembly.html">Build the robot →</a><br><sub>Assembly, 3D structure and connections.</sub></td>
+    <td width="400" valign="top"><b>① Budget and shopping</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/budget.html">Choose your parts →</a><br><sub>Follow the list for your chosen budget.</sub></td>
+    <td width="400" valign="top"><b>② Assembly and wiring</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/assembly.html">Build the robot →</a><br><sub>Assembly, 3D structure and connections.</sub></td>
   </tr>
   <tr>
-    <td width="50%" valign="top"><b>③ Flash and first walk</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/start.html">Get the duck moving →</a><br><sub>Flash, connect and calibrate.</sub></td>
-    <td width="50%" valign="top"><b>④ Advanced · optional</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/advanced.html">Train a new movement →</a><br><sub>For learning training or a new task.</sub></td>
+    <td width="400" valign="top"><b>③ Flash and first walk</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/start.html">Get the duck moving →</a><br><sub>Flash, connect and calibrate.</sub></td>
+    <td width="400" valign="top"><b>④ Advanced · optional</b><br><br><a href="https://kissqy.github.io/Microduck-kissqy/build/advanced.html">Train a new movement →</a><br><sub>For learning training or a new task.</sub></td>
   </tr>
 </table>
 
@@ -51,12 +51,12 @@ A personal replica by kissqy, based on [Pollen Robotics Microduck](https://githu
 
 <table width="100%">
   <tr>
-    <td width="50%" valign="top"><b>🦆 Start with supplied movements</b><br><br>Walk, sit/stand, pick, roll, left/right kicks and roller resources.<br><sub>Assemble, flash and calibrate your robot first.</sub></td>
-    <td width="50%" valign="top"><b>🎮 Chinese console and AI</b><br><br>Graphical maintenance, conversation, image recognition and action calls.<br><sub>AI needs service credentials and connectivity.</sub></td>
+    <td width="400" valign="top"><b>🦆 Start with supplied movements</b><br><br>Walk, sit/stand, pick, roll, left/right kicks and roller resources.<br><sub>Assemble, flash and calibrate your robot first.</sub></td>
+    <td width="400" valign="top"><b>🎮 Chinese console and AI</b><br><br>Graphical maintenance, conversation, image recognition and action calls.<br><sub>AI needs service credentials and connectivity.</sub></td>
   </tr>
   <tr>
-    <td width="50%" valign="top"><b>🔧 One matching configuration</b><br><br>HAT / IMU / HUB, printing, wiring, image and firmware.<br><sub>Fabricate the boards or choose assembled ones.</sub></td>
-    <td width="50%" valign="top"><b>🧠 Continue from documented training</b><br><br>Provenance, physical demos, training queues, simulation and ONNX export.<br><sub>Use the separate Training Studio for new skills.</sub></td>
+    <td width="400" valign="top"><b>🔧 One matching configuration</b><br><br>HAT / IMU / HUB, printing, wiring, image and firmware.<br><sub>Fabricate the boards or choose assembled ones.</sub></td>
+    <td width="400" valign="top"><b>🧠 Continue from documented training</b><br><br>Provenance, physical demos, training queues, simulation and ONNX export.<br><sub>Use the separate Training Studio for new skills.</sub></td>
   </tr>
 </table>
 

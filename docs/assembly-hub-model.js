@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
-import {HUB_LAYOUT} from './assembly-hub-layout.js?v=20261103-hub-bottom';
+import {HUB_LAYOUT} from './assembly-hub-layout.js?v=20261118-cn1-amp-smt';
 const MM=.001,HALF=HUB_LAYOUT.thickness/2;
 const mat=(color,metalness=.04)=>new T.MeshStandardMaterial({color,roughness:metalness>.5?.33:.65,metalness});
 const signal=net=>net==='GND'?'gnd':net==='VIN'?'power':'data';
@@ -23,14 +23,14 @@ function capacitorMark(parent,z){
 export function createHubModel(){
  const group=new T.Group(),ports={},shell=mat(0xf1f0e9),metal=mat(0xbcc3c4,.8),gold=mat(0xc9ad58,.7),silk=mat(0xeef3f0),mask=mat(0x075cae),trace=mat(0x073760);
  const shape=new T.Shape();HUB_LAYOUT.outline.forEach(([x,y],i)=>i?shape.lineTo(x*MM,y*MM):shape.moveTo(x*MM,y*MM));shape.closePath();
- const holes=[...HUB_LAYOUT.holes];for(const c of HUB_LAYOUT.components)for(const p of c.pads){const [x,y]=pcbPad(c,p);holes.push([x,y,p.hole/2]);}
+ const holes=[...HUB_LAYOUT.holes];for(const c of HUB_LAYOUT.components)for(const p of c.pads){if(!(p.hole>0))continue;const [x,y]=pcbPad(c,p);holes.push([x,y,p.hole/2]);}
  for(const[x,y,r]of holes){const hole=new T.Path();hole.absarc(x*MM,y*MM,r*MM,0,2*Math.PI,true);shape.holes.push(hole);}
  const geometry=new T.ExtrudeGeometry(shape,{depth:HUB_LAYOUT.thickness*MM,bevelEnabled:false,curveSegments:12});geometry.translate(0,0,-HALF*MM);
  const pcb=mesh(group,geometry,mask,'HUB-V2-PCB');pcb.userData.primaryPCB=true;
  for(const[x,y,r]of holes)for(const side of[-1,1]){const ring=mesh(group,new T.RingGeometry(r*MM,(r+.32)*MM,20),gold,'HUB-plated-ring',x,y,side*(HALF+.015));if(side<0)ring.rotation.x=Math.PI;ring.userData.hubSolid=false;}
  for(const[x1,y1,x2,y2,w,layer]of HUB_LAYOUT.traces){const a=new T.Vector3(x1*MM,y1*MM,(layer===1?1:-1)*(HALF+.02)*MM),b=new T.Vector3(x2*MM,y2*MM,a.z);const m=mesh(group,new T.BoxGeometry(a.distanceTo(b),w*MM,.000012),trace,'HUB-copper');m.position.copy(a.clone().add(b).multiplyScalar(.5));m.rotation.z=Math.atan2(y2-y1,x2-x1);m.userData.hubSolid=false;}
  for(const c of HUB_LAYOUT.components){
-  // Installed underside: C1 and straight CN2-CN5; CN1 stays on top.
+  // C1 and straight CN2-CN5 stay underneath; CN1 is top-side SMT.
   const bottom=HUB_LAYOUT.assemblyOverrides?.[c.ref]?.bottom??c.bottom;
   const part=new T.Group();part.name='HUB-'+c.ref;part.position.set(c.position[0]*MM,c.position[1]*MM,0);part.rotation.z=c.angle*Math.PI/180;if(bottom)part.rotateX(Math.PI);group.add(part);
   if(c.ref==='C1'){
@@ -39,6 +39,32 @@ export function createHubModel(){
    for(const a of[-Math.PI/4,Math.PI/4]){const vent=box(part,4.2,.10,.035,mat(0x637174,.3),'HUB-C1-vent',0,0,HALF+8.27);vent.rotation.z=a;}
    const stripe=mesh(part,new T.CylinderGeometry(.00402,.00402,.0078,32,1,true,-Math.PI*.2,Math.PI*.32),mat(0xdce1df,.4),'HUB-C1-polarity',0,0,HALF+4.1);stripe.rotation.x=Math.PI/2;
    c.pads.forEach(p=>pin(part,metal,'HUB-C1-leg-'+p.pin,[p.x,0,-HALF-.6],[p.x,0,HALF+1],.25));label(group,'C1',...c.silk.position,bottom?-HALF-.03:HALF+.03,silk);continue;
+  }
+  if(c.ref==='CN1'){
+   // AMP2.0-2P right-angle SMT: open mouth points towards the near PCB edge.
+   // Approximate display shell; no vertical XH socket or through-hole tails.
+   const width=6.2,z=HALF;
+   box(part,width,6.2,.6,shell,'CN1-amp-smt-base',0,-.5,z+.3);
+   box(part,width,.6,3.8,shell,'CN1-amp-smt-back',0,2.3,z+2.2);
+   box(part,width,6.2,.6,shell,'CN1-amp-smt-roof',0,-.5,z+4.1);
+   for(const sign of[-1,1]){
+    box(part,.6,6.2,3.8,shell,'CN1-amp-smt-side',sign*(width/2-.3),-.5,z+2.2);
+    box(part,1.0,2.4,.25,metal,'CN1-amp-smt-anchor',sign*(width/2+.35),.6,z+.15);
+   }
+   box(part,1.4,1.5,.35,shell,'CN1-amp-smt-key',0,-2.85,z+.85);
+   const pins={},ordered=[];
+   for(const p of c.pads){
+    const name=signal(p.net);
+    box(part,1.1,2,.06,gold,'CN1-smt-pad-'+p.pin,p.x,p.y,z+.03).userData.hubSolid=false;
+    pin(part,metal,'CN1-smt-tail-'+p.pin,[p.x,2.7,z+.18],[p.x,1.2,z+2],.22);
+    pin(part,metal,'CN1-contact-'+p.pin,[p.x,1.2,z+2],[p.x,-3.1,z+2],.22);
+    const contact=point(part,'CN1-'+name,p.x,-3.1,z+2);
+    contact.userData={signal:name,pin:p.pin,net:p.net};pins[name]=contact;ordered.push(contact);
+   }
+   const mouth=point(part,'CN1-mouth',0,-3.6,z+2);
+   const outward=point(part,'CN1-outward',0,-7.6,z+2);
+   ports.CN1={root:part,pins,ordered,mouth,outward,kind:'power2',pinCount:2,sourceRef:'CN1'};
+   label(group,c.ref,...c.silk.position,HALF+.04,silk);continue;
   }
   const power=c.ref==='CN1',width=power?6.2:7.6;
   // Every connector exits perpendicular to the PCB. The part's fitted-side

@@ -111,10 +111,19 @@ function addHeaderPort(parent,c,{name=c.ref,count=40,rows=2,pitch=2.54,female=fa
   // or the HAT footprint's paired / mirrored electrical numbering.
   return{kind:'header40',pinCount:count,root,pins:{ordered},ordered,mouth,outward,sourceRef:c.ref,numbering:'display-contact-order'};
 }
+function addSpeakerPort(parent,c){
+  const root=portObject(parent,'J1-speaker-connector',c.x,c.y,0);root.rotation.z=c.angle*Math.PI/180;
+  const z=THICK/2+3.5*.65;
+  // J1 pin 1 = SPK_R_P, pin 2 = SPK_R_N (differential audio, not GND).
+  const pins={spk_p:portObject(root,'J1-SPK_R_P',.625,.45,z),spk_n:portObject(root,'J1-SPK_R_N',-.625,.45,z)};
+  const mouth=portObject(root,'J1-mouth',0,.45,THICK/2+3.5),outward=portObject(root,'J1-outward',0,.45,THICK/2+7.5);
+  return{kind:'speaker2',pinCount:2,root,pins,mouth,outward,sourceRef:'J1'};
+}
 function pcbPorts(parent,layout,id){
   const ports={};
   for(const c of layout.components){
     if(id==='hat'&&['J13','J14'].includes(c.ref))ports[c.ref]=addBusPort(parent,c);
+    else if(id==='hat'&&c.ref==='J1')ports.J1=addSpeakerPort(parent,c);
     else if(id==='imu'&&c.ref==='J1')ports.J1=addBusPort(parent,c);
     else if(id==='hat'&&c.ref==='J4')ports.J4=addHeaderPort(parent,c,{female:true,bottom:true});
   }

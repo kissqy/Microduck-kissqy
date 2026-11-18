@@ -1,5 +1,5 @@
 {
-  "source": "Author CN1 AMP2.0 right-angle SMT display update, 2026-11-18",
+  "source": "HUB V3 CN1 footprint CONN-TH_A2007WR-3P and CJT A2007 drawing",
   "units": "mm",
   "width": 23,
   "height": 34,
@@ -429,7 +429,7 @@
         "angle": 0
       },
       "ref": "CN1",
-      "name": "AMP2.0-2P 卧贴",
+      "name": "A2007WR-3P AMP2.0 卧式",
       "position": [
         0,
         -13.4
@@ -438,24 +438,32 @@
       "bottom": false,
       "pads": [
         {
-          "pin": "1",
-          "x": -1,
-          "y": 1.7,
-          "hole": 0,
-          "diameter": 1.1,
+          "pin": "3",
+          "x": -2,
+          "y": 0,
+          "hole": 1,
+          "diameter": 1.5,
           "net": "GND"
         },
         {
           "pin": "2",
-          "x": 1,
-          "y": 1.7,
-          "hole": 0,
-          "diameter": 1.1,
+          "x": 0,
+          "y": 0,
+          "hole": 1,
+          "diameter": 1.5,
           "net": "VIN"
+        },
+        {
+          "pin": "1",
+          "x": 2,
+          "y": 0,
+          "hole": 1,
+          "diameter": 1.5,
+          "net": "NC"
         }
       ],
       "socketAxis": "in-plane",
-      "mounting": "smt"
+      "mounting": "through-hole-right-angle"
     }
   ],
   "traces": [
@@ -508,7 +516,7 @@
       1
     ]
   ],
-  "note": "Board outline and mounting holes retain the author CAD dimensions. Installed underside: four straight 3-pin AMP2.0 sockets CN2-CN5 and C1. Top: CN1 AMP2.0 two-pin right-angle SMT power input, mouth parallel to PCB towards its nearest edge. Updated by author clarification on 2026-11-03. Display placements are approximate; net identities retain the verified project mapping.",
+  "note": "Board outline and CN2-CN5/C1 placements retained. CN1 is a three-position A2007WR-3P open wafer with 2 mm pitch, open-top tray, side locking windows and round bent pins. Pin 1 is not wired; pin 2=VIN and pin 3=GND, matching V3.",
   "assemblyOverrides": {},
   "baselineSource": {
     "source": "ProPrj_DXL_HUB_V2_2026-10-30.epro2",
@@ -524,5 +532,11 @@
       "sha256": "d913e47b75139581cbc46a2cbef0277fafcf6bc71b564dabb66b6595744fb1d7"
     }
   ],
-  "assemblyClarification": "CN2-CN5 and C1 retain their underside installation. Only CN1 changes from XH2.54 to top-side AMP2.0-2P right-angle SMT; pin 1=GND and pin 2=VIN remain unchanged. Connector envelope is schematic."
+  "assemblyClarification": "CN1 exterior reconstructed from the V3 connector footprint and CJT A2007WR drawing (7.96 mm width, 4 mm height, 2 mm contact pitch). V3 uses a right-angle through-hole part; this corrects the earlier two-pin SMT approximation.",
+  "connectorReference": {
+    "part": "A2007WR-3P",
+    "datasheet": "https://www.cjt.com/upload/A2007.pdf",
+    "image": "https://alimg.szlcsc.com/upload/public/product/middle/20230108/898201A3DD6F1005488072A0C81645D9.jpg",
+    "project": "hardware/ProPrj_DXL_HUB_V3_2026-11-14.epro2"
+  }
 }

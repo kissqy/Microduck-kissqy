@@ -1,17 +1,17 @@
 {
-  "source": "Author HUB front/reverse 3D views, 2026-11-03",
+  "source": "Author CN1 AMP2.0 right-angle SMT display update, 2026-11-18",
   "units": "mm",
-  "width": 23.0,
-  "height": 34.0,
-  "thickness": 1.0,
+  "width": 23,
+  "height": 34,
+  "thickness": 1,
   "outline": [
     [
       -10.5,
-      17.0
+      17
     ],
     [
       10.5,
-      17.0
+      17
     ],
     [
       10.69509,
@@ -43,7 +43,7 @@
     ],
     [
       11.5,
-      16.0
+      16
     ],
     [
       11.5,
@@ -63,7 +63,7 @@
     ],
     [
       11.5,
-      -16.0
+      -16
     ],
     [
       11.48078,
@@ -95,11 +95,11 @@
     ],
     [
       10.5,
-      -17.0
+      -17
     ],
     [
       -10.5,
-      -17.0
+      -17
     ],
     [
       -10.69509,
@@ -131,7 +131,7 @@
     ],
     [
       -11.5,
-      -16.0
+      -16
     ],
     [
       -11.5,
@@ -151,7 +151,7 @@
     ],
     [
       -11.5,
-      16.0
+      16
     ],
     [
       -11.48078,
@@ -183,28 +183,28 @@
     ],
     [
       -10.5,
-      17.0
+      17
     ]
   ],
   "holes": [
     [
       -9.5,
-      15.0,
+      15,
       1.2
     ],
     [
       9.5,
-      15.0,
+      15,
       1.2
     ],
     [
       -9.5,
-      -15.0,
+      -15,
       1.2
     ],
     [
       9.5,
-      -15.0,
+      -15,
       1.2
     ]
   ],
@@ -229,16 +229,16 @@
         {
           "pin": "2",
           "x": 1.75006,
-          "y": 0.0,
-          "hole": 1.0,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.6,
           "net": "GND"
         },
         {
           "pin": "1",
           "x": -1.75006,
-          "y": 0.0,
-          "hole": 1.0,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.6,
           "net": "VIN"
         }
@@ -263,25 +263,25 @@
       "pads": [
         {
           "pin": "3",
-          "x": -2.0,
-          "y": 0.0,
-          "hole": 1.0,
+          "x": -2,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.5,
           "net": "GND"
         },
         {
           "pin": "2",
-          "x": -3e-05,
-          "y": 0.0,
-          "hole": 1.0,
+          "x": -0.00003,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.5,
           "net": "VIN"
         },
         {
           "pin": "1",
-          "x": 2.0,
-          "y": 0.0,
-          "hole": 1.0,
+          "x": 2,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.5,
           "net": "SERVO_BUS"
         }
@@ -307,25 +307,25 @@
       "pads": [
         {
           "pin": "3",
-          "x": -2.0,
-          "y": 0.0,
-          "hole": 1.0,
+          "x": -2,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.5,
           "net": "GND"
         },
         {
           "pin": "2",
-          "x": -3e-05,
-          "y": 0.0,
-          "hole": 1.0,
+          "x": -0.00003,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.5,
           "net": "VIN"
         },
         {
           "pin": "1",
-          "x": 2.0,
-          "y": 0.0,
-          "hole": 1.0,
+          "x": 2,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.5,
           "net": "SERVO_BUS"
         }
@@ -351,25 +351,25 @@
       "pads": [
         {
           "pin": "3",
-          "x": -2.0,
-          "y": 0.0,
-          "hole": 1.0,
+          "x": -2,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.5,
           "net": "GND"
         },
         {
           "pin": "2",
-          "x": -3e-05,
-          "y": 0.0,
-          "hole": 1.0,
+          "x": -0.00003,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.5,
           "net": "VIN"
         },
         {
           "pin": "1",
-          "x": 2.0,
-          "y": 0.0,
-          "hole": 1.0,
+          "x": 2,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.5,
           "net": "SERVO_BUS"
         }
@@ -395,25 +395,25 @@
       "pads": [
         {
           "pin": "3",
-          "x": -2.0,
-          "y": 0.0,
-          "hole": 1.0,
+          "x": -2,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.5,
           "net": "GND"
         },
         {
           "pin": "2",
-          "x": -3e-05,
-          "y": 0.0,
-          "hole": 1.0,
+          "x": -0.00003,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.5,
           "net": "VIN"
         },
         {
           "pin": "1",
-          "x": 2.0,
-          "y": 0.0,
-          "hole": 1.0,
+          "x": 2,
+          "y": 0,
+          "hole": 1,
           "diameter": 1.5,
           "net": "SERVO_BUS"
         }
@@ -429,7 +429,7 @@
         "angle": 0
       },
       "ref": "CN1",
-      "name": "CN1 2P 直插",
+      "name": "AMP2.0-2P 卧贴",
       "position": [
         0,
         -13.4
@@ -439,22 +439,23 @@
       "pads": [
         {
           "pin": "1",
-          "x": -1.25006,
-          "y": 0.0,
-          "hole": 1.0,
-          "diameter": 1.5,
+          "x": -1,
+          "y": 1.7,
+          "hole": 0,
+          "diameter": 1.1,
           "net": "GND"
         },
         {
           "pin": "2",
-          "x": 1.25006,
-          "y": 0.0,
-          "hole": 1.0,
-          "diameter": 1.5,
+          "x": 1,
+          "y": 1.7,
+          "hole": 0,
+          "diameter": 1.1,
           "net": "VIN"
         }
       ],
-      "socketAxis": "normal"
+      "socketAxis": "in-plane",
+      "mounting": "smt"
     }
   ],
   "traces": [
@@ -507,7 +508,7 @@
       1
     ]
   ],
-  "note": "Board outline and mounting holes retain the author CAD dimensions. Installed underside: four straight 3-pin AMP2.0 sockets CN2-CN5 and C1. Top: CN1 two-pin power input. Updated by author clarification on 2026-11-03. Display placements are approximate; net identities retain the verified project mapping.",
+  "note": "Board outline and mounting holes retain the author CAD dimensions. Installed underside: four straight 3-pin AMP2.0 sockets CN2-CN5 and C1. Top: CN1 AMP2.0 two-pin right-angle SMT power input, mouth parallel to PCB towards its nearest edge. Updated by author clarification on 2026-11-03. Display placements are approximate; net identities retain the verified project mapping.",
   "assemblyOverrides": {},
   "baselineSource": {
     "source": "ProPrj_DXL_HUB_V2_2026-10-30.epro2",
@@ -523,5 +524,5 @@
       "sha256": "d913e47b75139581cbc46a2cbef0277fafcf6bc71b564dabb66b6595744fb1d7"
     }
   ],
-  "assemblyClarification": "Author confirmed: CN2-CN5 are straight vertical sockets on the installed underside together with C1; CN1 is on top."
+  "assemblyClarification": "CN2-CN5 and C1 retain their underside installation. Only CN1 changes from XH2.54 to top-side AMP2.0-2P right-angle SMT; pin 1=GND and pin 2=VIN remain unchanged. Connector envelope is schematic."
 }

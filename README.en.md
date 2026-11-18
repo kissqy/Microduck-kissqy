@@ -197,9 +197,9 @@ Community improvements and the author's real-robot modifications are collected i
   </thead>
   <tbody>
     <tr>
-      <td align="center"><a href="docs/assets/boards/hat-white.png"><img src="docs/assets/boards/hat-white.png" width="200" alt="HAT board, front and back on a white background" /></a></td>
-      <td align="center"><a href="docs/assets/boards/hub-white.png"><img src="docs/assets/boards/hub-white.png" width="200" alt="HUB board, three views on a white background" /></a></td>
-      <td align="center"><a href="docs/assets/boards/imu-white.png"><img src="docs/assets/boards/imu-white.png" width="200" alt="IMU board on a white background" /></a></td>
+      <td align="center"><a href="docs/assets/boards/hat-white.webp"><img src="docs/assets/boards/hat-white.webp" width="200" alt="HAT board, front and back on a white background" /></a></td>
+      <td align="center"><a href="docs/assets/boards/hub-white.webp"><img src="docs/assets/boards/hub-white.webp" width="200" alt="HUB board, three views on a white background" /></a></td>
+      <td align="center"><a href="docs/assets/boards/imu-white.webp"><img src="docs/assets/boards/imu-white.webp" width="200" alt="IMU board on a white background" /></a></td>
       <td align="center">&nbsp;</td>
     </tr>
   </tbody>

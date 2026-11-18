@@ -199,9 +199,9 @@ R2 已预装 control.102 与 11 个 ONNX 运行模型。首次运动前仍需核
   </thead>
   <tbody>
     <tr>
-      <td align="center"><a href="docs/assets/boards/hat-white.png"><img src="docs/assets/boards/hat-white.png" width="200" alt="HAT 电路板正反面白底图" /></a></td>
-      <td align="center"><a href="docs/assets/boards/hub-white.png"><img src="docs/assets/boards/hub-white.png" width="200" alt="HUB 分线板三视图白底图" /></a></td>
-      <td align="center"><a href="docs/assets/boards/imu-white.png"><img src="docs/assets/boards/imu-white.png" width="200" alt="IMU 姿态传感器板白底图" /></a></td>
+      <td align="center"><a href="docs/assets/boards/hat-white.webp"><img src="docs/assets/boards/hat-white.webp" width="200" alt="HAT 电路板正反面白底图" /></a></td>
+      <td align="center"><a href="docs/assets/boards/hub-white.webp"><img src="docs/assets/boards/hub-white.webp" width="200" alt="HUB 分线板三视图白底图" /></a></td>
+      <td align="center"><a href="docs/assets/boards/imu-white.webp"><img src="docs/assets/boards/imu-white.webp" width="200" alt="IMU 姿态传感器板白底图" /></a></td>
       <td align="center">&nbsp;</td>
     </tr>
   </tbody>

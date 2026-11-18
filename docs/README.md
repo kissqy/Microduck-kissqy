@@ -5,6 +5,8 @@
 首页、使用指南、硬件记录与技术说明的中英文入口。当前软件界面仍为中文；英文指南保留必要的中文按钮名称。原始测试日志、源代码与正式许可保持原文。
 
 
+**[为什么选择 kissqy？六个代表项目的详细对比 →](MICRODUCK-COMPARISON.md)** 先看现成动作、配套软硬件、中文 AI 与训练工具的区别；包含 OpenMicroDuck。
+
 > [!NOTE]
 > **V297 BATE 中控测试版已独立发布。** 新增四模式工作台、HAT 舵机编号与独立硬件测试，无需 URT2 调试板即可给舵机编号和中位校准。
 >
@@ -160,4 +162,3 @@
 - [软件与自训模型：原创归属、个人使用与商业授权](../microduck-hd1910/docs/SOFTWARE-MODEL-RIGHTS.md) · [English](../microduck-hd1910/docs/SOFTWARE-MODEL-RIGHTS.en.md)
 - [逐模型来源：十个随包动作、六份源码权重及历史样本](../microduck-hd1910/docs/MODEL-PROVENANCE.md) · [English](../microduck-hd1910/docs/MODEL-PROVENANCE.en.md)
 - [分项许可索引](../LICENSE) · [第三方来源](../microduck-hd1910/docs/THIRD-PARTY.md)
-

@@ -28,6 +28,32 @@
 The three build stages and optional advanced guide are in Chinese. [English build guide and FAQ](https://kissqy.github.io/Microduck-kissqy/guides/en.html) · [🎮 Robot Console demo](https://kissqy.github.io/Microduck-kissqy/) · [📖 Console tutorial (中文)](https://kissqy.github.io/Microduck-kissqy/console-guide.html) · [❓ FAQ](docs/MICRODUCK-FAQ.en.md)
 
 
+<!-- replica-choice:start -->
+<div align="left">
+
+## Why choose Microduck-kissqy?
+
+**A coordinated Feetech HD1910 build for people comfortable with a Chinese console: start with supplied policies, then explore Chinese AI interaction and training your own movements.**
+
+<table>
+  <tr>
+    <td width="50%" valign="top"><b>🦆 Supplied movements, no initial training</b><br>Walking, sit/stand, picking, rolling, left/right kicks and roller resources. Assemble, flash and calibrate your own robot before using the matching policies.</td>
+    <td width="50%" valign="top"><b>🔧 Coordinated hardware and software</b><br>DIY HAT / IMU / HUB projects, printing files, wiring guides, image and firmware in one project. Fabricate the boards or choose assembled boards.</td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><b>🎮 Chinese console and AI interaction</b><br>Calibration, live 3D pose, joint feedback, camera, gamepad and firmware maintenance. Chinese voice, image recognition and action calls require service credentials and network access.</td>
+    <td width="50%" valign="top"><b>🧠 Self-trained results and training tools</b><br>Model provenance and physical-robot demonstrations, plus a separate Training Studio for queues, reward curves, simulation evaluation and ONNX export.</td>
+  </tr>
+</table>
+
+**The project also supplies HD1910 motion resources used elsewhere in the community.** fanhao's image model notice credits **10 models to kissqy** and records that their weights were retained. [Read the project's attribution](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt).
+
+**[Compare six representative projects and choose a build route →](docs/MICRODUCK-COMPARISON.en.md)**  
+Official Microduck, Luwu XGO-Duck, AI-FanGe, fanhao375, OpenMicroDuck and this project. [Start the three-stage build guide (中文) →](https://kissqy.github.io/Microduck-kissqy/build/)
+
+</div>
+<!-- replica-choice:end -->
+
 > [!NOTE]
 > **The V297 BATE console is available as a separate pre-release.** Four workspaces, HAT servo numbering and independent hardware tests. Assign servo IDs and calibrate their midpoint without a URT2 programming board.
 >

@@ -28,6 +28,32 @@
 [📚 Microduck 完整复刻教程](https://kissqy.github.io/Microduck-kissqy/guides/) · [🚀 从零复刻路线](https://kissqy.github.io/Microduck-kissqy/build/) · [🎮 机器人中控演示](https://kissqy.github.io/Microduck-kissqy/) · [📖 中控使用教程](https://kissqy.github.io/Microduck-kissqy/console-guide.html) · [❓ 常见问题](docs/MICRODUCK-FAQ.md)
 
 
+<!-- replica-choice:start -->
+<div align="left">
+
+## 为什么选择 Microduck-kissqy？
+
+**面向中文用户的飞特 HD1910 个人复刻：先用现成模型走起来，再体验中文 AI、研究自己的新动作。**
+
+<table>
+  <tr>
+    <td width="50%" valign="top"><b>🦆 现成动作，正常复刻无需训练</b><br>提供行走、坐站、捡取、翻滚、左右踢球及滑轮动作资源；完成装配、刷机和本机标定后使用配套模型。</td>
+    <td width="50%" valign="top"><b>🔧 配套软硬件，按一套方案制作</b><br>自制 HAT／IMU／HUB 工程、打印件、接线说明、镜像和固件集中提供；可自行制作，也可选择成品板。</td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><b>🎮 中文中控，继续体验 AI 互动</b><br>标定、3D 姿态、关节反馈、摄像头、手柄和固件维护；支持中文语音、拍照识别与动作调用，AI 需配置服务并联网。</td>
+    <td width="50%" valign="top"><b>🧠 作者自训成果，进阶有训练工具</b><br>提供模型来源说明与实机展示；独立训练中控支持任务队列、奖励曲线、仿真评估和 ONNX 导出。</td>
+  </tr>
+</table>
+
+**本项目也是社区 HD1910 动作资源的来源之一。** fanhao 的镜像模型说明将其中 **10 个模型的作者标为 kissqy**，并记录保留原始权重。[查看对方的来源说明](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt)。
+
+**[查看六个代表项目的详细对比与选择理由 →](docs/MICRODUCK-COMPARISON.md)**  
+含官方 Microduck、陆吾 XGO-Duck、AI-FanGe、fanhao375、OpenMicroDuck 与本项目。[直接开始三步复刻 →](https://kissqy.github.io/Microduck-kissqy/build/)
+
+</div>
+<!-- replica-choice:end -->
+
 > [!NOTE]
 > **V297 BATE 中控测试版已独立发布。** 新增四模式工作台、HAT 舵机编号与独立硬件测试，无需 URT2 调试板即可给舵机编号和中位校准。
 >
@@ -196,4 +222,3 @@ HAT 连接 ZERO 3W 与舵机总线，提供供电、通信及音频外围；独�
     </td>
   </tr>
 </table>
-

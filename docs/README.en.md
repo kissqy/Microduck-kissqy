@@ -5,6 +5,8 @@
 English editions of the homepage, user guides, hardware records, and technical notes. Current application interfaces remain Chinese; English guides include button labels for reference. Raw test logs, source code, and formal licenses retain their original text.
 
 
+**[Why choose kissqy? Compare six representative projects →](MICRODUCK-COMPARISON.en.md)** Supplied policies, matching hardware/software, Chinese AI and training tools, including OpenMicroDuck.
+
 > [!NOTE]
 > **The V297 BATE console is available as a separate pre-release.** Four workspaces, HAT servo numbering and independent hardware tests. Assign servo IDs and calibrate their midpoint without a URT2 programming board.
 >
@@ -160,4 +162,3 @@ Current control.102: [firmware source](https://github.com/kissqy/Microduck-kissq
 - [Software and model ownership, personal use and commercial permission](../microduck-hd1910/docs/SOFTWARE-MODEL-RIGHTS.en.md) · [简体中文](../microduck-hd1910/docs/SOFTWARE-MODEL-RIGHTS.md)
 - [Model provenance: ten bundled policies, six source weights and historical samples](../microduck-hd1910/docs/MODEL-PROVENANCE.en.md) · [简体中文](../microduck-hd1910/docs/MODEL-PROVENANCE.md)
 - [Component license index](../LICENSE) · [Third-party sources](../microduck-hd1910/docs/THIRD-PARTY.en.md)
-

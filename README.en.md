@@ -36,7 +36,7 @@ Radxa ZERO 3W · 15 × Feetech HD1910 · Matching HAT / IMU / HUB
   </tr>
 </table>
 
-**This project also supplies HD1910 motion resources used elsewhere in the community.**
+**This project is a major source of HD1910 motion resources in the community.**
 
 fanhao's image model notice credits **10 models to kissqy** and records retaining their original weights. [Read the attribution](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt).
 
@@ -52,13 +52,18 @@ fanhao's image model notice credits **10 models to kissqy** and records retainin
 
 **A normal build does not require training your own policy.** Assemble, flash and calibrate, then use the matching supplied models.
 
-| Stage | What to complete | Guide |
-| --- | --- | --- |
-| **① Budget and shopping** | Choose a budget and prepare its servos, controller, boards and parts. | [What should I buy?](https://kissqy.github.io/Microduck-kissqy/build/budget.html) |
-| **② Assembly and wiring** | Follow the 3D structure, component assembly, servo orientation and connections. | [How do I assemble it?](https://kissqy.github.io/Microduck-kissqy/build/assembly.html) |
-| **③ Flash and first walk** | Flash, connect to Wi-Fi, calibrate and use the supplied walking policy. | [Get the duck moving](https://kissqy.github.io/Microduck-kissqy/build/start.html) |
+<table width="100%">
+  <tr>
+    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/budget.html"><b>① Budget and shopping</b></a><br><br>Choose a budget and prepare its servos, controller, boards and parts.<br><sub>What should I buy?</sub></td>
+    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/assembly.html"><b>② How do I assemble it?</b></a><br><br>Follow the 3D structure, component assembly, servo orientation and connections.<br><sub>Assembly and wiring</sub></td>
+  </tr>
+  <tr>
+    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/start.html"><b>③ Get the duck moving</b></a><br><br>Flash, connect to Wi-Fi, calibrate and use the matching supplied policies.<br><sub>Flash and first walk</sub></td>
+    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/advanced.html"><b>④ Advanced play (optional)</b></a><br><br>Explore this when training a new movement or learning reinforcement learning.<br><sub>Normal builds require no initial training</sub></td>
+  </tr>
+</table>
 
-Skip stages you have already completed. Use [advanced play (optional)](https://kissqy.github.io/Microduck-kissqy/build/advanced.html) when training a new movement or learning the workflow.
+Skip stages you have already completed. **The first three stages complete a normal build; stage 4 is optional.**
 
 [Three-stage route (中文)](https://kissqy.github.io/Microduck-kissqy/build/) · [English build guide and FAQ](https://kissqy.github.io/Microduck-kissqy/guides/en.html) · [Written guide](docs/MICRODUCK-BUILD-GUIDE.en.md) · [Shopping list](DUCK-SHOPPING-LIST.en.md) · [FAQ](docs/MICRODUCK-FAQ.en.md)
 

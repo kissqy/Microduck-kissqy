@@ -1,8 +1,8 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
-import {createBoardModel} from './assembly-board-models.js?v=20261118-speaker-hp125';
-import {attachHeadClearance} from './assembly-head-clearance.js?v=20261118-speaker-hp125';
+import {createBoardModel} from './assembly-board-models.js?v=20261118-speaker-hp125-id21';
+import {attachHeadClearance} from './assembly-head-clearance.js?v=20261118-speaker-hp125-id21';
 import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261104-head-labels';
-import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261118-no32-top-horn';
+import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261118-servo21-no32-horn';
 import {createHubModel} from './assembly-hub-model.js?v=20261118-amp-inward';
 import {createBatteryPack,createBatteryPickup,BATTERY_PICKUP} from './assembly-battery-model.js?v=20261103-contact-hip';
 import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261104-head-orientation';

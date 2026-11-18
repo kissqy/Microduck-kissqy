@@ -94,7 +94,8 @@ export function attachServoModel(servo,id){
   // ID 12 retains its earlier left/right (case X) reflection as well.
   const mirrorX=[11,12,13,22,23,30,31].includes(id),mirrorZ=id===12;
   const mirroredCase=mirrorX||mirrorZ;
-  const caseGeometry=mirroredCase?mirrorServoCase(assets.geometries[0],mirrorX?-1:1,mirrorZ?-1:1):(turnedCase?assets.geometries[0].clone().rotateZ(Math.PI):(uprightHip?assets.hipGeometry:assets.geometries[0]));
+  let caseGeometry=mirroredCase?mirrorServoCase(assets.geometries[0],mirrorX?-1:1,mirrorZ?-1:1):(turnedCase?assets.geometries[0].clone().rotateZ(Math.PI):(uprightHip?assets.hipGeometry:assets.geometries[0]));
+  if(id===32){const full=caseGeometry;caseGeometry=withoutPassiveHorn(full);full.dispose();}
   servo.geometry=caseGeometry;
   const group=new T.Group();group.name=`servo-${id}-identification-and-ports`;servo.add(group);
   if(turnedCase||uprightHip)group.rotation.z=Math.PI;

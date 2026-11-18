@@ -12,7 +12,7 @@ ZERO 3W + HD1910
 
 | **Microduck-kissqy · 我们的优势** | **fanhao375 · 对照方案的差距** |
 | --- | --- |
-| **动作直接看作者发布，中文 AI 有配套流程**<br>本项目提供自训适配模型、来源与部署记录；中文对话、拍照识别和动作调用已有 R2 / V260 发布入口。 | **这批现成模型不是另一套新增动作**<br>其镜像说明将 10 个模型署名给 kissqy，并记录保留原始权重。<br><br>**自由 AI 对话仍被列为未接入**<br>公开说明中的本地固定指令识别，不能等同于自由对话、视觉识别与 AI 动作调用。<br><br>**自建训练台仍待长训与自训真机验收**<br>GPU 短试跑、评估和导出已验证，不代表新动作已经在实机训成。 |
+| **从 0 到进阶，一套完整方案**<br>软件、硬件、现成运动模型、飞特 HD1910 适配打印件、教程和独立训练中控集中提供，覆盖制作、使用与进阶。<br><br>**动作直接看作者发布，中文 AI 有配套流程**<br>本项目提供自训适配模型、来源与部署记录；中文对话、拍照识别和动作调用已有 R2 / V260 发布入口。 | **这批现成模型不是另一套新增动作**<br>其镜像说明将 10 个模型署名给 kissqy，并记录保留原始权重。<br><br>**自由 AI 对话仍被列为未接入**<br>公开说明中的本地固定指令识别，不能等同于自由对话、视觉识别与 AI 动作调用。<br><br>**自建训练台仍待长训与自训真机验收**<br>GPU 短试跑、评估和导出已验证，不代表新动作已经在实机训成。 |
 
 该项目资料依据：[模型署名](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt) · [项目说明](https://github.com/fanhao375/microduck-replica) · [训练验证](https://github.com/fanhao375/microduck-replica/blob/master/software/training-studio/docs/verification.md)
 
@@ -65,29 +65,29 @@ UNO Q + 1910 / QMI8658A
 
 ## 选择我们，具体得到什么
 
-### 1. 现成动作直接找作者
+### 1. 从 0 到进阶的完整鸭鸭复刻方案
+
+**软件、硬件、运动模型、飞特 HD1910 适配打印件、各类教程与训练中控集中提供。**
+
+从采购、打印装配、刷机配网与本机标定开始，再继续体验现成动作、中文 AI、训练评估和 ONNX 导出。[完整制作与进阶路线](https://kissqy.github.io/Microduck-kissqy/build/)
+
+### 2. 现成动作直接找作者
 
 **普通脚掌与滑轮动作，来源和部署记录一起看。**
 
 外部镜像明确署名的 10 个模型可追溯到 kissqy；具体权重以发布包为准。 [看模型来源](https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/docs/MODEL-PROVENANCE.md)
 
-### 2. 中文 AI 有配套发布流程
+### 3. 中文 AI 有配套发布流程
 
 **中文对话、拍照识别、音色角色与动作调用。**
 
 R2 / V260 已发布对应流程；需配置服务凭据并联网。 [看 AI 功能与用法](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)
 
-### 3. HAT 直接编号与中位校准
+### 4. HAT 直接编号与中位校准
 
 **无需 URT2 调试板，编号和标定在同一中控中衔接。**
 
 该功能在 V297 BATE 测试版；已有 R2 / control.102 用户只需更换中控，实机验收待完成。 [看 HAT 编号方法](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate)
-
-### 4. 制作与进阶都有配套资料
-
-**板卡工程、镜像、打印接线、中文中控和训练工具集中提供。**
-
-先用现成模型完成自己的鸭子；研究新动作时，再进入独立训练中控。 [看配套资料](https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/README.md)
 
 ## 关于动作来源
 

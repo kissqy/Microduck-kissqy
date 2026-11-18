@@ -12,7 +12,7 @@ ZERO 3W + HD1910
 
 | **Microduck-kissqy · Our advantages** | **fanhao375 · Gaps in this other route** |
 | --- | --- |
-| **Use the policy author’s publication and matching Chinese AI workflow**<br>This project provides trained/adapted policies, provenance and deployment records, plus an R2 / V260 flow for conversation, image recognition and action calls. | **These supplied models are not an additional independent motion set**<br>Its image notice credits 10 models to kissqy and says the original weights were retained.<br><br>**Free-form AI conversation remains listed as unconnected**<br>Documented local fixed-command recognition does not establish conversation, image recognition or AI action calling.<br><br>**Its training workbench still needs long-training and hardware acceptance**<br>GPU checks cover short training, evaluation and export, not completed robot deployment of a newly trained skill. |
+| **A complete route from zero to advanced play**<br>Software, hardware, supplied policies, HD1910-adapted printing parts, tutorials and a separate Training Studio cover construction, operation and advanced exploration.<br><br>**Use the policy author’s publication and matching Chinese AI workflow**<br>This project provides trained/adapted policies, provenance and deployment records, plus an R2 / V260 flow for conversation, image recognition and action calls. | **These supplied models are not an additional independent motion set**<br>Its image notice credits 10 models to kissqy and says the original weights were retained.<br><br>**Free-form AI conversation remains listed as unconnected**<br>Documented local fixed-command recognition does not establish conversation, image recognition or AI action calling.<br><br>**Its training workbench still needs long-training and hardware acceptance**<br>GPU checks cover short training, evaluation and export, not completed robot deployment of a newly trained skill. |
 
 Sources for this project: [Model notice](https://github.com/fanhao375/microduck-replica/blob/master/software/image/overlay/usr/share/doc/microduck/%E6%A8%A1%E5%9E%8B%E8%AF%B4%E6%98%8E.txt) · [README](https://github.com/fanhao375/microduck-replica) · [Training](https://github.com/fanhao375/microduck-replica/blob/master/software/training-studio/docs/verification.md)
 
@@ -65,29 +65,29 @@ Checked **November 18, 2026**. Gaps concern the linked configurations and docume
 
 ## Concrete reasons to choose this project
 
-### 1. Go directly to the policy author
+### 1. A complete duck-building route from zero to advanced play
+
+**Software, hardware, motion policies, HD1910-adapted printing parts, tutorials and Training Studio are provided together.**
+
+Start with purchasing, printing, assembly, flashing, networking and robot-specific calibration; continue to supplied movements, Chinese AI, training, evaluation and ONNX export. [Complete build and advanced route](https://kissqy.github.io/Microduck-kissqy/build/)
+
+### 2. Go directly to the policy author
 
 **Ordinary-foot and roller movements with provenance and deployment records.**
 
 Ten models credited by another image project can be traced to kissqy; use each actual release package. [Model provenance](https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/docs/MODEL-PROVENANCE.md)
 
-### 2. A published Chinese AI workflow
+### 3. A published Chinese AI workflow
 
 **Conversation, image recognition, voices/personas and action calling.**
 
 Documented in R2 / V260; requires service credentials and connectivity. [AI features and setup](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)
 
-### 3. HAT numbering and midpoint calibration
+### 4. HAT numbering and midpoint calibration
 
 **No URT2 board required; numbering connects to calibration in one console.**
 
 Available in V297 BATE. Existing R2 / control.102 users replace the console; hardware acceptance is pending. [HAT numbering guide](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate)
-
-### 4. Matching build and research resources
-
-**Board designs, image, printing/wiring, Chinese console and training tools.**
-
-Finish a reference duck with supplied policies, then explore new skills in the separate Training Studio. [Matching resources](https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/README.en.md)
 
 ## Policy provenance
 

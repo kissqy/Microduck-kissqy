@@ -240,6 +240,12 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   chooseChain([34,33,32,31,30],components.get('hat').ports.J13,components.get('hub').ports.CN2);
   chooseChain([20,21,22,23,24],components.get('hub').ports.CN5,null);
   chooseChain([10,11,12,13,14],components.get('hub').ports.CN4,null);
+  // Installation reference: swap the upper/lower cable sockets on 12 and 22.
+  // Keep each socket's GND/VIN/DATA contacts and the servo mounting unchanged.
+  for(const id of [12,22]){
+    const input=incoming.get(id),output=outgoing.get(id);
+    incoming.set(id,output);outgoing.set(id,input);
+  }
   const portPairs=spec=>{
     if(spec.id==='hat-speaker')return[components.get('hat').ports.J1,headClearance.port];
     if(spec.id==='hat-zero')return[components.get('hat').ports.J4,components.get('zero').ports.gpio40];

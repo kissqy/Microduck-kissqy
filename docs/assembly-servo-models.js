@@ -66,11 +66,11 @@ function idTexture(id){
   const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;return texture;
 }
 
-function mirrorCaseAcrossShaft(geometry){
-  // Reflect about local X=0 (shaft midpoint), preserving the shaft line.
-  const mirrored=geometry.clone().scale(-1,1,1),index=mirrored.index;
-  // A baked reflection reverses triangle handedness; restore outward winding.
-  for(let i=0;i<index.count;i+=3){
+function mirrorServoCase(geometry,scaleX,scaleZ){
+  // Reflections stay in the case frame; the shaft line and mounting stay fixed.
+  const mirrored=geometry.clone().scale(scaleX,1,scaleZ),index=mirrored.index;
+  // Only an odd number of reflections reverses triangle handedness.
+  if(scaleX*scaleZ<0)for(let i=0;i<index.count;i+=3){
     const b=index.getX(i+1);index.setX(i+1,index.getX(i+2));index.setX(i+2,b);
   }
   index.needsUpdate=true;
@@ -90,12 +90,16 @@ export function attachServoModel(servo,id){
   const turnedCase=[14,24,32,33].includes(id),uprightHip=id===10||id===20;
   // Hip-pitch/knee sockets and neck IDs 30/31 use mirrored case handedness.
   // Mirror each case itself, rather than rotating its mounting/joint frame.
-  const mirroredCase=[12,13,22,23,30,31].includes(id);
-  const caseGeometry=mirroredCase?mirrorCaseAcrossShaft(assets.geometries[0]):(turnedCase?assets.geometries[0].clone().rotateZ(Math.PI):(uprightHip?assets.hipGeometry:assets.geometries[0]));
+  // Duck front/back is case X for ID 11, case Z for ID 12 at model zero.
+  // ID 12 retains its earlier left/right (case X) reflection as well.
+  const mirrorX=[11,12,13,22,23,30,31].includes(id),mirrorZ=id===12;
+  const mirroredCase=mirrorX||mirrorZ;
+  const caseGeometry=mirroredCase?mirrorServoCase(assets.geometries[0],mirrorX?-1:1,mirrorZ?-1:1):(turnedCase?assets.geometries[0].clone().rotateZ(Math.PI):(uprightHip?assets.hipGeometry:assets.geometries[0]));
   servo.geometry=caseGeometry;
   const group=new T.Group();group.name=`servo-${id}-identification-and-ports`;servo.add(group);
   if(turnedCase||uprightHip)group.rotation.z=Math.PI;
-  if(mirroredCase)group.scale.x=-1;
+  if(mirrorX)group.scale.x=-1;
+  if(mirrorZ)group.scale.z=-1;
   const shellMaterial=new T.MeshStandardMaterial({color:0xe7e4d9,roughness:.66,metalness:.02,side:T.DoubleSide});
   const metalMaterial=new T.MeshStandardMaterial({color:0xc9b26b,roughness:.32,metalness:.65});
   const ports={};
@@ -132,7 +136,8 @@ export function attachServoModel(servo,id){
     decal.name=`servo-id-${id}-${sign>0?'left':'right'}`;decal.renderOrder=foregroundKnee?20:0;
     decal.rotation.x=sign>0?-Math.PI/2:Math.PI/2;
     if(foregroundKnee&&sign<0)decal.rotateZ(Math.PI);
-    if(mirroredCase)decal.scale.x=-1; // Keep ID text readable after reflection.
+    if(mirrorX)decal.scale.x=-1; // Keep ID text readable after reflection.
+    if(mirrorZ)decal.scale.y=-1; // The label's vertical axis is case Z.
     decal.position.set(.0005,sign*.01008,-.0175);group.add(decal);decals.push(decal);
   }
   const detail={group,ports,decals,texture,

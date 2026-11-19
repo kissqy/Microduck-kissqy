@@ -8,9 +8,9 @@
 
 **[MakerWorld 模型与打印配置](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553)**
 
-**[⬇️ 下载完整打印包（RAR，14.54 MiB）](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/3d-print-frankenduck/Microduck-Print-FrankenDuck-20261107.rar)** · [SHA256 校验](SHA256SUMS) · [包内文件清单](FILES.md) · [鸭子采购总清单](../../DUCK-SHOPPING-LIST.md) · [返回首页](../../README.md)
+**[⬇️ 下载完整打印包（RAR，15.12 MiB）](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/3d-print-frankenduck/Microduck-Print-FrankenDuck-20261119.rar)** · [SHA256 校验](SHA256SUMS) · [包内文件清单](FILES.md) · [鸭子采购总清单](../../DUCK-SHOPPING-LIST.md) · [返回首页](../../README.md)
 
-发布于 **2026-10-15**。包内 **36 个 STL 文件 + 1 个 3MF 摆盘项目（5 盘）**，保留原文件名和摆盘；文件数量不等于装配数量。下载的是原始压缩包，模型与摆盘内容没有重新编辑。
+当前版本：**2026-11-19**。包内 **37 个 STL 文件 + 1 个 3MF 摆盘项目（5 盘）**，保留原文件名和摆盘；文件数量不等于装配数量。下载的是原始压缩包，模型与摆盘内容没有重新编辑。
 
 **2026-10-21 更新：**
 
@@ -37,7 +37,7 @@
 
 | 版本 | 文件名 | 用途 |
 | --- | --- | --- |
-| **夹 HUB 板版** | `电池仓_M2.5螺丝_HUB组合.stl` | 需要同时夹持 HUB 板时选择；使用 M2.5 螺丝的 HUB 组合结构；按需要选择。 |
+| **夹 HUB 板版** | `电池仓_加厚卡扣_HUB优化_IMU定位.stl` | 需要同时夹持 HUB 板时选择；加厚卡扣、HUB 优化与 IMU 定位结构；按需要选择。 |
 | **官方式加厚卡扣版** | `电池仓_卡扣加厚.stl` | 沿用官方式电池仓结构，加厚卡扣部分；可用这份 STL 替换摆盘中的电池仓。 |
 
 两者均配套 [本仓库 IMU](../README.md)；使用其他 IMU 时，按板形、尺寸与固定方式修改安装位。IMU 的烧录与接线见 [FT6 固件指南](../IMU-FIRMWARE.md)。

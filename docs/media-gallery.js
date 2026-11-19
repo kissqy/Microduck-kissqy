@@ -72,18 +72,70 @@
   window.addEventListener('resize', scheduleLayout, {passive: true});
   wall.querySelectorAll('img').forEach(img => img.addEventListener('load', scheduleLayout));
 
+  // GitHub renders some attachment URLs as short-lived playback URLs.
+  // Resolve those from the public homepage at runtime; never commit signed URLs.
+  const attachmentId = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+  let homepageSources = null, homepageSourcesAt = 0;
+  const resolvingVideos = new WeakMap();
+
+  function getHomepageSources() {
+    if (!homepageSources || Date.now() - homepageSourcesAt > 240000) {
+      homepageSourcesAt = Date.now();
+      homepageSources = fetch('https://api.github.com/repos/kissqy/Microduck-kissqy/readme', {
+        headers: {Accept: 'application/vnd.github.html+json'},
+        credentials: 'omit',
+        signal: AbortSignal.timeout(12000)
+      }).then(async response => {
+        if (!response.ok) throw new Error('Homepage video sources unavailable');
+        const homepage = new DOMParser().parseFromString(await response.text(), 'text/html');
+        const sources = new Map();
+        homepage.querySelectorAll('video[src]').forEach(item => {
+          const source = item.getAttribute('src');
+          const id = source.match(attachmentId)?.[0];
+          if (id && source.startsWith('https://')) sources.set(id, source);
+        });
+        return sources;
+      }).catch(error => { homepageSources = null; throw error; });
+    }
+    return homepageSources;
+  }
+
+  function resolveHomepageVideo(video) {
+    if (resolvingVideos.has(video)) return resolvingVideos.get(video);
+    const id = video.dataset.attachmentSrc.match(attachmentId)?.[0];
+    if (!id) return Promise.resolve(false);
+    const pending = getHomepageSources().then(sources => {
+      const source = sources.get(id);
+      if (!source || video.getAttribute('src') === source) return false;
+      const resume = !video.paused;
+      video.src = source;
+      video.load();
+      if (resume) video.play().catch(() => {});
+      return true;
+    }).finally(() => resolvingVideos.delete(video));
+    resolvingVideos.set(video, pending);
+    return pending;
+  }
+
   videos.forEach(video => {
+    video.dataset.attachmentSrc = video.getAttribute('src') || video.querySelector('source')?.getAttribute('src') || '';
+    const errorMessage = video.closest('[data-media-card]').querySelector('.media-error');
     video.addEventListener('loadedmetadata', () => {
       if (video.videoWidth && video.videoHeight) video.style.aspectRatio = `${video.videoWidth}/${video.videoHeight}`;
+      errorMessage.hidden = true;
       scheduleLayout();
     });
     video.addEventListener('play', () => videos.forEach(other => { if (other !== video) other.pause(); }));
     const showVideoError = () => {
-      video.closest('[data-media-card]').querySelector('.media-error').hidden = false;
+      errorMessage.hidden = false;
       scheduleLayout();
     };
-    video.addEventListener('error', showVideoError);
-    video.querySelectorAll('source').forEach(source => source.addEventListener('error', showVideoError));
+    const recoverVideo = () => resolveHomepageVideo(video).then(resolved => {
+      if (!resolved) showVideoError();
+    }).catch(showVideoError);
+    video.addEventListener('error', recoverVideo);
+    video.querySelectorAll('source').forEach(source => source.addEventListener('error', recoverVideo));
+    if (video.hasAttribute('data-homepage-video')) recoverVideo();
   });
   if ('IntersectionObserver' in window) {
     const lazy = new IntersectionObserver(entries => entries.forEach(entry => {

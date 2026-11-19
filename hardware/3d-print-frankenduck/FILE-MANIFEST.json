@@ -1,13 +1,13 @@
 {
-  "publication_date": "2026-10-15",
+  "publication_date": "2026-11-19",
   "archive": {
-    "file": "Microduck-Print-FrankenDuck-20261015.rar",
-    "bytes": 15248649,
-    "sha256": "ff78c1d7431733d1fd9fc9265d8930548e72551dd42ee05771c3fbf0d14e302f",
+    "file": "Microduck-Print-FrankenDuck-20261119.rar",
+    "bytes": 15853991,
+    "sha256": "30216c35fbb1a9166fadc705c5c9fe4a983bc2d150d2414c8e6392dcd8d0ba0b",
     "uploaded_content_unchanged": true
   },
   "contents": {
-    "stl_files": 36,
+    "stl_files": 37,
     "project_3mf_files": 1,
     "plates": 5
   },
@@ -53,11 +53,6 @@
       "sha256": "4c97774a0a386695d05b8ea083dbd684fea589109cea8e5567bc00f13104554d"
     },
     {
-      "path": "3D打印缝合怪版/stl模型/支撑部分/脸.stl",
-      "bytes": 562984,
-      "sha256": "e250da95ca2237a0de0d328236c86e336e8bfdd9f7d964ed0fe828db235da2e4"
-    },
-    {
       "path": "3D打印缝合怪版/stl模型/支撑部分/颈部固定右.stl",
       "bytes": 73484,
       "sha256": "4a3524f66260c9ead2c19a7dc3f37d2bb4708e0f505c74c9203ae7de90b26fad"
@@ -99,13 +94,13 @@
     },
     {
       "path": "3D打印缝合怪版/stl模型/橙色部分/滑轮支架右.stl",
-      "bytes": 5930560,
-      "sha256": "f6a34c647b665cacda372f3a24348f93a6b12a2c8dff00243f94e4f8ebe98dfb"
+      "bytes": 5977863,
+      "sha256": "e9f162738a0a013616815ff07bff7d6df1618a115f34de7410201a28def7093c"
     },
     {
       "path": "3D打印缝合怪版/stl模型/橙色部分/滑轮支架左.stl",
-      "bytes": 5930560,
-      "sha256": "f6a34c647b665cacda372f3a24348f93a6b12a2c8dff00243f94e4f8ebe98dfb"
+      "bytes": 5977863,
+      "sha256": "e9f162738a0a013616815ff07bff7d6df1618a115f34de7410201a28def7093c"
     },
     {
       "path": "3D打印缝合怪版/stl模型/橙色部分/眼睛.stl",
@@ -138,14 +133,24 @@
       "sha256": "3db31237e92fcfb0bd2ea561d5d35c24d374198de9766d1464d58cf0cbe9b3f7"
     },
     {
-      "path": "3D打印缝合怪版/stl模型/躯体部分/电池仓_M2.5螺丝_HUB组合.stl",
+      "path": "3D打印缝合怪版/stl模型/躯体部分/电池仓_加厚卡扣_HUB优化_IMU定位.stl",
       "bytes": 821384,
-      "sha256": "1740ec7cf55346a932ea58fa8fea972d42ba2c7384a799e9f29581bce3074bd1"
+      "sha256": "fab5d1753cdf96efd4d76ede48c781d651a895b84791dd1823bfccf8aabb87d3"
     },
     {
       "path": "3D打印缝合怪版/stl模型/躯体部分/电池仓_卡扣加厚.stl",
       "bytes": 2621762,
       "sha256": "66a40d4622763dc770de49834f70ad632034d927cb5f1fb03f815c78ad9d294e"
+    },
+    {
+      "path": "3D打印缝合怪版/stl模型/躯体部分/鸭脸_仓库IMX219.stl",
+      "bytes": 570684,
+      "sha256": "64598c10c0db8cd6d41748060593e9231df46ad47cd220c7538182750c05352f"
+    },
+    {
+      "path": "3D打印缝合怪版/stl模型/躯体部分/鸭脸_瑞莎IMX219.stl",
+      "bytes": 562984,
+      "sha256": "3bc5290384035f8b06336a8f7b87a85f248b4ed856c1e5e0ddd777250b8e424b"
     },
     {
       "path": "3D打印缝合怪版/stl模型/黑色部分/右胯固定片.stl",
@@ -194,10 +199,8 @@
     },
     {
       "path": "3D打印缝合怪版/缝合怪摆盘.3mf",
-      "bytes": 5727217,
-      "sha256": "02012811530a94554d0deb0c4c0c0e3365f877daa0b2577d2d9f202ae2705ec5"
+      "bytes": 6850003,
+      "sha256": "36a9d0be506e353a1ac2690d029457e46cfb3eda1b3b0d59a0435e99a78ed64b"
     }
-  ],
-  "updated_date": "2026-10-21",
-  "update_note": "Added leg support ramps, removed outer leg-shell counterbores, and integrated an interchangeable-foot design based on the official roller shoes."
+  ]
 }

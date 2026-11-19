@@ -392,6 +392,42 @@
       "group": "bearings",
       "unitQuote": "1.50",
       "note": "滑轮选配；普通脚掌首次行走不需要，不计入基础采购合计。"
+    },
+    {
+      "id": "metal-horn",
+      "name": "金属舵盘",
+      "spec": "金属舵盘；按需购买，¥3.50／个。",
+      "unit": "个",
+      "quantity": 1,
+      "unitQuote": "3.50",
+      "subtotalCents": 350,
+      "url": "https://item.taobao.com/item.htm?id=1099891150825&skuId=6323184222733",
+      "group": "metal-horn",
+      "note": "金属舵盘升级配件，数量按实际安装需求选择；不计入基础采购合计。"
+    },
+    {
+      "id": "metal-horn-m2x5",
+      "name": "M2×5 金属舵盘平纹螺丝",
+      "spec": "M2×5；平纹螺丝（非自攻）；200 个包邮。",
+      "unit": "包（200个）",
+      "quantity": 1,
+      "unitQuote": "1.16",
+      "subtotalCents": 116,
+      "url": "https://detail.tmall.com/item.htm?id=16908083014&skuId=5505364984903",
+      "group": "metal-horn",
+      "note": "金属舵盘专用；商品页选择 M2×5 规格；不计入基础采购合计。"
+    },
+    {
+      "id": "metal-horn-m2x6",
+      "name": "M2×6 金属舵盘平纹螺丝",
+      "spec": "M2×6；平纹螺丝（非自攻）；200 个包邮。",
+      "unit": "包（200个）",
+      "quantity": 1,
+      "unitQuote": "1.49",
+      "subtotalCents": 149,
+      "url": "https://detail.tmall.com/item.htm?id=16908083014&skuId=5505364984903",
+      "group": "metal-horn",
+      "note": "金属舵盘专用；商品页选择 M2×6 规格；不计入基础采购合计。"
     }
   ],
   "printingEdition": {

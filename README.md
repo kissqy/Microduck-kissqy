@@ -53,7 +53,7 @@ Radxa ZERO 3W · 15 × 飞特 HD1910 · 配套 HAT / IMU / HUB
 </tr>
 </table>
 
-[🎬 查看全部实机视频 →](https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html?v=20261119-gallery#more-videos)
+[🎬 查看全部实机视频 · 抖音 →](https://www.douyin.com/user/MS4wLjABAAAAreAIt9HOU709zTxGNJO0eClwbaTKpDbItTruNTEnfiGiXNJjB2y7YdNndIN6mlk-)
 
 <p><b>📷 小鸭出游</b> · <a href="https://kissqy.github.io/Microduck-kissqy/one-leg-balance.html?v=20261119-gallery#photo-gallery">7 张照片 · 点击进入滑动相册 →</a></p>
 

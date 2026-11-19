@@ -1,5 +1,4 @@
 {
-  "sourceArchive": "https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/3d-print-frankenduck/Microduck-Print-FrankenDuck-20261015.rar",
   "sourceMember": "3D打印缝合怪版/stl模型/躯体部分/电池仓_M2.5螺丝_HUB组合.stl",
   "asset": "assembly-battery-holder.stl",
   "sha256": "1740ec7cf55346a932ea58fa8fea972d42ba2c7384a799e9f29581bce3074bd1",
@@ -19,5 +18,8 @@
       83.48979949951172
     ]
   ],
-  "licenseAndCredits": "https://github.com/kissqy/Microduck-kissqy/tree/main/hardware/3d-print-frankenduck#来源与整理"
+  "licenseAndCredits": "https://github.com/kissqy/Microduck-kissqy/tree/main/hardware/3d-print-frankenduck#来源与整理",
+  "historicalSourceArchive": "https://github.com/kissqy/Microduck-kissqy/raw/5353b018257dbe0a6caa37991d65592bffdcb5f0/hardware/3d-print-frankenduck/Microduck-Print-FrankenDuck-20261015.rar",
+  "currentPrintPackage": "https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/hardware/3d-print-frankenduck/Microduck-Print-FrankenDuck-20261119.rar",
+  "note": "3D viewer asset retains its original source geometry; download the current package for printing."
 }

@@ -11,7 +11,7 @@ if(triggers.length){
    <button type="button" class="power-reference-close" aria-label="关闭取电图片" autofocus>×</button>
   </header>
   <div class="power-reference-body">
-   <a class="power-reference-photo" href="../assets/boards/banana-battery-front-white.jpg" target="_blank" rel="noopener" aria-label="查看香蕉板接好电池的实拍原图">
+   <a class="power-reference-photo" href="../assets/boards/banana-battery-front-white.jpg" target="_blank" rel="noopener" aria-label="查看香蕉板接好电池的实拍白底图">
     <img src="../assets/boards/banana-battery-front-white.jpg" alt="新版香蕉取电板插入电池触点的实拍" width="864" height="1536" loading="lazy">
    </a>
    <div class="power-reference-copy" id="power-reference-copy">
@@ -19,7 +19,7 @@ if(triggers.length){
     <p><strong>新版香蕉取电板 ¥39／块，配套成品线直插免焊。</strong></p>
     <p>双香蕉插针插入 NP-F550 电池触点，配套 AMP2.0 电源线接 HUB V3 CN1：2=VIN，3=GND，1=NC 留空。</p>
     <p class="power-reference-wiring">按所用版本的实板丝印核对接口和极性，再连接匹配的成品线。</p>
-    <p class="power-reference-hint">图片为新版香蕉板已接好电池的实拍；点击可查看原图。</p>
+    <p class="power-reference-hint">图片为新版香蕉板已接好电池的实拍；点击可放大查看白底图。</p>
    </div>
   </div>`;
  document.body.append(dialog);

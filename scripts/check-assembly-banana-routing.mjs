@@ -36,11 +36,16 @@ function audit(){
   return{length:path.getLength(),maxZ:Math.max(...points.map(p=>p.z))};
  });
 }
+const pack=api.batteryHolder.pack.group,holder=api.batteryHolder.mesh;
+const relative=()=>pack.getWorldPosition(new T.Vector3()).sub(holder.getWorldPosition(new T.Vector3()));
+const assembledRelative=relative();
 const assembled=audit();
 assert(assembled.every(c=>c.maxZ<.0825),'assembled power cable escaped above the torso skin');
 api.setExploded(true);const expanded=audit();
+assert(relative().distanceTo(assembledRelative)>.05,'battery did not separate from its holder');
 assert(expanded.every(c=>c.length>.1),'exploded power cable did not follow the battery holder');
 api.setExploded(false);const restored=audit();
+assert(relative().distanceTo(assembledRelative)<1e-8,'battery did not return to its seated position');
 restored.forEach((c,i)=>{assert(c.maxZ<.0825,'restored wire retained exploded exterior route');assert(Math.abs(c.length-assembled[i].length)<1e-6,'restored power route changed');});
 api.dispose();
 console.log('PASS: connected power conductors stay inside the assembled torso and return after explosion.');

@@ -75,7 +75,13 @@ export function attachPrintExplosion(view,{extraMeshes=[],followers=new Map()}={
     const end=root.localToWorld(deltaRoot.clone());
     const offset=parent.worldToLocal(end.clone()).sub(parent.worldToLocal(origin.clone()));
     if(!offset.toArray().every(Number.isFinite)||offset.length()<.0001)throw Error('打印件爆炸方向无效');
-    const following=(followers.get(mesh)||[]).map(object=>({object,rest:object.position.clone(),offset:object.parent.worldToLocal(end.clone()).sub(object.parent.worldToLocal(origin.clone()))}));
+    const following=(followers.get(mesh)||[]).map(entry=>{
+      const object=entry.object||entry;
+      // Independently removable parts (battery) need their own separation, while
+      // mounted PCBs continue to follow the holder's displacement.
+      const target=entry.offsetRoot?root.localToWorld(entry.offsetRoot.clone()):end.clone();
+      return{object,rest:object.position.clone(),offset:object.parent.worldToLocal(target).sub(object.parent.worldToLocal(origin.clone()))};
+    });
     entries.push({mesh,index,name,rest:mesh.position.clone(),offset,following});
   }
 

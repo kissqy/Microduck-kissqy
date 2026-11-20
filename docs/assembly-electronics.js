@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
 import {createBoardModel} from './assembly-board-models.js?v=20261118-speaker-hp125-id21';
 import {attachHeadClearance} from './assembly-head-clearance.js?v=20261118-speaker-mounted';
-import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261104-head-labels';
+import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261120-separate-battery';
 import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261118-servo21-no32-horn';
 import {createHubModel} from './assembly-hub-model.js?v=20261118-amp-inward';
 import {createBatteryPack,createBatteryPickup,BATTERY_PICKUP} from './assembly-battery-model.js?v=20261120-banana-interior-v2';
@@ -278,7 +278,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     });
     return{...spec,group,mesh:group,fromPort,toPort,conductors,header,fromContacts:portContacts(fromPort),toContacts:portContacts(toPort),last:null};
   });
-  const explosion=attachPrintExplosion(view,{extraMeshes:batteryMesh?[batteryMesh]:[],followers:new Map(batteryMesh?[[batteryMesh,[components.get('imu').group,batteryPort.root,batteryPack.group]]]:[])});
+  const explosion=attachPrintExplosion(view,{extraMeshes:batteryMesh?[batteryMesh]:[],followers:new Map(batteryMesh?[[batteryMesh,[components.get('imu').group,batteryPort.root,{object:batteryPack.group,offsetRoot:vector(-.165,0,.025)}]]]:[])});
   const notice=document.createElement('span');notice.className='electronics-scene-note';notice.textContent=batteryError?'电池仓暂未加载；板卡位置按装配区显示':'端子接入 · 线束走向为装配示意';container.append(notice);
   const batteryLabel=document.createElement('button');batteryLabel.type='button';batteryLabel.className='electronics-label';batteryLabel.textContent='电池仓';batteryLabel.setAttribute('aria-label','查看电池仓');Object.assign(batteryLabel.style,{position:'absolute',zIndex:'3',transform:'translate(-50%,-50%)',font:'650 10px system-ui,sans-serif',whiteSpace:'nowrap',cursor:'pointer'});batteryLabel.addEventListener('click',()=>api.focus('battery'));container.append(batteryLabel);
 

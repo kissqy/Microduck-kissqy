@@ -1,9 +1,9 @@
 {
-  "publication_date": "2026-11-19",
+  "publication_date": "2026-11-20",
   "archive": {
-    "file": "Microduck-Print-FrankenDuck-20261119.rar",
-    "bytes": 15853991,
-    "sha256": "30216c35fbb1a9166fadc705c5c9fe4a983bc2d150d2414c8e6392dcd8d0ba0b",
+    "file": "Microduck-Print-FrankenDuck-20261120.rar",
+    "bytes": 16089169,
+    "sha256": "5c236a3de2a40b04a6b1c4a75a5d6d54947d765c509356d7ffa4ef76c788d1ae",
     "uploaded_content_unchanged": true
   },
   "contents": {
@@ -133,9 +133,9 @@
       "sha256": "3db31237e92fcfb0bd2ea561d5d35c24d374198de9766d1464d58cf0cbe9b3f7"
     },
     {
-      "path": "3D打印缝合怪版/stl模型/躯体部分/电池仓_加厚卡扣_HUB优化_IMU定位.stl",
-      "bytes": 821384,
-      "sha256": "fab5d1753cdf96efd4d76ede48c781d651a895b84791dd1823bfccf8aabb87d3"
+      "path": "3D打印缝合怪版/stl模型/躯体部分/电池仓_加厚卡扣_HUB优化_IMU定位_香蕉板优化.stl",
+      "bytes": 4653521,
+      "sha256": "22f283612cef5429e6eabc6d5de6468cbaaa59038ecb8b5bbd988a6742c09e80"
     },
     {
       "path": "3D打印缝合怪版/stl模型/躯体部分/电池仓_卡扣加厚.stl",
@@ -199,8 +199,8 @@
     },
     {
       "path": "3D打印缝合怪版/缝合怪摆盘.3mf",
-      "bytes": 6850003,
-      "sha256": "36a9d0be506e353a1ac2690d029457e46cfb3eda1b3b0d59a0435e99a78ed64b"
+      "bytes": 6857025,
+      "sha256": "bda26dc82363796e9ffd08f1b058b68811ebaef0c6acf30919270779cead0459"
     }
   ]
 }

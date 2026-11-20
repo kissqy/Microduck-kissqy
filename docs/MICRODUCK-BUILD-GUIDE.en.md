@@ -56,7 +56,7 @@ This page links the build stages; individual part instructions are on the printi
 
 **HAT, IMU and HUB are three separate boards. Select each board on the [same product page](https://item.taobao.com/item.htm?id=1095121548583). The HUB costs CNY 69 and includes the main-power buffer capacitor to buffer transient servo loads and help prevent ZERO restarts caused by supply voltage dips.**
 
-**All HUB V3 connectors use AMP2.0 and matching premade cables. The matching banana power board also uses AMP2.0; it is not yet listed for sale and is expected around November 16, 2026. With the assembled boards, cables and banana board in hand, assembly can use plug-in connections without soldering.**
+**All HUB V3 connectors use AMP2.0 and matching premade cables. The matching banana power board also uses AMP2.0; the new board is ¥39 each, with a right-angle connector. With the assembled boards, cables and banana board in hand, assembly can use plug-in connections without soldering.**
 
 Legacy power reference: the repository's battery holder can use M2.6 screws as power contacts. Connect positive to the legacy HUB's VIN (+) and negative to GND (−), following its markings. XH2.54 connectors and soldered leads belong to the legacy instructions; follow the V3 board's connectors and markings for V3.
 
@@ -100,3 +100,13 @@ Report issues with hardware configuration, console version, running firmware ide
 Author: kissqy · [Original repository](https://github.com/kissqy/Microduck-kissqy) · [FAQ](MICRODUCK-FAQ.en.md) · [Documentation index](README.en.md)
 
 
+
+## New banana power board · ¥39
+
+The new banana power board is **¥39 each**, with a right-angle AMP2.0 connector and a matching premade cable to HUB V3 for solder-free assembly.
+
+[接线 / Wiring](../hardware/BANANA-POWER.en.md)
+
+| 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
+| --- | --- |
+| ![Battery](assets/boards/banana-battery-front.jpg) | ![Wiring](assets/boards/banana-battery-rear.jpg) |

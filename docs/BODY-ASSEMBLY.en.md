@@ -4,7 +4,7 @@
 
 These photos cover the four-way HUB harness, torso prewiring, battery-holder and IMU mounting, the leg/torso assembly and the head/neck connection. Assemble with power disconnected. Follow the connector signals and the actual mounting positions.
 
-**Version note: these photos retain the legacy HUB for mounting, branching and cable-routing reference. All HUB V3 connectors use AMP2.0 and matching premade cables. The matching banana power board also uses AMP2.0; it is not yet listed for sale and is expected around November 16, 2026. With the assembled boards, cables and banana board in hand, assembly can use plug-in connections without soldering.**
+**Version note: these photos retain the legacy HUB for mounting, branching and cable-routing reference. All HUB V3 connectors use AMP2.0 and matching premade cables. The matching banana power board also uses AMP2.0; the new board is ¥39 each, with a right-angle connector. With the assembled boards, cables and banana board in hand, assembly can use plug-in connections without soldering.**
 
 [Web assembly guide (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#body-photos) · [Inside the head](HEAD-ASSEMBLY.en.md) · [3D reference](https://kissqy.github.io/Microduck-kissqy/assembly.html)
 
@@ -60,3 +60,13 @@ Do not trap spare cable between the head-shell opening and the bracket. This pho
 The four bus ports of the legacy HUB pictured here share their nets. Port-to-branch positions in a photo are not mandatory. With an all-black harness, check GND, power and DATA by connector signals rather than wire color.
 
 [HUB hardware and power connections](../hardware/README.en.md) · [Full build guide](MICRODUCK-BUILD-GUIDE.en.md)
+
+## New banana power board · ¥39
+
+The new banana power board is **¥39 each**, with a right-angle AMP2.0 connector and a matching premade cable to HUB V3 for solder-free assembly.
+
+[接线 / Wiring](../hardware/BANANA-POWER.en.md)
+
+| 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
+| --- | --- |
+| ![Battery](assets/boards/banana-battery-front.jpg) | ![Wiring](assets/boards/banana-battery-rear.jpg) |

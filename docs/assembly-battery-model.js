@@ -4,7 +4,7 @@ import * as T from './vendor/three.module.min.js?demo=20261013';
 // The author's arrows select the upward contact holes in the top crossbar:
 // raw X=+/-16.9, Y=31.6 mm; surface Z is approximately 77.5 mm.
 // Viewed straight at the battery label, raw +X is left: GND left, VIN right.
-// Both screw axes are raw Z, not the sideways end-bracket bores.
+// Banana contacts enter the battery along raw -Z; the AMP2.0 mouth opens in +Y.
 export const BATTERY_PICKUP=Object.freeze({x:[.0169,-.0169],y:.0316,z:.0775});
 export const NPF550=Object.freeze({width:.0384,depth:.0206,length:.0708,
   source:'https://www.sony.com.au/electronics/support/camera-camcorder-accessories-batteries-chargers/np-f550/specifications'});
@@ -34,19 +34,47 @@ export function createBatteryPack(){
   }
   group.userData.dimensions=NPF550;return{group,body};
 }
+// Rebuilt from the author's front / rear / side photographs. Display model only.
+export const BANANA_BOARD=Object.freeze({width:.03919,depth:.0125,thickness:.001,contactPitch:.0338});
 export function createBatteryPickup(){
-  const root=new T.Group();root.name='BATTERY-SCREW-PICKUP';root.position.set(0,BATTERY_PICKUP.y,BATTERY_PICKUP.z);const pins={},ordered=[],screws={};
-  const steel=material(0xbec5c5,.85),brass=material(0xb79850,.75),top=0;
-  for(const [i,signal]of ['gnd','power'].entries()){
-    const x=BATTERY_PICKUP.x[i],y=0;
-    const shaft=cylinder(root,.0008,.008,steel,'battery-'+signal+'-M2.6-shaft',[x,y,top-.0035]);
-    const head=cylinder(root,.0022,.0014,steel,'battery-'+signal+'-screw-head',[x,y,top+.00075]);
-    const ring=part(root,new T.RingGeometry(.0013,.00265,28),brass,'battery-'+signal+'-wire-lug',[x,y,top+.00005]);
-    const slot=part(root,new T.BoxGeometry(.0027,.00038,.00005),material(0x3a4445),'battery-'+signal+'-screw-slot',[x,y,top+.00148]);slot.userData.hubSolid=false;
-    const pin=new T.Object3D();pin.name='battery-'+signal+'-lug-contact';pin.position.set(x,y,top+.00165);pin.userData={signal,target:head.name,batterySide:signal==='gnd'?'left':'right'};root.add(pin);pins[signal]=pin;ordered.push(pin);
-    screws[signal]={shaft,head,ring,pin,hole:[x,BATTERY_PICKUP.y,BATTERY_PICKUP.z]};
+  const root=new T.Group();root.name='AMP2.0-BANANA-POWER-BOARD';root.position.set(0,BATTERY_PICKUP.y,BATTERY_PICKUP.z);
+  const pins={},ordered=[],contacts={};
+  const green=material(0x166347),gold=material(0xd5b653,.8),white=material(0xe9ebe2),steel=material(0xc0c5bd,.8);
+  const box=(parent,w,d,h,mat,name,pos)=>part(parent,new T.BoxGeometry(w,d,h),mat,name,pos);
+  box(root,BANANA_BOARD.width,BANANA_BOARD.depth,BANANA_BOARD.thickness,green,'banana-PCB',[0,0,.001]);
+  for(const [i,signal] of ['gnd','power'].entries()){
+    const x=BATTERY_PICKUP.x[i];
+    // Cylindrical spring contacts with longitudinal slots, opposite the socket face.
+    const stem=cylinder(root,.00125,.0095,gold,'banana-'+signal+'-contact',[x,0,-.00425]);
+    cylinder(root,.00165,.00035,gold,'banana-'+signal+'-pad',[x,0,.00165]);
+    cylinder(root,.00075,.0013,gold,'banana-'+signal+'-solder-tail',[x,0,.002]);
+    for(let j=0;j<4;j++){
+      const angle=j*Math.PI/2,slot=box(root,.00016,.0002,.006,material(0x5a4d2b),'banana-spring-slot',[x+Math.cos(angle)*.00122,Math.sin(angle)*.00122,-.004]);slot.rotation.z=angle;slot.userData.hubSolid=false;
+    }
+    const tip=part(root,new T.SphereGeometry(.00125,16,8),gold,'banana-'+signal+'-rounded-tip',[x,0,-.009]);tip.scale.z=.7;
+    contacts[signal]=stem;
   }
-  const mouth=new T.Object3D();mouth.position.set(0,0,top+.00165);root.add(mouth);
-  const outward=new T.Object3D();outward.position.copy(mouth.position).add(new T.Vector3(0,0,.004));root.add(outward);
-  return{root,pins,ordered,mouth,outward,screws,kind:'power2',pinCount:2};
+  // Open right-angle 3P AMP housing, with parallel-to-PCB insertion and guide key.
+  const socket=new T.Group();socket.name='banana-AMP2.0-3P-right-angle';socket.position.set(-.004,0,.0015);root.add(socket);
+  box(socket,.008,.001,.0042,white,'AMP-rear-wall',[0,-.0025,.0021]);
+  box(socket,.008,.005,.0007,white,'AMP-floor',[0,0,.00035]);
+  box(socket,.008,.005,.0007,white,'AMP-roof',[0,0,.00385]);
+  for(const x of[-.00365,.00365])box(socket,.0007,.005,.0042,white,'AMP-side-guide',[x,0,.0021]);
+  for(const x of[-.001,.001])box(socket,.00045,.0015,.0005,white,'AMP-key-guide',[x,.00175,.00085]);
+  for(const [i,signal] of ['nc','power','gnd'].entries()){
+    const x=-.002+i*.002;
+    box(socket,.00048,.0038,.00048,steel,'AMP-'+signal+'-pin',[x,-.0002,.0019]);
+    box(socket,.00055,.0018,.0004,steel,'AMP-'+signal+'-solder-pad',[x,-.0038,.0002]);
+    const pin=new T.Object3D();pin.name='banana-AMP-'+signal+'-wire-contact';pin.position.set(x,.0026,.0019);pin.userData={signal,target:'AMP-'+signal+'-pin'};socket.add(pin);pins[signal]=pin;ordered.push(pin);
+  }
+  const mouth=new T.Object3D();mouth.position.set(0,.0026,.0019);socket.add(mouth);
+  const outward=new T.Object3D();outward.position.set(0,.0066,.0019);socket.add(outward);
+  if(typeof document!=='undefined'){
+    const canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;const ctx=canvas.getContext('2d');
+    if(ctx){ctx.clearRect(0,0,512,128);ctx.fillStyle='#edf2dc';ctx.font='bold 36px sans-serif';ctx.fillText('BAT+',18,85);ctx.fillText('GND',390,85);
+      const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;
+      const label=part(root,new T.PlaneGeometry(.035,.007),new T.MeshBasicMaterial({map:texture,transparent:true,side:T.DoubleSide}),'banana-polarity-silkscreen',[0,-.002,.00153]);label.userData.hubSolid=false;}
+  }
+  root.userData.dimensions=BANANA_BOARD;
+  return{root,pins,ordered,mouth,outward,contacts,kind:'power2',pinCount:3};
 }

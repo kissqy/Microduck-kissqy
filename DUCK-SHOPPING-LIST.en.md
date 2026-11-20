@@ -9,7 +9,7 @@
 
 [🏠 Project homepage](README.en.md)
 
-**Assembled-board reference subtotal: CNY 2998.53**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. Printing costs are additional, based on an actual quote or filament budget. The HUB is included at CNY 69; battery-connection parts and shipping are extra.
+**Assembled-board reference subtotal: CNY 3037.53**, including the 32GB microSD card, card reader and URT2 servo programming board, before printing. Printing costs are additional, based on an actual quote or filament budget. The HUB is included at CNY 69; the banana power board is included at CNY 39; additional cables and shipping are extra.
 
 **[Open the shopping checklist (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/shopping.html)** · [Compare budget totals (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/budget.html)
 
@@ -28,16 +28,17 @@ Check the servos, boards, printed parts, cables and accessories before assembly.
 | Duck body, including gamepad, URT2 and reference spare stock | ¥2711.53 | ¥2711.53 |
 | HAT + IMU | [HAT ¥119 + IMU ¥99](https://item.taobao.com/item.htm?id=1095121548583) | ¥94.22–134.22 · first component purchase |
 | Assembled HUB (buffer capacitor included) | ¥69 | ¥69 |
+| Banana power board (AMP2.0) | ¥39 | ¥39 |
 | Soldering / programming tools and consumables | No board-soldering tools; assembled IMU has FT6 preflashed | ¥800–1000 |
-| **Total without a printer** | **¥2998.53** | **¥3674.75–3914.75** |
+| **Total without a printer** | **¥3037.53** | **¥3713.75–3953.75** |
 | 3D printer allowance | +¥3500 | +¥3500 |
-| **Total including a printer** | **¥6498.53** | **¥7174.75–7414.75** |
+| **Total including a printer** | **¥6537.53** | **¥7213.75–7453.75** |
 
 Printing-service costs are additional, based on an actual quote. No printer purchase is needed. [Edition features and printing instructions](hardware/3d-print-frankenduck/README.en.md).
 
 **[MakerWorld model and print profile](https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553)**
 
-- **The base table excludes printed parts or filament; printing costs are additional, based on an actual quote or filament budget. Robot-assembly labor, a computer, battery-connection parts, new-order shipping and losses are extra.** The body includes 15 HD1910 servos at ¥123 each; the microSD card and card reader are priced and included.
+- **The base table excludes printed parts or filament; printing costs are additional, based on an actual quote or filament budget. Robot-assembly labor, a computer, additional cables, new-order shipping and losses are extra.** The body includes 15 HD1910 servos at ¥123 each; the microSD card and card reader are priced and included.
 - HAT, IMU and HUB are listed separately in the board purchasing table below. The HUB includes the main-power buffer capacitor; no separate capacitor purchase is needed.
 - DIY board materials use full component packs; the range covers free PCB coupons / no coupons. [Board cost breakdown](hardware/README.en.md#build-cost) · [Tool budget](docs/BUILD-TOOLS.en.md#budgeting-for-tools-from-scratch). Reuse existing tools; the assembled-board option assumes you have normal assembly hand tools.
 
@@ -50,10 +51,11 @@ The author supplied reference prices for the EAGET 32GB monitoring / dashcam mic
 | Assembled HAT<br><sub><strong>AMP2.0 servo connectors</strong>; <strong>plug-in speaker</strong>; <strong>no manual jumpers</strong>; stable communication <strong>without packet loss</strong>.<br>Power, servo communication and audio connections for ZERO.</sub> | 1 | CNY 119 | [Select HAT](https://item.taobao.com/item.htm?id=1095121548583) |
 | Assembled IMU (FT6 preflashed)<br><sub><strong>AMP2.0 interface</strong>; stable orientation <strong>without drift</strong>; <strong>FT6 preflashed</strong>.<br>Mount against the repository battery holder backplate with J1 pointing up to <strong>use the author&#x27;s IMU calibration</strong>.</sub> | 1 | CNY 99 | [Select IMU](https://item.taobao.com/item.htm?id=1095121548583) |
 | Assembled HUB V3 (buffer capacitor included)<br><sub>Servo and battery-power distribution; onboard <strong>1000 µF buffer capacitor</strong> <strong>helps prevent ZERO resets</strong> from transient supply dips.<br>Mount above servos 10 and 20; every V3 connector, including power, uses AMP2.0. Match wiring and polarity to the board markings.</sub> | 1 | CNY 69 | [Select HUB](https://item.taobao.com/item.htm?id=1095121548583) |
+| AMP2.0 banana power board | 1 board | ¥39 | [Photos and wiring](hardware/BANANA-POWER.en.md) |
 
 ### Battery power connection
 
-**Every HUB V3 connector uses AMP2.0, including its power input; the banana power board also uses AMP2.0.** With assembled HAT / IMU / HUB V3 boards, matching pre-made cables and the banana power board, board and power-harness connections plug together without soldering. The banana board is not listed for sale yet; availability is expected **around November 16, 2026**. [HUB V3 schematic and PCB](hardware/ProPrj_DXL_HUB_V3_2026-11-14.epro2).
+**Every HUB V3 connector uses AMP2.0, including its power input; the banana power board also uses AMP2.0.** With assembled HAT / IMU / HUB V3 boards, matching pre-made cables and the banana power board, board and power-harness connections plug together without soldering. The new banana power board is ¥39 each, with a right-angle AMP2.0 connector. [HUB V3 schematic and PCB](hardware/ProPrj_DXL_HUB_V3_2026-11-14.epro2).
 
 **Historical HUB V1 power connection:** The HUB's CN1 power input uses XH2.54-2P. Connect an XH2.54 power lead to the repository battery holder's M2.6 screw contacts for a quick, convenient connection; plug in a battery with a matching XH2.54 connector, voltage and polarity directly; or solder the XH2.54 lead to a banana board. Connect positive to VIN (+) and negative to GND (−), following the board markings.
 

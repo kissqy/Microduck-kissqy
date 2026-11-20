@@ -24,7 +24,7 @@ nmcli -f IN-USE,SSID,FREQ,SIGNAL device wifi list
 
 ## Battery power and HUB connection
 
-The HUB's CN1 power input uses XH2.54-2P. Connect an XH2.54 power lead to the repository battery holder's M2.6 screw contacts for a quick, convenient connection; plug in a battery with a matching XH2.54 connector, voltage and polarity directly; or solder the XH2.54 lead to a banana board. Connect positive to VIN (+) and negative to GND (−), following the board markings.
+**Historical HUB V1 connection:** The HUB's CN1 power input uses XH2.54-2P. Connect an XH2.54 power lead to the repository battery holder's M2.6 screw contacts for a quick, convenient connection; plug in a battery with a matching XH2.54 connector, voltage and polarity directly; or solder the XH2.54 lead to a banana board. Connect positive to VIN (+) and negative to GND (−), following the board markings.
 
 ## The HUB includes the main-power buffer capacitor
 
@@ -34,3 +34,13 @@ The HUB's CN1 power input uses XH2.54-2P. Connect an XH2.54 power lead to the re
 - The capacitor buffers transient servo loads; the battery, wires and power contacts still need reliable connections.
 
 [Documentation index](README.en.md) · [HAT / IMU / HUB board guide](../hardware/README.en.md)
+
+## New banana power board · ¥39
+
+The new banana power board is **¥39 each**, with a right-angle AMP2.0 connector and a matching premade cable to HUB V3 for solder-free assembly.
+
+[接线 / Wiring](../hardware/BANANA-POWER.en.md)
+
+| 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
+| --- | --- |
+| ![Battery](assets/boards/banana-battery-front.jpg) | ![Wiring](assets/boards/banana-battery-rear.jpg) |

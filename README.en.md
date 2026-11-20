@@ -191,7 +191,7 @@ Designed and laid out by the author, refined through real-robot use and **SMT as
       <td align="center"><a href="docs/assets/boards/hat-white.webp"><img src="docs/assets/boards/hat-white.webp" width="200" alt="HAT board, front and back on a white background" /></a></td>
       <td align="center"><a href="docs/assets/boards/hub-white.webp"><img src="docs/assets/boards/hub-white.webp" width="200" alt="HUB board, three views on a white background" /></a></td>
       <td align="center"><a href="docs/assets/boards/imu-white.webp"><img src="docs/assets/boards/imu-white.webp" width="200" alt="IMU board on a white background" /></a></td>
-      <td align="center">&nbsp;</td>
+      <td align="center"><a href="hardware/BANANA-POWER.en.md"><img src="docs/assets/boards/banana-white.png" width="200" alt="AMP2.0 banana power board / 香蕉取电板三视图 · ¥39" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -201,7 +201,7 @@ Designed and laid out by the author, refined through real-robot use and **SMT as
 | **HAT** | Connects ZERO 3W and the servo bus; provides power, communication and audio peripherals. |
 | **Torso IMU** | Body-orientation feedback. Assembled IMUs are preflashed with FT6; robot-specific calibration is still required. |
 | **Power-distribution HUB** | Branches servo and power connections, with a 1000 µF buffer capacitor. Every HUB V3 connector uses AMP2.0. |
-| **Banana power board** | AMP2.0 and matching power harness; its image slot remains empty. Availability follows the assembled-board listing. |
+| **Banana power board** | **¥39 each**; dual banana contacts and right-angle AMP2.0 connector, with a matching premade cable to HUB V3. [Photos and wiring](hardware/BANANA-POWER.en.md). |
 
 **Matching assembled boards and cables support plug-in assembly without soldering.** Use the assembled HAT / IMU / HUB V3, matching pre-made cables and banana power board as one configuration.
 

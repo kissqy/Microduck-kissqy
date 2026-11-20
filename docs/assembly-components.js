@@ -21,7 +21,7 @@ export const COMPONENTS=Object.freeze({
       '可选打印件：电池仓_M2.5螺丝_HUB组合.stl。',
       '针号是各自工程编号，不代表照片左右或现成线束顺序；按 GND、电源、DATA 信号与实板丝印核对并确认导通，不因编号不同就直接交叉线束。',
       'HUB 为独立板卡，与 HAT、IMU 在同一商品页分别选择款式。',
-      '正对电池标签面、接触端朝上时：左负右正。两颗取电螺丝装在电池仓顶部横板的接触孔内，左侧黑线接 HUB CN1 的 GND（−），右侧红线接 VIN（+）。可隐藏电池查看孔位。',
+      '正对电池标签面、接触端朝上时：左负右正。新版香蕉取电板 ¥39，双香蕉插针插入电池触点，AMP2.0 卧式接口配套成品线接 HUB CN1，免焊装配。可隐藏电池查看取电板。',
     ],
   },
   imu:{
@@ -78,9 +78,9 @@ export const COMPONENTS=Object.freeze({
 
 export const CONNECTIONS=Object.freeze([
   {
-    id:'battery-hub',from:'battery',to:'hub',label:'电池 → HUB CN1',kind:'power',
+    id:'battery-hub',from:'battery',to:'hub',label:'电池 → 香蕉取电板 → HUB CN1',kind:'power',
     signals:[['负极 / GND','GND'],['正极 / 电源','VIN']],
-    detail:'正对电池标签面、接触端朝上时，左侧为负极（黑线），右侧为正极（红线）。取电螺丝从上往下装入顶部横板的两个接触孔，分别接 HUB V3 CN1 的 3 脚 GND、2 脚 VIN，1 脚未接。C1 为 1000 µF / 16V，正极网络为 VIN、负极为 GND；元件极性按实板核对。',
+    detail:'正对电池标签面、接触端朝上时，左侧为负极（黑线），右侧为正极（红线）。香蕉取电板从上往下插入电池触点，AMP2.0 配套电源线分别接 HUB V3 CN1 的 3 脚 GND、2 脚 VIN，1 脚未接。C1 为 1000 µF / 16V，正极网络为 VIN、负极为 GND；元件极性按实板核对。',
     sourceUrl:hardware+'3d-print-frankenduck/README.md',
     sourceNote:'针序依据用户提供的 DXL_HUB_V2（2026-10-30）工程；链接为配套机械说明。',
     extraSourceUrl:repository+'docs/ASSEMBLY-NOTES.md',

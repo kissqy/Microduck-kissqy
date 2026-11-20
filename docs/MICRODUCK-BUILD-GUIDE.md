@@ -54,7 +54,7 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 
 **HAT、IMU、HUB 为三块独立板卡，均在[同一商品页](https://item.taobao.com/item.htm?id=1095121548583)选择对应款式。HUB ¥69 已含总电源缓冲电容，用于缓冲舵机瞬时负载，防止瞬时压降导致 ZERO 重启。**
 
-**HUB V3 全部接口统一为 AMP2.0，使用配套成品线束插接。配套香蕉取电板也采用 AMP2.0，暂未上架，预计 2026-11-16 前后上架；配齐成品板、线束与香蕉板后，可全插接免焊装配。**
+**HUB V3 全部接口统一为 AMP2.0，使用配套成品线束插接。新版香蕉取电板 ¥39／块，采用 AMP2.0 卧式接口；配齐成品板、线束与香蕉板后，可全插接免焊装配。**
 
 旧版取电参考：仓库配套电池仓可加 M2.6 螺丝作为取电触点，正极接旧版 HUB 的 VIN（+），负极接 GND（−），按实板丝印核对极性。旧版 XH2.54 接头与焊线步骤按对应旧版说明使用；V3 按实板接口与丝印核对。
 
@@ -98,3 +98,13 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 作者：kissqy · [项目原始仓库](https://github.com/kissqy/Microduck-kissqy) · [常见问题](MICRODUCK-FAQ.md) · [完整文档目录](README.md)
 
 
+
+## 新版香蕉取电板 · ¥39
+
+新版香蕉取电板 **¥39／块**，AMP2.0 卧式接口，配套成品线直插 HUB V3，免焊装配。
+
+[接线 / Wiring](../hardware/BANANA-POWER.md)
+
+| 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
+| --- | --- |
+| ![Battery](assets/boards/banana-battery-front.jpg) | ![Wiring](assets/boards/banana-battery-rear.jpg) |

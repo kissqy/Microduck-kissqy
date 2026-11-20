@@ -4,7 +4,7 @@ import {attachHeadClearance} from './assembly-head-clearance.js?v=20261118-speak
 import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261104-head-labels';
 import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261118-servo21-no32-horn';
 import {createHubModel} from './assembly-hub-model.js?v=20261118-amp-inward';
-import {createBatteryPack,createBatteryPickup,BATTERY_PICKUP} from './assembly-battery-model.js?v=20261103-contact-hip';
+import {createBatteryPack,createBatteryPickup,BATTERY_PICKUP} from './assembly-battery-model.js?v=20261120-banana';
 import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261104-head-orientation';
 import {parallelCablePaths} from './assembly-cable-bundles.js?v=20261030-hub-arcs';
 import {softenCableCorners} from './assembly-wire-curves.js?v=20261030-hub-arcs';
@@ -30,7 +30,7 @@ export const ELECTRONICS_WIRES=Object.freeze([
   wire('hub-10','hub','servo10','HUB → 右腿 10','#7eadd7','right'),
   ...[[10,11],[11,12],[12,13],[13,14]].map(([a,b])=>wire(`servo-${a}-${b}`,`servo${a}`,`servo${b}`,`${a} → ${b}`,'#7eadd7','right')),
   wire('hub-imu','hub','imu','HUB → 电池仓背面 IMU','#78beb7','battery'),
-  wire('battery-hub','battery','hub','电池仓取电螺丝 → HUB CN1','#db8e83','battery'),
+  wire('battery-hub','battery','hub','香蕉取电板 AMP2.0 → HUB CN1','#db8e83','battery'),
 ]);
 
 const COVER_MESH_INDEX=21,FACE_MESH_INDEX=19,STL_URL=new URL('./assets/assembly-battery-holder.stl',import.meta.url);
@@ -110,7 +110,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   const packRailFaceY=new T.Box3().setFromObject(batteryPack.body).min.y;
   const contactRailFaceY=BATTERY_PICKUP.y-.00265;
   const shellRearX=Math.min(...[1,5].map(index=>new T.Box3().setFromObject(view.actual.parts[index]).min.x));
-  // Keep both the pack and the upward contact screws outside the reference
+  // Keep both the pack and the banana pickup board outside the reference
   // cover; their source-STL coordinates remain fixed within the holder.
   const holderOffset=vector(Math.min(holderReferenceX+.017,shellRearX+Math.min(packRailFaceY,contactRailFaceY)-.0008),hipCenter.y,hipCenter.z-.055);
   batteryMount.position.copy(trunk.worldToLocal(holderOffset.clone()));

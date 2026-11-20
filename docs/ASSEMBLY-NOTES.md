@@ -24,7 +24,7 @@ nmcli -f IN-USE,SSID,FREQ,SIGNAL device wifi list
 
 ## 电池取电与 HUB 接入
 
-HUB 的电源输入 CN1 为 XH2.54-2P。可用 XH2.54 电源线连接仓库电池仓的 M2.6 螺丝触点，取电方便快捷；也可直接插接电压、极性匹配的 XH2.54 接口电池，或将 XH2.54 电源线焊接到香蕉板取电。正极接 VIN（+），负极接 GND（−），按实板丝印核对极性。
+**旧版 HUB V1 历史接法：**HUB 的电源输入 CN1 为 XH2.54-2P。可用 XH2.54 电源线连接仓库电池仓的 M2.6 螺丝触点，取电方便快捷；也可直接插接电压、极性匹配的 XH2.54 接口电池，或将 XH2.54 电源线焊接到香蕉板取电。正极接 VIN（+），负极接 GND（−），按实板丝印核对极性。
 
 ## HUB 已带总电源缓冲电容
 
@@ -34,3 +34,13 @@ HUB 的电源输入 CN1 为 XH2.54-2P。可用 XH2.54 电源线连接仓库电�
 - 缓冲电容用于应对舵机瞬时负载；电池、线材与取电触点仍需接触可靠。
 
 [使用说明目录](README.md) · [HAT / IMU / HUB 板卡说明](../hardware/README.md)
+
+## 新版香蕉取电板 · ¥39
+
+新版香蕉取电板 **¥39／块**，AMP2.0 卧式接口，配套成品线直插 HUB V3，免焊装配。
+
+[接线 / Wiring](../hardware/BANANA-POWER.md)
+
+| 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
+| --- | --- |
+| ![Battery](assets/boards/banana-battery-front.jpg) | ![Wiring](assets/boards/banana-battery-rear.jpg) |

@@ -175,7 +175,7 @@ fanhao 的镜像模型说明将其中 **10 个模型的作者标为 kissqy**，�
 
 ## 硬件与打印资料
 
-### 🔧 自制 HAT、IMU 与 HUB 电路板
+### 🔧 自制 HAT、IMU、HUB 与香蕉取电板
 
 板卡由作者自行设计绘制，经真机使用与迭代验证，由**嘉立创 SMT 贴片生产**。提供电路工程、材料清单与制作记录。
 
@@ -193,7 +193,7 @@ fanhao 的镜像模型说明将其中 **10 个模型的作者标为 kissqy**，�
       <td align="center"><a href="docs/assets/boards/hat-white.webp"><img src="docs/assets/boards/hat-white.webp" width="200" alt="HAT 电路板正反面白底图" /></a></td>
       <td align="center"><a href="docs/assets/boards/hub-white.webp"><img src="docs/assets/boards/hub-white.webp" width="200" alt="HUB 分线板三视图白底图" /></a></td>
       <td align="center"><a href="docs/assets/boards/imu-white.webp"><img src="docs/assets/boards/imu-white.webp" width="200" alt="IMU 姿态传感器板白底图" /></a></td>
-      <td align="center">&nbsp;</td>
+      <td align="center"><a href="hardware/BANANA-POWER.md"><img src="docs/assets/boards/banana-white.png" width="200" alt="AMP2.0 banana power board / 香蕉取电板三视图 · ¥39" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -203,7 +203,7 @@ fanhao 的镜像模型说明将其中 **10 个模型的作者标为 kissqy**，�
 | **HAT** | 连接 ZERO 3W 与舵机总线，提供供电、通信及音频外围。 |
 | **独立躯干 IMU** | 提供身体姿态反馈。成品 IMU 已预烧录 FT6，到手无需另行烧录；安装后仍需完成本机标定。 |
 | **HUB 分线供电板** | 分接舵机与电源，带 1000 µF 缓冲电容；HUB V3 的所有接口均为 AMP2.0。 |
-| **香蕉取电板** | 使用 AMP2.0，配合对应取电线束；图片位置先预留。供货状态以成品板页面为准。 |
+| **香蕉取电板** | **¥39／块**；AMP2.0 卧式接口，双香蕉插针插入电池触点，配套成品线直插 HUB V3，免焊。 [实拍与接线](hardware/BANANA-POWER.md)。 |
 
 **配套成品线束可直插，免焊装配。** 选择成品 HAT／IMU／HUB V3、配套成品线与香蕉取电板，板卡和取电线束可直接插接。
 

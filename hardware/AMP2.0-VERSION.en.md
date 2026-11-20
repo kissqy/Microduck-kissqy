@@ -16,7 +16,7 @@ The author's project files are published unchanged and contain both schematic an
 
 ## HUB V3 and plug-in power
 
-**Every HUB V3 connector uses AMP2.0, including its power input; the banana power board also uses AMP2.0.** With assembled HAT / IMU / HUB V3 boards, matching pre-made cables and the banana power board, board and power-harness connections plug together without soldering. The banana board is not listed for sale yet; availability is expected **around November 16, 2026**.
+**Every HUB V3 connector uses AMP2.0, including its power input; the banana power board also uses AMP2.0.** With assembled HAT / IMU / HUB V3 boards, matching pre-made cables and the banana power board, board and power-harness connections plug together without soldering. The new banana power board is ¥39 each, with a right-angle AMP2.0 connector.
 
 Use the V3 board markings to match power wiring and polarity. The XH2.54 instructions under [historical HUB V1](README.en.md#historical-hub-v1--november-7-2026) apply to V1.
 

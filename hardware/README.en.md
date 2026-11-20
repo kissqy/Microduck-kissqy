@@ -27,7 +27,7 @@
 | --- | --- |
 | **HAT** | **Plug-in speaker**; **AMP2.0 servo connectors**; **no manual jumpers**; stable communication **without packet loss**. |
 | **IMU** | **AMP2.0 interface**; stable orientation **without drift**; **use the author's IMU calibration** with the matching repository battery holder to reduce walking problems caused by incorrect calibration. |
-| **HUB V3** | **All connectors use AMP2.0, including power**; **1000 µF buffer capacitor**. Use matching pre-made cables for plug-in connections; the upcoming banana power board also uses AMP2.0. |
+| **HUB V3** | **All connectors use AMP2.0, including power**; **1000 µF buffer capacitor**. Use matching pre-made cables for plug-in connections; the banana power board also uses AMP2.0. |
 
 **[🔧 Assembly notes: 5 GHz Wi-Fi for ZERO; the HUB includes the 1000 µF main-power buffer capacitor, with no separate purchase needed; wiring and precautions](../docs/ASSEMBLY-NOTES.en.md)**
 
@@ -65,7 +65,7 @@ IMU update, 2026-11-13: J1 footprint pads 1 and 3 exchange physical positions. E
 
 **[Download the complete HUB V3 project (schematic + PCB)](ProPrj_DXL_HUB_V3_2026-11-14.epro2)**. The supplied source file is published unchanged; every connector, including power, uses AMP2.0.
 
-**Every HUB V3 connector uses AMP2.0, including its power input; the banana power board also uses AMP2.0.** With assembled HAT / IMU / HUB V3 boards, matching pre-made cables and the banana power board, board and power-harness connections plug together without soldering. The banana board is not listed for sale yet; availability is expected **around November 16, 2026**.
+**Every HUB V3 connector uses AMP2.0, including its power input; the banana power board also uses AMP2.0.** With assembled HAT / IMU / HUB V3 boards, matching pre-made cables and the banana power board, board and power-harness connections plug together without soldering. The new banana power board is ¥39 each, with a right-angle AMP2.0 connector.
 
 Match the pre-made power cable to the V3 board markings and polarity.
 
@@ -123,7 +123,8 @@ Minimum pack counts below apply to each row for one set. Rows with the same prod
 | IMU (assembled: FT6 preflashed) | ¥20.38 | ¥24.38 | [¥99](https://item.taobao.com/item.htm?id=1095121548583) |
 | **HAT + IMU subtotal** | **¥37.11** | **¥45.11** | **¥218** |
 | Assembled HUB (buffer capacitor included) | — | — | [¥69](https://item.taobao.com/item.htm?id=1095121548583) |
-| **All three assembled boards** | — | — | **¥287** |
+| Banana power board (AMP2.0) | — | — | [¥39](BANANA-POWER.en.md) |
+| **All four assembled boards** | — | — | **¥326** |
 
 DIY amounts above cover parts fitted to the boards, excluding tools and labor. For the first purchase, use full-pack amounts below and add **¥800–1000** for [tools and consumables](../docs/BUILD-TOOLS.en.md#budgeting-for-tools-from-scratch); assembled boards are ready to use.
 
@@ -400,3 +401,5 @@ Expand either table to inspect each component. Project attributes and the actual
 | **U4**<br>SN74LVC2G125DCUR | SN74LVC2G125DCUR<br>C21404 | VSSOP-8<br>输入类型:-；工作电压:1.65V~5.5V；元件数:2；每个元件位数:1；灌电流(IOL):32mA；拉电流(IOH):32mA | 商品无选项，按商品标题完整型号购买<br>SN74LVC2G125DCUR / VSSOP-8，按商品完整型号购买。 | [Product](https://item.taobao.com/item.htm?id=705642638300) · [Project model](https://www.lcsc.com/product-detail/C21404.html) |
 
 </details>
+
+[New banana power board: photos and wiring · ¥39](BANANA-POWER.en.md)

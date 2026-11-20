@@ -23,7 +23,7 @@ let state=readState();
 const save=field=>{try{const latest=readState();latest[field]=state[field];localStorage.setItem(storageKey,JSON.stringify(latest));}catch{}};
 const priceInput=key=>{const raw=state.costs[key];if(raw===undefined||raw==='')return null;const number=Number(raw);return Number.isFinite(number)&&number>=0&&number<=1000000?Math.round(number*100):null;};
 let data;
-try{const response=await fetch(new URL('./data.json?v=20261114-hub-v3',import.meta.url));if(response.ok)data=await response.json();}catch{}
+try{const response=await fetch(new URL('./data.json?v=20261120-banana',import.meta.url));if(response.ok)data=await response.json();}catch{}
 if(data){
  const body=data.items.reduce((sum,item)=>sum+item.subtotalCents,0),boards=data.boards.filter(item=>!item.diyRequired).reduce((sum,item)=>sum+(item.subtotalCents??0),0),fixedBoards=data.boards.filter(item=>item.diyRequired).reduce((sum,item)=>sum+(item.subtotalCents??0),0),assembled=body+boards+fixedBoards;
  const shopping=configureShopping(data);
@@ -35,7 +35,7 @@ if(data){
   if(query.has('boards')||printingModes.includes(query.get('printing')))save('route');
  }
  const plans=[{id:'own',fields:['ownPrint','extras','shipping']},{id:'service',fields:['printService','extras','shipping'],quote:'printService',quoteText:'待填代打报价'},{id:'buy-printer',fields:['printer','ownPrint','extras','shipping'],quote:'printer',quoteText:'待填打印机价格'}];
- const names={ownPrint:'打印耗材',printService:'代打费用',printer:'打印机设备费',extras:'电池接入与工具',shipping:'运费与零星费用'};
+ const names={ownPrint:'打印耗材',printService:'代打费用',printer:'打印机设备费',extras:'额外线束与工具',shipping:'运费与零星费用'};
  const defaultValues={printer:String(data.printerReferenceCents/100)};
  const references={printer:data.printerReferenceCents};
  const cost=key=>state.costs[key]===undefined&&Object.hasOwn(references,key)?references[key]:priceInput(key);
@@ -70,7 +70,7 @@ if(data){
   const selected=plans.find(plan=>plan.id===state.route.printing);
   document.querySelectorAll('[data-cost]').forEach(input=>input.closest('label').hidden=!selected.fields.includes(input.dataset.cost));
   const note=document.getElementById('route-price-note');
-  if(note)note.textContent='当前按“'+boardNames[state.route.boards]+'”计算。'+(diy?'已用自焊材料替换成品板 '+money(boards)+'；'+(buyTools?'已加工具与耗材预算。':'已有焊接工具按复用计算，缺少耗材另补。'):'含成品 HAT '+money(data.boards.find(item=>item.id==='hat').subtotalCents)+' 与 IMU '+money(data.boards.find(item=>item.id==='imu').subtotalCents)+'。')+'均含作者参考本体配置、手柄、32GB TF 卡及读卡器；'+(state.route.printing==='service'?'代打按填写报价计入；':'自己打印耗材按填写预算计入；')+'HUB '+money(fixedBoards)+' 已计入当前方案；电池接入、工具和运费等另计。HUB 自带缓冲电容，用于缓冲舵机瞬时负载，防止供电瞬时压降导致 ZERO 重启，无需另购。';
+  if(note)note.textContent='当前按“'+boardNames[state.route.boards]+'”计算。'+(diy?'已用自焊材料替换成品板 '+money(boards)+'；'+(buyTools?'已加工具与耗材预算。':'已有焊接工具按复用计算，缺少耗材另补。'):'含成品 HAT '+money(data.boards.find(item=>item.id==='hat').subtotalCents)+' 与 IMU '+money(data.boards.find(item=>item.id==='imu').subtotalCents)+'。')+'均含作者参考本体配置、手柄、32GB TF 卡及读卡器；'+(state.route.printing==='service'?'代打按填写报价计入；':'自己打印耗材按填写预算计入；')+'HUB ¥69 与香蕉取电板 ¥39 已计入当前方案；额外线束、工具和运费等另计。HUB 自带缓冲电容，用于缓冲舵机瞬时负载，防止供电瞬时压降导致 ZERO 重启，无需另购。';
   document.querySelectorAll('[data-base-total]').forEach(el=>el.textContent=shopping?.baseLabel??money(assembled));
   const hint=document.getElementById('budget-state');
   if(hint)hint.textContent='当前选择：'+boardNames[state.route.boards]+' ／ '+printingNames[state.route.printing]+'。只显示这套方案需要填写的费用，其他方案的输入会保留。'+(buyTools?'自焊工具已计入，同一工具不要重复填入待补配件。':'已有可复用项目填 0，尚未报价的留空。');

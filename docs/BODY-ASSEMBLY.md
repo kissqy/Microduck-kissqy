@@ -4,7 +4,7 @@
 
 这组实拍补齐 **HUB 四路分线 → 躯干预接线 → 电池仓与 IMU 固定 → 双腿合装 → 头颈连接**。断电后装配，按接口信号与实际安装位核对。
 
-**版本说明：本页保留旧版 HUB 实拍，用于安装位置、分线与理线参考。HUB V3 全部接口统一为 AMP2.0，使用配套成品线束插接。配套香蕉取电板也采用 AMP2.0，暂未上架，预计 2026-11-16 前后上架；配齐成品板、线束与香蕉板后，可全插接免焊装配。**
+**版本说明：本页保留旧版 HUB 实拍，用于安装位置、分线与理线参考。HUB V3 全部接口统一为 AMP2.0，使用配套成品线束插接。新版香蕉取电板 ¥39／块，采用 AMP2.0 卧式接口；配齐成品板、线束与香蕉板后，可全插接免焊装配。**
 
 [在线查看对应装配章节](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#body-photos) · [头部内部安装五步实拍](HEAD-ASSEMBLY.md) · [3D 装配参考](https://kissqy.github.io/Microduck-kissqy/assembly.html)
 
@@ -60,3 +60,13 @@
 照片中旧版 HUB 的四个总线口电气共网，不把照片中的端口位置规定为固定支路。全黑线束按 GND、电源、DATA 信号核对，不按线色判断。
 
 [HUB 硬件与取电说明](../hardware/README.md) · [返回复刻总教程](MICRODUCK-BUILD-GUIDE.md)
+
+## 新版香蕉取电板 · ¥39
+
+新版香蕉取电板 **¥39／块**，AMP2.0 卧式接口，配套成品线直插 HUB V3，免焊装配。
+
+[接线 / Wiring](../hardware/BANANA-POWER.md)
+
+| 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
+| --- | --- |
+| ![Battery](assets/boards/banana-battery-front.jpg) | ![Wiring](assets/boards/banana-battery-rear.jpg) |

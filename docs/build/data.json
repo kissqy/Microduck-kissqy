@@ -1,6 +1,6 @@
 {
   "currency": "CNY",
-  "reviewed": "2026-11-01",
+  "reviewed": "2026-11-20",
   "priceBasis": "作者历史采购记录、成品板定价，以及补充的京东 TF 卡与读卡器报价、作者更新的双头反向舵机线单价、作者补充的飞特 URT2 报价；商品价格以下单时为准。",
   "items": [
     {
@@ -335,6 +335,23 @@
         "防止瞬时压降导致 ZERO 重启",
         "成品线直插免焊"
       ]
+    },
+    {
+      "id": "banana",
+      "name": "AMP2.0 香蕉取电板",
+      "spec": "双香蕉插针取电；AMP2.0 卧式接口；配套成品线直插免焊。",
+      "unit": "块",
+      "quantity": 1,
+      "unitQuote": "39.00",
+      "subtotalCents": 3900,
+      "group": "boards",
+      "url": "https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/BANANA-POWER.md",
+      "note": "连接 NP-F550 电池与 HUB V3 CN1；按实板丝印核对 VIN / GND，NC 留空。",
+      "diyRequired": true,
+      "highlights": [
+        "AMP2.0 卧式接口",
+        "成品线直插免焊"
+      ]
     }
   ],
   "groups": [
@@ -366,13 +383,6 @@
   "printerReferenceCents": 350000,
   "source": "https://github.com/kissqy/Microduck-kissqy/blob/main/DUCK-SHOPPING-LIST.md",
   "unpriced": [
-    {
-      "id": "battery-power",
-      "name": "电池接入",
-      "spec": "HUB V3 全部接口均为 AMP2.0；香蕉取电板也采用 AMP2.0，搭配匹配的成品线即可直插免焊。香蕉取电板暂未上架，预计 2026 年 11 月 16 日前后上架。旧版 HUB 的 XH2.54-2P、M2.6 螺丝取电及香蕉板焊线方式仅作历史参考；接线前按对应版本实板丝印核对极性。",
-      "url": "https://kissqy.github.io/Microduck-kissqy/build/shopping.html#battery-power-reference",
-      "purchaseLabel": "查看取电"
-    },
     {
       "id": "hand-tools",
       "name": "常规装配手工具",

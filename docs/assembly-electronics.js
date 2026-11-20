@@ -330,7 +330,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
         if(item.id==='battery-hub'){
           // Keep power inside the holder/backplate corridor, clear of the battery's
           // exposed cell face. The waypoint travels with the holder when exploded.
-          const guide=root.worldToLocal(batteryPort.root.localToWorld(vector(-.004,-.011,.006)));
+          const guide=root.worldToLocal(batteryPort.root.localToWorld(vector(-.004,-.0033,-.008)));
           const first=bundleRouter.route({start:a,leadA:a,leadB:guide,end:guide});
           const second=first&&bundleRouter.route({start:guide,leadA:guide,leadB:b,end:b});
           if(first&&second){const curve=new T.CurvePath();curve.add(first.curve);curve.add(second.curve);shared={curve,points:[...first.points,...second.points.slice(1)]};}

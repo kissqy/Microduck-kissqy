@@ -205,6 +205,12 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   const servoMeshes=[...servoDetails.values()].map(detail=>detail.group.parent);
   const wireRouter=createWireRouter(root,servoMeshes,collisionMeshes,{clearance:.00045});
   const bundleRouter=createWireRouter(root,servoMeshes,collisionMeshes,{clearance:.0010});
+  // Frozen upstream torso skins omit the current build's power-harness entry.
+  // Only this display cable may pass those legacy skins; retain all real holder,
+  // servo, connector, PCB and battery obstacles. Other wiring keeps full checks.
+  const powerSolids=collisionMeshes.filter(mesh=>mesh!==view.actual.parts[1]&&mesh!==view.actual.parts[5]);
+  const powerRouter=createWireRouter(root,servoMeshes,powerSolids,{clearance:.00045});
+  const powerBundleRouter=createWireRouter(root,servoMeshes,powerSolids,{clearance:.0010});
   const portContacts=port=>{
     // The solder tabs sit flush against the acoustic cavity. Permit only the
     // fixed terminal lead to leave that body; the rest still avoids its shell.
@@ -295,11 +301,12 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
     // The speaker lead stays visible even when bus wiring is hidden.
     if(coverAmount!==coverTo&&wires.every(item=>item.last))return;
     root.updateMatrixWorld(true);
-    wireRouter.update();bundleRouter.update();
+    wireRouter.update();bundleRouter.update();powerRouter.update();powerBundleRouter.update();
     if(!wireCache.has(wireRouter.signature))wireCache.set(wireRouter.signature,{obstacles:wireRouter.signature,routes:{}});
     const cacheState=wireCache.get(wireRouter.signature);
     batteryPort.root.visible=batteryVisible;
     for(const item of wires){
+      const routeRouter=item.id==='battery-hub'?powerRouter:wireRouter,routeBundleRouter=item.id==='battery-hub'?powerBundleRouter:bundleRouter;
       item.group.visible=(wiringVisible||item.id==='hat-speaker')&&endpointVisible(item.from)&&endpointVisible(item.to);
       if(!item.group.visible)continue;
       const positions=item.conductors.flatMap(c=>[...c.start.getWorldPosition(new T.Vector3()).toArray(),...c.end.getWorldPosition(new T.Vector3()).toArray()]);
@@ -308,7 +315,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
       positions.push(...item.fromPort.outward.getWorldPosition(new T.Vector3()).toArray(),...item.toPort.outward.getWorldPosition(new T.Vector3()).toArray());
       const endpointKey=positions.map(x=>x.toFixed(7)).join(',');
       const saved=cacheState.routes[item.id],cacheHit=!item.header&&saved?.endpoints===endpointKey;
-      const signature=(explosion.expanded?'expanded|':'assembled|')+wireRouter.signature+'|'+endpointKey;if(signature===item.last)continue;
+      const signature=(explosion.expanded?'expanded|':'assembled|')+routeRouter.signature+'|'+endpointKey;if(signature===item.last)continue;
       if(item.id==='battery-hub'){item.bundlePoints=null;item.conductors.forEach(c=>{c.routePoints=null;});}
       item.last=signature;
       const starts=item.conductors.map(c=>root.worldToLocal(c.start.getWorldPosition(new T.Vector3())));
@@ -321,8 +328,8 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
       if(item.id!=='hat-speaker'&&!item.header&&!cacheHit){
         const outsideLead=(port,points)=>{
           const center=mean(points),dir=port.outward.getWorldPosition(new T.Vector3()).sub(port.mouth.getWorldPosition(new T.Vector3())).transformDirection(root.matrixWorld.clone().invert());
-          if(bundleRouter.clearSegment(center,center))return center;
-          for(const amount of[.0005,.001,.0015,.002]){const candidate=center.clone().addScaledVector(dir,amount);if(bundleRouter.clearSegment(candidate,candidate)&&wireRouter.clearSegment(center,candidate))return candidate;}
+          if(routeBundleRouter.clearSegment(center,center))return center;
+          for(const amount of[.0005,.001,.0015,.002]){const candidate=center.clone().addScaledVector(dir,amount);if(routeBundleRouter.clearSegment(candidate,candidate)&&routeRouter.clearSegment(center,candidate))return candidate;}
           return center;
         };
         const a=outsideLead(item.fromPort,leadsA),b=outsideLead(item.toPort,leadsB);
@@ -330,21 +337,21 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
         if(item.id==='battery-hub'){
           // Keep power inside the holder/backplate corridor, clear of the battery's
           // exposed cell face. The waypoint travels with the holder when exploded.
-          const guide=root.worldToLocal(batteryPort.root.localToWorld(vector(-.004,-.0033,-.008)));
-          const first=bundleRouter.route({start:a,leadA:a,leadB:guide,end:guide});
-          const second=first&&bundleRouter.route({start:guide,leadA:guide,leadB:b,end:b});
+          const guide=root.worldToLocal(batteryPort.root.localToWorld(vector(-.004,-.0176,-.0075)));
+          const first=routeBundleRouter.route({start:a,leadA:a,leadB:guide,end:guide});
+          const second=first&&routeBundleRouter.route({start:guide,leadA:guide,leadB:b,end:b});
           if(first&&second){const curve=new T.CurvePath();curve.add(first.curve);curve.add(second.curve);shared={curve,points:[...first.points,...second.points.slice(1)]};}
-        }else shared=bundleRouter.route({start:a,leadA:a,leadB:b,end:b,previous:item.bundlePoints});
+        }else shared=routeBundleRouter.route({start:a,leadA:a,leadB:b,end:b,previous:item.bundlePoints});
         const tryBundle=shared=>{
           if(!shared)return null;
           for(const flat of[false,true]){
-            const paths=parallelCablePaths(shared.curve,starts,leadsA,leadsB,ends,{clearSegment:wireRouter.clearSegment,flat});
-            if(paths&&paths.every((path,index)=>!wireRouter.validate(path.curve,coreSpec(index)))){item.bundlePoints=shared.points;return paths;}
+            const paths=parallelCablePaths(shared.curve,starts,leadsA,leadsB,ends,{clearSegment:routeRouter.clearSegment,flat});
+            if(paths&&paths.every((path,index)=>!routeRouter.validate(path.curve,coreSpec(index)))){item.bundlePoints=shared.points;return paths;}
           }
           return null;
         };
         bundles=tryBundle(shared);
-        if(!bundles){const a=mean(leadsA),b=mean(leadsB);bundles=tryBundle(wireRouter.route({start:a,leadA:a,leadB:b,end:b}));}
+        if(!bundles){const a=mean(leadsA),b=mean(leadsB);bundles=tryBundle(routeRouter.route({start:a,leadA:a,leadB:b,end:b}));}
       }
       item.conductors.forEach((c,index)=>{
         const start=starts[index],end=ends[index];
@@ -359,9 +366,9 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
         }else{
           const spec=coreSpec(index);
           const bundle=bundles?.[index];
-          routing=bundle&&!wireRouter.validate(bundle.curve,spec)?bundle:wireRouter.route({...spec,previous:bundle?.points||c.routePoints});
-          if(!routing){c.mesh.visible=false;c.mesh.userData.routingError=wireRouter.lastFailure;return;}
-          curve=softenCableCorners(routing.curve,{accept:candidate=>!wireRouter.validate(candidate,spec)});
+          routing=bundle&&!routeRouter.validate(bundle.curve,spec)?bundle:routeRouter.route({...spec,previous:bundle?.points||c.routePoints});
+          if(!routing){c.mesh.visible=false;c.mesh.userData.routingError=routeRouter.lastFailure;return;}
+          curve=softenCableCorners(routing.curve,{accept:candidate=>!routeRouter.validate(candidate,spec)});
           c.routePoints=routing.points;
         }
         const segments=item.header?12:Math.max(48,Math.min(1024,Math.ceil(curve.getLength()/.0004))),geometry=new T.TubeGeometry(curve,segments,item.header?.000105:.00034,6,false);

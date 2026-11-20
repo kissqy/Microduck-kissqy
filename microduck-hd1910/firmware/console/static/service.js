@@ -8,8 +8,8 @@ import {GamepadRepair} from './gamepad-repair.js';
 
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const fmt=(v,n=1)=>finite(v)?v.toFixed(n):'—';
-const actions={'set-pad-settings':'手柄幅度设置',move:'关节移动',center:'整组顺序居中',capture:'关节标定',init:'Home 站姿','switch-mode':'服务模式切换','reconnect-service':'重新连接 HAT','upgrade-service':'升级 R17 / 0.15.1','set-action-scale':'动作缩放应用',relax:'停止并松开', 'verify-imu':'IMU 安装方向',reboot:'重启 Zero',shutdown:'关闭 Zero','resume-connection':'恢复连接'};
-const feedbackTargets={'repair-gamepad':'gamepad-repair-status','set-pad-settings':'control-feedback',move:'service-job',center:'service-job',capture:'service-job',init:'control-feedback',
+const actions={'set-pad-settings':'手柄幅度设置',move:'关节移动',center:'整组顺序居中',capture:'关节标定','calibrate-all':'全关节 CAL 标定',init:'Home 站姿','switch-mode':'服务模式切换','reconnect-service':'重新连接 HAT','upgrade-service':'升级 R17 / 0.15.1','set-action-scale':'动作缩放应用',relax:'停止并松开', 'verify-imu':'IMU 安装方向',reboot:'重启 Zero',shutdown:'关闭 Zero','resume-connection':'恢复连接'};
+const feedbackTargets={'repair-gamepad':'gamepad-repair-status','set-pad-settings':'control-feedback',move:'service-job',center:'service-job',capture:'service-job','calibrate-all':'service-cal-all-feedback',init:'control-feedback',
   'switch-mode':'service-mode-job','forget-sudo-password':'service-mode-job','verify-imu':'service-imu-job',
   relax:'service-power-job',reboot:'service-power-job',shutdown:'service-power-job','resume-connection':'service-power-job',
   'set-action-scale':'management-status',
@@ -91,6 +91,15 @@ export class ServicePanel {
               <p id="service-center-progress" class="tiny muted" role="status"></p>
               <p class="tiny muted">2048 是编码器中心，不是装配零位。</p>
             </div>
+            <div class="service-cal-all">
+              <div class="service-confirm-row"><h3>全关节 CAL 标定</h3><label class="service-check"><input id="service-cal-all-ready" type="checkbox" disabled>已摆到“零位 0°”（不是 HOME）、机身有支撑、周围无遮挡</label><button class="button accent" id="service-cal-all" disabled>一键标定全部 15 颗</button></div>
+              <p class="service-cal-all-warning">页面角度按<strong>旧标定</strong>计算，标定前<strong>不要追页面 0°</strong>；请以 3D「零位 0°」的物理姿态为准。CAL 会把当前姿态写成 2048。</p>
+              <p id="service-cal-all-progress" class="tiny muted" role="status"></p>
+              <p id="service-cal-all-feedback" class="tiny muted" role="status"></p>
+              <details class="service-cal-all-before" id="service-cal-all-before-wrap" hidden><summary>标定前快照（当前 raw / 旧 zero / 偏差）</summary><div id="service-cal-all-before"></div></details>
+              <p class="tiny muted">写舵机 EEPROM（CAL 0x0B）并同步 TOML；robotd 不重启，遥测不中断。需要 <code>feetech-ft6-control.44</code> 或更高版本。回滚 TOML 不能撤销 CAL；标定后 motion_enabled 会变 false。若某个关节限位不含 0°，请先用上方「保存当前关节」单独处理。<button class="text-button" id="service-cal-all-zero" type="button">查看零位 0°</button></p>
+              <div class="service-cal-all-next" id="service-cal-all-next" hidden><p class="tiny muted">标定完成。下一步可切回运动模式（会执行 calibration-config.py enable 并重启 robotd，机器人可能自动站起）。</p><button class="button" id="service-cal-all-motion" type="button">切回运动模式</button></div>
+            </div>
           </div>
           <div class="panel-note service-job" id="service-job" role="status" aria-live="polite"></div>
         </section>
@@ -142,7 +151,7 @@ export class ServicePanel {
       bottom.setAttribute('aria-label','标定保存、未装配居中与 IMU 安装');
       const saved=document.createElement('div');saved.className='service-saved-controls';
       saved.append(this.root.querySelector('.service-calibration .service-confirm-row'),this.$('service-calibration-detail'));
-      bottom.append(saved,this.root.querySelector('.service-center'),this.$('service-setup-row').querySelector('.service-imu'));
+      bottom.append(saved,this.root.querySelector('.service-center'),this.root.querySelector('.service-cal-all'),this.$('service-setup-row').querySelector('.service-imu'));
       this.$('service-editor').querySelector('.service-editor-body').append(bottom);
       this.$('service-setup-row').remove();
       this.$('service-hero').after(this.$('motors'));
@@ -166,6 +175,9 @@ export class ServicePanel {
     this.$('service-move').onclick=()=>this.move();
     this.$('service-minus').onclick=()=>this.move(-57);this.$('service-plus').onclick=()=>this.move(57);
     this.$('service-center').onclick=()=>this.post({action:'center',unassembled:this.$('service-unassembled').checked,duration_ms:Number(this.$('service-duration').value)});
+    this.$('service-cal-all').onclick=()=>this.calibrateAll();
+    this.$('service-cal-all-zero').onclick=()=>document.getElementById('pose-reference-zero')?.click();
+    this.$('service-cal-all-motion').onclick=()=>this.switchMode('motion');
     this.$('service-capture').onclick=()=>{
       if(!this.$('service-known').checked)return this.feedback('capture','请先确认当前实际关节角度、方向和限位','warning');
       const values=['service-known-angle','service-min','service-max'].map(id=>this.$(id).value.trim());
@@ -203,6 +215,12 @@ export class ServicePanel {
   select(id){
     if(this.id!==id){this.id=id;this.dirty=false;this.$('service-known').checked=false;this.calKey=null;this.calibrationDirty=false;}
     this.paint();
+  }
+  calibrateAll(){
+    if(this.s?.bus?.calibrate_all!==true)return this.feedback('calibrate-all','当前固件不支持一键标定；请先升级到 .44 或更高版本','warning');
+    if(!this.$('service-cal-all-ready').checked)return this.feedback('calibrate-all','请先确认机器人已摆到“零位 0°”并有支撑','warning');
+    if(!confirm('将对 15 颗舵机写 CAL(0x0B)，随后同步 TOML。\n\n请确认：机器人已摆到“零位 0°”（不是 HOME）、机身有支撑、周围无遮挡。\n\nCAL 写的是舵机 EEPROM，回滚 TOML 不能撤销。'))return;
+    this.post({action:'calibrate-all',confirmed:true});
   }
   move(delta){
     const row=this.s?.servos.find(r=>r.id===this.id),value=delta===undefined?this.$('service-position').value.trim():null;
@@ -267,7 +285,20 @@ export class ServicePanel {
     this.inspection.render(s,this.options);
     const m=b.motion,centerJob=job?.action==='center',center=m?.action==='center',centerDone=center?m.completed_ids?.length:job?.result?.completed_ids?.length;
     set('service-center-progress',center?`归中 ${centerDone??0}/15 · 当前 ID ${m.id}`:centerJob&&job.status==='completed'?`归中完成 ${centerDone??'—'}/15 · 已松开`:centerJob&&job.status==='error'?`归中未完成 · ${job.error}`:'');
-    for(const action of ['reboot','shutdown'])this.$('service-'+action).disabled=!!(s.service_control?.job?.status==='running'&&['reboot','shutdown'].includes(s.service_control?.job?.action));
+    const calJob=job?.action==='calibrate-all'?job:null,calState=calJob?.calibration_all||{},calDone=calState.done_ids?.length??0,calSynced=calState.sync_results?.length??0;
+    const calPhase={backup:'备份标定文件',calibrating:`CAL ${calDone}/15`,syncing:`同步 TOML ${calSynced}/15`,verifying:'校验 15 关节'}[calJob?.phase]||`CAL ${calDone}/15`;
+    const calAllSaved=s.saved_calibrated_count??s.calibrated_count??0;
+    const calHint=b.calibrate_all!==true?'当前固件不支持一键标定；请先升级到 .44 或更高版本':calAllSaved!==15?`需要先完成 15 个关节的保存标定（当前 ${calAllSaved}/15）`:this.blocked||this.posting?'等待标定模式、扭矩 OFF 和新鲜反馈':this.$('service-cal-all-ready').checked?'条件已满足，可以执行一键标定':'勾选上方确认后即可执行';
+    set('service-cal-all-progress',calJob?(calJob.status==='running'?`${calPhase} · ${calJob.message||'执行中'}`:calJob.status==='completed'?`15/15 已完成 · 备份 ${calJob.result?.backup||calState.backup||'—'}`:`失败于 ${calJob.phase||'?'} · ${calJob.error||calJob.message||'未完成'}`):calHint);
+    const before=calState.before,calBeforeWrap=this.$('service-cal-all-before-wrap'),calBefore=this.$('service-cal-all-before');
+    if(Array.isArray(before)&&before.length){
+      calBefore.innerHTML=`<table><thead><tr><th>ID</th><th>关节</th><th>raw</th><th>旧 zero</th><th>偏差 °</th></tr></thead><tbody>${before.map(r=>`<tr><td>${r.id}</td><td>${r.name||''}</td><td>${r.position_raw??'—'}</td><td>${r.zero_raw??'—'}</td><td>${finite(r.angle_deg)?r.angle_deg.toFixed(2):'—'}</td></tr>`).join('')}</tbody></table>`;
+      calBeforeWrap.hidden=false;
+    }else{calBeforeWrap.hidden=true;calBefore.innerHTML='';}
+    const calCompleted=calJob?.status==='completed';
+    this.$('service-cal-all-next').hidden=!calCompleted;
+    this.$('service-cal-all-motion').disabled=!calCompleted||!!this.blocked||this.posting;
+    for(const action of ['reboot','shutdown'])this.$('service-'+action).disabled=!!(s.service_control?.job?.status==='running'&&(['reboot','shutdown'].includes(s.service_control?.job?.action)||s.service_control?.job?.action==='calibrate-all'));
     this.$('service-resume').disabled=!s.connection_paused||!!(s.service_control?.busy||job?.status==='running'||this.options.replay);
     const power=job&&['reboot','shutdown'].includes(job.action);
     set('service-power-state',power?(job.status==='completed'?(job.result?.reconnected?'Zero 已重新上线。':job.action==='reboot'?'重启请求已提交；等待 Zero 启动后自动重连。':'已提交关机；自动连接已暂停。Zero 再次上电后点击“恢复连接”。'):job.status==='error'?job.error:'正在提交系统电源指令…'):'关机 / 重启直接执行系统指令。');
@@ -295,15 +326,22 @@ export class ServicePanel {
     set('service-imu-state',saved?.imu_mount_verified===true?'已保存确认':saved?'尚未保存确认':'等待标定回读');
     for(const id of ['service-center','service-move','service-minus','service-plus','service-capture','service-verify-imu'])this.$(id).disabled=!!(this.blocked||this.posting);
     this.$('service-center').disabled ||= !!(s.saved_calibrated_count??s.calibrated_count);
-    if(this.$('service-quick-stop'))this.$('service-quick-stop').disabled=!!this.options.replay;
+    const calAllReady=!this.blocked&&b.calibrate_all===true&&calAllSaved===15&&!this.posting;
+    this.$('service-cal-all').disabled=!(calAllReady&&this.$('service-cal-all-ready').checked)||calJob?.status==='running';
+    this.$('service-cal-all-ready').disabled=!calAllReady||calJob?.status==='running';
+    this.$('service-cal-all-zero').disabled=!!this.options.replay;
+    if(this.$('service-quick-stop'))this.$('service-quick-stop').disabled=!!this.options.replay||calJob?.status==='running';
     const key=job?`${job.at}:${job.action}:${job.status}:${job.error||''}:${job.result?.reconnected||''}:${job.result?.input?.status||''}:${job.action==='init'?job.phase+':'+job.message:''}`:'';
     if(job&&key!==this.lastJob){
       this.lastJob=key;
-      const message=job.action==='init'?`Home 站姿 · ${{running:'执行中',completed:'已确认到位',error:'未完成'}[job.status]||job.status} · ${job.error||job.result?.message||job.message||'等待执行反馈'}`:
-        job.status==='completed'&&['delete-model'].includes(job.action)?job.result?.message||'模型已删除，官方模型保留':
-        `${actions[job.action]||job.action} · ${{running:'执行中，等待反馈',completed:'服务已完成',error:'未完成'}[job.status]||job.status}${job.error?' · '+job.error:''}`;
-      const input=job.result?.input,inputNote=input?.status==='recovering'?'手柄连接恢复中':input?.status==='error'?`手柄暂不可用：${input.error}`:input?.status==='ready'?'手柄连接已恢复':'';
-      this.feedback(job.action,message+(inputNote?' · '+inputNote:''),job.status,job.result?.message||'');
+      // calibrate-all owns service-cal-all-progress with phase/count detail.
+      if(job.action!=='calibrate-all'){
+        const message=job.action==='init'?`Home 站姿 · ${{running:'执行中',completed:'已确认到位',error:'未完成'}[job.status]||job.status} · ${job.error||job.result?.message||job.message||'等待执行反馈'}`:
+          job.status==='completed'&&['delete-model'].includes(job.action)?job.result?.message||'模型已删除，官方模型保留':
+          `${actions[job.action]||job.action} · ${{running:'执行中，等待反馈',completed:'服务已完成',error:'未完成'}[job.status]||job.status}${job.error?' · '+job.error:''}`;
+        const input=job.result?.input,inputNote=input?.status==='recovering'?'手柄连接恢复中':input?.status==='error'?`手柄暂不可用：${input.error}`:input?.status==='ready'?'手柄连接已恢复':'';
+        this.feedback(job.action,message+(inputNote?' · '+inputNote:''),job.status,job.result?.message||'');
+      }
     }
     this.gamepadRepair.render();
   }

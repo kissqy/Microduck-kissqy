@@ -11,18 +11,25 @@ use duck_ipc_proto as proto;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, VecDeque};
+use std::f64::consts::TAU;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 use std::sync::atomic::AtomicBool;
 use std::sync::{Arc, Mutex};
-use std::time::{Duration, Instant};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::sync::oneshot;
 
-pub const BUILD: &str = "1fa8438-feetech-ft6-control.43";
+pub const BUILD: &str = "1fa8438-feetech-ft6-control.44";
 const MAX_PENDING: usize = 16;
 const POSITION_TOLERANCE: u16 = 8;
 const SETTLE_TIMEOUT: Duration = Duration::from_secs(4);
+const REG_TORQUE_ENABLE: u8 = 40;
+const REG_LOCK: u8 = 55;
+const REG_POSITION: u8 = 56;
+const CAL_AFTER_CAL_MS: u64 = 80;
+const CAL_AFTER_LOCK_MS: u64 = 30;
+const CAL_TIMEOUT: Duration = Duration::from_secs(30);
 type Reply = Result<Value, String>;
 
 #[derive(Debug, Clone, Subcommand, Serialize, Deserialize)]
@@ -63,6 +70,8 @@ pub enum BusCommand {
         #[arg(long, allow_hyphen_values = true)]
         max_deg: f64,
     },
+    /// CAL(0x0B) every configured joint: current pose becomes 2048, then sync TOML.
+    CalibrateAll {},
     /// Show the persisted calibration and what still prevents full control.
     CalibrationStatus,
     /// Record that the official IMU mounting axes have been physically checked.
@@ -408,6 +417,115 @@ struct Motion {
     deadline: Instant,
 }
 
+#[derive(Clone, Copy)]
+enum CalStage {
+    TorqueOff,
+    Unlock,
+    Calibrate,
+    WaitAfterCal,
+    Lock,
+    WaitAfterLock,
+    Verify,
+    Save,
+}
+
+impl CalStage {
+    fn name(self) -> &'static str {
+        match self {
+            CalStage::TorqueOff => "torque-off",
+            CalStage::Unlock => "unlock",
+            CalStage::Calibrate => "calibrate",
+            CalStage::WaitAfterCal => "settle",
+            CalStage::Lock => "lock",
+            CalStage::WaitAfterLock => "settle",
+            CalStage::Verify => "verify",
+            CalStage::Save => "save",
+        }
+    }
+}
+
+struct CalibrateAll {
+    remaining: VecDeque<u8>,
+    done: Vec<u8>,
+    active: u8,
+    stage: CalStage,
+    next_at: Instant,
+    reply: oneshot::Sender<Reply>,
+    results: Vec<(u8, u16)>,
+    backup: PathBuf,
+    deadline: Instant,
+}
+
+#[derive(Clone, Serialize)]
+pub struct CalibrationAllStatus {
+    status: &'static str,
+    total: usize,
+    done_ids: Vec<u8>,
+    current_id: u8,
+    stage: &'static str,
+}
+
+impl CalibrateAll {
+    fn status(&self) -> CalibrationAllStatus {
+        CalibrationAllStatus {
+            status: "running",
+            total: NUM_JOINTS,
+            done_ids: self.done.clone(),
+            current_id: self.active,
+            stage: self.stage.name(),
+        }
+    }
+}
+
+enum CalResult {
+    Done,
+    Error,
+}
+
+fn cal_all_preflight(calibration: &Calibration) -> Result<(), String> {
+    if calibration.joints.len() != NUM_JOINTS {
+        return Err("calibrate-all requires all 15 configured joints".into());
+    }
+    for joint in &calibration.joints {
+        if !joint.calibrated {
+            return Err(format!("{}: not calibrated", joint.name));
+        }
+        let (Some(lo), Some(hi)) = (joint.min_rad, joint.max_rad) else {
+            return Err(format!("{}: min/max limits are required", joint.name));
+        };
+        if !(lo < 0.0 && hi > 0.0) {
+            return Err(format!(
+                "{}: saved limits do not contain 0 degrees; calibrate it separately",
+                joint.name
+            ));
+        }
+        let raw_lo = 2048.0 + f64::from(joint.direction) * lo / TAU * 4096.0;
+        let raw_hi = 2048.0 + f64::from(joint.direction) * hi / TAU * 4096.0;
+        if !(0.0..=4095.0).contains(&raw_lo) || !(0.0..=4095.0).contains(&raw_hi) {
+            return Err(format!(
+                "{}: limits cross the single-turn encoder boundary after CAL",
+                joint.name
+            ));
+        }
+    }
+    Ok(())
+}
+
+fn backup_calibration(path: &Path) -> Result<PathBuf, String> {
+    let stamp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|elapsed| elapsed.as_secs())
+        .unwrap_or(0);
+    let backup = PathBuf::from(format!("{}.bak-cal-all-{}", path.display(), stamp));
+    std::fs::copy(path, &backup).map_err(|e| format!("backup calibration: {e}"))?;
+    let original = std::fs::read(path).map_err(|e| format!("read calibration: {e}"))?;
+    let copied = std::fs::read(&backup).map_err(|e| format!("read calibration backup: {e}"))?;
+    if original != copied {
+        return Err("calibration backup verification failed".into());
+    }
+    Ok(backup)
+}
+
 fn torque_off(bus: &mut Bus, ids: &[u8]) -> Result<(), String> {
     bus.torque(ids, false).map_err(|e| e.to_string())?;
     bus.verify_torque(ids, false).map_err(|e| e.to_string())
@@ -450,6 +568,7 @@ fn process_job(
     calibration: &mut Calibration,
     path: &Path,
     motion: &mut Option<Motion>,
+    calibrate: &mut Option<CalibrateAll>,
     ids: &[u8],
     off_pending: &mut Option<String>,
 ) {
@@ -457,6 +576,13 @@ fn process_job(
         return;
     }
     if matches!(job.command, BusCommand::Relax) {
+        if let Some(running) = calibrate.take() {
+            let _ = bus.write(running.active, REG_LOCK, &[1]);
+            let _ = bus.write(running.active, REG_TORQUE_ENABLE, &[0]);
+            let _ = running
+                .reply
+                .send(Err("calibration interrupted by relax".into()));
+        }
         let stop_error = abort_motion(bus, ids, motion, "movement interrupted by relax");
         *off_pending = stop_error.clone();
         let result =
@@ -479,6 +605,12 @@ fn process_job(
         let _ = job.reply.send(Err(
             "a movement is already active; use bus relax to interrupt it".into(),
         ));
+        return;
+    }
+    if calibrate.is_some() {
+        let _ = job
+            .reply
+            .send(Err("a calibration is already active".into()));
         return;
     }
     match job.command {
@@ -567,6 +699,42 @@ fn process_job(
                     + Duration::from_millis(duration_ms * ids.len() as u64)
                     + SETTLE_TIMEOUT * ids.len() as u32
                     + Duration::from_secs(30),
+            });
+        }
+
+        BusCommand::CalibrateAll {} => {
+            if let Err(error) = cal_all_preflight(calibration) {
+                let _ = job.reply.send(Err(error));
+                return;
+            }
+            if let Err(error) = torque_off(bus, ids) {
+                let _ = job.reply.send(Err(format!(
+                    "calibrate-all requires confirmed torque off: {error}"
+                )));
+                return;
+            }
+            let backup = match backup_calibration(path) {
+                Ok(path) => path,
+                Err(error) => {
+                    let _ = job.reply.send(Err(error));
+                    return;
+                }
+            };
+            let mut remaining: VecDeque<u8> = ids.iter().copied().collect();
+            let Some(active) = remaining.pop_front() else {
+                let _ = job.reply.send(Err("no configured joints".into()));
+                return;
+            };
+            *calibrate = Some(CalibrateAll {
+                remaining,
+                done: vec![],
+                active,
+                stage: CalStage::TorqueOff,
+                next_at: Instant::now(),
+                reply: job.reply,
+                results: vec![],
+                backup,
+                deadline: Instant::now() + CAL_TIMEOUT,
             });
         }
 
@@ -741,6 +909,122 @@ fn step_motion(
     }
 }
 
+fn step_calibrate(
+    bus: &mut Bus,
+    calibration: &mut Calibration,
+    path: &Path,
+    calibrate: &mut Option<CalibrateAll>,
+) -> Option<CalResult> {
+    let state = calibrate.as_mut()?;
+    if state.reply.is_closed() || Instant::now() >= state.deadline {
+        let state = calibrate.take().unwrap();
+        let _ = bus.write(state.active, REG_LOCK, &[1]);
+        let _ = bus.write(state.active, REG_TORQUE_ENABLE, &[0]);
+        let message = "calibrate-all cancelled or timed out";
+        let _ = state.reply.send(Err(message.into()));
+        return Some(CalResult::Error);
+    }
+    if Instant::now() < state.next_at {
+        return None;
+    }
+    let step = (|| -> Result<bool, String> {
+        match state.stage {
+            CalStage::TorqueOff => {
+                bus.write(state.active, REG_TORQUE_ENABLE, &[0])
+                    .map_err(|e| e.to_string())?;
+                state.stage = CalStage::Unlock;
+            }
+            CalStage::Unlock => {
+                bus.write(state.active, REG_LOCK, &[0])
+                    .map_err(|e| e.to_string())?;
+                state.stage = CalStage::Calibrate;
+            }
+            CalStage::Calibrate => {
+                bus.calibrate(state.active).map_err(|e| e.to_string())?;
+                state.next_at = Instant::now() + Duration::from_millis(CAL_AFTER_CAL_MS);
+                state.stage = CalStage::WaitAfterCal;
+            }
+            CalStage::WaitAfterCal => {
+                state.stage = CalStage::Lock;
+            }
+            CalStage::Lock => {
+                bus.write(state.active, REG_LOCK, &[1])
+                    .map_err(|e| e.to_string())?;
+                state.next_at = Instant::now() + Duration::from_millis(CAL_AFTER_LOCK_MS);
+                state.stage = CalStage::WaitAfterLock;
+            }
+            CalStage::WaitAfterLock => {
+                state.stage = CalStage::Verify;
+            }
+            CalStage::Verify => {
+                let raw = bus
+                    .read(state.active, REG_POSITION, 2)
+                    .map_err(|e| e.to_string())?;
+                if raw.len() != 2 {
+                    return Err(format!("ID {}: short position read", state.active));
+                }
+                let position = u16::from_le_bytes([raw[0], raw[1]]);
+                if position != 2048 {
+                    return Err(format!(
+                        "ID {} read back {} instead of 2048",
+                        state.active, position
+                    ));
+                }
+                state.results.push((state.active, position));
+                state.done.push(state.active);
+                if let Some(next) = state.remaining.pop_front() {
+                    state.active = next;
+                    state.stage = CalStage::TorqueOff;
+                } else {
+                    state.stage = CalStage::Save;
+                }
+            }
+            CalStage::Save => {
+                let mut updated = calibration.clone();
+                for joint in &mut updated.joints {
+                    if state.done.contains(&joint.id) {
+                        joint.zero_raw = 2048;
+                        joint.calibrated = true;
+                    }
+                }
+                updated.motion_enabled = false;
+                updated.validate().map_err(|e| e.to_string())?;
+                save_calibration(path, &updated)?;
+                *calibration = updated;
+                return Ok(true);
+            }
+        }
+        Ok(false)
+    })();
+    match step {
+        Ok(true) => {
+            let state = calibrate.take().unwrap();
+            let positions = state
+                .results
+                .iter()
+                .map(|(id, position)| (id.to_string(), *position))
+                .collect::<BTreeMap<_, _>>();
+            let _ = state.reply.send(Ok(json!({
+                "completed_ids": state.done,
+                "positions": positions,
+                "backup": state.backup,
+                "calibration": calibration_status(calibration, path),
+            })));
+            Some(CalResult::Done)
+        }
+        Ok(false) => None,
+        Err(error) => {
+            let state = calibrate.take().unwrap();
+            // Leave EEPROM locked even when a step failed, so a later tick or a
+            // human retry cannot write offset 31 by accident.
+            let _ = bus.write(state.active, REG_LOCK, &[1]);
+            let _ = bus.write(state.active, REG_TORQUE_ENABLE, &[0]);
+            let _ = state.reply.send(Err(error.clone()));
+            Some(CalResult::Error)
+        }
+    }
+}
+
 #[derive(Clone, Serialize)]
 pub struct ServoStatus {
     id: u8,
@@ -811,6 +1095,8 @@ pub struct Status {
     torque_off_pending: Option<String>,
     power_pending: bool,
     motion: Option<MotionStatus>,
+    calibrate_all: bool,
+    calibration_all: Option<CalibrationAllStatus>,
     policy_motion_enabled: bool,
     updated_at_us: u64,
 }
@@ -872,6 +1158,7 @@ pub async fn run(
     let mut last_sequence = None;
     let mut stale_run = 0u64;
     let mut motion: Option<Motion> = None;
+    let mut calibrate: Option<CalibrateAll> = None;
     let mut off_pending = None;
     let mut imu_decoder = SflpDecoder::new(calibration.imu_mount_quat);
     let mut last_sample = None;
@@ -946,6 +1233,10 @@ pub async fn run(
             if motion.is_some() {
                 off_pending = abort_motion(&mut bus, &ids, &mut motion, error);
             }
+            if let Some(running) = calibrate.take() {
+                let _ = running.reply.send(Err(error.clone()));
+                off_pending = torque_off(&mut bus, &ids).err();
+            }
             if consecutive == 1 {
                 tracing::warn!(cycle,%error,"bus read failed");
             }
@@ -958,6 +1249,7 @@ pub async fn run(
                         &mut calibration,
                         calibration_path,
                         &mut motion,
+                        &mut calibrate,
                         &ids,
                         &mut off_pending,
                     );
@@ -1034,6 +1326,7 @@ pub async fn run(
                     &mut calibration,
                     calibration_path,
                     &mut motion,
+                    &mut calibrate,
                     &ids,
                     &mut off_pending,
                 );
@@ -1050,10 +1343,21 @@ pub async fn run(
                 }
             }
             step_motion(&mut bus, &samples, &ids, &mut motion, &mut off_pending);
+            if let Some(CalResult::Done) =
+                step_calibrate(&mut bus, &mut calibration, calibration_path, &mut calibrate)
+            {
+                state.bus_calibration.store(Some(Arc::new(calibration_status(
+                    &calibration,
+                    calibration_path,
+                ))));
+            }
         }
         state
             .moving
-            .store(motion.is_some() || off_pending.is_some(), Ordering::Relaxed);
+            .store(
+                motion.is_some() || calibrate.is_some() || off_pending.is_some(),
+                Ordering::Relaxed,
+            );
         state.ticks.store(cycle, Ordering::Relaxed);
         if error.is_none() && total_success == 1 {
             state.startup_step(2, "success", "标定采集第一份有效反馈已读取");
@@ -1075,6 +1379,10 @@ pub async fn run(
             rate_start = Instant::now();
         }
         if publish || error.is_some() {
+            // The early "configuring_bus" value is only a placeholder. Once the
+            // commissioning loop publishes a typed Status it must stop shadowing
+            // robot.busStatus, which prefers startup phases over bus_snapshot.
+            state.bus_status.store(None);
             let power = state.bus_commands.power_pending.load(Ordering::Relaxed);
             state.bus_snapshot.store(Some(Arc::new(Status {
                 build: BUILD,
@@ -1086,6 +1394,8 @@ pub async fn run(
                     "read_error"
                 } else if off_pending.is_some() {
                     "stop_unconfirmed"
+                } else if calibrate.is_some() {
+                    "calibrating"
                 } else if motion.is_some() {
                     "moving"
                 } else {
@@ -1118,6 +1428,8 @@ pub async fn run(
                 torque_off_pending: off_pending.clone(),
                 power_pending: power,
                 policy_motion_enabled: false,
+                calibrate_all: true,
+                calibration_all: calibrate.as_ref().map(CalibrateAll::status),
                 motion: motion.as_ref().map(|m| MotionStatus {
                     id: m.active_id,
                     target_raw: m.target,
@@ -1184,9 +1496,14 @@ mod tests {
             torque_off_pending: None,
             power_pending: false,
             motion: None,
+            calibrate_all: true,
+            calibration_all: None,
             policy_motion_enabled: false,
             updated_at_us: 840_000,
         };
+        let wire = serde_json::to_value(&report).unwrap();
+        assert_eq!(wire["calibrate_all"], true);
+        assert!(wire.get("calibration_all").is_some());
         let id = proto::Id::Text("typed-report".into());
         let expected = proto::Response::ok(Some(id.clone()), &report);
         state.bus_snapshot.store(Some(Arc::new(report)));
@@ -1371,6 +1688,41 @@ mod tests {
         assert!(
             serde_json::from_value::<BusCommand>(json!({"action":"reboot","command":"arbitrary"}))
                 .is_err()
+        );
+    }
+
+    #[test]
+    fn cal_all_preflight_requires_zero_inside_limits_and_single_turn() {
+        let mut calibration = Calibration::commissioning(JOINT_IDS);
+        for joint in &mut calibration.joints {
+            joint.calibrated = true;
+            joint.min_rad = Some(-std::f64::consts::FRAC_PI_2);
+            joint.max_rad = Some(std::f64::consts::FRAC_PI_2);
+        }
+        assert!(cal_all_preflight(&calibration).is_ok());
+        let mut not_calibrated = calibration.clone();
+        not_calibrated.joints[0].calibrated = false;
+        assert!(cal_all_preflight(&not_calibrated).is_err());
+        let mut excludes_zero = calibration.clone();
+        excludes_zero.joints[0].min_rad = Some(0.1);
+        assert!(cal_all_preflight(&excludes_zero).is_err());
+        let mut crosses_turn = calibration.clone();
+        crosses_turn.joints[0].min_rad = Some(-std::f64::consts::PI);
+        crosses_turn.joints[0].max_rad = Some(std::f64::consts::PI);
+        assert!(cal_all_preflight(&crosses_turn).is_err());
+    }
+
+    #[test]
+    fn calibrate_all_is_a_typed_bus_command() {
+        assert!(matches!(
+            serde_json::from_value::<BusCommand>(json!({"action":"calibrate-all"})).unwrap(),
+            BusCommand::CalibrateAll {}
+        ));
+        assert!(
+            serde_json::from_value::<BusCommand>(
+                json!({"action":"calibrate-all","command":"arbitrary"})
+            )
+            .is_err()
         );
     }
 

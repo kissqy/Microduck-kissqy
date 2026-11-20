@@ -12,7 +12,7 @@ Connect the matching premade power cable to HUB V3 CN1: VIN → pin 2, GND → p
 
 | Battery contact end | Cable routing and rear mounting |
 | --- | --- |
-| ![Battery contacts](../docs/assets/boards/banana-battery-front.jpg) | ![Installed wiring](../docs/assets/boards/banana-battery-rear.jpg) |
+| ![Battery contacts](../docs/assets/boards/banana-battery-front-white.jpg) | ![Installed wiring](../docs/assets/boards/banana-battery-rear-white.jpg) |
 
 [3D assembly](https://kissqy.github.io/Microduck-kissqy/assembly.html?component=hub) · [Shopping list](../DUCK-SHOPPING-LIST.en.md)
 

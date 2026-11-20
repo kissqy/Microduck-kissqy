@@ -12,7 +12,7 @@
 
 | 电池触点端 | 插线与背面安装 |
 | --- | --- |
-| ![Battery contacts](../docs/assets/boards/banana-battery-front.jpg) | ![Installed wiring](../docs/assets/boards/banana-battery-rear.jpg) |
+| ![Battery contacts](../docs/assets/boards/banana-battery-front-white.jpg) | ![Installed wiring](../docs/assets/boards/banana-battery-rear-white.jpg) |
 
 [3D assembly](https://kissqy.github.io/Microduck-kissqy/assembly.html?component=hub) · [Shopping list](../DUCK-SHOPPING-LIST.md)
 

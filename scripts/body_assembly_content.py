@@ -19,6 +19,16 @@ STEPS = [
         "en": ("Secure the battery holder and IMU, then tuck the wiring", "Install the battery holder on the torso and fasten the IMU flat against its locating position on the backplate, in the specified orientation. Tuck spare cable to the sides, clear of the battery slide and latch.", "Secure the board and plugs before tucking spare cable. Keep wiring clear of servos, bearings and moving brackets, and match the IMU orientation in the 3D assembly reference."),
     },
     {
+        "slug": "banana-battery-front-white", "group": "body", "image": "../assets/boards/banana-battery-front-white.jpg",
+        "zh": ("插入香蕉取电板，核对电池触点", "将双香蕉插针插入 NP-F550 电池触点，取电板位于电池仓顶部。新版香蕉取电板 ¥39，白色 AMP2.0 卧式插口留出插线空间。", "图为实拍白底处理，保留实际插针、电池、支架与线束。"),
+        "en": ("Fit the banana board to the battery contacts", "Insert the dual banana contacts into the NP-F550 battery at the top of the holder. The board is ¥39; leave space at its right-angle AMP2.0 socket.", "The original photographed hardware is shown on a cleaned white background."),
+    },
+    {
+        "slug": "banana-battery-rear-white", "group": "body", "landscape": True, "image": "../assets/boards/banana-battery-rear-white.jpg",
+        "zh": ("接好电源线，沿背板收纳余线", "香蕉板的 AMP2.0 配套电源线接入 HUB V3 CN1：VIN 对应 2 脚，GND 对应 3 脚，1 脚 NC 留空。对照背面实拍整理线束。", "全黑线束按信号与实板丝印核对；电源插头的第三位置不接 DATA。余线避开电池卡扣和舵机活动区。"),
+        "en": ("Connect power and tuck cables along the backplate", "Connect the matching power harness to HUB V3 CN1: VIN to pin 2, GND to pin 3, pin 1 NC. Compare the rear view when tucking cables.", "Match actual signals, not wire colors. The third power position is not DATA; keep cable slack clear of the battery latch and joints."),
+    },
+    {
         "slug": "04-legs-body", "group": "legs", "landscape": True,
         "zh": ("两条腿与躯干合装", "两腿分别装好后，与躯干总成连接。对照实拍检查白色连接件、金属支撑板和脚掌朝向，再核对各关节的位置与编号。", "左右以鸭子自身为准：右腿 10–14，左腿 20–24。跨关节的线束保留活动余量，不要拉紧或夹在连接件之间。"),
         "en": ("Join both legs to the torso", "Attach the assembled legs to the torso. Compare the white brackets, metal support plates and foot orientation with the photograph, then check each joint position and ID.", "Left and right refer to the robot itself: right leg 10–14, left leg 20–24. Leave slack across joints, with no cable trapped between brackets."),
@@ -31,7 +41,7 @@ STEPS = [
 ]
 
 GROUPS = {
-    "body": ("body-photos", "HUB、IMU 与电池仓，跟着实拍接好装稳", "先分线，再预接躯干总成，最后固定电池仓与 IMU。照片中的黑线按信号名核对；点击图片可放大查看。", "HUB · IMU · 电池仓"),
+    "body": ("body-photos", "HUB、IMU 与电池仓，跟着实拍接好装稳", "先分线，再预接躯干总成，最后固定电池仓与 IMU，再接入香蕉取电板。照片中的黑线按信号名核对；点击图片可放大查看。", "HUB · IMU · 电池仓"),
     "legs": ("leg-photos", "双腿与躯干合装参考", "对照实拍看脚掌、连接件与躯干的相对位置，配合 3D 视角核对左右方向。", "HD1910 · 双腿 · 躯干"),
     "neck": ("neck-photos", "头颈连接与线束预留", "头部内部装好后，再核对颈部连接件和线束出口，让关节活动时线束有余量。", "头壳 · 颈部支架 · 理线"),
 }
@@ -43,7 +53,7 @@ def render_photo_group(group):
     cards = []
     for number, step in enumerate(selected, 1):
         heading, body, detail = map(escape, step["zh"])
-        image = "../assets/body-assembly/" + step["slug"] + ".jpg"
+        image = step.get("image", "../assets/body-assembly/" + step["slug"] + ".jpg")
         overview = " head-step--overview" if len(selected) == 1 or number == len(selected) else ""
         landscape = " body-step--landscape" if step.get("landscape") else ""
         width, height = (1448, 1086) if step.get("landscape") else (1086, 1448)
@@ -74,7 +84,7 @@ def render_markdown(language):
     ]
     for number, step in enumerate(STEPS, 1):
         title, body, detail = step[language]
-        image = 'assets/body-assembly/' + step['slug'] + '.jpg'
+        image = step['image'].removeprefix('../') if step.get('image') else 'assets/body-assembly/' + step['slug'] + '.jpg'
         width = 680 if step.get('landscape') else 480
         lines += [f'## {number:02d} · {title}', '', body, '', f'<a href="{image}"><img src="{image}" width="{width}" alt="{escape(title, quote=True)}" /></a>', '', detail, '']
     if english:

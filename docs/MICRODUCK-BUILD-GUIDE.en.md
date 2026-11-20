@@ -109,4 +109,4 @@ The new banana power board is **¥39 each**, with a right-angle AMP2.0 connector
 
 | 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
 | --- | --- |
-| ![Battery](assets/boards/banana-battery-front.jpg) | ![Wiring](assets/boards/banana-battery-rear.jpg) |
+| ![Battery](assets/boards/banana-battery-front-white.jpg) | ![Wiring](assets/boards/banana-battery-rear-white.jpg) |

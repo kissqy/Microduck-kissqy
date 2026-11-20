@@ -4,7 +4,7 @@ import * as T from './vendor/three.module.min.js?demo=20261013';
 // The author's arrows select the upward contact holes in the top crossbar:
 // raw X=+/-16.9, Y=31.6 mm; surface Z is approximately 77.5 mm.
 // Viewed straight at the battery label, raw +X is left: GND left, VIN right.
-// Banana contacts enter the battery along raw -Z; the AMP2.0 mouth opens in +Y.
+// Banana contacts enter the battery along raw -Z; the AMP2.0 mouth opens in -Y (toward the holder interior).
 export const BATTERY_PICKUP=Object.freeze({x:[.0169,-.0169],y:.0316,z:.0775});
 export const NPF550=Object.freeze({width:.0384,depth:.0206,length:.0708,
   source:'https://www.sony.com.au/electronics/support/camera-camcorder-accessories-batteries-chargers/np-f550/specifications'});
@@ -21,18 +21,38 @@ function decal(parent,text,width,height,position,rotation){
   const mesh=part(parent,new T.PlaneGeometry(width,height),new T.MeshBasicMaterial({map:texture,side:T.DoubleSide}),'NP-F550-label',position);
   mesh.rotation.set(...rotation);mesh.userData.hubSolid=false;return mesh;
 }
+// NP-F550: Sony envelope + the author's two-cell shell / terminal-side photographs.
+// Independent display reconstruction, not a downloaded manufacturer CAD model.
 export function createBatteryPack(){
-  const group=new T.Group();group.name='NP-F550-battery';group.position.set(0,.0458,.0409);
-  const {width,depth,length}=NPF550,r=.0016,x=width/2,z=length/2,shape=new T.Shape();
-  shape.moveTo(-x+r,-z);shape.lineTo(x-r,-z);shape.quadraticCurveTo(x,-z,x,-z+r);shape.lineTo(x,z-r);shape.quadraticCurveTo(x,z,x-r,z);shape.lineTo(-x+r,z);shape.quadraticCurveTo(-x,z,-x,z-r);shape.lineTo(-x,-z+r);shape.quadraticCurveTo(-x,-z,-x+r,-z);
-  const geometry=new T.ExtrudeGeometry(shape,{depth,bevelEnabled:false,curveSegments:8});geometry.translate(0,0,-depth/2);geometry.rotateX(Math.PI/2);
-  const body=part(group,geometry,material(0x242a2b),'NP-F550-case');
-  const seam=part(group,new T.BoxGeometry(width+.0001,.0003,length-.004),material(0x424a4b),'NP-F550-case-seam',[0,.0072,0]);seam.userData.hubSolid=false;
-  decal(group,'NP-F550',.029,.014,[0,depth/2+.00006,.006],[-Math.PI/2,0,Math.PI]);
-  for(const sign of[-1,1])for(let i=0;i<4;i++){
-    const rib=part(group,new T.BoxGeometry(.0003,.013,.001),material(0x3c4445),'NP-F550-grip',[sign*(x+.00003),0,-.021+i*.004]);rib.userData.hubSolid=false;
+  const group=new T.Group();group.name='NP-F550-battery';group.position.set(0,.0400,.0409);
+  const {width,depth,length}=NPF550,x=width/2,y=depth/2;
+  // Two rounded cell lobes with a real recessed centre valley; rear slide face flat.
+  function outline(){
+    const shape=new T.Shape();
+    shape.moveTo(-x,-y);shape.lineTo(x,-y);shape.lineTo(x,.001);
+    shape.quadraticCurveTo(x,y,x-.0085,y);shape.lineTo(.0016,y);
+    shape.quadraticCurveTo(.0008,y,.00065,y-.0013);shape.lineTo(-.00065,y-.0013);
+    shape.quadraticCurveTo(-.0008,y,-.0016,y);shape.lineTo(-x+.0085,y);
+    shape.quadraticCurveTo(-x,y,-x,.001);shape.closePath();return shape;
   }
-  group.userData.dimensions=NPF550;return{group,body};
+  const black=material(0x202425),body=new T.Group();body.name='NP-F550-case';group.add(body);
+  const lower=new T.ExtrudeGeometry(outline(),{depth:length-.010,bevelEnabled:false,curveSegments:16});lower.translate(0,0,-length/2);
+  part(body,lower,black,'NP-F550-two-cell-shell');
+  const capShape=outline();
+  // Recessed contact sockets, aligned with the banana contacts at raw Y=31.6 mm.
+  for(const px of BATTERY_PICKUP.x){const hole=new T.Path();hole.absarc(px,-.0084,.00145,0,Math.PI*2,false);capShape.holes.push(hole);}
+  const cap=new T.ExtrudeGeometry(capShape,{depth:.010,bevelEnabled:false,curveSegments:16});cap.translate(0,0,length/2-.010);part(body,cap,black,'NP-F550-recessed-terminal-cap');
+  for(const [i,px] of BATTERY_PICKUP.x.entries()){
+    const tube=new T.Mesh(new T.CylinderGeometry(.00135,.00135,.008,24,1,true),material(0xb7a16b,.8));tube.name=i?'NP-F550-positive-socket':'NP-F550-negative-socket';tube.rotation.x=Math.PI/2;tube.position.set(px,-.0084,length/2-.0043);group.add(tube);
+  }
+  // Slide rails on the mounting face, with an interrupted locking shoulder.
+  for(const sign of[-1,1]){
+    part(group,new T.BoxGeometry(.0018,.0012,.046),black,'NP-F550-slide-rail',[sign*.0158,-y+.0006,-.006]);
+    part(group,new T.BoxGeometry(.0026,.0014,.006),black,'NP-F550-lock-shoulder',[sign*.0158,-y+.0007,.021]);
+  }
+  part(group,new T.BoxGeometry(.005,.00035,.003),material(0x101415),'NP-F550-latch-recess',[0,-y-.00003,-.026]);
+  group.userData.dimensions=NPF550;group.userData.reference='Sony NP-F550 specifications and author battery photographs';
+  return{group,body};
 }
 // Rebuilt from the author's front / rear / side photographs. Display model only.
 export const BANANA_BOARD=Object.freeze({width:.03919,depth:.0125,thickness:.001,contactPitch:.0338});
@@ -55,7 +75,7 @@ export function createBatteryPickup(){
     contacts[signal]=stem;
   }
   // Open right-angle 3P AMP housing, with parallel-to-PCB insertion and guide key.
-  const socket=new T.Group();socket.name='banana-AMP2.0-3P-right-angle';socket.position.set(-.004,0,.0015);root.add(socket);
+  const socket=new T.Group();socket.name='banana-AMP2.0-3P-right-angle';socket.position.set(-.004,0,.0015);socket.rotation.z=Math.PI;root.add(socket);
   box(socket,.008,.001,.0042,white,'AMP-rear-wall',[0,-.0025,.0021]);
   box(socket,.008,.005,.0007,white,'AMP-floor',[0,0,.00035]);
   box(socket,.008,.005,.0007,white,'AMP-roof',[0,0,.00385]);

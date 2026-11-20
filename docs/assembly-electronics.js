@@ -4,7 +4,7 @@ import {attachHeadClearance} from './assembly-head-clearance.js?v=20261118-speak
 import {attachPrintExplosion,PRINTED_MESH_NAMES} from './assembly-explosion.js?v=20261104-head-labels';
 import {prepareServoModels,attachServoModel} from './assembly-servo-models.js?v=20261118-servo21-no32-horn';
 import {createHubModel} from './assembly-hub-model.js?v=20261118-amp-inward';
-import {createBatteryPack,createBatteryPickup,BATTERY_PICKUP} from './assembly-battery-model.js?v=20261120-banana';
+import {createBatteryPack,createBatteryPickup,BATTERY_PICKUP} from './assembly-battery-model.js?v=20261120-banana-interior-v2';
 import {loadWireCache,packCable,unpackCable,WIRE_CACHE_REVISION} from './assembly-wire-cache.js?v=20261104-head-orientation';
 import {parallelCablePaths} from './assembly-cable-bundles.js?v=20261030-hub-arcs';
 import {softenCableCorners} from './assembly-wire-curves.js?v=20261030-hub-arcs';
@@ -308,7 +308,9 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
       positions.push(...item.fromPort.outward.getWorldPosition(new T.Vector3()).toArray(),...item.toPort.outward.getWorldPosition(new T.Vector3()).toArray());
       const endpointKey=positions.map(x=>x.toFixed(7)).join(',');
       const saved=cacheState.routes[item.id],cacheHit=!item.header&&saved?.endpoints===endpointKey;
-      const signature=wireRouter.signature+'|'+endpointKey;if(signature===item.last)continue;item.last=signature;
+      const signature=(explosion.expanded?'expanded|':'assembled|')+wireRouter.signature+'|'+endpointKey;if(signature===item.last)continue;
+      if(item.id==='battery-hub'){item.bundlePoints=null;item.conductors.forEach(c=>{c.routePoints=null;});}
+      item.last=signature;
       const starts=item.conductors.map(c=>root.worldToLocal(c.start.getWorldPosition(new T.Vector3())));
       const ends=item.conductors.map(c=>root.worldToLocal(c.end.getWorldPosition(new T.Vector3())));
       const leadsA=item.conductors.map(c=>portLead(item.fromPort,c.start)),leadsB=item.conductors.map(c=>portLead(item.toPort,c.end));
@@ -323,7 +325,16 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
           for(const amount of[.0005,.001,.0015,.002]){const candidate=center.clone().addScaledVector(dir,amount);if(bundleRouter.clearSegment(candidate,candidate)&&wireRouter.clearSegment(center,candidate))return candidate;}
           return center;
         };
-        const a=outsideLead(item.fromPort,leadsA),b=outsideLead(item.toPort,leadsB),shared=bundleRouter.route({start:a,leadA:a,leadB:b,end:b,previous:item.bundlePoints});
+        const a=outsideLead(item.fromPort,leadsA),b=outsideLead(item.toPort,leadsB);
+        let shared;
+        if(item.id==='battery-hub'){
+          // Keep power inside the holder/backplate corridor, clear of the battery's
+          // exposed cell face. The waypoint travels with the holder when exploded.
+          const guide=root.worldToLocal(batteryPort.root.localToWorld(vector(-.004,-.011,.006)));
+          const first=bundleRouter.route({start:a,leadA:a,leadB:guide,end:guide});
+          const second=first&&bundleRouter.route({start:guide,leadA:guide,leadB:b,end:b});
+          if(first&&second){const curve=new T.CurvePath();curve.add(first.curve);curve.add(second.curve);shared={curve,points:[...first.points,...second.points.slice(1)]};}
+        }else shared=bundleRouter.route({start:a,leadA:a,leadB:b,end:b,previous:item.bundlePoints});
         const tryBundle=shared=>{
           if(!shared)return null;
           for(const flat of[false,true]){

@@ -4,8 +4,6 @@
 
 这组实拍补齐 **HUB 四路分线 → 躯干预接线 → 电池仓与 IMU 固定 → 双腿合装 → 头颈连接**。断电后装配，按接口信号与实际安装位核对。
 
-**版本说明：本页保留旧版 HUB 实拍，用于安装位置、分线与理线参考。HUB V3 全部接口统一为 AMP2.0，使用配套成品线束插接。新版香蕉取电板 ¥39／块，采用 AMP2.0 卧式接口；配齐成品板、线束与香蕉板后，可全插接免焊装配。**
-
 [在线查看对应装配章节](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#body-photos) · [头部内部安装五步实拍](HEAD-ASSEMBLY.md) · [3D 装配参考](https://kissqy.github.io/Microduck-kissqy/assembly.html)
 
 ## 01 · 先接好 HUB 四路分线
@@ -32,7 +30,23 @@
 
 板卡与插头固定后再整理余线，避开舵机、轴承和连接件的活动区；IMU 的朝向与 3D 装配说明一致。
 
-## 04 · 两条腿与躯干合装
+## 04 · 插入香蕉取电板，核对电池触点
+
+将双香蕉插针插入 NP-F550 电池触点，取电板位于电池仓顶部。新版香蕉取电板 ¥39，白色 AMP2.0 卧式插口留出插线空间。
+
+<a href="assets/boards/banana-battery-front-white.jpg"><img src="assets/boards/banana-battery-front-white.jpg" width="480" alt="插入香蕉取电板，核对电池触点" /></a>
+
+图为实拍白底处理，保留实际插针、电池、支架与线束。
+
+## 05 · 接好电源线，沿背板收纳余线
+
+香蕉板的 AMP2.0 配套电源线接入 HUB V3 CN1：VIN 对应 2 脚，GND 对应 3 脚，1 脚 NC 留空。对照背面实拍整理线束。
+
+<a href="assets/boards/banana-battery-rear-white.jpg"><img src="assets/boards/banana-battery-rear-white.jpg" width="680" alt="接好电源线，沿背板收纳余线" /></a>
+
+全黑线束按信号与实板丝印核对；电源插头的第三位置不接 DATA。余线避开电池卡扣和舵机活动区。
+
+## 06 · 两条腿与躯干合装
 
 两腿分别装好后，与躯干总成连接。对照实拍检查白色连接件、金属支撑板和脚掌朝向，再核对各关节的位置与编号。
 
@@ -40,7 +54,7 @@
 
 左右以鸭子自身为准：右腿 10–14，左腿 20–24。跨关节的线束保留活动余量，不要拉紧或夹在连接件之间。
 
-## 05 · 连接头部与颈部，预留线束活动量
+## 07 · 连接头部与颈部，预留线束活动量
 
 将头壳与白色颈部支架连接，核对连接件、轴承和螺丝位置。黑色总线线束从支架侧面引出，给转头和俯仰保留自然弯曲的余量。
 
@@ -57,16 +71,6 @@
 | 左腿 | HUB → 20 → 21 → 22 → 23 → 24 |
 | IMU | HUB → IMU 总线端子 J1 |
 
-照片中旧版 HUB 的四个总线口电气共网，不把照片中的端口位置规定为固定支路。全黑线束按 GND、电源、DATA 信号核对，不按线色判断。
+HUB 四个总线口电气共网，不把照片中的端口位置规定为固定支路。全黑线束按 GND、电源、DATA 信号核对，不按线色判断。
 
 [HUB 硬件与取电说明](../hardware/README.md) · [返回复刻总教程](MICRODUCK-BUILD-GUIDE.md)
-
-## 新版香蕉取电板 · ¥39
-
-新版香蕉取电板 **¥39／块**，AMP2.0 卧式接口，配套成品线直插 HUB V3，免焊装配。
-
-[接线 / Wiring](../hardware/BANANA-POWER.md)
-
-| 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
-| --- | --- |
-| ![Battery](assets/boards/banana-battery-front.jpg) | ![Wiring](assets/boards/banana-battery-rear.jpg) |

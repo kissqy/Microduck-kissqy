@@ -1,0 +1,10 @@
+{
+  "model": "NP-F550",
+  "type": "independent display reconstruction",
+  "dimensions_mm": [38.4, 20.6, 70.8],
+  "dimensions_source": "https://www.sony.com.au/electronics/support/camera-camcorder-accessories-batteries-chargers/np-f550/specifications",
+  "reference_cad_listing": "https://grabcad.com/library/sony-np-f550-battery-1",
+  "reference_note": "Mishu Mc's measured Patona NP-F550 listing was located, but its STEP download requires login; no third-party CAD was copied or redistributed.",
+  "shape_basis": "Author front/rear battery photos: two rounded cell lobes, central valley, slide/lock face and recessed terminals.",
+  "placement": "Holder raw frame in metres: centre [0, 0.0400, 0.0409], contact axes x=+/-0.0169, y=0.0316."
+}

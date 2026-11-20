@@ -107,4 +107,4 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 
 | 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
 | --- | --- |
-| ![Battery](assets/boards/banana-battery-front.jpg) | ![Wiring](assets/boards/banana-battery-rear.jpg) |
+| ![Battery](assets/boards/banana-battery-front-white.jpg) | ![Wiring](assets/boards/banana-battery-rear-white.jpg) |

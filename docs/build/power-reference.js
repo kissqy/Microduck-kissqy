@@ -11,8 +11,8 @@ if(triggers.length){
    <button type="button" class="power-reference-close" aria-label="关闭取电图片" autofocus>×</button>
   </header>
   <div class="power-reference-body">
-   <a class="power-reference-photo" href="../assets/boards/banana-battery-front.jpg" target="_blank" rel="noopener" aria-label="查看香蕉板接好电池的实拍原图">
-    <img src="../assets/boards/banana-battery-front.jpg" alt="新版香蕉取电板插入电池触点的实拍" width="864" height="1536" loading="lazy">
+   <a class="power-reference-photo" href="../assets/boards/banana-battery-front-white.jpg" target="_blank" rel="noopener" aria-label="查看香蕉板接好电池的实拍原图">
+    <img src="../assets/boards/banana-battery-front-white.jpg" alt="新版香蕉取电板插入电池触点的实拍" width="864" height="1536" loading="lazy">
    </a>
    <div class="power-reference-copy" id="power-reference-copy">
     <p><strong>HUB V3 全部接口均为 AMP2.0。</strong>香蕉取电板也采用 AMP2.0，搭配匹配的成品线即可直插免焊。</p>

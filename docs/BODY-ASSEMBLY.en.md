@@ -4,8 +4,6 @@
 
 These photos cover the four-way HUB harness, torso prewiring, battery-holder and IMU mounting, the leg/torso assembly and the head/neck connection. Assemble with power disconnected. Follow the connector signals and the actual mounting positions.
 
-**Version note: these photos retain the legacy HUB for mounting, branching and cable-routing reference. All HUB V3 connectors use AMP2.0 and matching premade cables. The matching banana power board also uses AMP2.0; the new board is ¥39 each, with a right-angle connector. With the assembled boards, cables and banana board in hand, assembly can use plug-in connections without soldering.**
-
 [Web assembly guide (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#body-photos) · [Inside the head](HEAD-ASSEMBLY.en.md) · [3D reference](https://kissqy.github.io/Microduck-kissqy/assembly.html)
 
 ## 01 · Prepare the four HUB branches
@@ -32,7 +30,23 @@ Install the battery holder on the torso and fasten the IMU flat against its loca
 
 Secure the board and plugs before tucking spare cable. Keep wiring clear of servos, bearings and moving brackets, and match the IMU orientation in the 3D assembly reference.
 
-## 04 · Join both legs to the torso
+## 04 · Fit the banana board to the battery contacts
+
+Insert the dual banana contacts into the NP-F550 battery at the top of the holder. The board is ¥39; leave space at its right-angle AMP2.0 socket.
+
+<a href="assets/boards/banana-battery-front-white.jpg"><img src="assets/boards/banana-battery-front-white.jpg" width="480" alt="Fit the banana board to the battery contacts" /></a>
+
+The original photographed hardware is shown on a cleaned white background.
+
+## 05 · Connect power and tuck cables along the backplate
+
+Connect the matching power harness to HUB V3 CN1: VIN to pin 2, GND to pin 3, pin 1 NC. Compare the rear view when tucking cables.
+
+<a href="assets/boards/banana-battery-rear-white.jpg"><img src="assets/boards/banana-battery-rear-white.jpg" width="680" alt="Connect power and tuck cables along the backplate" /></a>
+
+Match actual signals, not wire colors. The third power position is not DATA; keep cable slack clear of the battery latch and joints.
+
+## 06 · Join both legs to the torso
 
 Attach the assembled legs to the torso. Compare the white brackets, metal support plates and foot orientation with the photograph, then check each joint position and ID.
 
@@ -40,7 +54,7 @@ Attach the assembled legs to the torso. Compare the white brackets, metal suppor
 
 Left and right refer to the robot itself: right leg 10–14, left leg 20–24. Leave slack across joints, with no cable trapped between brackets.
 
-## 05 · Connect the head and neck, leaving cable slack
+## 07 · Connect the head and neck, leaving cable slack
 
 Join the head shell to the white neck bracket, checking the bracket, bearing and fastener positions. Route the black bus harness along the side with a relaxed bend for head rotation and pitch movement.
 
@@ -57,16 +71,6 @@ Do not trap spare cable between the head-shell opening and the bracket. This pho
 | Left leg | HUB → 20 → 21 → 22 → 23 → 24 |
 | IMU | HUB → IMU bus connector J1 |
 
-The four bus ports of the legacy HUB pictured here share their nets. Port-to-branch positions in a photo are not mandatory. With an all-black harness, check GND, power and DATA by connector signals rather than wire color.
+The four HUB bus ports share their nets. Port-to-branch positions in a photo are not mandatory. With an all-black harness, check GND, power and DATA by connector signals rather than wire color.
 
 [HUB hardware and power connections](../hardware/README.en.md) · [Full build guide](MICRODUCK-BUILD-GUIDE.en.md)
-
-## New banana power board · ¥39
-
-The new banana power board is **¥39 each**, with a right-angle AMP2.0 connector and a matching premade cable to HUB V3 for solder-free assembly.
-
-[接线 / Wiring](../hardware/BANANA-POWER.en.md)
-
-| 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
-| --- | --- |
-| ![Battery](assets/boards/banana-battery-front.jpg) | ![Wiring](assets/boards/banana-battery-rear.jpg) |

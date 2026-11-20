@@ -43,4 +43,4 @@ nmcli -f IN-USE,SSID,FREQ,SIGNAL device wifi list
 
 | 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
 | --- | --- |
-| ![Battery](assets/boards/banana-battery-front.jpg) | ![Wiring](assets/boards/banana-battery-rear.jpg) |
+| ![Battery](assets/boards/banana-battery-front-white.jpg) | ![Wiring](assets/boards/banana-battery-rear-white.jpg) |

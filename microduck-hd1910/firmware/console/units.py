@@ -6,10 +6,9 @@ controller (which units may have their autostart changed). Keeping it here
 means a unit name sent by a browser can be checked against a constant instead
 of being passed to systemctl.
 
-Autostart is deliberately the only thing the page may change. Starting or
-stopping a unit is not offered: `systemctl stop robotd` does not release
-torque, so a web page that could stop it could also freeze the robot in
-place, and "restart the firmware" already exists for the case that needs it.
+Unit control is limited to this catalogue. Stopping `robotd` does not release
+torque; its stop path has an additional live-state interlock in
+`service_control.py`.
 """
 
 # hardware ids -> operator-facing name and what a "present" reading means
@@ -49,6 +48,20 @@ AUTOSTART_UNITS = frozenset(row["unit"] for row in UNITS if row["autostart"])
 # a unit can be safe to enable and still be the wrong thing to poke at.
 PROBE_UNITS = frozenset({"tofd.service"})
 
+# One-shot mixer initialization has no meaningful stop operation. All other
+# entries are continuous services; robotd stop is separately interlocked.
+MANUAL_OPERATIONS = {
+    "robotd.service": frozenset({"start", "stop"}),
+    "padd.service": frozenset({"start", "stop"}),
+    "gamesir-xboxd.service": frozenset({"start", "stop"}),
+    "mediad.service": frozenset({"start", "stop"}),
+    "tofd.service": frozenset({"start", "stop"}),
+    "aic3104-init.service": frozenset({"start"}),
+    "bluetooth.service": frozenset({"start", "stop"}),
+}
+MANUAL_UNITS = frozenset(MANUAL_OPERATIONS)
+ONESHOT_UNITS = frozenset({"aic3104-init.service"})
+
 # UnitFileState values where `systemctl enable` succeeds as asked. `masked`
 # needs an unmask first; `not-found`/`static` cannot be changed at all.
 ENABLE_STATES = frozenset({"disabled", "enabled", "linked", "linked-runtime", "indirect", "generated"})
@@ -64,15 +77,42 @@ def label(unit):
 
 
 def unit_meta():
-    """The page's copy of the catalogue: labels, hardware and what may change."""
+    """The page's copy of labels, hardware and permitted service actions."""
     return [{"unit": row["unit"], "label": row["label"], "note": row["note"],
-             "hardware": list(row["hardware"]), "autostart": row["autostart"]}
+             "hardware": list(row["hardware"]), "autostart": row["autostart"],
+             "manual_actions": sorted(MANUAL_OPERATIONS.get(row["unit"], ()))}
             for row in UNITS]
 
 
 def hardware_meta():
     return [{"id": key, "label": value["label"], "detail": value["detail"]}
             for key, value in HARDWARE.items()]
+
+
+def manual_action_plan(unit, operation, load_state, unit_file_state, active_state, installed=True):
+    """Return a fixed systemctl action, or a reason it cannot safely run."""
+    allowed = MANUAL_OPERATIONS.get(unit)
+    if allowed is None or operation not in allowed:
+        return (), "该服务不支持此手动操作"
+    if not installed or load_state == "not-found":
+        return (), "本机未安装 %s" % unit
+    if operation == "start":
+        if load_state == "masked" or unit_file_state == "masked":
+            return (), "%s 已屏蔽；先取消屏蔽或启用开机自启" % unit
+        if active_state in {"activating", "deactivating", "reloading"}:
+            return (), "%s 正在变更状态，请等待完成" % unit
+        if active_state == "active":
+            return (), "already-active"
+        if active_state not in {"inactive", "failed"}:
+            return (), "%s 当前状态未知，拒绝启动" % unit
+        return (["start", "--", unit], "")
+    if active_state in {"activating", "deactivating", "reloading"}:
+        return (), "%s 正在变更状态，请等待完成" % unit
+    if active_state == "inactive":
+        return (), "already-inactive"
+    if active_state not in {"active", "failed"}:
+        return (), "%s 当前状态未知，拒绝停止" % unit
+    return (["stop", "--", unit], "")
 
 
 def autostart_plan(unit, enabled, unit_file_state, installed=True):

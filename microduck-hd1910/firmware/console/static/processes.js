@@ -94,6 +94,39 @@ export function autostartReason(row,meta){
   return '';
 }
 
+export function robotdStopReason(snapshot){
+  const report=snapshot?.bus||{};
+  if(snapshot?.service_sample_fresh!==true)return '需要 robotd 的新鲜反馈';
+  if(report.motion||report.power_pending||report.torque_off_pending)return 'robotd 正在移动或处于停止/电源过渡状态';
+  if(report.mode==='commissioning')
+    return report.phase==='ready'&&report.torque_state==='off'?'':'需要标定模式就绪且扭矩确认 OFF';
+  if(report.mode==='motion'){
+    const native=report.native||{},hd1910=native.hd1910||{};
+    return report.phase==='control'&&report.fresh_sample===true&&report.policy_enabled===false
+      &&native.torque_state_confirmed===false&&hd1910.restore_pending!==true
+      &&hd1910.temporary_gains_applied!==true?'':'需要策略关闭、反馈新鲜且扭矩确认 OFF';
+  }
+  return 'robotd 状态未知，不能安全停止';
+}
+
+export function manualActionReason(row,meta,operation,snapshot,busy=false){
+  if(!meta?.manual_actions?.includes(operation))return '该服务不支持此手动操作';
+  if(!row)return '等待服务状态';
+  if(row.installed===false||row.load==='not-found')return '本机未安装 '+meta.unit;
+  if(operation==='start'&&(row.load==='masked'||row.enabled==='masked'))return '服务已屏蔽，不能启动';
+  if(busy)return '另一个服务操作正在执行';
+  if(['activating','deactivating','reloading'].includes(row.active))return '服务正在变更状态';
+  if(operation==='start'&&row.active==='active')return '服务已经运行';
+  if(operation==='stop'&&row.active==='inactive')return '服务已经停止';
+  if(meta.unit==='robotd.service'&&operation==='stop')return robotdStopReason(snapshot);
+  return '';
+}
+
+export function manualActionCommand(row,meta,operation,snapshot,busy=false){
+  if(manualActionReason(row,meta,operation,snapshot,busy))return null;
+  return {action:'unit-control',unit:meta.unit,operation,supported:true};
+}
+
 export function summary(rows){
   if(!rows.length)return '';
   const total=rows.length;
@@ -118,7 +151,8 @@ export class ProcessPanel{
     this.$=id=>document.getElementById(id);
     this.$('process-list').addEventListener('click',e=>{
       const button=e.target.closest('button[data-unit]');
-      if(button)this.toggle(button.dataset.unit,button.dataset.enabled==='true');
+      if(button?.dataset.operation)this.control(button.dataset.unit,button.dataset.operation);
+      else if(button)this.toggle(button.dataset.unit,button.dataset.enabled==='true');
     });
   }
 
@@ -156,6 +190,18 @@ export class ProcessPanel{
     this.post({action:'unit-autostart',unit,enabled,supported:true});
   }
 
+  control(unit,operation){
+    const row=this.rows.find(item=>item.unit===unit),meta=this.meta.get(unit);
+    const command=manualActionCommand(row,meta,operation,this.s,this.controlBusy);
+    if(!command)return this.feedback(manualActionReason(row,meta,operation,this.s,this.controlBusy)||'服务操作不可用','warning');
+    const label=meta.label||unit;
+    const warning=unit==='robotd.service'&&operation==='stop'
+      ?'停止 robotd 不会卸力；系统已核验策略关闭和扭矩 OFF。仍要停止运动控制服务吗？'
+      :`${operation==='start'?'启动':'停止'}${label}服务？`;
+    if(!confirm(warning))return;
+    this.post(command);
+  }
+
   feedback(message,tone){
     const el=this.$('process-feedback');if(!el)return;
     el.textContent=message;el.className='panel-note service-job '+(tone||'');
@@ -179,6 +225,7 @@ export class ProcessPanel{
     const live=servos.filter(row=>row.status==='live').length;
     this.servoCount=servos.length?live:null;
     this.tofStreaming=s?.channels?.tof?.status==='live';
+    this.controlBusy=!!s?.service_control?.busy||s?.service_control?.job?.status==='running';
     this.paint();
     this.watchJob(s);
   }
@@ -188,7 +235,7 @@ export class ProcessPanel{
   watchJob(s){
     const job=s?.service_control?.job;
     if(!job||this.baseJobAt===undefined)return;
-    if(!['unit-autostart','tof-probe'].includes(job.action))return;
+    if(!['unit-autostart','unit-control','tof-probe'].includes(job.action))return;
     // Only a job newer than the one already on screen belongs to this click.
     if(job.at<=this.baseJobAt)return;
     if(job.status==='running'||job.at===this.shownJobAt)return;
@@ -249,16 +296,22 @@ export class ProcessPanel{
     const badges=el('div','process-badges'),state=el('span','badge'),boot=el('span','badge');
     badges.append(state,boot);
     const hardware=el('div','process-hardware'),detail=el('div','process-detail'),actions=el('div','process-actions');
-    const toggle=el('button','button'),probe=el('button','button');
+    const start=el('button','button'),stop=el('button','button'),toggle=el('button','button'),probe=el('button','button');
+    start.type='button';start.textContent='启动';start.dataset.operation='start';
+    stop.type='button';stop.textContent='停止';stop.dataset.operation='stop';
+    start.onclick=()=>this.control(row.unit,'start');
+    stop.onclick=()=>this.control(row.unit,'stop');
     probe.type='button';probe.textContent='探测 0x29';
     probe.title='用 i2cdetect -y -r 3 读一次 I²C3';
     probe.onclick=()=>this.post({action:'tof-probe',supported:true});
     toggle.type='button';
     toggle.onclick=()=>{if(toggle.dataset.unit)this.toggle(toggle.dataset.unit,toggle.dataset.enabled!=='false');};
     if(meta.autostart)toggle.dataset.unit=row.unit;
+    if(meta.manual_actions?.includes('start'))actions.append(start);
+    if(meta.manual_actions?.includes('stop'))actions.append(stop);
     actions.append(toggle,probe);
     row_.append(name,badges,hardware,detail,actions);
-    return {row:row_,dot,strong,state,boot,hardware,detail,toggle,probe};
+    return {row:row_,dot,strong,state,boot,hardware,detail,start,stop,toggle,probe};
   }
 
   updateRow(node,row,meta){
@@ -280,6 +333,12 @@ export class ProcessPanel{
     node.detail.textContent=[finite(row.pid)?`PID ${row.pid}`:null,`内存 ${memoryText(row.memory)}`,
       finite(row.restarts)&&row.restarts>0?`重启 ${row.restarts} 次`:null,
       row.executable_present===false?'可执行文件缺失':null].filter(Boolean).join(' · ');
+    for(const [operation,button] of [['start',node.start],['stop',node.stop]]){
+      if(!button)continue;
+      const reason=manualActionReason(row,meta,operation,this.s,this.controlBusy||this.posting||this.offline);
+      button.disabled=!!reason;
+      button.title=reason||`${operation==='start'?'启动':'停止'}${meta.label||row.unit}`;
+    }
     const command=this.posting||this.offline?null:autostartCommand(row,meta,row.enabled!=='enabled');
     const reason=this.posting?'正在提交…':this.offline?'回放或离线时不修改服务':autostartReason(row,meta);
     node.toggle.disabled=!command;

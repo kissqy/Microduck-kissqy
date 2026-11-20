@@ -1,10 +1,10 @@
 // Service rows: state labels, hardware chips, and when the autostart button may
 // be shown. Pure functions only — the panel's DOM half is exercised by the page.
 import assert from 'node:assert/strict';
-import {unitState,autostartState,hardwareChip,servoChip,tofChip,memoryText,autostartCommand,autostartLabel,autostartReason,summary} from '../static/processes.js';
+import {unitState,autostartState,hardwareChip,servoChip,tofChip,memoryText,autostartCommand,autostartLabel,autostartReason,manualActionCommand,manualActionReason,robotdStopReason,summary} from '../static/processes.js';
 
-const META={unit:'mediad.service',label:'摄像头服务',hardware:['camera'],autostart:true};
-const READONLY={unit:'robotd.service',label:'运动控制守护',hardware:['servo_bus','servos'],autostart:false};
+const META={unit:'mediad.service',label:'摄像头服务',hardware:['camera'],autostart:true,manual_actions:['start','stop']};
+const READONLY={unit:'robotd.service',label:'运动控制守护',hardware:['servo_bus','servos'],autostart:false,manual_actions:['start','stop']};
 const HW={camera:{label:'IMX219 摄像头',detail:'V4L2 采集节点'}};
 
 // Run state: a failed unit is not merely "not active", and a unit that was never
@@ -75,6 +75,29 @@ assert.equal(autostartReason({},READONLY),'该服务只能查看，不能从中�
 assert.equal(autostartReason({load:'not-found'},META),'本机未安装 mediad.service');
 assert.equal(autostartReason({load:'loaded',enabled:'static'},META),'内建 unit，不能改自启');
 assert.equal(autostartReason({load:'loaded',enabled:'enabled'},META),'');
+
+// Manual service actions are a separate allowlist from boot policy. robotd can
+// start normally, but stop requires fresh evidence that all torque is already off.
+const commissioning={service_sample_fresh:true,bus:{mode:'commissioning',phase:'ready',torque_state:'off'}};
+assert.deepEqual(manualActionCommand({load:'loaded',installed:true,active:'inactive'},META,'start',commissioning),
+  {action:'unit-control',unit:'mediad.service',operation:'start',supported:true});
+assert.deepEqual(manualActionCommand({load:'loaded',installed:true,active:'active'},META,'stop',commissioning),
+  {action:'unit-control',unit:'mediad.service',operation:'stop',supported:true});
+assert.equal(manualActionCommand({load:'masked',enabled:'masked',active:'inactive'},META,'start',commissioning),null);
+assert.equal(manualActionCommand({load:'not-found',installed:false,active:'inactive'},META,'start',commissioning),null);
+assert.equal(manualActionCommand({load:'loaded',active:'active'},META,'stop',commissioning,true),null);
+assert.equal(manualActionCommand({load:'loaded',active:'active'},READONLY,'stop',
+  {service_sample_fresh:true,bus:{mode:'commissioning',phase:'ready',torque_state:'single_joint_enabled'}}),null);
+assert.match(robotdStopReason({service_sample_fresh:false,bus:{}}),/新鲜反馈/);
+assert.deepEqual(manualActionCommand({load:'loaded',active:'inactive'},READONLY,'start',{}),
+  {action:'unit-control',unit:'robotd.service',operation:'start',supported:true});
+assert.equal(manualActionCommand({load:'loaded',active:'inactive'},
+  {unit:'aic3104-init.service',manual_actions:['start']},'stop',commissioning),null);
+const safeMotion={service_sample_fresh:true,bus:{mode:'motion',phase:'control',fresh_sample:true,
+  policy_enabled:false,torque_off_pending:false,native:{torque_state_confirmed:false,
+    hd1910:{restore_pending:false,temporary_gains_applied:false}}}};
+assert.equal(robotdStopReason(safeMotion),'');
+assert.notEqual(robotdStopReason({...safeMotion,bus:{...safeMotion.bus,policy_enabled:true}}),'');
 
 assert.equal(summary([{active:'active',enabled:'enabled',load:'loaded'},
                       {active:'inactive',enabled:'masked',load:'masked'},

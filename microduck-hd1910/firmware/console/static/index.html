@@ -100,7 +100,7 @@
         <div class="process-list" id="process-list"><p class="tiny muted">等待 Zero 上的 systemd 状态（每 2 秒一次；若中控刚重启，请刷新页面）。</p></div>
         <p id="process-error" class="tiny red" hidden></p>
         <div id="process-feedback" class="panel-note service-job" role="status" aria-live="polite"></div>
-        <div class="panel-note">只修改「开机自启」，不提供启动 / 停止 / 重启：停 robotd 不会自动卸力。需要重启固件请用上方「重启固件」。</div>
+        <div class="panel-note">可手动启停目录列出的服务并单独管理开机自启。停止 robotd 不会卸力；只有在新鲜反馈、策略关闭且扭矩确认 OFF 时才允许停止。codec 初始化是一次性服务，只提供启动。</div>
       </section>
       <section class="panel sound-panel" id="sound-panel">
         <div class="panel-head"><div><span class="section-index">10</span><h2>声音测试</h2><span id="sound-volume" class="muted tiny">音量未回读</span></div><span class="badge neutral">robot.sound</span></div>

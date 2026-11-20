@@ -287,6 +287,40 @@ class AutostartPlanTests(unittest.TestCase):
         self.assertIn("内建", units.autostart_plan("mediad.service", True, "static")[1])
 
 
+class ManualActionPlanTests(unittest.TestCase):
+    def test_continuous_service_can_start_and_stop(self):
+        self.assertEqual(units.manual_action_plan(
+            "mediad.service", "start", "loaded", "disabled", "inactive"),
+            (["start", "--", "mediad.service"], ""))
+        self.assertEqual(units.manual_action_plan(
+            "mediad.service", "stop", "loaded", "enabled", "active"),
+            (["stop", "--", "mediad.service"], ""))
+
+    def test_masked_or_missing_services_do_not_start(self):
+        self.assertIn("屏蔽", units.manual_action_plan(
+            "tofd.service", "start", "masked", "masked", "inactive")[1])
+        self.assertIn("未安装", units.manual_action_plan(
+            "tofd.service", "start", "not-found", "", "inactive", installed=False)[1])
+
+    def test_repeated_and_in_flight_actions_are_not_issued(self):
+        self.assertEqual(units.manual_action_plan(
+            "padd.service", "start", "loaded", "enabled", "active"), ((), "already-active"))
+        self.assertEqual(units.manual_action_plan(
+            "padd.service", "stop", "loaded", "enabled", "inactive"), ((), "already-inactive"))
+        self.assertIn("正在变更", units.manual_action_plan(
+            "padd.service", "stop", "loaded", "enabled", "deactivating")[1])
+
+    def test_oneshot_codec_has_no_stop_action(self):
+        commands, reason = units.manual_action_plan(
+            "aic3104-init.service", "stop", "loaded", "enabled", "active")
+        self.assertEqual(commands, ())
+        self.assertIn("不支持", reason)
+
+    def test_unknown_units_are_never_actionable(self):
+        self.assertEqual(units.manual_action_plan(
+            "sshd.service", "stop", "loaded", "enabled", "active")[0], ())
+
+
 class ValidationTests(unittest.TestCase):
     def command(self, **fields):
         return validate({**fields, "supported": True})
@@ -294,6 +328,21 @@ class ValidationTests(unittest.TestCase):
     def test_accepts_a_listed_unit(self):
         self.assertEqual(self.command(action="unit-autostart", unit="mediad.service", enabled=False)["unit"],
                          "mediad.service")
+
+    def test_accepts_only_listed_manual_service_operations(self):
+        command = self.command(action="unit-control", unit="mediad.service", operation="stop")
+        self.assertEqual(command["operation"], "stop")
+        with self.assertRaises(ControlError):
+            self.command(action="unit-control", unit="sshd.service", operation="start")
+        with self.assertRaises(ControlError):
+            self.command(action="unit-control", unit="aic3104-init.service", operation="stop")
+        with self.assertRaises(ControlError):
+            self.command(action="unit-control", unit="mediad.service", operation="restart")
+
+    def test_manual_control_requires_explicit_confirmation(self):
+        with self.assertRaises(ControlError):
+            validate({"action": "unit-control", "unit": "mediad.service",
+                      "operation": "start"})
 
     def test_rejects_a_unit_outside_the_catalogue(self):
         with self.assertRaises(ControlError) as caught:
@@ -366,13 +415,82 @@ class FakeTransport:
         return {"accepted": True, "unit": unit, "enabled": enabled,
                 "message": "%s 已改" % unit}
 
+    def control_unit(self, unit, operation, password=None):
+        self.calls.append(("unit-control", unit, operation, password))
+        return {"accepted": True, "unit": unit, "operation": operation,
+                "message": "%s 已%s" % (unit, "启动" if operation == "start" else "停止")}
+
     def tof_probe(self, password=None):
         self.calls.append(("tof-probe", password))
         return {"accepted": True, "found": ["29"], "message": "I²C3 上发现 0x29"}
 
 
+class UnitControlTransportTests(unittest.TestCase):
+    def transport(self, before, after):
+        from service_control import ServiceTransport
+        transport = object.__new__(ServiceTransport)
+        states = iter((before, after))
+        transport.unit_runtime_state = lambda unit, password=None: next(states)
+        transport.unit_installed = lambda unit, password=None: True
+        calls = []
+        transport._manage = lambda command, password=None, **kwargs: calls.append(command)
+        return transport, calls
+
+    def test_systemctl_property_options_precede_the_unit_separator(self):
+        from service_control import ServiceTransport
+        transport = object.__new__(ServiceTransport)
+        calls = []
+
+        def manage(command, *args, **kwargs):
+            calls.append(command)
+            return {"message": "LoadState=loaded\nActiveState=inactive\nUnitFileState=disabled\n"}
+
+        transport._manage = manage
+        state = transport.unit_runtime_state("mediad.service")
+        self.assertEqual(state["LoadState"], "loaded")
+        self.assertLess(calls[0].index("-p"), calls[0].index("--"))
+        self.assertEqual(calls[0][-1], "mediad.service")
+
+        self.assertEqual(transport.unit_state("mediad.service"), "disabled")
+        self.assertLess(calls[1].index("-p"), calls[1].index("--"))
+        self.assertEqual(calls[1][-1], "mediad.service")
+
+    def test_start_and_stop_are_read_back(self):
+        inactive = {"LoadState": "loaded", "UnitFileState": "enabled", "ActiveState": "inactive"}
+        active = {**inactive, "ActiveState": "active"}
+        transport, calls = self.transport(inactive, active)
+        result = transport.control_unit("mediad.service", "start")
+        self.assertTrue(result["accepted"])
+        self.assertEqual(calls, [["/bin/systemctl", "start", "--", "mediad.service"]])
+
+        transport, calls = self.transport(active, inactive)
+        result = transport.control_unit("mediad.service", "stop")
+        self.assertTrue(result["accepted"])
+        self.assertEqual(calls, [["/bin/systemctl", "stop", "--", "mediad.service"]])
+
+    def test_masked_start_and_bad_readback_are_not_reported_as_success(self):
+        masked = {"LoadState": "masked", "UnitFileState": "masked", "ActiveState": "inactive"}
+        transport, calls = self.transport(masked, masked)
+        with self.assertRaises(ControlError):
+            transport.control_unit("tofd.service", "start")
+        self.assertEqual(calls, [])
+
+        inactive = {"LoadState": "loaded", "UnitFileState": "disabled", "ActiveState": "inactive"}
+        transport, _ = self.transport(inactive, inactive)
+        with self.assertRaises(ControlError):
+            transport.control_unit("mediad.service", "start")
+
+    def test_oneshot_start_uses_exit_status_instead_of_active_state(self):
+        inactive = {"LoadState": "loaded", "UnitFileState": "enabled", "ActiveState": "inactive"}
+        exited = {**inactive, "SubState": "dead", "Result": "success", "ExecMainStatus": "0"}
+        transport, calls = self.transport(inactive, exited)
+        self.assertTrue(transport.control_unit("aic3104-init.service", "start")["accepted"])
+        self.assertEqual(calls, [["/bin/systemctl", "start", "--", "aic3104-init.service"]])
+
+
 def controller_store(tofd_active="inactive"):
-    return {"bus": {"mode": "commissioning", "phase": "ready", "torque_state": "off"},
+    return {"bus": {"mode": "commissioning", "phase": "ready", "torque_state": "off",
+                     "motion": None, "power_pending": False, "torque_off_pending": None},
             "servos": [], "service_sample_fresh": True, "service_compatible": True,
             # The units channel, not `system`: in --feetech mode `system` is
             # robotd's telemetry and carries no unit rows.
@@ -410,6 +528,54 @@ class ControllerTests(unittest.TestCase):
         job = self.wait(controller)
         self.assertEqual(job["status"], "completed", job)
         self.assertEqual(transport.calls, [("mediad.service", True, None)])
+
+    def test_manual_start_runs_with_robotd_down(self):
+        store, transport, controller = self.controller()
+        store.data["service_sample_fresh"] = False
+        store.data["bus"] = {}
+        self.send(controller, {"action": "unit-control", "unit": "mediad.service",
+                               "operation": "start", "supported": True})
+        job = self.wait(controller)
+        self.assertEqual(job["status"], "completed", job)
+        self.assertEqual(transport.calls, [("unit-control", "mediad.service", "start", None)])
+
+    def test_robotd_stop_refuses_any_unconfirmed_or_busy_state(self):
+        unsafe = (
+            lambda s: s.update(service_sample_fresh=False),
+            lambda s: s["bus"].update(phase="moving"),
+            lambda s: s["bus"].update(torque_state="single_joint_enabled"),
+            lambda s: s["bus"].update(motion={"action": "move"}),
+        )
+        for mutate in unsafe:
+            store, transport, controller = self.controller()
+            mutate(store.data)
+            with self.subTest(data=store.data), self.assertRaises(ControlError):
+                self.send(controller, {"action": "unit-control", "unit": "robotd.service",
+                                       "operation": "stop", "supported": True})
+            self.assertEqual(transport.calls, [])
+
+    def test_robotd_stop_is_allowed_only_after_policy_and_torque_are_off(self):
+        store, transport, controller = self.controller()
+        store.data["bus"] = {"mode": "motion", "phase": "control", "fresh_sample": True,
+                             "policy_enabled": False, "torque_off_pending": False,
+                             "native": {"torque_state_confirmed": False,
+                                        "hd1910": {"restore_pending": False,
+                                                   "temporary_gains_applied": False}}}
+        self.send(controller, {"action": "unit-control", "unit": "robotd.service",
+                               "operation": "stop", "supported": True})
+        job = self.wait(controller)
+        self.assertEqual(job["status"], "completed", job)
+        self.assertEqual(transport.calls, [("unit-control", "robotd.service", "stop", None)])
+
+    def test_policy_enabled_robotd_cannot_be_stopped_even_with_torque_off(self):
+        store, transport, controller = self.controller()
+        store.data["bus"] = {"mode": "motion", "phase": "control", "fresh_sample": True,
+                             "policy_enabled": True, "torque_off_pending": False,
+                             "native": {"torque_state_confirmed": False}}
+        with self.assertRaises(ControlError):
+            self.send(controller, {"action": "unit-control", "unit": "robotd.service",
+                                   "operation": "stop", "supported": True})
+        self.assertEqual(transport.calls, [])
 
     def test_robotd_cannot_be_toggled_through_the_api(self):
         store, transport, controller = self.controller()

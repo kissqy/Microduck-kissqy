@@ -70,6 +70,10 @@ These settings came from the user's `duck-10e4` assembly. On a fresh ZERO withou
 
 The live feedback direction column reads saved local calibration; missing data shows “—”. Advanced parameters retain action scaling. Contracts provide servo P; other parameters follow valid local settings and the current contract.
 
+## Robot processes and services
+
+The process panel can manually start or stop services in the fixed catalogue; boot autostart is a separate setting. Before stopping `robotd`, the console requires fresh feedback, a disabled policy, and confirmed torque-off. Stopping the service does not release torque. If the interlock is not satisfied, use **停止并松开** (Stop and Relax) and wait for readback. `aic3104-init` is a one-shot initializer and only offers Start.
+
 ## Camera and connection
 
 mediad remains resident and wakes video on demand. Clicking camera Connect starts acquisition; it sleeps after the last video consumer exits. Multiple pages can share it. System boot or opening the page alone does not keep capture running.

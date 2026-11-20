@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#14161A">
+<title>Duck 遥控 · 原型 v2（竖屏）</title>
+<style>
+  :root{
+    --bg:#14161A; --panel:#1D2026; --panel-hi:#232832; --line:#2E3440;
+    --text:#F2F4F7; --muted:#9AA3AF; --dim:#5C6470;
+    --duck:#FFC53D; --duck-soft:rgba(255,197,61,.16);
+    --ok:#3DDC97; --warn:#FFC53D; --danger:#FF5A52; --danger-soft:rgba(255,90,82,.16);
+    --info:#5AA9FF;
+    --r-btn:16px; --r-panel:20px; --r-sheet:24px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%; margin:0; overflow:hidden; overscroll-behavior:none;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:system-ui,"HarmonyOS Sans SC","Noto Sans SC","Source Han Sans SC",sans-serif;
+    user-select:none; touch-action:none;
+    font-variant-numeric:tabular-nums;
+  }
+  button{font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer;}
+  button:focus-visible{outline:2px solid var(--duck); outline-offset:2px;}
+  .mono{font-variant-numeric:tabular-nums;}
+  .muted{color:var(--muted);}
+  .hidden{display:none!important;}
+
+  /* Flex column, not a fixed 4-row grid: the banner is `display:none` most of
+     the time, and a hidden item leaves its grid row to whoever comes next. */
+  body{display:block; background:#0B0C0E;}
+  /* 宽度决定一切：≤480 是手机（2×2 按钮），≥620 是宽屏（一排四个按钮）。
+     不再套手机壳 —— 壳只按窗口高度开关，窗口一矮就漏成整屏，2×2 会被拉成两条大块。 */
+  #app{
+    position:relative; width:100%; height:100vh; height:100dvh; margin:0 auto;
+    display:flex; flex-direction:column; overflow:hidden;
+    background:var(--bg);
+    padding:0 max(0px, env(safe-area-inset-right)) max(0px, env(safe-area-inset-bottom)) max(0px, env(safe-area-inset-left));
+  }
+  @media (min-width:481px){
+    #app{max-width:480px; border-left:1px solid var(--line); border-right:1px solid var(--line);}
+  }
+  @media (min-width:620px){
+    #app{max-width:720px;}
+  }
+
+  /* ── 顶栏：手机式状态栏 ───────────────────────────────── */
+  #topbar{
+    min-height:56px; display:flex; align-items:center; gap:8px;
+    padding:6px 10px 6px 6px; border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#191C21,#15171B);
+    min-width:0; flex:0 0 auto;
+  }
+  #statusBtn{
+    flex:1 1 auto; min-width:0; min-height:44px;
+    display:flex; align-items:center; flex-wrap:wrap; gap:6px 12px; padding:0 8px;
+    border-radius:12px; text-align:left;
+  }
+  #statusBtn:hover{background:rgba(255,255,255,.03);}
+  .dot{width:9px; height:9px; border-radius:50%; background:var(--ok); box-shadow:0 0 9px var(--ok); flex:0 0 auto;}
+  .dot.readonly{background:var(--info); box-shadow:0 0 9px var(--info);}
+  .dot.offline{background:var(--dim); box-shadow:none;}
+  .s-item{display:inline-flex; align-items:center; gap:5px; font-size:12px; color:var(--muted); white-space:nowrap;}
+  .s-item svg{flex:0 0 auto;}
+  .s-item b{font-size:13px; color:var(--text); font-weight:700;}
+  .s-item .unit{font-size:10px; color:var(--dim);}
+  .s-item .s-tag{font-size:9px; color:var(--dim); letter-spacing:.02em;}
+  #statusBtn[data-conn="online"] .s-item.conn svg{color:var(--ok);}
+  #statusBtn[data-conn="readonly"] .s-item.conn svg{color:var(--info);}
+  #statusBtn[data-conn="offline"] .s-item.conn svg{color:var(--dim);}
+  .s-item.low b{color:var(--danger);}
+  .s-item.hot b{color:var(--warn);}
+  .s-item.warn b{color:var(--warn);}
+  .s-item.bad b{color:var(--danger);}
+  .s-item.bad svg{color:var(--danger);}
+  .s-item.warn .batt-ico{color:var(--warn);}
+  .s-item.warn .batt-ico i{background:var(--warn);}
+  .s-alarm{
+    display:inline-flex; align-items:center; gap:3px;
+    padding:2px 6px; border-radius:999px;
+    background:rgba(255,197,61,.14); color:var(--warn);
+    font-size:11px; font-weight:700;
+  }
+  .s-alarm.danger{background:rgba(255,90,82,.16); color:var(--danger);}
+  .s-alarm b{font-size:11px; color:inherit;}
+  .s-pill{
+    display:inline-flex; align-items:center; gap:5px;
+    padding:3px 9px; border-radius:999px; border:1px solid var(--line);
+    background:var(--panel); font-size:12px; font-weight:700; color:var(--muted);
+    white-space:nowrap;
+  }
+  .s-pill svg{width:14px; height:14px;}
+  .s-pill.walk{color:#0E1A14; background:var(--ok); border-color:var(--ok);}
+  .s-pill.home{color:#1A1406; background:var(--duck); border-color:var(--duck);}
+  .s-pill.limp{color:#1F0B0A; background:var(--danger); border-color:var(--danger);}
+  .batt-ico{
+    position:relative; width:20px; height:11px; display:inline-block;
+    border:1.5px solid currentColor; border-radius:3px; color:var(--muted);
+  }
+  .batt-ico::after{
+    content:""; position:absolute; right:-4px; top:3px;
+    width:2px; height:5px; background:currentColor; border-radius:1px;
+  }
+  .batt-ico i{
+    position:absolute; left:1.5px; top:1.5px; bottom:1.5px;
+    width:var(--level,60%); background:var(--ok); border-radius:1px;
+  }
+  .s-item.low .batt-ico{color:var(--danger);}
+  .s-item.low .batt-ico i{background:var(--danger);}
+  .s-chev{color:var(--dim); font-size:18px; line-height:1; margin-left:auto; padding-left:4px;}
+  .full{
+    width:32px; height:32px; border-radius:8px; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; color:var(--muted);
+    flex:0 0 auto;
+  }
+  .full:hover{color:var(--text); background:var(--panel);}
+
+  /* ── 警示条 ───────────────────────────────────────────── */
+  #banner{
+    display:flex; align-items:center; gap:10px;
+    padding:8px 16px; font-size:13px; line-height:18px;
+    background:rgba(255,197,61,.10); color:var(--duck);
+    border-bottom:1px solid rgba(255,197,61,.22);
+  }
+  #banner.danger{background:rgba(255,90,82,.11); color:var(--danger); border-bottom-color:rgba(255,90,82,.25);}
+  #banner svg{flex:0 0 auto;}
+  #banner .fill{flex:1 1 auto;}
+  #banner button{color:inherit; font-weight:700; text-decoration:underline;}
+
+
+  /* ── 策略条：一排按钮 ─────────────────────────────────── */
+  #policyBar{
+    position:relative; flex:0 0 auto; z-index:15;
+    padding:6px 0 6px; border-bottom:1px solid var(--line); background:#171A20;
+  }
+  .pb-row{display:flex; align-items:center; gap:8px; padding:0 12px;}
+  .pb-key{flex:0 0 auto; font-size:10px; font-weight:700; letter-spacing:.08em; color:var(--dim); white-space:nowrap;}
+  #policyBar[data-locked="true"] .pb-key{color:#6B7078;}
+  /* 没接管时整条压暗，chips 一眼看出点不动 */
+  #policyBar[data-locked="true"] .chip{opacity:.45;}
+  #policyBar[data-locked="true"] .chip[data-state="active"]{opacity:.75;}
+  /* 一行放不下的策略横向滑动，不换行 */
+  .pb-chips{
+    flex:1 1 auto; min-width:0; display:flex; gap:6px; overflow-x:auto;
+    scrollbar-width:none; -ms-overflow-style:none; padding:2px 0;
+    scroll-snap-type:x proximity;
+    /* 右边淡出，暗示还能横向滑动 */
+    mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 20px),transparent 100%);
+  }
+  .pb-chips::-webkit-scrollbar{display:none;}
+  .chip{
+    flex:0 0 auto; height:32px; display:inline-flex; align-items:center; gap:6px;
+    padding:0 11px; border-radius:9px; border:1px solid #2E3440;
+    background:linear-gradient(180deg,#20242B,#1A1D23);
+    font-size:12px; font-weight:600; color:var(--muted); white-space:nowrap;
+    scroll-snap-align:start; transition:border-color .12s, color .12s, background .12s;
+  }
+  .chip:hover{border-color:#3C4655; color:var(--text);}
+  .chip[data-state="active"]{
+    color:#241A00; background:var(--duck); border-color:var(--duck); font-weight:700;
+  }
+  .chip[data-state="missing"]{color:#6B7078; border-style:dashed; text-decoration:line-through;}
+  .chip[data-state="missing"] .chip-i{color:var(--danger);}
+  .chip-i{font-size:10px; opacity:.75;}
+  .pb-more{
+    flex:0 0 auto; width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+    border-radius:9px; border:1px solid #2E3440; background:#1D2128; color:var(--muted);
+    transition:border-color .14s, color .14s;
+  }
+  .pb-more:hover{border-color:#3C4655; color:var(--text);}
+  #policyBar[data-open="true"] .pb-more{border-color:rgba(255,197,61,.5); color:var(--duck);}
+  #policyBar[data-open="true"] .pb-more svg{transform:rotate(180deg);}
+
+  #policyPanel{
+    position:absolute; left:12px; right:12px; top:calc(100% - 2px); z-index:16;
+    display:flex; flex-direction:column; gap:6px; padding:8px;
+    border-radius:14px; border:1px solid #343C48;
+    background:rgba(26,29,35,.985); box-shadow:0 18px 40px rgba(0,0,0,.55);
+    max-height:min(60vh,420px); overflow:auto;
+  }
+  .pp{
+    display:flex; align-items:center; gap:9px; width:100%; text-align:left;
+    padding:9px 10px; border-radius:10px; border:1px solid #2A303A; background:#20242B;
+    transition:background .12s, border-color .12s;
+  }
+  .pp:hover{border-color:#3C4655; background:#252A33;}
+  .pp[data-state="active"]{border-color:rgba(255,197,61,.5); background:#2A2A22;}
+  .pp[data-state="missing"]{opacity:.55;}
+  /* 没接管时整张面板也点不动 */
+  #policyPanel[data-locked="true"] .pp{opacity:.5;}
+  #policyPanel[data-locked="true"] .pp[data-state="active"]{opacity:.7;}
+  .pp .pp-dot{flex:0 0 auto; width:7px; height:7px; border-radius:50%; background:#3A414D;}
+  .pp[data-state="active"] .pp-dot{background:var(--duck); box-shadow:0 0 8px rgba(255,197,61,.7);}
+  .pp[data-state="missing"] .pp-dot{background:var(--danger);}
+  .pp .pp-txt{flex:1 1 auto; min-width:0;}
+  .pp .pp-name{
+    display:block; font-size:13px; font-weight:600; color:var(--text);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .pp .pp-sub{display:block; font-size:10px; color:var(--dim); margin-top:1px;}
+  .pp .pp-badge{
+    flex:0 0 auto; font-size:9px; font-weight:700; padding:2px 6px; border-radius:999px;
+    border:1px solid #3A414D; color:var(--muted); background:#232830;
+  }
+  .pp[data-state="active"] .pp-badge{color:#241A00; background:var(--duck); border-color:var(--duck);}
+  .pp[data-state="missing"] .pp-badge{color:var(--danger); border-color:rgba(255,90,82,.45); background:rgba(255,90,82,.1);}
+  #policyPanel .pp-note{font-size:10px; color:var(--dim); line-height:15px; padding:2px 4px 0;}
+
+  /* ── 主区 ─────────────────────────────────────────────── */
+  #main{
+    position:relative; flex:1 1 auto; min-height:0;
+    display:flex; flex-direction:column; gap:10px;
+    padding:10px 12px 8px;
+  }
+  #stickZone{
+    position:relative; flex:1 1 auto; min-height:0; border-radius:var(--r-panel);
+    background:
+      radial-gradient(circle at 38% 52%, rgba(255,197,61,.055), transparent 44%),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.016) 0 1px, transparent 1px 44px),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.016) 0 1px, transparent 1px 44px),
+      #15171B;
+    border:1px solid #20242B; overflow:hidden;
+  }
+  #stickZone.disabled{opacity:.45;}
+  #stickZone .guidance{
+    position:absolute; left:0; right:0; top:12px; text-align:center;
+    font-size:12px; color:var(--dim); pointer-events:none;
+  }
+  #stickZone .guidance b{color:var(--muted); font-weight:600;}
+  #stickZone.disabled .guidance{color:var(--dim);}
+  #stickBase{
+    position:absolute; width:248px; height:248px; margin:-124px 0 0 -124px;
+    left:50%; top:50%;
+    border-radius:50%; opacity:.34; transition:opacity .18s ease, left .12s ease, top .12s ease;
+    background:radial-gradient(circle at 50% 50%, rgba(255,197,61,.05), rgba(255,255,255,.012) 62%, transparent 63%);
+    border:1px solid rgba(255,197,61,.24);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
+  }
+  #stickBase.on{opacity:1; border-color:rgba(255,197,61,.55);}
+  #stickBase::before,#stickBase::after{
+    content:""; position:absolute; border-radius:50%; border:1px solid rgba(255,255,255,.07);
+  }
+  #stickBase::before{inset:34px;}
+  #stickBase::after{inset:76px;}
+  #stickBase .cross{position:absolute; inset:0;}
+  #stickBase .cross i{
+    position:absolute; background:rgba(255,255,255,.08);
+  }
+  #stickBase .cross i:nth-child(1){left:50%; top:14%; bottom:14%; width:1px;}
+  #stickBase .cross i:nth-child(2){top:50%; left:14%; right:14%; height:1px;}
+  #stickKnob{
+    position:absolute; width:104px; height:104px; left:50%; top:50%;
+    margin:-52px 0 0 -52px; border-radius:50%;
+    background:radial-gradient(circle at 38% 32%, #FFE39A, var(--duck) 58%, #D99A15);
+    box-shadow:0 10px 26px rgba(255,197,61,.28), inset 0 2px 6px rgba(255,255,255,.45);
+    transform:translate(0,0); will-change:transform;
+  }
+  #stickKnob::after{
+    content:""; position:absolute; inset:31px; border-radius:50%;
+    border:2px solid rgba(0,0,0,.18);
+  }
+  #stickReadout{
+    position:absolute; left:18px; bottom:14px; font-size:12px; color:var(--muted);
+    display:flex; flex-direction:column; gap:4px; pointer-events:none;
+  }
+  #stickReadout b{color:var(--text); font-size:13px;}
+  #stickReadout .limit{color:var(--warn);}
+  .bars{display:flex; gap:10px; align-items:center; margin-top:2px;}
+  .bars span{font-size:11px; color:var(--dim); width:26px;}
+  .bar{width:92px; height:4px; border-radius:999px; background:#262B33; overflow:hidden;}
+  .bar i{display:block; height:100%; width:0%; background:var(--duck); transition:width .08s linear;}
+  .bar.app i{background:var(--ok);}
+
+  /* ── 动作按钮 ─────────────────────────────────────────── */
+  /* 竖屏：四个动作从右列搬到底部，2×2 满宽 —— 每个按钮从 220×64 变成约 190×84 */
+  #actions{
+    flex:0 0 auto;
+    display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  }
+  .act{
+    position:relative; min-height:84px;
+    display:flex; align-items:center; gap:14px; padding:0 16px 0 14px;
+    border:1px solid #343C48; border-radius:20px 8px 20px 8px;
+    background:
+      radial-gradient(120% 90% at 12% 0%, rgba(255,255,255,.07), transparent 52%),
+      linear-gradient(180deg,#262B34,#1B1F26 72%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 8px 18px rgba(0,0,0,.22);
+    overflow:hidden;
+    transition:transform .08s ease, border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .act::before{
+    content:""; position:absolute; left:0; top:16%; bottom:16%; width:3px;
+    border-radius:0 4px 4px 0;
+    background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.05));
+  }
+  .act::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(115deg,rgba(255,255,255,.06),transparent 38%);
+  }
+  .act .ico{
+    position:relative; z-index:1;
+    width:46px; height:46px; flex:0 0 auto; border-radius:14px 6px 14px 6px;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(180deg,#2E3541,#232833);
+    border:1px solid #3B4350;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+    color:var(--muted);
+  }
+  .act .ico svg{width:23px; height:23px;}
+  .act .txt{
+    position:relative; z-index:1; display:flex; flex-direction:column;
+    align-items:flex-start; gap:1px; min-width:0;
+  }
+  .act .txt b{font-size:20px; font-weight:700; letter-spacing:.05em; line-height:1.2;}
+  .act .txt small{font-size:11px; font-weight:600; letter-spacing:.04em; color:var(--muted); white-space:nowrap;}
+  .act .led{
+    position:relative; z-index:1; width:7px; height:7px; border-radius:50%;
+    margin-left:auto; flex:0 0 auto; background:#3E4552;
+  }
+
+  /* 站立：冷色 */
+  .act.stand::before{background:linear-gradient(180deg,#9DC4FF,#3D6FA8);}
+  .act.stand .ico{color:#9DC4FF; background:linear-gradient(180deg,rgba(90,169,255,.18),rgba(90,169,255,.06)); border-color:rgba(90,169,255,.32);}
+  .act.stand .led{background:#5AA9FF; box-shadow:0 0 10px rgba(90,169,255,.7);}
+
+  /* 接管/交还：绿色为行走中 */
+  .act.enable::before{background:linear-gradient(180deg,#8E98A8,#4A5361);}
+  .act.enable.enabled{
+    border-color:rgba(61,220,151,.42);
+    background:
+      radial-gradient(120% 90% at 12% 0%, rgba(61,220,151,.13), transparent 55%),
+      linear-gradient(180deg,#202A27,#19211F 72%);
+  }
+  .act.enable.enabled::before{background:linear-gradient(180deg,#7BF0BE,#1E9A68);}
+  .act.enable.enabled .ico{color:var(--ok); background:linear-gradient(180deg,rgba(61,220,151,.2),rgba(61,220,151,.06)); border-color:rgba(61,220,151,.4);}
+  .act.enable.enabled .txt b{color:#DFFFF1;}
+  .act.enable.enabled .led{background:var(--ok); box-shadow:0 0 10px var(--ok);}
+
+  /* 停下：最大、红色、反方向圆角 */
+  .act.stop{
+    flex:1.3 1 0; border-radius:8px 22px 8px 22px;
+    border:1px solid rgba(255,90,82,.55);
+    background:
+      radial-gradient(120% 90% at 15% 0%, rgba(255,120,112,.2), transparent 55%),
+      linear-gradient(180deg,#2C2125,#1F191C 75%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.07), 0 10px 26px rgba(255,90,82,.12);
+  }
+  .act.stop::before{width:4px; top:12%; bottom:12%; background:linear-gradient(180deg,#FF9A94,#C9312B);}
+  .act.stop .ico{
+    color:#fff; border-color:rgba(255,150,142,.6);
+    background:radial-gradient(circle at 40% 30%,#FF8A82,#C9312B 72%);
+    box-shadow:0 0 18px rgba(255,90,82,.35), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .act.stop .txt b{font-size:22px; color:#FFE4E1;}
+  .act.stop .txt small{color:rgba(255,228,225,.62);}
+  .act.stop .led{background:var(--danger); box-shadow:0 0 10px var(--danger);}
+
+  /* 卸力：琥珀色、长按 */
+  .act.relax{
+    border-radius:22px 8px 22px 8px;
+    border-color:rgba(255,197,61,.42);
+    background:
+      radial-gradient(120% 90% at 15% 0%, rgba(255,197,61,.16), transparent 55%),
+      linear-gradient(180deg,#28251C,#1E1C16 75%);
+  }
+  .act.relax::before{width:4px; background:linear-gradient(180deg,#FFE08A,#C98F12);}
+  .act.relax .ico{
+    color:var(--duck); border-color:rgba(255,197,61,.45);
+    background:linear-gradient(180deg,rgba(255,197,61,.24),rgba(255,197,61,.06));
+  }
+  .act.relax .txt b{color:var(--duck);}
+  .act.relax .txt small{color:rgba(255,197,61,.68);}
+  .act.relax .led{background:var(--duck); box-shadow:0 0 10px rgba(255,197,61,.7);}
+
+  /* 宽视口（电脑 / 平板 / 横窗口）：四个按钮排成一排，别拉成大块 */
+  @media (min-width:620px){
+    #actions{grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px;}
+    .act{min-height:64px; gap:9px; padding:0 12px 0 10px;}
+    .act .ico{width:34px; height:34px; border-radius:11px 5px 11px 5px;}
+    .act .ico svg{width:17px; height:17px;}
+    .act .txt b{font-size:16px;}
+    .act.stop .txt b{font-size:17px;}
+    .act .txt small{font-size:10px;}
+  }
+
+  @media (hover:hover){
+    .act:hover{transform:translateY(-1px); border-color:#4B5564; box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 12px 24px rgba(0,0,0,.28);}
+    .act.stop:hover{border-color:rgba(255,120,112,.8);}
+    .act.relax:hover{border-color:rgba(255,197,61,.65);}
+    .act.enable.enabled:hover{border-color:rgba(61,220,151,.6);}
+  }
+  .act:active{transform:translateY(1px) scale(.995);}
+  .act[disabled]{opacity:.4; filter:saturate(.35); box-shadow:none;}
+  .act .hold-fill{
+    position:absolute; left:0; bottom:0; height:5px; width:calc(var(--hold,0)*100%);
+    background:linear-gradient(90deg,#FFE08A,var(--duck));
+    box-shadow:0 0 14px rgba(255,197,61,.65);
+    z-index:2;
+  }
+
+  /* ── 底栏 ─────────────────────────────────────────────── */
+  #footer{
+    height:48px; flex:0 0 auto; display:flex; align-items:center; gap:10px;
+    padding:0 12px; border-top:1px solid var(--line);
+    background:#15171B; min-width:0;
+  }
+  #footer .label, #footer .unit, #btnMaint span{white-space:nowrap;}
+  .speed{display:flex; align-items:center; gap:8px;}
+  .speed .label{font-size:12px; color:var(--muted);}
+  .seg{display:flex; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:2px; gap:2px;}
+  .seg button{font-size:12px; font-weight:700; padding:5px 9px; border-radius:7px; color:var(--muted);}
+  .seg button.on{background:var(--duck); color:#1A1406;}
+  .unit{font-size:11px; color:var(--dim);}
+  .tilt{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted);}
+  .bubble{width:26px; height:26px; border-radius:50%; border:1px solid var(--line); position:relative; background:#101216;}
+  .bubble::before,.bubble::after{content:""; position:absolute; background:var(--line);}
+  .bubble::before{left:50%; top:4px; bottom:4px; width:1px;}
+  .bubble::after{top:50%; left:4px; right:4px; height:1px;}
+  .bubble i{
+    position:absolute; width:8px; height:8px; border-radius:50%; left:9px; top:9px;
+    background:var(--ok); box-shadow:0 0 8px var(--ok); transform:translate(0,0);
+  }
+  .bubble.warn i{background:var(--warn); box-shadow:0 0 8px var(--warn);}
+  .bubble.bad i{background:var(--danger); box-shadow:0 0 8px var(--danger);}
+  #btnMaint{
+    flex:0 0 auto;
+    margin-left:auto; display:flex; align-items:center; gap:7px;
+    font-size:13px; color:var(--muted); padding:7px 10px; border-radius:10px;
+  }
+  #btnMaint:hover{background:var(--panel); color:var(--text);}
+
+  /* ── 覆盖层 ───────────────────────────────────────────── */
+  .overlay{
+    position:absolute; inset:0; z-index:20; display:flex; align-items:center; justify-content:center;
+    padding:16px; overflow:auto;
+    background:rgba(10,11,13,.72); backdrop-filter:blur(6px);
+  }
+  .sheet-card{
+    width:min(560px,86vw); max-height:calc(100vh - 32px); overflow:auto;
+    background:linear-gradient(180deg,#20242C,#191C22);
+    border:1px solid #313845; border-radius:var(--r-sheet);
+    box-shadow:0 12px 40px rgba(0,0,0,.45); padding:26px 28px;
+  }
+  .sheet-card h1{margin:0 0 8px; font-size:26px; line-height:32px; letter-spacing:.01em;}
+  .sheet-card p{margin:0 0 18px; font-size:14px; line-height:21px; color:var(--muted);}
+  .sheet-actions{display:flex; flex-direction:column; gap:10px;}
+  .big-btn{
+    position:relative; height:60px; border-radius:14px; font-size:17px; font-weight:700;
+    background:var(--panel-hi); border:1px solid var(--line); overflow:hidden;
+  }
+  .big-btn.primary{background:var(--duck); color:#1A1406; border-color:var(--duck);}
+  .big-btn.ghost{color:var(--muted);}
+  .big-btn[disabled]{opacity:.35;}
+  .overlay .icon-round{
+    width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:var(--panel-hi); border:1px solid var(--line); margin-bottom:16px; color:var(--muted);
+  }
+  .overlay .icon-round.info{color:var(--info); background:rgba(90,169,255,.10); border-color:rgba(90,169,255,.28);}
+  .overlay .icon-round.danger{color:var(--danger); background:var(--danger-soft); border-color:rgba(255,90,82,.3);}
+  .overlay .icon-round.warn{color:var(--warn); background:var(--duck-soft); border-color:rgba(255,197,61,.3);}
+  #offline .last{
+    margin:0 0 18px; padding:12px 14px; border-radius:12px; background:#121418;
+    border:1px solid var(--line); font-size:13px; color:var(--muted); line-height:20px;
+  }
+  #offline .last b{color:var(--text);}
+
+  /* 警告详情 */
+  .alert-head{display:flex; gap:14px; align-items:flex-start; margin-bottom:14px;}
+  .alert-ico{
+    width:48px; height:48px; flex:0 0 auto; border-radius:14px 6px 14px 6px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--duck-soft); color:var(--warn); border:1px solid rgba(255,197,61,.32);
+  }
+  .alert-ico.danger{background:var(--danger-soft); color:var(--danger); border-color:rgba(255,90,82,.38);}
+  .alert-h .kicker{font-size:11px; font-weight:700; letter-spacing:.14em; color:var(--muted);}
+  .alert-h h1{margin:3px 0 0; font-size:24px; line-height:30px;}
+  .alert-card p{margin:0 0 14px; font-size:14px; line-height:21px; color:var(--muted);}
+  .alert-ev{
+    margin:0 0 18px; padding:10px 14px; border-radius:12px;
+    background:#121418; border:1px solid var(--line);
+    font-size:13px; line-height:20px; color:var(--muted);
+  }
+  .ev-row{display:flex; justify-content:space-between; align-items:center; gap:16px; padding:6px 0;}
+  .ev-row + .ev-row{border-top:1px solid rgba(255,255,255,.055);}
+  .ev-row b{color:var(--text); font-weight:600; text-align:right;}
+  .ev-row code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px;
+    background:#0D0F13; border:1px solid var(--line); border-radius:6px;
+    padding:3px 7px; color:var(--duck);
+  }
+
+  /* 状态详情 */
+  .status-drawer{width:min(760px,100%); max-height:86%; overflow:auto;}
+  .status-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px;}
+  .status-head h2{margin:0; font-size:20px;}
+  .status-head .hint{font-size:12px; color:var(--muted); margin-top:2px;}
+  .status-alarms{
+    margin-top:8px; padding:7px 10px; border-radius:9px;
+    background:rgba(255,197,61,.10); border:1px solid rgba(255,197,61,.28);
+    color:var(--warn); font-size:12px; line-height:17px;
+  }
+  .status-alarms.danger{background:rgba(255,90,82,.10); border-color:rgba(255,90,82,.3); color:var(--danger);}
+  .status-alarms.hidden{display:none!important;}
+  .status-head .x{
+    width:32px; height:32px; border-radius:8px; border:1px solid var(--line);
+    color:var(--muted); font-size:20px; line-height:1;
+    display:flex; align-items:center; justify-content:center; flex:0 0 auto;
+  }
+  .status-head .x:hover{color:var(--text); background:var(--panel);}
+  .status-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .s-card{
+    background:#171A20; border:1px solid var(--line); border-radius:14px;
+    padding:11px 13px; display:grid; grid-template-columns:34px 1fr;
+    grid-template-rows:auto auto auto; column-gap:10px; align-items:center;
+    text-align:left; font:inherit; color:inherit;
+  }
+  .s-card[role="button"]{cursor:pointer;}
+  .s-card[role="button"]:hover{border-color:#4B5564;}
+  .s-card[role="button"]:focus-visible{outline:2px solid var(--duck); outline-offset:2px;}
+  .s-card .s-ico{
+    grid-row:1 / 4; width:34px; height:34px; border-radius:10px 4px 10px 4px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--panel-hi); border:1px solid var(--line); color:var(--muted);
+  }
+  .s-card .s-ico svg{width:18px; height:18px;}
+  .s-card .s-k{font-size:11px; color:var(--muted); letter-spacing:.08em;}
+  .s-card .s-v{font-size:16px; font-weight:700; color:var(--text); line-height:1.25;}
+  .s-card .s-d{font-size:11px; color:var(--muted); line-height:15px; margin-top:1px;}
+  .s-card.wide{grid-column:1 / -1;}
+  .s-card.warn{border-color:rgba(255,197,61,.35);}
+  .s-card.warn .s-v{color:var(--warn);}
+  .s-card.bad{border-color:rgba(255,90,82,.35);}
+  .s-card.bad .s-v{color:var(--danger);}
+  .status-foot{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:14px; padding-top:12px; border-top:1px solid var(--line);
+  }
+  .proto-note{font-size:11px; color:var(--dim);}
+
+  .alert-card{width:min(880px,94vw);}
+  .alert-layout{display:grid; grid-template-columns:1.08fr .92fr; gap:22px; align-items:start;}
+  .alert-main{min-width:0;}
+  .alert-side{border-left:1px solid var(--line); padding-left:20px; min-width:0;}
+  .msg-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px;}
+  .msg-head b{font-size:13px;}
+  .msg-head span{font-size:11px; color:var(--muted); margin-left:6px;}
+  .msg-list{
+    display:flex; flex-direction:column; gap:6px;
+    max-height:calc(100vh - 250px); overflow:auto; padding-right:2px;
+  }
+  .msg{
+    display:grid; grid-template-columns:8px 40px 1fr 10px; gap:8px; align-items:center;
+    padding:8px 9px; border-radius:10px; border:1px solid transparent;
+    background:#15181E; text-align:left; font:inherit; color:inherit;
+  }
+  .msg:hover{border-color:#3B4350; background:#191D24;}
+  .msg.on{border-color:rgba(255,197,61,.4); background:rgba(255,197,61,.07);}
+  .msg-dot{width:7px; height:7px; border-radius:50%; background:var(--dim);}
+  .msg-dot.warn{background:var(--warn); box-shadow:0 0 7px rgba(255,197,61,.6);}
+  .msg-dot.bad{background:var(--danger); box-shadow:0 0 7px rgba(255,90,82,.6);}
+  .msg-dot.ok{background:var(--ok);}
+  .msg-time{font-size:10px; color:var(--dim); font-variant-numeric:tabular-nums;}
+  .msg-txt{min-width:0; display:flex; flex-direction:column; gap:1px;}
+  .msg-txt b{font-size:12px; color:var(--text); font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .msg-txt small{font-size:10px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .msg-chev{color:var(--dim); font-size:14px;}
+  .msg-empty{padding:18px 10px; text-align:center; font-size:11px; color:var(--dim);}
+
+  /* 维护抽屉 */
+  #maint{
+    align-items:flex-end; justify-content:center; background:rgba(0,0,0,.58);
+    padding:0;
+  }
+  #maint .drawer{
+    width:min(720px,100%); max-height:86%; overflow:auto;
+    background:linear-gradient(180deg,#20242C,#171A20);
+    border:1px solid #313845; border-bottom:0;
+    border-radius:24px 24px 0 0; padding:10px 22px 32px;
+    animation:up .18s ease-out;
+  }
+  @keyframes up{from{transform:translateY(12%)}to{transform:translateY(0)}}
+  .drawer .grab{width:44px; height:4px; border-radius:999px; background:#3A414D; margin:2px auto 14px;}
+  .drawer h2{margin:0 0 4px; font-size:20px;}
+  .drawer .hint{font-size:12px; color:var(--muted); margin-bottom:12px;}
+  .row{
+    display:flex; align-items:center; gap:14px; padding:14px 2px; border-top:1px solid var(--line);
+  }
+  .row:first-of-type{border-top:0;}
+  .row .grow{flex:1 1 auto; min-width:0;}
+  .row .t{font-size:15px; font-weight:600;}
+  .row .d{font-size:12px; color:var(--muted); line-height:18px; margin-top:2px;}
+  .row .v{font-size:14px; color:var(--text); font-weight:600; white-space:nowrap;}
+  .row .v.ok{color:var(--ok);}
+  .row .v.warn{color:var(--warn);}
+  .row button.mini{
+    font-size:13px; font-weight:700; padding:9px 14px; border-radius:10px;
+    background:var(--panel-hi); border:1px solid var(--line); white-space:nowrap;
+  }
+  .row button.mini.danger{border-color:rgba(255,90,82,.5); color:#FFD9D6; background:var(--danger-soft);}
+  .code{
+    display:inline-flex; align-items:center; gap:8px; margin-top:6px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px;
+    background:#101216; border:1px solid var(--line); border-radius:8px; padding:6px 9px; color:var(--muted);
+  }
+
+  /* toast */
+  /* Toast 钉在顶部：竖屏下底栏上方就是「停下」按钮，浮层绝不能盖住它 */
+  /* 钉在摇杆区顶部：既不压策略条/警示条，也不压下面的动作按钮 */
+  #toasts{
+    position:absolute; left:50%; top:8px; transform:translateX(-50%);
+    display:flex; flex-direction:column; gap:8px; z-index:40; pointer-events:none;
+    width:min(520px,90vw);
+  }
+  .toast{
+    display:flex; gap:10px; align-items:flex-start;
+    background:rgba(29,32,38,.96); border:1px solid var(--line); border-left:4px solid var(--ok);
+    border-radius:12px; padding:11px 14px; font-size:13px; line-height:19px;
+    box-shadow:0 10px 26px rgba(0,0,0,.35); animation:tin .16s ease-out;
+  }
+  .toast.warn{border-left-color:var(--warn);}
+  .toast.err{border-left-color:var(--danger);}
+  @keyframes tin{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+
+  /* 小屏竖屏（360×640 一档）：压一压内边距和按钮高度，保证一屏不滚 */
+  @media (max-height:700px){
+    #topbar{min-height:48px; padding:4px 8px 4px 4px;}
+    #main{padding:8px 10px 6px; gap:8px;}
+    #actions{gap:8px;}
+    .act{min-height:70px; gap:11px; padding:0 12px 0 11px;}
+    .act .ico{width:40px; height:40px;}
+    .act .ico svg{width:20px; height:20px;}
+    .act .txt b{font-size:18px;}
+    #stickBase{width:176px; height:176px; margin:-88px 0 0 -88px;}
+    #stickKnob{width:78px; height:78px; margin:-39px 0 0 -39px;}
+    #footer{padding:6px 10px;}
+    .overlay{padding:10px;}
+    .sheet-card{max-height:calc(100vh - 20px); padding:18px 20px;}
+    .sheet-card h1{font-size:21px; line-height:26px;}
+    .big-btn{height:48px; font-size:15px;}
+    .msg-list{max-height:180px;}
+    .status-grid{gap:8px;}
+    .s-card{padding:9px 10px;}
+  }
+  /* 抽屉里的行：窄屏时让标题/说明独占一行，数值和按钮落到下一行右对齐，
+     否则「关闭」会插在两行说明中间，留下一个孤零零的「跑。」 */
+  @media (max-width:460px){
+    #maint .row{flex-wrap:wrap; row-gap:6px;}
+    #maint .row .grow{flex:1 1 100%;}
+    #maint .row > .v, #maint .row > .mini{margin-left:auto;}
+  }
+  @media (max-width:380px){
+    #footer{gap:7px; padding:0 8px;}
+    .speed{gap:6px;}
+    .speed .label{display:none;}
+    .seg button{padding:5px 7px; font-size:11px;}
+    #footer .unit{display:none;}  /* m/s 省掉，Hz 要留 */
+    .tilt{gap:6px; font-size:11px;}
+    #btnMaint{font-size:11px; gap:5px; padding:0 6px;}
+    .act .txt b{font-size:17px;}
+    .act .txt small{font-size:10px;}
+    .act{gap:9px; padding:0 10px 0 9px;}
+    #stickBase{width:160px; height:160px; margin:-80px 0 0 -80px;}
+    #stickKnob{width:70px; height:70px; margin:-35px 0 0 -35px;}
+  }
+  /* 详情类抽屉：竖屏一律单列 */
+  .alert-layout{grid-template-columns:1fr; gap:14px;}
+  .alert-side{border-left:0; border-top:1px solid var(--line); padding-left:0; padding-top:12px;}
+  .alert-card{width:min(560px,96vw);}
+  .status-drawer{width:100%;}
+
+
+  /* ── 评审导航（只在电脑宽屏出现；不属于产品界面，正式版没有） ────── */
+  #reviewNav{
+    display:none; position:fixed; right:24px; top:50%; transform:translateY(-50%);
+    flex-direction:column; gap:6px; z-index:200; width:132px;
+  }
+  #reviewNav .rn-t{
+    font-size:11px; color:var(--dim); letter-spacing:.06em;
+    margin:0 0 2px; padding-left:2px;
+  }
+  #reviewNav button{
+    text-align:left; font-size:12px; color:var(--muted);
+    padding:7px 10px; border-radius:9px; border:1px solid var(--line);
+    background:rgba(29,32,38,.72); transition:color .12s, border-color .12s, background .12s;
+  }
+  #reviewNav button:hover{color:var(--text); border-color:#3C4655; background:rgba(38,43,52,.9);}
+  #reviewNav button[aria-current="true"]{color:var(--duck); border-color:rgba(255,197,61,.5);}
+  @media (min-width:820px) and (min-height:700px){ #reviewNav{display:flex;} }
+</style>
+</head>
+<body>
+<div id="app" data-mode="driver">
+
+  <header id="topbar">
+    <button id="statusBtn" type="button" aria-label="打开状态详情">
+      <span class="s-item conn">
+        <span class="dot" id="connDot"></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M12 19.5h.01"/></svg>
+      </span>
+      <span class="s-pill policy walk" id="policyChip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13a6 6 0 0 1 12 0v3a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"/><path d="M18 12l4 2-4 2"/></svg>
+        <span id="policyText">行走</span>
+      </span>
+      <span class="s-item batt" id="battMetric">
+        <span class="batt-ico"><i id="battFill"></i></span>
+        <b id="battPct">61%</b>
+      </span>
+      <span class="s-item hz" id="hzMetric">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
+        <b id="hzVal">50</b><span class="unit">Hz</span>
+      </span>
+      <span class="s-item temp" id="tempMetric" title="电机最高温度">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.8V5a2 2 0 1 0-4 0v9.8a4 4 0 1 0 4 0Z"/></svg>
+        <span class="s-tag">电机</span><b id="tempVal">30°</b>
+      </span>
+      <span class="s-item cpu" id="cpuMetric" title="主控温度">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M9 3v2M12 3v2M15 3v2M9 19v2M12 19v2M15 19v2M3 9h2M3 12h2M3 15h2M19 9h2M19 12h2M19 15h2"/></svg>
+        <span class="s-tag">主控</span><b id="cpuVal">48°</b>
+      </span>
+      <span class="s-alarm hidden" id="alarmChip" title="当前告警数">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        <b id="alarmCount">0</b>
+      </span>
+      <span class="s-chev">›</span>
+    </button>
+    <button class="full" id="btnFull" type="button" title="全屏" aria-label="进入全屏">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5"/><path d="M16 3h5v5"/><path d="M8 21H3v-5"/><path d="M16 21h5v-5"/></svg>
+    </button>
+  </header>
+
+  <div id="banner" class="hidden" role="status">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    <span class="fill" id="bannerText">手柄服务 (padd) 在运行，会覆盖手机指令</span>
+    <button type="button" id="bannerAction" aria-label="查看当前提示的详情">详情 ▸</button>
+  </div>
+
+  <!-- 策略条：一排策略按钮，点一下直接切；⋯ 展开看全名 -->
+  <section id="policyBar" aria-label="策略">
+    <div class="pb-row">
+      <span class="pb-key">策略</span>
+      <div class="pb-chips" id="policyChips" role="group" aria-label="切换策略"></div>
+      <button class="pb-more" id="policyToggle" type="button" aria-expanded="false"
+              aria-controls="policyPanel" aria-label="展开全部策略">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+    </div>
+    <div id="policyPanel" class="hidden" role="listbox" aria-label="全部策略"></div>
+  </section>
+
+  <main id="main">
+    <div id="toasts" aria-live="polite"></div>
+    <section id="stickZone" aria-label="驾驶摇杆区">
+      <div class="guidance" id="stickGuide"><b>按住拖动</b> · 松手即停</div>
+      <div id="stickBase" aria-hidden="true">
+        <div class="cross"><i></i><i></i></div>
+        <div id="stickKnob"></div>
+      </div>
+      <div id="stickReadout">
+        <div><b id="roVx">0.00</b> m/s · <b id="roYaw">0.00</b> rad/s</div>
+        <div class="bars">
+          <span>请求</span><div class="bar"><i id="barReq"></i></div>
+          <span>实际</span><div class="bar app"><i id="barApp"></i></div>
+        </div>
+        <div id="roLimit" class="limit hidden">已限幅</div>
+      </div>
+    </section>
+
+    <aside id="actions">
+      <button class="act stand" id="btnStand" type="button" aria-label="站立">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V6"/><path d="m6.5 11.5 5.5-6 5.5 6"/><path d="M5 21h14"/></svg>
+        </span>
+        <span class="txt"><b>站立</b><small>回 HOME</small></span>
+        <span class="led"></span>
+      </button>
+      <button class="act enable enabled" id="btnEnable" type="button" aria-label="交还策略">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v18"/><path d="m3.5 7.5 4.5-4.5 4.5 4.5"/><path d="M16 21V3"/><path d="m11.5 16.5 4.5 4.5 4.5-4.5"/></svg>
+        </span>
+        <span class="txt"><b id="enableLabel">交还</b><small id="enableSub">策略待命</small></span>
+        <span class="led"></span>
+      </button>
+      <button class="act stop" id="btnStop" type="button" aria-label="停下">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+        </span>
+        <span class="txt"><b>停下</b><small>仍站立</small></span>
+        <span class="led"></span>
+      </button>
+      <button class="act relax" id="btnRelax" type="button" aria-label="长按卸力">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v9"/><path d="M6.4 6.4a8 8 0 1 0 11.2 0"/></svg>
+        </span>
+        <span class="txt"><b>卸力</b><small>长按 1.5s</small></span>
+        <span class="led"></span>
+        <span class="hold-fill"></span>
+      </button>
+    </aside>
+  </main>
+
+  <footer id="footer">
+    <div class="speed">
+      <span class="label">速度</span>
+      <div class="seg" id="speedSeg" role="group" aria-label="速度档位">
+        <button data-speed="0.1" type="button">0.1</button>
+        <button data-speed="0.2" type="button" class="on">0.2</button>
+        <button data-speed="0.3" type="button">0.3</button>
+      </div>
+      <span class="unit">m/s</span>
+    </div>
+    <div class="tilt">
+      <div class="bubble" id="tiltBubble"><i id="tiltDot"></i></div>
+      <span>倾角 <b id="tiltVal" style="color:var(--text)">8.5°</b></span>
+    </div>
+    <button id="btnMaint" type="button" aria-label="打开维护面板">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+      维护
+    </button>
+  </footer>
+
+<!-- 只读 -->
+<div id="readonly" class="overlay hidden">
+  <div class="sheet-card">
+    <div class="icon-round info">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+    </div>
+    <h1>另一台设备正在驾驶</h1>
+    <p><b style="color:var(--text)">Mate 40 Pro · 客厅</b> 正在控制这只鸭子。你可以查看状态，但不能发送动作。</p>
+    <div class="sheet-actions">
+      <button class="big-btn primary" id="btnTakeover" type="button">请求接管</button>
+      <button class="big-btn ghost" id="btnReadonlyClose" type="button">只看状态</button>
+    </div>
+  </div>
+</div>
+
+<!-- 离线 -->
+<div id="offline" class="overlay hidden">
+  <div class="sheet-card">
+    <div class="icon-round">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l20 20"/><path d="M5.8 5.8A10 10 0 0 0 12 22a10 10 0 0 0 6.2-2.2"/><path d="M9.9 4.2A10 10 0 0 1 22 12a10 10 0 0 1-1.2 4.8"/><path d="M8.5 8.5a6 6 0 0 0 7 7"/><path d="M12 3a9 9 0 0 1 9 9"/></svg>
+    </div>
+    <h1>未连接</h1>
+    <p>页面已离线启动。遥控需要手机与鸭子在同一 Wi-Fi。</p>
+    <div class="last" id="offlineLast">上次连接 <b>14:03:22</b> · walk · 61%</div>
+    <div class="sheet-actions">
+      <button class="big-btn primary" id="btnRetry" type="button">重试连接</button>
+      <button class="big-btn ghost" id="btnHelp" type="button">排障</button>
+    </div>
+  </div>
+</div>
+
+<!-- 状态详情（点顶部状态栏进入） -->
+<div id="status" class="overlay hidden">
+  <div class="drawer status-drawer">
+    <div class="grab"></div>
+    <div class="status-head">
+      <div>
+        <h2>状态</h2>
+        <div class="hint">点顶部状态栏随时打开</div>
+        <div class="status-alarms hidden" id="statusAlarms">⚠ 2 项告警</div>
+      </div>
+      <button class="x" id="btnStatusClose" type="button" aria-label="关闭状态">×</button>
+    </div>
+    <div class="status-grid">
+      <div class="s-card" id="stConnCard">
+        <span class="s-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M12 19.5h.01"/></svg>
+        </span>
+        <div class="s-k">连接</div>
+        <div class="s-v" id="stConn">已连接</div>
+        <div class="s-d" id="stIp">192.168.110.240</div>
+      </div>
+      <div class="s-card" id="stPolicyCard">
+        <span class="s-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13a6 6 0 0 1 12 0v3a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"/><path d="M18 12l4 2-4 2"/></svg>
+        </span>
+        <div class="s-k">策略</div>
+        <div class="s-v" id="stPolicy">行走</div>
+        <div class="s-d" id="stPolicyD">policy=walk · limp=false</div>
+      </div>
+      <div class="s-card" id="stHzCard">
+        <span class="s-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
+        </span>
+        <div class="s-k">控制环</div>
+        <div class="s-v" id="stHz">50.0 Hz</div>
+        <div class="s-d" id="stMissed">missed 12</div>
+      </div>
+      <div class="s-card" id="stBattCard">
+        <span class="s-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="17" height="10" rx="2"/><path d="M22 11v2"/></svg>
+        </span>
+        <div class="s-k">电源</div>
+        <div class="s-v" id="stBatt">61%</div>
+        <div class="s-d" id="stBattD">7.55 V</div>
+      </div>
+      <div class="s-card" id="stTempCard">
+        <span class="s-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.8V5a2 2 0 1 0-4 0v9.8a4 4 0 1 0 4 0Z"/></svg>
+        </span>
+        <div class="s-k">温度</div>
+        <div class="s-v">电机 <span id="stMotor">30°C</span></div>
+        <div class="s-d">主控 <span id="stCpu">48°C</span></div>
+      </div>
+      <div class="s-card" id="stInputCard" role="button" tabindex="0" aria-label="查看输入源详情">
+        <span class="s-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12a4 4 0 0 1 4 4v2a4 4 0 0 1-7 2.6L13 17h-2l-2-.4A4 4 0 0 1 2 14v-2a4 4 0 0 1 4-4Z"/><path d="M7 12h.01M17 12h.01"/></svg>
+        </span>
+        <div class="s-k">输入源</div>
+        <div class="s-v" id="stInput">padd 运行中</div>
+        <div class="s-d" id="stInputD">会覆盖手机指令 · 点此查看</div>
+      </div>
+    </div>
+    <div class="status-foot">
+      <span class="proto-note">robotd 0.15.1 · R17 · duckphone 原型 v1</span>
+      <button class="mini" id="btnStatusClose2" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 警告详情（从黄色条幅的“查看”进入） -->
+<div id="alert" class="overlay hidden">
+  <div class="sheet-card alert-card">
+    <div class="alert-layout">
+      <div class="alert-main">
+        <div class="alert-head">
+          <span class="alert-ico" id="alertIco">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          </span>
+          <div class="alert-h">
+            <div class="kicker" id="alertKicker">输入源</div>
+            <h1 id="alertTitle">手柄服务正在运行</h1>
+          </div>
+        </div>
+        <p id="alertBody">padd 空杆时每 100 ms 仍会重发一次零速帧，会覆盖手机 20 Hz 的驾驶指令。</p>
+        <div class="alert-ev" id="alertEv"></div>
+        <div class="sheet-actions">
+          <button class="big-btn primary" id="alertCopy" type="button">复制停止命令</button>
+          <button class="big-btn primary" id="alertStand" type="button">去站立</button>
+          <button class="big-btn ghost" id="alertOk" type="button">知道了</button>
+        </div>
+      </div>
+      <aside class="alert-side">
+        <div class="msg-head">
+          <div><b>最近消息</b><span id="msgCount">6 条</span></div>
+          <button class="mini hidden" id="alertBack" type="button">返回当前</button>
+        </div>
+        <div class="msg-list" id="msgList"></div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- 维护 -->
+<div id="maint" class="overlay hidden">
+  <div class="drawer">
+    <div class="grab"></div>
+    <h2>维护</h2>
+    <div class="hint">只放少用的恢复动作；驾驶中请先停下。</div>
+
+    <div class="row">
+      <div class="grow">
+        <div class="t">重启舵机</div>
+        <div class="d">过载锁死后使用。会先切力矩，机器人会倒。</div>
+      </div>
+      <button class="mini danger" id="btnReboot" type="button">重启舵机</button>
+    </div>
+
+    <div class="row">
+      <div class="grow">
+        <div class="t">输入源</div>
+        <div class="d">手柄服务运行时会覆盖手机指令；解释与处理在“查看详情”里。</div>
+        <button class="mini" id="btnInputDetail" type="button" style="margin-top:8px;">查看详情</button>
+      </div>
+      <span class="v ok" id="paddState">运行中</span>
+    </div>
+
+    <div class="row">
+      <div class="grow">
+        <div class="t">版本与环路</div>
+        <div class="d">robotd 0.15.1 · R17 · 控制环 50 Hz</div>
+      </div>
+      <span class="v" id="maintHz">50.0 Hz</span>
+    </div>
+
+    <div class="row">
+      <div class="grow">
+        <div class="t">温度</div>
+        <div class="d">板温 / 最热舵机</div>
+      </div>
+      <span class="v" id="maintTemp">48°C / 30°C</span>
+    </div>
+
+    <div class="row">
+      <div class="grow">
+        <div class="t">排障</div>
+        <div class="d">连不上 8001：确认同一 Wi-Fi、板上 duckphone 在跑。</div>
+      </div>
+      <button class="mini" id="btnMaintClose" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<nav id="reviewNav" aria-label="原型状态直达（评审用）">
+  <p class="rn-t">原型状态直达</p>
+  <button type="button" data-h="main">主界面 · 行走</button>
+  <button type="button" data-h="home">主界面 · 待命</button>
+  <button type="button" data-h="limp">主界面 · 卸力</button>
+  <button type="button" data-h="limit">限幅进行中</button>
+  <button type="button" data-h="alert">警告详情 · padd</button>
+  <button type="button" data-h="alert-limit">警告详情 · 限幅</button>
+  <button type="button" data-h="alert-motor">警告详情 · 电机</button>
+  <button type="button" data-h="status">状态页</button>
+  <button type="button" data-h="status-alarm">状态页 · 告警</button>
+  <button type="button" data-h="maintenance">维护页</button>
+  <button type="button" data-h="policy">策略页</button>
+  <button type="button" data-h="readonly">另一台在驾驶</button>
+  <button type="button" data-h="offline">离线打开</button>
+</nav>
+
+
+
+<script>
+(() => {
+  'use strict';
+
+  const $ = (s, root=document) => root.querySelector(s);
+  const $$ = (s, root=document) => Array.from(root.querySelectorAll(s));
+  const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+  const lerp = (a,b,t) => a + (b-a)*t;
+
+  const SPEEDS = {
+    '0.1': { vx: 0.10, yaw: 0.40 },
+    '0.2': { vx: 0.20, yaw: 0.60 },
+    '0.3': { vx: 0.30, yaw: 0.80 },
+  };
+
+  const S = {
+    mode: 'driver',            // driver | readonly | offline | standing
+    policy: 'walk',            // held | walk | home | limp
+    limp: false,
+    fallen: false,
+    batt: { v: 7.55, p: 61 },
+    temp: 30,
+    cpu: 48,
+    hz: 50.0,
+    missed: 12,
+    req: [0,0,0],
+    app: [0,0,0],
+    limited: [],
+    speed: localStorage.getItem('duck.speed') || '0.2',
+    padd: true,
+    demoLimit: false,
+    lastSeen: Date.now(),
+  };
+  if (!SPEEDS[S.speed]) S.speed = '0.2';
+  S.eventsSeq = 0;
+  S.events = [
+    { id:'seed-padd', t: Date.now() - 62 * 1000, kind:'padd', sev:'warn',
+      title:'手柄服务正在运行', summary:'padd 会覆盖手机指令' },
+    { id:'seed-limit', t: Date.now() - 3 * 60 * 1000, kind:'limit', sev:'warn',
+      title:'指令超时被拦截', summary:'vx 0.20 / vy −0.40 实际 0',
+      detail:{ danger:false, kicker:'行走安全', title:'移动指令被拦截',
+        body:'最后一次移动指令已超过 200 ms 未刷新，bridge 强制下发零速。这是训练模式下的正常保护，不是故障。',
+        ev:'<div class="ev-row"><span>请求</span><b>vx 0.20 · vy −0.40 · ω 0.00</b></div><div class="ev-row"><span>实际</span><b>0 · 0 · 0（已归零）</b></div><div class="ev-row"><span>原因</span><b>指令超时 200 ms</b></div>',
+        copy:false, stand:false } },
+    { id:'seed-reboot', t: Date.now() - 8 * 60 * 1000, kind:'reboot', sev:'ok',
+      title:'舵机已重启', summary:'4 个舵机全部应答' },
+    { id:'seed-home', t: Date.now() - 11 * 60 * 1000, kind:'home', sev:'ok',
+      title:'已回 HOME', summary:'机器人站直' },
+    { id:'seed-batt', t: Date.now() - 14 * 60 * 1000, kind:'batt', sev:'ok',
+      title:'电量 61%', summary:'7.62 V · 常规采样',
+      detail:{ danger:false, kicker:'电源', title:'电量 61% · 7.62 V',
+        body:'低压告警阈值是 25% 或 7.3 V。电量低于 15% 时会不允许行走，只保留站立。',
+        ev:'<div class="ev-row"><span>时间</span><b>'+fmtTime(Date.now()-14*60*1000)+'</b></div><div class="ev-row"><span>电压</span><b>7.62 V</b></div><div class="ev-row"><span>电量</span><b>61%</b></div>',
+        copy:false, stand:false } },
+    { id:'seed-loop', t: Date.now() - 19 * 60 * 1000, kind:'loop', sev:'ok',
+      title:'控制环 50.0 Hz', summary:'丢帧 0 · 均值 20.0 ms',
+      detail:{ danger:false, kicker:'控制环', title:'控制环 50.0 Hz',
+        body:'robotd 会按 50 Hz 送出状态帧。低于 48 Hz 记黄色，低于 45 Hz 记红色。',
+        ev:'<div class="ev-row"><span>时间</span><b>'+fmtTime(Date.now()-19*60*1000)+'</b></div><div class="ev-row"><span>频率</span><b>50.0 Hz</b></div><div class="ev-row"><span>丢帧</span><b>0 帧</b></div>',
+        copy:false, stand:false } }
+  ];
+
+  const el = {
+    app: $('#app'), dot: $('#connDot'),
+    chip: $('#policyChip'), policyText: $('#policyText'),
+    battPct: $('#battPct'), battFill: $('#battFill'), battMetric: $('#battMetric'),
+    hzMetric: $('#hzMetric'), hzVal: $('#hzVal'),
+    tempMetric: $('#tempMetric'), tempVal: $('#tempVal'),
+    cpuMetric: $('#cpuMetric'), cpuVal: $('#cpuVal'),
+    alarmChip: $('#alarmChip'), alarmCount: $('#alarmCount'),
+    banner: $('#banner'), bannerText: $('#bannerText'), bannerAction: $('#bannerAction'),
+    stickZone: $('#stickZone'), stickBase: $('#stickBase'), knob: $('#stickKnob'),
+    roVx: $('#roVx'), roYaw: $('#roYaw'), barReq: $('#barReq'), barApp: $('#barApp'),
+    roLimit: $('#roLimit'),
+    btnStand: $('#btnStand'), btnEnable: $('#btnEnable'), enableLabel: $('#enableLabel'), enableSub: $('#enableSub'),
+    btnStop: $('#btnStop'), btnRelax: $('#btnRelax'),
+    seg: $('#speedSeg'), tiltBubble: $('#tiltBubble'), tiltDot: $('#tiltDot'),
+    tiltVal: $('#tiltVal'), btnMaint: $('#btnMaint'),
+    readonly: $('#readonly'), offline: $('#offline'), maint: $('#maint'),
+    policyBar: $('#policyBar'), policyToggle: $('#policyToggle'), policyPanel: $('#policyPanel'),
+    policyChips: $('#policyChips'), policyKey: $('.pb-key'),
+    status: $('#status'), statusBtn: $('#statusBtn'),
+    stConn: $('#stConn'), stIp: $('#stIp'), stPolicy: $('#stPolicy'), stPolicyD: $('#stPolicyD'),
+    stHz: $('#stHz'), stMissed: $('#stMissed'), stBatt: $('#stBatt'), stBattD: $('#stBattD'),
+    stMotor: $('#stMotor'), stCpu: $('#stCpu'), statusAlarms: $('#statusAlarms'),
+    stInput: $('#stInput'), stInputD: $('#stInputD'),
+    stInputCard: $('#stInputCard'),
+    alert: $('#alert'), alertIco: $('#alertIco'), alertKicker: $('#alertKicker'),
+    alertTitle: $('#alertTitle'), alertBody: $('#alertBody'), alertEv: $('#alertEv'),
+    alertCopy: $('#alertCopy'), alertStand: $('#alertStand'), alertOk: $('#alertOk'),
+    alertBack: $('#alertBack'), msgList: $('#msgList'), msgCount: $('#msgCount'),
+    toasts: $('#toasts'),
+    offlineLast: $('#offlineLast'),
+    paddState: $('#paddState'), maintHz: $('#maintHz'), maintTemp: $('#maintTemp'),
+    btnReboot: $('#btnReboot'), btnInputDetail: $('#btnInputDetail'),
+  };
+
+  /* ── 基础渲染 ─────────────────────────────────────────── */
+  const POLICY = { held:'待命', walk:'行走', home:'HOME', limp:'卸力' };
+
+  /* ── 告警判定 ─────────────────────────────────────────── */
+  function alarmState(){
+    const a = { batt:null, cpu:null, motor:null, loop:null };
+    if (S.batt.p < 15 || S.batt.v < 7.0) a.batt = 'bad';
+    else if (S.batt.p < 25 || S.batt.v < 7.3) a.batt = 'warn';
+
+    if (S.cpu >= 85) a.cpu = 'bad';
+    else if (S.cpu >= 70) a.cpu = 'warn';
+
+    if (S.temp >= 60) a.motor = 'bad';
+    else if (S.temp >= 50) a.motor = 'warn';
+
+    if (S.hz < 45) a.loop = 'bad';
+    else if (S.hz < 48) a.loop = 'warn';
+    return a;
+  }
+
+  function activeAlarms(){
+    const a = alarmState();
+    const out = [];
+    if (a.batt) out.push({ kind:'batt', sev:a.batt, text:`电量 ${Math.round(S.batt.p)}% · ${S.batt.v.toFixed(2)}V` });
+    if (a.motor) out.push({ kind:'motor', sev:a.motor, text:`电机 ${Math.round(S.temp)}°C` });
+    if (a.cpu) out.push({ kind:'cpu', sev:a.cpu, text:`主控 ${Math.round(S.cpu)}°C` });
+    if (a.loop) out.push({ kind:'loop', sev:a.loop, text:`控制环 ${S.hz.toFixed(1)} Hz` });
+    if (S.fallen) out.push({ kind:'fallen', sev:'bad', text:'检测到倒地' });
+    if (S.padd) out.push({ kind:'padd', sev:'warn', text:'手柄服务运行中' });
+    if (S.limited.length) out.push({ kind:'limit', sev:'warn', text:'指令未执行' });
+    return out;
+  }
+
+  function worstSev(...sevs){
+    if (sevs.includes('bad')) return 'bad';
+    if (sevs.includes('warn')) return 'warn';
+    return null;
+  }
+
+  function updateTopbar(){
+    const online = S.mode !== 'offline';
+    const a = alarmState();
+    const list = activeAlarms();
+    el.dot.className = 'dot' + (!online ? ' offline' : (S.mode === 'readonly' ? ' readonly' : ''));
+    el.statusBtn.dataset.conn = !online ? 'offline' : (S.mode === 'readonly' ? 'readonly' : 'online');
+    el.policyText.textContent = POLICY[S.policy] || S.policy;
+    el.chip.className = 's-pill policy ' + (S.policy === 'walk' ? 'walk' : S.policy === 'home' ? 'home' : S.policy === 'limp' ? 'limp' : '');
+    el.battPct.textContent = `${Math.round(S.batt.p)}%`;
+    el.battFill.style.setProperty('--level', `${clamp(S.batt.p, 0, 100)}%`);
+    el.battMetric.className = 's-item batt' + (a.batt === 'bad' ? ' low' : a.batt === 'warn' ? ' warn' : '');
+    el.hzVal.textContent = `${Math.round(S.hz)}`;
+    el.hzMetric.className = 's-item hz' + (a.loop === 'bad' ? ' bad' : a.loop === 'warn' ? ' warn' : '');
+    el.tempVal.textContent = `${Math.round(S.temp)}°`;
+    el.tempMetric.className = 's-item temp' + (a.motor === 'bad' ? ' bad' : a.motor === 'warn' ? ' warn' : '');
+    el.cpuVal.textContent = `${Math.round(S.cpu)}°`;
+    el.cpuMetric.className = 's-item cpu' + (a.cpu === 'bad' ? ' bad' : a.cpu === 'warn' ? ' warn' : '');
+    el.alarmChip.classList.toggle('hidden', list.length === 0);
+    el.alarmChip.classList.toggle('danger', list.some(x => x.sev === 'bad'));
+    el.alarmCount.textContent = list.length;
+  }
+
+  function updateStatusPage(){
+    const online = S.mode !== 'offline';
+    const a = alarmState();
+    const list = activeAlarms();
+    const tempSev = worstSev(a.motor, a.cpu);
+
+    el.stConn.textContent = !online ? '未连接' : (S.mode === 'readonly' ? '只读' : '已连接');
+    el.stIp.textContent = !online ? '—' : '192.168.110.240';
+    el.stPolicy.textContent = POLICY[S.policy] || S.policy;
+    el.stPolicyD.textContent = `policy=${S.policy} · limp=${S.limp} · fallen=${S.fallen}`;
+    el.stHz.textContent = `${S.hz.toFixed(1)} Hz`;
+    el.stMissed.textContent = `missed ${S.missed}` + (a.loop ? ' · 阈值 48/45 Hz' : '');
+    el.stBatt.textContent = `${Math.round(S.batt.p)}%`;
+    el.stBattD.textContent = `${S.batt.v.toFixed(2)} V` + (a.batt ? ' · 阈值 7.3/7.0V' : '');
+    el.stMotor.textContent = `${Math.round(S.temp)}°C`;
+    el.stCpu.textContent = `${Math.round(S.cpu)}°C`;
+    el.stInput.textContent = S.padd ? 'padd 运行中' : '仅手机';
+    el.stInputD.textContent = S.padd ? '会覆盖手机指令 · 点此查看' : '无输入冲突';
+
+    const setCard = (id, sev) => {
+      const node = document.getElementById(id);
+      if (node) node.className = 's-card' + (sev === 'bad' ? ' bad' : sev === 'warn' ? ' warn' : '');
+    };
+    setCard('stConnCard', online ? null : 'bad');
+    setCard('stPolicyCard', S.fallen ? 'bad' : null);
+    setCard('stHzCard', a.loop);
+    setCard('stBattCard', a.batt);
+    setCard('stTempCard', tempSev);
+    el.stInputCard.classList.toggle('warn', S.padd);
+
+    if (list.length) {
+      el.statusAlarms.textContent = `⚠ ${list.length} 项告警 · ${list.map(x => x.text).join(' / ')}`;
+      el.statusAlarms.className = 'status-alarms' + (list.some(x => x.sev === 'bad') ? ' danger' : '');
+    } else {
+      el.statusAlarms.className = 'status-alarms hidden';
+    }
+  }
+
+  function tiltAngle(){
+    return Math.abs(S.app[1]) * 18 + Math.abs(S.app[0]) * 6;
+  }
+
+  function updateStatus(){
+    const tilt = tiltAngle();
+    el.tiltVal.textContent = `${tilt.toFixed(1)}°`;
+    const deg = clamp(tilt / 30, 0, 1);
+    const x = clamp(-S.app[1] * 26, -12, 12);
+    const y = clamp(S.app[0] * 18, -12, 12);
+    el.tiltDot.style.transform = `translate(${x}px,${y}px)`;
+    el.tiltBubble.className = 'bubble' + (S.fallen || deg > .8 ? ' bad' : deg > .5 ? ' warn' : '');
+    el.maintHz.textContent = `${S.hz.toFixed(1)} Hz`;
+    el.maintTemp.textContent = `${Math.round(S.cpu)}°C / ${Math.round(S.temp)}°C`;
+    el.roVx.textContent = (S.req[0] >= 0 ? '+' : '') + S.req[0].toFixed(2);
+    el.roYaw.textContent = (S.req[2] >= 0 ? '+' : '') + S.req[2].toFixed(2);
+    el.barReq.style.width = clamp(Math.abs(S.req[0]) / 0.3 * 100, 0, 100) + '%';
+    el.barApp.style.width = clamp(Math.abs(S.app[0]) / 0.3 * 100, 0, 100) + '%';
+    el.roLimit.classList.toggle('hidden', S.limited.length === 0);
+  }
+
+  function updateBanner(){
+    const a = currentAlert();
+    if (!a) {
+      el.banner.classList.add('hidden');
+      return;
+    }
+    el.bannerText.textContent = a.banner || a.title;
+    el.banner.classList.remove('hidden');
+    el.banner.classList.toggle('danger', !!a.danger);
+  }
+
+  function limitZh(x){
+    return ({ deadman:'指令超时', joint_range:'关节限位', not_finite:'数值非法' })[x] || x;
+  }
+
+  function canDrive(){
+    return S.mode === 'driver' && !S.limp && S.policy === 'walk' && isWalking();
+  }
+  function canAct(){
+    return S.mode === 'driver';
+  }
+
+  function updateActions(){
+    const drive = canDrive();
+    el.stickZone.classList.toggle('disabled', !drive);
+    el.btnStand.disabled = !canAct();
+    el.btnEnable.disabled = !canAct();
+    el.btnStop.disabled = !canAct();
+    el.btnRelax.disabled = !canAct() || S.limp;
+    el.btnMaint.disabled = S.mode === 'offline';
+    el.enableLabel.textContent = S.policy === 'walk' ? '交还' : '接管';
+    el.enableSub.textContent = S.policy === 'walk' ? '策略待命' : '让策略驱动';
+    el.btnEnable.classList.toggle('enabled', S.policy === 'walk');
+    el.btnEnable.setAttribute('aria-label', S.policy === 'walk' ? '交还策略' : '接管策略');
+    el.btnStop.classList.toggle('danger', false);
+  }
+
+  function render(){
+    updateTopbar(); updateStatus(); updateStatusPage(); updateBanner(); updateActions();
+    syncPolicyGate();
+    el.app.dataset.demo = S.demoLimit ? '1' : '0';
+    el.app.dataset.padd = S.padd ? '1' : '0';
+    el.app.dataset.lim = S.limited.join(',');
+  }
+
+  /* ── Toast ────────────────────────────────────────────── */
+  function toast(msg, kind='ok', ms=2200){
+    const d = document.createElement('div');
+    d.className = 'toast ' + kind;
+    d.textContent = msg;
+    el.toasts.appendChild(d);
+    while (el.toasts.children.length > 2) el.toasts.removeChild(el.toasts.firstChild);
+    setTimeout(() => { d.style.opacity = '0'; d.style.transition = 'opacity .2s'; }, ms);
+    setTimeout(() => d.remove(), ms + 240);
+    vibrate(kind === 'err' ? 40 : 10);
+  }
+  function vibrate(ms){ if (navigator.vibrate) { try { navigator.vibrate(ms); } catch(_){} } }
+
+  /* ── 动作 ─────────────────────────────────────────────── */
+  function setPolicy(p){
+    S.policy = p;
+    S.limp = (p === 'limp');
+    if (p !== 'limp') S.fallen = false;
+    render();
+  }
+
+  el.btnStand.addEventListener('click', () => {
+    if (!canAct()) return;
+    const wasLimp = S.limp;
+    S.mode = 'standing';
+    setPolicy('home');
+    toast(wasLimp ? '重新上力中…（约 2 秒）' : '站立中…（约 2 秒）');
+    render();
+    setTimeout(() => {
+      S.mode = 'driver';
+      setPolicy('held');
+      pushEvent('home','ok','已回 HOME','机器人站直');
+      toast('已回 HOME，请扶稳');
+      render();
+    }, 1600);
+  });
+
+  el.btnEnable.addEventListener('click', () => {
+    if (!canAct()) return;
+    if (S.limp) { toast('请先站立，再接管策略', 'warn'); return; }
+    if (S.policy === 'walk') { setPolicy('held'); pushEvent('enable','ok','已交还策略','机器人待命'); toast('已交还策略，机器人待命'); }
+    else { setPolicy('walk'); pushEvent('takeover','ok','已接管行走策略','手机开始控制'); toast('已接管行走策略'); }
+  });
+
+  el.btnStop.addEventListener('click', () => {
+    if (S.mode === 'offline') return;
+    S.req = [0,0,0]; S.app = [0,0,0];
+    render(); vibrate(40);
+    pushEvent('stop','ok','已停止','仍站立 · 指令已归零');
+    toast('已停止 · 仍站立');
+  });
+
+  /* ── 长按通用 ─────────────────────────────────────────── */
+  function bindHold(btn, ms, onDone){
+    let start = 0, timer = 0, active = false;
+    const stopTimer = () => { if (timer) { clearInterval(timer); timer = 0; } };
+    const reset = () => {
+      btn.classList.remove('holding');
+      btn.style.setProperty('--hold', 0);
+    };
+    const cancel = () => {
+      if (!active) return;
+      active = false;
+      stopTimer();
+      reset();
+    };
+    btn.addEventListener('pointerdown', (e) => {
+      if (btn.disabled) return;
+      e.preventDefault(); e.stopPropagation();
+      active = true; start = performance.now();
+      btn.classList.add('holding');
+      btn.style.setProperty('--hold', 0.001);
+      try { btn.setPointerCapture(e.pointerId); } catch(_){}
+      stopTimer();
+      timer = setInterval(() => {
+        if (!active) return;
+        const p = clamp((performance.now() - start) / ms, 0, 1);
+        btn.style.setProperty('--hold', p);
+        if (p >= 1) {
+          active = false;
+          stopTimer();
+          reset();
+          onDone();
+        }
+      }, 30);
+    });
+    ['pointerup','pointercancel','lostpointercapture','pointerleave'].forEach(ev =>
+      btn.addEventListener(ev, cancel));
+    return cancel;
+  }
+
+  function doRelax(){
+    closeAlert(); closeMaint(); closeStatus();
+    S.req = [0,0,0]; S.app = [0,0,0];
+    setPolicy('limp');
+    logLast();
+    pushEvent('relax','warn','已卸力','机器人会瘫倒，需要重新站立');
+    render();
+    toast('已卸力 · 机器人会瘫倒', 'warn', 3200);
+  }
+
+  // 长按 1.5 s 即生效 —— 长按本身就是防误触，不再叠一层确认弹框
+  bindHold(el.btnRelax, 1500, () => { vibrate(60); doRelax(); });
+
+  /* ── 策略条（假数据：与板上 6 个双足包一致） ───────────── */
+  // kind 决定点完之后去哪，和 robotd 的优先级链一致：
+  //   skill > ground_pick > sit/rise > walk。技能窗口到期、没有 chain 就落回 walk。
+  //   sitstand 是锁存（坐下后由它保持），walk 是常驻。
+  const POLICIES = [
+    {slot:'walk',        short:'行走',     label:'行走／保持', name:'行走＋倒地联合 9600 轮',        kind:'walk',    dur:0,   state:'active'},
+    {slot:'sitstand',    short:'坐下/站起', label:'坐下／站起', name:'坐下／站起 10000 轮',          kind:'latch',   dur:0,   state:'installed'},
+    {slot:'ground_pick', short:'拾取',     label:'地面捡取',   name:'低头捡取 10000 轮 · 无缩放滤波', kind:'oneshot', dur:2.8, state:'installed'},
+    {slot:'kick_left',   short:'左脚踢',   label:'左脚踢球',   name:'左脚踢球 10000 轮',            kind:'oneshot', dur:0.5, state:'installed'},
+    {slot:'kick_right',  short:'右脚踢',   label:'右脚踢球',   name:'右脚踢球 10000 轮 · 无缩放滤波', kind:'oneshot', dur:0.5, state:'missing'},
+    {slot:'roulade',     short:'前滚翻',   label:'前滚翻',     name:'前滚翻 10000 轮 · 无缩放滤波',  kind:'oneshot', dur:1.0, state:'installed'},
+  ];
+  const POL_BADGE = {active:'在用', installed:'', missing:'未配置'};
+
+  function currentPolicy(){ return POLICIES.find((p) => p.state === 'active') || POLICIES[0]; }
+  // 只有「行走」槽在跑时方向盘才有效；其它策略点完只执行一次，不接管方向
+  function isWalking(){ return currentPolicy().slot === 'walk'; }
+  // 接管中（策略在驱动）才能点策略；待命 / 卸力 / 只读 / 离线锁上
+  function policyGateOpen(){ return S.mode === 'driver' && S.policy === 'walk'; }
+
+  function renderChips(){
+    const open = policyGateOpen();
+    el.policyChips.innerHTML = POLICIES.map((p) => `
+      <button class="chip" type="button" data-slot="${p.slot}" data-state="${p.state}"
+              title="${p.name}" ${p.state === 'missing' || !open ? 'disabled' : ''}>
+        ${p.short}
+      </button>`).join('');
+    const chip = el.policyChips.querySelector('.chip[data-state="active"]');
+    if (chip) chip.scrollIntoView({block:'nearest', inline:'center'});
+  }
+
+  function renderPanel(){
+    el.policyPanel.innerHTML = POLICIES.map((p) => `
+      <button class="pp" type="button" role="option" data-slot="${p.slot}" data-state="${p.state}"
+              ${p.state === 'missing' || !policyGateOpen() ? 'disabled' : ''}>
+        <span class="pp-dot"></span>
+        <span class="pp-txt">
+          <span class="pp-name">${p.name}</span>
+          <span class="pp-sub">${p.slot} · ${p.label}</span>
+        </span>
+        ${POL_BADGE[p.state] ? `<span class="pp-badge">${POL_BADGE[p.state]}</span>` : ''}
+      </button>`).join('') +
+      `<div class="pp-note">${
+        policyGateOpen()
+          ? '点一次就执行一次：前滚翻 1 s、踢球 0.5 s、拾取 2.8 s，跑完自动回到「行走」；坐下/站起是开关。只有「行走」时方向盘能驱动运动。'
+          : '现在没有策略在驱动，不能切换 —— 先点「接管」让策略跑起来。'
+      }</div>`;
+  }
+
+  // 门禁一变就重画，别让 chip 留在"能点"的样子
+  function syncPolicyGate(){
+    const open = policyGateOpen();
+    el.policyBar.dataset.locked = open ? 'false' : 'true';
+    el.policyPanel.dataset.locked = open ? 'false' : 'true';
+    el.policyKey.textContent = open ? '策略' : '策略（需接管）';
+    el.policyChips.querySelectorAll('.chip').forEach((b) => {
+      b.disabled = !open || b.dataset.state === 'missing';
+    });
+    if (el.policyBar.dataset.open === 'true') renderPanel();
+  }
+
+  function setPolicyOpen(open){
+    el.policyBar.dataset.open = open ? 'true' : 'false';
+    el.policyToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    el.policyPanel.classList.toggle('hidden', !open);
+    if (open) { renderPanel(); syncPolicyGate(); }
+  }
+  function openPolicyBar(){ setPolicyOpen(true); }
+  function closePolicyBar(){ setPolicyOpen(false); }
+
+  // 点一次 = 执行一次这个策略。行为对齐 robotd：
+  //   walk     → 常驻
+  //   oneshot  → 跑完 duration 自动落回 walk（前滚翻 1 s / 踢球 0.5 s / 拾取 2.8 s）
+  //   latch    → 坐下/站起是个开关，停在你切到的状态
+  let revertTimer = 0;
+  function switchPolicy(p){
+    if (!p || p.state === 'missing') return;
+    if (!policyGateOpen()) { toast('先点「接管」让策略驱动，再切策略', 'warn'); return; }
+    if (p.state !== 'active') {
+      currentPolicy().state = 'installed';
+      p.state = 'active';
+    }
+    S.req = [0,0,0]; S.app = [0,0,0];
+    render();
+    restStick();
+    renderChips();
+    if (el.policyBar.dataset.open === 'true') renderPanel();
+    pushEvent('policy', 'ok', '执行策略', `${p.slot} → ${p.name}`);
+    toast(`已切换至${p.short}策略`);
+    closePolicyBar();
+
+    if (revertTimer) { clearTimeout(revertTimer); revertTimer = 0; }
+    if (p.kind === 'oneshot') {
+      // 技能窗口到期，优先级链落回 walk —— 界面跟着回去，不做假的"停留"
+      revertTimer = setTimeout(() => {
+        revertTimer = 0;
+        const cur = currentPolicy();
+        if (cur.slot !== p.slot) return;
+        cur.state = 'installed';
+        POLICIES[0].state = 'active';
+        render(); renderChips();
+        if (el.policyBar.dataset.open === 'true') renderPanel();
+      }, p.dur * 1000);
+    }
+  }
+
+  el.policyChips.addEventListener('click', (e) => {
+    const b = e.target.closest('.chip');
+    if (!b) return;
+    switchPolicy(POLICIES.find((x) => x.slot === b.dataset.slot));
+  });
+
+  el.policyToggle.addEventListener('click', () => {
+    setPolicyOpen(el.policyBar.dataset.open !== 'true');
+  });
+
+  el.policyPanel.addEventListener('click', (e) => {
+    const b = e.target.closest('.pp');
+    if (!b) return;
+    switchPolicy(POLICIES.find((x) => x.slot === b.dataset.slot));
+  });
+
+  // 点策略条以外的地方收起
+  document.addEventListener('pointerdown', (e) => {
+    if (el.policyBar.dataset.open !== 'true') return;
+    if (e.target.closest('#policyBar')) return;
+    closePolicyBar();
+  }, true);
+
+  renderChips();
+  syncPolicyGate();
+
+  /* ── 速度档 ───────────────────────────────────────────── */
+  function setSpeed(v){
+    if (!SPEEDS[v]) return;
+    S.speed = v;
+    localStorage.setItem('duck.speed', v);
+    $$('#speedSeg button').forEach(b => b.classList.toggle('on', b.dataset.speed === v));
+  }
+  $$('#speedSeg button').forEach(b => b.addEventListener('click', () => setSpeed(b.dataset.speed)));
+  setSpeed(S.speed);
+
+  /* ── 摇杆 ─────────────────────────────────────────────── */
+  const stick = { active:false, id:null, cx:0, cy:0 };
+  const R = 80;
+
+  function showStick(x, y){
+    el.stickBase.style.left = x + 'px';
+    el.stickBase.style.top = y + 'px';
+    el.stickBase.classList.add('on');
+  }
+  function moveKnob(dx, dy){
+    el.knob.style.transform = `translate(${dx}px,${dy}px)`;
+  }
+  function restStick(){
+    el.stickBase.style.left = '50%';
+    el.stickBase.style.top = '50%';
+    el.stickBase.classList.remove('on');
+    moveKnob(0,0);
+  }
+  function setStickFromPoint(px, py){
+    let dx = px - stick.cx, dy = py - stick.cy;
+    const len = Math.hypot(dx, dy);
+    if (len > R) { dx = dx / len * R; dy = dy / len * R; }
+    const nx = dx / R, ny = dy / R;
+    if (Math.hypot(nx, ny) < 0.12) {
+      S.req = [0,0,0];
+    } else {
+      const lim = SPEEDS[S.speed];
+      const vx = clamp((-ny) * lim.vx, -lim.vx * 0.6, lim.vx);
+      const vyaw = clamp((-nx) * lim.yaw, -lim.yaw, lim.yaw);
+      S.req = [vx, 0, vyaw];
+    }
+    moveKnob(dx, dy);
+    render();
+  }
+
+  el.stickZone.addEventListener('pointerdown', (e) => {
+    if (!canDrive()) return;
+    if (e.target.closest('button')) return;
+    const r = el.stickZone.getBoundingClientRect();
+    stick.active = true; stick.id = e.pointerId;
+    stick.cx = e.clientX - r.left; stick.cy = e.clientY - r.top;
+    showStick(stick.cx, stick.cy);
+    moveKnob(0,0);
+    try { el.stickZone.setPointerCapture(e.pointerId); } catch(_){}
+    e.preventDefault();
+  });
+  el.stickZone.addEventListener('pointermove', (e) => {
+    if (!stick.active || e.pointerId !== stick.id) return;
+    const r = el.stickZone.getBoundingClientRect();
+    setStickFromPoint(e.clientX - r.left, e.clientY - r.top);
+  });
+  function endStick(){
+    if (!stick.active) return;
+    stick.active = false; stick.id = null;
+    S.req = [0,0,0];
+    restStick();
+    render();
+  }
+  ['pointerup','pointercancel','lostpointercapture','pointerleave'].forEach(ev =>
+    el.stickZone.addEventListener(ev, endStick));
+  window.addEventListener('blur', endStick);
+
+  // 键盘演示：方向键
+  const keys = new Set();
+  window.addEventListener('keydown', (e) => {
+    if (!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) return;
+    e.preventDefault();
+    if (e.key === ' ') { S.req = [0,0,0]; render(); return; }
+    keys.add(e.key); applyKeys();
+  });
+  window.addEventListener('keyup', (e) => { keys.delete(e.key); if (!keys.size) { S.req=[0,0,0]; render(); } });
+  function applyKeys(){
+    if (!canDrive()) return;
+    const lim = SPEEDS[S.speed];
+    let vx = (keys.has('ArrowUp') ? lim.vx : 0) + (keys.has('ArrowDown') ? -lim.vx*0.6 : 0);
+    let yaw = (keys.has('ArrowLeft') ? lim.yaw : 0) + (keys.has('ArrowRight') ? -lim.yaw : 0);
+    S.req = [vx, 0, yaw];
+    render();
+  }
+
+  /* ── 警告详情（解释黄条，不做维护动作） ───────────────── */
+  function suggestionForLimit(){
+    if (S.limited.includes('deadman')) return '摇杆保持按住；检查 Wi-Fi';
+    if (S.limited.includes('joint_range')) return '降低速度/角度；检查关节是否卡住';
+    if (S.limited.includes('not_finite')) return '松开摇杆重试；持续出现就看日志';
+    return '松开摇杆重试';
+  }
+
+  function buildAlert(kind){
+    const reason = S.limited.map(limitZh).join(' / ');
+    const reqTxt = `${S.req[0].toFixed(2)} m/s · ${S.req[2].toFixed(2)} rad/s`;
+    const appTxt = `${S.app[0].toFixed(2)} m/s · ${S.app[2].toFixed(2)} rad/s`;
+
+    if (kind === 'padd') return {
+      danger: false, kicker: '输入源 · 手柄',
+      title: '手柄服务正在运行',
+      banner: '手柄服务 (padd) 在运行，会覆盖手机指令',
+      body: 'padd 空杆时每 100 ms 仍会重发一次零速帧，会覆盖手机 20 Hz 的驾驶指令。联调前先停掉它；停掉后手柄不能再用。',
+      ev: `<div class="ev-row"><span>状态</span><b>运行中</b></div>
+           <div class="ev-row"><span>设备</span><b>Xbox 控制器已连接</b></div>
+           <div class="ev-row"><span>停止命令</span><code>sudo systemctl stop padd</code></div>`,
+      copy: true, stand: false
+    };
+    if (kind === 'limit') return {
+      danger: false, kicker: '未执行 · 安全层',
+      title: '指令没有被执行',
+      banner: '未执行：' + (reason || '安全层限幅'),
+      body: '机器人收到了速度请求，但安全层把它归零了。下面是原因和建议。',
+      ev: `<div class="ev-row"><span>请求</span><b>${reqTxt}</b></div>
+           <div class="ev-row"><span>实际</span><b>${appTxt}</b></div>
+           <div class="ev-row"><span>原因</span><b>${reason || '—'}</b></div>
+           <div class="ev-row"><span>建议</span><b>${suggestionForLimit()}</b></div>`,
+      copy: false, stand: false
+    };
+    if (kind === 'batt') return {
+      danger: true, kicker: '电量',
+      title: '电量偏低',
+      banner: `电量低：${Math.round(S.batt.p)}% · ${S.batt.v.toFixed(2)} V`,
+      body: '走路峰值电流会让电压瞬间下塌，可能出现掉力矩或板子重启。建议先充电再走。',
+      ev: `<div class="ev-row"><span>当前</span><b>${Math.round(S.batt.p)}% · ${S.batt.v.toFixed(2)} V</b></div>
+           <div class="ev-row"><span>阈值</span><b>25% / 7.3 V 预警 · 15% / 7.0 V 危险</b></div>
+           <div class="ev-row"><span>建议</span><b>先充电到 7.8 V 以上</b></div>`,
+      copy: false, stand: false
+    };
+    if (kind === 'fallen') return {
+      danger: true, kicker: '姿态',
+      title: '检测到倒地',
+      banner: '已检测到倒地；仍可站立/卸力',
+      body: '机器人报告 fallen。它仍然可以站立、卸力或重启舵机；先把周围清空，确认是吊架还是地面。',
+      ev: `<div class="ev-row"><span>倾角</span><b>${tiltAngle().toFixed(1)}°</b></div>
+           <div class="ev-row"><span>建议</span><b>${S.limp ? '先点“站立”重新上力' : '点“站立”回 HOME，或长按卸力'}</b></div>`,
+      copy: false, stand: true
+    };
+    if (kind === 'motor') {
+      const sev = alarmState().motor;
+      return {
+        danger: sev === 'bad', kicker: '温度 · 电机',
+        title: '电机温度偏高',
+        banner: `电机温度偏高：${Math.round(S.temp)}°C`,
+        body: '最热舵机接近或超过建议上限。继续走路可能触发热保护或掉力矩。',
+        ev: `<div class="ev-row"><span>最热舵机</span><b>${Math.round(S.temp)}°C</b></div>
+             <div class="ev-row"><span>阈值</span><b>50°C 预警 · 60°C 危险</b></div>
+             <div class="ev-row"><span>建议</span><b>停下散热，检查是否卡住</b></div>`,
+        copy: false, stand: false
+      };
+    }
+    if (kind === 'cpu') {
+      const sev = alarmState().cpu;
+      return {
+        danger: sev === 'bad', kicker: '温度 · 主控',
+        title: '主控温度偏高',
+        banner: `主控温度偏高：${Math.round(S.cpu)}°C`,
+        body: 'SoC 温度接近或超过降频阈值。控制环可能掉频，先降低负载或停机散热。',
+        ev: `<div class="ev-row"><span>主控</span><b>${Math.round(S.cpu)}°C</b></div>
+             <div class="ev-row"><span>阈值</span><b>70°C 预警 · 85°C 危险</b></div>
+             <div class="ev-row"><span>建议</span><b>停止驾驶，检查散热/环境温度</b></div>`,
+        copy: false, stand: false
+      };
+    }
+    if (kind === 'loop') {
+      const sev = alarmState().loop;
+      return {
+        danger: sev === 'bad', kicker: '控制环',
+        title: '控制环频率偏低',
+        banner: `控制环频率偏低：${S.hz.toFixed(1)} Hz`,
+        body: '50 Hz 控制环没有跑满，可能是 CPU 负载、总线超时或散热降频。走路会变得不稳。',
+        ev: `<div class="ev-row"><span>当前</span><b>${S.hz.toFixed(1)} Hz</b></div>
+             <div class="ev-row"><span>丢步</span><b>missed ${S.missed}</b></div>
+             <div class="ev-row"><span>阈值</span><b>48 Hz 预警 · 45 Hz 危险</b></div>`,
+        copy: false, stand: false
+      };
+    }
+    return null;
+  }
+
+  function currentAlert(){
+    if (S.mode !== 'driver') return null;
+    const a = alarmState();
+    const order = [];
+    if (S.fallen) order.push('fallen');
+    if (a.batt === 'bad') order.push('batt');
+    if (a.motor === 'bad') order.push('motor');
+    if (a.cpu === 'bad') order.push('cpu');
+    if (S.padd) order.push('padd');
+    if (S.limited.length) order.push('limit');
+    if (a.batt === 'warn') order.push('batt');
+    if (a.motor === 'warn') order.push('motor');
+    if (a.cpu === 'warn') order.push('cpu');
+    if (a.loop) order.push('loop');
+    if (!order.length) return null;
+    const found = buildAlert(order[0]);
+    if (found) found.kind = order[0];
+    return found;
+  }
+
+  /* ── 事件记录 ─────────────────────────────────────────── */
+  function fmtTime(t){
+    const d = new Date(t);
+    const p = n => String(n).padStart(2, '0');
+    return `${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+
+  function pushEvent(kind, sev, title, summary){
+    S.events.unshift({
+      id: 'e' + (++S.eventsSeq) + '-' + Date.now().toString(36),
+      t: Date.now(), kind, sev, title, summary
+    });
+    S.events = S.events.slice(0, 10);
+    if (!el.alert.classList.contains('hidden')) renderMsgList();
+  }
+
+  function eventDetail(e){
+    if (e.id === '__current') return currentAlertDetail;
+    if (e.detail) return e.detail;
+    if (['padd','limit','motor','cpu','loop','batt','fallen'].includes(e.kind)) {
+      const a = buildAlert(e.kind);
+      if (a) return a;
+    }
+    return {
+      danger: e.sev === 'bad', kicker: '记录',
+      title: e.title,
+      body: e.summary || '—',
+      ev: `<div class="ev-row"><span>时间</span><b>${fmtTime(e.t)}</b></div>
+           <div class="ev-row"><span>结果</span><b>${e.summary || '—'}</b></div>`,
+      copy: false, stand: false
+    };
+  }
+
+  function renderMsgList(){
+    if (!el.msgList) return;
+    const items = S.events.slice();
+    // 当前这条若还没写进历史，就在列表顶部临时插一条，保证“当前”也能在列表里看到
+    if (currentAlertDetail && !currentAlertEventId && !currentAlertDetail.__historical) {
+      items.unshift({
+        id: '__current', t: currentAlertAt, kind: currentAlertDetail.kind,
+        sev: currentAlertDetail.danger ? 'bad' : 'warn',
+        title: currentAlertDetail.title, summary: currentAlertDetail.banner || ''
+      });
+    }
+    el.msgCount.textContent = `${items.length} 条`;
+    if (!items.length) {
+      el.msgList.innerHTML = '<div class="msg-empty">还没有消息</div>';
+      return;
+    }
+    el.msgList.innerHTML = items.map(e => {
+      const dot = e.sev === 'bad' ? 'bad' : e.sev === 'warn' ? 'warn' : 'ok';
+      return `<button class="msg${e.id === viewingEventId ? ' on' : ''}" data-id="${e.id}" type="button">
+        <span class="msg-dot ${dot}"></span>
+        <span class="msg-time">${fmtTime(e.t)}</span>
+        <span class="msg-txt"><b>${e.title}</b><small>${e.summary || ''}</small></span>
+        <span class="msg-chev">›</span>
+      </button>`;
+    }).join('');
+  }
+
+  function renderAlertView(a, isCurrent){
+    el.alertIco.className = 'alert-ico' + (a.danger ? ' danger' : '');
+    el.alertKicker.textContent = a.kicker;
+    el.alertTitle.textContent = a.title;
+    el.alertBody.textContent = a.body;
+    el.alertEv.innerHTML = a.ev || '';
+    el.alertCopy.classList.toggle('hidden', !(isCurrent && a.copy));
+    el.alertStand.classList.toggle('hidden', !(isCurrent && a.stand));
+    el.alertBack.classList.toggle('hidden', isCurrent || !currentAlertDetail);
+  }
+
+  let currentAlertDetail = null;
+  let currentAlertEventId = null;
+  let currentAlertAt = 0;
+  let viewingEventId = null;
+
+  function showEvent(id){
+    if (id === '__current') { backToCurrent(); return; }
+    const e = S.events.find(x => x.id === id);
+    if (!e) return;
+    viewingEventId = id;
+    renderAlertView(eventDetail(e), false);
+    renderMsgList();
+  }
+
+  function backToCurrent(){
+    if (!currentAlertDetail) return;
+    viewingEventId = currentAlertEventId || '__current';
+    renderAlertView(currentAlertDetail, true);
+    renderMsgList();
+  }
+
+  function openAlert(kind){
+    const a = kind ? buildAlert(kind) : currentAlert();
+    if (!a) { toast('当前没有需要处理的提示'); return; }
+    if (kind) a.kind = kind;
+    closeMaint(); closeStatus();
+    // 弹层出现先归零；证据文本在上面已经取好
+    S.req = [0,0,0]; S.app = [0,0,0];
+    render();
+    currentAlertDetail = a;
+    currentAlertAt = Date.now();
+    const match = S.events.find(e => e.kind === a.kind);
+    currentAlertEventId = match ? match.id : null;
+    viewingEventId = currentAlertEventId || '__current';
+    renderAlertView(a, true);
+    renderMsgList();
+    el.alert.classList.remove('hidden');
+  }
+  function closeAlert(){ el.alert.classList.add('hidden'); }
+
+  el.alertCopy.addEventListener('click', async () => {
+    const text = 'sudo systemctl stop padd';
+    try { await navigator.clipboard.writeText(text); toast('命令已复制'); }
+    catch(_) { toast('请手动复制：' + text, 'warn'); }
+  });
+  el.alertStand.addEventListener('click', () => {
+    closeAlert();
+    if (el.btnStand.disabled) { toast('当前不能站立，请先看维护面板', 'warn'); return; }
+    el.btnStand.click();
+  });
+  el.alertOk.addEventListener('click', closeAlert);
+  el.alertBack.addEventListener('click', backToCurrent);
+  el.msgList.addEventListener('click', (e) => {
+    const b = e.target.closest('.msg');
+    if (b && b.dataset.id) showEvent(b.dataset.id);
+  });
+  el.alert.addEventListener('click', (e) => { if (e.target === el.alert) closeAlert(); });
+
+  /* ── 状态详情（点顶栏进入） ───────────────────────────── */
+  function openStatus(){
+    closeAlert(); closeMaint();
+    S.req = [0,0,0]; S.app = [0,0,0];
+    render();
+    updateStatusPage();
+    el.status.classList.remove('hidden');
+  }
+  function closeStatus(){ el.status.classList.add('hidden'); }
+
+  el.statusBtn.addEventListener('click', openStatus);
+  $('#btnStatusClose').addEventListener('click', closeStatus);
+  $('#btnStatusClose2').addEventListener('click', closeStatus);
+  el.status.addEventListener('click', (e) => { if (e.target === el.status) closeStatus(); });
+  function openInputDetail(){
+    closeStatus();
+    if (S.padd) openAlert('padd');
+    else toast('手柄服务未运行，手机指令不会被覆盖');
+  }
+  el.stInputCard.addEventListener('click', openInputDetail);
+  el.stInputCard.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openInputDetail(); }
+  });
+
+  /* ── 维护（设备级动作，不重复解释黄条） ───────────────── */
+  function openMaint(){
+    closeAlert(); closeStatus();
+    updateMaint();
+    el.maint.classList.remove('hidden');
+  }
+  function closeMaint(){ el.maint.classList.add('hidden'); }
+  function updateMaint(){
+    el.paddState.textContent = S.padd ? '运行中' : '未运行';
+    el.paddState.className = 'v ' + (S.padd ? 'warn' : 'ok');
+  }
+  el.btnMaint.addEventListener('click', openMaint);
+  el.bannerAction.addEventListener('click', () => openAlert());
+  el.btnInputDetail.addEventListener('click', () => {
+    if (S.padd) openAlert('padd');
+    else toast('手柄服务未运行，手机指令不会被覆盖');
+  });
+  async function enterFullscreen(){
+    try {
+      if (document.fullscreenElement) { await document.exitFullscreen(); return; }
+      await document.documentElement.requestFullscreen();
+      // 只做竖屏，全屏后不再锁方向
+    } catch(_) { toast('当前浏览器不支持全屏，可添加到桌面后使用', 'warn', 3200); }
+  }
+  $('#btnFull').addEventListener('click', enterFullscreen);
+  $('#btnMaintClose').addEventListener('click', closeMaint);
+  el.maint.addEventListener('click', (e) => { if (e.target === el.maint) closeMaint(); });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeAlert(); closeMaint(); closeStatus(); }
+  });
+
+  let rebootArmed = false, rebootTimer = 0;
+  el.btnReboot.addEventListener('click', () => {
+    if (!rebootArmed) {
+      rebootArmed = true;
+      el.btnReboot.textContent = '再点一次确认';
+      rebootTimer = setTimeout(() => {
+        rebootArmed = false; el.btnReboot.textContent = '重启舵机';
+      }, 3000);
+      return;
+    }
+    clearTimeout(rebootTimer);
+    rebootArmed = false;
+    el.btnReboot.textContent = '重启舵机';
+    pushEvent('reboot','warn','舵机重启中','等待 4 个舵机应答');
+    toast('舵机重启中…', 'warn');
+    setTimeout(() => {
+      setPolicy('held');
+      pushEvent('reboot','ok','舵机已重启','请重新站立');
+      toast('舵机已重启，请重新站立', 'warn', 3200);
+    }, 1400);
+  });
+
+  /* ── 只读 / 离线 ──────────────────────────────────────── */
+  function setMode(mode){
+    const prev = S.mode;
+    S.mode = mode;
+    el.readonly.classList.toggle('hidden', mode !== 'readonly');
+    el.offline.classList.toggle('hidden', mode !== 'offline');
+    if (mode === 'readonly' || mode === 'offline') { S.req = [0,0,0]; S.app = [0,0,0]; }
+    if (mode === 'offline' && prev !== 'offline') pushEvent('offline','bad','连接断开','已进入离线模式');
+    if (mode === 'readonly' && prev !== 'readonly') pushEvent('readonly','warn','进入只读','只能看状态，不能驾驶');
+    render();
+  }
+
+  $('#btnTakeover').addEventListener('click', () => {
+    const b = $('#btnTakeover');
+    b.disabled = true; b.textContent = '请求中…';
+    setTimeout(() => {
+      b.disabled = false; b.textContent = '请求接管';
+      setMode('driver');
+      pushEvent('takeover','ok','已接管','手机开始控制');
+      toast('已接管');
+    }, 900);
+  });
+  $('#btnReadonlyClose').addEventListener('click', () => {
+    el.readonly.classList.add('hidden');
+    toast('只看状态 · 不能驾驶', 'warn');
+  });
+
+  $('#btnRetry').addEventListener('click', () => {
+    const b = $('#btnRetry');
+    b.disabled = true; b.textContent = '重连中…';
+    setTimeout(() => {
+      b.disabled = false; b.textContent = '重试连接';
+      setMode('driver');
+      toast('已重新连接');
+      logLast();
+    }, 900);
+  });
+  $('#btnHelp').addEventListener('click', () => {
+    toast('连不上 8001：确认同一 Wi-Fi、板上 duckphone 在跑', 'warn', 4200);
+  });
+
+  /* ── 状态持久化（离线展示用） ─────────────────────────── */
+  function logLast(){
+    try {
+      localStorage.setItem('duck.last', JSON.stringify({
+        t: Date.now(), policy: S.policy, p: S.batt.p
+      }));
+    } catch(_){}
+  }
+  function showLast(){
+    let last = null;
+    try { last = JSON.parse(localStorage.getItem('duck.last') || 'null'); } catch(_){}
+    const t = last ? new Date(last.t) : new Date();
+    const hh = String(t.getHours()).padStart(2,'0');
+    const mm = String(t.getMinutes()).padStart(2,'0');
+    const ss = String(t.getSeconds()).padStart(2,'0');
+    el.offlineLast.innerHTML = `上次连接 <b>${hh}:${mm}:${ss}</b> · ${last ? last.policy : 'walk'} · ${last ? Math.round(last.p) : 61}%`;
+  }
+
+  /* ── 模拟环路 ─────────────────────────────────────────── */
+  setInterval(() => {
+    if (S.mode === 'offline') return;
+    S.hz = 49.8 + Math.random() * 0.5;
+    if (S.policy === 'walk' && Math.hypot(...S.req) > 0.01) {
+      S.batt.p = clamp(S.batt.p - 0.002, 0, 100);
+      S.batt.v = clamp(7.55 - (61 - S.batt.p) * 0.004, 6.3, 8.2);
+      S.temp = clamp(S.temp + 0.01, 30, 55);
+    }
+    S.app = S.demoLimit ? [0,0,0] : S.app.map((v,i) => lerp(v, S.req[i], 0.32));
+    S.limited = S.demoLimit ? ['deadman'] : [];
+    render();
+  }, 100);
+
+  /* ── 页面隐藏即停 ─────────────────────────────────────── */
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      endStick(); S.req = [0,0,0]; S.app = [0,0,0];
+      try { navigator.sendBeacon && navigator.sendBeacon('/stop', '{}'); } catch(_){}
+    }
+  });
+  window.addEventListener('pagehide', () => { S.req = [0,0,0]; });
+  document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  /* ── hash 路由（评审直达） ────────────────────────────── */
+  function applyHash(){
+    const h = (location.hash || '#main').slice(1);
+    closeMaint(); closeAlert(); closeStatus(); closePolicyBar();
+    el.readonly.classList.add('hidden'); el.offline.classList.add('hidden');
+    S.mode = 'driver'; S.limp = false; S.fallen = false;
+    S.req = [0,0,0]; S.app = [0,0,0];
+    S.policy = 'walk'; S.padd = true; S.demoLimit = false;
+    S.limited = [];
+    S.temp = 30; S.cpu = 48; S.hz = 50; S.missed = 12;
+    S.batt.p = 61; S.batt.v = 7.55;
+
+    if (h === 'readonly') { setMode('readonly'); }
+    else if (h === 'offline') { S.mode = 'offline'; showLast(); setMode('offline'); }
+    else if (h === 'relax') { S.mode = 'driver'; render(); doRelax(); }
+    else if (h === 'maintenance') { S.mode = 'driver'; render(); openMaint(); }
+    else if (h === 'policy') { S.mode = 'driver'; render(); openPolicyBar(); }
+    else if (h === 'status') { S.mode = 'driver'; render(); openStatus(); }
+    else if (h === 'alert') { S.mode = 'driver'; render(); openAlert('padd'); }
+    else if (h === 'alert-limit') {
+      S.padd = false; S.demoLimit = true; S.limited = ['deadman'];
+      S.req = [0.20, 0, -0.40]; S.app = [0,0,0];
+      render(); openAlert('limit');
+    }
+    else if (h === 'alert-motor') { S.padd = false; S.temp = 65; render(); openAlert('motor'); }
+    else if (h === 'status-alarm') {
+      S.padd = false; S.temp = 65; S.batt.p = 18; S.batt.v = 7.15;
+      render(); openStatus();
+    }
+    else if (h === 'home') { S.policy = 'held'; }
+    else if (h === 'limp') { S.policy = 'limp'; S.limp = true; }
+    else if (h === 'limit') { S.padd = false; S.demoLimit = true; S.limited = ['deadman']; }
+
+    render();
+    restStick();
+  }
+
+  window.addEventListener('hashchange', applyHash);
+
+  /* 评审导航：改 hash 走同一条路由，顺便把当前项点亮 */
+  const reviewNav = $('#reviewNav');
+  if (reviewNav) {
+    const sync = () => {
+      const h = (location.hash || '#main').slice(1) || 'main';
+      reviewNav.querySelectorAll('button').forEach((b) =>
+        b.setAttribute('aria-current', String(b.dataset.h === h)));
+    };
+    reviewNav.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-h]');
+      if (!b) return;
+      location.hash = '#' + b.dataset.h;
+      if ((location.hash || '#main').slice(1) === b.dataset.h) { applyHash(); sync(); }
+    });
+    window.addEventListener('hashchange', sync);
+    sync();
+  }
+  if (new URLSearchParams(location.search).has('clean')) document.body.classList.add('clean');
+  applyHash();
+  logLast();
+
+  // 评审/自动化用：只读内部状态
+  window.__duck = { S, applyHash, openAlert };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14161A">
+<title>Duck 遥控 · 排障</title>
+<style>
+  :root{
+    --bg:#14161A; --panel:#1D2026; --line:#2E3440;
+    --text:#F2F4F7; --muted:#9AA3AF; --dim:#5C6470;
+    --duck:#FFC53D; --ok:#3DDC97; --warn:#FFC53D; --danger:#FF5A52;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:24px 20px 60px; background:var(--bg); color:var(--text);
+    font-family:system-ui,"HarmonyOS Sans SC","Noto Sans SC",sans-serif;
+    line-height:1.65; -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:640px; margin:0 auto;}
+  h1{font-size:22px; margin:0 0 6px;}
+  .sub{color:var(--muted); font-size:13px; margin:0 0 24px;}
+  h2{font-size:15px; margin:26px 0 8px; color:var(--duck);}
+  p,li{font-size:14px; color:var(--muted);}
+  ol,ul{padding-left:20px; margin:8px 0;}
+  li{margin:5px 0;}
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px;
+    background:#0D0F13; border:1px solid var(--line); border-radius:6px;
+    padding:2px 6px; color:var(--duck); word-break:break-all;
+  }
+  pre{
+    background:#0D0F13; border:1px solid var(--line); border-radius:10px;
+    padding:12px 14px; overflow:auto; font-size:12.5px; line-height:1.6; color:var(--muted);
+  }
+  pre code{background:none; border:0; padding:0; color:inherit;}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:12px 0;}
+  .card b{color:var(--text);}
+  .back{display:inline-block; margin-top:28px; color:var(--duck); font-weight:600; text-decoration:none;}
+  .tag{display:inline-block; font-size:11px; padding:2px 7px; border-radius:999px; background:rgba(255,197,61,.14); color:var(--duck); margin-left:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>连不上怎么办</h1>
+  <p class="sub">这一页在离线时也能打开（Service Worker 缓存）。按顺序排查，通常第 1、2 步就能解决。</p>
+
+  <h2>1. 手机和鸭子在同一 Wi-Fi</h2>
+  <ul>
+    <li>路由器要允许设备互访；开了「AP 隔离 / 访客网络」就连不上。</li>
+    <li>手机如果连的是 5 GHz、鸭子连 2.4 GHz，只要在同一个子网就没问题；跨网段不行。</li>
+    <li>关掉手机上的 VPN / 代理再试。</li>
+  </ul>
+
+  <h2>2. 板子上的 duckphone 在跑</h2>
+  <pre><code>systemctl status duckphone
+journalctl -u duckphone -n 50 --no-pager</code></pre>
+  <div class="card">
+    <b>启动日志里有两样东西：</b>地址和配对码。<br>
+    地址形如 <code>http://192.168.110.240:8001/</code>，配对码是 6 位数字（也存在
+    <code>/etc/duckphone/token</code>）。
+  </div>
+
+  <h2>3. 页面能开、但一直显示未连接</h2>
+  <ul>
+    <li>先看 <code>http://&lt;板子IP&gt;:8001/healthz</code>：返回 <code>ok</code> 说明桥正常，<code>robotd-unreachable</code> 说明桥活着但连不上 <code>robotd</code>。</li>
+    <li><code>systemctl status robotd</code>，再 <code>robotctl health</code>。</li>
+    <li>桥以 <code>duck</code> 身份运行，需要在 <code>robot</code> 组里（<code>id duck</code> 能看到 <code>robot</code>）。</li>
+  </ul>
+
+  <h2>4. 提示「配对码不对」</h2>
+  <ul>
+    <li>配对码每次重装服务不会变，除非手动删掉 <code>/etc/duckphone/token</code>。</li>
+    <li>连续错 5 次会锁 60 秒，页面会显示倒计时。</li>
+  </ul>
+
+  <h2>5. 能连上但机器人不动</h2>
+  <ul>
+    <li><b>手柄服务在抢控制权。</b>顶部黄条会提示，点「详情」可以直接停掉它。</li>
+    <li>策略没接管：先点「站立」，再点「接管」。</li>
+    <li>看「状态详情」里的控制环频率，低于 45 Hz 说明板子忙或散热有问题。</li>
+    <li>看「未执行」提示里的原因：指令超时 = 摇杆没保持按住或 Wi-Fi 抖动。</li>
+  </ul>
+
+  <h2>6. 手机熄屏后要重新点一次页面</h2>
+  <p>这是浏览器的限制，不是 bug。切后台、熄屏都会让桥在 500 ms 内归零；回来时页面会自动重连，但屏幕常亮需要重新申请。</p>
+
+  <h2>7. 彻底重启</h2>
+  <pre><code>sudo systemctl restart duckphone</code></pre>
+  <p>这只重启桥，不影响 <code>robotd</code> 和机器人当前姿态。物理 HUB 上的电源开关是最后手段。</p>
+
+  <a class="back" href="/">← 回到遥控</a>
+</div>
+</body>
+</html>

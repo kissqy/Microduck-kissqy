@@ -45,7 +45,7 @@ class AssemblyView extends DuckView{
     this.actual.parts.forEach((mesh,index)=>{
       const relevant=this.matches(this.model.parts[index],index);
       applyAssemblyAppearance(mesh,{dimmed:fade&&!relevant,expanded:exploded});
-      if(mesh.userData.joint===this.selected){mesh.material.emissive.setHex(0xc1f577);mesh.material.emissiveIntensity=.65;}
+      if(this.selected>=0&&mesh.userData.joint===this.selected){mesh.material.emissive.setHex(0xc1f577);mesh.material.emissiveIntensity=.65;}
     });
   }
   focusScope(){

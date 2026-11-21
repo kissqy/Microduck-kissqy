@@ -1,0 +1,114 @@
+#!/bin/bash
+set -euo pipefail
+
+GADGET=/sys/kernel/config/usb_gadget/microduck
+CONFIG=/sys/kernel/config
+FUNCTION=ecm.usb0
+DEVICE_MAC=02:4d:44:55:43:4b
+HOST_MAC=02:4d:44:55:43:4c
+
+log() { echo "microduck-usb-gadget: $*"; }
+
+cleanup_gadget() {
+    if [[ -e "$GADGET/UDC" ]]; then
+        local bound
+        bound=$(cat "$GADGET/UDC" 2>/dev/null || true)
+        if [[ -n "$bound" ]]; then
+            printf '\n' > "$GADGET/UDC"
+            sleep 0.2
+        fi
+    fi
+    [[ -L "$GADGET/configs/c.1/$FUNCTION" ]] && rm "$GADGET/configs/c.1/$FUNCTION"
+    [[ -d "$GADGET/functions/$FUNCTION" ]] && rmdir "$GADGET/functions/$FUNCTION"
+    [[ -d "$GADGET/configs/c.1/strings/0x409" ]] && rmdir "$GADGET/configs/c.1/strings/0x409"
+    [[ -d "$GADGET/configs/c.1" ]] && rmdir "$GADGET/configs/c.1"
+    [[ -d "$GADGET/strings/0x409" ]] && rmdir "$GADGET/strings/0x409"
+    [[ -d "$GADGET" ]] && rmdir "$GADGET"
+    return 0
+}
+
+on_error() {
+    local status=$?
+    trap - ERR
+    cleanup_gadget || true
+    exit "$status"
+}
+trap on_error ERR
+
+case "${1:-start}" in
+    stop)
+        cleanup_gadget
+        log 'ECM USB network gadget stopped.'
+        exit 0
+        ;;
+    start) ;;
+    *) log "usage: $0 [start|stop]" >&2; exit 2 ;;
+esac
+
+if [[ ! -d "$CONFIG" ]]; then
+    mkdir -p "$CONFIG"
+fi
+if ! mountpoint -q "$CONFIG"; then
+    mount -t configfs none "$CONFIG"
+fi
+
+modprobe libcomposite
+
+# Repeated service starts must not create a duplicate configfs gadget.
+if [[ -d "$GADGET" ]]; then
+    bound=
+    if [[ -e "$GADGET/UDC" ]]; then
+        bound=$(cat "$GADGET/UDC" 2>/dev/null || true)
+    fi
+    if [[ -n "$bound" ]]; then
+        log "already bound to UDC $bound"
+        exit 0
+    fi
+    cleanup_gadget
+fi
+
+udc_path=
+for ((attempt=0; attempt<40; attempt++)); do
+    for candidate in /sys/class/udc/*; do
+        if [[ -e "$candidate" ]]; then udc_path=$candidate; break 2; fi
+    done
+    sleep 0.5
+done
+if [[ -z "$udc_path" ]]; then
+    log 'no USB device controller (UDC) is registered after 20 seconds; check USB-C 1 OTG role and the kernel DWC3 gadget driver' >&2
+    exit 1
+fi
+
+serial=$(tr -d '\n\r' < /etc/machine-id 2>/dev/null || true)
+if [[ ! "$serial" =~ ^[0-9a-fA-F]{32}$ ]]; then
+    serial=$(tr -d '\n\r-' < /proc/sys/kernel/random/uuid)
+fi
+
+mkdir "$GADGET"
+printf '0x0525\n' > "$GADGET/idVendor"
+printf '0xa4a1\n' > "$GADGET/idProduct"
+printf '0x0200\n' > "$GADGET/bcdUSB"
+printf '0x0100\n' > "$GADGET/bcdDevice"
+mkdir -p "$GADGET/strings/0x409" "$GADGET/configs/c.1/strings/0x409" "$GADGET/functions/$FUNCTION"
+printf 'Microduck\n' > "$GADGET/strings/0x409/manufacturer"
+printf 'Microduck USB Ethernet\n' > "$GADGET/strings/0x409/product"
+printf '%s\n' "$serial" > "$GADGET/strings/0x409/serialnumber"
+printf 'USB Ethernet\n' > "$GADGET/configs/c.1/strings/0x409/configuration"
+printf '500\n' > "$GADGET/configs/c.1/MaxPower"
+printf '%s\n' "$DEVICE_MAC" > "$GADGET/functions/$FUNCTION/dev_addr"
+printf '%s\n' "$HOST_MAC" > "$GADGET/functions/$FUNCTION/host_addr"
+printf 'usb%%d\n' > "$GADGET/functions/$FUNCTION/ifname"
+ln -s "$GADGET/functions/$FUNCTION" "$GADGET/configs/c.1/$FUNCTION"
+udc=$(basename "$udc_path")
+if ! printf '%s\n' "$udc" > "$GADGET/UDC"; then
+    cleanup_gadget
+    log "failed to bind ECM gadget to UDC $udc; verify the USB-C 1 port entered peripheral role" >&2
+    exit 1
+fi
+
+# Bring usb0 up even before a host supplies ECM carrier; NetworkManager then
+# applies DHCP and the EUI-64 link-local profile when it starts.
+/usr/sbin/ip link set dev usb0 up
+
+log "CDC ECM gadget bound to $udc; board interface is usb0 ($DEVICE_MAC)."
+trap - ERR

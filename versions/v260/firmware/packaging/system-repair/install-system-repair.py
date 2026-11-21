@@ -20,6 +20,13 @@ PROGRAM = 'usr/local/sbin/microduck-public-image'
 PORTAL = 'usr/local/libexec/microduck-setup-portal.py'
 UNIT = 'etc/systemd/system/microduck-setup.service'
 R7_MODULE = 'usr/local/libexec/microduck_wifi_r7.py'
+USB_GADGET = 'usr/local/sbin/microduck-usb-gadget'
+USB_UNIT = 'etc/systemd/system/microduck-usb-gadget.service'
+USB_PROFILE = 'etc/NetworkManager/system-connections/Microduck-USB.nmconnection'
+USB_NM_POLICY = 'etc/NetworkManager/conf.d/zzz-microduck-usb-network.conf'
+USB_UDEV_RULE = 'etc/udev/rules.d/90-microduck-usb-managed.rules'
+USB_ENABLE_LINK = 'etc/systemd/system/multi-user.target.wants/microduck-usb-gadget.service'
+USB_ENABLE_TARGET = '../microduck-usb-gadget.service'
 LEGACY = {
     'usr/local/libexec/microduck_wifi_events.py': 'c31ad55f443db1c7fa1cbe7febbaabb359228b65cb4b62e47ebfc0080500a185',
     'etc/NetworkManager/dispatcher.d/90-microduck-hotspot': '33e6b289a97c531903c0e5d3c11c3b290fec3a83043efe9f41fe2d2727c91786',
@@ -76,6 +83,11 @@ def check(root):
         PROGRAM: (program, 0o700),
         PORTAL: (portal, 0o700),
         UNIT: ((HERE / 'microduck-setup.service').read_bytes(), 0o644),
+        USB_GADGET: ((HERE / 'microduck-usb-gadget').read_bytes(), 0o755),
+        USB_UNIT: ((HERE / 'microduck-usb-gadget.service').read_bytes(), 0o644),
+        USB_PROFILE: ((HERE / 'Microduck-USB.nmconnection').read_bytes(), 0o600),
+        USB_NM_POLICY: ((HERE / 'zzz-microduck-usb-network.conf').read_bytes(), 0o644),
+        USB_UDEV_RULE: ((HERE / '90-microduck-usb-managed.rules').read_bytes(), 0o644),
     }
     changes = []
     for name, (updated, mode) in bundled.items():
@@ -105,12 +117,15 @@ def check(root):
     except ValueError as error:
         # Only the known old Armbian writer needs this optional patch.
         boot = {'status': 'skipped', 'detail': str(error)}
-    return module, changes, boot
+    enable_link = root / USB_ENABLE_LINK
+    usb_link_needs_repair = not (
+        enable_link.is_symlink() and os.readlink(enable_link) == USB_ENABLE_TARGET)
+    return module, changes, boot, usb_link_needs_repair
 
 
 def apply(root, live=False):
     dependency = prepare_hotspot_dependencies() if live else None
-    module, changes, boot = check(root)
+    module, changes, boot, usb_link_needs_repair = check(root)
     if boot['status'] != 'skipped':
         boot = module.repair(root / BOOT_SCRIPT, root / BOOT_ENV,
                              root / 'var/backups/microduck-armbian-env', apply=True)
@@ -121,21 +136,35 @@ def apply(root, live=False):
             path.unlink()
         else:
             module.atomic_write(path, updated, metadata)
+    if usb_link_needs_repair:
+        link = root / USB_ENABLE_LINK
+        link.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
+        if link.is_dir() and not link.is_symlink():
+            raise RuntimeError('USB 网络服务启用路径是目录，拒绝替换。')
+        if link.is_symlink() or link.exists():
+            link.unlink()
+        link.symlink_to(USB_ENABLE_TARGET)
     wants = root / 'etc/systemd/system/multi-user.target.wants'
     wants.mkdir(mode=0o755, parents=True, exist_ok=True)
     link = wants / 'microduck-setup.service'
     if not link.is_symlink() and not link.exists():
         link.symlink_to('../microduck-setup.service')
-    if live and any(name == UNIT for name, *_ in changes):
+    if live and (usb_link_needs_repair
+                 or any(name in {UNIT, USB_UNIT} for name, *_ in changes)):
         subprocess.run(['systemctl', 'daemon-reload'], check=True)
-    _, remaining, _ = check(root)
-    if remaining:
-        raise RuntimeError('配网组件安装后读回不一致：' + '、'.join('/'+row[0] for row in remaining))
+    _, remaining, _, link_still_needs_repair = check(root)
+    if remaining or link_still_needs_repair:
+        unresolved = ['/'+row[0] for row in remaining]
+        if link_still_needs_repair:
+            unresolved.append('/'+USB_ENABLE_LINK)
+        raise RuntimeError('系统联网组件安装后读回不一致：' + '、'.join(unresolved))
     return {'repair': REVISION, 'wifi': 'R10-boot-connect-or-hotspot',
             'boot': boot['status'], 'boot_detail': boot.get('detail'),
-            'changed': ['/' + row[0] for row in changes],
+            'changed': ['/' + row[0] for row in changes]
+                       + (['/' + USB_ENABLE_LINK] if usb_link_needs_repair else []),
             'wifi_restarted': False, 'motion_commands_sent': False,
             'readback_verified': True, 'portal_import_verified': True,
+            'usb_ethernet': 'installed; activates on next reboot',
             'hotspot_dependency': dependency,
             'effective': 'next reboot; installation does not restart the current network'}
 
@@ -152,9 +181,11 @@ def main():
             parser.error('热点依赖需在目标 Zero 上使用 sudo 安装。')
         result = {'repair': REVISION, 'hotspot_dependency': prepare_hotspot_dependencies()}
     elif args.check:
-        _, changes, boot = check(root)
+        _, changes, boot, usb_link_needs_repair = check(root)
         result = {'repair': REVISION, 'boot': boot['status'],
-                  'wifi': 'needs-install' if changes else 'already-installed', 'changed': []}
+                  'wifi': 'needs-install' if changes else 'already-installed',
+                  'usb_ethernet': 'needs-install' if changes or usb_link_needs_repair else 'installed',
+                  'changed': []}
     else:
         if root == Path('/') and os.geteuid() != 0:
             parser.error('请使用 sudo 安装系统修复')

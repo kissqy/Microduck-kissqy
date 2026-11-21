@@ -1,9 +1,10 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
+import {prepareAssemblyAppearance,applyAssemblyAppearance} from './assembly-appearance.js?v=20261121-orange-white';
 import {DuckView} from './duck.js?demo=20261013';
 import {REFERENCE_IDS,REFERENCE_LABELS} from './calibration-reference.js?demo=20261013';
 import {officialStandingDegrees,referenceAngle} from './joint-reference.js?demo=20261013';
-import {attachElectronics} from './assembly-electronics.js?v=20261120-separate-battery';
-import {COMPONENTS,CONNECTIONS,WIRING_NOTE} from './assembly-components.js?v=20261120-separate-battery';
+import {attachElectronics} from './assembly-electronics.js?v=20261121-orange-white';
+import {COMPONENTS,CONNECTIONS,WIRING_NOTE} from './assembly-components.js?v=20261121-orange-white';
 
 const groups={
   all:{title:'整只小鸭',description:'先看整体连接关系，再选择腿部或头颈放大查看。',indexes:REFERENCE_IDS.map((_,i)=>i)},
@@ -28,6 +29,7 @@ class AssemblyView extends DuckView{
       while(current>=0){const entry=this.model.bodies[current];if(entry.joint>=0)chain.push(entry.joint);current=entry.parent;}
       return chain;
     });
+    prepareAssemblyAppearance(this);
     this.setReference('zero');
     return this;
   }
@@ -42,11 +44,7 @@ class AssemblyView extends DuckView{
     const fade=$('fade-others').checked&&scope!=='all';
     this.actual.parts.forEach((mesh,index)=>{
       const relevant=this.matches(this.model.parts[index],index);
-      mesh.material.transparent=fade&&!relevant;
-      mesh.material.opacity=fade&&!relevant ? .13 : 1;
-      mesh.material.depthWrite=!fade||relevant;
-      mesh.material.depthTest=true;
-      mesh.renderOrder=relevant?1:0;
+      applyAssemblyAppearance(mesh,{dimmed:fade&&!relevant,expanded:exploded});
       if(mesh.userData.joint===this.selected){mesh.material.emissive.setHex(0xc1f577);mesh.material.emissiveIntensity=.65;}
     });
   }

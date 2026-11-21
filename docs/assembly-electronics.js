@@ -119,7 +119,7 @@ export async function attachElectronics(view,onSelect=()=>{},{useWireCache=true}
   try{
     const response=await fetch(STL_URL);if(!response.ok)throw Error('电池仓模型读取失败');
     const geometry=parseBatterySTL(await response.arrayBuffer());
-    batteryMesh=new T.Mesh(geometry,new T.MeshStandardMaterial({color:0xc4c9c8,roughness:.73,metalness:.04,side:T.DoubleSide}));
+    batteryMesh=new T.Mesh(geometry,new T.MeshStandardMaterial({color:0xf3f1e9,roughness:.73,metalness:.04,side:T.DoubleSide}));
     batteryMesh.name='电池仓_M2.5螺丝_HUB组合.stl';batteryMount.add(batteryMesh);
   }catch(error){batteryError=error?.message||'电池仓模型未加载';}
   // Mount both face boards upside down as one paired stack. A rigid half-turn

@@ -278,8 +278,11 @@ def run(config, emit, stop=None):
         emit({'channel':'collector','data':{'nonce':config['startup_nonce'],
               'hostname':socket.gethostname(),'python':list(sys.version_info[:3]),
               'unix_socket':hasattr(socket,'AF_UNIX')}})
-    jobs = [(system_loop, (emit, stop)),
-            (subscription, (config.get("tofd_socket", "/run/tofd/tof.sock"), "tof.stream", "tof.frame", None, emit, stop, "tof"))]
+    jobs = [(system_loop, (emit, stop))]
+    if config.get("tofd_socket"):
+        jobs.append((subscription, (config["tofd_socket"], "tof.stream", "tof.frame", None, emit, stop, "tof")))
+    else:
+        emit({"channel": "tof", "data": {"disabled": True}})
     path = config.get("robotd_socket", "/run/robotd.sock")
     jobs += [(subscription, (path, "robot.subscribe", "robot.state", config.get("hz", 20), emit, stop, "state")),
              (health_loop, (path, emit, stop)),

@@ -1,7 +1,7 @@
 import {supportsFeature} from './service-builds.js';
 import {deriveKinematics} from './raw-kinematics.js';
 
-const TTL={state:1.5,health:5,tof:2,system:7,capabilities:20,bus:1.5,calibration:Infinity,startup:Infinity};
+const TTL={state:1.5,health:5,tof:2,system:7,capabilities:20,bus:1.5,calibration:Infinity,startup:Infinity,units:6};
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const number=v=>finite(v)?v:null;
 const counter=v=>finite(v)||(typeof v==='string'&&/^[0-9]+$/.test(v));
@@ -153,6 +153,8 @@ export class TelemetryStore{
     if(data.gait_capture&&!this.aux.gait_capture&&!data.inspection_active){this.history=[];this.lastRecord=-1;}
     this.aux={...this.aux,...data};
     if(object(data.calibration))this.ingest({channel:'calibration',data:data.calibration});
+    // Service and hardware state is sampled by the console itself, not robotd.
+    if(object(data.units))this.ingest({channel:'units',data:data.units});
   }
   snapshot(record=true){
     const now=this.clock(),channels=copy(this.channels);
@@ -175,7 +177,7 @@ export class TelemetryStore{
       }
     }
     const imu={gravity,roll_deg:roll,pitch_deg:pitch,gyro:vector(rawImu.gyro,3),quat:vector(rawImu.quat,4),source:Object.keys(rawImu).length?'robot.state.diagnostics':'robot.state.safety.gravity',health:get(health,'imu'),status:imuStatus,reason:imuReason,ready:get(rawImu,'ready'),sequence:get(rawImu,'sequence'),age_ms:get(rawImu,'age_ms')};
-    const result={schema:'microduck-console/v1',service_operation:!!this.aux.service_operation,connection_paused:!!this.aux.connection_paused,version:this.config.version,baseline:this.config.baseline,mode:this.config.mode,read_only:!this.config.control_enabled,at:this.wall(),uptime:now-this.started,channels,state,health,imu,startup:copy(this.data.startup||{}),capabilities:copy(this.data.capabilities||{}),tof:copy(this.data.tof||{}),servos,system:copy(this.data.system||{}),events:copy(this.events),extended:extension.schema==='microduck-observer/v1',pose_calibrated:true};
+    const result={schema:'microduck-console/v1',service_operation:!!this.aux.service_operation,connection_paused:!!this.aux.connection_paused,version:this.config.version,baseline:this.config.baseline,mode:this.config.mode,read_only:!this.config.control_enabled,at:this.wall(),uptime:now-this.started,channels,state,health,imu,startup:copy(this.data.startup||{}),capabilities:copy(this.data.capabilities||{}),tof:copy(this.data.tof||{}),servos,system:copy(this.data.system||{}),units:copy(this.data.units||{}),events:copy(this.events),extended:extension.schema==='microduck-observer/v1',pose_calibrated:true};
     if(this.config.mode==='service')adaptService(result,copy(this.data.bus||{}),copy(this.data.calibration||{}),this.busSampleAt===null?null:(now-this.busSampleAt)*1000);
     const bus=result.bus||{},loop=this.config.mode==='service'&&bus.mode==='motion'&&counter(bus.cycle)&&channels.bus.status==='live';
     if(record&&(this.aux.inspection_active||loop||this.aux.gait_capture)&&now-this.lastRecord>=.095){

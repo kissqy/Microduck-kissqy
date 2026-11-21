@@ -49,6 +49,7 @@ implementation details. The current R17 console mapping is documented in the con
 | [`restart-order.md`](design/restart-order.md) | Which unit restarts, at which step, on every path that moves `current` — and at boot. |
 | [`app-path-design.md`](design/app-path-design.md) | `btd` and `configd` — how a phone configures a robot over BLE. |
 | [`mobile-app.md`](design/mobile-app.md) | The phone app — what it is built from, and what the robot still owes it. The code is in [`microduck-app`](https://github.com/pollen-robotics/microduck-app). |
+| [`lan-phone-remote.md`](design/lan-phone-remote.md) | `duckphone/` — a browser on the robot's own wifi as a third way to drive: the session and role model, the policy bar, and the four watchdogs. |
 | [`remote-webrtc.md`](design/remote-webrtc.md) | WebRTC sessions, signalling, and the control channel — how a peer drives and observes the robot. |
 | [`webrtc-console.md`](design/webrtc-console.md) | The WebRTC client: serving it from the robot, finding the robot, and what the page should be. |
 | [`remote-access-design.md`](design/remote-access-design.md) | Reaching a duck from outside the LAN: the Hugging Face account, the device flow, and the bridge to a rendezvous service. |

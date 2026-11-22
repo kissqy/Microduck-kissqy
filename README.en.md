@@ -20,6 +20,41 @@ Radxa ZERO 3W · 15 × Feetech HD1910 · Matching HAT / IMU / HUB
 
 ---
 
+## Build your duck
+
+**A normal build does not require training your own policy.** Assemble, flash and calibrate, then use the matching supplied models.
+
+<table width="100%">
+  <tr>
+    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/budget.html"><b>① Budget and shopping</b></a><br><br>Choose a budget and prepare its servos, controller, boards and parts.<br><sub>What should I buy?</sub></td>
+    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/assembly.html"><b>② How do I assemble it?</b></a><br><br>Follow the 3D structure, component assembly, servo orientation and connections.<br><sub>Assembly and wiring</sub></td>
+  </tr>
+  <tr>
+    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/start.html"><b>③ Get the duck moving</b></a><br><br>Flash, connect to Wi-Fi, calibrate and use the matching supplied policies.<br><sub>Flash and first walk</sub></td>
+    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/advanced.html"><b>④ Advanced play (optional)</b></a><br><br>Explore this when training a new movement or learning reinforcement learning.<br><sub>Normal builds require no initial training</sub></td>
+  </tr>
+</table>
+
+Skip stages you have already completed. **The first three stages complete a normal build; stage 4 is optional.**
+
+[Three-stage route (中文)](https://kissqy.github.io/Microduck-kissqy/build/) · [English build guide and FAQ](https://kissqy.github.io/Microduck-kissqy/guides/en.html) · [Written guide](docs/MICRODUCK-BUILD-GUIDE.en.md) · [Shopping list](DUCK-SHOPPING-LIST.en.md) · [FAQ](docs/MICRODUCK-FAQ.en.md)
+
+<sub>The stage pages above are Chinese; the English guide provides the corresponding instructions. China access: [Gitee](https://gitee.com/kissqy/microduck-kissqy) · [R2 China release](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260).</sub>
+
+
+<!-- duck-king-video:start -->
+<table width="100%">
+<tr><td align="center">
+<h2><a href="https://www.bilibili.com/video/BV1kuyjzjEC1/">🎬 鸭王亲手教你做鸭 · 视频教程</a></h2>
+<p><b>🦆 kissqy · Learn with the creator · BILIBILI</b></p>
+<p>Shopping → Assembly → Flashing and calibration → Advanced training<br>Follow the four stages to build your own Microduck.</p>
+<h3><a href="https://www.bilibili.com/video/BV1kuyjzjEC1/">▶ Watch the video tutorial on Bilibili</a></h3>
+</td></tr>
+</table>
+<!-- duck-king-video:end -->
+
+---
+
 ## Real-robot videos and photos
 
 ### 🏆 One-legged balance · A new training milestone
@@ -98,30 +133,6 @@ fanhao's image model notice credits **10 models to kissqy** and records retainin
 
 <sub>Comparison evidence cutoff: <b>2026-11-18</b>; reviewed public versions only.<br>[Text edition and evidence](docs/MICRODUCK-COMPARISON.en.md) · Official Microduck, Luwu XGO-Duck, AI-FanGe, fanhao375, OpenMicroDuck and this project.</sub>
 <!-- replica-choice:end -->
-
-
----
-
-## Build your duck
-
-**A normal build does not require training your own policy.** Assemble, flash and calibrate, then use the matching supplied models.
-
-<table width="100%">
-  <tr>
-    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/budget.html"><b>① Budget and shopping</b></a><br><br>Choose a budget and prepare its servos, controller, boards and parts.<br><sub>What should I buy?</sub></td>
-    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/assembly.html"><b>② How do I assemble it?</b></a><br><br>Follow the 3D structure, component assembly, servo orientation and connections.<br><sub>Assembly and wiring</sub></td>
-  </tr>
-  <tr>
-    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/start.html"><b>③ Get the duck moving</b></a><br><br>Flash, connect to Wi-Fi, calibrate and use the matching supplied policies.<br><sub>Flash and first walk</sub></td>
-    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/advanced.html"><b>④ Advanced play (optional)</b></a><br><br>Explore this when training a new movement or learning reinforcement learning.<br><sub>Normal builds require no initial training</sub></td>
-  </tr>
-</table>
-
-Skip stages you have already completed. **The first three stages complete a normal build; stage 4 is optional.**
-
-[Three-stage route (中文)](https://kissqy.github.io/Microduck-kissqy/build/) · [English build guide and FAQ](https://kissqy.github.io/Microduck-kissqy/guides/en.html) · [Written guide](docs/MICRODUCK-BUILD-GUIDE.en.md) · [Shopping list](DUCK-SHOPPING-LIST.en.md) · [FAQ](docs/MICRODUCK-FAQ.en.md)
-
-<sub>The stage pages above are Chinese; the English guide provides the corresponding instructions. China access: [Gitee](https://gitee.com/kissqy/microduck-kissqy) · [R2 China release](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260).</sub>
 
 
 ---

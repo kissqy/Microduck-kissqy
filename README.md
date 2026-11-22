@@ -45,10 +45,10 @@ Radxa ZERO 3W · 15 × 飞特 HD1910 · 配套 HAT / IMU / HUB
 <!-- duck-king-video:start -->
 <table width="100%">
 <tr><td align="center">
-<h2>🎬 鸭王亲手教你做鸭 · 视频教程</h2>
+<h2><a href="https://www.bilibili.com/video/BV1kuyjzjEC1/">🎬 鸭王亲手教你做鸭 · 视频教程</a></h2>
 <p><b>🦆 kissqy 作者亲授 · BILIBILI</b></p>
 <p>采购 → 装配 → 刷机标定 → 进阶玩法<br>跟着四部曲，手把手做出自己的 Microduck。</p>
-<h3>📺 B站转码中 · 即将上线</h3>
+<h3><a href="https://www.bilibili.com/video/BV1kuyjzjEC1/">▶ 点击观看完整视频教程</a></h3>
 </td></tr>
 </table>
 <!-- duck-king-video:end -->

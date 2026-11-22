@@ -20,6 +20,30 @@ Radxa ZERO 3W · 15 × 飞特 HD1910 · 配套 HAT / IMU / HUB
 
 ---
 
+## 从零复刻
+
+**正常复刻无需自行训练模型。** 配套现成动作模型，装好、刷机并完成本机标定后即可体验。
+
+<table width="100%">
+  <tr>
+    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/budget.html"><b>① 我要花多少钱、买什么？</b></a><br><br>先选预算方案，再按对应清单备齐舵机、主控、板卡与零件。<br><sub>预算与采购</sub></td>
+    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/assembly.html"><b>② 我要怎么装？</b></a><br><br>完成部位装配、3D 结构与端子接线，核对舵机安装方向。<br><sub>装配与接线</sub></td>
+  </tr>
+  <tr>
+    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/start.html"><b>③ 我要让鸭子走起来</b></a><br><br>刷机、配网、标定，使用配套现成模型行走。<br><sub>刷机与首次行走</sub></td>
+    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/advanced.html"><b>④ 进阶玩法（可选）</b></a><br><br>想自训新动作或学习强化学习训练流程时，再进入。<br><sub>正常复刻无需先做训练</sub></td>
+  </tr>
+</table>
+
+已经完成的步骤可以直接跳过。**前三步完成正常复刻，第 4 步为可选进阶。**
+
+[完整复刻路线](https://kissqy.github.io/Microduck-kissqy/build/) · [项目概览与完整教程](https://kissqy.github.io/Microduck-kissqy/guides/) · [从零复刻文字指南](docs/MICRODUCK-BUILD-GUIDE.md) · [材料采购清单](DUCK-SHOPPING-LIST.md) · [常见问题](docs/MICRODUCK-FAQ.md)
+
+<sub>国内访问：[Gitee 国内仓库](https://gitee.com/kissqy/microduck-kissqy) · [R2 国内发布说明](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260)。</sub>
+
+
+---
+
 ## 实机视频与照片
 
 ### 🏆 单脚独立 · 自训新突破
@@ -100,30 +124,6 @@ fanhao 的镜像模型说明将其中 **10 个模型的作者标为 kissqy**，�
 
 <sub>对比资料核查截至 <b>2026-11-18</b>；只对应当日公开版本。<br>[文字版与逐项依据](docs/MICRODUCK-COMPARISON.md) · 含官方 Microduck、陆吾 XGO-Duck、AI-FanGe、fanhao375、OpenMicroDuck 与本项目。</sub>
 <!-- replica-choice:end -->
-
-
----
-
-## 从零复刻
-
-**正常复刻无需自行训练模型。** 配套现成动作模型，装好、刷机并完成本机标定后即可体验。
-
-<table width="100%">
-  <tr>
-    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/budget.html"><b>① 我要花多少钱、买什么？</b></a><br><br>先选预算方案，再按对应清单备齐舵机、主控、板卡与零件。<br><sub>预算与采购</sub></td>
-    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/assembly.html"><b>② 我要怎么装？</b></a><br><br>完成部位装配、3D 结构与端子接线，核对舵机安装方向。<br><sub>装配与接线</sub></td>
-  </tr>
-  <tr>
-    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/start.html"><b>③ 我要让鸭子走起来</b></a><br><br>刷机、配网、标定，使用配套现成模型行走。<br><sub>刷机与首次行走</sub></td>
-    <td width="400" valign="top"><a href="https://kissqy.github.io/Microduck-kissqy/build/advanced.html"><b>④ 进阶玩法（可选）</b></a><br><br>想自训新动作或学习强化学习训练流程时，再进入。<br><sub>正常复刻无需先做训练</sub></td>
-  </tr>
-</table>
-
-已经完成的步骤可以直接跳过。**前三步完成正常复刻，第 4 步为可选进阶。**
-
-[完整复刻路线](https://kissqy.github.io/Microduck-kissqy/build/) · [项目概览与完整教程](https://kissqy.github.io/Microduck-kissqy/guides/) · [从零复刻文字指南](docs/MICRODUCK-BUILD-GUIDE.md) · [材料采购清单](DUCK-SHOPPING-LIST.md) · [常见问题](docs/MICRODUCK-FAQ.md)
-
-<sub>国内访问：[Gitee 国内仓库](https://gitee.com/kissqy/microduck-kissqy) · [R2 国内发布说明](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260)。</sub>
 
 
 ---

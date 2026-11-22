@@ -42,6 +42,17 @@ Radxa ZERO 3W · 15 × 飞特 HD1910 · 配套 HAT / IMU / HUB
 <sub>国内访问：[Gitee 国内仓库](https://gitee.com/kissqy/microduck-kissqy) · [R2 国内发布说明](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260)。</sub>
 
 
+<!-- duck-king-video:start -->
+<table width="100%">
+<tr><td align="center">
+<h2>🎬 鸭王亲手教你做鸭 · 视频教程</h2>
+<p><b>🦆 kissqy 作者亲授 · BILIBILI</b></p>
+<p>采购 → 装配 → 刷机标定 → 进阶玩法<br>跟着四部曲，手把手做出自己的 Microduck。</p>
+<h3>📺 B站转码中 · 即将上线</h3>
+</td></tr>
+</table>
+<!-- duck-king-video:end -->
+
 ---
 
 ## 实机视频与照片

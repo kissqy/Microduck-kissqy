@@ -1,3 +1,7 @@
+<!-- duck-king-video:start -->
+<a href="https://www.bilibili.com/video/BV1kuyjzjEC1/"><img src="docs/assets/duck-king-video-banner.svg" width="1200" alt="Duck King teaches you to build a Microduck · Watch kissqy's video tutorial on Bilibili" /></a>
+<!-- duck-king-video:end -->
+
 [简体中文](README.md) | **English** · [Gitee repository](https://gitee.com/kissqy/microduck-kissqy)
 
 <div align="center">
@@ -41,17 +45,6 @@ Skip stages you have already completed. **The first three stages complete a norm
 
 <sub>The stage pages above are Chinese; the English guide provides the corresponding instructions. China access: [Gitee](https://gitee.com/kissqy/microduck-kissqy) · [R2 China release](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260).</sub>
 
-
-<!-- duck-king-video:start -->
-<table width="100%">
-<tr><td align="center">
-<h2><a href="https://www.bilibili.com/video/BV1kuyjzjEC1/">🎬 鸭王亲手教你做鸭 · 视频教程</a></h2>
-<p><b>🦆 kissqy · Learn with the creator · BILIBILI</b></p>
-<p>Shopping → Assembly → Flashing and calibration → Advanced training<br>Follow the four stages to build your own Microduck.</p>
-<h3><a href="https://www.bilibili.com/video/BV1kuyjzjEC1/">▶ Watch the video tutorial on Bilibili</a></h3>
-</td></tr>
-</table>
-<!-- duck-king-video:end -->
 
 ---
 

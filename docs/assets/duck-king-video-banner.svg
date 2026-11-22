@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 0 1200 340" role="img" aria-labelledby="banner-title banner-description">
+<title id="banner-title">鸭王亲手教你做鸭 · 视频教程</title>
+<desc id="banner-description">Microduck kissqy 作者亲授，采购、装配、刷机标定与进阶玩法。点击横幅前往哔哩哔哩观看视频教程。</desc>
+<defs>
+  <linearGradient id="orange" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0cc"/><stop offset=".55" stop-color="#ffd493"/><stop offset="1" stop-color="#ffb85e"/></linearGradient>
+  <linearGradient id="button" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#542b10"/><stop offset="1" stop-color="#321806"/></linearGradient>
+</defs>
+<rect x="3" y="3" width="1194" height="334" rx="30" fill="url(#orange)" stroke="#f49a35" stroke-width="6"/>
+<circle cx="1148" cy="37" r="143" fill="#ffffff" opacity=".18"/>
+<circle cx="1177" cy="300" r="103" fill="#f58b22" opacity=".13"/>
+<path d="M914 44h186a18 18 0 0 1 18 18v66a18 18 0 0 1-18 18H914a18 18 0 0 1-18-18V62a18 18 0 0 1 18-18Z" fill="#fff9ed" opacity=".48"/>
+<path d="m984 65 49 30-49 30Z" fill="#bc5a0d"/>
+<g font-family="'Noto Sans CJK SC','Microsoft YaHei','PingFang SC',sans-serif">
+<text x="56" y="58" fill="#9b470f" font-size="32" font-weight="800" letter-spacing="2">MICRODUCK · KISSQY 开源</text>
+<text x="52" y="164" fill="#402008" font-size="88" font-weight="900">鸭王亲手教你做鸭</text>
+<text x="56" y="239" fill="#7e3a0e" font-size="52" font-weight="800">视频教程 · 作者亲授</text>
+<text x="56" y="300" fill="#814917" font-size="29" font-weight="600">采购 · 装配 · 刷机标定 · 进阶玩法</text>
+<rect x="704" y="202" width="440" height="88" rx="44" fill="url(#button)"/>
+<path d="m737 230 27 16-27 16Z" fill="#ffca80"/>
+<text x="788" y="261" fill="#fff4df" font-size="40" font-weight="800">点击观看视频教程</text>
+</g>
+</svg>

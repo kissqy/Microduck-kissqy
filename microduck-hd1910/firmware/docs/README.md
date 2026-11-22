@@ -25,6 +25,7 @@ docs give the reasoning and point at it.
 | [`dev-push.md`](robot/dev-push.md) | Build on your machine and install on the board over ssh, with no CI run. |
 | [`simulation.md`](robot/simulation.md) | The simulated duck: `scripts/duck-sim`, the real daemons against a MuJoCo body, one duck or several in containers. |
 | [`duckctl.md`](robot/duckctl.md) | Every `duckctl` command — the robot from a laptop, over Bluetooth. |
+| [`../ducknet/README.md`](../ducknet/README.md) | The desktop app: the same radio, but for wifi itself — scan, join, and pin a fixed address. |
 | [`install-dev.md`](robot/install-dev.md) | Setting up a board for development, from nothing. |
 | [`install-by-hand.md`](robot/install-by-hand.md) | The same install as separate commands, for testing one step at a time. |
 | [`armbian-boot-config.md`](robot/armbian-boot-config.md) | Repair the known Armbian boot-config writer without an OS upgrade; check, backup, and rollback. |
@@ -48,6 +49,7 @@ implementation details. The current R17 console mapping is documented in the con
 | [`policy-channel-design.md`](design/policy-channel-design.md) | Where the ONNX policies come from: the `policies` component, trying someone else's, and what `reset` puts back. |
 | [`restart-order.md`](design/restart-order.md) | Which unit restarts, at which step, on every path that moves `current` — and at boot. |
 | [`app-path-design.md`](design/app-path-design.md) | `btd` and `configd` — how a phone configures a robot over BLE. |
+| [`ble-provisioning-app.md`](design/ble-provisioning-app.md) | `ducknet/` — the Linux desktop client for that path: the contract it uses, the pinned address it can set, and the two things it keeps on the laptop instead. |
 | [`mobile-app.md`](design/mobile-app.md) | The phone app — what it is built from, and what the robot still owes it. The code is in [`microduck-app`](https://github.com/pollen-robotics/microduck-app). |
 | [`lan-phone-remote.md`](design/lan-phone-remote.md) | `duckphone/` — a browser on the robot's own wifi as a third way to drive: the session and role model, the policy bar, and the four watchdogs. |
 | [`remote-webrtc.md`](design/remote-webrtc.md) | WebRTC sessions, signalling, and the control channel — how a peer drives and observes the robot. |

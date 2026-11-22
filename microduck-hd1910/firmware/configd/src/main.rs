@@ -460,7 +460,7 @@ async fn dispatch(
                 id,
                 service
                     .net
-                    .connect(&params.ssid, params.psk.as_deref())
+                    .connect(&params.ssid, params.psk.as_deref(), params.ipv4.as_ref())
                     .await,
             )
         }

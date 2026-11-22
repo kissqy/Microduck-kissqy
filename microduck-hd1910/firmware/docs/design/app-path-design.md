@@ -723,6 +723,35 @@ NetworkManager.
 Still false on a board: the link is unencrypted (§5.5). That is the only thing left between this path
 and something that can be handed to someone.
 
+### 2.5 A pinned address, added for the desktop client · **measured** (2026-11-22)
+
+`net.connect` used to only ever ask NetworkManager for a lease. A robot that has to be *found* at a
+known address — a fleet, a port forward, a bookmarked console URL — had no way to say so, so
+`NetConnectParams` grew one optional field:
+
+```json
+{"ssid": "大树下", "psk": "…",
+ "ipv4": {"address": "192.168.110.240", "prefix": 23,
+          "gateway": "192.168.110.1", "dns": ["192.168.110.1"]}}
+```
+
+`configd` turns it into `method=manual`, `address-data`, `gateway` and `dns` in the profile it writes,
+**after validating the address, prefix, gateway and resolvers**: NM stores what it is given, in a
+root-only file `autoconnect` then uses on every boot, so a typo is not a failed call — it is a robot
+that comes up unreachable, with BLE as the only way back. The reply's `ip4` is the pinned address,
+which is how a client tells "applied" from "DHCP answered something".
+
+Three contract details that are not what they look like, all found on a board against NM 1.52.1:
+
+| | |
+| --- | --- |
+| `address-data` | `aa{sv}` — `{address: s, prefix: u}` per entry. The older `aau` shape does not fail as a *property*: the whole settings dictionary fails to parse, `802-11-wireless` with it, and the device answers `A 'wireless' setting is required if no AP path was given`. |
+| `ipv4.dns` | native-endian `u32`. NM prints the value's bytes through `inet4_ntop`, so a big-endian integer comes out reversed (`1.110.168.192` for `192.168.110.1`). |
+| replacing a profile | deleting the one in use and activating immediately aborts NM 1.52 at `nm-l3cfg.c:459`, while the old activation is still tearing down; the client only sees a 45-second timeout. `configd` waits for the device to reach `DISCONNECTED` first (bounded at 10 s). |
+
+The client that uses this — and why it also has to remember the passphrase and the address locally —
+is [`ble-provisioning-app.md`](ble-provisioning-app.md).
+
 ## 6. Testing without a radio  · **measured**
 
 The suite runs on a laptop with no hardware, no network, no D-Bus and no Docker, and that had to

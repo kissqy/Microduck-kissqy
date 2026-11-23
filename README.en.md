@@ -142,24 +142,24 @@ R2 is for new or reflashed Radxa ZERO 3W systems. It includes upstream Microduck
 | --- | --- | --- | --- |
 | **New system image** | R2 · control.102 · Wi-Fi R10 | [Download .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) | [Image release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
 | **Stable console and firmware** | Studio V260 · control.102 | [Runtime and firmware downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) | [Version files, guide and source](versions/v260/README.en.md) |
-| **Console pre-release** | V297 BATE · control.102 | [Download console ZIP](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v297-bate/Microduck-Console-Studio-V297-BATE.zip) | [Features page](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Version files](versions/v297-bate/README.en.md) |
+| **Console pre-release** | V302 Beta · control.102 | [Download console ZIP](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v302/Microduck-Console-Studio-V302.zip) | [Features page](https://kissqy.github.io/Microduck-kissqy/console-v302/en.html) · [Version files](versions/v302/README.en.md) |
 | **Separate Training Studio · optional** | R1.5.27 | [Download ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip) | [Training guide](microduck-hd1910/training-console/README.en.md) |
 
 ### V167 users: upgrade to V260 without reflashing
 
 Fully extract V260, connect to ZERO and install the bundled firmware from the console. Follow the [upgrade guide](versions/v260/README.en.md) to retain robot-specific calibration and settings. Use R2 for a new system or when you intend to reflash.
 
-### V297 BATE: servo numbering through HAT
+### V302 Beta: numbering, midpoint calibration and 3D references
 
-**Assign servo IDs and calibrate their midpoint without a URT2 programming board.** The pre-release provides four workspaces, HAT numbering and separate hardware tests.
+**Assign servo IDs and calibrate their midpoint without a URT2 programming board.** V302 improves maintenance sessions and adds complete 3D zero/HOME references and side-by-side IMU charts. It reuses unchanged control.102 firmware and 11 models; only the console is updated.
 
-[Console features and instructions](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate)
+[Console features and instructions](https://kissqy.github.io/Microduck-kissqy/console-v302/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302)
 
 <sub>Existing R2 / control.102 users only replace the desktop console. Physical acceptance is pending; V260 remains stable. Obtain the actual runtime from Release Assets.</sub>
 
 ### Version and validation scope
 
-Training Studio R1.5.27 is a separate tool; its version is independent of Robot Console V167, V260 and V297. Version trees are in main under `versions/`, without switching branches. V260 console and firmware source are in [versions/v260/](versions/v260/).
+Training Studio R1.5.27 is a separate tool; its version is independent of Robot Console V167, V260 and V302. Version trees are in main under `versions/`, without switching branches. V260 console and firmware source are in [versions/v260/](versions/v260/).
 
 Check your robot's mechanics, servos and IMU calibration before its first movement. [Release baseline and verification scope](microduck-hd1910/docs/BASELINE.en.md). Documentation changes do not extend physical Known-Good. R1 flashing records and old V167 source/runtime addresses remain available.
 

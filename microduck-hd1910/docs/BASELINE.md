@@ -2,7 +2,16 @@
 
 # 发布基线与验证范围
 
-当前公开版本为 **R17 V167 / control.43 + Training R1.5.27**，官方基线为 **0.15.1**。身份与哈希见 [PUBLICATION-MANIFEST.json](../PUBLICATION-MANIFEST.json)。
+## 当前中控发布 · 2026-11-23
+
+[Console Studio V302 Beta](../../versions/v302/) 已发布。本次只更新电脑端中控及独立维护组件，直接复用 **control.102 固件、R2 / R10 和原有 11 个 ONNX**，官方软件基线为 **Microduck 0.15.1**。已有 control.102 无需升级原生固件或重刷 TF 卡。
+
+维护、兼容性与界面本地回归已通过；实机验收待完成，不扩大 Reference Duck 既有 Known-Good。**下一步唯一主任务：Reference Duck / control.102 上验收 V302 编号、中位校准与模式切换，记录实际结果与延迟。**
+
+以下 V167 资料为历史记录，不代表当前最新发布版本。
+
+
+本历史线公开版本为 **R17 V167 / control.43 + Training R1.5.27**，官方基线为 **0.15.1**。身份与哈希见 [PUBLICATION-MANIFEST.json](../PUBLICATION-MANIFEST.json)。
 
 **V167 更新：修复鸭身抖动的问题。**
 
@@ -38,4 +47,4 @@
 
 2026-11-12 已完成公开中控与固件的源码清理修订 1：移除旧工具与未引用模块，按哈希恢复重复模型资料。已通过资源恢复、198 项指定 Python 检查和中控启动检查；没有 Rust/ARM64 重编译或实机验收，不建立新的运行 Known-Good。详见[源码清理审计](SOURCE-CLEANUP-20261112.md)。
 
-**下一步唯一主任务：在既有 Linux/WSL 环境完成清理后源码的 Rust 与 ARM64 构建验收。** 一次只验证一个变量。
+**该历史阶段的下一步：在既有 Linux/WSL 环境完成清理后源码的 Rust 与 ARM64 构建验收。** 一次只验证一个变量。

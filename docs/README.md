@@ -7,9 +7,9 @@
 
 **[为什么选择 kissqy？打开网页版对比 →](https://kissqy.github.io/Microduck-kissqy/compare/)** · [文字版与来源](MICRODUCK-COMPARISON.md) 先看现成动作、配套软硬件、中文 AI 与训练工具的区别；包含 OpenMicroDuck。
 
-> **V297 BATE 中控测试版已独立发布。** 新增四模式工作台、HAT 舵机编号与独立硬件测试，无需 URT2 调试板即可给舵机编号和中位校准。
+> **V302 Beta 中控测试版已独立发布。** 优化舵机编号与中位校准，保留四模式工作台、HAT 直接编号和独立硬件测试，并恢复 3D 零位／HOME 参考与 IMU 双列布局。直接复用 control.102 和原有 11 个模型。
 >
-> [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 文件目录](../versions/v297-bate/)
+> [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-v302/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302) · [V302 文件目录](../versions/v302/)
 >
 > 已有 R2 / control.102 用户只需更换中控。本版实机验收待完成；V260 稳定版继续保留。运行包统一从 Release 的 Assets 获取。
 
@@ -18,11 +18,11 @@
 
 默认使用 **系统镜像 R2 + Console Studio V260／control.102，开机配网 R10**。[R2 镜像](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [运行包与源码说明](../versions/v260/README.md)。
 
-两个机器人中控版本统一在 main 的 `versions/` 中分目录保存，无需切换分支。
+机器人中控按版本统一在 main 的 `versions/` 中分目录保存，无需切换分支。
 
 | 版本目录 | 固件与镜像 | 入口 |
 | --- | --- | --- |
-| V297 BATE · 独立测试版 | control.102 · R2 / R10 | [V297 说明与下载](../versions/v297-bate/) |
+| V302 Beta · 独立测试版 | control.102 · R2 / R10 | [V302 说明与下载](../versions/v302/) |
 | V260 · 当前发布 | control.102 · R2 / R10 | [V260 源码与下载](../versions/v260/) |
 | V167 · 历史版本 | control.43 · R1 预装 control.40 | [V167 源码与下载](../versions/v167/) |
 

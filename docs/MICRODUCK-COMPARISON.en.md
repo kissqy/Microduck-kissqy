@@ -6,7 +6,7 @@
 
 For personal builds using ZERO 3W, Feetech HD1910 and the Chinese workflow.
 
-> **Evidence cutoff: 18 November 2026.** Reviewed public versions only; later changes are outside this snapshot.
+> **Evidence cutoff: 18 November 2026.** External comparisons cover the reviewed public versions on that date. Our console entry was updated to V302 on November 23, 2026; other later project changes remain outside this snapshot.
 
 ## What Microduck-kissqy provides
 
@@ -32,7 +32,7 @@ R2 / V260 documents conversation, image recognition, voices/personas and action 
 
 **Board designs, bills of materials, wiring, system image and firmware are provided together; build the boards or choose assembled ones.**
 
-V297 BATE also adds HAT servo numbering and midpoint calibration without URT2. Hardware acceptance of that test release remains pending. [Matching hardware](https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/README.en.md)
+V302 Beta also adds HAT servo numbering and midpoint calibration without URT2. Hardware acceptance of that test release remains pending. [Matching hardware](https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/README.en.md)
 
 ### 5. HD1910 print files and step-by-step tutorials
 
@@ -104,7 +104,7 @@ The author’s training/adaptation builds on upstream frameworks, tasks and comm
 ## Usage and verification scope
 
 - Supported hardware is the published HAT / IMU / HUB configuration. Other boards, servos and mechanical changes require compatibility checks. Establish the reference configuration first, then verify one change at a time.
-- V260 / R2 is the current stable publication entry. The [V297 BATE pre-release](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) adds HAT servo numbering, midpoint calibration and separate hardware tests; physical acceptance is pending and controlled regressions do not extend Known-Good.
+- V260 / R2 is the current stable publication entry. The [V302 Beta pre-release](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302) adds HAT servo numbering, midpoint calibration and separate hardware tests; physical acceptance is pending and controlled regressions do not extend Known-Good.
 - Physical demonstrations, simulation results and shipped weights have separate scopes. One-legged balance has been demonstrated physically; the provenance page has not matched that demonstration to a separately identified published weight. The video is not a promise that the current package contains it.
 - Normal operation needs no training. Listed recipes are not proof that every task has completed long training and physical acceptance.
 - Project, upstream and third-party material retain their component licenses. Some original material is restricted to personal noncommercial use; see [licenses](../LICENSE) and [software/model rights](../microduck-hd1910/docs/SOFTWARE-MODEL-RIGHTS.en.md).

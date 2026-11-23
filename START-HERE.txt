@@ -1,11 +1,11 @@
 中文：START-HERE.txt
 English: https://github.com/kissqy/Microduck-kissqy/blob/main/START-HERE.en.md
 
-Microduck 当前公开发布 · 2026-11-13
+Microduck 当前公开发布 · 2026-11-23
 
 项目：https://github.com/kissqy/Microduck-kissqy
-V297 BATE 独立中控测试版：https://kissqy.github.io/Microduck-kissqy/console-bate/
-发布与下载：https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate
+V302 Beta 独立中控测试版：https://kissqy.github.io/Microduck-kissqy/console-v302/
+发布与下载：https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302
 已有 R2 / control.102 只需换中控；实机验收待完成。运行包统一从 Release 的 Assets 获取。
 
 默认使用：系统镜像 R2 + Microduck Console Studio V260（R17）。
@@ -20,14 +20,15 @@ V260 版本目录：https://github.com/kissqy/Microduck-kissqy/tree/main/version
 
 版本目录（main，无需切换分支）：
 V167：versions/v167/
-V260：versions/v260/
+V302：versions/v302/（新中控，只更新电脑端）
+V260：versions/v260/（R2 镜像与 control.102 稳定固件）
 每个版本目录均提供对应源码与运行包入口。
 
 首次开机先尝试已保存 Wi-Fi，未能连接时开启配网热点。
 热点：Microduck-kissqy，密码：12345678
 配网页面：http://10.42.0.1:8088
 运行中断网不自动切换热点；可通过中控手动开启。
-电脑端完整解压 V260，Windows 运行 start.cmd，macOS/Linux 运行 bash start.command。
+电脑端完整解压 V302，Windows 运行 start.cmd，macOS/Linux 运行 bash start.command。
 首次运动前核对本机标定，按 HOME → 保持 → 行走 使用。
 
 历史版本保留：

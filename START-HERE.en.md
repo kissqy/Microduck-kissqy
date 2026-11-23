@@ -2,9 +2,9 @@
 
 # Current public Microduck release
 
-Updated November 13, 2026. Project: <https://github.com/kissqy/Microduck-kissqy>.
+Updated November 23, 2026. Project: <https://github.com/kissqy/Microduck-kissqy>.
 
-V297 BATE independent console pre-release: [features and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release Assets](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate). Existing R2 / control.102 users only replace the console. Use the actual runtime in Release Assets; physical acceptance is pending.
+V302 Beta independent console pre-release: [features and guide](https://kissqy.github.io/Microduck-kissqy/console-v302/en.html) · [Release Assets](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302). Existing R2 / control.102 users only replace the console. Use the actual runtime in Release Assets; physical acceptance is pending.
 
 - Default setup: **System Image R2 + Microduck Console Studio V260 (R17)**.
 - Robot firmware: official Microduck 0.15.1 / control.102.
@@ -15,9 +15,11 @@ V297 BATE independent console pre-release: [features and guide](https://kissqy.g
 
 On boot, the system tries saved Wi-Fi first and opens a setup hotspot if it cannot connect. Join `Microduck-kissqy` (password `12345678`) and visit `http://10.42.0.1:8088` if the page does not open automatically. A disconnection during normal operation does not automatically start the hotspot; it can be enabled manually from the console.
 
-Extract the complete V260 console. Run `start.cmd` on Windows or `bash start.command` on macOS/Linux. Before first movement, verify this robot's calibration and follow **HOME → hold → walk**.
+Extract the complete V302 console. Run `start.cmd` on Windows or `bash start.command` on macOS/Linux. Before first movement, verify this robot's calibration and follow **HOME → hold → walk**.
 
 ## Version directories on main
+
+- [V302 Beta · current console pre-release](versions/v302/README.en.md): console-only update; reuses control.102 and all 11 models.
 
 - [V260 · current release](versions/v260/): console, firmware source and runtime downloads.
 - [V167 · historical release](versions/v167/README.en.md): preserved source layout and original packages.

@@ -144,24 +144,24 @@ fanhao 的镜像模型说明将其中 **10 个模型的作者标为 kissqy**，�
 | --- | --- | --- | --- |
 | **新装系统镜像** | R2 · control.102 · 配网 R10 | [下载 .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) | [镜像发布说明](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
 | **正式版机器人中控与固件** | Studio V260 · control.102 | [运行包与固件下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) | [版本文件、使用说明与独立源码](versions/v260/README.md) |
-| **中控测试版** | V297 BATE · control.102 | [下载中控 ZIP](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v297-bate/Microduck-Console-Studio-V297-BATE.zip) | [独立专页](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [版本文件](versions/v297-bate/) |
+| **中控测试版** | V302 Beta · control.102 | [下载中控 ZIP](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v302/Microduck-Console-Studio-V302.zip) | [独立专页](https://kissqy.github.io/Microduck-kissqy/console-v302/) · [版本文件](versions/v302/) |
 | **独立训练中控 · 可选** | R1.5.27 | [下载训练中控 ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip) | [训练指南](microduck-hd1910/training-console/README.zh-CN.md) |
 
 ### 已有 V167：升级到 V260 无需重刷
 
 下载并完整解压 V260 中控，连接 ZERO 后，直接在中控内安装随包固件。需要保留本机标定与个人配置时，按[版本升级说明](versions/v260/README.md)操作；R2 镜像用于新装或确实需要重刷时。
 
-### V297 BATE：通过 HAT 给舵机编号
+### V302 Beta：编号、中位校准与 3D 界面更新
 
-**无需 URT2 调试板，即可给舵机编号和中位校准。** 测试版提供四模式工作台、HAT 舵机编号与独立硬件测试。
+**无需 URT2 调试板，即可给舵机编号和中位校准。** V302 优化编号与中位维护链路，保留四模式工作台，恢复 3D 零位／HOME 参考与 IMU 双列布局。直接复用 control.102 固件和 11 个模型，只更新中控。
 
-[中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [发布说明与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate)
+[中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-v302/) · [发布说明与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302)
 
 <sub>已有 R2 / control.102 用户只需更换电脑端中控。本版实机验收待完成，V260 正式版继续保留；实际运行包从 Release 的 Assets 获取。</sub>
 
 ### 版本与验证范围
 
-训练中控 R1.5.27 是独立工具，不与机器人中控的 V167、V260、V297 版本号混用。各版本资料在 main 的 `versions/` 目录中，无需切换分支；V260 中控源码与固件源码从 [versions/v260/](versions/v260/) 进入。
+训练中控 R1.5.27 是独立工具，不与机器人中控的 V167、V260、V302 版本号混用。各版本资料在 main 的 `versions/` 目录中，无需切换分支；V260 中控源码与固件源码从 [versions/v260/](versions/v260/) 进入。
 
 首次运动前仍需核对本机机械、舵机与 IMU 标定。[发布基线与验证范围](microduck-hd1910/docs/BASELINE.md)；文档与入口整理不扩大已有实机 Known-Good 范围。原 R1 刷卡实测记录与 V167 旧地址继续保留。
 

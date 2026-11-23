@@ -14,9 +14,9 @@ A Feetech HD1910 adaptation based on official Microduck **0.15.1**, including ro
 
 
 > [!NOTE]
-> **The V297 BATE console is available as a separate pre-release.** Four workspaces, HAT servo numbering and independent hardware tests. Assign servo IDs and calibrate their midpoint without a URT2 programming board.
+> **The V302 Beta console is available as a separate pre-release.** Improved numbering and midpoint calibration, four workspaces, complete 3D zero/HOME references and side-by-side IMU charts. Reuses unchanged control.102 and all 11 models; no URT2 is needed for numbering.
 >
-> [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 version files](../versions/v297-bate/README.en.md)
+> [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-v302/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302) · [V302 version files](../versions/v302/README.en.md)
 >
 > Existing R2 / control.102 users only replace the desktop console. Physical-robot acceptance is pending; V260 remains stable. Download the actual console runtime from Release Assets.
 

@@ -7,9 +7,9 @@ English editions of the homepage, user guides, hardware records, and technical n
 
 **[Why choose kissqy? Open the web comparison →](https://kissqy.github.io/Microduck-kissqy/compare/en.html)** · [Text version and sources](MICRODUCK-COMPARISON.en.md) Supplied policies, matching hardware/software, Chinese AI and training tools, including OpenMicroDuck.
 
-> **The V297 BATE console is available as a separate pre-release.** Four workspaces, HAT servo numbering and independent hardware tests. Assign servo IDs and calibrate their midpoint without a URT2 programming board.
+> **The V302 Beta console is available as a separate pre-release.** Improved numbering and midpoint calibration, four workspaces, complete 3D zero/HOME references and side-by-side IMU charts. Reuses unchanged control.102 and all 11 models; no URT2 is needed for numbering.
 >
-> [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-bate/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 version files](../versions/v297-bate/README.en.md)
+> [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-v302/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302) · [V302 version files](../versions/v302/README.en.md)
 >
 > Existing R2 / control.102 users only replace the desktop console. Physical-robot acceptance is pending; V260 remains stable. Download the actual console runtime from Release Assets.
 
@@ -22,7 +22,7 @@ Robot Console versions are grouped on main; no branch switching is needed.
 
 | Version directory | Firmware and image | Entry |
 | --- | --- | --- |
-| V297 BATE · pre-release | control.102 · R2 / R10 | [V297 page and files](../versions/v297-bate/README.en.md) |
+| V302 Beta · pre-release | control.102 · R2 / R10 | [V302 page and files](../versions/v302/README.en.md) |
 | V260 · current | control.102 · R2 / R10 | [V260 source and downloads](../versions/v260/) |
 | V167 · historical | control.43 · R1 includes control.40 | [V167 source and downloads](../versions/v167/README.en.md) |
 

@@ -14,9 +14,9 @@
 
 
 > [!NOTE]
-> **V297 BATE 中控测试版已独立发布。** 新增四模式工作台、HAT 舵机编号与独立硬件测试，无需 URT2 调试板即可给舵机编号和中位校准。
+> **V302 Beta 中控测试版已独立发布。** 优化舵机编号与中位校准，保留四模式工作台、HAT 直接编号和独立硬件测试，并恢复 3D 零位／HOME 参考与 IMU 双列布局。直接复用 control.102 和原有 11 个模型。
 >
-> [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-bate/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v297-bate) · [V297 文件目录](../versions/v297-bate/)
+> [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-v302/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302) · [V302 文件目录](../versions/v302/)
 >
 > 已有 R2 / control.102 用户只需更换中控。本版实机验收待完成；V260 稳定版继续保留。运行包统一从 Release 的 Assets 获取。
 

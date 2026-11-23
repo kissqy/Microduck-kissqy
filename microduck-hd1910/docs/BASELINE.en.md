@@ -2,7 +2,16 @@
 
 # Release baseline and verification scope
 
-Published version: **R17 V167 / control.43 + Training R1.5.27**, based on official **0.15.1**. See [PUBLICATION-MANIFEST.json](../PUBLICATION-MANIFEST.json) for identities and hashes.
+## Current console release · November 23, 2026
+
+[Console Studio V302 Beta](../../versions/v302/README.en.md) is published. It only updates the desktop console and isolated maintenance modules, reusing unchanged **control.102, R2 / R10 and the existing 11 ONNX models** on official **Microduck 0.15.1**. Existing control.102 users do not upgrade native firmware or reflash the card.
+
+Local maintenance, compatibility and UI regressions passed; physical acceptance remains pending. Existing Reference Duck Known-Good records are retained. **Next single task: verify V302 numbering, midpoint calibration and mode changes on Reference Duck / control.102, recording actual results and latency.**
+
+The following V167 records are historical and do not describe the latest release.
+
+
+Historical published version: **R17 V167 / control.43 + Training R1.5.27**, based on official **0.15.1**. See [PUBLICATION-MANIFEST.json](../PUBLICATION-MANIFEST.json) for identities and hashes.
 
 **V167 update: Fixed body jitter.**
 
@@ -38,4 +47,4 @@ Current release reference: **0.15.1 + R17 V167 / control.43 + Training R1.5.27**
 
 November 12: source cleanup revision 1 removed obsolete tools and an unlinked module, with duplicate model metadata restored by checksum. Resource restoration, 198 selected Python checks and console startup passed. No Rust/ARM64 rebuild or hardware acceptance was performed, and no new runtime Known-Good was established. See the [source cleanup audit (中文)](SOURCE-CLEANUP-20261112.md).
 
-**Single next task: validate Rust and ARM64 builds of the cleaned source in the existing Linux/WSL environment.** Validate one variable at a time.
+**Historical next task: validate Rust and ARM64 builds of the cleaned source in the existing Linux/WSL environment.** Validate one variable at a time.

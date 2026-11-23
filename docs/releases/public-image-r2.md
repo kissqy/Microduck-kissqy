@@ -21,3 +21,13 @@
 本次仅同步发布与教程入口，没有新增实机验收；原 Known-Good 记录不变。V260 实机功能验收仍按独立版本说明进行。
 
 [保留的 R1 历史说明](public-image-r1.md) · [R1 历史发布页](https://github.com/kissqy/Microduck-kissqy/releases/tag/public-image-r1) · [回到首次行走教程](../build/start.html)
+
+---
+
+### 🧠 火山方舟模型开通入口
+
+**[点击进入火山方舟 · 模型开通管理](https://console.volcengine.com/ark/region:cn-beijing/openManagement?LLM=%7B%7D&advancedActiveKey=model)**
+
+模型开通界面示例（`Doubao-Seed-2.1-lite`）：
+
+[![火山方舟模型开通示例：Doubao-Seed-2.1-lite 已开通](https://raw.githubusercontent.com/kissqy/Microduck-kissqy/main/docs/assets/ark-model-activation-seed21-lite.png)](https://console.volcengine.com/ark/region:cn-beijing/openManagement?LLM=%7B%7D&advancedActiveKey=model)

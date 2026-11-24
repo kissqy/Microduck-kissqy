@@ -2,29 +2,21 @@
 
 # Current public Microduck release
 
-Updated November 23, 2026. Project: <https://github.com/kissqy/Microduck-kissqy>.
+**R3 system image · Console Studio V313 · robot firmware `control.127`**
 
-V302 Beta independent console pre-release: [features and guide](https://kissqy.github.io/Microduck-kissqy/console-v302/en.html) · [Release Assets](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302). Existing R2 / control.102 users only replace the console. Use the actual runtime in Release Assets; physical acceptance is pending.
+[R3 image (.img.xz)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [V313 console (.zip)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [Release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
-- Default setup: **System Image R2 + Microduck Console Studio V260 (R17)**.
-- Robot firmware: official Microduck 0.15.1 / control.102.
-- First-boot Wi-Fi: R10; runtime models: 11 ONNX.
-- Optional independent Training Studio: R1.5.27.
-
-[Download R2 image](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [V260 release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [Console, firmware and source-package guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) · [Independent V260 source](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260)
+On an existing R2 card, connect with V313 and open **系统维护 (System Maintenance)**. If the robot runs `control.102` or `control.126`, select the bundled V313 / `control.127` firmware and click **升级所选固件 (Upgrade selected firmware)**. A robot already on `control.127` is ready to use.
 
 On boot, the system tries saved Wi-Fi first and opens a setup hotspot if it cannot connect. Join `Microduck-kissqy` (password `12345678`) and visit `http://10.42.0.1:8088` if the page does not open automatically. A disconnection during normal operation does not automatically start the hotspot; it can be enabled manually from the console.
 
-Extract the complete V302 console. Run `start.cmd` on Windows or `bash start.command` on macOS/Linux. Before first movement, verify this robot's calibration and follow **HOME → hold → walk**.
+Extract the complete V313 console. Run `start.cmd` on Windows or `bash start.command` on macOS/Linux. Before first movement, verify this robot's calibration and follow **HOME → hold → walk**.
 
-## Version directories on main
+## Versions
 
-- [V302 Beta · current console pre-release](versions/v302/README.en.md): console-only update; reuses control.102 and all 11 models.
-
-- [V260 · current release](versions/v260/): console, firmware source and runtime downloads.
-- [V167 · historical release](versions/v167/README.en.md): preserved source layout and original packages.
-
-No branch switching is needed. Training Studio R1.5.27 remains an independent tool.
+- [R3 / V313 · current](versions/v313/README.en.md)
+- [V302 · archive](versions/v302/README.en.md)
+- [R2 / V260 · archive](versions/v260/README.md)
 
 ## Historical releases
 
@@ -33,4 +25,4 @@ No branch switching is needed. Training Studio R1.5.27 remains an independent to
 - V167 / control.43 source is grouped in `versions/v167/microduck-hd1910/firmware/`; its console is in `console/`.
 - Training Studio source remains in `microduck-hd1910/training-console/`.
 
-V167 and V260 occupy separate directories under `versions/` and do not trigger automatic upgrades. The original root `microduck-hd1910/` source path remains available. The root `release-assets/` directory has moved to `versions/v167/release-assets/`; use the updated download links. See [Known-Good and validation scope](microduck-hd1910/docs/BASELINE.en.md); this publication does not add real-robot acceptance results. See `microduck-hd1910/LICENSE` for component licensing; third-party content retains its original terms.
+V167 and V260 occupy separate directories under `versions/` and do not trigger automatic upgrades. The original root `microduck-hd1910/` source path remains available. The root `release-assets/` directory has moved to `versions/v167/release-assets/`; use the updated download links. See [Known-Good and validation scope](microduck-hd1910/docs/BASELINE.en.md). All three freshly flashed TF cards booted and opened the setup hotspot on first power-on. See `microduck-hd1910/LICENSE` for component licensing; third-party content retains its original terms.

@@ -6,7 +6,7 @@
 
 面向使用中文流程、ZERO 3W 与飞特 HD1910 完成个人复刻的用户。
 
-> **资料核查截至 2026 年 11 月 18 日。** 外部仓库对比仅对应当日核查的公开版本；本仓库中控入口于 2026-11-23 更新至 V302，其他项目后续更新以各自最新说明为准。
+> **资料核查截至 2026 年 11 月 18 日。** 外部仓库对比仅对应当日核查的公开版本；本仓库中控入口于 2026-11-24 更新至 R3／V313，其他项目后续更新以各自最新说明为准。
 
 ## 我们的优势
 
@@ -26,13 +26,13 @@
 
 **舵机与 IMU 标定、3D 姿态、关节反馈、摄像头、手柄和固件维护，都有中文操作入口。**
 
-R2 / V260 提供中文对话、拍照识别、音色角色与动作调用；AI 需配置服务凭据并联网。 [中控与 AI 用法](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)
+R3 / V313 提供中文对话、拍照识别、音色角色与动作调用；AI 需配置服务凭据并联网。 [中控与 AI 用法](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 ### 4. HAT、IMU、HUB，软硬件对应起来
 
 **板卡电路工程、材料清单、接线、系统镜像与固件集中提供，可自行制作，也可选择成品板。**
 
-V302 Beta 另提供 HAT 直接编号与中位校准，无需 URT2；该测试版实机验收待完成。 [配套硬件资料](https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/README.md)
+V313 支持通过 HAT 直接给舵机编号和校准中位，无需 URT2。 [配套硬件资料](https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/README.md)
 
 ### 5. 飞特适配打印件与分步教程
 
@@ -104,7 +104,7 @@ fanhao 的[镜像模型说明](https://github.com/fanhao375/microduck-replica/bl
 ## 使用与验证范围
 
 - 本项目保证的适配范围是公布版本的 HAT／IMU／HUB；第三方板卡、不同舵机和机械改动需要重新确认兼容性。新手先按配套参考配置跑通，再一次验证一个改动。
-- V260／R2 是当前正式发布入口。[V302 Beta](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302)另提供 HAT 舵机编号、中位校准和独立硬件测试；该版实机验收待完成，不能据受控回归直接扩大 Known-Good。
+- [R3 / V313](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313) 为当前正式版。三张新 TF 卡分别写入 R3，三张均在第一次上电时启动并开启配网热点。
 - 实机展示、仿真结果与随包权重分别说明。单脚平衡已有实机演示；模型来源页尚未将该演示与独立发布权重一一对应，不能据视频承诺当前包已包含该模型。
 - 普通使用无需训练；训练工具中的任务与配方不等于全部已经完成长训练和实机验收。不同动作按各自记录核对。
 - 本项目及官方、第三方内容按各自许可使用。部分原创内容限个人非商业用途，见[分项许可](../LICENSE)与[软件及模型权利说明](../microduck-hd1910/docs/SOFTWARE-MODEL-RIGHTS.md)。

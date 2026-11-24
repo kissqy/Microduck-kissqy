@@ -2,11 +2,13 @@
 
 # 发布基线与验证范围
 
-## 当前中控发布 · 2026-11-23
+## 当前发布 · 2026-11-24
 
-[Console Studio V302 Beta](../../versions/v302/) 已发布。本次只更新电脑端中控及独立维护组件，直接复用 **control.102 固件、R2 / R10 和原有 11 个 ONNX**，官方软件基线为 **Microduck 0.15.1**。已有 control.102 无需升级原生固件或重刷 TF 卡。
+**R3 系统镜像 · V313 电脑中控 · 机器人固件 `control.127`** · Microduck 0.15.1 · R10 · 11 ONNX
 
-维护、兼容性与界面本地回归已通过；实机验收待完成，不扩大 Reference Duck 既有 Known-Good。**下一步唯一主任务：Reference Duck / control.102 上验收 V302 编号、中位校准与模式切换，记录实际结果与延迟。**
+三张新 TF 卡分别写入 R3，三张均在第一次上电时启动并开启配网热点。 [验收记录与安装图解](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+
+**Reference Duck 下一项实机验证**为在 control.127 上复核 HAT 编号、中位校准和模式切换，记录实测结果。
 
 以下 V167 资料为历史记录，不代表当前最新发布版本。
 
@@ -41,9 +43,9 @@
 
 `firmware/verification/v167/` 保存此前编译阶段的 237 项 Rust 测试、18 项 Python 测试及十个 ARM64/QEMU 模型加载与首次推理记录。本次整理只核对交付包、源码、资源恢复和校验清单，没有重新编译或操作机器人。
 
-## Known-Good 与下一步
+## V167 历史 Known-Good 与当时的下一步
 
-当前软件发布参考为 **0.15.1 + R17 V167 / control.43 + Training R1.5.27**；系统镜像仍使用已重刷验证的 **Public Image R1**，不同动作的验收范围按各自实测记录执行。
+V167 阶段的软件发布参考为 **0.15.1 + R17 V167 / control.43 + Training R1.5.27**；系统镜像仍使用已重刷验证的 **Public Image R1**，不同动作的验收范围按各自实测记录执行。
 
 2026-11-12 已完成公开中控与固件的源码清理修订 1：移除旧工具与未引用模块，按哈希恢复重复模型资料。已通过资源恢复、198 项指定 Python 检查和中控启动检查；没有 Rust/ARM64 重编译或实机验收，不建立新的运行 Known-Good。详见[源码清理审计](SOURCE-CLEANUP-20261112.md)。
 

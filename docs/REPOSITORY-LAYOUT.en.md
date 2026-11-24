@@ -4,11 +4,12 @@
 
 ## Choose a version directory
 
-Robot Console, firmware source and matching downloads are grouped under [versions/](../versions/) on main, separated into **V167** and **V260**. No branch switching is needed.
+Choose the current release or an archived version in [versions/](../versions/).
 
 | Directory | Version and contents |
 | --- | --- |
-| [versions/v260/](../versions/v260/) | Current release: Studio V260 / control.102 / Image R2 / Wi-Fi R10. Console source is in `console/`; firmware source is in `firmware/`. |
+| [versions/v313/](../versions/v313/README.en.md) | Current release · R3 / V313 / control.127. Includes links to the image, console and bundled source. |
+| [versions/v260/](../versions/v260/) | Archive: Studio V260 / control.102 / Image R2 / Wi-Fi R10. Console source is in `console/`; firmware source is in `firmware/`. |
 | [versions/v167/](../versions/v167/README.en.md) | Historical R17 V167 / control.43. Preserves the relative layout of `microduck-hd1910/` source and `release-assets/` build resources. Image R1 originally includes control.40. |
 | `microduck-hd1910/` | Preserved source compatibility path. The root `release-assets/` directory is retired; packages and build baselines now use `versions/v167/release-assets/`. |
 | `microduck-hd1910/training-console/` | Independent Training Studio R1.5.27; its version number is separate from Robot Console versions. |
@@ -17,13 +18,13 @@ Robot Console, firmware source and matching downloads are grouped under [version
 
 V167 console source is in [microduck-hd1910/firmware/console/](../versions/v167/microduck-hd1910/firmware/console/), and firmware source in [microduck-hd1910/firmware/](../versions/v167/microduck-hd1910/firmware/). See [BUILD.en.md](../versions/v167/microduck-hd1910/docs/BUILD.en.md). Preserving their relative depth lets packaging scripts locate the pinned build baseline at the original relative path.
 
-This updates navigation and the resource paths used by legacy root packaging tools. Frozen version source and runtime packages retain their original bytes; it does not add real-robot Known-Good results. The next single main task remains V260 acceptance on the reference card.
+See [the release baseline](../microduck-hd1910/docs/BASELINE.en.md) for dated hardware checks.
 
 ## Larger files
 
 | Content | Location and purpose |
 | --- | --- |
-| Ready-to-use downloads | The two V260 runtime ZIPs and R2 image are on the [release page](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260); V167 downloads are grouped in [its version directory](../versions/v167/README.en.md). The former root download paths are retired; use the version-directory URLs. |
+| Ready-to-use downloads | [R3 image (.img.xz)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [V313 console (.zip)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [Release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313) |
 | Training configuration and references | `microduck-hd1910/training-console/data/`, for the independent training console; the V167 snapshot retains its original training material. |
 | Online-demo resources | `docs/`, the GitHub Pages publication directory; copied geometry and training parameters keep the demo independent. |
 | Build baseline | One pinned V164 ZIP in `versions/v167/release-assets/build-baselines/`, used to reproduce V167. The root copy is removed; updated links and the legacy source packaging tools use this archive. |

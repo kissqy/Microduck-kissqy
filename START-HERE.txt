@@ -1,37 +1,28 @@
 中文：START-HERE.txt
 English: https://github.com/kissqy/Microduck-kissqy/blob/main/START-HERE.en.md
 
-Microduck 当前公开发布 · 2026-11-23
+Microduck 正式版 · 2026-11-24
 
-项目：https://github.com/kissqy/Microduck-kissqy
-V302 Beta 独立中控测试版：https://kissqy.github.io/Microduck-kissqy/console-v302/
-发布与下载：https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302
-已有 R2 / control.102 只需换中控；实机验收待完成。运行包统一从 Release 的 Assets 获取。
+系统镜像 R3 · 电脑中控 V313 · 机器人固件 control.127
+平台：Radxa ZERO 3W / 飞特 HD1910。官方 Microduck 0.15.1，11 个 ONNX 模型，开机配网 R10。
 
-默认使用：系统镜像 R2 + Microduck Console Studio V260（R17）。
-机器人固件：官方 0.15.1 / control.102
-开机配网：R10；运行模型：11 个 ONNX
-训练中控：R1.5.27，按需独立下载
+R3 镜像：https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz
+V313 电脑中控：https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip
+累计更新与安装图解：https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313
+中控与 HAT 编号图解：https://kissqy.github.io/Microduck-kissqy/console-v313/
 
-R2 镜像下载：https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz
-V260 发布下载：https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260
-中控、固件、两类源码说明：https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md
-V260 版本目录：https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260
-
-版本目录（main，无需切换分支）：
-V167：versions/v167/
-V302：versions/v302/（新中控，只更新电脑端）
-V260：versions/v260/（R2 镜像与 control.102 稳定固件）
-每个版本目录均提供对应源码与运行包入口。
+已有 R2 卡可以保留标定和配网。用 V313 连接 ZERO，进入 系统维护。当前为 control.102 或 control.126 时，选择随包的 V313／control.127，点击 升级所选固件。已经是 control.127 的可以直接使用。
 
 首次开机先尝试已保存 Wi-Fi，未能连接时开启配网热点。
 热点：Microduck-kissqy，密码：12345678
 配网页面：http://10.42.0.1:8088
 运行中断网不自动切换热点；可通过中控手动开启。
-电脑端完整解压 V302，Windows 运行 start.cmd，macOS/Linux 运行 bash start.command。
+电脑端完整解压 V313，Windows 运行 start.cmd，macOS/Linux 运行 bash start.command。
 首次运动前核对本机标定，按 HOME → 保持 → 行走 使用。
 
 历史版本保留：
+R2 / V260：https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260
+V302：https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302
 R1 镜像：https://github.com/kissqy/Microduck-kissqy/releases/tag/public-image-r1
 V167 中控：https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Console-R17-V167.zip
 V167 / control.43 源码：versions/v167/microduck-hd1910/firmware/，其中中控为 console/。
@@ -40,5 +31,5 @@ R1 仍预装 control.40 / 配网 R5；需要旧线升级时使用 V167 的随包
 V167、V260 在 versions/ 内分目录保存，不触发旧线自动升级。
 原 microduck-hd1910/ 源码路径保留；根 release-assets/ 已归并到 versions/v167/release-assets/，使用本页的新下载地址。
 
-Known-Good 与验证范围见 microduck-hd1910/docs/BASELINE.md；本次发布不新增实机验收结论。
+Known-Good 与验证范围见 microduck-hd1910/docs/BASELINE.md；三张新 TF 卡分别写入 R3，三张均在第一次上电时启动并开启配网热点。
 分项授权见 microduck-hd1910/LICENSE；第三方内容保留原许可。

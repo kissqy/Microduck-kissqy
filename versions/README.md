@@ -4,14 +4,13 @@
 
 | 版本 | 固件 | 配套镜像 | 版本目录 |
 | --- | --- | --- | --- |
-| **V302 Beta · 独立测试版** | control.102 | R2 / 配网 R10 | [进入 V302 Beta](v302/) |
-| **V260 · 当前发布** | control.102 | R2 / 配网 R10 | [进入 V260](v260/) |
+| **V313 · 当前正式版** | control.127 | R3 / 配网 R10 | [V313 下载与使用](v313/) |
+| **V302 Beta · 历史中控** | control.102 | R2 / 配网 R10 | [进入 V302 Beta](v302/) |
+| **V260 · 历史正式版** | control.102 | R2 / 配网 R10 | [进入 V260](v260/) |
 | **V167 · 历史保留** | control.43 | R1（镜像预装 control.40，安装 V167 随包固件后为 control.43） | [进入 V167](v167/) |
 
-V302 Beta 的更新、编号方法和文件入口独立保存在 `v302/`，运行包附件由本版 Release 的 Assets 提供，以实际上传文件为准。已有 R2 / control.102 用户只需更换中控。
+[下载 R3 镜像（.img.xz）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [下载 V313 中控（.zip）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [累计更新与安装图解](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
-V167、V260 的源码与配套说明分别保存在各自目录。运行包从相应版本页下载；V260 的两个运行 ZIP 与 R2 镜像保存在 [Releases](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)。源码无需重复下载或上传 ZIP。
+已有 R2 卡可以保留标定和配网。用 V313 连接 ZERO，进入 **系统维护**。当前为 `control.102` 或 `control.126` 时，选择随包的 V313／`control.127`，点击 **升级所选固件**。已经是 `control.127` 的可以直接使用。
 
-独立训练中控 **R1.5.27** 不随机器人中控版本升级，入口见 [训练中控说明](../microduck-hd1910/training-console/README.md)。根目录 `microduck-hd1910/` 仍作为源码兼容位置；旧根 `release-assets/` 已归并到 `versions/v167/release-assets/`，版本选择与下载以本目录为准。
-
-V302 Beta 的维护、兼容性与界面本地回归已通过，实机验收待完成。官方软件基线 Microduck 0.15.1、机器人固件 control.102、R2 / R10 与既有实机 Known-Good 记录保持不变。下一步唯一主任务：参考卡上的 V302 Beta 实机验收，重点检查编号、中位校准与模式切换，并记录实际操作结果与延迟。
+独立训练中控 R1.5.27 的下载与源码见[训练中控说明](../microduck-hd1910/training-console/README.md)。

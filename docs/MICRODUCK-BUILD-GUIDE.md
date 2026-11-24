@@ -9,7 +9,7 @@
 
 Microduck-kissqy 是 kissqy 基于 Pollen Robotics Microduck 0.15.1、已完成实机复刻的个人项目，面向 **Radxa ZERO 3W + 15 个飞特 HD1910 舵机 + 本仓库 HAT / IMU**。这里提供系统镜像、中文机器人中控、配套现成动作模型、自制电路板工程，以及全套打印件和摆盘。**日常使用直接用发布包里的模型，无须自己训练。**
 
-**当前发布：系统镜像 R2 / 机器人中控 V260 / 固件 control.102 / 配网 R10。** [新版下载与独立源码说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)；[R1 历史镜像](releases/public-image-r1.md)及 V167 / control.43 已验证基线保留。新版发布不替代原有实机 Known-Good 记录。新手路线按预算、采购、装配和首次行走展开。版本及验证依据见[发布基线](../microduck-hd1910/docs/BASELINE.md)。源码可获取；作者原创部分采用个人非商业许可，官方和第三方部分保留各自许可，见[分项许可](../microduck-hd1910/LICENSE)。
+**当前发布：系统镜像 R3 / 机器人中控 V313 / 固件 control.127 / 配网 R10。** [正式版下载与随包源码](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v313/README.md)；[R1 历史镜像](releases/public-image-r1.md)及 V167 / control.43 已验证基线保留。新版发布不替代原有实机 Known-Good 记录。新手路线按预算、采购、装配和首次行走展开。版本及验证依据见[发布基线](../microduck-hd1910/docs/BASELINE.md)。源码可获取；作者原创部分采用个人非商业许可，官方和第三方部分保留各自许可，见[分项许可](../microduck-hd1910/LICENSE)。
 
 ## 按这四个问题开始
 
@@ -68,20 +68,20 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 
 **[打开首次行走六步路线 →](https://kissqy.github.io/Microduck-kissqy/build/start.html)** · [中控图文教程](https://kissqy.github.io/Microduck-kissqy/console-guide.html)
 
-**从 V167 升级到 V260 不需要重刷系统或 TF 卡。** 下载并完整解压 V260 中控，连接 ZERO 后，直接在 V260 中控内安装随包固件即可。R2 镜像用于新装系统或需要重刷时。 已有 V167 系统的用户可跳过下面的新装刷卡与首次配网步骤，直接从第 3 步开始。
+已有 R2 卡可以保留标定和配网。用 V313 连接 ZERO，进入 **系统维护**。当前为 `control.102` 或 `control.126` 时，选择随包的 V313／`control.127`，点击 **升级所选固件**。已经是 `control.127` 的可以直接使用。 要换用 R3 磁盘布局，先备份，再写入 R3 镜像。 [V167 旧系统迁移](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)
 
-1. 在[系统镜像 R2 发布页](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)下载镜像，用 Armbian Imager 将压缩镜像直接刷入 TF 卡。
+1. 在[系统镜像 R3 发布页](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)下载镜像，用 Armbian Imager 将压缩镜像直接刷入 TF 卡。
 2. ZERO 启动时先等待网卡与网络服务就绪并尝试已保存的 Wi-Fi；没有可连接网络或连接失败时，连接其 `Microduck-kissqy` 热点，按提示配置家庭 Wi-Fi 和新的登录密码；未自动弹出页面时访问 `http://10.42.0.1:8088`。运行中断网不会自动切换热点，可在中控手动开启。
-3. 从[下载区](../README.md#下载与版本)取得机器人中控 V260，完整解压后运行 `start.cmd`；macOS 使用 `start.command`。
-4. 填入本机 ZERO 的 SSH 地址和登录信息。**R2 镜像预装 V260 / control.102，配套使用 V260 中控。V167 用户无需重刷，通过 V260 中控安装本版随包固件即可；不要交给 V167 中控导入。**
+3. 从[下载区](../README.md#下载与版本)取得机器人中控 V313，完整解压后运行 `start.cmd`；macOS 使用 `start.command`。
+4. 填入 ZERO 的实际 SSH 地址和登录信息。连接后打开 **系统维护** 核对固件，V313 的配套版本是 `control.127`。
 
-软件包安装和版本说明见[V260 独立发布说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)，操作以 V260 随包使用说明为准；[V167 历史使用指南](../microduck-hd1910/firmware/console/README.zh-CN.md)仍保留。网页在线演示使用模拟数据，实际连接需要本地运行中控。
+软件包安装和版本说明见[V313 使用说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v313/README.md)，操作以 V313 随包使用说明为准；[V167 历史使用指南](../microduck-hd1910/firmware/console/README.zh-CN.md)仍保留。网页在线演示使用模拟数据，实际连接需要本地运行中控。
 
 ### 标定自己的机器人，再进行运动
 
 逐一核对 **15 个关节的零位、方向、限位，以及 IMU 安装姿态**。参考样机的标定不能直接替代你的机械装配标定。
 
-先检查中控的关节与姿态反馈，再按使用指南完成 HOME、保持和行走。实体手柄的模式切换、轮滑动作及条件，以 V260 随包使用说明与本机提示为准；[V167 历史按键说明](../microduck-hd1910/firmware/console/README.zh-CN.md)仅供旧版对照。遇到异常先确认发生在哪一环，见[标定与运行问题](MICRODUCK-FAQ.md)。
+先检查中控的关节与姿态反馈，再按使用指南完成 HOME、保持和行走。实体手柄的模式切换、轮滑动作及条件，以 V313 随包使用说明与本机提示为准；[V167 历史按键说明](../microduck-hd1910/firmware/console/README.zh-CN.md)仅供旧版对照。遇到异常先确认发生在哪一环，见[标定与运行问题](MICRODUCK-FAQ.md)。
 
 ## 进阶玩法：训练自己的动作
 

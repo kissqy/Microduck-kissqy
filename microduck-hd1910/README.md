@@ -2,42 +2,41 @@
 
 # Microduck HD1910 · 原路径兼容目录
 
-版本入口已统一到 [versions/](../versions/)：[V260](../versions/v260/) 与 [V167](../versions/v167/)。本目录保留兼容已有源码、文档和下载地址；查找版本时无需切换分支。
+从 [versions/](../versions/) 选择当前及历史版本。本目录保留原 V167 源码与配套文档。
 
 基于 Microduck 官方 **0.15.1** 的飞特 HD1910 适配，包含机器人固件、R17 机器人中控和独立训练中控。参考硬件：Radxa ZERO 3W、官方骨架、15 个 HD1910。社区个人项目，与 Pollen Robotics 无官方隶属关系。
 
 **源码公开、分项许可；明确适用个人非商业条款的原创部分限个人非商业使用，商业及组织用途须书面授权。其余内容保留各自许可，范围见 [LICENSE](LICENSE)。**
 
-**当前下载：系统镜像 R2 + Console Studio V260／control.102，开机配网 R10。** 更新于 2026-11-13。[发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [文件与使用说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)。本目录原 V167／control.43 源码继续保留。
+**R3 系统镜像 · V313 电脑中控 · 机器人固件 `control.127`** · [下载 R3 镜像（.img.xz）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [下载 V313 中控（.zip）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [累计更新与安装图解](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 **作者成品 IMU 已预烧录 FT6，到手无需另行烧录，安装后仍需本机标定。** 自焊新板、换芯片或维护升级再看 [STM32 FT6 下载与烧录指南](../hardware/IMU-FIRMWARE.md)；ZERO 机器人服务固件不会烧录外置 IMU。
 
 
-> [!NOTE]
-> **V302 Beta 中控测试版已独立发布。** 优化舵机编号与中位校准，保留四模式工作台、HAT 直接编号和独立硬件测试，并恢复 3D 零位／HOME 参考与 IMU 双列布局。直接复用 control.102 和原有 11 个模型。
+> **R3 系统镜像 · V313 电脑中控 · 机器人固件 `control.127`**
 >
-> [中控专页与使用方法](https://kissqy.github.io/Microduck-kissqy/console-v302/) · [发布与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302) · [V302 文件目录](../versions/v302/)
+> 可通过 HAT 直接编号和设置中位，逐设备通信卡片会显示最近一次超时耗时。
 >
-> 已有 R2 / control.102 用户只需更换中控。本版实机验收待完成；V260 稳定版继续保留。运行包统一从 Release 的 Assets 获取。
+> [V313 中控专页](https://kissqy.github.io/Microduck-kissqy/console-v313/) · [更新说明与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 
 ## 当前发布与独立源码
 
 | 内容 | 版本 | 源码或发布位置 |
 | --- | --- | --- |
-| 机器人固件与设备服务 | 官方 0.15.1 · control.102 | [V260 固件源码](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260/firmware) |
-| 机器人中控 | Studio V260（R17） | [V260 中控源码](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260/console) |
-| 公开系统镜像 | R2 · 开机配网 R10 | [镜像发布页](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
+| 机器人固件与设备服务 | Microduck 0.15.1 · control.127 | [随包固件与原生源码](../versions/v313/README.md) |
+| 机器人中控 | Studio V313 | [下载中控 ZIP](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) |
+| 公开系统镜像 | R3 · 配网 R10 | [下载系统镜像](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) |
 | 训练中控 | R1.5.27 | [training-console/](training-console/) |
 | 历史机器人固件与中控 | V167 / control.43 | [V167 固件](../versions/v167/microduck-hd1910/firmware/) · [V167 中控](../versions/v167/microduck-hd1910/firmware/console/) |
 
-V260 源码归入 `versions/v260/`；V167 源码与构建资源归入 `versions/v167/`，保留原有内部相对路径。本兼容目录仍保留 V167／control.43。R1、V167 运行包及验证记录保留；本次发布不改变已记录的实机 Known-Good 范围。
+V260 源码归入 `versions/v260/`；V167 源码与构建资源归入 `versions/v167/`，保留原有内部相对路径。本兼容目录仍保留 V167／control.43。最新与历史验收分别记录在[发布基线](docs/BASELINE.md)。
 
 ## 下载与使用
 
-1. [下载系统镜像 R2](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz)，用 [Armbian Imager](https://imager.armbian.com/) 刷入 TF 卡。
+1. [下载系统镜像 R3](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz)，用 [Armbian Imager](https://imager.armbian.com/) 刷入 TF 卡。
 2. 开机未能连接已保存 Wi-Fi 时，连接 `Microduck-kissqy` 热点（密码 `12345678`），设置家庭 Wi-Fi 和新的系统登录密码。未自动弹出页面时访问 `http://10.42.0.1:8088`。
-3. [打开 V260 发布下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)，取得完整 Console Studio V260 运行包，完整解压后运行 `start.cmd`；macOS/Linux 运行 `bash start.command`。页面地址为 `http://127.0.0.1:8090`。
+3. [下载 V313 中控 ZIP](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip)，完整解压后运行 `start.cmd`；macOS/Linux 运行 `bash start.command`。页面地址为 `http://127.0.0.1:8090`。
 4. 填写自己的 `用户名@机器人IP` 和 SSH 登录信息，连接后核对本机标定，按 **HOME → 保持 → 行走** 使用。镜像已预装机器人服务；已有系统需要升级时，可在中控“系统维护”安装随包固件。
 5. 需要训练时，[下载训练中控 R1.5.27](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip)，运行 `start-training.cmd` 或 `bash start-training.command`，打开 `http://127.0.0.1:8092`。
 
@@ -45,6 +44,7 @@ V260 源码归入 `versions/v260/`；V167 源码与构建资源归入 `versions/
 
 ## 从源码使用
 
+- V313 · [中控与原生固件源码](../versions/v313/README.md)
 - V260 中控与固件：[独立源码](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260)，资源恢复与构建见[版本说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)。
 - 历史 V167 中控启动入口（从仓库根目录）：`versions/v167/microduck-hd1910/firmware/console/start.cmd` 或 `start.command`。
 - 训练中控启动入口：`training-console/start-training.cmd` 或 `start-training.command`。

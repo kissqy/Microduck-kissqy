@@ -4,11 +4,12 @@
 
 ## 从版本目录进入
 
-机器人中控、固件及配套下载统一放在 main 的 [versions/](../versions/) 入口下，按 **V167** 与 **V260** 区分，无需切换分支。
+从 [versions/](../versions/) 选择当前正式版或历史版本。
 
 | 目录 | 版本与内容 |
 | --- | --- |
-| [versions/v260/](../versions/v260/) | 当前发布：Studio V260 / control.102 / 系统镜像 R2 / 配网 R10；中控源码在 `console/`，固件源码在 `firmware/`。 |
+| [versions/v313/](../versions/v313/) | 当前正式版 R3／V313／control.127，提供镜像、中控和随包源码入口。 |
+| [versions/v260/](../versions/v260/) | 历史版本：Studio V260 / control.102 / 系统镜像 R2 / 配网 R10；中控源码在 `console/`，固件源码在 `firmware/`。 |
 | [versions/v167/](../versions/v167/) | 历史发布：R17 V167 / control.43；保留 `microduck-hd1910/` 源码和 `release-assets/` 构建资源的原相对结构。R1 镜像原预装 control.40。 |
 | `microduck-hd1910/` | 保留的源码兼容位置。根 `release-assets/` 已退休，运行包和构建基线统一使用 `versions/v167/release-assets/`。 |
 | `microduck-hd1910/training-console/` | 独立训练中控 R1.5.27，版本号不与机器人中控混用。 |
@@ -17,13 +18,13 @@
 
 V167 的中控源码位于 [microduck-hd1910/firmware/console/](../versions/v167/microduck-hd1910/firmware/console/)，固件位于 [microduck-hd1910/firmware/](../versions/v167/microduck-hd1910/firmware/)。构建说明见 [BUILD.md](../versions/v167/microduck-hd1910/docs/BUILD.md)。保留内部目录深度，是为了让打包脚本和固定基线继续按原相对路径定位。
 
-本次整理目录与入口，并调整旧根源码包装工具及资源清单的路径；冻结版本源码与运行包沿用原字节，不增加实机 Known-Good 验收结论。下一步唯一主任务仍为参考卡上的 V260 功能验收。
+各版本的实测范围见[发布基线](../microduck-hd1910/docs/BASELINE.md)。
 
 ## 为什么还会看到较大的文件
 
 | 内容 | 位置与用途 |
 | --- | --- |
-| 成品下载 | V260 两个运行 ZIP 与 R2 镜像在 [发布页](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)；V167 从 [版本目录](../versions/v167/) 下载。根目录旧下载地址已归并，使用版本目录中的地址。 |
+| 成品下载 | [下载 R3 镜像（.img.xz）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [下载 V313 中控（.zip）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [累计更新与安装图解](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313) |
 | 训练配置与参考数据 | `microduck-hd1910/training-console/data/`，供独立训练中控查看参数；V167 冻结源码也保留原训练资料。 |
 | 在线演示资源 | `docs/`，GitHub Pages 从此目录发布；3D 资源和训练参数副本为演示独立运行所需。 |
 | 构建基线 | `versions/v167/release-assets/build-baselines/`，一份固定 V164 ZIP，用于复现 V167 安装包。旧根目录已移除，现有链接与旧源码包装工具使用此归档位置。 |

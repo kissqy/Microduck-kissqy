@@ -2,6 +2,8 @@
 
 # Microduck Console Studio V302 Beta
 
+> V302 历史使用说明。[当前 R3／V313 正式版下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+
 **只更新中控，直接复用 control.102 固件与原有 11 个 ONNX；R2 / R10 不变。** 已有 control.102 用户无需重装固件或重刷 TF 卡。
 
 | 内容 | 入口 |
@@ -12,7 +14,7 @@
 | 文件大小与 SHA256 | [release-assets/](release-assets/) |
 | 中控源码 | 运行包内含完整 Python / JavaScript 源码与本地验证记录 |
 | 原生固件与源码 | [control.102 说明](../v260/README.md) · [V260 固件源码](../v260/firmware/) |
-| 新装系统镜像 | [R2 镜像与稳定固件](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
+| 新装系统镜像 | [R2 镜像与配套固件](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
 
 关闭旧中控，完整解压；Windows 运行 `start.cmd`，macOS / Linux 运行 `bash start.command`，打开 `http://127.0.0.1:8090`。首次进入编号或硬件测试时会准备独立维护组件，不替换原生动作固件。
 

@@ -1,5 +1,7 @@
 # 🦆 Microduck Console Studio V302 Beta
 
+> V302 中控历史资料。[当前 R3 系统镜像与 V313 中控](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+
 **编号、中位校准与 3D 界面累计更新 · 更新于 2026-11-23 · 继续使用 control.102 固件**
 
 > **已有 R2／control.102：关闭旧中控，完整解压并运行 V302，直接连接 ZERO 即可。无需升级机器人固件，也无需重刷 TF 卡。**

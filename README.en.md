@@ -43,7 +43,7 @@ Skip stages you have already completed. **The first three stages complete a norm
 
 [Three-stage route (中文)](https://kissqy.github.io/Microduck-kissqy/build/) · [English build guide and FAQ](https://kissqy.github.io/Microduck-kissqy/guides/en.html) · [Written guide](docs/MICRODUCK-BUILD-GUIDE.en.md) · [Shopping list](DUCK-SHOPPING-LIST.en.md) · [FAQ](docs/MICRODUCK-FAQ.en.md)
 
-<sub>The stage pages above are Chinese; the English guide provides the corresponding instructions. China access: [Gitee](https://gitee.com/kissqy/microduck-kissqy) · [R2 China release](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260).</sub>
+<sub>The stage pages are in Chinese. See the English guide for the same steps. [Gitee repository](https://gitee.com/kissqy/microduck-kissqy) · [R3 / V313 release on GitHub](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)</sub>
 
 
 ---
@@ -110,7 +110,7 @@ Software, hardware, ready-to-use motion policies, **Feetech HD1910-adapted print
 <table width="100%">
   <tr>
     <td width="400" valign="top"><b>🦆 Supplied movements, no initial training</b><br><br>Walking, sit/stand, picking, forward rolls, left/right kicks and roller swizzle, crouch, spin and get-up resources.<br><br><sub>Assemble, flash and calibrate your own robot before using its matching release policies.</sub></td>
-    <td width="400" valign="top"><b>🎮 Chinese console and AI interaction</b><br><br>Graphical connection, servo/IMU calibration, live 3D pose, joint feedback, camera, gamepad and firmware maintenance. R2 / V260 adds conversation, image recognition, voices/personas and action calls.<br><br><sub>AI requires service credentials and network access.</sub></td>
+    <td width="400" valign="top"><b>🎮 Chinese console and AI interaction</b><br><br>Graphical connection, servo/IMU calibration, live 3D pose, joint feedback, camera, gamepad and firmware maintenance. R3 / V313 supports conversation, image recognition, voices/personas and action calls.<br><br><sub>AI requires service credentials and network access.</sub></td>
   </tr>
   <tr>
     <td width="400" valign="top"><b>🔧 Coordinated hardware and software</b><br><br>HAT / IMU / HUB designs, parts lists, printing, wiring, image and firmware are provided together. Fabricate the boards or choose assembled ones.<br><br><sub>Reference configuration: ZERO 3W and 15 HD1910 servos; other boards and mechanical changes require compatibility checks.</sub></td>
@@ -132,39 +132,24 @@ fanhao's image model notice credits **10 models to kissqy** and records retainin
 
 ## Downloads and versions
 
-**Current stable publication: System Image R2 + Console Studio V260 / control.102, boot-time Wi-Fi R10.**
+**R3 system image · Console Studio V313 · robot firmware `control.127`**
 
-R2 is for new or reflashed Radxa ZERO 3W systems. It includes upstream Microduck 0.15.1, control.102, 11 runtime ONNX models and R10 boot-time Wi-Fi setup. Connect to Wi-Fi and use V260 without compiling the firmware yourself.
+For Radxa ZERO 3W with Feetech HD1910. R3 uses a single MBR partition and includes 11 ONNX models and R10 boot-time Wi-Fi.
 
-<sub>R2 / V260 publication information updated November 13, 2026.</sub>
-
-| Need | Matching version | Download | Documentation / source |
+| What you need | Version | Download | Guide |
 | --- | --- | --- | --- |
-| **New system image** | R2 · control.102 · Wi-Fi R10 | [Download .img.xz](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) | [Image release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) |
-| **Stable console and firmware** | Studio V260 · control.102 | [Runtime and firmware downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) | [Version files, guide and source](versions/v260/README.en.md) |
-| **Console pre-release** | V302 Beta · control.102 | [Download console ZIP](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v302/Microduck-Console-Studio-V302.zip) | [Features page](https://kissqy.github.io/Microduck-kissqy/console-v302/en.html) · [Version files](versions/v302/README.en.md) |
+| Flash a new TF card | R3 · R10 Wi-Fi | [Download R3 image](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) | [Flashing guide](https://kissqy.github.io/Microduck-kissqy/build/start.html) |
+| Control or upgrade a robot | V313 · control.127 | [Download V313 console ZIP](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) | [V313 guide and source](versions/v313/README.en.md) |
 | **Separate Training Studio · optional** | R1.5.27 | [Download ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip) | [Training guide](microduck-hd1910/training-console/README.en.md) |
 
-### V167 users: upgrade to V260 without reflashing
+**Keep your R2 card and its calibration.** To upgrade, connect with V313 and open **系统维护 (System Maintenance)**. If the robot runs `control.102` or `control.126`, select the bundled V313 / `control.127` firmware and click **升级所选固件 (Upgrade selected firmware)**. A robot already on `control.127` is ready to use.
 
-Fully extract V260, connect to ZERO and install the bundled firmware from the console. Follow the [upgrade guide](versions/v260/README.en.md) to retain robot-specific calibration and settings. Use R2 for a new system or when you intend to reflash.
-
-### V302 Beta: numbering, midpoint calibration and 3D references
-
-**Assign servo IDs and calibrate their midpoint without a URT2 programming board.** V302 improves maintenance sessions and adds complete 3D zero/HOME references and side-by-side IMU charts. It reuses unchanged control.102 firmware and 11 models; only the console is updated.
-
-[Console features and instructions](https://kissqy.github.io/Microduck-kissqy/console-v302/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302)
-
-<sub>Existing R2 / control.102 users only replace the desktop console. Physical acceptance is pending; V260 remains stable. Obtain the actual runtime from Release Assets.</sub>
-
-### Version and validation scope
-
-Training Studio R1.5.27 is a separate tool; its version is independent of Robot Console V167, V260 and V302. Version trees are in main under `versions/`, without switching branches. V260 console and firmware source are in [versions/v260/](versions/v260/).
-
-Check your robot's mechanics, servos and IMU calibration before its first movement. [Release baseline and verification scope](microduck-hd1910/docs/BASELINE.en.md). Documentation changes do not extend physical Known-Good. R1 flashing records and old V167 source/runtime addresses remain available.
+All three freshly flashed TF cards booted and opened the setup hotspot on first power-on. [V260–V313 change log](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313) · [V313 features and HAT guide](https://kissqy.github.io/Microduck-kissqy/console-v313/en.html)
 
 <details>
-<summary>Historical releases: R1 / V167</summary>
+<summary>Earlier releases · R2 / V260, V302 and R1 / V167</summary>
+
+- [V302 console](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302) · [R2 / V260](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [R2 on Gitee](https://gitee.com/kissqy/microduck-kissqy/releases/tag/console-studio-v260)
 
 - [System Image R1](https://github.com/kissqy/Microduck-kissqy/releases/download/public-image-r1/microduck-zero3w-0.15.1-R1.img.xz) includes control.40 and first-boot Wi-Fi R5.
 - [Robot Console R17 V167](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Console-R17-V167.zip) includes control.43; [historical firmware guide](versions/v167/release-assets/README.en.md).
@@ -236,7 +221,7 @@ The Robot Console connects and calibrates the physical duck, displays feedback, 
 
 **For a real robot, download and run the local Robot Console.** [Connection, networking, calibration and operation tutorial (中文)](https://kissqy.github.io/Microduck-kissqy/console-guide.html)
 
-[Online console demo](https://kissqy.github.io/Microduck-kissqy/) · [R2 / V260 AI features and setup](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260)
+[Online console demo](https://kissqy.github.io/Microduck-kissqy/) · [R3 / V313 AI features and setup](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 <sub>The online demo uses simulated data. AI requires service credentials and connectivity from ZERO; it is not a local offline large language model.</sub>
 

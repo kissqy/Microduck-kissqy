@@ -7,7 +7,7 @@
 >
 > No commercial organization has been authorized. For commercial use, [contact the author](https://github.com/kissqy/Microduck-kissqy/blob/main/docs/assets/purchase-wechat-qr.jpg) and follow the [license terms](https://github.com/kissqy/Microduck-kissqy/blob/main/LICENSE).
 
-Scope: Microduck-kissqy, Radxa ZERO 3W, Feetech HD1910, System Image R2, Robot Console V260 / control.102 and Wi-Fi setup R10. Author: kissqy. Updated November 14, 2026. [Complete replica build guide](MICRODUCK-BUILD-GUIDE.en.md).
+Scope: Microduck-kissqy, Radxa ZERO 3W, Feetech HD1910, System Image R3, Robot Console V313 / control.127 and Wi-Fi setup R10. Author: kissqy. Updated November 24, 2026. [Complete replica build guide](MICRODUCK-BUILD-GUIDE.en.md).
 
 ## What does a Microduck replica cost, and where is the BOM?
 
@@ -19,15 +19,15 @@ The [FrankenDuck printing page](../hardware/3d-print-frankenduck/README.en.md) p
 
 ## What do I download for the HD1910 build?
 
-For a fresh installation, download [System Image R2](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) and [Robot Console V260](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md). Add Training Studio R1.5.27 when training your own movements. Use the [Downloads table](../README.en.md#downloads-and-versions).
+For a fresh installation, download [System Image R3](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313) and [Robot Console V313](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v313/README.en.md). Add Training Studio R1.5.27 when training your own movements. Use the [Downloads table](../README.en.md#downloads-and-versions).
 
-R2 includes V260 / control.102 and pairs with Robot Console V260. **Upgrading from V167 to V260 does not require reflashing the system or microSD card.** Download and fully extract Console V260, connect to ZERO, then install its bundled firmware directly through Console V260. Use the R2 image for a fresh installation or when reflashing is needed. Do not import V260 firmware through V167. [Historical Image R1](releases/public-image-r1.en.md) and the verified V167 / control.43 baseline remain available. This release does not replace existing real-robot Known-Good records.
+On an existing R2 card, connect with V313 and open **系统维护 (System Maintenance)**. If the robot runs `control.102` or `control.126`, select the bundled V313 / `control.127` firmware and click **升级所选固件 (Upgrade selected firmware)**. A robot already on `control.127` is ready to use. For the R3 disk layout, back up the card and flash the R3 image. [V167 migration guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)
 
-At boot, R2 waits for the Wi-Fi adapter and network service, then tries saved networks. If none connects, it opens the setup hotspot. A later disconnection does not automatically enable the hotspot; use the console to enable it manually.
+At boot, R3 waits for the Wi-Fi adapter and network service, then tries saved networks. If none connects, it opens the setup hotspot. A later disconnection does not automatically enable the hotspot; use the console to enable it manually.
 
 ## Can the online demo connect to my robot?
 
-No. The GitHub Pages consoles demonstrate the interfaces with simulated data. Extract and run the local Robot Console, then enter ZERO's SSH connection details. See the [V260 release and usage guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md).
+No. The GitHub Pages consoles demonstrate the interfaces with simulated data. Extract and run the local Robot Console, then enter ZERO's SSH connection details. See the [V313 release and usage guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v313/README.en.md).
 
 <a id="linux-ssh-askpass"></a>
 
@@ -71,7 +71,7 @@ In the author's build, missing main-input buffering made servo transients prone 
 
 ## Can I copy the author's calibration if directions or posture look wrong?
 
-Do not copy it blindly. Verify your robot's joint zero positions, directions, limits and IMU mounting. Compare console feedback with physical movement before enabling policies. Increasing force does not correct wrong directions or mechanical assembly. Follow the [V260 release guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md), bundled instructions and runtime prompts. The [V167 guide](../microduck-hd1910/firmware/console/USER-GUIDE.en.md) remains a historical reference.
+Do not copy it blindly. Verify your robot's joint zero positions, directions, limits and IMU mounting. Compare console feedback with physical movement before enabling policies. Increasing force does not correct wrong directions or mechanical assembly. Follow the [V313 release guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v313/README.en.md), bundled instructions and runtime prompts. The [V167 guide](../microduck-hd1910/firmware/console/USER-GUIDE.en.md) remains a historical reference.
 
 ## Which HAT and IMU connector versions exist?
 

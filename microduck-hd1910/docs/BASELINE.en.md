@@ -2,11 +2,13 @@
 
 # Release baseline and verification scope
 
-## Current console release · November 23, 2026
+## Current release · November 24, 2026
 
-[Console Studio V302 Beta](../../versions/v302/README.en.md) is published. It only updates the desktop console and isolated maintenance modules, reusing unchanged **control.102, R2 / R10 and the existing 11 ONNX models** on official **Microduck 0.15.1**. Existing control.102 users do not upgrade native firmware or reflash the card.
+**R3 system image · Console Studio V313 · robot firmware `control.127`** · Microduck 0.15.1 · R10 · 11 ONNX
 
-Local maintenance, compatibility and UI regressions passed; physical acceptance remains pending. Existing Reference Duck Known-Good records are retained. **Next single task: verify V302 numbering, midpoint calibration and mode changes on Reference Duck / control.102, recording actual results and latency.**
+All three freshly flashed TF cards booted and opened the setup hotspot on first power-on. [Test record and installation guide](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+
+**Next Reference Duck check:** verify HAT servo numbering, midpoint calibration and mode switching on control.127, and record the results.
 
 The following V167 records are historical and do not describe the latest release.
 
@@ -41,7 +43,7 @@ The image was previously verified by reflashing, first Wi-Fi setup, SSH, robot c
 
 `firmware/verification/v167/` contains prior compilation records: 237 Rust tests, 18 Python tests and ten ARM64/QEMU model loads and first inferences. This cleanup checks delivered archives, source, resource restoration and checksums without rebuilding firmware or operating the robot.
 
-## Known-Good and next task
+## V167 historical Known-Good and next task
 
 Current release reference: **0.15.1 + R17 V167 / control.43 + Training R1.5.27**, with the reflash-verified **Public Image R1**. Action-specific acceptance remains governed by the corresponding real-robot records.
 

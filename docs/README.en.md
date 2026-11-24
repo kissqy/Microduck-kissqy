@@ -7,23 +7,24 @@ English editions of the homepage, user guides, hardware records, and technical n
 
 **[Why choose kissqy? Open the web comparison →](https://kissqy.github.io/Microduck-kissqy/compare/en.html)** · [Text version and sources](MICRODUCK-COMPARISON.en.md) Supplied policies, matching hardware/software, Chinese AI and training tools, including OpenMicroDuck.
 
-> **The V302 Beta console is available as a separate pre-release.** Improved numbering and midpoint calibration, four workspaces, complete 3D zero/HOME references and side-by-side IMU charts. Reuses unchanged control.102 and all 11 models; no URT2 is needed for numbering.
+> **R3 system image · Console Studio V313 · robot firmware `control.127`**
 >
-> [Console page and guide](https://kissqy.github.io/Microduck-kissqy/console-v302/en.html) · [Release and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v302) · [V302 version files](../versions/v302/README.en.md)
+> Assign servo IDs and set midpoints through the HAT. Each device card shows its latest timeout in milliseconds.
 >
-> Existing R2 / control.102 users only replace the desktop console. Physical-robot acceptance is pending; V260 remains stable. Download the actual console runtime from Release Assets.
+> [Console guide](https://kissqy.github.io/Microduck-kissqy/console-v313/en.html) · [Release notes and downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 
-## Current downloads · November 13, 2026
+## Current downloads · November 24, 2026
 
-Default setup: **System Image R2 + Console Studio V260 / control.102, Wi-Fi setup R10**. [R2 image](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v260/microduck-kissqy-zero3w-R2.img.xz) · [release downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v260) · [runtime and source guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) · [independent V260 source](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260).
+[R3 image (.img.xz)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [V313 console (.zip)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [Release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 Robot Console versions are grouped on main; no branch switching is needed.
 
 | Version directory | Firmware and image | Entry |
 | --- | --- | --- |
-| V302 Beta · pre-release | control.102 · R2 / R10 | [V302 page and files](../versions/v302/README.en.md) |
-| V260 · current | control.102 · R2 / R10 | [V260 source and downloads](../versions/v260/) |
+| V313 · stable | control.127 · R3 / R10 | [V313 files and source](../versions/v313/README.en.md) |
+| V302 · archive | control.102 · R2 / R10 | [V302](../versions/v302/README.en.md) |
+| V260 · archive | control.102 · R2 / R10 | [V260 source and downloads](../versions/v260/) |
 | V167 · historical | control.43 · R1 includes control.40 | [V167 source and downloads](../versions/v167/README.en.md) |
 
 The original root source and package paths remain for compatibility. Training Studio R1.5.27 is independent. This directory organization does not add real-robot Known-Good results.
@@ -86,7 +87,7 @@ Legacy power reference: the repository's battery holder can use M2.6 screws as p
 
 ## Robot Console / 机器人中控
 
-Current V260: [download and package guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md) · [console source](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260/console). The table below documents the retained V167 line.
+Current console: V313. The table below documents the historical V167 line. [V313 package and source](../versions/v313/README.en.md)
 
 | Guide | 中文 | English |
 | --- | --- | --- |
@@ -115,7 +116,7 @@ Training Studio is optional after first walking. Everyday operation uses the rel
 
 ## Firmware and models / 固件与模型
 
-Current control.102: [firmware source](https://github.com/kissqy/Microduck-kissqy/tree/main/versions/v260/firmware) · [release guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md). The table below retains historical firmware and model records.
+Current firmware: control.127. The table below records earlier firmware and models. [V313 firmware and source](../versions/v313/README.en.md)
 
 | Guide | 中文 | English |
 | --- | --- | --- |

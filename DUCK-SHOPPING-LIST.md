@@ -67,7 +67,7 @@
 | --- | --- | ---: | ---: | ---: | --- |
 | **飞特 HD1910 串口总线舵机**<br>HD-1910-C001；HD-1910-C001 | 只 | 15 | ¥123.00 | ¥1845.00 | 作者淘宝商品<br>[购买](https://e.tb.cn/h.jhmwoGCAcQbwZRt?tk=i4416azfdRS) |
 | **飞特 URT2 舵机调试板**<br>用于设置／修改舵机编号（ID）；已有可复用 | 个 | 1 | ¥45.00 | ¥45.00 | 淘宝<br>[购买商品](https://item.taobao.com/item.htm?abbucket=0&id=603181554943&skuId=4836538640319) |
-| **Radxa ZERO 3W**<br>2GB RAM 无 eMMC 带排针[【Microduck 原版主板】]；2GB RAM / 无eMMC / 带排针 | 个 | 1 | ¥309.00 | ¥309.00 | 瑞莎计算机(深圳)有限公司<br>[购买商品](https://item.taobao.com/item.htm?id=763812025816) |
+| **Radxa ZERO 3W**<br>**1GB／2GB RAM 均可**；无 eMMC、带排针；清单价格按 2GB 版本参考 | 个 | 1 | ¥309.00 | ¥309.00 | 瑞莎计算机(深圳)有限公司<br>[购买商品](https://item.taobao.com/item.htm?id=763812025816) |
 | **忆捷 32GB TF 存储卡**<br>监控／记录仪款；32GB 即可；作者补充参考价 | 张 | 1 | ¥39.90 | ¥39.90 | 京东<br>[购买商品](https://item.jd.com/7577435.html?pcdk=eEBXN8tCQR5L8OyFhPK6-ChtO-EgJ8wAa8kzyCTEPOo%3D.qliT.8Idm) |
 | **山泽双头高速读卡器**<br>SD／TF 卡同读；作者补充参考价；已有可复用 | 个 | 1 | ¥22.90 | ¥22.90 | 京东<br>[购买商品](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) |
 | **NP-F550 电池与双充套装**<br>【NP-F550补光灯专用▲2200mAh】2电+标准双充套裝；沣标 NP-F550 / 2200mAh / 2块电池＋标准双充 | 套 | 1 | ¥84.59 | ¥84.59 | fb数码旗舰店<br>[购买商品](https://item.taobao.com/item.htm?id=585415365001) |

@@ -69,7 +69,7 @@ The author supplied reference prices for the EAGET 32GB monitoring / dashcam mic
 | --- | --- | ---: | ---: | ---: | --- |
 | **飞特 HD1910 串口总线舵机**<br>HD-1910-C001；HD-1910-C001 | 只 | 15 | ¥123.00 | ¥1845.00 | Author’s Taobao listing<br>[Purchase](https://e.tb.cn/h.jhmwoGCAcQbwZRt?tk=i4416azfdRS) |
 | **Feetech URT2 servo programming board**<br>Used to set / change servo IDs; reuse one you already have | unit | 1 | ¥45.00 | ¥45.00 | Taobao<br>[Product](https://item.taobao.com/item.htm?abbucket=0&id=603181554943&skuId=4836538640319) |
-| **Radxa ZERO 3W**<br>2GB RAM 无 eMMC 带排针[【Microduck 原版主板】]；2GB RAM / 无eMMC / 带排针 | 个 | 1 | ¥309.00 | ¥309.00 | 瑞莎计算机(深圳)有限公司<br>[Product](https://item.taobao.com/item.htm?id=763812025816) |
+| **Radxa ZERO 3W**<br>**1GB or 2GB RAM both work**; no eMMC, with header pins; listed price is for the 2GB version | 个 | 1 | ¥309.00 | ¥309.00 | 瑞莎计算机(深圳)有限公司<br>[Product](https://item.taobao.com/item.htm?id=763812025816) |
 | **EAGET 32GB microSD / TF card**<br>Monitoring / dashcam variant; 32GB is sufficient; reference price supplied by the author | card | 1 | ¥39.90 | ¥39.90 | JD.com<br>[Product](https://item.jd.com/7577435.html?pcdk=eEBXN8tCQR5L8OyFhPK6-ChtO-EgJ8wAa8kzyCTEPOo%3D.qliT.8Idm) |
 | **SAMZHE dual-head high-speed card reader**<br>Simultaneous SD / TF card reading; reference price supplied by the author; reuse one you already have | unit | 1 | ¥22.90 | ¥22.90 | JD.com<br>[Product](https://3.cn/393kj-8k?jkl=@I2cIJ7xKJzv@) |
 | **NP-F550 电池与双充套装**<br>【NP-F550补光灯专用▲2200mAh】2电+标准双充套裝；沣标 NP-F550 / 2200mAh / 2块电池＋标准双充 | 套 | 1 | ¥84.59 | ¥84.59 | fb数码旗舰店<br>[Product](https://item.taobao.com/item.htm?id=585415365001) |

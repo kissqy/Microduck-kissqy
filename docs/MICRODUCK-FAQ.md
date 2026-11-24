@@ -19,7 +19,7 @@
 
 ## Microduck 飞特 HD1910 版需要下载什么？
 
-首次安装系统时，下载[系统镜像 R3](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)和[机器人中控 V313](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v313/README.md)。训练自己的动作时，再下载训练中控 R1.5.27。下载统一见[首页下载区](../README.md#下载与版本)。
+首次安装系统时，下载[系统镜像 R3](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)（[百度网盘](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52)，提取码 `km52`）和[机器人中控 V313](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v313/README.md)。训练自己的动作时，再下载训练中控 R1.5.27。下载统一见[首页下载区](../README.md#下载与版本)。
 
 已有 R2 卡可以保留标定和配网。用 V313 连接 ZERO，进入 **系统维护**。当前为 `control.102` 或 `control.126` 时，选择随包的 V313／`control.127`，点击 **升级所选固件**。已经是 `control.127` 的可以直接使用。 要换用 R3 磁盘布局，先备份，再写入 R3 镜像。 [V167 旧系统迁移说明](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)
 

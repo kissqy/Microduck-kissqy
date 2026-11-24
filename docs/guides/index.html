@@ -56,7 +56,7 @@
 <p>旧版外接电容参考：按<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/ASSEMBLY-NOTES.md">装机注意事项</a>配置 5 GHz Wi-Fi，并在总进电口并联 1000 µF 缓冲电容；电容极性、耐压和安装位置以该页说明为准。</p>
 <h3>4. 刷写系统镜像并连接中文中控</h3>
 <ol>
-<li>在<a href="https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313">系统镜像 R3 发布页</a>下载镜像，用 Armbian Imager 将压缩镜像直接刷入 TF 卡。</li>
+<li>在<a href="https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313">系统镜像 R3 发布页</a> (<a href="https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52">百度网盘</a> · 提取码 <code>km52</code>)下载镜像，用 Armbian Imager 将压缩镜像直接刷入 TF 卡。</li>
 <li>ZERO 启动时等待网卡和网络服务就绪并尝试已保存的 Wi-Fi；无可连接网络或连接失败时，连接 <code>Microduck-kissqy</code> 热点，按提示配置家庭 Wi-Fi 和新的登录密码；未自动弹出页面时访问 <code>http://10.42.0.1:8088</code>。运行中断网不会自动切换热点，可在中控手动开启。</li>
 <li>从<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/README.md#下载与版本">下载区</a>取得机器人中控 V313，完整解压后运行 <code>start.cmd</code>；macOS 使用 <code>start.command</code>。</li>
 <li>先到路由器 App / 后台的在线设备列表查机器人 IP（<a href="../console-guide.html#network">刷机后配网与查 IP 的图文步骤</a>），再在本地中控填写 <code>radxa@实际IP</code> 和配网时设置的系统登录密码。<strong>连接后在系统维护核对固件，V313 配套版本为 control.127。</strong></li>

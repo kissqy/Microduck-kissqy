@@ -8,7 +8,7 @@ A Feetech HD1910 adaptation based on official Microduck **0.15.1**, including ro
 
 **Source-available under component licenses. Original material explicitly covered by personal noncommercial terms requires written permission for commercial or organizational use. Other material retains its applicable license. See [LICENSE](LICENSE).**
 
-**R3 system image · Console Studio V313 · robot firmware `control.127`** · [R3 image (.img.xz)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [V313 console (.zip)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [Release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+**R3 system image · Console Studio V313 · robot firmware `control.127`** · [R3 image (.img.xz)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [Baidu Netdisk](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52) (code `km52`) · [V313 console (.zip)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [Release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 **The author's assembled IMU is pre-flashed with FT6; no initial flashing is needed. Calibrate it after installation.** For a new self-soldered board, replacement MCU or maintenance, see the [FT6 guide](../hardware/IMU-FIRMWARE.en.md); installing robot-service firmware on ZERO does not program the external IMU.
 

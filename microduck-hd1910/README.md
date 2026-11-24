@@ -8,7 +8,7 @@
 
 **源码公开、分项许可；明确适用个人非商业条款的原创部分限个人非商业使用，商业及组织用途须书面授权。其余内容保留各自许可，范围见 [LICENSE](LICENSE)。**
 
-**R3 系统镜像 · V313 电脑中控 · 机器人固件 `control.127`** · [下载 R3 镜像（.img.xz）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [下载 V313 中控（.zip）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [累计更新与安装图解](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+**R3 系统镜像 · V313 电脑中控 · 机器人固件 `control.127`** · [下载 R3 镜像（.img.xz）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [百度网盘](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52)（提取码 `km52`） · [下载 V313 中控（.zip）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [累计更新与安装图解](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 **作者成品 IMU 已预烧录 FT6，到手无需另行烧录，安装后仍需本机标定。** 自焊新板、换芯片或维护升级再看 [STM32 FT6 下载与烧录指南](../hardware/IMU-FIRMWARE.md)；ZERO 机器人服务固件不会烧录外置 IMU。
 

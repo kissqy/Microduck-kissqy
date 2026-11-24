@@ -19,7 +19,7 @@ The [FrankenDuck printing page](../hardware/3d-print-frankenduck/README.en.md) p
 
 ## What do I download for the HD1910 build?
 
-For a fresh installation, download [System Image R3](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313) and [Robot Console V313](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v313/README.en.md). Add Training Studio R1.5.27 when training your own movements. Use the [Downloads table](../README.en.md#downloads-and-versions).
+For a fresh installation, download [System Image R3](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313) ([Baidu mirror](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52), code `km52`) and [Robot Console V313](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v313/README.en.md). Add Training Studio R1.5.27 when training your own movements. Use the [Downloads table](../README.en.md#downloads-and-versions).
 
 On an existing R2 card, connect with V313 and open **系统维护 (System Maintenance)**. If the robot runs `control.102` or `control.126`, select the bundled V313 / `control.127` firmware and click **升级所选固件 (Upgrade selected firmware)**. A robot already on `control.127` is ready to use. For the R3 disk layout, back up the card and flash the R3 image. [V167 migration guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)
 

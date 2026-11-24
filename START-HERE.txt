@@ -6,7 +6,8 @@ Microduck 正式版 · 2026-11-24
 系统镜像 R3 · 电脑中控 V313 · 机器人固件 control.127
 平台：Radxa ZERO 3W / 飞特 HD1910。官方 Microduck 0.15.1，11 个 ONNX 模型，开机配网 R10。
 
-R3 镜像：https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz
+R3 镜像（百度网盘，提取码 km52）：https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52
+R3 镜像（GitHub）：https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz
 V313 电脑中控：https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip
 累计更新与安装图解：https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313
 中控与 HAT 编号图解：https://kissqy.github.io/Microduck-kissqy/console-v313/

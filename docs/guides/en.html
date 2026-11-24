@@ -56,7 +56,7 @@
 <p>Legacy external-capacitor reference: follow the <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/ASSEMBLY-NOTES.en.md">assembly notes</a> for 5 GHz Wi-Fi and a 1000 µF capacitor across the main power input, including polarity, voltage rating and placement.</p>
 <h3>4. Flash the image and connect Robot Console</h3>
 <ol>
-<li>Download <a href="https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313">System Image R3</a> and write the compressed image directly to a microSD card using Armbian Imager.</li>
+<li>Download <a href="https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313">System Image R3</a> (<a href="https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52">Baidu mirror</a> · code <code>km52</code>) and write the compressed image directly to a microSD card using Armbian Imager.</li>
 <li>At boot, ZERO waits for the Wi-Fi adapter and network service, then tries saved networks. If none connects, join the <code>Microduck-kissqy</code> setup hotspot and configure home Wi-Fi and a new login password. If setup does not open automatically, visit <code>http://10.42.0.1:8088</code>. A later disconnection does not automatically enable the hotspot; use the console to enable it manually.</li>
 <li>Download Robot Console V313 from <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/README.en.md#downloads-and-versions">Downloads</a>, extract the complete archive and run <code>start.cmd</code> on Windows or <code>start.command</code> on macOS.</li>
 <li>Enter your ZERO's SSH address and credentials. <strong>Connect with V313 and check the firmware under System Maintenance. V313 pairs with control.127.</strong></li>

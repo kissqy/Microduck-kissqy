@@ -70,7 +70,7 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 
 已有 R2 卡可以保留标定和配网。用 V313 连接 ZERO，进入 **系统维护**。当前为 `control.102` 或 `control.126` 时，选择随包的 V313／`control.127`，点击 **升级所选固件**。已经是 `control.127` 的可以直接使用。 要换用 R3 磁盘布局，先备份，再写入 R3 镜像。 [V167 旧系统迁移](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)
 
-1. 在[系统镜像 R3 发布页](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)下载镜像，用 Armbian Imager 将压缩镜像直接刷入 TF 卡。
+1. 下载[R3 系统镜像](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz)，或使用[百度网盘](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52)（提取码 `km52`），用 Armbian Imager 将压缩镜像直接刷入 TF 卡。
 2. ZERO 启动时先等待网卡与网络服务就绪并尝试已保存的 Wi-Fi；没有可连接网络或连接失败时，连接其 `Microduck-kissqy` 热点，按提示配置家庭 Wi-Fi 和新的登录密码；未自动弹出页面时访问 `http://10.42.0.1:8088`。运行中断网不会自动切换热点，可在中控手动开启。
 3. 从[下载区](../README.md#下载与版本)取得机器人中控 V313，完整解压后运行 `start.cmd`；macOS 使用 `start.command`。
 4. 填入 ZERO 的实际 SSH 地址和登录信息。连接后打开 **系统维护** 核对固件，V313 的配套版本是 `control.127`。

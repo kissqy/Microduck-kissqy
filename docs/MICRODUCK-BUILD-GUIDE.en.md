@@ -72,7 +72,7 @@ Follow the [assembly notes](ASSEMBLY-NOTES.en.md) for 5 GHz Wi-Fi and power conn
 
 On an existing R2 card, connect with V313 and open **系统维护 (System Maintenance)**. If the robot runs `control.102` or `control.126`, select the bundled V313 / `control.127` firmware and click **升级所选固件 (Upgrade selected firmware)**. A robot already on `control.127` is ready to use. For the R3 disk layout, back up the card and flash the R3 image. [V167 migration](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)
 
-1. Download [System Image R3](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313) and write the compressed image directly to a microSD card using Armbian Imager.
+1. Download [System Image R3](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) ([Baidu Netdisk mirror](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52), code `km52`) and write the compressed image directly to a microSD card using Armbian Imager.
 2. At boot, wait for the Wi-Fi adapter and network service, then let ZERO try its saved networks. If no saved network connects, join the `Microduck-kissqy` hotspot and configure home Wi-Fi and a new login password. If setup does not open automatically, visit `http://10.42.0.1:8088`. A later disconnection does not automatically enable the hotspot; use the console to enable it manually.
 3. Download Robot Console V313 from [Downloads](../README.en.md#downloads-and-versions), extract the complete archive and run `start.cmd` on Windows or `start.command` on macOS.
 4. Enter your ZERO’s SSH address and credentials. After connecting, check the installed firmware under **系统维护**. V313 pairs with `control.127`.

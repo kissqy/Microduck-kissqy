@@ -43,7 +43,7 @@ Radxa ZERO 3W · 15 × 飞特 HD1910 · 配套 HAT / IMU / HUB
 
 [完整复刻路线](https://kissqy.github.io/Microduck-kissqy/build/) · [项目概览与完整教程](https://kissqy.github.io/Microduck-kissqy/guides/) · [从零复刻文字指南](docs/MICRODUCK-BUILD-GUIDE.md) · [材料采购清单](DUCK-SHOPPING-LIST.md) · [常见问题](docs/MICRODUCK-FAQ.md)
 
-<sub>[Gitee 国内仓库](https://gitee.com/kissqy/microduck-kissqy) · [R3／V313 正式版（GitHub）](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)</sub>
+<sub>[Gitee 国内仓库](https://gitee.com/kissqy/microduck-kissqy) · [R3 镜像国内下载](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52)（提取码 `km52`） · [R3／V313 正式版（GitHub）](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)</sub>
 
 
 ---
@@ -140,7 +140,7 @@ fanhao 的镜像模型说明将其中 **10 个模型的作者标为 kissqy**，�
 
 | 使用场景 | 配套版本 | 下载 | 使用说明 |
 | --- | --- | --- | --- |
-| 给新卡装系统 | R3 · 开机配网 R10 | [下载 R3 镜像](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) | [刷机与首次启动](https://kissqy.github.io/Microduck-kissqy/build/start.html) |
+| 给新卡装系统 | R3 · 开机配网 R10 | [下载 R3 镜像](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [百度网盘](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52)（提取码 `km52`） | [刷机与首次启动](https://kissqy.github.io/Microduck-kissqy/build/start.html) |
 | 在电脑上控制小鸭或升级原卡 | V313 · control.127 | [下载 V313 中控 ZIP](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) | [V313 使用与源码说明](versions/v313/README.md) |
 | **独立训练中控 · 可选** | R1.5.27 | [下载训练中控 ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip) | [训练指南](microduck-hd1910/training-console/README.zh-CN.md) |
 

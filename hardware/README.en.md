@@ -55,6 +55,22 @@ IMU update, 2026-11-13: J1 footprint pads 1 and 3 exchange physical positions. E
 
 **Current baseline, confirmed October 12, 2026:** fabrication, full-robot integration, and extended real-robot validation are complete for both boards. IMU fabrication and Feetech adaptation test records are in the timeline.
 
+## Hardware test: IMU / HAT / HUB wiring
+
+<a href="../docs/assets/tutorials/hardware-wiring-white-v268.png"><img src="../docs/assets/tutorials/hardware-wiring-white-v268.png" alt="Hardware test: IMU, HAT, HUB and speaker wiring on a white background" width="420" /></a>
+
+With power disconnected, connect the HAT, HUB, IMU and speaker as shown. Check supply polarity, connector orientation and board markings. The clips are power leads; the power source is outside the photo. In the console, open **Hardware tests** and check IMU orientation, microphone input and the speaker's duck sound. An IMU-only test needs no servos, numbering or calibration. The HUB passively distributes power and bus connections.
+
+[Hardware-test wiring and steps](https://kissqy.github.io/Microduck-kissqy/console-v313/en.html#hardware-tests)
+
+## Servo numbering: HAT / HUB and one servo
+
+<a href="../docs/assets/tutorials/numbering-wiring-white-v268.png"><img src="../docs/assets/tutorials/numbering-wiring-white-v268.png" alt="Servo numbering: HAT, HUB and a single HD1910 servo on a white background" width="720" /></a>
+
+**Connect one servo at a time if its ID is unknown or may conflict.** Open **Servo numbering**, scan, select the servo and save its target joint ID. Devices with verified distinct IDs can be chained. After numbering, reconnect the complete chain, scan to verify IDs, then calibrate each joint on your robot.
+
+Right leg: **10–14**; left leg: **20–24**; neck/head: **30–34**. The IMU uses **200** and must not be renumbered as a joint servo. [HAT numbering guide](https://kissqy.github.io/Microduck-kissqy/console-v313/en.html#numbering)
+
 ## HAT: ToF and speaker wiring
 
 <a href="AMP2.0-VERSION.en.md#tof-and-speaker-wiring-photo"><img src="../docs/assets/hat-tof-speaker-wiring.jpg" alt="ToF and speaker wiring photo" width="420" /></a>

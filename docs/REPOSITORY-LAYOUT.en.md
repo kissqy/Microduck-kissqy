@@ -8,7 +8,7 @@ Choose the current release or an archived version in [versions/](../versions/).
 
 | Directory | Version and contents |
 | --- | --- |
-| [versions/v313/](../versions/v313/README.en.md) | Current release · R3 / V313 / control.127. Includes links to the image, console and bundled source. |
+| [versions/v315/](../versions/v315/README.en.md) | Current release · R3 / V315 / control.127. Includes links to the image, console and bundled source. |
 | [versions/v260/](../versions/v260/) | Archive: Studio V260 / control.102 / Image R2 / Wi-Fi R10. Console source is in `console/`; firmware source is in `firmware/`. |
 | [versions/v167/](../versions/v167/README.en.md) | Historical R17 V167 / control.43. Preserves the relative layout of `microduck-hd1910/` source and `release-assets/` build resources. Image R1 originally includes control.40. |
 | `microduck-hd1910/` | Preserved source compatibility path. The root `release-assets/` directory is retired; packages and build baselines now use `versions/v167/release-assets/`. |
@@ -24,7 +24,7 @@ See [the release baseline](../microduck-hd1910/docs/BASELINE.en.md) for dated ha
 
 | Content | Location and purpose |
 | --- | --- |
-| Ready-to-use downloads | [R3 image (.img.xz)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [V313 console (.zip)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [Release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313) |
+| Ready-to-use downloads | [R3 image (.img.xz)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [V315 console (.zip)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V315.zip) · [Release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313) |
 | Training configuration and references | `microduck-hd1910/training-console/data/`, for the independent training console; the V167 snapshot retains its original training material. |
 | Online-demo resources | `docs/`, the GitHub Pages publication directory; copied geometry and training parameters keep the demo independent. |
 | Build baseline | One pinned V164 ZIP in `versions/v167/release-assets/build-baselines/`, used to reproduce V167. The root copy is removed; updated links and the legacy source packaging tools use this archive. |

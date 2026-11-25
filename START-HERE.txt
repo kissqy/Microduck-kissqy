@@ -3,22 +3,22 @@ English: https://github.com/kissqy/Microduck-kissqy/blob/main/START-HERE.en.md
 
 Microduck 正式版 · 2026-11-24
 
-系统镜像 R3 · 电脑中控 V313 · 机器人固件 control.127
+系统镜像 R3 · 电脑中控 V315 · 机器人固件 control.127
 平台：Radxa ZERO 3W / 飞特 HD1910。官方 Microduck 0.15.1，11 个 ONNX 模型，开机配网 R10。
 
 R3 镜像（百度网盘，提取码 km52）：https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52
 R3 镜像（GitHub）：https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz
-V313 电脑中控：https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip
+V315 电脑中控：https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V315.zip
 累计更新与安装图解：https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313
-中控与 HAT 编号图解：https://kissqy.github.io/Microduck-kissqy/console-v313/
+中控与 HAT 编号图解：https://kissqy.github.io/Microduck-kissqy/console-v315/
 
-已有 R2 卡可以保留标定和配网。用 V313 连接 ZERO，进入 系统维护。当前为 control.102 或 control.126 时，选择随包的 V313／control.127，点击 升级所选固件。已经是 control.127 的可以直接使用。
+已有 R2 卡可以保留标定和配网。用 V315 连接 ZERO，进入 系统维护。当前为 control.102 或 control.126 时，选择随包的 V315／control.127，点击 升级所选固件。已经是 control.127 的可以直接使用。
 
 首次开机先尝试已保存 Wi-Fi，未能连接时开启配网热点。
 热点：Microduck-kissqy，密码：12345678
 配网页面：http://10.42.0.1:8088
 运行中断网不自动切换热点；可通过中控手动开启。
-电脑端完整解压 V313，Windows 运行 start.cmd，macOS/Linux 运行 bash start.command。
+电脑端完整解压 V315，Windows 运行 start.cmd，macOS/Linux 运行 bash start.command。
 首次运动前核对本机标定，按 HOME → 保持 → 行走 使用。
 
 历史版本保留：

@@ -9,7 +9,7 @@
 
 Microduck-kissqy is kissqy's working physical replica project based on Pollen Robotics Microduck 0.15.1, for **Radxa ZERO 3W, 15 Feetech HD1910 servos and this repository's HAT / torso IMU**. It includes a system image, a Chinese-language Robot Console, ready-made motion models, PCB projects and printing files. **Ordinary use starts with the released models; training your own is optional.**
 
-**Current release: System Image R3 / Robot Console V313 / control.127 / Wi-Fi setup R10.** [Downloads and bundled source](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v313/README.en.md). [Image R1](releases/public-image-r1.en.md) and the verified V167 / control.43 baseline remain available. This release does not replace existing real-robot Known-Good records. Follow budget, shopping, assembly and first walking below. See the [release baseline and validation scope](../microduck-hd1910/docs/BASELINE.en.md). Source is available; the author's original additions carry personal noncommercial terms, while upstream and third-party components retain their respective licenses. See [component licensing](../microduck-hd1910/LICENSE).
+**Current release: System Image R3 / Robot Console V315 / control.127 / Wi-Fi setup R10.** [Downloads and bundled source](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v315/README.en.md). [Image R1](releases/public-image-r1.en.md) and the verified V167 / control.43 baseline remain available. This release does not replace existing real-robot Known-Good records. Follow budget, shopping, assembly and first walking below. See the [release baseline and validation scope](../microduck-hd1910/docs/BASELINE.en.md). Source is available; the author's original additions carry personal noncommercial terms, while upstream and third-party components retain their respective licenses. See [component licensing](../microduck-hd1910/LICENSE).
 
 ## Start with these four questions
 
@@ -70,20 +70,20 @@ Follow the [assembly notes](ASSEMBLY-NOTES.en.md) for 5 GHz Wi-Fi and power conn
 
 **[Open the six-step first-walking route (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/start.html)** · [Illustrated console guide (Chinese)](https://kissqy.github.io/Microduck-kissqy/console-guide.html)
 
-On an existing R2 card, connect with V313 and open **系统维护 (System Maintenance)**. If the robot runs `control.102` or `control.126`, select the bundled V313 / `control.127` firmware and click **升级所选固件 (Upgrade selected firmware)**. A robot already on `control.127` is ready to use. For the R3 disk layout, back up the card and flash the R3 image. [V167 migration](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)
+On an existing R2 card, connect with V315 and open **系统维护 (System Maintenance)**. If the robot runs `control.102` or `control.126`, select the bundled V315 / `control.127` firmware and click **升级所选固件 (Upgrade selected firmware)**. A robot already on `control.127` only needs the new PC console; re-enter numbering to update its maintenance component. For the R3 disk layout, back up the card and flash the R3 image. [V167 migration](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v260/README.md)
 
 1. Download [System Image R3](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) ([Baidu Netdisk mirror](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52), code `km52`) and write the compressed image directly to a microSD card using Armbian Imager.
 2. At boot, wait for the Wi-Fi adapter and network service, then let ZERO try its saved networks. If no saved network connects, join the `Microduck-kissqy` hotspot and configure home Wi-Fi and a new login password. If setup does not open automatically, visit `http://10.42.0.1:8088`. A later disconnection does not automatically enable the hotspot; use the console to enable it manually.
-3. Download Robot Console V313 from [Downloads](../README.en.md#downloads-and-versions), extract the complete archive and run `start.cmd` on Windows or `start.command` on macOS.
-4. Enter your ZERO’s SSH address and credentials. After connecting, check the installed firmware under **系统维护**. V313 pairs with `control.127`.
+3. Download Robot Console V315 from [Downloads](../README.en.md#downloads-and-versions), extract the complete archive and run `start.cmd` on Windows or `start.command` on macOS.
+4. Enter your ZERO’s SSH address and credentials. After connecting, check the installed firmware under **系统维护**. V315 pairs with `control.127`.
 
-See the [V313 release guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v313/README.en.md) and bundled instructions for installation, logs and controls. The [historical V167 user guide](../microduck-hd1910/firmware/console/USER-GUIDE.en.md) remains available. The online demos use simulated data; actual control requires the locally running console.
+See the [V315 release guide](https://github.com/kissqy/Microduck-kissqy/blob/main/versions/v315/README.en.md) and bundled instructions for installation, logs and controls. The [historical V167 user guide](../microduck-hd1910/firmware/console/USER-GUIDE.en.md) remains available. The online demos use simulated data; actual control requires the locally running console.
 
 ### Calibrate your own robot before movement
 
 Check **zero position, direction and limits for all 15 joints, plus IMU mounting orientation**. A reference robot's calibration cannot replace calibration of your own assembly.
 
-Inspect joint and pose feedback before HOME, hold and walking. Follow V313's bundled instructions and runtime prompts for gamepad modes, roller movements and their conditions. The [V167 control guide](../microduck-hd1910/firmware/console/USER-GUIDE.en.md) remains a historical reference for that version. The [FAQ](MICRODUCK-FAQ.en.md) helps distinguish connection, service, communication and movement problems.
+Inspect joint and pose feedback before HOME, hold and walking. Follow V315's bundled instructions and runtime prompts for gamepad modes, roller movements and their conditions. The [V167 control guide](../microduck-hd1910/firmware/console/USER-GUIDE.en.md) remains a historical reference for that version. The [FAQ](MICRODUCK-FAQ.en.md) helps distinguish connection, service, communication and movement problems.
 
 ## Advanced: train your own movements
 

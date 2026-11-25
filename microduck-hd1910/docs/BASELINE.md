@@ -4,7 +4,7 @@
 
 ## 当前发布 · 2026-11-24
 
-**R3 系统镜像 · V313 电脑中控 · 机器人固件 `control.127`** · Microduck 0.15.1 · R10 · 11 ONNX
+**R3 系统镜像 · V315 电脑中控 · 机器人固件 `control.127`** · Microduck 0.15.1 · R10 · 11 ONNX
 
 三张新 TF 卡分别写入 R3，三张均在第一次上电时启动并开启配网热点。 [验收记录与安装图解](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 

@@ -2,19 +2,19 @@
 
 # Current public Microduck release
 
-**R3 system image · Console Studio V313 · robot firmware `control.127`**
+**R3 system image · Console Studio V315 · robot firmware `control.127`**
 
-[R3 image (.img.xz)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [Baidu Netdisk](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52) (code `km52`) · [V313 console (.zip)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [Release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+[R3 image (.img.xz)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [Baidu Netdisk](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52) (code `km52`) · [V315 console (.zip)](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V315.zip) · [Release notes](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
-On an existing R2 card, connect with V313 and open **系统维护 (System Maintenance)**. If the robot runs `control.102` or `control.126`, select the bundled V313 / `control.127` firmware and click **升级所选固件 (Upgrade selected firmware)**. A robot already on `control.127` is ready to use.
+On an existing R2 card, connect with V315 and open **系统维护 (System Maintenance)**. If the robot runs `control.102` or `control.126`, select the bundled V315 / `control.127` firmware and click **升级所选固件 (Upgrade selected firmware)**. A robot already on `control.127` only needs the new PC console; re-enter numbering to update its maintenance component.
 
 On boot, the system tries saved Wi-Fi first and opens a setup hotspot if it cannot connect. Join `Microduck-kissqy` (password `12345678`) and visit `http://10.42.0.1:8088` if the page does not open automatically. A disconnection during normal operation does not automatically start the hotspot; it can be enabled manually from the console.
 
-Extract the complete V313 console. Run `start.cmd` on Windows or `bash start.command` on macOS/Linux. Before first movement, verify this robot's calibration and follow **HOME → hold → walk**.
+Extract the complete V315 console. Run `start.cmd` on Windows or `bash start.command` on macOS/Linux. Before first movement, verify this robot's calibration and follow **HOME → hold → walk**.
 
 ## Versions
 
-- [R3 / V313 · current](versions/v313/README.en.md)
+- [R3 / V315 · current](versions/v315/README.en.md)
 - [V302 · archive](versions/v302/README.en.md)
 - [R2 / V260 · archive](versions/v260/README.md)
 

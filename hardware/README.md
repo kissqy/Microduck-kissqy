@@ -58,7 +58,7 @@ HAT 的思路是先分析官方器件及外围，按实际需要精简，再用�
 
 先断电，按图连接 HAT、HUB、IMU 与扬声器，并核对供电极性、接口方向和实板丝印。鳄鱼夹仅为供电引线，电源主体未入镜。连接中控后进入 **IMU / HAT / HUB 测试**，依次检查 IMU 姿态、麦克风电平和扬声器鸭叫。单 IMU 测试无需舵机、编号或标定；HUB 为被动供电分线板。
 
-[查看测试模式图解与操作](https://kissqy.github.io/Microduck-kissqy/console-v313/#hardware-tests)
+[查看测试模式图解与操作](https://kissqy.github.io/Microduck-kissqy/console-v315/#hardware-tests)
 
 ## 编号模式：HAT / HUB 与单颗舵机接线
 
@@ -66,7 +66,7 @@ HAT 的思路是先分析官方器件及外围，按实际需要精简，再用�
 
 **未编号或可能重号的舵机，一次只接一颗。** 在中控进入 **舵机编号**，手动扫描、选择舵机，再保存目标关节编号。已确认编号不同的设备可以串联；全部编号完成后接回整链扫描核对，再做本机关节标定。
 
-右腿 **10–14**，左腿 **20–24**，颈头 **30–34**；IMU 为 **200**，不作为关节舵机改号。[查看 HAT 编号四步图解](https://kissqy.github.io/Microduck-kissqy/console-v313/#numbering)
+右腿 **10–14**，左腿 **20–24**，颈头 **30–34**；IMU 为 **200**，不作为关节舵机改号。[查看 HAT 编号四步图解](https://kissqy.github.io/Microduck-kissqy/console-v315/#numbering)
 
 ## HAT：ToF 与喇叭接线
 

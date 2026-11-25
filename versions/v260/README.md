@@ -1,6 +1,6 @@
 # Microduck V260 / control.102
 
-> V260 版本历史资料。[当前 R3 系统镜像与 V313 中控](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+> V260 版本历史资料。[当前 R3 系统镜像与 V315 中控](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 配套机器人固件为 **control.102**，官方软件基线为 **0.15.1**，开机配网为 **R10**，运行模型为 **11 个 ONNX**。
 

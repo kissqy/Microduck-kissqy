@@ -2,7 +2,7 @@
 
 # Microduck Console Studio V302 Beta
 
-> Archived V302 guide. [Current R3 / V313 downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+> Archived V302 guide. [Current R3 / V315 downloads](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 **Console-only update; reuses unchanged control.102 firmware and the existing 11 ONNX models. R2 / R10 remain unchanged.** Existing control.102 users do not reinstall firmware or reflash their card.
 

@@ -43,7 +43,7 @@ Radxa ZERO 3W · 15 × 飞特 HD1910 · 配套 HAT / IMU / HUB
 
 [完整复刻路线](https://kissqy.github.io/Microduck-kissqy/build/) · [项目概览与完整教程](https://kissqy.github.io/Microduck-kissqy/guides/) · [从零复刻文字指南](docs/MICRODUCK-BUILD-GUIDE.md) · [材料采购清单](DUCK-SHOPPING-LIST.md) · [常见问题](docs/MICRODUCK-FAQ.md)
 
-<sub>[Gitee 国内仓库](https://gitee.com/kissqy/microduck-kissqy) · [R3 镜像国内下载](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52)（提取码 `km52`） · [R3／V313 正式版（GitHub）](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)</sub>
+<sub>[Gitee 国内仓库](https://gitee.com/kissqy/microduck-kissqy) · [R3 镜像国内下载](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52)（提取码 `km52`） · [R3／V315 正式版（GitHub）](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)</sub>
 
 
 ---
@@ -112,7 +112,7 @@ Radxa ZERO 3W · 15 × 飞特 HD1910 · 配套 HAT / IMU / HUB
 <table width="100%">
   <tr>
     <td width="400" valign="top"><b>🦆 现成动作，正常复刻无需训练</b><br><br>提供行走、坐下站起、低头捡取、前滚翻、左右踢球，以及滑轮对称滑行、蹲下、原地转和倒地起身等动作资源。<br><br><sub>完成装配、刷机和本机标定后，使用对应发布包的配套模型。</sub></td>
-    <td width="400" valign="top"><b>🎮 中文中控，继续体验 AI 互动</b><br><br>从连接、舵机与 IMU 标定，到查看 3D 姿态、关节反馈、摄像头、手柄与固件维护，均有中文操作入口。R3 / V313 提供中文对话、拍照识别、音色角色与动作调用。<br><br><sub>AI 需自行配置对应服务凭据，并保持联网。</sub></td>
+    <td width="400" valign="top"><b>🎮 中文中控，继续体验 AI 互动</b><br><br>从连接、舵机与 IMU 标定，到查看 3D 姿态、关节反馈、摄像头、手柄与固件维护，均有中文操作入口。R3 / V315 提供中文对话、拍照识别、音色角色与动作调用。<br><br><sub>AI 需自行配置对应服务凭据，并保持联网。</sub></td>
   </tr>
   <tr>
     <td width="400" valign="top"><b>🔧 配套软硬件，按同一套参考方案制作</b><br><br>自制 HAT／IMU／HUB 的电路工程、材料清单、打印件、接线、镜像和固件集中提供，既可自行制作板卡，也可选择成品板。<br><br><sub>参考配置为 ZERO 3W 与 15 个 HD1910；第三方板卡和机械改动需另行核对。</sub></td>
@@ -134,19 +134,19 @@ fanhao 的镜像模型说明将其中 **10 个模型的作者标为 kissqy**，�
 
 ## 下载与版本
 
-**R3 系统镜像 · V313 电脑中控 · 机器人固件 `control.127`**
+**R3 系统镜像 · V315 电脑中控 · 机器人固件 `control.127`**
 
 适用于 Radxa ZERO 3W 与飞特 HD1910。R3 使用单分区 MBR，内置 11 个 ONNX 模型，沿用 R10 开机配网。
 
 | 使用场景 | 配套版本 | 下载 | 使用说明 |
 | --- | --- | --- | --- |
 | 给新卡装系统 | R3 · 开机配网 R10 | [下载 R3 镜像](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [百度网盘](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52)（提取码 `km52`） | [刷机与首次启动](https://kissqy.github.io/Microduck-kissqy/build/start.html) |
-| 在电脑上控制小鸭或升级原卡 | V313 · control.127 | [下载 V313 中控 ZIP](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) | [V313 使用与源码说明](versions/v313/README.md) |
+| 在电脑上控制小鸭或升级原卡 | V315 · control.127 | [下载 V315 中控 ZIP](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V315.zip) | [V315 使用与源码说明](versions/v315/README.md) |
 | **独立训练中控 · 可选** | R1.5.27 | [下载训练中控 ZIP](https://github.com/kissqy/Microduck-kissqy/raw/refs/heads/main/versions/v167/release-assets/Microduck-Training-Studio-R1.5.27.zip) | [训练指南](microduck-hd1910/training-console/README.zh-CN.md) |
 
-**原卡升级可保留标定和配网。**用 V313 连接 ZERO，进入 **系统维护**。当前为 `control.102` 或 `control.126` 时，选择随包的 V313／`control.127`，点击 **升级所选固件**。已经是 `control.127` 的可以直接使用。
+**原卡升级可保留标定和配网。**用 V315 连接 ZERO，进入 **系统维护**。当前为 `control.102` 或 `control.126` 时，选择随包的 V315／`control.127`，点击 **升级所选固件**。已经是 `control.127` 的只需更换中控并重新进入编号模式，进入时自动更新维护组件。
 
-三张新 TF 卡分别写入 R3，三张均在第一次上电时启动并开启配网热点。 [V260 至 V313 完整更新说明](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313) · [V313 中控与 HAT 编号图解](https://kissqy.github.io/Microduck-kissqy/console-v313/)
+三张新 TF 卡分别写入 R3，三张均在第一次上电时启动并开启配网热点。 [V260 至 V315 完整更新说明](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313) · [V315 中控与 HAT 编号图解](https://kissqy.github.io/Microduck-kissqy/console-v315/)
 
 <details>
 <summary>历史版本 · R2／V260、V302 与 R1／V167</summary>
@@ -223,7 +223,7 @@ fanhao 的镜像模型说明将其中 **10 个模型的作者标为 kissqy**，�
 
 **连接真实机器人：下载并运行本地机器人中控。** [图文使用教程：配网、找 IP、标定与操作](https://kissqy.github.io/Microduck-kissqy/console-guide.html)
 
-[在线体验中控界面](https://kissqy.github.io/Microduck-kissqy/) · [R3 / V313 的 AI 功能与使用说明](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+[在线体验中控界面](https://kissqy.github.io/Microduck-kissqy/) · [R3 / V315 的 AI 功能与使用说明](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 <sub>在线演示使用模拟数据，不连接实机。中文 AI 需自行配置对应服务的凭据，并保持 ZERO 能够访问服务；不是本地离线大模型。</sub>
 

@@ -1,6 +1,6 @@
 # Microduck 一键系统镜像 R2
 
-> R2 镜像历史资料。[当前 R3 系统镜像与 V313 中控](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+> R2 镜像历史资料。[当前 R3 系统镜像与 V315 中控](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 R2 发布时的配套版本为 **R2 / Microduck Console Studio V260 / control.102 / 配网 R10**，官方软件基线为 **Microduck 0.15.1**，适用 Radxa ZERO 3W，内置 11 个运行模型。
 

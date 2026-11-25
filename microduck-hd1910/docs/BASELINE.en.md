@@ -4,7 +4,7 @@
 
 ## Current release · November 24, 2026
 
-**R3 system image · Console Studio V313 · robot firmware `control.127`** · Microduck 0.15.1 · R10 · 11 ONNX
+**R3 system image · Console Studio V315 · robot firmware `control.127`** · Microduck 0.15.1 · R10 · 11 ONNX
 
 All three freshly flashed TF cards booted and opened the setup hotspot on first power-on. [Test record and installation guide](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 

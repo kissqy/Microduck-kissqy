@@ -61,7 +61,7 @@ IMU update, 2026-11-13: J1 footprint pads 1 and 3 exchange physical positions. E
 
 With power disconnected, connect the HAT, HUB, IMU and speaker as shown. Check supply polarity, connector orientation and board markings. The clips are power leads; the power source is outside the photo. In the console, open **Hardware tests** and check IMU orientation, microphone input and the speaker's duck sound. An IMU-only test needs no servos, numbering or calibration. The HUB passively distributes power and bus connections.
 
-[Hardware-test wiring and steps](https://kissqy.github.io/Microduck-kissqy/console-v313/en.html#hardware-tests)
+[Hardware-test wiring and steps](https://kissqy.github.io/Microduck-kissqy/console-v315/en.html#hardware-tests)
 
 ## Servo numbering: HAT / HUB and one servo
 
@@ -69,7 +69,7 @@ With power disconnected, connect the HAT, HUB, IMU and speaker as shown. Check s
 
 **Connect one servo at a time if its ID is unknown or may conflict.** Open **Servo numbering**, scan, select the servo and save its target joint ID. Devices with verified distinct IDs can be chained. After numbering, reconnect the complete chain, scan to verify IDs, then calibrate each joint on your robot.
 
-Right leg: **10–14**; left leg: **20–24**; neck/head: **30–34**. The IMU uses **200** and must not be renumbered as a joint servo. [HAT numbering guide](https://kissqy.github.io/Microduck-kissqy/console-v313/en.html#numbering)
+Right leg: **10–14**; left leg: **20–24**; neck/head: **30–34**. The IMU uses **200** and must not be renumbered as a joint servo. [HAT numbering guide](https://kissqy.github.io/Microduck-kissqy/console-v315/en.html#numbering)
 
 ## HAT: ToF and speaker wiring
 

@@ -2,7 +2,7 @@
 
 # Microduck Console Studio V302 Beta
 
-> V302 历史使用说明。[当前 R3／V313 正式版下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+> V302 历史使用说明。[当前 R3／V315 正式版下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 **只更新中控，直接复用 control.102 固件与原有 11 个 ONNX；R2 / R10 不变。** 已有 control.102 用户无需重装固件或重刷 TF 卡。
 

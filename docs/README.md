@@ -7,22 +7,22 @@
 
 **[为什么选择 kissqy？打开网页版对比 →](https://kissqy.github.io/Microduck-kissqy/compare/)** · [文字版与来源](MICRODUCK-COMPARISON.md) 先看现成动作、配套软硬件、中文 AI 与训练工具的区别；包含 OpenMicroDuck。
 
-> **R3 系统镜像 · V313 电脑中控 · 机器人固件 `control.127`**
+> **R3 系统镜像 · V315 电脑中控 · 机器人固件 `control.127`**
 >
 > 可通过 HAT 直接编号和设置中位，逐设备通信卡片会显示最近一次超时耗时。
 >
-> [V313 中控专页](https://kissqy.github.io/Microduck-kissqy/console-v313/) · [更新说明与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+> [V315 中控专页](https://kissqy.github.io/Microduck-kissqy/console-v315/) · [更新说明与下载](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 
 ## 当前下载 · 2026-11-24
 
-[下载 R3 镜像（.img.xz）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [百度网盘](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52)（提取码 `km52`） · [下载 V313 中控（.zip）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V313.zip) · [累计更新与安装图解](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
+[下载 R3 镜像（.img.xz）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/microduck-kissqy-zero3w-R3.img.xz) · [百度网盘](https://pan.baidu.com/s/1mGu_SiBGiYlzmvqPsVpfxw?pwd=km52)（提取码 `km52`） · [下载 V315 中控（.zip）](https://github.com/kissqy/Microduck-kissqy/releases/download/console-studio-v313/Microduck-Console-Studio-V315.zip) · [累计更新与安装图解](https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313)
 
 机器人中控按版本统一在 main 的 `versions/` 中分目录保存，无需切换分支。
 
 | 版本目录 | 固件与镜像 | 入口 |
 | --- | --- | --- |
-| V313 · 正式版 | control.127 · R3 / R10 | [V313 下载与源码说明](../versions/v313/README.md) |
+| V315 · 最新中控 | control.127 · R3 / R10 | [V315 下载与源码说明](../versions/v315/README.md) |
 | V302 · 历史版本 | control.102 · R2 / R10 | [V302](../versions/v302/README.md) |
 | V260 · 历史版本 | control.102 · R2 / R10 | [V260 源码与下载](../versions/v260/) |
 | V167 · 历史版本 | control.43 · R1 预装 control.40 | [V167 源码与下载](../versions/v167/) |
@@ -87,7 +87,7 @@
 
 ## Robot Console / 机器人中控
 
-当前中控为 V313，下表保留 V167 历史记录。[V313 运行包与源码](../versions/v313/README.md)
+当前中控为 V315，下表保留 V167 历史记录。[V315 运行包与源码](../versions/v315/README.md)
 
 | 说明 | 中文 | English |
 | --- | --- | --- |
@@ -116,7 +116,7 @@
 
 ## Firmware and models / 固件与模型
 
-当前配套固件为 control.127，下表保留历史固件与模型记录。[V313 固件与源码](../versions/v313/README.md)
+当前配套固件为 control.127，下表保留历史固件与模型记录。[V315 固件与源码](../versions/v315/README.md)
 
 | 说明 | 中文 | English |
 | --- | --- | --- |

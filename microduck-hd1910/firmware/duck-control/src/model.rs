@@ -121,12 +121,38 @@ pub const BATTERY_FULL_V: f64 = 8.2;
 /// protection trips. Empty for our purposes, not empty for the cells'.
 pub const BATTERY_EMPTY_V: f64 = 6.6;
 
+/// A 2S Li-ion pack's rested (open-circuit) voltage against state of charge, as
+/// `(volts, percent)` pairs, highest first.
+///
+/// These are the usual Li-ion OCV landmarks doubled for two cells in series: 4.20 V/cell
+/// is full, 3.90 V is ~70 %, 3.70 V is ~30 %, 3.55 V is ~10 %. Between points the curve
+/// is interpolated linearly; outside it clamps.
+///
+/// This replaces a straight line between 8.2 V and 6.6 V. Li-ion holds most of its
+/// voltage through the middle of its charge and falls away at the end, so the straight
+/// line read ~56 % on a pack that had ~35 % left — and 7.2 V as 37 % when it is closer to
+/// 15 %. Anyone deciding whether the robot can still walk was being told the wrong story.
+const BATTERY_OCV_CURVE: [(f64, f64); 9] = [
+    (8.40, 100.0),
+    (8.00, 80.0),
+    (7.80, 70.0),
+    (7.65, 55.0),
+    (7.50, 40.0),
+    (7.40, 30.0),
+    (7.20, 15.0),
+    (7.00, 5.0),
+    (6.90, 0.0),
+];
+
 /// Fraction of a pack, 0–100, for a bus voltage.
 ///
-/// Linear, and the numbers come from `microduck_runtime`'s `check_battery`, where they were
-/// arrived at by running a duck flat. It lives here rather than in `robotd` so there is one
-/// mapping: the prototype had it in a CLI *and* re-derived in the app, which is how two
-/// screens end up disagreeing about the same pack.
+/// A piecewise-linear Li-ion OCV curve, not a straight line — see [`BATTERY_OCV_CURVE`].
+/// It lives here rather than in `robotd` so there is one mapping: the prototype had it in
+/// a CLI *and* re-derived in the app, which is how two screens end up disagreeing about
+/// the same pack.
+///
+/// The caller is expected to feed this a *rested* voltage (see `battery_rest_v` in
+/// `robotd`): under load the whole rail sags and would read low.
 ///
 /// A non-finite or non-positive reading is 0 — those mean "no answer from the bus", and the
 /// caller is expected to report that as unknown rather than to display this number.
@@ -134,7 +160,23 @@ pub fn battery_percent(volts: f64) -> f64 {
     if !volts.is_finite() || volts <= 0.0 {
         return 0.0;
     }
-    ((volts - BATTERY_EMPTY_V) / (BATTERY_FULL_V - BATTERY_EMPTY_V)).clamp(0.0, 1.0) * 100.0
+    let (top_v, top_p) = BATTERY_OCV_CURVE[0];
+    let (bottom_v, bottom_p) = BATTERY_OCV_CURVE[BATTERY_OCV_CURVE.len() - 1];
+    if volts >= top_v {
+        return top_p;
+    }
+    if volts <= bottom_v {
+        return bottom_p;
+    }
+    for pair in BATTERY_OCV_CURVE.windows(2) {
+        let (hi_v, hi_p) = pair[0];
+        let (lo_v, lo_p) = pair[1];
+        if (lo_v..=hi_v).contains(&volts) {
+            let t = (volts - lo_v) / (hi_v - lo_v);
+            return lo_p + t * (hi_p - lo_p);
+        }
+    }
+    bottom_p
 }
 
 #[cfg(test)]
@@ -222,13 +264,32 @@ mod tests {
         assert_eq!(joint_index("mouth"), Some(MOUTH_INDEX));
     }
 
-    /// The ends of the span and the middle of it. Getting the direction wrong here would
-    /// report a full pack as flat, which is the kind of thing nobody double-checks.
+    /// The ends of the span and the flat middle where the old straight line lied: a rested
+    /// 7.4 V pack is around 30 %, not the 50 % the 8.2–6.6 line reported.
     #[test]
     fn battery_percent_spans_the_usable_range() {
-        assert_eq!(battery_percent(BATTERY_FULL_V), 100.0);
+        assert_eq!(battery_percent(8.40), 100.0);
         assert_eq!(battery_percent(BATTERY_EMPTY_V), 0.0);
-        assert!((battery_percent(7.4) - 50.0).abs() < 0.001);
+        assert!((battery_percent(7.4) - 30.0).abs() < 0.5);
+        assert!((battery_percent(7.65) - 55.0).abs() < 0.5);
+    }
+
+    /// Every step of the curve must be monotone: a higher voltage can never read lower,
+    /// and no reading may leave 0–100.
+    #[test]
+    fn battery_percent_is_monotone() {
+        let mut previous = 101.0;
+        let mut volts = 6.5;
+        while volts <= 8.6 {
+            let percent = battery_percent(volts);
+            assert!((0.0..=100.0).contains(&percent), "{volts} V read {percent}%");
+            assert!(
+                percent <= previous,
+                "{volts} V read {percent}% after {previous}%"
+            );
+            previous = percent;
+            volts += 0.01;
+        }
     }
 
     /// Voltages outside the span are ordinary — a fresh pack reads over 8.2 V off the

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#14161A">
-<title>Duck 遥控 · 原型 v3（竖屏 · 声音 / 头部）</title>
+<title>Duck 遥控 · 原型 v4（竖屏 · 声音 / 头部 / 动态声音）</title>
 <style>
   :root{
     --bg:#14161A; --panel:#1D2026; --panel-hi:#232832; --line:#2E3440;
@@ -718,6 +718,77 @@
   }
   #sound .vol button.on{color:var(--danger); border-color:rgba(255,90,82,.45); background:var(--danger-soft);}
 
+  /* 动态声音 */
+  .dyn-sound{
+    margin:2px 0 14px; padding:12px 14px; border:1px solid #2A303A;
+    border-radius:14px; background:#1B1F26;
+  }
+  .dyn-head{display:flex; align-items:center; gap:14px;}
+  .dyn-head .grow{flex:1 1 auto; min-width:0;}
+  .dyn-head .t{font-size:15px; font-weight:700;}
+  .dyn-head .d{font-size:12px; color:var(--muted); line-height:17px; margin-top:3px;}
+  .dyn-note{font-size:11px; color:var(--dim); line-height:16px; margin-top:8px;}
+  .dyn-link{
+    margin-top:9px; padding:0; border:0; background:none;
+    color:var(--info); font-size:12px; font-weight:600;
+  }
+  .switch{
+    flex:0 0 auto; width:46px; height:26px; padding:0; position:relative;
+    border-radius:999px; border:1px solid #3A414D; background:#15181E;
+    transition:background .15s, border-color .15s;
+  }
+  .switch span{
+    position:absolute; left:2px; top:2px; width:20px; height:20px;
+    border-radius:50%; background:#7E8896; transition:left .15s, background .15s;
+  }
+  .switch[aria-checked="true"]{
+    background:rgba(255,197,61,.16); border-color:rgba(255,197,61,.55);
+  }
+  .switch[aria-checked="true"] span{left:22px; background:var(--duck);}
+  .switch:disabled{opacity:.45;}
+
+  /* 设置抽屉：v2 分组、数值网格与开关网格 */
+  .set-sec{
+    margin:16px 0 2px; padding-top:12px; border-top:1px solid var(--line);
+    color:var(--duck); font-size:11px; font-weight:700; letter-spacing:.04em;
+  }
+  .set-sec:first-of-type{margin-top:2px; padding-top:0; border-top:0;}
+  .set-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px 14px; padding:8px 0 2px;}
+  .set-num{display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); min-width:0;}
+  .set-num span{flex:1 1 auto; min-width:0;}
+  .set-num input{
+    width:62px; padding:6px 8px; border-radius:8px; border:1px solid var(--line);
+    background:#121418; color:var(--text); font:inherit; font-size:14px; text-align:right;
+  }
+  .set-num i{font-style:normal; font-size:11px; color:var(--dim); flex:0 0 auto;}
+  .set-toggle{display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted); min-width:0;}
+  .set-toggle span{flex:1 1 auto; min-width:0;}
+  @media (max-width:380px){ .set-grid{grid-template-columns:1fr;} }
+
+  /* 设置抽屉（动态声音节奏，下个版本接入） */
+  #settings{
+    align-items:flex-end; justify-content:center; background:rgba(0,0,0,.58);
+    padding:0;
+  }
+  #settings .drawer{
+    width:min(720px,100%); max-height:86%; overflow:auto;
+    background:linear-gradient(180deg,#20242C,#171A20);
+    border:1px solid #313845; border-bottom:0;
+    border-radius:24px 24px 0 0; padding:10px 22px 32px;
+    animation:up .18s ease-out;
+  }
+  .soon{
+    display:inline-block; margin-left:6px; padding:1px 6px; border-radius:999px;
+    background:rgba(90,169,255,.12); border:1px solid rgba(90,169,255,.3);
+    color:var(--info); font-size:10px; font-weight:600; vertical-align:1px;
+  }
+  .num{display:flex; align-items:center; gap:6px; flex:0 0 auto;}
+  .num input{
+    width:82px; padding:8px 10px; border-radius:9px; border:1px solid var(--line);
+    background:#121418; color:var(--text); font:inherit; font-size:15px; text-align:right;
+  }
+  .num span{font-size:12px; color:var(--muted);}
+
   /* toast */
   /* Toast 钉在顶部：竖屏下底栏上方就是「停下」按钮，浮层绝不能盖住它 */
   /* 钉在摇杆区顶部：既不压策略条/警示条，也不压下面的动作按钮 */
@@ -1061,7 +1132,7 @@
       </div>
     </div>
     <div class="status-foot">
-      <span class="proto-note">robotd 0.15.1 · R17 · duckphone 原型 v3</span>
+      <span class="proto-note">robotd 0.15.1 · R17 · duckphone 原型 v4</span>
       <button class="mini" id="btnStatusClose2" type="button">关闭</button>
     </div>
   </div>
@@ -1152,11 +1223,87 @@
       <button id="btnMute" type="button">静音</button>
     </div>
 
+    <div class="dyn-sound">
+      <div class="dyn-head">
+        <div class="grow">
+          <div class="t">动态声音</div>
+          <div class="d" id="dynState">已开启 · 动作/告警/空闲会自动叫</div>
+        </div>
+        <button class="switch" id="btnDynSound" type="button" role="switch"
+                aria-checked="true" aria-label="动态声音"><span></span></button>
+      </div>
+      <div class="dyn-note" id="dynNote">接管后默认开启；首次空闲 30 s、之后每 5 分钟。</div>
+      <button class="dyn-link" id="btnDynSettings" type="button">设置（下个版本）</button>
+    </div>
+
     <div class="row" style="border-top:0">
       <div class="grow">
         <div class="d">音量写声卡；音色由这台机器人在安装时生成，运行期不能切换。</div>
       </div>
       <button class="mini" id="btnSoundClose" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 设置：动态声音（v1 只做开关，时间项下个版本接入） -->
+<div id="settings" class="overlay hidden">
+  <div class="drawer">
+    <div class="grab"></div>
+    <h2>设置 <span class="soon">动态声音</span></h2>
+    <div class="hint">保存后立即生效，写入 audio.json；总开关仍在声音抽屉。</div>
+
+    <div class="set-sec">空闲</div>
+    <div class="row">
+      <div class="grow"><div class="t">第一次空闲提示</div><div class="d">接管后多久没操作先叫一声。</div></div>
+      <div class="num"><input id="setIdleFirst" type="number" min="5" max="3600" step="5" value="30"><span>秒</span></div>
+    </div>
+    <div class="row">
+      <div class="grow"><div class="t">空闲重复间隔</div><div class="d">之后每隔多久再叫一次。</div></div>
+      <div class="num"><input id="setIdleRepeat" type="number" min="5" max="3600" step="5" value="300"><span>秒</span></div>
+    </div>
+    <div class="row">
+      <div class="grow"><div class="t">每小时上限</div><div class="d">空闲声音每小时最多几次。</div></div>
+      <div class="num"><input id="setIdleMax" type="number" min="1" max="60" step="1" value="12"><span>次</span></div>
+    </div>
+    <div class="row">
+      <div class="grow"><div class="t">空闲头部动作</div><div class="d">第一次抬头，之后左右看。</div></div>
+      <button class="switch" data-set-toggle="gesture" type="button" role="switch"
+              aria-checked="true" aria-label="空闲头部动作"><span></span></button>
+    </div>
+
+    <div class="set-sec">告警节奏</div>
+    <div class="set-grid">
+      <label class="set-num"><span>倒地重复</span><input id="setFallRepeat" type="number" min="2" max="30" step="1" value="5"><i>秒</i></label>
+      <label class="set-num"><span>倒地次数</span><input id="setFallMax" type="number" min="1" max="20" step="1" value="6"><i>次</i></label>
+      <label class="set-num"><span>倒地长间隔</span><input id="setFallTail" type="number" min="10" max="600" step="5" value="60"><i>秒</i></label>
+      <label class="set-num"><span>倾斜阈值</span><input id="setTiltDeg" type="number" min="10" max="60" step="1" value="30"><i>°</i></label>
+      <label class="set-num"><span>倾斜重复</span><input id="setTiltRepeat" type="number" min="5" max="120" step="1" value="10"><i>秒</i></label>
+    </div>
+
+    <div class="set-sec">动作反馈</div>
+    <div class="set-grid">
+      <div class="set-toggle"><span>接管 / 交还</span><button class="switch" data-set-toggle="takeover" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>技能开始 / 结束</span><button class="switch" data-set-toggle="skill" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>启用 / 关闭策略</span><button class="switch" data-set-toggle="enable" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>命令被拒绝</span><button class="switch" data-set-toggle="refusal" type="button" role="switch" aria-checked="true"><span></span></button></div>
+    </div>
+
+    <div class="set-sec">告警类别</div>
+    <div class="set-grid">
+      <div class="set-toggle"><span>倒地</span><button class="switch" data-set-toggle="fall" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>倾斜</span><button class="switch" data-set-toggle="tilt" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>电量</span><button class="switch" data-set-toggle="battery" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>电机温度</span><button class="switch" data-set-toggle="motor" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>主控温度</span><button class="switch" data-set-toggle="cpu" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>掉频</span><button class="switch" data-set-toggle="loop" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>总线</span><button class="switch" data-set-toggle="bus" type="button" role="switch" aria-checked="true"><span></span></button></div>
+    </div>
+
+    <div class="row" style="border-top:0">
+      <div class="grow"><div class="d">恢复默认只改本页；点保存才写入。</div></div>
+      <button class="mini" id="btnSettingsReset" type="button">恢复默认</button>
+      <button class="mini" id="btnSettingsClose" type="button">关闭</button>
+      <button class="mini" id="btnSettingsSave" type="button">保存</button>
     </div>
   </div>
 </div>
@@ -1218,7 +1365,9 @@
   <button type="button" data-h="main">主界面 · 行走</button>
   <button type="button" data-h="head">头部模式 · 行走</button>
   <button type="button" data-h="head-held">头部模式 · 待命</button>
-  <button type="button" data-h="sound">声音面板</button>
+  <button type="button" data-h="sound">声音面板 · 动态开</button>
+  <button type="button" data-h="sound-off">声音面板 · 动态关</button>
+  <button type="button" data-h="settings">设置 · 动态声音</button>
   <button type="button" data-h="home">主界面 · 待命</button>
   <button type="button" data-h="limp">主界面 · 卸力</button>
   <button type="button" data-h="limit">限幅进行中</button>
@@ -1260,6 +1409,15 @@
   const HEAD_MAX = 0.5;
   const fmtDeg = (rad) => `${rad >= 0 ? '+' : '−'}${Math.abs(Math.round(rad * 180 / Math.PI))}°`;
 
+  function defaultSettings(){
+    return {
+      idleFirst: 30, idleRepeat: 300, idleMax: 12, idleGesture: true,
+      fallRepeat: 5, fallMax: 6, fallTail: 60, tiltDeg: 30, tiltRepeat: 10,
+      actions: { takeover: true, skill: true, enable: true, refusal: true },
+      alerts: { fall: true, tilt: true, battery: true, motor: true, cpu: true, loop: true, bus: true },
+    };
+  }
+
   const S = {
     mode: 'driver',            // driver | readonly | offline | standing
     policy: 'walk',            // held | walk | home | limp
@@ -1278,6 +1436,8 @@
     head: { yaw: 0, pitch: 0 },
     headApp: { yaw: 0, pitch: 0 },
     sound: { volume: 60, mute: false, prevVolume: 60, playing: null, wheee: false },
+    dyn: true,                 // 动态声音；手机接管后默认开
+    ...defaultSettings(),      // v2 设置页字段，保存后写入 audio.json
     padd: true,
     demoLimit: false,
     lastSeen: Date.now(),
@@ -1326,6 +1486,14 @@
     roHeadReq: $('#roHeadReq'), roHeadApp: $('#roHeadApp'), btnHeadReset: $('#btnHeadReset'),
     btnSound: $('#btnSound'), sound: $('#sound'), soundGrid: $('#soundGrid'),
     volRange: $('#volRange'), volPct: $('#volPct'), btnMute: $('#btnMute'),
+    btnDynSound: $('#btnDynSound'), dynState: $('#dynState'), dynNote: $('#dynNote'),
+    btnDynSettings: $('#btnDynSettings'),
+    settings: $('#settings'),
+    setIdleFirst: $('#setIdleFirst'), setIdleRepeat: $('#setIdleRepeat'), setIdleMax: $('#setIdleMax'),
+    setFallRepeat: $('#setFallRepeat'), setFallMax: $('#setFallMax'), setFallTail: $('#setFallTail'),
+    setTiltDeg: $('#setTiltDeg'), setTiltRepeat: $('#setTiltRepeat'),
+    btnSettingsReset: $('#btnSettingsReset'),
+    btnSettingsClose: $('#btnSettingsClose'), btnSettingsSave: $('#btnSettingsSave'),
     btnStand: $('#btnStand'), btnEnable: $('#btnEnable'), enableLabel: $('#enableLabel'), enableSub: $('#enableSub'),
     btnStop: $('#btnStop'), btnRelax: $('#btnRelax'),
     seg: $('#speedSeg'), tiltBubble: $('#tiltBubble'), tiltDot: $('#tiltDot'),
@@ -1542,6 +1710,7 @@
     el.app.dataset.demo = S.demoLimit ? '1' : '0';
     el.app.dataset.padd = S.padd ? '1' : '0';
     el.app.dataset.lim = S.limited.join(',');
+    updateDynUI();
   }
 
   /* ── Toast ────────────────────────────────────────────── */
@@ -2196,8 +2365,82 @@
   el.maint.addEventListener('click', (e) => { if (e.target === el.maint) closeMaint(); });
 
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closeAlert(); closeMaint(); closeStatus(); closeSound(); }
+    if (e.key === 'Escape') { closeAlert(); closeMaint(); closeStatus(); closeSound(); closeSettings(); }
   });
+
+  /* ── 动态声音 / 设置 ─────────────────────────────────── */
+  function dynAllowed(){ return S.mode === 'driver' || S.mode === 'standing'; }
+  function updateDynUI(){
+    const on = !!S.dyn && dynAllowed();
+    [el.btnDynSound].forEach((b) => {
+      if (!b) return;
+      b.setAttribute('aria-checked', String(on));
+      b.disabled = !dynAllowed();
+    });
+    if (el.dynState) {
+      if (!dynAllowed()) el.dynState.textContent = S.mode === 'offline' ? '离线 · 不生效' : '接管后可开启';
+      else el.dynState.textContent = on ? '已开启 · 动作/告警/空闲会自动叫' : '已关闭 · 只响应手动点播';
+    }
+    if (el.dynNote) {
+      el.dynNote.textContent = !dynAllowed()
+        ? '动态声音只在手机接管驾驶后生效。'
+        : (on ? idleNoteText() : '已关闭；下次接管会重新默认开启。');
+    }
+  }
+  function idleNoteText(){
+    const rep = S.idleRepeat % 60 === 0 && S.idleRepeat >= 60
+      ? `${S.idleRepeat / 60} 分钟` : `${S.idleRepeat} 秒`;
+    return `接管后默认开启；首次空闲 ${S.idleFirst} s、之后每 ${rep}${S.idleGesture ? '，带抬头/左右看' : ''}。`;
+  }
+  function setDyn(on, quiet){
+    if (!dynAllowed()) { toast('接管后才能开启动态声音', 'warn'); return; }
+    S.dyn = !!on;
+    updateDynUI();
+    if (!quiet) toast(S.dyn ? '动态声音已开启' : '动态声音已关闭 · 只响应手动点播', S.dyn ? 'ok' : 'warn');
+  }
+  function openSettings(){
+    closeAlert(); closeMaint(); closeStatus(); closeSound();
+    fillSettingsForm(S);
+    updateDynUI();
+    el.settings.classList.remove('hidden');
+  }
+  function closeSettings(){ el.settings.classList.add('hidden'); }
+  function fillSettingsForm(cfg){
+    const set = (elRef, value) => { if (elRef) elRef.value = value; };
+    set(el.setIdleFirst, cfg.idleFirst); set(el.setIdleRepeat, cfg.idleRepeat); set(el.setIdleMax, cfg.idleMax);
+    set(el.setFallRepeat, cfg.fallRepeat); set(el.setFallMax, cfg.fallMax); set(el.setFallTail, cfg.fallTail);
+    set(el.setTiltDeg, cfg.tiltDeg); set(el.setTiltRepeat, cfg.tiltRepeat);
+    const state = { gesture: cfg.idleGesture, ...cfg.actions, ...cfg.alerts };
+    for (const b of $$('[data-set-toggle]')) {
+      b.setAttribute('aria-checked', String(state[b.dataset.setToggle] === true));
+    }
+  }
+  function readToggle(name){ const b = $(`[data-set-toggle="${name}"]`); return b?.getAttribute('aria-checked') === 'true'; }
+  function saveSettings(){
+    const num = (elRef, fallback, lo, hi) => clamp(Number(elRef?.value) || fallback, lo, hi);
+    const first = num(el.setIdleFirst, 30, 5, 3600);
+    let repeat = num(el.setIdleRepeat, 300, 5, 3600);
+    if (repeat < first) repeat = first;
+    S.idleFirst = first; S.idleRepeat = repeat;
+    S.idleMax = num(el.setIdleMax, 12, 1, 60);
+    S.idleGesture = readToggle('gesture');
+    S.fallRepeat = num(el.setFallRepeat, 5, 2, 30);
+    S.fallMax = num(el.setFallMax, 6, 1, 20);
+    S.fallTail = num(el.setFallTail, 60, 10, 600);
+    S.tiltDeg = num(el.setTiltDeg, 30, 10, 60);
+    S.tiltRepeat = num(el.setTiltRepeat, 10, 5, 120);
+    S.actions = { takeover: readToggle('takeover'), skill: readToggle('skill'),
+                  enable: readToggle('enable'), refusal: readToggle('refusal') };
+    S.alerts = { fall: readToggle('fall'), tilt: readToggle('tilt'), battery: readToggle('battery'),
+                 motor: readToggle('motor'), cpu: readToggle('cpu'), loop: readToggle('loop'), bus: readToggle('bus') };
+    fillSettingsForm(S);
+    updateDynUI();
+    toast(`设置已保存：首次 ${first}s · 间隔 ${repeat}s${S.idleGesture ? ' · 带头部动作' : ''}（原型演示）`, 'ok', 3200);
+  }
+  function resetSettings(){
+    fillSettingsForm(defaultSettings());
+    toast('已恢复默认，点保存才生效', 'warn', 2600);
+  }
 
   /* ── 声音面板 ─────────────────────────────────────────── */
   function updateSoundUI(){
@@ -2246,6 +2489,18 @@
   el.btnSound.addEventListener('click', openSound);
   $('#btnSoundClose').addEventListener('click', closeSound);
   el.sound.addEventListener('click', (e) => { if (e.target === el.sound) closeSound(); });
+
+  if (el.btnDynSound) el.btnDynSound.addEventListener('click', () => setDyn(!S.dyn));
+  if (el.btnDynSettings) el.btnDynSettings.addEventListener('click', openSettings);
+  if (el.btnSettingsClose) el.btnSettingsClose.addEventListener('click', closeSettings);
+  if (el.btnSettingsSave) el.btnSettingsSave.addEventListener('click', saveSettings);
+  if (el.btnSettingsReset) el.btnSettingsReset.addEventListener('click', resetSettings);
+  for (const b of $$('[data-set-toggle]')) {
+    b.addEventListener('click', () => {
+      b.setAttribute('aria-checked', b.getAttribute('aria-checked') === 'true' ? 'false' : 'true');
+    });
+  }
+  if (el.settings) el.settings.addEventListener('click', (e) => { if (e.target === el.settings) closeSettings(); });
 
   el.soundGrid.addEventListener('click', (e) => {
     const b = e.target.closest('.snd');
@@ -2320,6 +2575,9 @@
     if (mode === 'readonly' || mode === 'offline') { S.req = [0,0,0]; S.app = [0,0,0]; }
     if (mode === 'offline' && prev !== 'offline') pushEvent('offline','bad','连接断开','已进入离线模式');
     if (mode === 'readonly' && prev !== 'readonly') pushEvent('readonly','warn','进入只读','只能看状态，不能驾驶');
+    // 接管驾驶 = 动态声音默认开；只读/离线 = 不生效
+    if (mode === 'driver' && prev !== 'driver') S.dyn = true;
+    if (mode === 'readonly' || mode === 'offline') S.dyn = false;
     render();
   }
 
@@ -2412,9 +2670,10 @@
   /* ── hash 路由（评审直达） ────────────────────────────── */
   function applyHash(){
     const h = (location.hash || '#main').slice(1);
-    closeMaint(); closeAlert(); closeStatus(); closePolicyBar(); closeSound();
+    closeMaint(); closeAlert(); closeStatus(); closePolicyBar(); closeSound(); closeSettings();
     el.readonly.classList.add('hidden'); el.offline.classList.add('hidden');
     S.mode = 'driver'; S.limp = false; S.fallen = false;
+    S.dyn = true; Object.assign(S, defaultSettings());
     S.req = [0,0,0]; S.app = [0,0,0];
     S.stickMode = 'drive'; S.head = { yaw:0, pitch:0 }; S.headApp = { yaw:0, pitch:0 };
     S.sound.wheee = false; S.sound.playing = null;
@@ -2428,6 +2687,8 @@
     else if (h === 'relax') { S.mode = 'driver'; render(); doRelax(); }
     else if (h === 'maintenance') { S.mode = 'driver'; render(); openMaint(); }
     else if (h === 'sound') { S.mode = 'driver'; render(); openSound(); }
+    else if (h === 'sound-off') { S.mode = 'driver'; S.dyn = false; render(); openSound(); }
+    else if (h === 'settings') { S.mode = 'driver'; render(); openSettings(); }
     else if (h === 'head') { S.mode = 'driver'; render(); setStickMode('head'); }
     else if (h === 'head-held') { S.mode = 'driver'; S.policy = 'held'; render(); setStickMode('head'); }
     else if (h === 'policy') { S.mode = 'driver'; render(); openPolicyBar(); }

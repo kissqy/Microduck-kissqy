@@ -1,9 +1,9 @@
-# 动态发声 · 需求方案（待评审）
+# 动态发声 · 需求方案（v1 已实现）
 
-> Status: proposed · 2026-11-26 · 未实现，等待需求评审
+> Status: implemented · 2026-11-26 · v1 落在 duckphone 桥 + 手机面板 + 控制台 LB
 > 目标机器人：Microduck（R17 / robotd 0.15.1）
-> 本文只定义“什么时候、因为什么、发什么声音”，不包含 UI 设计。
-> UI 等需求确认后单独出。
+> 本文定义“什么时候、因为什么、发什么声音”；v1 的实际落地见 §9。
+> UI 设计见手机 App 声音抽屉（底部「动态声音」卡片）与控制台模拟手柄的 LB 键。
 
 ---
 
@@ -106,8 +106,8 @@
 
 | ID | 场景 | 触发条件 | 声音 | 优先级 | 默认 | 冷却 | 备注 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| I1 | 一段时间没人操作 | 无摇杆/头部/命令输入 ≥5 min，且未 limp/fallen | coo | P2 | 开 | 一次 | “休闲”核心场景 |
-| I2 | 长时间空闲 | 空闲 ≥15 min | inquire | P2 | 开 | 每 15 min，最多 4 次/小时 | 像在找人 |
+| I1 | 一段时间没人操作 | 无摇杆/头部/命令输入 ≥30 s，且未 limp/fallen | coo | P2 | 开 | 一次 | “休闲”核心场景 |
+| I2 | 长时间空闲 | 之后每 300 s | inquire | P2 | 开 | 每 5 min，最多 12 次/小时 | 像在找人 |
 | I3 | 随机小叫 | 空闲状态，每 10–20 min 随机 | chirp | P2 | **关** | 每小时最多 3 次 | 更像宠物，但可能吵 |
 | I4 | 空闲时抬头看人 | 与 I1/I2 同时，头部轻微抬起/转头 | 声音 + 头部动作 | P2 | 关 | 与声音同一次 | 属于“动态”，可选 |
 
@@ -241,3 +241,146 @@
 - 掉线/重启后规则状态不产生重复告警（例如开机不要立刻补叫三次倒地）。
 - duckphone 日志能查到最后一次动态声音的 trigger、tag、原因。
 - 单测覆盖：规则边沿、滞回、优先级、冷却、静音、无数据。
+
+---
+
+## 9. v1 实现落地（2026-11-26）
+
+### 9.1 代码位置
+
+| 文件 | 作用 |
+| --- | --- |
+| `firmware/duckphone/audio_director.py` | 规则引擎：状态边沿、告警节奏、空闲、优先级、冷却 |
+| `firmware/duckphone/server.py` | 总开关 `dynamic_sound`、`dyn` / `err` 状态字段、HTTP 与 WebSocket 接口 |
+| `firmware/duckphone/static/` | 声音抽屉底部「动态声音」卡片（开关 + 说明） |
+| `firmware/console/static/` | 模拟手柄 LB 键（读写同一个开关） |
+| `firmware/console/console.py` | CSP 放行 `http://*:8001` |
+
+### 9.2 开关与接口
+
+- 桥接层全局一份开关，默认关闭；手机成为 driver（首次 hello 或 takeover）时自动开启。
+  用户可在手机上关闭，本次会话保持关闭；重新接管会再次开启。
+- 手机端：WebSocket `{"t":"cmd","name":"dynamicSound","on":true|false}`，回执带 `enabled`。
+- 调试台：`GET /api/dynamic-sound` → `{"enabled":bool}`；
+  `POST /api/dynamic-sound`，body 为 `{"enabled":bool}` 或 `{"toggle":true}`。
+  两个接口都带 `Access-Control-Allow-Origin: *`，控制台才能跨端口读写。
+- 控制台 LB 在官方映射里未绑定，选它便于以后映射到实体手柄；按钮每 5 s 轮询桥，
+  桥不在线时禁用，且不受“手柄整体不可用”影响（动态声音与运动服务无关）。
+- 状态帧新增 `dyn`（开关）与 `err`（`health.bus.consecutive_errors`），页面无需额外轮询。
+
+### 9.3 v1 实际启用的规则
+
+- 生命周期：L2 接管 greet、L3 会话结束 coo、A2/A3 enable greet/coo。
+- 动作：A4 技能开始 chirp、A5 技能结束 coo、A8 命令被拒 inquire。
+- 告警：E1 倒地 5 s × 6 → 60 s、E2 倾斜 ≥30° 每 10 s、E3 电量 <25%、
+  E4 <15% 每 60 s、E5 电机 ≥60 °C / ≥50 °C、E6 CPU ≥85 °C、
+  E7 掉频 <45 Hz 持续 3 s、E8 总线连续错误 ≥3、E9 告警解除 coo。
+- 空闲：I1 30 s coo、I2 每 300 s inquire，每小时最多 12 次；
+  只在有 driver、`walk` / `held`、未 limp / fallen、且 tilt < 30° 时生效。
+- 手动点播抑制 P1/P2 1.5 s；P0 不受抑制。
+- 真机抖动保护：技能运行期间（`roulade` / `sitstand` / `ground_pick` 等）不触发 E1/E2，
+  避免翻滚被当成摔倒；`fall` 需连续 2 s 正常才算解除，短暂的 false 不会重置 5 s 节奏；
+  `tilt` 的 10 s 冷却不会被瞬间回到 30° 以下重置。
+- 调整节奏：设置页或 `POST /api/audio-config` 直接改 `idle.after_s` / `idle.repeat_s`；
+  生产默认仍是 30 s / 300 s。
+
+### 9.4 v1 不做（下一版）
+
+- 手机设置页与 `/etc/duckphone/audio.json`：时间固定 30 s / 300 s。
+- 声音 + 头部动作组合（I4）。
+- 随机小叫（I3）、A6 起坐单独提示、A7 行走起停、A9 标定提示、
+  L5 链路恢复、E10 站起问候——规则表保留，v1 未接。
+- robotd 固件内的 L1/L4/抚摸声音保持不变，不重复叠加。
+
+---
+
+## 10. v2 设计（已实现，待真机验收）
+
+> 2026-11-26 · 设置页开放“节奏 + 开关”；空闲动作 I1 抬头 / I2 左右看；
+> 配置存桥上 `/etc/duckphone/audio.json`。UI 见
+> [`duckphone-ui.zh-CN.md`](duckphone-ui.zh-CN.md) §19.3 / §20。
+> 实现：`audio_settings.py`（配置）、`head_gesture.py`（动作）、
+> `server.py`（WS/HTTP 接口）、`static/`（设置抽屉）；单测 136 项通过。
+
+### 10.1 参数分层
+
+**手机设置页（常规）**
+
+- 空闲：`after_s` 30、`repeat_s` 300、`max_per_hour` 12、`gesture` 开。
+- 倒地节奏：`repeat_s` 5、`max_repeats` 6、`tail_s` 60。
+- 倾斜：`deg` 30、`repeat_s` 10。
+- 动作反馈：接管/交还、技能开始/结束、启用/关闭、命令被拒绝（4 组开关，底层 6 个布尔）。
+- 告警类别：倒地、倾斜、电量、电机、主控、掉频、总线（7 个开关）。
+
+**配置文件 / 高级（不进手机常规页）**
+
+- `min_gap_s` 1.5、`manual_hold_s` 1.5。
+- 电量低/危险 25/15 %、电机温热/高温 50/60 °C、主控 85 °C、
+  掉频 <45 Hz 持续 3 s、总线连续错误 3。
+- 各触发冷却沿用代码默认，暂不开放。
+
+安全阈值留在文件里，避免在手机页误调。
+
+### 10.2 配置文件
+
+`/etc/duckphone/audio.json`，完整结构：
+
+```json
+{
+  "version": 2,
+  "idle": {"after_s": 30, "repeat_s": 300, "max_per_hour": 12, "gesture": true},
+  "fall": {"repeat_s": 5, "max_repeats": 6, "tail_s": 60},
+  "tilt": {"deg": 30, "repeat_s": 10},
+  "actions": {"takeover": true, "handback": true, "skill_start": true,
+              "skill_end": true, "enable": true, "refusal": true},
+  "alerts": {"fall": true, "tilt": true, "battery": true, "motor": true,
+             "cpu": true, "loop": true, "bus": true},
+  "advanced": {"min_gap_s": 1.5, "manual_hold_s": 1.5,
+               "battery_low_pct": 25, "battery_critical_pct": 15,
+               "motor_warm_c": 50, "motor_hot_c": 60, "cpu_hot_c": 85,
+               "loop_min_hz": 45, "loop_low_s": 3, "bus_error_count": 3}
+}
+```
+
+- 文件缺失/损坏 → 默认值启动 + warning，不阻塞服务。
+- 缺键补默认，未知键忽略，类型错误回退默认；数值越界夹紧；`repeat_s ≥ after_s`。
+- 临时文件 + `os.replace` 原子写，`duck:duck 0600`；改完热生效，不重启。
+- 总开关 `dynamicSound` 仍是会话状态，不写入文件。
+
+### 10.3 接口
+
+- 手机 WS：`audioConfig` 读、`setAudioConfig` 写、`resetAudioConfig` 恢复默认。
+  读取允许所有会话；写入要求 driver。
+- 调试台 HTTP：`GET/POST /api/audio-config`，与 `/api/dynamic-sound` 一样带 CORS。
+- 保存后广播 `{"t":"audioConfig","config":{…}}`，所有设置页和声音抽屉同步。
+
+### 10.4 空闲头部动作
+
+**I1 第一次空闲（配 coo）**
+
+```text
+0.0 s  neck 0, pitch -0.30, yaw 0
+1.2 s  回中/恢复动作前姿态
+```
+
+**I2 之后空闲（配 inquire）**
+
+```text
+0.0 s  neck 0, pitch -0.18, yaw +0.30
+0.8 s  neck 0, pitch -0.18, yaw -0.30
+1.6 s  回中/恢复动作前姿态
+```
+
+- 10 Hz 下发，持续刷新，避免 250 ms 头部看门狗归零。
+- 只在声音真正被接受后触发；被手动点播/冷却/总开关拦下时不动作。
+- 只在有 driver、在线、非只读、非 limp/fallen、倾斜 <30°、policy 为 walk/held 时执行。
+- `drive` / `head` / `cmd` 输入、接管、关闭动态声音、会话结束、P0 告警都会取消动作。
+- 动作层做成一个 `HeadGesture` worker；规则层只传 I1/I2，后续随机动作库只改动作层。
+
+### 10.5 验收
+
+- 设置保存后立即生效、重启保留；手机和调试台读到同一份。
+- 非法/缺失/损坏配置不会让桥启动失败。
+- I1 声音+抬头、I2 声音+左右看；关掉 `idle.gesture` 后只剩声音。
+- 摇杆/头部输入、接管、P0 告警立刻取消动作；结束回中。
+- 单测覆盖：配置合并/校验/原子写、两套动作时序、取消、只读/limp/fall/tilt 不动作。

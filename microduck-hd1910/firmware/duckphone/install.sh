@@ -39,7 +39,7 @@ if [[ -n "$TARGET" ]]; then
   ssh "$TARGET" "sudo mkdir -p $DEST && sudo chown \$(id -u):\$(id -g) $DEST"
   rsync -a --delete \
     --exclude '__pycache__' --exclude 'verification' --exclude 'design' \
-    "$HERE"/server.py "$HERE"/rpc.py "$HERE"/ws.py "$HERE"/static "$HERE"/README.md "$HERE"/README.en.md \
+    "$HERE"/server.py "$HERE"/rpc.py "$HERE"/ws.py "$HERE"/audio_director.py "$HERE"/audio_settings.py "$HERE"/head_gesture.py "$HERE"/static "$HERE"/README.md "$HERE"/README.en.md \
     "$TARGET:$DEST/"
   rsync -a "$HERE/$UNIT_SRC" "$TARGET:/tmp/$UNIT"
   run "sudo install -m 644 /tmp/$UNIT /etc/systemd/system/$UNIT"
@@ -54,11 +54,11 @@ else
   if command -v rsync >/dev/null 2>&1; then
     sudo rsync -a --delete \
       --exclude '__pycache__' --exclude 'verification' --exclude 'design' \
-      "$HERE"/server.py "$HERE"/rpc.py "$HERE"/ws.py "$HERE"/static "$HERE"/README.md "$HERE"/README.en.md \
+      "$HERE"/server.py "$HERE"/rpc.py "$HERE"/ws.py "$HERE"/audio_director.py "$HERE"/audio_settings.py "$HERE"/head_gesture.py "$HERE"/static "$HERE"/README.md "$HERE"/README.en.md \
       "$DEST/"
   else
     sudo rm -rf "$DEST/static"
-    sudo cp -a "$HERE"/server.py "$HERE"/rpc.py "$HERE"/ws.py "$HERE"/README.md "$HERE"/README.en.md "$DEST/"
+    sudo cp -a "$HERE"/server.py "$HERE"/rpc.py "$HERE"/ws.py "$HERE"/audio_director.py "$HERE"/audio_settings.py "$HERE"/head_gesture.py "$HERE"/README.md "$HERE"/README.en.md "$DEST/"
     sudo cp -a "$HERE"/static "$DEST/"
   fi
   sudo install -m 644 "$HERE/$UNIT_SRC" "/etc/systemd/system/$UNIT"

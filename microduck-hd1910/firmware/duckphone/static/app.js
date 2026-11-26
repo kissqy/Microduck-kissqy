@@ -20,8 +20,8 @@
   const OFFLINE_AFTER = 5;
   const RELAX_HOLD_MS = 1500;
   const STICK_R = 80;
-  // 与手柄右摇杆默认一致；robotd 会再按策略/关节限位处理。
-  const HEAD_MAX = 0.5;
+  // 比手柄默认 0.5 rad 更明显；robotd 仍会按策略/关节限位处理。
+  const HEAD_MAX = 0.8;
   const HEAD_REFRESH_MS = 60;
   const SOUND_TAGS = ['chirp', 'greet', 'inquire', 'coo', 'alarm', 'peck', 'wheee'];
   const TOKEN_KEY = 'duck.token';
@@ -29,6 +29,17 @@
   const NAME_KEY = 'duck.name';
   const LAST_KEY = 'duck.last';
   const POLICY_REFRESH_MS = 20000;
+  // Mirrors audio_settings.py; used before the bridge sends its config and for
+  // the "restore defaults" button. The bridge remains the source of truth.
+  const AUDIO_DEFAULTS = {
+    idle: { after_s: 30, repeat_s: 300, max_per_hour: 12, gesture: true },
+    fall: { repeat_s: 5, max_repeats: 6, tail_s: 60 },
+    tilt: { deg: 30, repeat_s: 10 },
+    actions: { takeover: true, handback: true, skill_start: true, skill_end: true,
+               enable: true, refusal: true },
+    alerts: { fall: true, tilt: true, battery: true, motor: true, cpu: true,
+              loop: true, bus: true },
+  };
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -48,6 +59,8 @@
     headReq: { yaw: 0, pitch: 0 },
     head: [0, 0, 0, 0],    // robotd 回传的头部意图 [neck, pitch, yaw, roll]
     sound: { volume: null, mute: false, prev: 60, wheee: false },
+    dyn: false,            // 桥接层动态声音总开关；接管后默认开
+    audio: null,           // 桥接层动态声音配置；hello/audioConfig 下发
     limited: [],
     hz: 0,
     missed: 0,
@@ -180,7 +193,19 @@
     volRange: $('#volRange'),
     volPct: $('#volPct'),
     btnMute: $('#btnMute'),
+    btnDynSound: $('#btnDynSound'),
+    dynState: $('#dynState'),
+    dynNote: $('#dynNote'),
+    btnDynSettings: $('#btnDynSettings'),
     btnSoundClose: $('#btnSoundClose'),
+
+    settings: $('#settings'),
+    setIdleFirst: $('#setIdleFirst'), setIdleRepeat: $('#setIdleRepeat'), setIdleMax: $('#setIdleMax'),
+    setFallRepeat: $('#setFallRepeat'), setFallMax: $('#setFallMax'), setFallTail: $('#setFallTail'),
+    setTiltDeg: $('#setTiltDeg'), setTiltRepeat: $('#setTiltRepeat'),
+    setHint: $('#setHint'), setReadonly: $('#setReadonly'),
+    btnSettingsReset: $('#btnSettingsReset'), btnSettingsClose: $('#btnSettingsClose'),
+    btnSettingsSave: $('#btnSettingsSave'),
 
     maint: $('#maint'),
     btnReboot: $('#btnReboot'),
@@ -326,6 +351,7 @@
       case 'hello': return onHello(msg);
       case 'state': return onState(msg);
       case 'policies': return onPolicies(msg);
+      case 'audioConfig': return onAudioConfig(msg);
       case 'ack': return onAck(msg);
       case 'session': return onSession(msg);
       case 'pong': return;
@@ -344,6 +370,12 @@
     renderPolicyBar();
   }
 
+  function onAudioConfig(msg) {
+    if (msg && msg.config) S.audio = msg.config;
+    updateDynUI();
+    if (!el.settings.classList.contains('hidden')) fillSettingsForm(audioCfg());
+  }
+
   function onHello(msg) {
     if (!msg.ok) {
       // 页面已经不收配对码了。到这个分支只可能是服务端仍带着 --auth，
@@ -359,12 +391,14 @@
     S.role = msg.role;
     S.driverName = msg.driver || '';
     S.paddCanStop = !!msg.paddCanStop;
+    if (msg.audio) S.audio = msg.audio;
     setLink('online');
     hideOffline();
     if (msg.role === 'readonly') showReadonly(msg.driver);
     else hideReadonly();
     pushEvent('link', 'ok', '已连接', msg.role === 'driver' ? '本机在驾驶' : '只读模式');
     requestPolicies(true);
+    if (!el.settings.classList.contains('hidden')) fillSettingsForm(audioCfg());
     render();
   }
 
@@ -383,6 +417,7 @@
     S.missed = Number(msg.missed) || 0;
     S.tilt = Number(msg.tilt) || 0;
     S.padd = !!msg.padd;
+    if (typeof msg.dyn === 'boolean') S.dyn = msg.dyn;
     if (typeof msg.paddCanStop === 'boolean') S.paddCanStop = msg.paddCanStop;
     if (msg.robotd) S.robotd = msg.robotd;
     const wasRo = S.ro;
@@ -439,6 +474,7 @@
       entry.resolve({
         ok: !!msg.ok, reason: msg.reason || '', policies: msg.policies,
         volume: msg.volume, muted: msg.muted, saved: msg.saved, message: msg.message,
+        enabled: msg.enabled, config: msg.config,
       });
     }
     if (typeof msg.padd === 'boolean') S.padd = msg.padd;
@@ -460,6 +496,7 @@
       toast(msg.reason || '已被另一台设备接管', 'warn', 3200);
       pushEvent('takeover', 'warn', '已被另一台设备接管', msg.driver || '');
     }
+    if (!el.settings.classList.contains('hidden')) fillSettingsForm(audioCfg());
     render();
   }
 
@@ -590,6 +627,7 @@
     updateMaintenance();
     updateStickModeUI();
     renderPolicyBar();
+    updateDynUI();
   }
 
   function updateTopbar() {
@@ -765,7 +803,12 @@
     el.btnStop.disabled = !canAct();
     el.btnRelax.disabled = !canAct() || S.limp;
     el.btnMaint.disabled = false;
-    el.btnSound.disabled = !canAct();
+    // Read-only sessions may open the sound drawer to view the switch and the
+    // settings, but must not play sounds or change volume.
+    el.btnSound.disabled = S.link !== 'online';
+    el.volRange.disabled = !canAct();
+    el.btnMute.disabled = !canAct();
+    for (const b of el.soundGrid.querySelectorAll('.snd')) b.disabled = !canAct();
 
     const walking = S.policy !== 'held' && !S.limp;
     el.enableLabel.textContent = walking ? '交还' : '接管';
@@ -1169,6 +1212,7 @@
     el.status.classList.add('hidden');
     el.maint.classList.add('hidden');
     el.sound.classList.add('hidden');
+    el.settings.classList.add('hidden');
     el.btnSound.classList.remove('active');
   }
 
@@ -1249,6 +1293,157 @@
     else toast(`音量 ${S.sound.volume}%`);
   }
 
+  function audioCfg() {
+    const raw = S.audio || {};
+    const out = {};
+    for (const key of Object.keys(AUDIO_DEFAULTS)) {
+      out[key] = { ...AUDIO_DEFAULTS[key], ...(raw[key] || {}) };
+    }
+    return out;
+  }
+
+  function audioNoteText() {
+    const idle = audioCfg().idle;
+    const rep = idle.repeat_s % 60 === 0 && idle.repeat_s >= 60
+      ? `${idle.repeat_s / 60} 分钟` : `${idle.repeat_s} 秒`;
+    return `接管后默认开启；首次空闲 ${idle.after_s} s、之后每 ${rep}`
+      + `${idle.gesture ? '，带抬头/左右看' : ''}。`;
+  }
+
+  function updateDynUI() {
+    if (!el.btnDynSound) return;
+    const online = S.link === 'online';
+    const can = online && S.role === 'driver' && !S.ro;
+    const on = can && !!S.dyn;
+    el.btnDynSound.setAttribute('aria-checked', String(on));
+    el.btnDynSound.disabled = !can;
+    if (!can) {
+      el.dynState.textContent = !online ? '离线 · 不生效' : S.ro ? '标定模式 · 不生效' : '接管后可开启';
+      el.dynNote.textContent = '动态声音只在手机接管驾驶后生效。';
+    } else if (on) {
+      el.dynState.textContent = '已开启 · 动作/告警/空闲会自动叫';
+      el.dynNote.textContent = audioNoteText();
+    } else {
+      el.dynState.textContent = '已关闭 · 只响应手动点播';
+      el.dynNote.textContent = '已关闭；下次接管会重新默认开启。';
+    }
+  }
+
+  function settingsCanEdit() {
+    return S.link === 'online' && S.role === 'driver' && !S.ro;
+  }
+
+  function fillSettingsForm(cfg) {
+    const set = (ref, value) => { if (ref) ref.value = value; };
+    set(el.setIdleFirst, cfg.idle.after_s);
+    set(el.setIdleRepeat, cfg.idle.repeat_s);
+    set(el.setIdleMax, cfg.idle.max_per_hour);
+    set(el.setFallRepeat, cfg.fall.repeat_s);
+    set(el.setFallMax, cfg.fall.max_repeats);
+    set(el.setFallTail, cfg.fall.tail_s);
+    set(el.setTiltDeg, cfg.tilt.deg);
+    set(el.setTiltRepeat, cfg.tilt.repeat_s);
+    const state = {
+      gesture: cfg.idle.gesture,
+      takeover: cfg.actions.takeover && cfg.actions.handback,
+      skill: cfg.actions.skill_start && cfg.actions.skill_end,
+      enable: cfg.actions.enable,
+      refusal: cfg.actions.refusal,
+      ...cfg.alerts,
+    };
+    for (const b of $$('[data-set-toggle]')) {
+      b.setAttribute('aria-checked', String(state[b.dataset.setToggle] === true));
+    }
+    const can = settingsCanEdit();
+    for (const input of el.settings.querySelectorAll('input')) input.disabled = !can;
+    for (const b of $$('[data-set-toggle]')) b.disabled = !can;
+    el.btnSettingsSave.disabled = !can;
+    el.btnSettingsReset.disabled = !can;
+    el.setHint.textContent = can
+      ? '保存后立即生效；写入 /etc/duckphone/audio.json。总开关仍在声音抽屉。'
+      : '只读会话只能查看；接管后才能保存。';
+    el.setReadonly.textContent = can
+      ? '恢复默认只改本页；点保存才写入。'
+      : '动态声音设置与手机、调试台共用。';
+  }
+
+  function readSetToggle(name) {
+    const b = $(`[data-set-toggle="${name}"]`);
+    return b?.getAttribute('aria-checked') === 'true';
+  }
+
+  async function saveSettings() {
+    if (!settingsCanEdit()) { toast('接管后才能保存设置', 'warn', 3000); return; }
+    const num = (ref, fallback, lo, hi) => clamp(Number(ref?.value) || fallback, lo, hi);
+    const first = num(el.setIdleFirst, 30, 5, 3600);
+    let repeat = num(el.setIdleRepeat, 300, 5, 3600);
+    if (repeat < first) repeat = first;
+    const patch = {
+      idle: {
+        after_s: first,
+        repeat_s: repeat,
+        max_per_hour: num(el.setIdleMax, 12, 1, 60),
+        gesture: readSetToggle('gesture'),
+      },
+      fall: {
+        repeat_s: num(el.setFallRepeat, 5, 2, 30),
+        max_repeats: num(el.setFallMax, 6, 1, 20),
+        tail_s: num(el.setFallTail, 60, 10, 600),
+      },
+      tilt: {
+        deg: num(el.setTiltDeg, 30, 10, 60),
+        repeat_s: num(el.setTiltRepeat, 10, 5, 120),
+      },
+      actions: {
+        takeover: readSetToggle('takeover'),
+        handback: readSetToggle('takeover'),
+        skill_start: readSetToggle('skill'),
+        skill_end: readSetToggle('skill'),
+        enable: readSetToggle('enable'),
+        refusal: readSetToggle('refusal'),
+      },
+      alerts: {
+        fall: readSetToggle('fall'),
+        tilt: readSetToggle('tilt'),
+        battery: readSetToggle('battery'),
+        motor: readSetToggle('motor'),
+        cpu: readSetToggle('cpu'),
+        loop: readSetToggle('loop'),
+        bus: readSetToggle('bus'),
+      },
+    };
+    el.btnSettingsSave.disabled = true;
+    const res = await cmd('setAudioConfig', { patch });
+    el.btnSettingsSave.disabled = false;
+    if (!res.ok) { toast(res.reason || '保存失败', 'err', 3600); return; }
+    if (res.config) S.audio = res.config;
+    fillSettingsForm(audioCfg());
+    updateDynUI();
+    el.setHint.textContent = '已保存 · 设置立即生效';
+    toast('动态声音设置已保存', 'ok', 3600);
+    pushEvent('dyn', 'ok', '动态声音设置已更新', '节奏 / 动作反馈 / 告警类别');
+  }
+
+  function resetSettings() {
+    fillSettingsForm(AUDIO_DEFAULTS);
+    toast('已恢复默认，点保存才写入', 'warn', 2600);
+  }
+
+  function openSettings() {
+    hideSheets();
+    stopStick();
+    render();
+    fillSettingsForm(audioCfg());
+    el.settings.classList.remove('hidden');
+    pushSheet();
+  }
+
+  function closeSettings() {
+    el.settings.classList.add('hidden');
+    dropSheet();
+  }
+
+
   function openSound() {
     hideSheets();
     stopStick();
@@ -1300,6 +1495,29 @@
   el.btnSound.addEventListener('click', openSound);
   el.btnSoundClose.addEventListener('click', dismissSheets);
   el.sound.addEventListener('click', (e) => { if (e.target === el.sound) dismissSheets(); });
+
+  el.btnDynSound.addEventListener('click', async () => {
+    if (!canAct()) { toast(blockedReason(), 'warn'); return; }
+    const want = !S.dyn;
+    el.btnDynSound.disabled = true;
+    const res = await cmd('dynamicSound', { on: want });
+    el.btnDynSound.disabled = false;
+    if (!res.ok) { toast(res.reason || '动态声音切换失败', 'err', 3600); return; }
+    S.dyn = typeof res.enabled === 'boolean' ? res.enabled : want;
+    render();
+    toast(S.dyn ? '动态声音已开启' : '动态声音已关闭 · 只响应手动点播', S.dyn ? 'ok' : 'warn');
+    pushEvent('dyn', 'ok', S.dyn ? '动态声音已开启' : '动态声音已关闭', '手机与调试台共用');
+  });
+  el.btnDynSettings.addEventListener('click', openSettings);
+  el.btnSettingsClose.addEventListener('click', closeSettings);
+  el.btnSettingsSave.addEventListener('click', saveSettings);
+  el.btnSettingsReset.addEventListener('click', resetSettings);
+  el.settings.addEventListener('click', (e) => { if (e.target === el.settings) closeSettings(); });
+  for (const b of $$('[data-set-toggle]')) {
+    b.addEventListener('click', () => {
+      b.setAttribute('aria-checked', b.getAttribute('aria-checked') === 'true' ? 'false' : 'true');
+    });
+  }
 
   el.soundGrid.addEventListener('click', (e) => {
     const b = e.target.closest('.snd');

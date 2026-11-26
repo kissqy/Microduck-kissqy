@@ -42,6 +42,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 import ws as wsproto
+from audio_director import AudioDirector
+from audio_settings import AudioSettings
+from head_gesture import HeadGesture
 from rpc import RobotRPC, RobotUnavailable
 
 LOG = logging.getLogger("duckphone")
@@ -72,7 +75,7 @@ PADD_PERIOD = 2.0
 # ── head / voice ────────────────────────────────────────────────────────────
 # The gamepad's default head amplitude; the trained command range is much
 # smaller, but this is the value verified on the robot and what padd sends.
-HEAD_MAX = 0.5
+HEAD_MAX = 0.8
 HEAD_HZ_MAX = 50.0
 HEAD_TIMEOUT = 0.25         # robotd has no deadman for head; the bridge is it
 SOUND_TAGS = frozenset({"chirp", "greet", "inquire", "coo", "alarm", "peck", "wheee"})
@@ -434,6 +437,9 @@ class RobotBridge:
         self._policy_sent: dict | None = None
         self._policy_at = 0.0
         self._volume_lock = threading.Lock()
+        # Dynamic sound is a bridge-level preference: the phone and the debug
+        # console toggle the same value. Off until a phone takes the wheel.
+        self.dynamic_sound = False
         self._rpc = RobotRPC(
             socket_path,
             subscribe_hz=subscribe_hz,
@@ -564,6 +570,7 @@ class RobotBridge:
             "tilt": trim(tilt_from_gravity(safety.get("gravity") or []), 1),
             "padd": self._padd,
             "paddCanStop": bool(self.padd_control),
+            "dyn": bool(self.dynamic_sound),
             "robotd": self.robotd_version,
             # robotd 在标定模式时拒绝 robot.subscribe：连接是好的，只是不能动。
             "ro": bool(self._rpc.subscribe_error),
@@ -589,6 +596,9 @@ class RobotBridge:
             # The stream carries the rate too, but it is zero for the first
             # second after robotd starts; health knows the windowed figure.
             out["hz"] = trim(achieved, 2)
+
+        bus = health.get("bus") or {}
+        out["err"] = int(as_float(bus.get("consecutive_errors"), 0) or 0)
         return out
 
     # ── intents ──────────────────────────────────────────────────────────
@@ -605,6 +615,15 @@ class RobotBridge:
 
     def sound(self, tag: str, hold: bool | None = None) -> dict:
         return self._rpc.sound(tag, hold)
+
+    def set_dynamic_sound(self, on: bool) -> dict:
+        """One global switch for the phone page and the debug console."""
+        self.dynamic_sound = bool(on)
+        # The phone paints from `state`, so a toggle must produce one immediately
+        # instead of waiting for the next 20 Hz frame (or 1 Hz health poll).
+        self._emit(self.snapshot())
+        LOG.info("动态声音：%s", "开启" if self.dynamic_sound else "关闭")
+        return {"accepted": True, "enabled": self.dynamic_sound}
 
     # ── system volume ────────────────────────────────────────────────────
     def _mixer(self, card: str, args: list[str]):
@@ -967,6 +986,8 @@ class Handler(BaseHTTPRequestHandler):
     manager: SessionManager
     pairing: Pairing
     watchdog: Watchdog
+    director: AudioDirector
+    audio_settings: AudioSettings
 
     def log_message(self, fmt: str, *args) -> None:  # noqa: A003 - stdlib signature
         LOG.debug("%s - %s", self.address_string(), fmt % args)
@@ -1004,6 +1025,29 @@ class Handler(BaseHTTPRequestHandler):
         if self.command != "HEAD":
             self.wfile.write(body)
 
+    def _send_json(self, code: int, payload: dict) -> None:
+        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        self.send_response(code)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        # The debug console is served from a different port on the same board.
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.end_headers()
+        if self.command != "HEAD":
+            self.wfile.write(body)
+
+    def do_OPTIONS(self) -> None:  # noqa: N802 - stdlib naming
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Max-Age", "86400")
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+
     def do_HEAD(self) -> None:  # noqa: N802 - stdlib naming
         self.do_GET()
 
@@ -1023,14 +1067,15 @@ class Handler(BaseHTTPRequestHandler):
             self._serve_websocket()
             return
         if path == "/api/status":
-            payload = {"online": self.bridge.online, "sessions": self.manager.driver_name()}
-            body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Content-Length", str(len(body)))
-            self.end_headers()
-            if self.command != "HEAD":
-                self.wfile.write(body)
+            self._send_json(200, {"online": self.bridge.online,
+                                  "sessions": self.manager.driver_name(),
+                                  "dynamicSound": bool(self.bridge.dynamic_sound)})
+            return
+        if path == "/api/dynamic-sound":
+            self._send_json(200, {"enabled": bool(self.bridge.dynamic_sound)})
+            return
+        if path == "/api/audio-config":
+            self._send_json(200, {"accepted": True, "config": self.audio_settings.snapshot()})
             return
 
         file = self._resolve(path)
@@ -1042,11 +1087,62 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:  # noqa: N802
         path = self.path.split("?", 1)[0]
         length = int(self.headers.get("Content-Length") or 0)
+        raw = b""
         if length:
             try:
-                self.rfile.read(min(length, 4096))
+                raw = self.rfile.read(min(length, 4096))
             except OSError:
                 pass
+        if path == "/api/dynamic-sound":
+            try:
+                msg = json.loads(raw or b"{}")
+            except ValueError:
+                self._send_json(400, {"accepted": False, "reason": "bad_json"})
+                return
+            if not isinstance(msg, dict):
+                self._send_json(400, {"accepted": False, "reason": "bad_json"})
+                return
+            if "enabled" in msg:
+                on = msg.get("enabled")
+                if not isinstance(on, bool):
+                    self._send_json(400, {"accepted": False, "reason": "enabled 必须是布尔值"})
+                    return
+            elif msg.get("toggle") is True:
+                on = not self.bridge.dynamic_sound
+            else:
+                self._send_json(400, {"accepted": False, "reason": "需要 enabled 或 toggle"})
+                return
+            self._send_json(200, self.bridge.set_dynamic_sound(on))
+            self.director.note_input()
+            return
+        if path == "/api/audio-config":
+            try:
+                msg = json.loads(raw or b"{}")
+            except ValueError:
+                self._send_json(400, {"accepted": False, "reason": "bad_json"})
+                return
+            if not isinstance(msg, dict):
+                self._send_json(400, {"accepted": False, "reason": "bad_json"})
+                return
+            try:
+                if msg.get("reset") is True:
+                    config = self.audio_settings.reset()
+                else:
+                    if "patch" in msg:
+                        patch = msg["patch"]
+                        if not isinstance(patch, dict):
+                            self._send_json(400, {"accepted": False, "reason": "patch 必须是对象"})
+                            return
+                    else:
+                        patch = msg
+                    config = self.audio_settings.update(patch)
+            except ValueError as exc:
+                self._send_json(400, {"accepted": False, "reason": str(exc)})
+                return
+            self.director.note_input()
+            self.manager.broadcast({"t": "audioConfig", "config": config})
+            self._send_json(200, {"accepted": True, "config": config})
+            return
         if path == "/stop":
             # `sendBeacon` on pagehide/visibilitychange. A stop is always safe to
             # honour without a token — the worst a stranger can do is halt a robot.
@@ -1098,8 +1194,12 @@ class Handler(BaseHTTPRequestHandler):
             # `read()`; CPython then raises ValueError("read of closed file").
             LOG.info("会话 %s 断开：%s", session.id, exc)
         finally:
+            was_driver = session.role == "driver"
             session.closed = True
             self.manager.remove(session)
+            if was_driver:
+                self.director.note_input()
+                self.director.on_event("driver_end")
             websocket.close()
             LOG.info("会话 %s 结束", session.id)
 
@@ -1135,6 +1235,7 @@ class Handler(BaseHTTPRequestHandler):
         if kind == "drive":
             if session.role != "driver":
                 return
+            self.director.note_input()
             if self.bridge.read_only:
                 # robotd has said it will refuse; sending anyway is 20 Hz of noise
                 # on a socket that also carries the health poll.
@@ -1158,6 +1259,7 @@ class Handler(BaseHTTPRequestHandler):
         if kind == "head":
             if session.role != "driver" or self.bridge.read_only:
                 return
+            self.director.note_input()
             values = [
                 as_float(msg.get("neck_pitch"), 0.0) or 0.0,
                 as_float(msg.get("head_pitch"), 0.0) or 0.0,
@@ -1180,7 +1282,13 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if kind == "takeover":
+            was = session.role
+            self.director.note_input()
             self.manager.promote(session)
+            if was != "driver":
+                # A fresh phone takeover is the documented default-on moment.
+                self.bridge.set_dynamic_sound(True)
+                self.director.on_event("driver_start")
             self.manager.broadcast({"t": "state_owner", "driver": session.name})
             return
 
@@ -1206,6 +1314,7 @@ class Handler(BaseHTTPRequestHandler):
 
         name = str(msg.get("name") or "手机")[:40]
         session.name = name
+        was = session.role
         role = self.manager.claim(session)
         session.ready = True
         session.send({
@@ -1215,8 +1324,13 @@ class Handler(BaseHTTPRequestHandler):
             "name": session.name,
             "driver": self.manager.driver_name(),
             "paddCanStop": bool(self.bridge.padd_control),
+            "audio": self.audio_settings.snapshot(),
             "clamp": {"vx": [VX_MIN, VX_MAX], "vyaw": [-VYAW_MAX, VYAW_MAX]},
         })
+        if role == "driver" and was != "driver":
+            # Takeover defaults dynamic sound on; the page can turn it off.
+            self.bridge.set_dynamic_sound(True)
+            self.director.on_event("driver_start")
         session.send(self._annotated_state())
         LOG.info("会话 %s 配对成功，角色 %s", session.id, role)
 
@@ -1235,16 +1349,53 @@ class Handler(BaseHTTPRequestHandler):
             payload["t"] = "policies"
             session.send(payload)
             return
+        if name == "audioConfig":
+            session.send({"t": "audioConfig", "ok": True,
+                          "config": self.audio_settings.snapshot()})
+            return
 
         if session.role != "driver":
             session.send({"t": "ack", "id": cmd_id, "ok": False, "reason": "readonly", "name": name})
             return
 
+        self.director.note_input()
         try:
+            if name == "setAudioConfig":
+                patch = msg.get("patch")
+                if not isinstance(patch, dict):
+                    session.send({"t": "ack", "id": cmd_id, "ok": False,
+                                  "reason": "patch 必须是对象", "name": name})
+                    return
+                config = self.audio_settings.update(patch)
+                self.manager.broadcast({"t": "audioConfig", "config": config})
+                session.send({"t": "ack", "id": cmd_id, "ok": True, "name": name,
+                              "config": config})
+                return
+            if name == "resetAudioConfig":
+                config = self.audio_settings.reset()
+                self.manager.broadcast({"t": "audioConfig", "config": config})
+                session.send({"t": "ack", "id": cmd_id, "ok": True, "name": name,
+                              "config": config})
+                return
+            if name == "dynamicSound":
+                on = msg.get("on")
+                if not isinstance(on, bool):
+                    session.send({"t": "ack", "id": cmd_id, "ok": False,
+                                  "reason": "on 必须是布尔值", "name": name})
+                    return
+                result = self.bridge.set_dynamic_sound(on)
+                self.director.note_input()
+                session.send({"t": "ack", "id": cmd_id, "ok": True, "name": name,
+                              "enabled": result["enabled"]})
+                return
             if name == "init":
                 result = self.bridge.init()
             elif name == "enable":
                 result = self.bridge.enable(bool(msg.get("on")))
+                if result.get("accepted", True):
+                    self.director.on_event("enable", on=bool(msg.get("on")))
+                else:
+                    self.director.on_event("refusal")
             elif name == "stop":
                 session.driving = False
                 result = self.bridge.stop()
@@ -1272,6 +1423,8 @@ class Handler(BaseHTTPRequestHandler):
                 if tag not in SOUND_HOLD_TAGS or not isinstance(hold, bool):
                     hold = None
                 result = self.bridge.sound(tag, hold)
+                if result.get("accepted", True):
+                    self.director.note_manual()
             elif name == "volume":
                 level = msg.get("level")
                 result = (self.bridge.set_volume(level) if level is not None
@@ -1286,6 +1439,8 @@ class Handler(BaseHTTPRequestHandler):
                     "skill": skill, "reason": result.get("reason") or None,
                     "policies": self.bridge.policies(),
                 })
+                if not accepted:
+                    self.director.on_event("refusal")
                 LOG.info("策略执行 %s：%s", skill, "ok" if accepted else result.get("reason"))
                 return
             elif name == "padd":
@@ -1310,6 +1465,8 @@ class Handler(BaseHTTPRequestHandler):
 
         accepted = result.get("accepted", True)
         reason = result.get("reason")
+        if not accepted and name not in ("sound", "volume"):
+            self.director.on_event("refusal")
         extra = {key: result[key] for key in ("volume", "muted", "saved", "message")
                  if key in result}
         session.send({
@@ -1323,6 +1480,16 @@ class Handler(BaseHTTPRequestHandler):
 class Server(ThreadingHTTPServer):
     daemon_threads = True
     allow_reuse_address = True
+
+    def handle_error(self, request, client_address) -> None:
+        # A phone that closes the page or loses wifi resets the HTTP socket while
+        # socketserver is still reading the request line. That is not a bridge
+        # failure and should not print a traceback into the robot's journal.
+        exc = sys.exc_info()[1]
+        if isinstance(exc, (ConnectionResetError, BrokenPipeError)):
+            LOG.debug("客户端断开：%s", client_address)
+            return
+        super().handle_error(request, client_address)
 
 
 def make_server(cfg: argparse.Namespace) -> Server:
@@ -1339,6 +1506,22 @@ def make_server(cfg: argparse.Namespace) -> Server:
         manager.broadcast(snapshot)
 
     bridge.add_listener(broadcast)
+    settings = AudioSettings(getattr(cfg, "audio_config", None))
+    gesture = HeadGesture(
+        bridge.head,
+        allowed=lambda: (bridge.online and not bridge.read_only
+                         and bridge.dynamic_sound and manager.driver is not None),
+    )
+    director = AudioDirector(
+        play=bridge.sound,
+        enabled=lambda: bridge.dynamic_sound,
+        driver_active=lambda: manager.driver is not None,
+        settings=settings.snapshot,
+        gesture=gesture.run,
+        cancel_gesture=gesture.cancel,
+    )
+    bridge.add_listener(director.on_state)
+    director.start()
 
     handler = type("BoundHandler", (Handler,), {
         "static_dir": Path(cfg.static).resolve(),
@@ -1346,12 +1529,16 @@ def make_server(cfg: argparse.Namespace) -> Server:
         "manager": manager,
         "pairing": pairing,
         "watchdog": watchdog,
+        "director": director,
+        "audio_settings": settings,
     })
     httpd = Server((cfg.host, cfg.port), handler)
     httpd.bridge = bridge          # type: ignore[attr-defined]
     httpd.manager = manager        # type: ignore[attr-defined]
     httpd.watchdog = watchdog      # type: ignore[attr-defined]
     httpd.pairing = pairing        # type: ignore[attr-defined]
+    httpd.director = director      # type: ignore[attr-defined]
+    httpd.audio_settings = settings  # type: ignore[attr-defined]
     return httpd
 
 
@@ -1375,6 +1562,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--static", default=str(Path(__file__).with_name("static")))
     ap.add_argument("--robot-socket", default="/run/robotd.sock")
     ap.add_argument("--token-file", default=DEFAULT_TOKEN_FILE)
+    ap.add_argument("--audio-config", default="/etc/duckphone/audio.json")
     # 默认不校验：手机页面上已经没有输入配对码的地方了，默认要求配对码会让
     # 每个新设备都卡在"未配对"。要恢复校验时用 --auth。
     ap.add_argument("--auth", action="store_true", help="启用 6 位配对码（默认关闭）")

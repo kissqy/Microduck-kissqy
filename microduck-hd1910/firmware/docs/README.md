@@ -27,6 +27,7 @@ docs give the reasoning and point at it.
 | [`duckctl.md`](robot/duckctl.md) | Every `duckctl` command — the robot from a laptop, over Bluetooth. |
 | [`../ducknet/README.md`](../ducknet/README.md) | The desktop app: the same radio, but for wifi itself — scan, join, and pin a fixed address. |
 | [`install-dev.md`](robot/install-dev.md) | Setting up a board for development, from nothing. |
+| [`duckphone-deployment.zh-CN.md`](robot/duckphone-deployment.zh-CN.md) | Deploying `duckphone/` to a board, and the on-hardware acceptance checks. |
 | [`install-by-hand.md`](robot/install-by-hand.md) | The same install as separate commands, for testing one step at a time. |
 | [`armbian-boot-config.md`](robot/armbian-boot-config.md) | Repair the known Armbian boot-config writer without an OS upgrade; check, backup, and rollback. |
 
@@ -52,6 +53,7 @@ implementation details. The current R17 console mapping is documented in the con
 | [`ble-provisioning-app.md`](design/ble-provisioning-app.md) | `ducknet/` — the Linux desktop client for that path: the contract it uses, the pinned address it can set, and the two things it keeps on the laptop instead. |
 | [`mobile-app.md`](design/mobile-app.md) | The phone app — what it is built from, and what the robot still owes it. The code is in [`microduck-app`](https://github.com/pollen-robotics/microduck-app). |
 | [`lan-phone-remote.md`](design/lan-phone-remote.md) | `duckphone/` — a browser on the robot's own wifi as a third way to drive: the session and role model, the policy bar, and the four watchdogs. |
+| [`duckphone-ui.zh-CN.md`](design/duckphone-ui.zh-CN.md) | The phone page's layout, drawers, head/sound controls and dynamic-sound card — with the interactive prototype's routes. |
 | [`remote-webrtc.md`](design/remote-webrtc.md) | WebRTC sessions, signalling, and the control channel — how a peer drives and observes the robot. |
 | [`webrtc-console.md`](design/webrtc-console.md) | The WebRTC client: serving it from the robot, finding the robot, and what the page should be. |
 | [`remote-access-design.md`](design/remote-access-design.md) | Reaching a duck from outside the LAN: the Hugging Face account, the device flow, and the bridge to a rendezvous service. |

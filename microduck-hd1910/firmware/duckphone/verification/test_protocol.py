@@ -67,6 +67,7 @@ class BridgeHarness:
         return WSClient("127.0.0.1", self.port)
 
     def close(self) -> None:
+        self.httpd.director.stop()
         self.httpd.watchdog.stop()
         self.httpd.shutdown()
         self.httpd.server_close()
@@ -605,6 +606,20 @@ class HeadTest(BridgeTestCase):
 
 
 class SoundTest(BridgeTestCase):
+    def setUp(self):
+        super().setUp()
+        self.driver = super().connect("Mate 40 Pro")
+        # 接管会自动开启动态声音并 greet 一次；先等它落地再关掉并清空记录，
+        # 后面的断言才只看到本用例手动点的声音。
+        deadline = time.monotonic() + 2.0
+        while time.monotonic() < deadline and not self.h.fake.calls("robot.sound"):
+            time.sleep(0.02)
+        self.h.httpd.bridge.dynamic_sound = False
+        self.h.fake.reset()
+
+    def connect(self, name: str = "Mate 40 Pro") -> WSClient:
+        return self.driver
+
     def test_sound_tag_is_forwarded(self):
         client = self.connect()
         client.send({"t": "cmd", "id": 31, "name": "sound", "tag": "chirp"})
@@ -645,6 +660,192 @@ class SoundTest(BridgeTestCase):
         ack = watcher.wait_for("ack", id=36)
         self.assertFalse(ack["ok"])
         self.assertEqual(ack["reason"], "readonly")
+
+
+class DynamicSoundTest(BridgeTestCase):
+    """动态声音是桥接层的一份状态：手机走 WebSocket，调试台走 HTTP。"""
+
+    def get_json(self, path: str):
+        with urllib.request.urlopen(self.h.url + path, timeout=5) as resp:
+            return resp.status, json.loads(resp.read())
+
+    def post_json(self, path: str, payload: dict):
+        req = urllib.request.Request(
+            self.h.url + path, data=json.dumps(payload).encode(),
+            method="POST", headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            return resp.status, json.loads(resp.read())
+
+    def test_http_starts_off_and_toggles(self):
+        status, body = self.get_json("/api/dynamic-sound")
+        self.assertEqual(status, 200)
+        self.assertFalse(body["enabled"])
+        self.assertFalse(self.h.httpd.bridge.snapshot()["dyn"])
+
+        _, body = self.post_json("/api/dynamic-sound", {"enabled": True})
+        self.assertTrue(body["enabled"])
+        self.assertTrue(self.h.httpd.bridge.snapshot()["dyn"])
+        self.assertTrue(self.get_json("/api/status")[1]["dynamicSound"])
+
+        _, body = self.post_json("/api/dynamic-sound", {"toggle": True})
+        self.assertFalse(body["enabled"])
+        self.assertFalse(self.h.httpd.bridge.snapshot()["dyn"])
+
+    def test_bad_payload_is_refused(self):
+        with self.assertRaises(urllib.error.HTTPError) as ctx:
+            self.post_json("/api/dynamic-sound", {"enabled": "yes"})
+        self.assertEqual(ctx.exception.code, 400)
+        self.assertFalse(self.h.httpd.bridge.dynamic_sound)
+
+    def test_cors_preflight_allows_the_console(self):
+        # 调试台在 8000，手机桥在 8001：没有这两个头，控制台的开关会被浏览器拦掉。
+        req = urllib.request.Request(self.h.url + "/api/dynamic-sound", method="OPTIONS")
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            self.assertEqual(resp.status, 204)
+            self.assertEqual(resp.headers["Access-Control-Allow-Origin"], "*")
+            self.assertIn("POST", resp.headers["Access-Control-Allow-Methods"])
+
+    def test_takeover_turns_it_on_and_the_page_can_turn_it_off(self):
+        client = self.connect()
+        self.assertTrue(client.wait_for("state", dyn=True)["dyn"])
+        client.send({"t": "cmd", "id": 41, "name": "dynamicSound", "on": False})
+        ack = client.wait_for("ack", id=41)
+        self.assertTrue(ack["ok"], ack)
+        self.assertFalse(ack["enabled"])
+        self.assertFalse(client.wait_for("state", dyn=False)["dyn"])
+
+        client.send({"t": "cmd", "id": 42, "name": "dynamicSound", "on": True})
+        self.assertTrue(client.wait_for("ack", id=42)["enabled"])
+        self.assertTrue(client.wait_for("state", dyn=True)["dyn"])
+
+    def test_bad_on_value_never_changes_the_switch(self):
+        client = self.connect()
+        client.send({"t": "cmd", "id": 43, "name": "dynamicSound", "on": "yes"})
+        ack = client.wait_for("ack", id=43)
+        self.assertFalse(ack["ok"])
+        self.assertTrue(self.h.httpd.bridge.dynamic_sound)
+
+    def test_readonly_session_cannot_toggle(self):
+        self.connect("Mate 40 Pro")
+        watcher = self.h.client()
+        self.clients.append(watcher)
+        watcher.send({"t": "hello", "name": "iPad"})
+        self.assertEqual(watcher.wait_for("hello")["role"], "readonly")
+        watcher.send({"t": "cmd", "id": 44, "name": "dynamicSound", "on": False})
+        ack = watcher.wait_for("ack", id=44)
+        self.assertFalse(ack["ok"])
+        self.assertEqual(ack["reason"], "readonly")
+        self.assertTrue(self.h.httpd.bridge.dynamic_sound)
+
+
+class IdleGestureTest(unittest.TestCase):
+    """The idle sound must also move the head; the bridge sends robot.head frames."""
+
+    def setUp(self):
+        self.h = BridgeHarness()
+        self.clients: list[WSClient] = []
+
+    def tearDown(self):
+        for c in self.clients:
+            c.close()
+        self.h.close()
+
+    def test_idle_sends_a_look_up_gesture(self):
+        client = self.h.client()
+        self.clients.append(client)
+        client.send({"t": "hello", "name": "Mate 40 Pro"})
+        self.assertEqual(client.wait_for("hello")["role"], "driver")
+        self.h.httpd.audio_settings.update(
+            {"idle": {"after_s": 5.0, "repeat_s": 30.0, "gesture": True}})
+        self.h.fake.reset()
+
+        def stream() -> None:
+            end = time.monotonic() + 7.0
+            while time.monotonic() < end:
+                self.h.fake.push_state(
+                    policy="walk",
+                    safety={"fallen": False, "limp": False, "gravity": [0.0, 0.0, -1.0]},
+                )
+                time.sleep(0.05)
+
+        pump = threading.Thread(target=stream, daemon=True)
+        pump.start()
+
+        deadline = time.monotonic() + 9.0
+        gesture = []
+        while time.monotonic() < deadline and not gesture:
+            gesture = [m for m in self.h.fake.calls("robot.head")
+                       if m["params"].get("head_pitch", 0.0) < -0.1]
+            time.sleep(0.05)
+        pump.join(timeout=1.0)
+        self.assertTrue(gesture, "空闲没有下发抬头动作")
+        self.assertAlmostEqual(gesture[0]["params"]["head_pitch"], -0.30, places=3)
+
+
+class AudioConfigTest(BridgeTestCase):
+    """动态声音设置：手机走 WebSocket，调试台走 HTTP，共用同一份配置。"""
+
+    def get_json(self, path: str):
+        with urllib.request.urlopen(self.h.url + path, timeout=5) as resp:
+            return resp.status, json.loads(resp.read())
+
+    def post_json(self, path: str, payload: dict):
+        req = urllib.request.Request(
+            self.h.url + path, data=json.dumps(payload).encode(),
+            method="POST", headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            return resp.status, json.loads(resp.read())
+
+    def test_http_defaults_patch_and_reset(self):
+        status, body = self.get_json("/api/audio-config")
+        self.assertEqual(status, 200)
+        self.assertEqual(body["config"]["idle"]["after_s"], 30)
+
+        _, body = self.post_json("/api/audio-config", {"patch": {"idle": {"after_s": 45}}})
+        self.assertEqual(body["config"]["idle"]["after_s"], 45)
+        self.assertEqual(self.get_json("/api/audio-config")[1]["config"]["idle"]["after_s"], 45)
+
+        _, body = self.post_json("/api/audio-config", {"reset": True})
+        self.assertEqual(body["config"]["idle"]["after_s"], 30)
+
+    def test_bad_config_is_refused(self):
+        with self.assertRaises(urllib.error.HTTPError) as ctx:
+            self.post_json("/api/audio-config", {"patch": "nope"})
+        self.assertEqual(ctx.exception.code, 400)
+
+    def test_hello_carries_the_config(self):
+        client = self.h.client()
+        self.clients.append(client)
+        client.send({"t": "hello", "name": "Mate 40 Pro"})
+        hello = client.wait_for("hello")
+        self.assertEqual(hello["audio"]["idle"]["after_s"], 30)
+
+    def test_ws_read_write_and_broadcast(self):
+        driver = self.connect()
+        driver.send({"t": "cmd", "id": 51, "name": "audioConfig"})
+        self.assertEqual(driver.wait_for("audioConfig")["config"]["idle"]["after_s"], 30)
+
+        watcher = self.h.client()
+        self.clients.append(watcher)
+        watcher.send({"t": "hello", "name": "iPad"})
+        self.assertEqual(watcher.wait_for("hello")["role"], "readonly")
+
+        driver.send({"t": "cmd", "id": 52, "name": "setAudioConfig",
+                     "patch": {"idle": {"after_s": 45}, "alerts": {"bus": False}}})
+        ack = driver.wait_for("ack", id=52)
+        self.assertTrue(ack["ok"], ack)
+        self.assertEqual(ack["config"]["idle"]["after_s"], 45)
+        pushed = watcher.wait_for("audioConfig")
+        self.assertEqual(pushed["config"]["idle"]["after_s"], 45)
+        self.assertFalse(pushed["config"]["alerts"]["bus"])
+
+        watcher.send({"t": "cmd", "id": 53, "name": "setAudioConfig",
+                      "patch": {"idle": {"after_s": 60}}})
+        refused = watcher.wait_for("ack", id=53)
+        self.assertFalse(refused["ok"])
+        self.assertEqual(refused["reason"], "readonly")
+        watcher.send({"t": "cmd", "id": 54, "name": "audioConfig"})
+        self.assertEqual(watcher.wait_for("audioConfig")["config"]["idle"]["after_s"], 45)
 
 
 class VolumeMathTest(unittest.TestCase):

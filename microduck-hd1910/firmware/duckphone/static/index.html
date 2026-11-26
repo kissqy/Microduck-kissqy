@@ -11,7 +11,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icon-192.png">
-<link rel="stylesheet" href="/style.css?v=7">
+<link rel="stylesheet" href="/style.css?v=13">
 <title>Duck 遥控</title>
 </head>
 <body>
@@ -349,11 +349,87 @@
       <button id="btnMute" type="button">静音</button>
     </div>
 
+    <div class="dyn-sound">
+      <div class="dyn-head">
+        <div class="grow">
+          <div class="t">动态声音</div>
+          <div class="d" id="dynState">已关闭 · 只响应手动点播</div>
+        </div>
+        <button class="switch" id="btnDynSound" type="button" role="switch"
+                aria-checked="false" aria-label="动态声音"><span></span></button>
+      </div>
+      <div class="dyn-note" id="dynNote">接管后默认开启；首次空闲 30 s、之后每 5 分钟。</div>
+      <button class="dyn-link" id="btnDynSettings" type="button">设置</button>
+    </div>
+
     <div class="row" style="border-top:0">
       <div class="grow">
         <div class="d">音量写声卡；音色由这台机器人在安装时生成，运行期不能切换。</div>
       </div>
       <button class="mini" id="btnSoundClose" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 动态声音设置 -->
+<div id="settings" class="overlay hidden">
+  <div class="drawer">
+    <div class="grab"></div>
+    <h2>设置 · 动态声音</h2>
+    <div class="hint" id="setHint">保存后立即生效；写入 /etc/duckphone/audio.json。总开关仍在声音抽屉。</div>
+
+    <div class="set-sec">空闲</div>
+    <div class="row">
+      <div class="grow"><div class="t">第一次空闲提示</div><div class="d">接管后多久没操作先叫一声。</div></div>
+      <div class="num"><input id="setIdleFirst" type="number" min="5" max="3600" step="5" value="30"><span>秒</span></div>
+    </div>
+    <div class="row">
+      <div class="grow"><div class="t">空闲重复间隔</div><div class="d">之后每隔多久再叫一次。</div></div>
+      <div class="num"><input id="setIdleRepeat" type="number" min="5" max="3600" step="5" value="300"><span>秒</span></div>
+    </div>
+    <div class="row">
+      <div class="grow"><div class="t">每小时上限</div><div class="d">空闲声音每小时最多几次。</div></div>
+      <div class="num"><input id="setIdleMax" type="number" min="1" max="60" step="1" value="12"><span>次</span></div>
+    </div>
+    <div class="row">
+      <div class="grow"><div class="t">空闲头部动作</div><div class="d">第一次抬头，之后左右看。</div></div>
+      <button class="switch" data-set-toggle="gesture" type="button" role="switch"
+              aria-checked="true" aria-label="空闲头部动作"><span></span></button>
+    </div>
+
+    <div class="set-sec">告警节奏</div>
+    <div class="set-grid">
+      <label class="set-num"><span>倒地重复</span><input id="setFallRepeat" type="number" min="2" max="30" step="1" value="5"><i>秒</i></label>
+      <label class="set-num"><span>倒地次数</span><input id="setFallMax" type="number" min="1" max="20" step="1" value="6"><i>次</i></label>
+      <label class="set-num"><span>倒地长间隔</span><input id="setFallTail" type="number" min="10" max="600" step="5" value="60"><i>秒</i></label>
+      <label class="set-num"><span>倾斜阈值</span><input id="setTiltDeg" type="number" min="10" max="60" step="1" value="30"><i>°</i></label>
+      <label class="set-num"><span>倾斜重复</span><input id="setTiltRepeat" type="number" min="5" max="120" step="1" value="10"><i>秒</i></label>
+    </div>
+
+    <div class="set-sec">动作反馈</div>
+    <div class="set-grid">
+      <div class="set-toggle"><span>接管 / 交还</span><button class="switch" data-set-toggle="takeover" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>技能开始 / 结束</span><button class="switch" data-set-toggle="skill" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>启用 / 关闭策略</span><button class="switch" data-set-toggle="enable" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>命令被拒绝</span><button class="switch" data-set-toggle="refusal" type="button" role="switch" aria-checked="true"><span></span></button></div>
+    </div>
+
+    <div class="set-sec">告警类别</div>
+    <div class="set-grid">
+      <div class="set-toggle"><span>倒地</span><button class="switch" data-set-toggle="fall" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>倾斜</span><button class="switch" data-set-toggle="tilt" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>电量</span><button class="switch" data-set-toggle="battery" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>电机温度</span><button class="switch" data-set-toggle="motor" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>主控温度</span><button class="switch" data-set-toggle="cpu" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>掉频</span><button class="switch" data-set-toggle="loop" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>总线</span><button class="switch" data-set-toggle="bus" type="button" role="switch" aria-checked="true"><span></span></button></div>
+    </div>
+
+    <div class="row" style="border-top:0">
+      <div class="grow"><div class="d" id="setReadonly">保存后立即生效；只读会话只能查看。</div></div>
+      <button class="mini" id="btnSettingsReset" type="button">恢复默认</button>
+      <button class="mini" id="btnSettingsClose" type="button">关闭</button>
+      <button class="mini" id="btnSettingsSave" type="button">保存</button>
     </div>
   </div>
 </div>
@@ -432,6 +508,6 @@
 
 <div id="toasts" aria-live="polite"></div>
 
-<script src="/app.js?v=7"></script>
+<script src="/app.js?v=13"></script>
 </body>
 </html>

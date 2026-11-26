@@ -28,9 +28,17 @@ class StubBridge:
         self.padd_control = True
         self.online = True
         self.calls: list[str] = []
+        self.heads: list[tuple[float, float, float, float]] = []
 
     def drive(self, vx, vyaw):
         self.drives.append((vx, vyaw))
+
+    def head(self, neck_pitch, head_pitch, head_yaw, head_roll):
+        self.heads.append((neck_pitch, head_pitch, head_yaw, head_roll))
+
+    def sound(self, tag, hold=None):
+        self.calls.append(f"sound:{tag}:{hold}")
+        return {"accepted": True}
 
     def stop(self):
         self.stops += 1
@@ -124,6 +132,9 @@ class WatchdogTest(unittest.TestCase):
         self.manager.remove(session)
         self.assertEqual(self.bridge.stops, 1)
         self.assertIsNone(self.manager.driver)
+        # The head is an absolute intent with no robotd deadman; losing the
+        # driver must put it back to neutral too.
+        self.assertEqual(self.bridge.heads[-1], (0.0, 0.0, 0.0, 0.0))
 
     def test_stale_joystick_is_zeroed(self):
         session = make_session(self.manager)
@@ -146,6 +157,33 @@ class WatchdogTest(unittest.TestCase):
             self.watchdog.mark_drive()
             time.sleep(0.05)
         self.assertEqual(self.bridge.stops, 0)
+
+    def test_stale_head_is_returned_to_neutral(self):
+        session = make_session(self.manager)
+        self.manager.claim(session)
+        self.watchdog.mark_head(True)
+        self.watchdog.start()
+        deadline = time.monotonic() + 1.5
+        while time.monotonic() < deadline and not self.bridge.heads:
+            time.sleep(0.02)
+        self.assertEqual(self.bridge.heads[-1], (0.0, 0.0, 0.0, 0.0))
+
+    def test_live_head_is_not_zeroed(self):
+        session = make_session(self.manager)
+        self.manager.claim(session)
+        self.watchdog.start()
+        for _ in range(12):          # ~600 ms of a held head pose
+            self.watchdog.mark_head(True)
+            time.sleep(0.05)
+        self.assertFalse(self.bridge.heads, "持续刷新的头部意图不该被回正")
+
+    def test_zero_head_does_not_arm_the_watchdog(self):
+        session = make_session(self.manager)
+        self.manager.claim(session)
+        self.watchdog.mark_head(False)
+        self.watchdog.start()
+        time.sleep(0.5)
+        self.assertFalse(self.bridge.heads)
 
     def test_silent_session_is_dropped(self):
         session = make_session(self.manager)

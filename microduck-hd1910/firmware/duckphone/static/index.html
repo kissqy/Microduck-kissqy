@@ -11,7 +11,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icon-192.png">
-<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/style.css?v=7">
 <title>Duck 遥控</title>
 </head>
 <body>
@@ -74,8 +74,18 @@
   </section>
 
   <main id="main">
-    <section id="stickZone" aria-label="驾驶摇杆区">
+    <section id="stickZone" data-mode="drive" aria-label="驾驶摇杆区">
+      <div id="stickMode" role="group" aria-label="摇杆模式">
+        <button type="button" data-stick="drive" class="on" aria-pressed="true">行走</button>
+        <button type="button" data-stick="head" aria-pressed="false">头部</button>
+      </div>
       <div class="guidance" id="stickGuide"><b>按住拖动</b> · 松手即停</div>
+      <div id="headAxes" aria-hidden="true">
+        <span class="ax-l">← 左转</span>
+        <span class="ax-r">右转 →</span>
+        <span class="ax-u">↑ 抬头</span>
+        <span class="ax-d">↓ 低头</span>
+      </div>
       <div id="stickBase" aria-hidden="true">
         <div class="cross"><i></i><i></i></div>
         <div id="stickKnob"></div>
@@ -87,6 +97,12 @@
           <span>实际</span><div class="bar app"><i id="barApp"></i></div>
         </div>
         <div id="roLimit" class="limit hidden">已限幅</div>
+      </div>
+      <div id="headReadout">
+        <div class="hr-req">请求 <b id="roHeadReq">+0° / +0°</b></div>
+        <div>实际 <b id="roHeadApp">+0° / +0°</b></div>
+        <div class="hint-mini">策略平滑后 · 松手即回正</div>
+        <button class="reset" id="btnHeadReset" type="button">头部回正</button>
       </div>
     </section>
 
@@ -137,6 +153,9 @@
       <div class="bubble" id="tiltBubble"><i id="tiltDot"></i></div>
       <span>倾角 <b id="tiltVal" style="color:var(--text)">8.5°</b></span>
     </div>
+    <button id="btnSound" type="button" aria-label="打开声音面板" title="声音">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+    </button>
     <button id="btnMaint" type="button" aria-label="打开维护面板">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
       维护
@@ -278,6 +297,67 @@
   </div>
 </div>
 
+<!-- 声音面板 -->
+<div id="sound" class="overlay hidden">
+  <div class="drawer">
+    <div class="grab"></div>
+    <h2>声音</h2>
+    <div class="hint">点一下叫一声；长按「长叫」持续、松开收尾。新声音会打断上一个。</div>
+
+    <div class="snd-grid" id="soundGrid">
+      <button class="snd" type="button" data-tag="chirp" data-label="短叫">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>短叫</b><small>最常见的回应</small></span>
+        <span class="snd-tag">chirp</span>
+      </button>
+      <button class="snd" type="button" data-tag="greet" data-label="打招呼">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>打招呼</b><small>开机同款</small></span>
+        <span class="snd-tag">greet</span>
+      </button>
+      <button class="snd" type="button" data-tag="inquire" data-label="疑问">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>疑问</b><small>尾音上扬</small></span>
+        <span class="snd-tag">inquire</span>
+      </button>
+      <button class="snd" type="button" data-tag="coo" data-label="咕咕">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>咕咕</b><small>慢、气声</small></span>
+        <span class="snd-tag">coo</span>
+      </button>
+      <button class="snd" type="button" data-tag="alarm" data-label="警戒">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>警戒</b><small>短促警告</small></span>
+        <span class="snd-tag">alarm</span>
+      </button>
+      <button class="snd" type="button" data-tag="peck" data-label="啄食">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>啄食</b><small>低频 + 咔哒</small></span>
+        <span class="snd-tag">peck</span>
+      </button>
+      <button class="snd wide" type="button" data-tag="wheee" data-label="长叫">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>长叫（按住）</b><small>按住持续，松开播结尾</small></span>
+        <span class="snd-tag">wheee</span>
+      </button>
+    </div>
+
+    <div class="vol">
+      <span class="label">音量</span>
+      <input id="volRange" type="range" min="0" max="100" step="1" value="60" aria-label="音量">
+      <b class="pct" id="volPct">—</b>
+      <button id="btnMute" type="button">静音</button>
+    </div>
+
+    <div class="row" style="border-top:0">
+      <div class="grow">
+        <div class="d">音量写声卡；音色由这台机器人在安装时生成，运行期不能切换。</div>
+      </div>
+      <button class="mini" id="btnSoundClose" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+
 <!-- 维护 -->
 <div id="maint" class="overlay hidden">
   <div class="drawer">
@@ -352,6 +432,6 @@
 
 <div id="toasts" aria-live="polite"></div>
 
-<script src="/app.js"></script>
+<script src="/app.js?v=7"></script>
 </body>
 </html>

@@ -3,8 +3,8 @@
 # 📱 duckphone — driving the duck from a phone on the LAN
 
 Same Wi-Fi, then `http://<board-ip>:8001/` in the browser and you are driving. No app to install, no
-Bluetooth pairing, no cable. One portrait page: the policy bar at the top, the stick in the middle,
-four action buttons 2×2 below.
+Bluetooth pairing, no cable. One portrait page: the policy bar at the top, a drive/head switch above
+the stick, four action buttons 2×2 below.
 
 No external dependencies: the board needs nothing but `python3` and its standard library, and the
 page needs no CDN, no `pip` and no internet.
@@ -30,12 +30,29 @@ opens no device, asks for no root, and makes no decision `robotd` would not make
 | | |
 | --- | --- |
 | Drive | virtual stick, `vx ∈ [-0.25, 0.35]`, `vyaw ∈ [-0.8, 0.8]` — narrower than the training envelope |
+| Head | the same stick in head mode: left/right yaw, up/down pitch; releasing or losing the link returns to neutral |
+| Sound | speaker button in the footer: seven bank tags; hold “wheee” for the long call |
+| Volume / mute | volume is written to the codec with `amixer`, and persisted with `alsactl` when passwordless sudo is available |
 | Policy bar | lists the policies installed on this robot; one press runs one; `walk` is the resting state, everything else falls back to it |
 | Take over / hand back | one driver at a time, a second device is read-only; `policies` is served to read-only too |
 | Relax | long-press for 1.5 s, one step, no confirmation dialog |
 | Status page | link, policy, control loop, power, both temperatures, input source |
 | Alert detail | fallen/tilted, temperature, battery, control-loop drops, `padd` conflict — each with what to do |
 | Maintenance | reboot motors, input source, versions, troubleshooting commands |
+
+## Sound and head
+
+- Head mode is live only while `policy == walk`; the stick area dims in `held`, `limp` or fallen.
+- Head intents are clamped to ±0.5 rad, the same amplitude as `padd`'s right stick. On this robot a
+  negative `head_pitch` looks up, so the page maps “up” to a negative value and inverts the readout.
+- `robotd` has no deadman for head. The bridge adds a 250 ms watchdog: releasing the stick, hiding the
+  page, losing the link, `/stop` and session end all return the head to neutral.
+- Sounds go through `robot.sound`; the PCM is single-client, so a new sound interrupts the previous.
+- `wheee`'s `hold` is a level. The page re-sends it at about 10 Hz while held; a single press would
+  decay and land after roughly 300 ms.
+- A read-only session can neither play nor change volume; `robotd --commissioning` refuses sounds.
+- Volume is 0–100 over `PCM Playback Volume` / `Line Playback Switch`; a failed `alsactl store` is
+  reported but does not undo the volume that is already in effect.
 
 ## Install
 
@@ -109,6 +126,7 @@ socket, covering frame codec, watchdogs, the role gate, the policy bar and the e
 - Portrait only. `manifest.webmanifest` declares `orientation: portrait`; there is no landscape layout.
 - The service worker's cache is versioned by hand — `VERSION` in `static/sw.js`. Bump it with any
   change to `app.js`, or a phone that already installed the page keeps the old bundle forever and it
-  looks like a server bug.
+  looks like a server bug. `index.html` also references `app.js?v=7` / `style.css?v=7` as a second
+  cache-buster; bump those together with `VERSION`.
 - Not part of the release artifact. `install.sh` puts it in `/opt/duckphone`; nothing else on the
   board refers to it.

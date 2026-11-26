@@ -264,6 +264,20 @@ class RobotRPC:
     def move(self, vx: float, vy: float, vyaw: float) -> None:
         self.notify("robot.move", {"vx": vx, "vy": vy, "vyaw": vyaw})
 
+    def head(self, neck_pitch: float, head_pitch: float, head_yaw: float, head_roll: float) -> None:
+        """Continuous head intent. Like `move`, a notification with no reply."""
+        self.notify("robot.head", {
+            "neck_pitch": neck_pitch, "head_pitch": head_pitch,
+            "head_yaw": head_yaw, "head_roll": head_roll,
+        })
+
+    def sound(self, tag: str, hold: bool | None = None) -> dict:
+        """Play one voice-bank tag. `hold` is only meaningful for `wheee`."""
+        params: dict[str, Any] = {"tag": tag}
+        if hold is not None:
+            params["hold"] = bool(hold)
+        return self.request("robot.sound", params, timeout=3.0)
+
     def stop(self) -> dict:
         return self.request("robot.stop", None, timeout=2.0)
 

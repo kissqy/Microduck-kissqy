@@ -20,6 +20,10 @@
   const OFFLINE_AFTER = 5;
   const RELAX_HOLD_MS = 1500;
   const STICK_R = 80;
+  // 与手柄右摇杆默认一致；robotd 会再按策略/关节限位处理。
+  const HEAD_MAX = 0.5;
+  const HEAD_REFRESH_MS = 60;
+  const SOUND_TAGS = ['chirp', 'greet', 'inquire', 'coo', 'alarm', 'peck', 'wheee'];
   const TOKEN_KEY = 'duck.token';
   const SPEED_KEY = 'duck.speed';
   const NAME_KEY = 'duck.name';
@@ -40,6 +44,10 @@
     req: [0, 0, 0],        // 本机摇杆的意图，界面以它为准
     robotReq: [0, 0, 0],   // robotd 收到的请求，只用于"请求 vs 实际"的证据
     applied: [0, 0, 0],
+    stickMode: 'drive',    // drive | head
+    headReq: { yaw: 0, pitch: 0 },
+    head: [0, 0, 0, 0],    // robotd 回传的头部意图 [neck, pitch, yaw, roll]
+    sound: { volume: null, mute: false, prev: 60, wheee: false },
     limited: [],
     hz: 0,
     missed: 0,
@@ -98,6 +106,10 @@
     barReq: $('#barReq'),
     barApp: $('#barApp'),
     roLimit: $('#roLimit'),
+    stickMode: $('#stickMode'),
+    roHeadReq: $('#roHeadReq'),
+    roHeadApp: $('#roHeadApp'),
+    btnHeadReset: $('#btnHeadReset'),
 
     btnStand: $('#btnStand'),
     btnEnable: $('#btnEnable'),
@@ -109,6 +121,7 @@
     tiltBubble: $('#tiltBubble'),
     tiltDot: $('#tiltDot'),
     tiltVal: $('#tiltVal'),
+    btnSound: $('#btnSound'),
     btnMaint: $('#btnMaint'),
 
     toasts: $('#toasts'),
@@ -161,6 +174,13 @@
     alertBack: $('#alertBack'),
     msgList: $('#msgList'),
     msgCount: $('#msgCount'),
+
+    sound: $('#sound'),
+    soundGrid: $('#soundGrid'),
+    volRange: $('#volRange'),
+    volPct: $('#volPct'),
+    btnMute: $('#btnMute'),
+    btnSoundClose: $('#btnSoundClose'),
 
     maint: $('#maint'),
     btnReboot: $('#btnReboot'),
@@ -357,6 +377,7 @@
     S.fallen = !!msg.fall;
     S.robotReq = Array.isArray(msg.mv) ? msg.mv : [0, 0, 0];
     S.applied = Array.isArray(msg.ap) ? msg.ap : [0, 0, 0];
+    S.head = Array.isArray(msg.head) ? msg.head.slice(0, 4) : [0, 0, 0, 0];
     S.limited = Array.isArray(msg.lim) ? msg.lim : [];
     S.hz = Number(msg.hz) || 0;
     S.missed = Number(msg.missed) || 0;
@@ -392,6 +413,12 @@
       setLink('online');
     }
 
+    // 头部意图是绝对量，robotd 不会因为策略退出而自动归零；一旦离开行走
+    // 就主动回正，避免"交还策略后头还歪着"。
+    if ((S.headReq.yaw || S.headReq.pitch) && (S.policy !== 'walk' || S.limp || S.fallen)) {
+      stopStick();
+    }
+
     if (!S.primed) S.primed = true;
     else {
       if (wasPolicy !== S.policy) {
@@ -409,7 +436,10 @@
     const entry = pending.get(msg.id);
     if (entry) {
       pending.delete(msg.id);
-      entry.resolve({ ok: !!msg.ok, reason: msg.reason || '', policies: msg.policies });
+      entry.resolve({
+        ok: !!msg.ok, reason: msg.reason || '', policies: msg.policies,
+        volume: msg.volume, muted: msg.muted, saved: msg.saved, message: msg.message,
+      });
     }
     if (typeof msg.padd === 'boolean') S.padd = msg.padd;
     render();
@@ -424,6 +454,8 @@
       pushEvent('takeover', 'ok', '已接管驾驶', clientName);
     } else {
       S.driverName = msg.driver || '';
+      stopStick();
+      stopWheee();
       showReadonly(msg.driver);
       toast(msg.reason || '已被另一台设备接管', 'warn', 3200);
       pushEvent('takeover', 'warn', '已被另一台设备接管', msg.driver || '');
@@ -446,6 +478,8 @@
       S.req = [0, 0, 0];
       S.robotReq = [0, 0, 0];
       S.applied = [0, 0, 0];
+      S.headReq = { yaw: 0, pitch: 0 };
+      stopWheee();
     }
     render();
   }
@@ -541,6 +575,11 @@
   // ── 渲染 ───────────────────────────────────────────────────────────────
   function pct(v) { return v === null || v === undefined || Number.isNaN(v) ? '—' : `${Math.round(v)}%`; }
   function deg(v) { return v === null || v === undefined || Number.isNaN(v) ? '—' : `${Math.round(v)}°`; }
+  function radDeg(v) {
+    if (v === null || v === undefined || Number.isNaN(Number(v))) return '—';
+    const d = Math.round(Number(v) * 180 / Math.PI);
+    return `${d >= 0 ? '+' : '−'}${Math.abs(d)}°`;
+  }
 
   function render() {
     updateTopbar();
@@ -549,6 +588,7 @@
     updateBanner();
     updateActions();
     updateMaintenance();
+    updateStickModeUI();
     renderPolicyBar();
   }
 
@@ -593,6 +633,9 @@
     el.roYaw.textContent = (S.req[2] >= 0 ? '+' : '') + S.req[2].toFixed(2);
     el.barReq.style.width = `${clamp(Math.abs(S.req[0]) / 0.3 * 100, 0, 100)}%`;
     el.barApp.style.width = `${clamp(Math.abs(S.applied[0]) / 0.3 * 100, 0, 100)}%`;
+    // pitch 在关节/协议里负值是抬头；界面上反过来显示，向上才是正数。
+    el.roHeadReq.textContent = `${radDeg(S.headReq.yaw)} / ${radDeg(-S.headReq.pitch)}`;
+    el.roHeadApp.textContent = `${radDeg(S.head[2])} / ${radDeg(-S.head[1])}`;
     const limited = limitIsReal();
     el.roLimit.classList.toggle('hidden', !limited);
     el.roLimit.textContent = limited ? `已限幅 · ${S.limited.map(limitZh).join(' / ')}` : '';
@@ -681,6 +724,39 @@
     return canAct() && !S.limp && !S.fallen && S.policy === 'walk';
   }
 
+  let stickModeSig = '';
+  function updateStickModeUI() {
+    if (S.stickMode === stickModeSig) return;
+    stickModeSig = S.stickMode;
+    el.stickZone.dataset.mode = S.stickMode;
+    el.stickGuide.innerHTML = S.stickMode === 'head'
+      ? '<b>左右转头</b> · 上下抬头 · 松手回正'
+      : '<b>按住拖动</b> · 松手即停';
+    $$('#stickMode button').forEach((b) => {
+      const on = b.dataset.stick === S.stickMode;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+
+  function setStickMode(mode) {
+    if (mode !== 'drive' && mode !== 'head') return;
+    if (S.stickMode === mode) return;
+    const hadHead = S.headReq.yaw !== 0 || S.headReq.pitch !== 0;
+    S.stickMode = mode;
+    S.req = [0, 0, 0];
+    S.headReq = { yaw: 0, pitch: 0 };
+    restStick();
+    if (canAct()) {
+      sendDrive();               // 切模式时把上一个模式的速度归零
+      if (hadHead) sendHeadZero();
+    }
+    render();
+    if (mode === 'head' && !canDrive()) {
+      toast(S.policy === 'walk' ? '先接管行走策略' : '接管行走策略后才能控制头部', 'warn', 2600);
+    }
+  }
+
   function updateActions() {
     const drive = canDrive();
     el.stickZone.classList.toggle('disabled', !drive);
@@ -689,6 +765,7 @@
     el.btnStop.disabled = !canAct();
     el.btnRelax.disabled = !canAct() || S.limp;
     el.btnMaint.disabled = false;
+    el.btnSound.disabled = !canAct();
 
     const walking = S.policy !== 'held' && !S.limp;
     el.enableLabel.textContent = walking ? '交还' : '接管';
@@ -1087,9 +1164,12 @@
   }
 
   function hideSheets() {
+    stopWheee();
     el.alert.classList.add('hidden');
     el.status.classList.add('hidden');
     el.maint.classList.add('hidden');
+    el.sound.classList.add('hidden');
+    el.btnSound.classList.remove('active');
   }
 
   function dismissSheets() {
@@ -1131,6 +1211,136 @@
 
   function openStatus() { hideSheets(); render(); el.status.classList.remove('hidden'); pushSheet(); }
   function openMaint() { hideSheets(); stopStick(); render(); el.maint.classList.remove('hidden'); pushSheet(); }
+
+  // ── 声音 ───────────────────────────────────────────────────────────────
+  function applyVolume(value, muted) {
+    const level = clamp(Math.round(Number(value) || 0), 0, 100);
+    S.sound.volume = level;
+    S.sound.mute = !!muted || level === 0;
+    if (level > 0) S.sound.prev = level;
+    el.volRange.value = String(level);
+    el.volPct.textContent = `${level}%`;
+    const off = S.sound.mute || level === 0;
+    el.btnMute.classList.toggle('on', off);
+    el.btnMute.textContent = off ? '取消静音' : '静音';
+  }
+
+  async function refreshVolume() {
+    if (!canAct()) {
+      el.volPct.textContent = '—';
+      return;
+    }
+    const res = await cmd('volume');
+    if (res.ok && typeof res.volume === 'number') applyVolume(res.volume, res.muted);
+    else el.volPct.textContent = '—';
+  }
+
+  async function setVolume(level) {
+    const previous = S.sound.volume;
+    const target = clamp(Math.round(Number(level) || 0), 0, 100);
+    const res = await cmd('volume', { level: target });
+    if (!res.ok) {
+      if (previous !== null) applyVolume(previous, S.sound.mute);
+      toast(res.reason || '音量设置失败', 'err', 3600);
+      return;
+    }
+    applyVolume(res.volume, res.muted);
+    if (res.message) toast(res.message, 'warn', 3600);
+    else toast(`音量 ${S.sound.volume}%`);
+  }
+
+  function openSound() {
+    hideSheets();
+    stopStick();
+    render();
+    el.sound.classList.remove('hidden');
+    el.btnSound.classList.add('active');
+    pushSheet();
+    refreshVolume();
+  }
+
+  function flashSound(btn, ms) {
+    if (!btn) return;
+    btn.classList.add('playing');
+    clearTimeout(btn._t);
+    btn._t = setTimeout(() => btn.classList.remove('playing'), ms);
+  }
+
+  async function playSound(tag, label) {
+    if (!canAct()) { toast(blockedReason(), 'warn'); return; }
+    const btn = el.soundGrid.querySelector(`[data-tag="${tag}"]`);
+    flashSound(btn, 700);
+    const res = await cmd('sound', { tag });
+    if (!res.ok) { toast(res.reason || '播放被拒绝', 'err', 3600); return; }
+    pushEvent('sound', 'ok', `播放${label}`, `${tag} · 单次播放`);
+    toast(`播放 ${label} · ${tag}`);
+  }
+
+  // robotd 把 wheee 当成"电平"：只发一次 hold:true 会在约 300 ms 后自然衰减并落地，
+  // 所以按住期间必须像手柄一样持续重发，松开才发 hold:false。
+  let wheeeTimer = 0;
+  function startWheeeRepeat() {
+    clearInterval(wheeeTimer);
+    wheeeTimer = setInterval(() => {
+      if (!S.sound.wheee) return;
+      wsSend({ t: 'cmd', id: ++cmdSeq, name: 'sound', tag: 'wheee', hold: true });
+    }, 100);
+  }
+
+  function stopWheee() {
+    clearInterval(wheeeTimer);
+    wheeeTimer = 0;
+    if (!S.sound.wheee) return;
+    S.sound.wheee = false;
+    const b = el.soundGrid.querySelector('[data-tag="wheee"]');
+    if (b) b.classList.remove('playing');
+    if (canAct()) cmd('sound', { tag: 'wheee', hold: false });
+  }
+
+  el.btnSound.addEventListener('click', openSound);
+  el.btnSoundClose.addEventListener('click', dismissSheets);
+  el.sound.addEventListener('click', (e) => { if (e.target === el.sound) dismissSheets(); });
+
+  el.soundGrid.addEventListener('click', (e) => {
+    const b = e.target.closest('.snd');
+    if (!b || b.dataset.tag === 'wheee') return;
+    if (!SOUND_TAGS.includes(b.dataset.tag)) return;
+    playSound(b.dataset.tag, b.dataset.label);
+  });
+
+  const wheeeBtn = el.soundGrid.querySelector('[data-tag="wheee"]');
+  wheeeBtn.addEventListener('pointerdown', (e) => {
+    if (!canAct()) { toast(blockedReason(), 'warn'); return; }
+    e.preventDefault();
+    e.stopPropagation();
+    S.sound.wheee = true;
+    wheeeBtn.classList.add('playing');
+    cmd('sound', { tag: 'wheee', hold: true }).then((res) => {
+      if (!res.ok) {
+        stopWheee();
+        toast(res.reason || '长叫被拒绝', 'err', 3600);
+      }
+    });
+    startWheeeRepeat();
+    pushEvent('sound', 'ok', '长叫开始', 'wheee · 按住持续');
+    vibrate(10);
+  });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) =>
+    wheeeBtn.addEventListener(ev, stopWheee));
+  window.addEventListener('blur', stopWheee);
+
+  el.volRange.addEventListener('input', () => {
+    const level = clamp(Math.round(Number(el.volRange.value) || 0), 0, 100);
+    el.volPct.textContent = `${level}%`;
+    el.btnMute.classList.toggle('on', level === 0);
+    el.btnMute.textContent = level === 0 ? '取消静音' : '静音';
+  });
+  el.volRange.addEventListener('change', () => { setVolume(el.volRange.value); });
+  el.btnMute.addEventListener('click', () => {
+    const current = Number(el.volRange.value) || 0;
+    const target = current > 0 ? 0 : (S.sound.prev > 0 ? S.sound.prev : 60);
+    setVolume(target);
+  });
 
   // ── 摇杆 ───────────────────────────────────────────────────────────────
 
@@ -1190,7 +1400,24 @@
     if (len > STICK_R) { dx = (dx / len) * STICK_R; dy = (dy / len) * STICK_R; }
     const nx = dx / STICK_R;
     const ny = dy / STICK_R;
-    if (Math.hypot(nx, ny) < 0.12) {
+    const dead = Math.hypot(nx, ny) < 0.12;
+
+    if (S.stickMode === 'head') {
+      // 与 padd 一致：左右 → head_yaw，上下 → head_pitch。
+      // 真机约定是 head_pitch 负值抬头（推上去 ny<0 → 负值），之前符号反了。
+      S.headReq = dead
+        ? { yaw: 0, pitch: 0 }
+        : {
+          yaw: clamp(-nx * HEAD_MAX, -HEAD_MAX, HEAD_MAX),
+          pitch: clamp(ny * HEAD_MAX, -HEAD_MAX, HEAD_MAX),
+        };
+      moveKnob(dx, dy);
+      sendHead();
+      render();
+      return;
+    }
+
+    if (dead) {
       S.req = [0, 0, 0];
     } else {
       const lim = SPEEDS[S.speed] || SPEEDS['0.2'];
@@ -1208,12 +1435,34 @@
     wsSend({ t: 'drive', vx: S.req[0], vyaw: S.req[2] });
   }
 
+  let lastHeadAt = 0;
+  function sendHead(force = false) {
+    if (!canAct()) return;
+    const now = performance.now();
+    if (!force && now - lastHeadAt < 1000 / 50) return;
+    lastHeadAt = now;
+    wsSend({
+      t: 'head', neck_pitch: 0, head_pitch: S.headReq.pitch,
+      head_yaw: S.headReq.yaw, head_roll: 0,
+    });
+  }
+
+  function sendHeadZero() {
+    lastHeadAt = performance.now();
+    wsSend({ t: 'head', neck_pitch: 0, head_pitch: 0, head_yaw: 0, head_roll: 0 });
+  }
+
   function stopStick() {
     stick.active = false;
     stick.id = null;
     S.req = [0, 0, 0];
+    const wasHead = S.headReq.yaw !== 0 || S.headReq.pitch !== 0;
+    S.headReq = { yaw: 0, pitch: 0 };
     restStick();
-    if (canAct()) sendDrive();
+    if (canAct()) {
+      sendDrive();
+      if (wasHead || S.stickMode === 'head') sendHeadZero();
+    }
     render();
   }
 
@@ -1241,12 +1490,28 @@
     el.stickZone.addEventListener(ev, () => { if (stick.active) stopStick(); }));
   window.addEventListener('blur', () => { if (stick.active) stopStick(); });
 
-  // 20 Hz 心跳：桥的看门狗是 250 ms，按住不动也要续命
+  el.stickMode.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-stick]');
+    if (b) setStickMode(b.dataset.stick);
+  });
+  el.btnHeadReset.addEventListener('click', () => {
+    S.headReq = { yaw: 0, pitch: 0 };
+    if (canAct()) sendHeadZero();
+    render();
+    toast('头部已回正');
+  });
+
+  // 20 Hz 心跳：桥的看门狗是 250 ms，按住不动也要续命。
+  // 头部意图也在这里重发——robotd 对 head 没有 deadman，桥靠新鲜度回正。
   setInterval(() => {
+    if (S.stickMode === 'head' && (stick.active || S.headReq.yaw !== 0 || S.headReq.pitch !== 0)) {
+      sendHead(true);
+      return;
+    }
     if (!stick.active) return;
     if (S.req[0] || S.req[2]) sendDrive();
     else wsSend({ t: 'drive', vx: 0, vyaw: 0 });
-  }, 60);
+  }, HEAD_REFRESH_MS);
 
   // 键盘演示（电脑上评审用）
   const keys = new Set();
@@ -1255,6 +1520,15 @@
     if (!canDrive()) return;
     e.preventDefault();
     keys.add(e.key);
+    if (S.stickMode === 'head') {
+      S.headReq = {
+        yaw: (keys.has('ArrowLeft') ? HEAD_MAX : 0) + (keys.has('ArrowRight') ? -HEAD_MAX : 0),
+        pitch: (keys.has('ArrowUp') ? -HEAD_MAX : 0) + (keys.has('ArrowDown') ? HEAD_MAX : 0),
+      };
+      sendHead(true);
+      render();
+      return;
+    }
     const lim = SPEEDS[S.speed] || SPEEDS['0.2'];
     const vx = (keys.has('ArrowUp') ? lim.vx : 0) + (keys.has('ArrowDown') ? -lim.vx * 0.6 : 0);
     const vyaw = (keys.has('ArrowLeft') ? lim.yaw : 0) + (keys.has('ArrowRight') ? -lim.yaw : 0);
@@ -1264,7 +1538,15 @@
   });
   window.addEventListener('keyup', (e) => {
     if (!keys.delete(e.key)) return;
-    if (!keys.size) { S.req = [0, 0, 0]; sendDrive(); render(); }
+    if (!keys.size) {
+      S.req = [0, 0, 0];
+      S.headReq = { yaw: 0, pitch: 0 };
+      if (canAct()) {
+        sendDrive();
+        if (S.stickMode === 'head') sendHeadZero();
+      }
+      render();
+    }
   });
 
   // ── 动作 ───────────────────────────────────────────────────────────────
@@ -1326,9 +1608,7 @@
 
   el.btnStop.addEventListener('click', async () => {
     if (!canAct()) { toast(blockedReason(), 'warn'); return; }
-    S.req = [0, 0, 0];
-    sendDrive();
-    render();
+    stopStick();
     vibrate(40);
     const res = await cmd('stop');
     if (!res.ok) { toast(res.reason || '停止失败', 'err'); return; }
@@ -1499,7 +1779,10 @@
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
       S.req = [0, 0, 0];
+      S.headReq = { yaw: 0, pitch: 0 };
       sendDrive();
+      if (canAct()) sendHeadZero();
+      stopWheee();
       try { navigator.sendBeacon('/stop', '{}'); } catch (_) {}
     } else {
       requestWakeLock();
@@ -1509,6 +1792,9 @@
 
   window.addEventListener('pagehide', () => {
     S.req = [0, 0, 0];
+    S.headReq = { yaw: 0, pitch: 0 };
+    if (canAct()) sendHeadZero();
+    stopWheee();
     try { navigator.sendBeacon('/stop', '{}'); } catch (_) {}
   });
 

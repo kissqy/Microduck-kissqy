@@ -557,3 +557,108 @@ class PolicyCommandTest(BridgeTestCase):
         self.assertFalse(ack["ok"])
         self.assertIn("ground pick", ack["reason"])
 
+
+class HeadTest(BridgeTestCase):
+    def test_head_is_forwarded_and_clamped(self):
+        client = self.connect()
+        self.h.fake.wait_for_client()
+        self.h.fake.reset()
+        client.send({"t": "head", "neck_pitch": 0, "head_pitch": 3.0,
+                     "head_yaw": -2.0, "head_roll": 0})
+        deadline = time.monotonic() + 2.0
+        while time.monotonic() < deadline and not self.h.fake.calls("robot.head"):
+            time.sleep(0.02)
+        params = self.h.fake.calls("robot.head")[-1]["params"]
+        self.assertAlmostEqual(params["head_pitch"], server.HEAD_MAX, places=6)
+        self.assertAlmostEqual(params["head_yaw"], -server.HEAD_MAX, places=6)
+        self.assertEqual(params["neck_pitch"], 0.0)
+        self.assertEqual(params["head_roll"], 0.0)
+
+    def test_head_is_dropped_for_readonly_session(self):
+        self.connect("Mate 40 Pro")
+        watcher = self.h.client()
+        self.clients.append(watcher)
+        watcher.send({"t": "hello", "name": "iPad"})
+        self.assertEqual(watcher.wait_for("hello")["role"], "readonly")
+        self.h.fake.wait_for_client()
+        self.h.fake.reset()
+        watcher.send({"t": "head", "head_yaw": 0.4, "head_pitch": 0.2})
+        time.sleep(0.3)
+        self.assertFalse(self.h.fake.calls("robot.head"))
+
+    def test_head_is_zeroed_when_the_driver_leaves(self):
+        client = self.connect()
+        self.h.fake.wait_for_client()
+        self.h.fake.reset()
+        client.send({"t": "head", "head_yaw": 0.4, "head_pitch": 0.2})
+        deadline = time.monotonic() + 2.0
+        while time.monotonic() < deadline and not self.h.fake.calls("robot.head"):
+            time.sleep(0.02)
+        self.h.fake.reset()
+        client.close()
+        deadline = time.monotonic() + 2.0
+        while time.monotonic() < deadline and not self.h.fake.calls("robot.head"):
+            time.sleep(0.02)
+        params = self.h.fake.calls("robot.head")[-1]["params"]
+        self.assertEqual(params, {"neck_pitch": 0.0, "head_pitch": 0.0,
+                                  "head_yaw": 0.0, "head_roll": 0.0})
+
+
+class SoundTest(BridgeTestCase):
+    def test_sound_tag_is_forwarded(self):
+        client = self.connect()
+        client.send({"t": "cmd", "id": 31, "name": "sound", "tag": "chirp"})
+        ack = client.wait_for("ack", id=31)
+        self.assertTrue(ack["ok"], ack)
+        self.assertEqual(self.h.fake.calls("robot.sound")[-1]["params"], {"tag": "chirp"})
+
+    def test_wheee_hold_is_forwarded_both_ways(self):
+        client = self.connect()
+        client.send({"t": "cmd", "id": 32, "name": "sound", "tag": "wheee", "hold": True})
+        self.assertTrue(client.wait_for("ack", id=32)["ok"])
+        client.send({"t": "cmd", "id": 33, "name": "sound", "tag": "wheee", "hold": False})
+        self.assertTrue(client.wait_for("ack", id=33)["ok"])
+        calls = self.h.fake.calls("robot.sound")[-2:]
+        self.assertEqual(calls[0]["params"], {"tag": "wheee", "hold": True})
+        self.assertEqual(calls[1]["params"], {"tag": "wheee", "hold": False})
+
+    def test_hold_is_ignored_for_one_shot_tags(self):
+        client = self.connect()
+        client.send({"t": "cmd", "id": 34, "name": "sound", "tag": "greet", "hold": True})
+        self.assertTrue(client.wait_for("ack", id=34)["ok"])
+        self.assertEqual(self.h.fake.calls("robot.sound")[-1]["params"], {"tag": "greet"})
+
+    def test_unknown_tag_never_reaches_robotd(self):
+        client = self.connect()
+        client.send({"t": "cmd", "id": 35, "name": "sound", "tag": "explode"})
+        ack = client.wait_for("ack", id=35)
+        self.assertFalse(ack["ok"])
+        self.assertEqual(self.h.fake.calls("robot.sound"), [])
+
+    def test_readonly_session_cannot_play(self):
+        self.connect("Mate 40 Pro")
+        watcher = self.h.client()
+        self.clients.append(watcher)
+        watcher.send({"t": "hello", "name": "iPad"})
+        watcher.wait_for("hello")
+        watcher.send({"t": "cmd", "id": 36, "name": "sound", "tag": "chirp"})
+        ack = watcher.wait_for("ack", id=36)
+        self.assertFalse(ack["ok"])
+        self.assertEqual(ack["reason"], "readonly")
+
+
+class VolumeMathTest(unittest.TestCase):
+    def test_curve_matches_the_console(self):
+        self.assertEqual(server.volume_raw(0), 0)
+        self.assertEqual(server.volume_raw(100), 127)
+        self.assertEqual(server.volume_percent(127), 100)
+        # The mapping is symmetric enough that a round trip is within a percent.
+        for percent in (1, 25, 50, 60, 75, 99):
+            self.assertLessEqual(abs(server.volume_percent(server.volume_raw(percent)) - percent), 1)
+
+    def test_out_of_range_is_clamped(self):
+        self.assertEqual(server.volume_raw(-5), 0)
+        self.assertEqual(server.volume_raw(200), 127)
+        self.assertEqual(server.volume_percent(-20), 0)
+        self.assertEqual(server.volume_percent(400), 100)
+

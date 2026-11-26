@@ -3,12 +3,14 @@
  * 驾驶靠 /ws，永远不经过这里；离线时页面只是能打开、能看上次状态。
  * 版本号改一次，activate 就清掉旧缓存 —— 上线新页面时只改 VERSION。
  */
-const VERSION = 'duckphone-v5';
+const VERSION = 'duckphone-v7';
 const SHELL = [
   '/',
   '/index.html',
   '/app.js',
+  '/app.js?v=7',
   '/style.css',
+  '/style.css?v=7',
   '/manifest.webmanifest',
   '/icon.svg',
   '/icon-192.png',

@@ -30,6 +30,7 @@ import logging
 import math
 import mimetypes
 import os
+import re
 import secrets
 import socket
 import subprocess
@@ -67,6 +68,23 @@ DRIVE_TIMEOUT = 0.25        # page must refresh the stick this often
 SESSION_TIMEOUT = 5.0       # no message at all for this long → drop the session
 HEALTH_PERIOD = 1.0
 PADD_PERIOD = 2.0
+
+# ── head / voice ────────────────────────────────────────────────────────────
+# The gamepad's default head amplitude; the trained command range is much
+# smaller, but this is the value verified on the robot and what padd sends.
+HEAD_MAX = 0.5
+HEAD_HZ_MAX = 50.0
+HEAD_TIMEOUT = 0.25         # robotd has no deadman for head; the bridge is it
+SOUND_TAGS = frozenset({"chirp", "greet", "inquire", "coo", "alarm", "peck", "wheee"})
+SOUND_HOLD_TAGS = frozenset({"wheee"})
+
+# The codec setup file the installer leaves behind; absent → card "0".
+VOICE_SETUP = "/opt/robot/feetech-ft5-r5/voice-device.json"
+VOLUME_CONTROL = "PCM Playback Volume"
+MUTE_CONTROL = "Line Playback Switch"
+ALSACTL = "/usr/sbin/alsactl"
+# Patched by tests; a module attribute so nothing else has to know about amixer.
+MIXER_RUNNER = subprocess.run
 
 # ── policy bar ──────────────────────────────────────────────────────────────
 # The biped slots, in the order the bar shows them. `walk` is the resting state
@@ -117,6 +135,33 @@ def as_float(value, default: float | None = None) -> float | None:
     if isinstance(value, (int, float)):
         return float(value) if math.isfinite(float(value)) else default
     return default
+
+
+def volume_raw(percent: int) -> int:
+    """Percent → the codec's 0..127 register, the same curve the console uses."""
+    if percent <= 0:
+        return 0
+    return max(0, min(127, round(127 + 40 * math.log10(percent / 100))))
+
+
+def volume_percent(raw: int) -> int:
+    return max(0, min(100, round(100 * 10 ** ((raw - 127) / 40))))
+
+
+def alsa_card() -> str:
+    """The codec card name/ID, from the installer's setup file or the env."""
+    override = os.environ.get("DUCKPHONE_ALSA_CARD", "").strip()
+    if override:
+        return override
+    try:
+        with open(VOICE_SETUP, "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+        card = data.get("card") if isinstance(data, dict) else None
+        if isinstance(card, str) and re.fullmatch(r"[A-Za-z0-9_-]+", card):
+            return card
+    except (OSError, ValueError):
+        pass
+    return "0"
 
 
 def trim(value, digits: int = 3) -> float:
@@ -388,6 +433,7 @@ class RobotBridge:
         self._policy_lock = threading.Lock()
         self._policy_sent: dict | None = None
         self._policy_at = 0.0
+        self._volume_lock = threading.Lock()
         self._rpc = RobotRPC(
             socket_path,
             subscribe_hz=subscribe_hz,
@@ -505,6 +551,11 @@ class RobotBridge:
             "mv": [trim(v) for v in list(req)[:3]],
             "ap": [trim(v) for v in list(app)[:3]],
             "lim": [str(x) for x in limited],
+            # The head command robotd last fed the policy, in joint order
+            # [neck_pitch, head_pitch, head_yaw, head_roll]. Rounded to 2 dp:
+            # this rides the 20 Hz stream and the page only draws degrees.
+            "head": [trim(v, 2) for v in (frame.get("head") or [0.0, 0.0, 0.0, 0.0])[:4]]
+            if isinstance(frame.get("head"), list) else [0.0, 0.0, 0.0, 0.0],
             "pol": str(frame.get("policy") or "held"),
             "limp": bool(safety.get("limp")),
             "fall": bool(safety.get("fallen")),
@@ -543,6 +594,83 @@ class RobotBridge:
     # ── intents ──────────────────────────────────────────────────────────
     def drive(self, vx: float, vyaw: float) -> None:
         self._rpc.move(clamp(vx, VX_MIN, VX_MAX), 0.0, clamp(vyaw, -VYAW_MAX, VYAW_MAX))
+
+    def head(self, neck_pitch: float, head_pitch: float, head_yaw: float, head_roll: float) -> None:
+        self._rpc.head(
+            clamp(neck_pitch, -HEAD_MAX, HEAD_MAX),
+            clamp(head_pitch, -HEAD_MAX, HEAD_MAX),
+            clamp(head_yaw, -HEAD_MAX, HEAD_MAX),
+            clamp(head_roll, -HEAD_MAX, HEAD_MAX),
+        )
+
+    def sound(self, tag: str, hold: bool | None = None) -> dict:
+        return self._rpc.sound(tag, hold)
+
+    # ── system volume ────────────────────────────────────────────────────
+    def _mixer(self, card: str, args: list[str]):
+        return MIXER_RUNNER(
+            ["amixer", "-c", card, *args],
+            capture_output=True, text=True, errors="replace", timeout=4,
+        )
+
+    def volume_status(self) -> dict:
+        """Read the codec's current volume, 0..100, and whether it is muted."""
+        try:
+            card = alsa_card()
+            proc = self._mixer(card, ["cget", "name=" + VOLUME_CONTROL])
+            if proc.returncode != 0:
+                raise RuntimeError((proc.stderr or proc.stdout or "").strip()[-200:] or "amixer 读取失败")
+            match = re.search(r": values=(\d+)", proc.stdout)
+            if not match:
+                raise RuntimeError("未取得声卡音量回读")
+            muted = False
+            switch = self._mixer(card, ["cget", "name=" + MUTE_CONTROL])
+            if switch.returncode == 0:
+                muted = bool(re.search(r": values=(?:off|0)(?:,|$)", switch.stdout, re.M))
+            percent = 0 if muted else volume_percent(int(match.group(1)))
+            return {"accepted": True, "volume": percent, "muted": muted}
+        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
+            return {"accepted": False, "reason": f"音量不可用：{exc}"}
+
+    def set_volume(self, level) -> dict:
+        """Apply 0..100 to the codec and persist it when sudo allows."""
+        if isinstance(level, bool) or not isinstance(level, (int, float)) or not math.isfinite(float(level)):
+            return {"accepted": False, "reason": "音量必须是 0～100 的整数"}
+        percent = int(level)
+        if percent < 0 or percent > 100:
+            return {"accepted": False, "reason": "音量必须是 0～100 的整数"}
+        raw = volume_raw(percent)
+        try:
+            with self._volume_lock:
+                card = alsa_card()
+                proc = self._mixer(card, ["cset", "name=" + VOLUME_CONTROL, str(raw)])
+                if proc.returncode != 0:
+                    raise RuntimeError((proc.stderr or proc.stdout or "").strip()[-200:] or "amixer 写入失败")
+                match = re.search(r": values=(\d+)", proc.stdout)
+                if not match or int(match.group(1)) != raw:
+                    raise RuntimeError("音量实际回读不符")
+                switch = self._mixer(
+                    card, ["cset", "name=" + MUTE_CONTROL, "off,off" if percent == 0 else "on,on"],
+                )
+                if switch.returncode != 0:
+                    raise RuntimeError((switch.stderr or switch.stdout or "").strip()[-200:] or "静音开关写入失败")
+        except (OSError, RuntimeError, subprocess.SubprocessError) as exc:
+            return {"accepted": False, "reason": f"音量设置失败：{exc}"}
+
+        saved, message = False, ""
+        try:
+            stored = subprocess.run(
+                ["sudo", "-n", ALSACTL, "store", card],
+                capture_output=True, text=True, timeout=4, check=False,
+            )
+            if stored.returncode == 0:
+                saved = True
+            else:
+                message = "音量已生效，但保存到 ALSA 失败（重启后可能恢复默认）"
+        except (OSError, subprocess.SubprocessError):
+            message = "音量已生效，但保存到 ALSA 失败（重启后可能恢复默认）"
+        return {"accepted": True, "volume": percent, "muted": percent == 0,
+                "saved": saved, "message": message}
 
     def stop(self) -> dict:
         return self._rpc.stop()
@@ -644,6 +772,7 @@ class Session:
         self.ready = False
         self.last_rx = time.monotonic()
         self.last_drive = 0.0
+        self.last_head = 0.0
         self.driving = False
         self.hello_count = 0
         self._send_lock = threading.Lock()
@@ -690,6 +819,13 @@ class SessionManager:
             self._safe_stop("驾驶会话结束")
 
     def promote(self, session: Session) -> None:
+        # The old driver's head pose is an absolute intent that outlives it;
+        # returning the head to neutral is part of handing over.
+        try:
+            self.bridge.head(0.0, 0.0, 0.0, 0.0)
+            self.bridge.sound("wheee", False)
+        except RobotUnavailable:
+            pass
         with self._lock:
             self._driver = session.id
             session.role = "driver"
@@ -734,6 +870,14 @@ class SessionManager:
             LOG.info("已归零（%s）", why)
         except RobotUnavailable as exc:
             LOG.warning("归零失败（%s）：%s", why, exc)
+        try:
+            self.bridge.head(0.0, 0.0, 0.0, 0.0)
+        except RobotUnavailable as exc:
+            LOG.warning("头部回正失败（%s）：%s", why, exc)
+        try:
+            self.bridge.sound("wheee", False)   # end a held long call, if any
+        except RobotUnavailable as exc:
+            LOG.warning("收声失败（%s）：%s", why, exc)
 
 
 # ── watchdog ────────────────────────────────────────────────────────────────
@@ -746,6 +890,8 @@ class Watchdog:
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
         self._last_forward = 0.0
+        self._last_head = 0.0
+        self._head_active = False
 
     def start(self) -> None:
         self._thread = threading.Thread(target=self._run, name="duckphone-watchdog", daemon=True)
@@ -756,6 +902,11 @@ class Watchdog:
 
     def mark_drive(self) -> None:
         self._last_forward = time.monotonic()
+
+    def mark_head(self, active: bool) -> None:
+        """Refresh the head deadline; `active` says whether it is off-neutral."""
+        self._last_head = time.monotonic()
+        self._head_active = bool(active)
 
     # 20 ms, not 50: the deadline is 250 ms and a 50 ms tick alone can add a
     # fifth of it. Measured on the robot, the old tick showed 375 ms end to end.
@@ -779,6 +930,15 @@ class Watchdog:
                     LOG.info("摇杆超时，已归零")
                 except RobotUnavailable as exc:
                     LOG.warning("看门狗归零失败：%s", exc)
+            # robotd has no freshness gate on `robot.head`; an absolute pose would
+            # otherwise outlive the page that asked for it.
+            if self._head_active and now - self._last_head > HEAD_TIMEOUT:
+                self._head_active = False
+                try:
+                    self.bridge.head(0.0, 0.0, 0.0, 0.0)
+                    LOG.info("头部意图超时，已回正")
+                except RobotUnavailable as exc:
+                    LOG.warning("头部回正失败：%s", exc)
 
 
 # ── HTTP / WebSocket handler ────────────────────────────────────────────────
@@ -899,6 +1059,8 @@ class Handler(BaseHTTPRequestHandler):
                 driver.driving = False
             try:
                 self.bridge.stop()
+                self.bridge.head(0.0, 0.0, 0.0, 0.0)
+                self.bridge.sound("wheee", False)
             except RobotUnavailable:
                 pass
             self.send_response(204)
@@ -931,7 +1093,9 @@ class Handler(BaseHTTPRequestHandler):
         except wsproto.WSError as exc:
             if exc.code != wsproto.CLOSE_NORMAL:
                 LOG.info("会话 %s 关闭：%s（%s）", session.id, exc, exc.code)
-        except OSError as exc:
+        except (OSError, ValueError) as exc:
+            # The session watchdog may close the socket while this thread is in
+            # `read()`; CPython then raises ValueError("read of closed file").
             LOG.info("会话 %s 断开：%s", session.id, exc)
         finally:
             session.closed = True
@@ -989,6 +1153,30 @@ class Handler(BaseHTTPRequestHandler):
                 self.bridge.drive(vx, vyaw)
             except RobotUnavailable:
                 pass
+            return
+
+        if kind == "head":
+            if session.role != "driver" or self.bridge.read_only:
+                return
+            values = [
+                as_float(msg.get("neck_pitch"), 0.0) or 0.0,
+                as_float(msg.get("head_pitch"), 0.0) or 0.0,
+                as_float(msg.get("head_yaw"), 0.0) or 0.0,
+                as_float(msg.get("head_roll"), 0.0) or 0.0,
+            ]
+            if not all(math.isfinite(v) for v in values):
+                return
+            now = time.monotonic()
+            nonzero = any(abs(v) > 1e-6 for v in values)
+            if now - session.last_head < 1.0 / HEAD_HZ_MAX and nonzero:
+                return
+            session.last_head = now
+            values = [clamp(v, -HEAD_MAX, HEAD_MAX) for v in values]
+            try:
+                self.bridge.head(*values)
+            except RobotUnavailable:
+                pass
+            self.watchdog.mark_head(nonzero)
             return
 
         if kind == "takeover":
@@ -1060,6 +1248,10 @@ class Handler(BaseHTTPRequestHandler):
             elif name == "stop":
                 session.driving = False
                 result = self.bridge.stop()
+                try:
+                    self.bridge.head(0.0, 0.0, 0.0, 0.0)
+                except RobotUnavailable:
+                    pass
             elif name == "relax":
                 if msg.get("confirm") != "RELAX":
                     session.send({"t": "ack", "id": cmd_id, "ok": False,
@@ -1070,6 +1262,20 @@ class Handler(BaseHTTPRequestHandler):
             elif name == "rebootMotors":
                 session.driving = False
                 result = self.bridge.reboot_motors([])
+            elif name == "sound":
+                tag = str(msg.get("tag") or "")
+                if tag not in SOUND_TAGS:
+                    session.send({"t": "ack", "id": cmd_id, "ok": False,
+                                  "reason": f"不支持的声音：{tag}", "name": name})
+                    return
+                hold = msg.get("hold")
+                if tag not in SOUND_HOLD_TAGS or not isinstance(hold, bool):
+                    hold = None
+                result = self.bridge.sound(tag, hold)
+            elif name == "volume":
+                level = msg.get("level")
+                result = (self.bridge.set_volume(level) if level is not None
+                          else self.bridge.volume_status())
             elif name == "policyDo":
                 skill = str(msg.get("skill") or "")
                 session.driving = False
@@ -1104,9 +1310,11 @@ class Handler(BaseHTTPRequestHandler):
 
         accepted = result.get("accepted", True)
         reason = result.get("reason")
+        extra = {key: result[key] for key in ("volume", "muted", "saved", "message")
+                 if key in result}
         session.send({
             "t": "ack", "id": cmd_id, "ok": bool(accepted), "name": name,
-            "reason": reason if reason else None,
+            "reason": reason if reason else None, **extra,
         })
         if name in ("init", "enable", "stop", "relax", "rebootMotors"):
             session.send(self._annotated_state())

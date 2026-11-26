@@ -90,9 +90,10 @@ export function attachServoModel(servo,id){
   const turnedCase=[14,24,32,33].includes(id),uprightHip=id===10||id===20;
   // Hip-pitch/knee sockets and neck IDs 30/31 use mirrored case handedness.
   // Mirror each case itself, rather than rotating its mounting/joint frame.
-  // Duck front/back is case X for IDs 11/21, case Z for ID 12 at model zero.
-  // ID 12 retains its earlier left/right (case X) reflection as well.
-  const mirrorX=[11,12,13,21,22,23,30,31].includes(id),mirrorZ=id===12;
+  // Keep the hip-pitch cases mirrored consistently on both legs. Reflecting
+  // ID 12 along case Z reverses its long body away from ID 13, introducing a
+  // 15 mm visual offset that is absent from the matching ID 22/23 assembly.
+  const mirrorX=[11,12,13,21,22,23,30,31].includes(id),mirrorZ=false;
   const mirroredCase=mirrorX||mirrorZ;
   let caseGeometry=mirroredCase?mirrorServoCase(assets.geometries[0],mirrorX?-1:1,mirrorZ?-1:1):(turnedCase?assets.geometries[0].clone().rotateZ(Math.PI):(uprightHip?assets.hipGeometry:assets.geometries[0]));
   if(id===32){const full=caseGeometry;caseGeometry=withoutPassiveHorn(full);full.dispose();}

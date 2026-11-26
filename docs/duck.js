@@ -28,7 +28,7 @@ export class DuckView {
     const grid=new T.GridHelper(1.6,32,0x415147,0x23302d);grid.rotation.x=Math.PI/2;grid.position.z=-.001;this.scene.add(grid);
     // This legend names body axes, so its arrows must follow the body as well.
     this.bodyAxes=new T.AxesHelper(.055);this.bodyAxes.material.depthTest=false;this.bodyAxes.renderOrder=10;this.scene.add(this.bodyAxes);
-    const modelResponse=await fetch('./assets/duck-visual.bin');if(!modelResponse.ok)throw Error('官方完整视觉模型读取失败');
+    const modelResponse=await fetch(new URL('./assets/duck-visual.bin',import.meta.url));if(!modelResponse.ok)throw Error('官方完整视觉模型读取失败');
     this.model=parseDuck(await modelResponse.arrayBuffer());
     // Share immutable GPU geometry between measured and target poses.
     this.geometry=this.model.meshes.map(m=>{

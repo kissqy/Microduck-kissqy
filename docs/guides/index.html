@@ -21,7 +21,7 @@
 #duck-guide-illustration:target>.duck-king-video{display:none}
 @media(max-width:600px){.duck-king-video{padding:20px;gap:14px}.duck-king-video .duck-king-video-status{white-space:normal}}
 </style></head>
-<body><header><nav><a href="https://github.com/kissqy/Microduck-kissqy">🦆 Microduck-kissqy · GitHub</a><a href="en.html">English</a><a href="../assembly.html">3D 装配参考</a><a href="../">机器人中控演示</a><a href="../console-guide.html">📖 中控使用教程</a><a href="../training/">训练中控演示</a><a href="../compare/">为什么选择 kissqy</a></nav>
+<body><header><nav><a href="https://github.com/kissqy/Microduck-kissqy">🦆 Microduck-kissqy · GitHub</a><a href="en.html">English</a><a href="../build/assembly.html#assembly-3d">3D 装配参考</a><a href="../">机器人中控演示</a><a href="../console-guide.html">📖 中控使用教程</a><a href="../training/">训练中控演示</a><a href="../compare/">为什么选择 kissqy</a></nav>
 <h1>Microduck 飞特 HD1910 复刻教程 · kissqy</h1><p class="intro">Microduck 飞特版实机复刻教程：材料清单、复刻成本、3D 打印、HAT 与 IMU 制作、ZERO 3W 刷机、V315 中文中控、舵机标定与强化学习训练。</p><nav><a href="#build">从零搭建</a><a href="#faq">常见问题</a><a href="https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313">下载 R3 / V315</a></nav></header>
 <main><!-- duck-king-video:start --><a class="duck-king-video" href="https://www.bilibili.com/video/BV1kuyjzjEC1/" target="_blank" rel="noopener noreferrer" aria-label="在哔哩哔哩观看：鸭王亲手教你做鸭视频教程（新窗口）"><div><small>▶ BILIBILI · 作者亲授</small><strong>鸭王亲手教你做鸭 · 视频教程</strong><p>跟着 kissqy，从采购、装配到刷机标定与进阶，手把手做出自己的 Microduck。</p></div><span class="duck-king-video-status">▶ 点击观看视频教程</span></a><!-- duck-king-video:end --><aside class="console-release-note" role="note"><strong>R3 系统镜像 · V315 最新中控</strong><p>新卡装机选 R3。已有 R2 卡可用 V315 中控升级随包固件 control.127，在设备卡片上查看最近一次超时耗时。</p><a href="../console-v315/">V315 中控与 HAT 编号图解 →</a> · <a href="https://github.com/kissqy/Microduck-kissqy/releases/tag/console-studio-v313">正式版下载与更新说明 ↗</a></aside><aside class="project-notice" role="note" aria-labelledby="project-notice-title" data-project-notice>
 <div class="project-notice__heading"><svg class="project-notice__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 2 21h20L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 9v5m0 3v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><h2 class="project-notice__title" id="project-notice-title">硬件与授权</h2></div>
@@ -43,7 +43,7 @@
 <p>先看<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/DUCK-SHOPPING-LIST.md">鸭子采购总清单</a>，分别准备鸭子本体、PCB 与工具。参考硬件是 ZERO 3W、15 个 HD1910、摄像头、ToF、扬声器、电池、HAT 与独立躯干 IMU。价格是历史订单参考，预算范围和未计入项目以采购表说明为准。</p>
 <p>焊接、回流和烧录工具见<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/BUILD-TOOLS.md">工具清单</a>。使用其他主控或舵机时，不要默认当前镜像和结构已经适配。</p>
 <h3>2. 打印零件并装配机械结构</h3>
-<p><strong><a href="../assembly.html">打开 3D 装配参考 →</a></strong> 旋转、放大模型，按部位查看关节位置、编号与安装朝向，无须连接机器人。模型用于结构参考；飞特改件、螺丝和走线细节以打印件及硬件说明为准。</p>
+<p><strong><a href="../build/assembly.html#assembly-3d">打开 3D 装配参考 →</a></strong> 旋转、放大模型，按部位查看关节位置、编号与安装朝向，无须连接机器人。模型用于结构参考；飞特改件、螺丝和走线细节以打印件及硬件说明为准。</p>
 <p>下载<a href="https://github.com/kissqy/Microduck-kissqy/blob/main/hardware/3d-print-frankenduck/README.md">全套打印件 · 缝合怪版</a>：36 个 STL、1 个 3MF 项目、5 盘参考摆盘。也可从 <a href="https://makerworld.com.cn/zh/models/3258815-microduck-kissqykai-yuan-feng-he-guai-ban#profileId-3849553">MakerWorld 打印入口 ↗</a> 获取。根据实际打印机与耗材调整配置，TPU 部件使用对应材料配置。</p>
 <p>电池仓有 HUB 组合版和官方式加厚卡扣版；IMU 安装位适配本仓库 IMU。2026-10-21 版增加腿部支撑斜面、去除腿外壳外侧沉孔，并整合无需拆舵机即可换装的脚掌与滑轮结构。滑轮使用 623ZZ 轴承。</p>
 <p>本页是装配流程导航，零件说明见打印件页；不把文件数量当成实际装配数量。</p>
@@ -109,3 +109,4 @@ Permission denied (publickey,password).</code></pre>
 <h3>问题解决不了，反馈时需要什么？</h3>
 <p>在 <a href="https://github.com/kissqy/Microduck-kissqy/issues">Issues</a> 写清：硬件与接口版本、机器人中控版本、实际固件标识、操作步骤、异常现象及日志或视频。先区分连接失败、服务启动失败、通信异常和运动异常，有助于复现。</p>
 <p><a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/MICRODUCK-BUILD-GUIDE.md">复刻总指南</a> · <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/docs/README.md">文档目录</a> · <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/README.md">仓库首页</a></p></section></main><footer>kissqy · 2026-11-24 · 作者原创部分适用个人非商业许可；官方及第三方部分保留各自许可。 <a href="https://github.com/kissqy/Microduck-kissqy/blob/main/microduck-hd1910/LICENSE">许可范围</a> · <a href="../sitemap.xml">站点地图</a></footer></body></html>
+

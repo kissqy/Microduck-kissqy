@@ -38,7 +38,7 @@ An assembled IMU needs no programming tools. For DIY boards, see the [tool list]
 
 ## 3. How do I assemble it?
 
-**[Follow the assembly and wiring steps (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/assembly.html)** · **[Open the 3D assembly reference (Chinese) →](https://kissqy.github.io/Microduck-kissqy/assembly.html)** Rotate and zoom the model to inspect joint positions, IDs and orientation without connecting a robot. The model is a structural reference; use the printing and hardware guides for Feetech-specific parts, fasteners and wiring.
+**[Follow the assembly and wiring steps (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/assembly.html)** · **[Open the 3D assembly reference (Chinese) →](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#assembly-3d)** Rotate and zoom the model to inspect joint positions, IDs and orientation without connecting a robot. The model is a structural reference; use the printing and hardware guides for Feetech-specific parts, fasteners and wiring.
 
 **Head assembly:** [Follow the five-photo guide for the ToF, IMX219, ZERO and HAT](HEAD-ASSEMBLY.en.md), or [open the web photo steps (Chinese)](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#head-photos).
 
@@ -110,3 +110,4 @@ The new banana power board is **¥39 each**, with a right-angle AMP2.0 connector
 | 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
 | --- | --- |
 | ![Battery](assets/boards/banana-battery-front-white.jpg) | ![Wiring](assets/boards/banana-battery-rear-white.jpg) |
+

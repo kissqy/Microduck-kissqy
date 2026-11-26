@@ -36,7 +36,7 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 
 ## 3. 我要怎么装？
 
-**[按步骤装配与接线 →](https://kissqy.github.io/Microduck-kissqy/build/assembly.html)** · **[打开 3D 装配参考 →](https://kissqy.github.io/Microduck-kissqy/assembly.html)** 旋转、放大模型，按部位查看关节位置、编号与安装朝向，无须连接机器人。模型用于结构参考；飞特改件与螺丝、走线细节以打印件及硬件说明为准。
+**[按步骤装配与接线 →](https://kissqy.github.io/Microduck-kissqy/build/assembly.html)** · **[打开 3D 装配参考 →](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#assembly-3d)** 旋转、放大模型，按部位查看关节位置、编号与安装朝向，无须连接机器人。模型用于结构参考；飞特改件与螺丝、走线细节以打印件及硬件说明为准。
 
 **头部安装：** [跟着五张实拍完成 ToF、IMX219、ZERO 与 HAT 的安装和接线](HEAD-ASSEMBLY.md)；[直接打开网页实拍步骤](https://kissqy.github.io/Microduck-kissqy/build/assembly.html#head-photos)。
 
@@ -108,3 +108,4 @@ TF 卡 32GB 即可；[山泽双头高速读卡器（SD／TF 卡同读）](https:
 | 电池触点端 / Battery contacts | 背面线束 / Rear wiring |
 | --- | --- |
 | ![Battery](assets/boards/banana-battery-front-white.jpg) | ![Wiring](assets/boards/banana-battery-rear-white.jpg) |
+

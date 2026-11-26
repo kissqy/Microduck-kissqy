@@ -1,9 +1,9 @@
 import * as T from './vendor/three.module.min.js?demo=20261013';
 import {prepareAssemblyAppearance,applyAssemblyAppearance} from './assembly-appearance.js?v=20261121-orange-white';
-import {DuckView} from './duck.js?demo=20261013';
+import {DuckView} from './duck.js?v=20261126-relative-assets';
 import {REFERENCE_IDS,REFERENCE_LABELS} from './calibration-reference.js?demo=20261013';
 import {officialStandingDegrees,referenceAngle} from './joint-reference.js?demo=20261013';
-import {attachElectronics} from './assembly-electronics.js?v=20261121-orange-white';
+import {attachElectronics} from './assembly-electronics.js?v=20261126-servo12-connection';
 import {COMPONENTS,CONNECTIONS,WIRING_NOTE} from './assembly-components.js?v=20261121-orange-white';
 
 const groups={
@@ -13,7 +13,7 @@ const groups={
   head:{title:'头颈 · 30–34',description:'颈部俯仰、头部俯仰、转向、侧摆与嘴部。转到侧面查看各层关节的连接关系。',indexes:[5,6,7,8,9]},
 };
 const $=id=>document.getElementById(id);
-let scope='all',selected=null,pose='zero',view,electronics,componentId='hat',activeComponent=null,exploded=false;
+let scope='all',selected=null,pose='zero',view,electronics,componentId='hat',activeComponent=null,exploded=false,pendingFocus=null;
 
 class AssemblyView extends DuckView{
   async init(container,onSelect){
@@ -161,7 +161,8 @@ $('toggle-explosion').addEventListener('click',()=>{
   if(exploded)setScope('all');
   electronics.setExploded(exploded);
   $('toggle-explosion').setAttribute('aria-pressed',String(exploded));
-  $('toggle-explosion').textContent=exploded?'收起复原':'爆炸展开';
+  $('toggle-explosion').querySelector('[data-explosion-label]').textContent=exploded?'收起复原':'爆炸展开';
+  $('toggle-explosion').querySelector('[data-explosion-hint]').textContent=exploded?'返回完整装配':'逐件查看打印件';
   $('explosion-status').textContent=exploded?'打印件已逐件展开，舵机和轴承保持原位；再点“收起复原”返回装配状态。':'已收起复原，可继续查看端子与接线。';
 });
 $('wiring-note').textContent=WIRING_NOTE;
@@ -184,6 +185,11 @@ $('connection-list').replaceChildren(...CONNECTIONS.map(item=>{
 }));
 drawComponent();
 drawInspector();
+document.querySelectorAll('[data-assembly-part],[data-assembly-component]').forEach(link=>link.addEventListener('click',()=>{
+  const request={part:link.dataset.assemblyPart,component:link.dataset.assemblyComponent};
+  if(!view){pendingFocus=request;return;}
+  if(request.component)selectComponent(request.component);else if(request.part)setScope(request.part);
+}));
 const modelControls='[data-group],[data-view],[data-pose],#reset-view,#fade-others,#open-cover,#show-components,#show-wires,#show-battery,#show-battery-pack,#focus-battery,#show-servo-ids,#toggle-explosion';
 document.querySelectorAll(modelControls).forEach(button=>button.disabled=true);
 try{
@@ -193,8 +199,9 @@ try{
   document.querySelectorAll(modelControls).forEach(button=>button.disabled=false);
   view.update({});drawInspector();
   const requested=new URLSearchParams(location.search);
-  if(COMPONENTS[requested.get('component')])selectComponent(requested.get('component'));
-  else if(groups[requested.get('part')])setScope(requested.get('part'));
+  const component=pendingFocus?.component||requested.get('component'),part=pendingFocus?.part||requested.get('part');
+  if(COMPONENTS[component])selectComponent(component);
+  else if(groups[part])setScope(part);
 }catch(error){
   $('loading').hidden=true;$('model-error').hidden=false;
   $('error-detail').textContent='3D 需要支持 WebGL 的浏览器；下方仍可查看接线说明和板卡购买入口。'+(error?.message?'（'+error.message+'）':'');

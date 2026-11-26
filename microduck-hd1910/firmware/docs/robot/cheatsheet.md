@@ -630,6 +630,13 @@ quack and leaves the triggers and the mic alone, which `audio.enabled = false` d
 Audio hardware bring-up — codec driver, overlays, mixer — is `setup-board.sh`'s audio
 section, once per board.
 
+If the robot is audible but far too quiet even at volume 100, check that the LOP output
+stage was actually initialised: `systemctl status aic3104-init` and
+`amixer -c aic3104 cget name='Line DAC Playback Volume'` (expect `118,118`) plus
+`Line Playback Volume` (`9,9`). An ordering cycle involving `Wants=sound.target` can make
+systemd drop the init job, leaving the codec at its power-on levels — the current unit has
+no such dependency and retries if the card is late.
+
 To audition a voice or regenerate the bank by hand, the release carries the generator:
 
 ```

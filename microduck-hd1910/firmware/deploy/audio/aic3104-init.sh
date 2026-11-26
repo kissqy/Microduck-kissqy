@@ -10,6 +10,7 @@ sleep 2
 # Radxa the card probe is deferred until the DKMS codec module autoloads.
 for i in $(seq 1 15); do
     if amixer -c aic3104 info >/dev/null 2>&1; then
+        found=1
         # Speaker path: the speaker amp hangs off the codec's line outputs
         # (LEFT_LOP/RIGHT_LOP). 'Line Playback Switch' is the LOP output-stage
         # MUTE (not a line-in bypass — this script used to set it off, which
@@ -40,3 +41,8 @@ for i in $(seq 1 15); do
     fi
     sleep 1
 done
+
+if [ "${found:-0}" -ne 1 ]; then
+    echo "aic3104 card did not appear; mixer stays at power-on levels" >&2
+    exit 1
+fi

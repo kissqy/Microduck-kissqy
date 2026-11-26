@@ -275,8 +275,13 @@ def raw_loop(target, config, emit, stop, system_log=None, connection_pause=None)
             finally:
                 transport_status('tof', False)
             stop.wait(2)
-    worker = threading.Thread(target=tof_loop, daemon=True)
-    worker.start()
+    if config.get('tofd_socket'):
+        worker = threading.Thread(target=tof_loop, daemon=True)
+        worker.start()
+    else:
+        # 空串 = 这次启动不要 ToF：说一次就够，不要去连一个没装的 daemon 然后每 2 秒重试。
+        event = {'channel':'tof', 'data':{'disabled':True}}
+        emit(event); hub.event(event, generation)
     try:
         while not stop.is_set():
             if handoff and not handoff.wait(stop):break

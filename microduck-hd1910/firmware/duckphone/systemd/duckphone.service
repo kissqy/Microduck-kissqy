@@ -1,0 +1,34 @@
+[Unit]
+Description=Duck phone remote (LAN PWA + robotd bridge)
+Documentation=file:///opt/duckphone/README.md
+# `After`, not `Requires`: the bridge starts and simply reports "未连接" until
+# robotd appears, which is what you want when someone restarts robotd mid-session.
+After=robotd.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=duck
+Group=robot
+WorkingDirectory=/opt/duckphone
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 /opt/duckphone/server.py --static /opt/duckphone/static
+
+# `Restart=always`, for the same reason as robotd: the bridge exiting is never
+# something the robot should have to notice. robotd's 500 ms deadman covers the gap.
+Restart=always
+RestartSec=3
+
+# Deliberately NOT set: `NoNewPrivileges=yes` would break `sudo -n systemctl stop
+# padd` (the one-tap gamepad interlock). If you would rather hand-run that command,
+# start the bridge with `--no-padd-control` and then this hardening is free.
+# NoNewPrivileges=yes
+
+# Nothing outside these paths is read or written.
+ReadWritePaths=/etc/duckphone
+ProtectSystem=full
+ProtectHome=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

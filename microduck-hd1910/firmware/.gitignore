@@ -134,3 +134,8 @@ __pycache__/
 /packaging/models/ee0376c927044cdece056ba1d3e6eac7/upstream-params/agent.yaml
 /packaging/models/ee0376c927044cdece056ba1d3e6eac7/upstream-params/env.yaml
 /packaging/models/ee0376c927044cdece056ba1d3e6eac7/使用说明.md
+
+# Console runtime logs. The console appends one file per session here; the single
+# log already tracked in this tree stays as a sample, everything newer is local
+# output that must never reach a commit.
+console/logs/*.log

@@ -70,3 +70,8 @@ __pycache__/
 /verification/official-reference-from146/*
 /packaging/models/a481d9f211f31d9476ab1a319fe362a2/policy.onnx
 /packaging/models/a481d9f211f31d9476ab1a319fe362a2/export-data.zip
+
+# Console runtime logs. The console appends one file per session here; the single
+# log already tracked in this tree stays as a sample, everything newer is local
+# output that must never reach a commit.
+console/logs/*.log

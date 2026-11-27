@@ -128,6 +128,12 @@ const HOME_RAMP: Duration = Duration::from_secs(2);
 /// `microduck_runtime`.
 const BATTERY_EMA_ALPHA: f64 = 0.1;
 
+/// Smoothing on the *rested* pack voltage that the percentage is derived from. Only updated
+/// while the joints are unpowered, so the samples are already close to open-circuit; the
+/// slower constant (~20 s at one sample per second) keeps a brief relax from jumping the
+/// number, while still following a pack that is genuinely draining between sessions.
+const BATTERY_REST_EMA_ALPHA: f64 = 0.05;
+
 /// How long the shutdown sit gets before torque is cut and the machine powers off, when no
 /// controller is there to say. The sitstand descent is a deliberate ~2 s glide; the prototype
 /// gives it four seconds, and a running controller derives the same from the set's `ramp_s`
@@ -618,6 +624,12 @@ struct RobotState {
     /// distinction that has to survive to the wire, since zero volts and unknown volts look
     /// nothing alike to whoever is deciding whether to charge the robot.
     battery_v: AtomicU64,
+    /// Last *rested* pack voltage, EMA-smoothed, as `f64::to_bits`: updated only while the
+    /// joints are unpowered (`gain() == None`), which is the closest this robot gets to an
+    /// open-circuit reading. The percentage is derived from this, not from [`Self::battery_v`],
+    /// so a step or a spell of walking cannot pull the number down and then let it climb back.
+    /// Zero means *not read yet*, same as the battery.
+    battery_rest_v: AtomicU64,
     /// Hottest servo of the last thermal sample: temperature as `f64::to_bits`, and which
     /// joint it was. Zero means *not read yet*, same as the battery.
     motor_max_c: AtomicU64,
@@ -788,6 +800,7 @@ impl RobotState {
             consecutive_errors: AtomicU32::new(0),
             startup_bus_failures: AtomicU32::new(0),
             battery_v: AtomicU64::new(0),
+            battery_rest_v: AtomicU64::new(0),
             motor_max_c: AtomicU64::new(0),
             motor_mean_c: AtomicU64::new(0),
             motor_hottest: AtomicU32::new(0),
@@ -991,9 +1004,13 @@ impl RobotState {
     /// than a second.
     fn battery(&self) -> Option<proto::Battery> {
         let volts = f64::from_bits(self.battery_v.load(Ordering::Relaxed));
+        // `volts` is the smoothed *loaded* reading, which is what a voltmeter on the rail
+        // shows. The percentage is taken from the last rested reading instead: that is the
+        // part of the measurement that says something about the pack rather than the step.
+        let rested = f64::from_bits(self.battery_rest_v.load(Ordering::Relaxed));
         (volts > 0.0).then(|| proto::Battery {
             volts,
-            percent: duck_control::battery_percent(volts),
+            percent: duck_control::battery_percent(if rested > 0.0 { rested } else { volts }),
         })
     }
 
@@ -4243,6 +4260,25 @@ fn publish_slow_sensors<T: RobotIo>(io: &mut Safety<T>, state: &RobotState) {
                 slow.volts
             };
             state.battery_v.store(smoothed.to_bits(), Ordering::Relaxed);
+
+            // The percentage is a claim about what is left in the pack, so it may only be
+            // refreshed when the pack is not being asked to deliver current. `gain() == None`
+            // is exactly that state: relaxed, or not yet armed. While the robot stands or
+            // walks the last rested value is held, instead of letting the sag pull the number
+            // down and the recovery push it back up on every step.
+            if io.gain().is_none() {
+                let previous_rest =
+                    f64::from_bits(state.battery_rest_v.load(Ordering::Relaxed));
+                let rested = if previous_rest > 0.0 {
+                    BATTERY_REST_EMA_ALPHA * smoothed
+                        + (1.0 - BATTERY_REST_EMA_ALPHA) * previous_rest
+                } else {
+                    smoothed
+                };
+                state
+                    .battery_rest_v
+                    .store(rested.to_bits(), Ordering::Relaxed);
+            }
 
             // Temperature is not smoothed: a servo's case is already a slow signal, and an
             // EMA would only delay the one reading anybody cares about — the joint climbing

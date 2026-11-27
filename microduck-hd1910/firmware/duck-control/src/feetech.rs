@@ -1323,7 +1323,7 @@ impl FeetechIo {
         let mut fresh = [false; NUM_JOINTS];
         let mut samples = Vec::with_capacity(NUM_JOINTS);
         let mut joints = Vec::with_capacity(NUM_JOINTS);
-        let mut volts = 0.0;
+        let mut volts = Vec::with_capacity(NUM_JOINTS);
         let mut temps = [0.0; NUM_JOINTS];
         let mut raws = [0; NUM_JOINTS];
         for (i, joint) in self.calibration.joints.iter().enumerate() {
@@ -1369,7 +1369,7 @@ impl FeetechIo {
             } else {
                 f64::NAN
             };
-            volts += fb.volts;
+            volts.push(fb.volts);
             temps[i] = f64::from(fb.temperature_c);
             joints.push(FeetechJointDiagnostic {
                 name: joint.name.clone(),
@@ -1432,8 +1432,12 @@ impl FeetechIo {
         self.latest_imu_age_ms = raw_imu.age_ms;
         self.latest_imu_age_upper_bound_ms = raw_imu.age_upper_bound_ms;
         self.latest_imu_status = Some(raw_imu.status);
+        // The pack is what all fifteen servos read, but a mean is dragged by one servo on a
+        // long branch or a marginal connector. The median is the number they agree on.
+        volts.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+        let pack_volts = volts.get(NUM_JOINTS / 2).copied().unwrap_or(0.0);
         self.latest_slow = Some(SlowSensors {
-            volts: volts / NUM_JOINTS as f64,
+            volts: pack_volts,
             temps_c: temps,
         });
         self.latest_ready = true;

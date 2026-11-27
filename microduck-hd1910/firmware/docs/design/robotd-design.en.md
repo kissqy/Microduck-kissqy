@@ -708,22 +708,28 @@ explanation, is unusable, and safety clamps things constantly:
 }}
 ```
 
-**Battery carries both volts and percent**, here and in `robot.health`. The mapping — 6.6 V
-empty, 8.2 V full under load, an NP-F550 — lives in `duck_control::model::battery_percent` and
-travels already applied. The prototype sent volts only and the app re-derived the percentage
-from constants of its own, which is how the same pack shows two different numbers on two
-screens. A client drawing a battery pill should not have to know which pack this robot ships
-with. There is no fuel gauge: the measurement is the servos' own supply voltage (§2.1), so it
-sags under load and recovers at rest.
+**Battery carries both volts and percent**, here and in `robot.health`. `volts` is the median
+of the fifteen servos' own supply readings (§2.1), smoothed over ~10 s; the median keeps one
+servo on a long branch from moving the number the pack actually has. `percent` applies a 2 S
+Li-ion open-circuit curve (6.9 V = 0 %, 7.40 V ≈ 30 %, 7.65 V ≈ 55 %, 8.40 V = 100 %) from
+`duck_control::model::battery_percent` to the **rested** voltage — a second EMA that only
+advances while the joints are unpowered (`gain() == None`). That is the only time the rail is
+the pack rather than the pack minus a load sag, so the percentage holds through a stand or a
+walk and re-settles after a relax. The straight line it replaced read ~56 % on a pack with
+~35 % left. 6.6 V is still the empty floor `safety.battery_empty_shutdown` acts on (§2.4); the
+curve and the shutdown are separate. The prototype sent volts only and the app re-derived the
+percentage from constants of its own, which is how the same pack shows two different numbers
+on two screens. A client drawing a battery pill should not have to know which pack this robot
+ships with. There is no fuel gauge.
 
 **The span is a statement about the rail, and it holds because the rail *is* the pack** — the
-servos are fed the 2 S battery, not a regulated 5 V, which is why the span runs from 6.6 to
-8.2 V across a servo whose own rating is 3.7–6.0 V. That does not make the two disagree: the
-servo's `Max Voltage Limit` is not written by anything here (§2.1), and the `shutdown` mask
-clears the input-voltage bit that would otherwise latch torque off above it, so a charged pack
-runs. A servo on a bench supply is answering the same question about a different rail — 5 V
-lands under 6.6 V and maps to 0%, which is the mapping working as defined rather than a fault
-to chase. Regulation would be a different robot, and these constants move with it.
+servos are fed the 2 S battery, not a regulated 5 V, which is why the curve runs from 6.9 to
+8.4 V (and the shutdown floor sits at 6.6 V) across a servo whose own rating is 3.7–6.0 V.
+That does not make the two disagree: the servo's `Max Voltage Limit` is not written by
+anything here (§2.1), and the `shutdown` mask clears the input-voltage bit that would
+otherwise latch torque off above it, so a charged pack runs. A servo on a bench supply is
+answering the same question about a different rail — 5 V lands below 6.9 V and maps to 0%,
+which is the mapping working as defined rather than a fault to chase. Regulation would be a different robot, and these constants move with it.
 
 Same payload for `robotctl monitor` and, later, the app. This is what replaces the runtime's
 180-byte frame on 9870, the JPEG stream on 9871, the UDP command socket on 9872, the maploc

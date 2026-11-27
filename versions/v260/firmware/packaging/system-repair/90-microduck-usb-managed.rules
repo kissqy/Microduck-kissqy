@@ -1,0 +1,1 @@
+SUBSYSTEM=="net", ACTION=="add|change|move", ATTR{address}=="02:4d:44:55:43:4b", ENV{DEVTYPE}=="gadget", ENV{NM_UNMANAGED}="0"

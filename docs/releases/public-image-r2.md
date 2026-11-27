@@ -14,6 +14,8 @@ R2 发布时的配套版本为 **R2 / Microduck Console Studio V260 / control.10
 
 开机会等待网卡与网络服务就绪，再尝试已保存的 Wi-Fi；没有可连接网络或连接失败时开启配网热点。运行中断网不会自动切换热点，可通过中控手动开启。
 
+安装包含 USB Ethernet 支持的新版固件并重启后，也可通过 ZERO 3W 的 **USB-C 1 / USB 2.0 OTG** 接入 Mac 的 USB Ethernet。Mac 在“互联网共享”中选择 Wi-Fi 作为来源、选择该 USB 网卡作为共享目标，Zero 会经 USB DHCP 使用 Mac 的网络；USB IPv6 链路本地连接仍可用。此功能复用 R10 的 NetworkManager 与系统安装入口，不替换 Wi-Fi 配网；SSH 继续使用设备现有账户认证。
+
 - 热点：`Microduck-kissqy`
 - 热点密码：`12345678`
 - 配网页面：`http://10.42.0.1:8088/`

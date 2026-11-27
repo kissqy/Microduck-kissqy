@@ -1,0 +1,17 @@
+[Unit]
+Description=Microduck USB Ethernet gadget (CDC ECM)
+Documentation=man:configfs(5)
+After=local-fs.target systemd-modules-load.service systemd-udevd.service
+Before=network-pre.target NetworkManager.service systemd-networkd.service
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/microduck-usb-gadget start
+ExecStop=/usr/local/sbin/microduck-usb-gadget stop
+TimeoutStartSec=30s
+TimeoutStopSec=10s
+
+[Install]
+WantedBy=multi-user.target

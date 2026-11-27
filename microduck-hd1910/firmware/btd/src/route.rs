@@ -323,9 +323,10 @@ fn permits(call: &proto::Call) -> bool {
         ChoraleSubscribe | ChoraleBeaconSet(_) | ChoraleHeard(_) => false,
 
         // Powering the machine off from a phone in the room is `system.reboot` without the
-        // coming back. The sit-then-power-off flow wants whoever asked to be watching the
-        // robot, and that is `robotctl` or the pad's long-press, deliberately.
-        RobotShutdown => false,
+        // coming back. Served now: the app asks with a two-step confirmation and says on screen
+        // that the robot will go down, so the guard that used to live here — an accidental tap —
+        // moved into the client. The gate itself stays in `robotd`: sit first, then power off.
+        RobotShutdown => true,
 
         // Only a stick-mapping hint for local clients like `padd`. An app gets the same answer
         // through `system.info` territory when it ever needs one; no reason to open another read
@@ -334,7 +335,7 @@ fn permits(call: &proto::Call) -> bool {
 
         // Switching modes means the robot goes home, loads other policies and drives differently
         // — and the reason to switch is that somebody just put wheels on it. That is a decision
-        // made in the room, holding the pad, the same place `robot.shutdown` is refused for.
+        // made in the room, holding the pad.
         RobotSetMode(_) => false,
 
         // Loading a policy is `robot.setMode` with a wider blast radius: it puts an arbitrary
@@ -616,6 +617,10 @@ mod tests {
                 // neither call discards anything or downloads anything.
                 proto::method::ROLLBACK,
                 proto::method::SELECT,
+                // Sitting the robot down and then cutting power, which the app now asks for with
+                // a two-step confirmation. `robotd` owns the sit-then-off sequence; this side
+                // only stops refusing the request.
+                proto::method::ROBOT_SHUTDOWN,
                 // Replacing the policy set, and fetching a stranger's policy onto the board.
                 // Routed for the reason provisioning is: BLE's physical-presence claim (§4.2)
                 // holds — ten metres of radio range, a PIN-checked bond — and trying a gait is
@@ -976,6 +981,17 @@ mod tests {
         // The cancel is the same method with nothing in it, and reaches the same place.
         assert_eq!(
             upstream_for(&proto::Call::RobotAction(proto::ActionParams::default())),
+            Some(Upstream::Robot)
+        );
+    }
+
+    /// Shutting the robot down was refused while the only requester was a stray tap on a phone.
+    /// The app now asks twice and says on screen that the robot goes down, so the request reaches
+    /// `robotd`, which sits the robot before cutting power.
+    #[test]
+    fn shutting_down_is_reachable() {
+        assert_eq!(
+            upstream_for(&proto::Call::RobotShutdown),
             Some(Upstream::Robot)
         );
     }

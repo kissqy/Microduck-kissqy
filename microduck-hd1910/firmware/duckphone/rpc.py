@@ -327,6 +327,10 @@ class RobotRPC:
     def reboot_motors(self, ids: list[int] | None = None) -> dict:
         return self.request("robot.rebootMotors", {"ids": list(ids or [])}, timeout=8.0)
 
+    def shutdown(self) -> dict:
+        """Sit, then cut power. Answers before the machine goes down."""
+        return self.request("robot.shutdown", None, timeout=4.0)
+
     def policies(self, timeout: float = 3.0) -> dict:
         """Which `.onnx` sits in each slot, and what is driving right now."""
         return self.request("robot.policies", None, timeout=timeout)

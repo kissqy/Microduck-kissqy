@@ -33,6 +33,7 @@
 | 预设动作：停止 / 摇杆打断 | ✅ | 面板「停止」→ `robot.action {}` 立即收尾；动作中推摇杆 → `act` 清空，头部保持最后姿态（`pitch -0.30`），不被清零 |
 | 预设动作状态回传 | ✅ | 从 `robotd` 侧取消，蓝牙页 0.5 s 内自行清掉「正在播放」，证明 `act` 走通 robotd→btd→App→页面 |
 | 预设动作门控 | ✅ | 未站立/未接管时返回「机器人未站立或正在移动」；未知动作返回「未知动作：moonwalk」 |
+| 关机（蓝牙与网页） | ✅ | 维护面板两步确认 → ack 在断电前返回 → 机器人先坐下再断电；蓝牙 App 与网页各实测一次，约 10 s 后 Wi-Fi 与 BLE 均断开，App 显示断开浮层 |
 | 断链零速 | ✅ | 行进中强杀 App：`intents went stale … deadman_ms=500`，速度被清零 |
 | 断链自动重连 | ✅ | 强杀后重启 App 8 s 内 `connected → ready → subscribe accepted` |
 | 正式版连接流程 | ✅ | `AUTO_CONNECT` 关闭、`TEST_PIN` 删除；连接页预选 duck-dillon、PIN 占位 `******`，点「连接」进入驾驶页 |

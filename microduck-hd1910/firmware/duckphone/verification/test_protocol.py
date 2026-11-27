@@ -172,6 +172,16 @@ class HelloTest(BridgeTestCase):
         self.assertTrue(client.wait_for("ack", id=5)["ok"])
         self.assertEqual(self.h.fake.calls("robot.rebootMotors")[-1]["params"], {"ids": []})
 
+    def test_shutdown_needs_confirmation(self):
+        client = self.connect()
+        client.send({"t": "cmd", "id": 8, "name": "shutdown"})
+        self.assertFalse(client.wait_for("ack", id=8)["ok"])
+        self.assertFalse(self.h.fake.calls("robot.shutdown"))
+
+        client.send({"t": "cmd", "id": 9, "name": "shutdown", "confirm": "SHUTDOWN"})
+        self.assertTrue(client.wait_for("ack", id=9)["ok"])
+        self.assertTrue(self.h.fake.calls("robot.shutdown"))
+
     def test_unknown_command_is_refused(self):
         client = self.connect()
         client.send({"t": "cmd", "id": 6, "name": "launch"})

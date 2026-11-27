@@ -116,7 +116,15 @@ POLICY_SLOTS = (
     {"slot": "kick_right", "short": "右脚踢", "label": "右脚踢球", "kind": "oneshot", "skill": "kick_right", "dur": 0.5},
     {"slot": "roulade", "short": "前滚翻", "label": "前滚翻", "kind": "oneshot", "skill": "roulade", "dur": 1.0},
 )
-POLICY_SKILLS = {row["skill"] for row in POLICY_SLOTS if row["skill"]}
+# Skills the robot publishes in `robot.policies.skills` but that have no slot of
+# their own. robotd's slot list is fixed (walk / stand / sitstand / ground_pick /
+# kick_* / roulade), so a skill installed through `policy.skill` never appears
+# there — only in `skills`. Anything listed here keeps its wording; anything
+# else the robot reports still gets a chip, labelled with its raw name.
+SKILL_META = {
+    "crouch": {"short": "深蹲", "label": "深蹲", "kind": "oneshot", "dur": 4.5},
+}
+POLICY_SKILLS = {row["skill"] for row in POLICY_SLOTS if row["skill"]} | set(SKILL_META)
 POLICY_CACHE_S = 3.0
 
 # Where the installed policy packages live. Read for display names only; a
@@ -258,6 +266,27 @@ def build_policy_bar(report: dict, model_dir: str | None) -> list[dict]:
             "name": name or meta["label"],
             "desc": desc,
             "error": row.get("error") if isinstance(row.get("error"), str) else None,
+        })
+    # Everything robotd reports in `skills` that the slot table above does not
+    # already cover. This is what makes a newly installed policy show up on its
+    # own: install it, `robot.reloadPolicies`, refresh the page.
+    covered = {meta["skill"] for meta in POLICY_SLOTS if meta["skill"]}
+    for skill in (report.get("skills") or []):
+        if not isinstance(skill, str) or skill in covered:
+            continue
+        meta = SKILL_META.get(skill, {})
+        label = meta.get("label") or skill
+        bar.append({
+            "slot": skill,
+            "short": meta.get("short") or label,
+            "label": label,
+            "kind": meta.get("kind", "oneshot"),
+            "skill": skill,
+            "dur": meta.get("dur", 0.0),
+            "ready": True,
+            "name": label,
+            "desc": "",
+            "error": None,
         })
     return bar
 
@@ -726,6 +755,10 @@ class RobotBridge:
     def reboot_motors(self, ids: list[int] | None = None) -> dict:
         return self._rpc.reboot_motors(ids)
 
+    def shutdown(self) -> dict:
+        """Sit, then cut power. The ack arrives before the machine goes down."""
+        return self._rpc.shutdown()
+
     # ── policies ─────────────────────────────────────────────────────────
     def policies(self, fresh: bool = False) -> dict:
         """The policy bar: every biped slot, what fills it, whether it runs.
@@ -759,11 +792,14 @@ class RobotBridge:
         with self._policy_lock:
             self._policy_sent = payload
             self._policy_at = time.monotonic()
+        # What `robot.do` will answer to right now; `run_skill` checks this so a
+        # policy installed after this page was written needs no code change.
+        self._skills_seen = {s for s in (report.get("skills") or []) if isinstance(s, str)}
         return payload
 
     def run_skill(self, skill: str) -> dict:
         """One `robot.do`. The robot returns to walk by itself afterwards."""
-        if skill not in POLICY_SKILLS:
+        if skill not in POLICY_SKILLS and skill not in getattr(self, "_skills_seen", ()):
             return {"accepted": False, "reason": f"不支持的策略：{skill}"}
         result = self._rpc.do_skill(skill)
         self.policies(fresh=True)
@@ -1454,6 +1490,15 @@ class Handler(BaseHTTPRequestHandler):
             elif name == "rebootMotors":
                 session.driving = False
                 result = self.bridge.reboot_motors([])
+            elif name == "shutdown":
+                if msg.get("confirm") != "SHUTDOWN":
+                    session.send({"t": "ack", "id": cmd_id, "ok": False,
+                                  "reason": "需要确认", "name": name})
+                    return
+                session.driving = False
+                result = self.bridge.shutdown()
+                if result.get("accepted", True):
+                    LOG.info("已受理关机请求：机器人会先坐下再断电")
             elif name == "sound":
                 tag = str(msg.get("tag") or "")
                 if tag not in SOUND_TAGS:

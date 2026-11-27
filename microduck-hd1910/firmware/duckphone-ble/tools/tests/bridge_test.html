@@ -45,7 +45,8 @@
       };
     }
     if (method === 'robot.volume') return { percent: 60, muted: false };
-    if (method === 'robot.init' || method === 'robot.stop' || method === 'robot.enable') {
+    if (method === 'robot.init' || method === 'robot.stop' || method === 'robot.enable' ||
+        method === 'robot.shutdown') {
       return { accepted: true };
     }
     return {};
@@ -76,7 +77,7 @@
     scan: function () {},
     connect: function (address) { window.__connected = address; window.__connects = (window.__connects || 0) + 1; },
     disconnect: function () {},
-    info: function () { return JSON.stringify({ apiVersion: 41, mtu: 517 }); },
+    info: function () { return JSON.stringify({ apiVersion: 42, mtu: 517 }); },
     keepScreen: function () {},
   };
 </script>
@@ -100,7 +101,7 @@
     await wait(20);
     check('connect 用了配置里的地址', window.__connected === 'AA:BB:CC:DD:EE:FF', String(window.__connected));
 
-    window.DuckNativeBridge.onLink('ready', 'api=41');
+    window.DuckNativeBridge.onLink('ready', 'api=42');
     await wait(50);
     var auth = window.__calls.find(function (c) { return c.method === 'system.authenticate'; });
     check('ready 后先认证', !!auth && auth.params.pin === '000000', JSON.stringify(auth));
@@ -132,6 +133,13 @@
     await wait(30);
     var ack = messages.filter(function (m) { return m.t === 'ack' && m.id === 41; })[0];
     check('cmd init 有 ack', !!ack && ack.ok === true, JSON.stringify(ack));
+
+    socket.send(JSON.stringify({ t: 'cmd', id: 44, name: 'shutdown', confirm: 'SHUTDOWN' }));
+    await wait(30);
+    var shut = messages.filter(function (m) { return m.t === 'ack' && m.id === 44; })[0];
+    check('关机经 robot.shutdown', !!shut && shut.ok === true &&
+      window.__calls.some(function (c) { return c.method === 'robot.shutdown'; }),
+      JSON.stringify(shut));
 
     socket.send(JSON.stringify({ t: 'cmd', id: 42, name: 'volume', level: 60 }));
     await wait(30);
@@ -180,7 +188,7 @@
       document.getElementById('stConn').textContent);
     check('「连接」卡显示机器人 IP / API / MTU',
       document.getElementById('stIp').textContent.indexOf('192.168.1.5') >= 0 &&
-      document.getElementById('stIp').textContent.indexOf('api 41') >= 0 &&
+      document.getElementById('stIp').textContent.indexOf('api 42') >= 0 &&
       document.getElementById('stIp').textContent.indexOf('517') >= 0,
       document.getElementById('stIp').textContent);
 
@@ -190,7 +198,7 @@
     window.DuckNativeBridge.onLink('down', '测试断开');
     await wait(20);
     check('断开后 socket 关闭', socket.readyState === 3, String(socket.readyState));
-    window.DuckNativeBridge.onLink('ready', 'api=41');
+    window.DuckNativeBridge.onLink('ready', 'api=42');
     await wait(80);
     check('重连后 socket 重新打开', socket.readyState === 1 && reopenCount === 1,
       'readyState=' + socket.readyState + ' opens=' + reopenCount);

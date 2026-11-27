@@ -360,12 +360,19 @@
       { slot: 'kick_right', short: '右脚踢', label: '右脚踢球', kind: 'oneshot', skill: 'kick_right', dur: 0.5 },
       { slot: 'roulade', short: '前滚翻', label: '前滚翻', kind: 'oneshot', skill: 'roulade', dur: 1.0 },
     ];
+    // 没有自己槽位的技能（robotd 的 slots 是固定的，policy.skill 装的只出现在 skills 里）。
+    // 新装的策略不用改代码：robot.reloadPolicies 之后刷新页面就多一个按钮。
+    var extra = {
+      crouch: { short: '深蹲', label: '深蹲', kind: 'oneshot', dur: 4.5 },
+    };
     var byName = {};
     (report.slots || []).forEach(function (row) {
       if (row && typeof row.slot === 'string') byName[row.slot] = row;
     });
     var out = [];
+    var covered = {};
     slots.forEach(function (meta) {
+      if (meta.skill) covered[meta.skill] = true;
       var row = byName[meta.slot];
       if (!row) return;
       var path = typeof row.path === 'string' ? row.path : '';
@@ -376,6 +383,16 @@
         name: meta.label,
         desc: '',
         error: typeof row.error === 'string' ? row.error : null,
+      });
+    });
+    (report.skills || []).forEach(function (skill) {
+      if (typeof skill !== 'string' || covered[skill]) return;
+      var meta = extra[skill] || {};
+      var label = meta.label || skill;
+      out.push({
+        slot: skill, short: meta.short || label, label: label,
+        kind: meta.kind || 'oneshot', skill: skill, dur: meta.dur || 0,
+        ready: true, name: label, desc: '', error: null,
       });
     });
     return out;
@@ -421,6 +438,11 @@
           .then(done).catch(function (e) { ack(socket, id, { ok: false, reason: e.message }); });
       case 'rebootMotors':
         return rpc('robot.rebootMotors', { ids: [] })
+          .then(done).catch(function (e) { ack(socket, id, { ok: false, reason: e.message }); });
+      // 关机：robotd 先坐下再断电。桥不主动断开，等 btd 随系统一起消失，
+      // 离线浮层由现有的断链逻辑接管。
+      case 'shutdown':
+        return rpc('robot.shutdown', {})
           .then(done).catch(function (e) { ack(socket, id, { ok: false, reason: e.message }); });
       case 'sound':
         return rpc('robot.sound', { tag: message.tag, hold: message.hold })

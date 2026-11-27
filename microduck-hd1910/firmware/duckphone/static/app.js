@@ -225,6 +225,7 @@
 
     maint: $('#maint'),
     btnReboot: $('#btnReboot'),
+    btnShutdown: $('#btnShutdown'),
     btnInputDetail: $('#btnInputDetail'),
     paddState: $('#paddState'),
     maintHz: $('#maintHz'),
@@ -767,6 +768,7 @@
     el.maintTemp.textContent = `${S.cpu === null ? '—' : Math.round(S.cpu) + '°C'} / ${S.temp === null ? '—' : Math.round(S.temp) + '°C'}`;
     if (el.maintVersion) el.maintVersion.textContent = `robotd ${S.robotd || '—'} · 控制环 ${S.hz > 0 ? Math.round(S.hz) : '—'} Hz`;
     el.btnReboot.disabled = S.role !== 'driver' || S.link !== 'online';
+    el.btnShutdown.disabled = S.role !== 'driver' || S.link !== 'online';
   }
 
   function updateBanner() {
@@ -2092,6 +2094,30 @@
       pushEvent('reboot', 'ok', '舵机已重启', '请重新站立');
       toast('舵机已重启，请重新站立', 'warn', 3200);
     }, 1600);
+  });
+
+  // 关机：两步确认后才发。robotd 先坐下再断电，之后只能手动上电
+  let shutdownArmed = false;
+  let shutdownTimer = 0;
+  el.btnShutdown.addEventListener('click', async () => {
+    if (!shutdownArmed) {
+      shutdownArmed = true;
+      el.btnShutdown.textContent = '再点一次关机';
+      shutdownTimer = setTimeout(() => {
+        shutdownArmed = false;
+        el.btnShutdown.textContent = '关机';
+      }, 4000);
+      return;
+    }
+    clearTimeout(shutdownTimer);
+    shutdownArmed = false;
+    el.btnShutdown.textContent = '关机';
+    stopStick();
+    const res = await cmd('shutdown', { confirm: 'SHUTDOWN' });
+    if (!res.ok) { toast(res.reason || '关机被拒绝', 'err'); return; }
+    pushEvent('shutdown', 'warn', '正在关机', '先坐下，然后断电；之后需要手动上电');
+    toast('正在关机 · 会先坐下再断电', 'warn', 4000);
+    dismissSheets();
   });
 
   // ── 速度档 ─────────────────────────────────────────────────────────────

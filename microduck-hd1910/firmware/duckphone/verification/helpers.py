@@ -47,6 +47,7 @@ class FakeRobotd:
             "robot.init": {"accepted": True},
             "robot.relax": {"accepted": True},
             "robot.rebootMotors": {"accepted": True},
+            "robot.shutdown": {"accepted": True},
             "robot.policies": {
                 "enabled": True, "homed": False, "mode": "walk", "sitting": False,
                 "skills": ["roulade", "kick_left"],

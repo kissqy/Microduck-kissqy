@@ -739,29 +739,19 @@ class DynamicSoundTest(BridgeTestCase):
 
 
 class ActionCommandTest(BridgeTestCase):
-    """v3 预设动作：驱动者播放、状态带 act、只读/待命拒绝。"""
+    """v4 预设动作：桥只转发 `robot.action`，`act` 由 robotd 的帧回传。"""
 
     def setUp(self):
         super().setUp()
         self.client = self.connect()
         self.assertTrue(self.h.fake.wait_for_client())
-        for _ in range(8):
-            self.h.fake.push_state(
-                policy="walk",
-                safety={"fallen": False, "limp": False, "gravity": [0.0, 0.0, -1.0]},
-            )
-            time.sleep(0.02)
         self.h.fake.reset()
 
     def wait_state(self, predicate, timeout: float = 3.0) -> dict:
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
-            # The bridge only emits a snapshot when robotd sends a state frame;
-            # idle tests have to keep the fake stream alive.
-            self.h.fake.push_state(
-                policy="walk",
-                safety={"fallen": False, "limp": False, "gravity": [0.0, 0.0, -1.0]},
-            )
+            # The bridge only emits a snapshot when robotd sends a state frame.
+            self.h.fake.push_state()
             try:
                 state = self.client.wait_for("state", timeout=0.4)
             except AssertionError:
@@ -770,57 +760,60 @@ class ActionCommandTest(BridgeTestCase):
                 return state
         raise AssertionError("没有等到目标 state")
 
-    def test_quack_moves_the_mouth_and_can_be_cancelled(self):
-        # `name` is the command; `action` carries the preset name.
+    def test_action_is_forwarded_and_the_frame_carries_act(self):
         self.client.send({"t": "cmd", "id": 1, "name": "action", "action": "quack"})
-        ack = self.client.wait_for("ack")
+        ack = self.client.wait_for("ack", id=1)
         self.assertTrue(ack["ok"], ack)
+        self.assertEqual(ack["action"], "quack")
+        self.assertTrue(ack["sound"])
+        self.assertEqual(
+            self.h.fake.calls("robot.action")[-1]["params"],
+            {"action": "quack", "idle": False, "sound": True},
+        )
+
+        # `act` is robotd's answer, not the bridge's own player.
+        self.h.fake.push_state(act="quack", actIdle=False)
         state = self.wait_state(lambda s: s.get("act") == "quack")
-        self.assertTrue(state["actIdle"] is False)
+        self.assertFalse(state["actIdle"])
 
-        deadline = time.monotonic() + 2.0
-        while time.monotonic() < deadline and not self.h.fake.calls("robot.mouth"):
-            time.sleep(0.02)
-        mouths = self.h.fake.calls("robot.mouth")
-        self.assertTrue(mouths, "张嘴动作没有下发 robot.mouth")
-        self.assertTrue(any(m["params"]["open"] > 0.8 for m in mouths), mouths)
-
+    def test_cancel_is_the_same_method_with_no_action(self):
         self.client.send({"t": "cmd", "id": 2, "name": "cancelAction"})
-        self.assertTrue(self.client.wait_for("ack")["ok"])
-        deadline = time.monotonic() + 1.0
-        while time.monotonic() < deadline:
-            mouths = self.h.fake.calls("robot.mouth")
-            if mouths and mouths[-1]["params"]["open"] == 0.0:
-                break
-            time.sleep(0.02)
-        self.assertEqual(mouths[-1]["params"]["open"], 0.0)
+        self.assertTrue(self.client.wait_for("ack", id=2)["ok"])
+        params = self.h.fake.calls("robot.action")[-1]["params"]
+        self.assertNotIn("action", params)
+
+    def test_unknown_action_never_reaches_robotd(self):
+        self.client.send({"t": "cmd", "id": 3, "name": "action", "action": "moonwalk"})
+        ack = self.client.wait_for("ack", id=3)
+        self.assertFalse(ack["ok"])
+        started = [c for c in self.h.fake.calls("robot.action") if "action" in c["params"]]
+        self.assertEqual(started, [])
 
     def test_readonly_cannot_play(self):
         ro = self.h.client()
         self.clients.append(ro)
         ro.send({"t": "hello", "name": "iPad"})
         self.assertEqual(ro.wait_for("hello")["role"], "readonly")
-        ro.send({"t": "cmd", "id": 3, "name": "action", "action": "circle"})
+        ro.send({"t": "cmd", "id": 4, "name": "action", "action": "circle"})
         ack = ro.wait_for("ack")
         self.assertFalse(ack["ok"])
         self.assertEqual(ack["reason"], "readonly")
-        self.assertEqual(self.h.fake.calls("robot.head"), [])
+        started = [c for c in self.h.fake.calls("robot.action") if "action" in c["params"]]
+        self.assertEqual(started, [])
 
-    def test_action_is_refused_when_not_walking(self):
-        self.h.fake.push_state(
-            policy="held",
-            safety={"fallen": False, "limp": False, "gravity": [0.0, 0.0, -1.0]},
-        )
-        time.sleep(0.1)
-        self.client.send({"t": "cmd", "id": 4, "name": "action", "action": "look_up"})
-        ack = self.client.wait_for("ack")
+    def test_robotd_refusal_is_passed_through(self):
+        self.h.fake.responses["robot.action"] = {
+            "accepted": False, "reason": "机器人未站立或正在移动", "sound": True,
+        }
+        self.client.send({"t": "cmd", "id": 5, "name": "action", "action": "look_up"})
+        ack = self.client.wait_for("ack", id=5)
         self.assertFalse(ack["ok"])
         self.assertIn("未站立", ack["reason"] or "")
-        self.assertEqual(self.h.fake.calls("robot.head"), [])
 
 
 class IdleGestureTest(unittest.TestCase):
-    """The idle sound must also move the head; the bridge sends robot.head frames."""
+    """The idle director asks robotd for the gesture, silently — it has already
+    played the sound the gesture belongs to."""
 
     def setUp(self):
         self.h = BridgeHarness()
@@ -831,7 +824,7 @@ class IdleGestureTest(unittest.TestCase):
             c.close()
         self.h.close()
 
-    def test_idle_sends_a_look_up_gesture(self):
+    def test_idle_requests_look_up_silently(self):
         client = self.h.client()
         self.clients.append(client)
         client.send({"t": "hello", "name": "Mate 40 Pro"})
@@ -854,14 +847,16 @@ class IdleGestureTest(unittest.TestCase):
         pump.start()
 
         deadline = time.monotonic() + 9.0
-        gesture = []
-        while time.monotonic() < deadline and not gesture:
-            gesture = [m for m in self.h.fake.calls("robot.head")
-                       if m["params"].get("head_pitch", 0.0) < -0.1]
+        calls = []
+        while time.monotonic() < deadline and not calls:
+            calls = [c for c in self.h.fake.calls("robot.action") if "action" in c["params"]]
             time.sleep(0.05)
         pump.join(timeout=1.0)
-        self.assertTrue(gesture, "空闲没有下发抬头动作")
-        self.assertAlmostEqual(gesture[0]["params"]["head_pitch"], -0.30, places=3)
+        self.assertTrue(calls, "空闲没有请求动作")
+        params = calls[0]["params"]
+        self.assertEqual(params["action"], "look_up")
+        self.assertTrue(params["idle"])
+        self.assertFalse(params["sound"], "空闲导演已经放过声音，动作必须静音")
 
 
 class AudioConfigTest(BridgeTestCase):

@@ -4850,6 +4850,8 @@ mod tests {
             imu: None,
             frames: None,
             skeleton: Vec::new(),
+            act: None,
+            act_idle: false,
         }
     }
 }

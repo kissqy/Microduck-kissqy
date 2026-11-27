@@ -174,6 +174,11 @@
     if (bat) message.bat = bat;
     if (health.motors && typeof health.motors.max_c === 'number') message.temp = health.motors.max_c;
     if (typeof health.cpu_temp_c === 'number') message.cpu = health.cpu_temp_c;
+    // 正在播放的预设动作由 robotd 回传；没有就不发，省掉两帧空字段。
+    if (f.act) {
+      message.act = f.act;
+      message.actIdle = !!f.actIdle;
+    }
     link.socket.emit(message);
   }
 
@@ -339,7 +344,7 @@
 
   function ack(socket, id, payload) {
     var message = { t: 'ack', id: id, ok: !!payload.ok };
-    ['reason', 'volume', 'muted', 'saved', 'message', 'enabled'].forEach(function (key) {
+    ['reason', 'volume', 'muted', 'saved', 'message', 'enabled', 'action', 'sound'].forEach(function (key) {
       if (payload[key] !== undefined) message[key] = payload[key];
     });
     socket.emit(message);
@@ -420,6 +425,16 @@
       case 'sound':
         return rpc('robot.sound', { tag: message.tag, hold: message.hold })
           .then(done).catch(function (e) { ack(socket, id, { ok: false, reason: e.message }); });
+      // 预设动作由 robotd 播放（API 42），与网页版是同一份实现。
+      case 'action':
+        return rpc('robot.action', {
+          action: message.action, idle: false, sound: true,
+        }).then(function (result) {
+          done(result, { action: message.action, sound: !!(result && result.sound) });
+        }).catch(function (e) { ack(socket, id, { ok: false, reason: e.message }); });
+      case 'cancelAction':
+        return rpc('robot.action', {})
+          .then(done).catch(function (e) { ack(socket, id, { ok: false, reason: e.message }); });
       case 'volume':
         return (message.level === undefined
           ? rpc('robot.volume', {})
@@ -486,9 +501,9 @@
     authenticate()
       .then(function (authResult) {
         logEvent('authed', JSON.stringify(authResult));
-        if (link.apiVersion < 41) {
+        if (link.apiVersion < 42) {
           throw new Error(link.apiVersion
-            ? '机器人固件是 API ' + link.apiVersion + '，需要 41；等新固件部署后再连'
+            ? '机器人固件是 API ' + link.apiVersion + '，需要 42；等新固件部署后再连'
             : '读不到机器人的 API 版本；断开后重新连接一次');
         }
         // 系统页（网络/维护）只需要一条已认证的会话，不订阅状态——那 10 Hz 的帧是

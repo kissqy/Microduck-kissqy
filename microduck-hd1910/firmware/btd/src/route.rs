@@ -301,6 +301,13 @@ fn permits(call: &proto::Call) -> bool {
         // refused for the reason on the arm below.
         RobotSound(_) => true,
 
+        // The four preset gestures the web page has had since it got its action buttons. One
+        // request, not a stream — the same argument as `robot.do`, and the reason the gestures
+        // moved into `robotd` at all: a phone has no Python host to play them, and the daemon
+        // already owns the head and the mouth. The gate that keeps them off a fallen robot is in
+        // `robotd`, which is also the only side that can see the live twist.
+        RobotAction(_) => true,
+
         // Reading and setting the codec's level. Same argument as `robot.sound`, and it is the
         // slider above those seven buttons. `robotd` answers it; the codec is the robot's own.
         RobotVolume(_) => true,
@@ -948,6 +955,29 @@ mod tests {
                 call.method()
             );
         }
+    }
+
+    /// The four preset gestures, which the phone app shares with the web page.
+    #[test]
+    fn the_preset_gestures_are_reachable() {
+        for action in ["look_up", "look_around", "circle", "quack"] {
+            let call = proto::Call::RobotAction(proto::ActionParams {
+                action: Some(action.into()),
+                idle: false,
+                sound: true,
+            });
+            assert_eq!(
+                upstream_for(&call),
+                Some(Upstream::Robot),
+                "{}",
+                call.method()
+            );
+        }
+        // The cancel is the same method with nothing in it, and reaches the same place.
+        assert_eq!(
+            upstream_for(&proto::Call::RobotAction(proto::ActionParams::default())),
+            Some(Upstream::Robot)
+        );
     }
 
     /// Stopping the pad driver reaches `configd`, which is root and owns the unit whitelist.

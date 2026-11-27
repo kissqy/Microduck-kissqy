@@ -42,7 +42,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 import ws as wsproto
-from actions import ACTIONS, ActionPlayer, action_sound
+from actions import ACTIONS
 from audio_director import AudioDirector
 from audio_settings import AudioSettings
 from rpc import RobotRPC, RobotUnavailable
@@ -440,9 +440,6 @@ class RobotBridge:
         # Dynamic sound is a bridge-level preference: the phone and the debug
         # console toggle the same value. Off until a phone takes the wheel.
         self.dynamic_sound = False
-        # The action currently playing, if any; read by `snapshot` for the UI.
-        self.action_name: str | None = None
-        self.action_idle = False
         self._rpc = RobotRPC(
             socket_path,
             subscribe_hz=subscribe_hz,
@@ -580,10 +577,11 @@ class RobotBridge:
             "roReason": self._rpc.subscribe_error,
         }
         # Only present while an action runs: the idle state stream is 20 Hz and
-        # two null fields on every frame are not worth the bytes.
-        if self.action_name:
-            out["act"] = self.action_name
-            out["actIdle"] = bool(self.action_idle)
+        # two null fields on every frame are not worth the bytes. `robotd` plays
+        # the gesture, so this is its frame's answer rather than a local belief.
+        if frame.get("act"):
+            out["act"] = str(frame["act"])
+            out["actIdle"] = bool(frame.get("actIdle"))
 
         health = self._health or {}
         battery = health.get("battery") or {}
@@ -630,48 +628,13 @@ class RobotBridge:
     def sound(self, tag: str, hold: bool | None = None) -> dict:
         return self._rpc.sound(tag, hold)
 
-    def sound_async(self, tag: str) -> None:
-        """A beat inside an action: do not wait for an ack, or the 500 ms
-        robotd deadman would fire while the sound request is in flight."""
-        self._rpc.sound_async(tag)
+    def action(self, name: str | None, *, idle: bool = False, sound: bool = True) -> dict:
+        """Play a preset gesture on `robotd`, or cancel the one playing."""
+        return self._rpc.action(name, idle=idle, sound=sound)
 
-    def set_action_state(self, name: str | None, idle: bool) -> None:
-        """Called by the action player so the 20 Hz state carries `act`."""
-        self.action_name = name
-        self.action_idle = bool(idle)
-
-    def action_allowed(self) -> bool:
-        """Whether a preset action may move the robot right now.
-
-        The page also checks this, but the bridge is the one that can see the
-        real state: a stale page must not start an action while the robot is
-        already moving, and padd would fight the action for `robot.move`.
-        """
-        if not self._online or self.read_only or self._padd:
-            return False
-        with self._lock:
-            frame = self._state or {}
-        if not frame:
-            return False
-        move = frame.get("move") or {}
-        safety = frame.get("safety") or {}
-        if str(frame.get("policy") or "") != "walk":
-            return False
-        if safety.get("limp") or safety.get("fallen"):
-            return False
-        if tilt_from_gravity(safety.get("gravity") or []) >= 30.0:
-            return False
-        # While an action is running, `requested` is the action's own move
-        # command; treating that as "someone else is driving" cancelled every
-        # moving action on the first frame. User input cancels via `note_input`.
-        if self.action_name:
-            return True
-        requested = move.get("requested") or [0.0, 0.0, 0.0]
-        try:
-            vx, _, vyaw = (float(v) for v in list(requested)[:3])
-        except (TypeError, ValueError):
-            return False
-        return abs(vx) < 0.02 and abs(vyaw) < 0.02
+    def cancel_action(self) -> None:
+        """Cancel a gesture without waiting for a reply."""
+        self._rpc.cancel_action()
 
     def set_dynamic_sound(self, on: bool) -> dict:
         """One global switch for the phone page and the debug console."""
@@ -1045,7 +1008,6 @@ class Handler(BaseHTTPRequestHandler):
     watchdog: Watchdog
     director: AudioDirector
     audio_settings: AudioSettings
-    actions: ActionPlayer
 
     def log_message(self, fmt: str, *args) -> None:  # noqa: A003 - stdlib signature
         LOG.debug("%s - %s", self.address_string(), fmt % args)
@@ -1212,7 +1174,7 @@ class Handler(BaseHTTPRequestHandler):
             if driver is not None:
                 driver.driving = False
             try:
-                self.actions.cancel()
+                self.bridge.cancel_action()
                 self.bridge.stop()
                 self.bridge.head(0.0, 0.0, 0.0, 0.0)
                 self.bridge.sound("wheee", False)
@@ -1454,21 +1416,18 @@ class Handler(BaseHTTPRequestHandler):
                                   "reason": f"不支持的动作：{action}", "name": name})
                     return
                 self.director.note_manual()
-                sound_ok = True
-                tag = action_sound(action)
-                if tag:
-                    # Play the voice first: if robotd refuses the sound request,
-                    # the action must not start behind a failed ack.
-                    sound_ok = bool(self.bridge.sound(tag).get("accepted", True))
-                ok, reason = self.actions.run(action, idle=False)
+                result = self.bridge.action(action)
                 session.send({
-                    "t": "ack", "id": cmd_id, "ok": ok, "name": name,
-                    "action": action, "reason": reason or None, "sound": sound_ok,
+                    "t": "ack", "id": cmd_id, "ok": bool(result.get("accepted", True)),
+                    "name": name, "action": action,
+                    "reason": result.get("reason") or None,
+                    "sound": bool(result.get("sound", False)),
                 })
                 return
             if name == "cancelAction":
-                self.actions.cancel()
-                session.send({"t": "ack", "id": cmd_id, "ok": True, "name": name})
+                result = self.bridge.action(None)
+                session.send({"t": "ack", "id": cmd_id, "ok": bool(result.get("accepted", True)),
+                              "name": name, "reason": result.get("reason") or None})
                 return
             if name == "init":
                 result = self.bridge.init()
@@ -1590,26 +1549,25 @@ def make_server(cfg: argparse.Namespace) -> Server:
     bridge.add_listener(broadcast)
     settings = AudioSettings(getattr(cfg, "audio_config", None))
 
-    def action_allowed() -> bool:
-        return (bridge.online and not bridge.read_only
-                and manager.driver is not None and bridge.action_allowed())
+    def _run_action(name: str, *, idle: bool, sound: bool) -> tuple[bool, str]:
+        result = bridge.action(name, idle=idle, sound=sound)
+        return bool(result.get("accepted", True)), str(result.get("reason") or "")
 
-    actions = ActionPlayer(
-        bridge.head,
-        bridge.mouth,
-        bridge.drive,
-        bridge.pose,
-        play_sound=bridge.sound_async,
-        allowed=action_allowed,
-        on_change=bridge.set_action_state,
-    )
+    def _cancel_action() -> None:
+        # Called from the director's hooks, which fire on the state-listener
+        # thread; a request there would wait for a reply that same thread
+        # delivers. A cancel needs no answer, so it goes as a notification.
+        bridge.cancel_action()
+
     director = AudioDirector(
         play=bridge.sound,
         enabled=lambda: bridge.dynamic_sound,
         driver_active=lambda: manager.driver is not None,
         settings=settings.snapshot,
-        action=actions.run,
-        cancel_action=actions.cancel,
+        # The director has already made the sound the gesture belongs to, so the
+        # gesture is played silent — `robotd` would otherwise beat it out twice.
+        action=lambda name, *, idle: _run_action(name, idle=idle, sound=False),
+        cancel_action=_cancel_action,
     )
     bridge.add_listener(director.on_state)
     director.start()
@@ -1622,7 +1580,6 @@ def make_server(cfg: argparse.Namespace) -> Server:
         "watchdog": watchdog,
         "director": director,
         "audio_settings": settings,
-        "actions": actions,
     })
     httpd = Server((cfg.host, cfg.port), handler)
     httpd.bridge = bridge          # type: ignore[attr-defined]
@@ -1631,7 +1588,6 @@ def make_server(cfg: argparse.Namespace) -> Server:
     httpd.pairing = pairing        # type: ignore[attr-defined]
     httpd.director = director      # type: ignore[attr-defined]
     httpd.audio_settings = settings  # type: ignore[attr-defined]
-    httpd.actions = actions        # type: ignore[attr-defined]
     return httpd
 
 

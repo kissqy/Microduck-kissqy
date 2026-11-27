@@ -817,6 +817,13 @@
   #btnSound:hover{background:var(--panel); color:var(--duck);}
   #btnSound.active{color:var(--duck);}
   #btnSound[disabled]{opacity:.35;}
+  #btnActions{
+    flex:0 0 auto; display:flex; align-items:center; gap:7px;
+    font-size:13px; color:var(--muted); padding:7px 10px; border-radius:10px;
+  }
+  #btnActions:hover{background:var(--panel); color:var(--text);}
+  #btnActions.active{color:var(--duck); background:rgba(255,197,61,.09);}
+  #btnActions[disabled]{opacity:.35;}
   /* 声音按钮占掉右推位置，维护按钮紧挨着它 */
   #btnMaint{margin-left:0;}
 
@@ -873,6 +880,67 @@
     border-radius:9px; border:1px solid var(--line); background:var(--panel-hi);
   }
   #sound .vol button.on{color:var(--danger); border-color:rgba(255,90,82,.45); background:var(--danger-soft);}
+
+  /* ── 预设动作抽屉 ───────────────────────────────────────── */
+  #actionsSheet{
+    align-items:flex-end; justify-content:center; background:rgba(0,0,0,.58);
+    padding:0;
+  }
+  #actionsSheet .drawer{
+    width:min(720px,100%); max-height:86%; overflow:auto;
+    background:linear-gradient(180deg,#20242C,#171A20);
+    border:1px solid #313845; border-bottom:0;
+    border-radius:24px 24px 0 0; padding:10px 22px 32px;
+    animation:up .18s ease-out;
+  }
+  .act-ro{
+    margin:0 0 12px; padding:9px 12px; border-radius:10px;
+    border:1px solid rgba(90,169,255,.3); background:rgba(90,169,255,.08);
+    color:var(--info); font-size:12px; font-weight:600;
+  }
+  .act-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
+  .preset{
+    position:relative; display:flex; flex-direction:column; align-items:flex-start;
+    gap:7px; min-height:112px; padding:13px 13px 16px; text-align:left;
+    border:1px solid #2A303A; border-radius:16px; background:#20242B;
+    transition:border-color .12s, background .12s, transform .08s; overflow:hidden;
+  }
+  .preset:hover{border-color:#3C4655; background:#252A33;}
+  .preset:active{transform:scale(.99);}
+  .preset:disabled{opacity:.42; cursor:not-allowed;}
+  .preset .p-ico{
+    width:34px; height:34px; border-radius:11px 5px 11px 5px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--muted); background:linear-gradient(180deg,#2E3541,#232833);
+    border:1px solid #3B4350;
+  }
+  .preset .p-ico svg{width:19px; height:19px;}
+  .preset .p-txt{display:flex; flex-direction:column; gap:1px; min-width:0;}
+  .preset .p-txt b{font-size:16px; font-weight:700; color:var(--text);}
+  .preset .p-txt small{font-size:11px; line-height:15px; color:var(--muted);}
+  .preset .p-meta{
+    margin-top:auto; font-size:10px; color:var(--dim);
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .preset .p-bar{position:absolute; left:0; right:0; bottom:0; height:3px; background:#111318;}
+  .preset .p-bar i{display:block; width:0; height:100%; background:var(--duck);}
+  .preset.wide{grid-column:1 / -1; min-height:92px;}
+  .preset.playing{border-color:rgba(255,197,61,.6); background:rgba(255,197,61,.08);}
+  .preset.playing .p-ico{color:var(--duck); border-color:rgba(255,197,61,.45);}
+  .preset .p-badge{
+    position:absolute; right:10px; top:10px; padding:2px 7px; border-radius:999px;
+    background:rgba(90,169,255,.14); border:1px solid rgba(90,169,255,.35);
+    color:var(--info); font-size:9px; font-weight:700;
+  }
+  .pool{display:flex; flex-wrap:wrap; gap:7px; margin-top:9px;}
+  .pool-chip{
+    padding:7px 11px; border-radius:999px; border:1px solid var(--line);
+    background:#171A20; color:var(--muted); font-size:12px; font-weight:600;
+  }
+  .pool-chip.on{
+    color:var(--duck); border-color:rgba(255,197,61,.5);
+    background:rgba(255,197,61,.1);
+  }
 
   /* 动态声音设置抽屉 */
   #settings{
@@ -970,4 +1038,10 @@
     .speed .label{display:none;}
     #footer .unit{display:none;}
     #btnMaint{font-size:12px; gap:5px; padding:0 4px;}
+    #btnActions span{display:none;}
+    #btnActions{padding:7px;}
+    #actionsSheet .drawer{padding:10px 14px 28px;}
+    #actionsSheet .row{flex-wrap:wrap; row-gap:6px;}
+    #actionsSheet .row .grow{flex:1 1 100%;}
+    #actionsSheet .row > .mini{margin-left:auto;}
   }

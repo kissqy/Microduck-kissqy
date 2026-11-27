@@ -18,6 +18,7 @@
 //! publishes and never calls into the loop — a wedged loop reports itself unhealthy rather
 //! than hanging the caller.
 
+mod action;
 mod chorale;
 mod communication_stats;
 mod control;
@@ -765,6 +766,8 @@ struct RobotState {
     /// Not `busy`: a seated duck is parked, not travelling, which is the distinction
     /// [`control::Controller::busy`] already draws.
     sitting: AtomicBool,
+    /// The preset gesture slot: what the IPC side asks for, and what the loop is playing.
+    actions: action::Handle,
 
     period_us: u64,
     min_achieved_hz: f64,
@@ -835,6 +838,7 @@ impl RobotState {
             home_start: ArcSwapOption::empty(),
             enable_refusal: ArcSwapOption::empty(),
             sitting: AtomicBool::new(false),
+            actions: action::Handle::default(),
             period_us: params.period().as_micros() as u64,
             min_achieved_hz: params.update_gate.min_achieved_hz,
             stall_periods: params.update_gate.stall_periods,
@@ -2262,6 +2266,12 @@ async fn control_loop<T: RobotIo>(
     let limp_fall_max = Duration::from_millis(params.safety.limp_fall_max_ms);
     let limp_fall_pose = Duration::from_millis(params.safety.limp_fall_pose_ms);
     let mut limp_fall = LimpFall::Idle;
+    // The gate for preset gestures. `in_limp_fall` is computed too late in the tick to be the
+    // value the player uses for that same tick, so it carries over from the previous one — 20 ms
+    // of staleness in the direction of *allowing* one extra frame, never of starting during a
+    // fall that was already known.
+    let mut limp_fall_active = false;
+    let mut player = action::Player::default();
 
     // The voice, and the ear. Both optional equipment: a robot without a codec or a bank
     // walks identically — the player degrades to a debug line, and the mic worker is only
@@ -2437,6 +2447,22 @@ async fn control_loop<T: RobotIo>(
 
         // As upstream: IMU readiness gates policy inference below; it does not
         // manufacture a robot.relax request. Failed observations coast then hold.
+        // Preset gestures, before the snapshot below reads the head and the mouth back — so a
+        // gesture's frame lands on this tick rather than the next. The gate is this tick's own
+        // safety and command, which is why it is computed here and not inside the player.
+        let pre = intents.snapshot();
+        let can_act = action::ready(
+            state.homed.load(Ordering::Relaxed),
+            pre.enabled,
+            safety.fallen(),
+            limp_fall_active,
+            sensors
+                .as_ref()
+                .map_or([0.0, 0.0, -1.0], |sensors| sensors.imu.gravity),
+            pre.command.twist,
+        );
+        player.tick(tick_start, &state.actions, &intents, can_act);
+
         let mut snapshot = intents.snapshot();
         let (gated, deadman) = safety.gate(snapshot.command, snapshot.twist_age);
         let mut limits: Vec<duck_control::safety::Limit> = deadman.into_iter().collect();
@@ -3236,6 +3262,7 @@ async fn control_loop<T: RobotIo>(
             }
         }
         let in_limp_fall = limp_fall != LimpFall::Idle;
+        limp_fall_active = in_limp_fall;
 
         // Smooth the command. The limp-fall sequence holds the twist at zero outright, so
         // the robot is not handed back mid-command; and leaving body-pose mode snaps the
@@ -4053,6 +4080,8 @@ async fn control_loop<T: RobotIo>(
                 } else {
                     Vec::new()
                 },
+                act: state.actions.current().map(str::to_owned),
+                act_idle: state.actions.idle(),
             });
             if official_subscribed {
                 let _ = state.state_tx.send(frame.clone());
@@ -4514,6 +4543,8 @@ async fn handle(
                                             enabled: intents.enabled(),
                                             homed: state.homed.load(Ordering::Relaxed),
                                             sitting: state.sitting.load(Ordering::Relaxed),
+                                            act: frame.act.clone(),
+                                            act_idle: frame.act_idle,
                                         };
                                         write_line(
                                             &mut write_half,
@@ -4752,6 +4783,20 @@ fn mouth_intent_ready(
 }
 
 fn apply_intent(state: &RobotState, intents: &Intents, call: &proto::Call) -> bool {
+    // The notification half of the same rule `dispatch` applies: an intent the user sent stops a
+    // gesture, without writing anything back. `robot.sound` and `chorale.heard` deliberately do
+    // not — a gesture's own beats must not cancel it.
+    if matches!(
+        call,
+        proto::Call::RobotMove(_)
+            | proto::Call::RobotHead(_)
+            | proto::Call::RobotLook(_)
+            | proto::Call::RobotPose(_)
+            | proto::Call::RobotMouth(_)
+            | proto::Call::RobotDo(_)
+    ) {
+        state.actions.stop();
+    }
     match call {
         proto::Call::RobotMove(p) => {
             intents.set_twist([p.vx, p.vy, p.vyaw]);
@@ -4791,6 +4836,22 @@ fn apply_intent(state: &RobotState, intents: &Intents, call: &proto::Call) -> bo
         // Same story for the wheee hold, which arrives per tick while the trigger is down.
         proto::Call::RobotSound(p) => {
             intents.request_sound(*p);
+            true
+        }
+        // A gesture sent as a notification: how the phone's director cancels one
+        // from a listener thread, where a request would wait on itself. A start
+        // still needs `robotd`'s gate, and the player applies it — a start that
+        // arrives while the gate is closed is dropped on the next tick rather
+        // than answered, because there is nobody waiting for an answer.
+        proto::Call::RobotAction(p) => {
+            match p.action.as_deref() {
+                None => state.actions.cancel(),
+                Some(name) => {
+                    if let Some(found) = action::Action::from_name(name) {
+                        state.actions.start(found, p.idle, p.sound);
+                    }
+                }
+            }
             true
         }
         _ => false,
@@ -5359,6 +5420,26 @@ fn dispatch(
             ),
         );
     }
+    // A user intent outranks a gesture. Stop it, but write nothing back — the client just sent
+    // head or a velocity, and zeroing those here would collide with its own intent by a frame.
+    // Idempotent, because a held joystick sends this fifty times a second.
+    if matches!(
+        call,
+        proto::Call::RobotMove(_)
+            | proto::Call::RobotHead(_)
+            | proto::Call::RobotLook(_)
+            | proto::Call::RobotStop
+            | proto::Call::RobotEnable(_)
+            | proto::Call::RobotInit
+            | proto::Call::RobotRelax
+            | proto::Call::RobotRebootMotors(_)
+            | proto::Call::RobotDo(_)
+            | proto::Call::RobotPose(_)
+            | proto::Call::RobotMouth(_)
+            | proto::Call::RobotShutdown
+    ) {
+        state.actions.stop();
+    }
     match call {
         proto::Call::RobotMove(_)
         | proto::Call::RobotHead(_)
@@ -5522,6 +5603,44 @@ fn dispatch(
                     "this robot has no voice: audio is disabled, or its bank is empty \
                      (run `sounds ensure-bank`)",
                 )
+            };
+            proto::Response::ok(Some(id), &result)
+        }
+
+        // A gesture is queued for the loop's next tick, like a sound. Refused here only for
+        // what this side can already know: an unknown name, or a robot the loop's last tick
+        // said it would not gesture from. The gate is the loop's, because only the loop sees
+        // the fall verdict, the limp-fall sequence and the live twist together.
+        proto::Call::RobotAction(p) => {
+            let result = match p.action.as_deref() {
+                None => {
+                    state.actions.cancel();
+                    proto::ActionResult {
+                        accepted: true,
+                        reason: None,
+                        sound: state.has_voice,
+                    }
+                }
+                Some(name) => match action::Action::from_name(name) {
+                    None => proto::ActionResult {
+                        accepted: false,
+                        reason: Some(format!("未知动作：{name}")),
+                        sound: state.has_voice,
+                    },
+                    Some(_) if !state.actions.ready() => proto::ActionResult {
+                        accepted: false,
+                        reason: Some("机器人未站立或正在移动".into()),
+                        sound: state.has_voice,
+                    },
+                    Some(found) => {
+                        state.actions.start(found, p.idle, p.sound);
+                        proto::ActionResult {
+                            accepted: true,
+                            reason: None,
+                            sound: state.has_voice,
+                        }
+                    }
+                },
             };
             proto::Response::ok(Some(id), &result)
         }

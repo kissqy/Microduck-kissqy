@@ -443,7 +443,20 @@ pub const JSONRPC_VERSION: &str = "2.0";
 /// the gamepad out of the way without an ssh session. Additive, and bumps for the reason the
 /// constant exists: a `btd` from before this release refuses all three, so the phone app must
 /// be able to tell an old robot from one it can drive.
-pub const API_VERSION: u32 = 41;
+///
+/// # v42 — the preset gestures, served by the robot
+///
+/// `robot.action` plays one of `look_up`, `look_around`, `circle` and `quack`, or cancels the one
+/// playing when sent as `{}`. The gestures used to be a Python player inside `duckphone`, which
+/// meant a phone with no Python host could not have them at all; the daemon already owns the head
+/// and the mouth, so it owns the gestures too. [`RobotState::act`] and [`PhoneState::act`] say
+/// what is playing, with `actIdle` marking a gesture the idle director chose.
+///
+/// Additive on the state stream — both fields are absent while nothing plays, so a v41 client sees
+/// the frame it saw before — and bumps for the reason the constant exists: a `btd` from before this
+/// release refuses `robot.action`, and the phone app must be able to tell that old robot from one
+/// it can drive.
+pub const API_VERSION: u32 = 42;
 
 /// The observation width every policy this robot family runs is built against.
 ///
@@ -684,6 +697,16 @@ pub mod method {
     /// is diagnostics, not danger), but "accepted" from a robot that cannot make a sound
     /// would make `robotctl quack` lie about which duck answered.
     pub const ROBOT_SOUND: &str = "robot.sound";
+    /// Play a preset gesture — `look_up`, `look_around`, `circle`, `quack` — or cancel the one
+    /// playing. Answered; a refusal names why (unknown name, or a robot that is not standing
+    /// still).
+    ///
+    /// One method for both directions because the answer is the same shape
+    /// ([`super::ActionResult`]) either way, and because a gesture is a state — `{}` is how a
+    /// client says "stop the gesture", exactly as it says nothing when there is none. In a
+    /// daemon of its own the gestures had to be replayable from a Python host; this is what lets
+    /// the phone app have them without one. (v42)
+    pub const ROBOT_ACTION: &str = "robot.action";
     /// The codec's output level and mute: read with `{}`, set with `percent` and/or `muted`.
     ///
     /// One method for both directions because the answer is always the same shape
@@ -1044,6 +1067,8 @@ pub enum Call {
     RobotMouth(MouthParams),
     /// Play a voice-bank sound.
     RobotSound(SoundParams),
+    /// Play a preset gesture, or cancel the one playing; see [`method::ROBOT_ACTION`]. (v42)
+    RobotAction(ActionParams),
     /// Read or set the codec's volume and mute; see [`method::ROBOT_VOLUME`]. (v41)
     RobotVolume(VolumeParams),
     /// Pick the ToF theremin up or put it down. Discrete; the answer is [`ThereminResult`].
@@ -1226,6 +1251,7 @@ impl Call {
             Call::RobotPose(_) => method::ROBOT_POSE,
             Call::RobotMouth(_) => method::ROBOT_MOUTH,
             Call::RobotSound(_) => method::ROBOT_SOUND,
+            Call::RobotAction(_) => method::ROBOT_ACTION,
             Call::RobotVolume(_) => method::ROBOT_VOLUME,
             Call::RobotTheremin(_) => method::ROBOT_THEREMIN,
             Call::RobotChorale(_) => method::ROBOT_CHORALE,
@@ -1415,6 +1441,7 @@ impl Call {
             | Call::RobotPose(_)
             | Call::RobotMouth(_)
             | Call::RobotSound(_)
+            | Call::RobotAction(_)
             // Reading or setting the codec's level. A pair of `amixer` calls, which is prompt —
             // and must be, since the client moves a slider with it.
             | Call::RobotVolume(_)
@@ -1538,6 +1565,7 @@ impl Call {
             Call::PolicySearch(p) => encode(p),
             Call::AccountLogin(p) => encode(p),
             Call::RobotSound(p) => encode(p),
+            Call::RobotAction(p) => encode(p),
             Call::RobotVolume(p) => encode(p),
             Call::RobotTheremin(p) => encode(p),
             Call::RobotChorale(p) => encode(p),
@@ -1630,6 +1658,12 @@ impl Call {
             method::ROBOT_POSE => Call::RobotPose(decode(params)?),
             method::ROBOT_MOUTH => Call::RobotMouth(decode(params)?),
             method::ROBOT_SOUND => Call::RobotSound(decode(params)?),
+            // `{}` is the cancel, and a hand-written client will send exactly that — same reason
+            // `pad.pair` handles an absent `params` member here rather than in `decode`.
+            method::ROBOT_ACTION => {
+                let empty = Value::Object(serde_json::Map::new());
+                Call::RobotAction(decode(params.or(Some(&empty)))?)
+            }
             method::ROBOT_VOLUME => Call::RobotVolume(decode(params)?),
             method::ROBOT_THEREMIN => Call::RobotTheremin(decode(params)?),
             method::ROBOT_CHORALE => Call::RobotChorale(decode(params)?),
@@ -1794,6 +1828,13 @@ pub mod test_support {
             Call::RobotSound(SoundParams {
                 tag: SoundTag::Chirp,
                 hold: None,
+            }),
+            // Only one form belongs here: `every_call_has_a_distinct_method` below requires one
+            // entry per method name, and the cancel shape is the same method.
+            Call::RobotAction(ActionParams {
+                action: Some("quack".into()),
+                idle: false,
+                sound: true,
             }),
             Call::RobotVolume(VolumeParams {
                 percent: Some(60),
@@ -2291,6 +2332,51 @@ pub struct SoundParams {
     /// so a client that dies mid-ride does not leave the robot going "wheee" forever.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub hold: Option<bool>,
+}
+
+/// See [`method::ROBOT_ACTION`]. (v42)
+///
+/// `action: None` cancels whatever gesture is playing. Every other member is `default` because a
+/// client saying `{"action":"quack"}` means the ordinary thing: a user asked for it, and the robot
+/// should make its own sound with it.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct ActionParams {
+    /// `look_up` | `look_around` | `circle` | `quack`; `None` cancels. (v42)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub action: Option<String>,
+    /// Chosen by the idle director rather than a user. Only a label: the state frame carries it
+    /// so the UI can say why the duck is moving on its own. (v42)
+    #[serde(skip_serializing_if = "is_false")]
+    pub idle: bool,
+    /// Let `robotd` play the gesture's own sound beats. An idle director that has already made
+    /// the sound passes `false`, so a gesture is not heard twice. (v42)
+    pub sound: bool,
+}
+
+impl Default for ActionParams {
+    fn default() -> Self {
+        Self {
+            action: None,
+            idle: false,
+            // `#[derive(Default)]` would make this `false`, and then every `{"action":"quack"}`
+            // from a client would be silent — the field is opt-out, not opt-in.
+            sound: true,
+        }
+    }
+}
+
+/// Answer to [`Call::RobotAction`]. (v42)
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(default)]
+pub struct ActionResult {
+    pub accepted: bool,
+    /// Why not, when `accepted` is false.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
+    /// This robot has a voice, so a gesture will be heard as well as seen. Independent of
+    /// `accepted` — a robot can refuse a gesture and still be able to make a sound. (v42)
+    pub sound: bool,
 }
 
 /// See [`method::ROBOT_VOLUME`].
@@ -2904,6 +2990,13 @@ pub struct PhoneState {
     pub homed: bool,
     /// The `sit_toggle` latch holds the robot in its seat.
     pub sitting: bool,
+    /// The preset gesture playing this tick; absent while none is. Copied from the full frame
+    /// [`RobotState::act`]. (v42)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub act: Option<String>,
+    /// That gesture was chosen by the idle director. Only meaningful while `act` is present. (v42)
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub act_idle: bool,
 }
 
 /// Dedicated R17 raw connection: native control cadence, no input/mutation on this stream.
@@ -3992,6 +4085,15 @@ pub struct RobotState {
     /// for real. `frames` is a few leaves of this. Empty from a daemon predating it. (v25)
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub skeleton: Vec<PoseState>,
+    /// The preset gesture playing this tick — `look_up`, `look_around`, `circle`, `quack` — or
+    /// absent while none is. `robotd` plays it, so a client that only watches the stream still
+    /// knows why the head is moving. (v42)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub act: Option<String>,
+    /// That gesture was chosen by the idle director rather than a user. Only meaningful while
+    /// [`Self::act`] is present. (v42)
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub act_idle: bool,
 }
 
 /// The trunk IMU, in [`RobotState::imu`]. Trunk frame: x forward, y left, z up.
@@ -5306,6 +5408,11 @@ fn is_zero(n: &u64) -> bool {
     *n == 0
 }
 
+/// `skip_serializing_if` for a flag that is absent when false. (v42)
+fn is_false(b: &bool) -> bool {
+    !*b
+}
+
 /// Re-exported so consumers spell version types with the *same* `semver` this crate
 /// compiled against. Without it, a crate depending on `semver` separately can end up with
 /// two incompatible copies of `Version` and a type error that reads as nonsense.
@@ -5793,7 +5900,7 @@ mod tests {
     fn every_call_covers_every_variant() {
         assert_eq!(
             every_call().len(),
-            69,
+            70,
             "a Call variant was added or removed — update every_call() and this count"
         );
     }
@@ -5831,6 +5938,30 @@ mod tests {
         assert_eq!(Call::parse(call.method(), Some(&params)).unwrap(), call);
         // And an omitted `params` entirely, which is what a hand-written client sends.
         assert_eq!(Call::parse(call.method(), None).unwrap(), call);
+    }
+
+    /// `robot.action` is both directions in one method: `{}` is the cancel, and the populated form
+    /// starts a gesture. Both shapes have to survive, and the absent `params` member too.
+    #[test]
+    fn action_is_started_and_cancelled_by_one_method() {
+        let cancel = Call::RobotAction(ActionParams::default());
+        // `{}` is what a client sends to cancel; the encoded form carries only the default that
+        // is not omitted, and parses back to the same call.
+        let empty = Value::Object(serde_json::Map::new());
+        assert_eq!(Call::parse(cancel.method(), Some(&empty)).unwrap(), cancel);
+        assert_eq!(Call::parse(cancel.method(), None).unwrap(), cancel);
+        assert_eq!(Call::parse(cancel.method(), Some(&cancel.params())).unwrap(), cancel);
+
+        let start = Call::RobotAction(ActionParams {
+            action: Some("quack".into()),
+            idle: false,
+            sound: true,
+        });
+        assert_eq!(
+            start.params(),
+            serde_json::json!({"action": "quack", "sound": true})
+        );
+        assert_eq!(Call::parse(start.method(), Some(&start.params())).unwrap(), start);
     }
 
     /// Every call must survive the wire unchanged.
@@ -6461,6 +6592,8 @@ mod tests {
             enabled: true,
             homed: true,
             sitting: false,
+            act: Some("circle".into()),
+            act_idle: true,
         };
 
         let line = serde_json::to_string(&Request::notify_phone_state(&state)).unwrap();
@@ -6599,6 +6732,8 @@ mod tests {
             imu: None,
             frames: None,
             skeleton: Vec::new(),
+            act: None,
+            act_idle: false,
         }
     }
 

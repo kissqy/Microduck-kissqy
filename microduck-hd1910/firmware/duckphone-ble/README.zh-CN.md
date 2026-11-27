@@ -1,21 +1,22 @@
 # duckphone-ble · 手机蓝牙版
 
-> 状态：机器人端（API 41）、App 传输层与调试 APK 均已构建通过 · 分支：`dev`
+> 状态：机器人端（API 42）、App 传输层与调试 APK 均已构建通过 · 分支：`dev`
 > 原网页版 `firmware/duckphone/` 保持不动，继续在 `http://<机器人IP>:8001` 独立运行。
 
 ## 当前进度
 
 | 层 | 内容 | 状态 |
 | --- | --- | --- |
-| 机器人 | `duck-ipc-proto` API 41、`btd` 路由、`robotd` phone 帧与音量、`configd` 服务动作 | ✅ 测试、交叉编译、真机部署通过 |
+| 机器人 | `duck-ipc-proto` API 42、`btd` 路由、`robotd` 预设动作播放器 / phone 帧与音量、`configd` 服务动作 | ✅ 测试、交叉编译、真机部署通过 |
 | PC 工具 | `probe_ble.py` / `acceptance.py` / `deploy_robot.py` / 构建安装脚本 | ✅ 构建安装可用（PC 直连 BLE 仍受 BlueZ 回收设备影响） |
 | App | Android 工程、`BleClient` / `RobotLink` / `JsBridge`、`ble-bridge.js` | ✅ 20 项 JVM 测试 + 23 项桥接断言通过 |
 | APK | `duckphone-ble-debug-*.apk`、`duckphone-ble-release-*.apk`（自签名） | ✅ 已装机，debug 与 release 均产出 |
 | 网络页 | `ble-network.html`：状态 / 扫描 / 连接 / 固定 IP / 忘记 / 控制台地址 | ✅ 状态、扫描、刷新真机通过 |
-| 真机 | 连接 / 认证 / API 41 | ✅ 手机侧通过 |
+| 真机 | 连接 / 认证 / API 42 | ✅ 手机侧通过 |
 | 真机 | 主流程：站立→接管→摇杆→停下→卸力 | ✅ 全部通过（摇杆 0.05 m/s、松手即停） |
 | 真机 | 页面：声音 / 详情抽屉 / 维护 / 网络 | ✅ 通过（右脚踢缺模型、前滚翻待冷却补测） |
 | 真机 | 断链：强杀 App 后零速 + 自动重连 | ✅ 死手 500 ms 清零，8 s 内重连 |
+| 真机 | 预设动作：抬头 / 左右看 / 画圈 / 张嘴 | ✅ 轨迹、声音、停止、摇杆打断全部通过（API 42） |
 | 交付 | release 签名、验收记录 | ✅ 见 [验收记录](../docs/design/duckphone-ble-acceptance.zh-CN.md) |
 
 ## 这是什么
@@ -85,7 +86,7 @@ duckphone-ble/
 - JDK 21（已具备）
 - Android SDK：platform 35、build-tools 35、platform-tools（已装好，license 已接受）
 - Gradle 8.9：`~/.local/opt/gradle-8.9`；`android/gradle/wrapper/` 已生成，可直接 `./gradlew`
-- 机器人端 `btd` / `robotd` / `configd`（API 41）
+- 机器人端 `btd` / `robotd` / `configd`（API 42）
 - PC 验收：Python 3.12 + Bleak（`tools/setup_pc.sh` 建 venv）
 
 ## 构建与安装
@@ -161,6 +162,10 @@ tools/.venv-ble/bin/python tools/acceptance.py --name duck-3f9c --pin 000000 --a
 手机侧同日实测（华为 NOH-AN00，API 40）：扫描到 `duck-dillon`、广播 IPv4 与 `net.status`
 一致、`connecting → connected → ready mtu=517`、PIN 认证通过；版本读回 40 后连接页停在
 「连接失败：机器人固件是 API 40，需要 41」而不是跳进驾驶页。
+
+2026-11-27 实测（API 42，预设动作）：`robot.action` 经桥转发到 `robotd`，四个动作的
+`act` 均在状态帧中出现；点「停止」或推摇杆后 `act` 立即消失、头/嘴回中；从 `robotd`
+侧取消时蓝牙页也会在一个状态帧内自行清掉“正在播放”，不再依赖本地计时器。
 
 ## App 如何连上机器人
 

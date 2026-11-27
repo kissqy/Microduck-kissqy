@@ -603,6 +603,8 @@ pub(crate) mod tests {
                 }),
                 frames: None,
                 skeleton: Vec::new(),
+                act: None,
+                act_idle: false,
             })),
             bus: Some(Bus {
                 port: Arc::from("/dev/ttyS1"),

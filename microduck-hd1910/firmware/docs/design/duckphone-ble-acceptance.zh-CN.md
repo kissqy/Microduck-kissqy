@@ -2,15 +2,15 @@
 
 > 依据：[duckphone-ble-acceptance-spec.zh-CN.md](./duckphone-ble-acceptance-spec.zh-CN.md)、
 > [duckphone-ble-acceptance-tasks.zh-CN.md](./duckphone-ble-acceptance-tasks.zh-CN.md)。
-> 设备：手机 NOH-AN00（PQY0221203054372，HarmonyOS）、机器人 duck-dillon（R17 固件，API 41）。
-> 日期：2026-11-26；2026-11-27 补测 UI 适配与断链自愈。机器人 IP 以 `net.status` / `ops/scripts/robot-ip.sh` 实时确认。
+> 设备：手机 NOH-AN00（PQY0221203054372，HarmonyOS）、机器人 duck-dillon（R17 固件，API 42）。
+> 日期：2026-11-26；2026-11-27 补测 UI 适配、断链自愈与预设动作。机器人 IP 以 `net.status` / `ops/scripts/robot-ip.sh` 实时确认。
 
 ## 1. 结果总表
 
 | 项 | 结论 | 证据 |
 | --- | --- | --- |
 | 自动连接（测试期简化） | ✅ | `DuckLink connecting/connected status=0`，零点击 |
-| 认证 + phone 订阅 + API 41 | ✅ | `robot.subscribe ok {accepted:true}`，`api=41 mtu=517` |
+| 认证 + phone 订阅 + API 42 | ✅ | `robot.subscribe ok {accepted:true}`，`api=42 mtu=517` |
 | 站立 | ✅ | `robot.init ok`，提示「已回 HOME，请扶稳」，倾角 18.4°→5.2°→1.4° |
 | 接管 | ✅ | `robot.enable ok {"accepted":true,"reason":"enabled — driving"}` |
 | 摇杆前进 + 松手即停 | ✅ | 拖动中 请求 +0.05 m/s、实际条跟随；松手后双零 |
@@ -29,6 +29,10 @@
 | 技能：左脚踢 | ✅ | `robot.do ok` |
 | 技能：右脚踢 | ⛔ 未配置 | 展开列表显示「未配置 · 缺少 policy.onnx」（机器人侧缺模型，非 App 缺陷） |
 | 技能：前滚翻 | ⚠️ 已触发但结果待查 | 09:48:34 `robot.do ok`；翻滚中倾角 105°，随后 BLE 反复断开、机器人停在倾角约 58°（`gravity_z≈-0.52`），09:50:56 出现 `Feetech Sync Read timeout; missing IDs [10, 32]`。需人工摆正后复测 |
+| 预设动作：抬头 / 左右看 / 画圈 / 张嘴 | ✅ | 2026-11-27 API 42 真机：四动作 `robot.action` 均 `accepted`，`act` 即时出现；画圈偏航 ±0.92 rad、张嘴嘴部目标 0.46 rad、抬头俯仰 -0.30 rad；`act` 消失后头/嘴回中 |
+| 预设动作：停止 / 摇杆打断 | ✅ | 面板「停止」→ `robot.action {}` 立即收尾；动作中推摇杆 → `act` 清空，头部保持最后姿态（`pitch -0.30`），不被清零 |
+| 预设动作状态回传 | ✅ | 从 `robotd` 侧取消，蓝牙页 0.5 s 内自行清掉「正在播放」，证明 `act` 走通 robotd→btd→App→页面 |
+| 预设动作门控 | ✅ | 未站立/未接管时返回「机器人未站立或正在移动」；未知动作返回「未知动作：moonwalk」 |
 | 断链零速 | ✅ | 行进中强杀 App：`intents went stale … deadman_ms=500`，速度被清零 |
 | 断链自动重连 | ✅ | 强杀后重启 App 8 s 内 `connected → ready → subscribe accepted` |
 | 正式版连接流程 | ✅ | `AUTO_CONNECT` 关闭、`TEST_PIN` 删除；连接页预选 duck-dillon、PIN 占位 `******`，点「连接」进入驾驶页 |
@@ -78,6 +82,12 @@
    页面已经 `hello`；认证完成后代码仍把 `pageBound` 清零等第二次 `open`，但那次 open
    不会再发生，4 s 兜底就误判并 `location.reload()`，表现为驾驶页不停闪。现在只有
    socket 仍关闭时才重置并等待 open；真机停留 12 s 重载计数 0。
+11. **断电导致系统盘文件损坏（2026-11-27 19:05）**：机器人低电关机后，
+    `/opt/robot/feetech-ft5-r5/` 的 `robotd`、`robotctl` 和 `/opt/robot/daemon/current/bin/btd`
+    变成 0 字节，`/etc/systemd/system/duckphone.service` 整篇 `0xFF`，`robotd` 报
+    `Exec format error`。重新部署二进制与 unit 后三个服务恢复；另有一个未挂槽位的
+    `models/a5bcb5…/policy.onnx` 被清零（crouch，未引用，不影响运行）。
+    建议找时间对根文件系统做一次 `fsck` 或重刷系统卡。
 
 ## 3. 30 min 稳定性
 

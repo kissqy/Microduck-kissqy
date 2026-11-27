@@ -66,6 +66,7 @@ class FakeRobotd:
                 ],
             },
             "robot.do": {"accepted": True},
+            "robot.action": {"accepted": True, "sound": True},
             "robot.health": {
                 "healthy": True,
                 "battery": {"volts": 7.55, "percent": 61.0},

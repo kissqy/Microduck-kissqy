@@ -292,9 +292,25 @@ class RobotRPC:
             params["hold"] = bool(hold)
         return self.request("robot.sound", params, timeout=3.0)
 
-    def sound_async(self, tag: str) -> None:
-        """Fire-and-forget beat for an action; never blocks the 20 Hz loop."""
-        self.notify("robot.sound", {"tag": tag})
+    def action(self, name: str | None, *, idle: bool = False, sound: bool = True) -> dict:
+        """Play a preset gesture, or cancel the one playing when `name` is None.
+
+        `idle` marks one the idle director chose; `sound=False` is for a director
+        that has already made the sound, so the gesture is not heard twice.
+        """
+        params: dict[str, Any] = {"idle": bool(idle), "sound": bool(sound)}
+        if name is not None:
+            params["action"] = name
+        return self.request("robot.action", params, timeout=3.0)
+
+    def cancel_action(self) -> None:
+        """Fire-and-forget cancel.
+
+        Used from listener threads — a request there would wait for a reply the
+        same thread delivers, and deadlock the read loop. `robotd` treats a
+        gesture with no name as the cancel, answer or no answer.
+        """
+        self.notify("robot.action", {})
 
     def stop(self) -> dict:
         return self.request("robot.stop", None, timeout=2.0)

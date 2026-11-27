@@ -3,7 +3,7 @@ import {prepareAssemblyAppearance,applyAssemblyAppearance} from './assembly-appe
 import {DuckView} from './duck.js?v=20261126-relative-assets';
 import {REFERENCE_IDS,REFERENCE_LABELS} from './calibration-reference.js?demo=20261013';
 import {officialStandingDegrees,referenceAngle} from './joint-reference.js?demo=20261013';
-import {attachElectronics} from './assembly-electronics.js?v=20261126-servo12-connection';
+import {attachElectronics} from './assembly-electronics.js?v=20261127-servo34-mirror';
 import {COMPONENTS,CONNECTIONS,WIRING_NOTE} from './assembly-components.js?v=20261121-orange-white';
 
 const groups={

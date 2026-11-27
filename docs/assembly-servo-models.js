@@ -93,7 +93,8 @@ export function attachServoModel(servo,id){
   // Keep the hip-pitch cases mirrored consistently on both legs. Reflecting
   // ID 12 along case Z reverses its long body away from ID 13, introducing a
   // 15 mm visual offset that is absent from the matching ID 22/23 assembly.
-  const mirrorX=[11,12,13,21,22,23,30,31].includes(id),mirrorZ=false;
+  // Mirror ID 34's visible housing and attached sockets together.
+  const mirrorX=[11,12,13,21,22,23,30,31,34].includes(id),mirrorZ=false;
   const mirroredCase=mirrorX||mirrorZ;
   let caseGeometry=mirroredCase?mirrorServoCase(assets.geometries[0],mirrorX?-1:1,mirrorZ?-1:1):(turnedCase?assets.geometries[0].clone().rotateZ(Math.PI):(uprightHip?assets.hipGeometry:assets.geometries[0]));
   if(id===32){const full=caseGeometry;caseGeometry=withoutPassiveHorn(full);full.dispose();}

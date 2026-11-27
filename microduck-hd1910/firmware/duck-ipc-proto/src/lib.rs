@@ -433,7 +433,17 @@ pub const JSONRPC_VERSION: &str = "2.0";
 /// Loaded model metadata includes its validated, fixed runtime execution settings;
 /// existing readback reports the applied scale and filters. Install the
 /// matching R17 control.29/console bundle; the raw record envelope is unchanged.
-pub const API_VERSION: u32 = 40;
+///
+/// # v41 — the phone over Bluetooth
+///
+/// `robot.subscribe` gains `profile`, and [`StateProfile::Phone`] asks for the compact
+/// [`PhoneState`] frame a BLE link can carry ten times a second instead of the ~3.9 KB full
+/// frame. `robot.volume` reads and sets the codec's level and mute, and
+/// `system.serviceAction` stops or starts one whitelisted unit — `padd`, so a phone can take
+/// the gamepad out of the way without an ssh session. Additive, and bumps for the reason the
+/// constant exists: a `btd` from before this release refuses all three, so the phone app must
+/// be able to tell an old robot from one it can drive.
+pub const API_VERSION: u32 = 41;
 
 /// The observation width every policy this robot family runs is built against.
 ///
@@ -674,6 +684,13 @@ pub mod method {
     /// is diagnostics, not danger), but "accepted" from a robot that cannot make a sound
     /// would make `robotctl quack` lie about which duck answered.
     pub const ROBOT_SOUND: &str = "robot.sound";
+    /// The codec's output level and mute: read with `{}`, set with `percent` and/or `muted`.
+    ///
+    /// One method for both directions because the answer is always the same shape
+    /// ([`super::VolumeResult`]) — a UI that moves a slider wants the level it actually ended at,
+    /// not an acknowledgement it then has to re-read. The controls are duckphone's, so the phone
+    /// and the web page cannot disagree about what 60% means. (v41)
+    pub const ROBOT_VOLUME: &str = "robot.volume";
     /// Pick the ToF theremin up, or put it down: the head's depth sensor becomes an
     /// instrument, and the distance of a hand in front of the beak is the pitch — and the
     /// mouth opening, which rises with it, so the note is visible as well as audible.
@@ -828,6 +845,13 @@ pub mod method {
     pub const SYSTEM_SET_NAME: &str = "system.setName";
     /// Reboot, cleanly, through systemd.
     pub const SYSTEM_REBOOT: &str = "system.reboot";
+    /// Stop or start one whitelisted unit, so a phone can get the gamepad out of the way.
+    ///
+    /// **A single-entry whitelist on purpose.** The alternative to this method was an ssh
+    /// session, and the unit a phone actually needs to stop is `padd` — the local pad driver,
+    /// which competes with the phone for the robot. Answering it is a root `configd`'s job;
+    /// widening the whitelist is a decision with its own paragraph, not a config value. (v41)
+    pub const SYSTEM_SERVICE_ACTION: &str = "system.serviceAction";
     /// The Bluetooth pairing PIN. Never reachable over Bluetooth itself.
     pub const SYSTEM_PAIRING_PIN: &str = "system.pairingPin";
     /// Set the Bluetooth pairing PIN.
@@ -1020,6 +1044,8 @@ pub enum Call {
     RobotMouth(MouthParams),
     /// Play a voice-bank sound.
     RobotSound(SoundParams),
+    /// Read or set the codec's volume and mute; see [`method::ROBOT_VOLUME`]. (v41)
+    RobotVolume(VolumeParams),
     /// Pick the ToF theremin up or put it down. Discrete; the answer is [`ThereminResult`].
     RobotTheremin(ThereminParams),
     /// Start or stop looking for other ducks to sing with. Discrete; the answer is
@@ -1084,6 +1110,8 @@ pub enum Call {
     SystemLogs(LogsParams),
     SystemSetName(SetNameParams),
     SystemReboot,
+    /// Stop or start one whitelisted unit; see [`method::SYSTEM_SERVICE_ACTION`]. (v41)
+    SystemServiceAction(ServiceActionParams),
     /// Read the pairing PIN.
     ///
     /// Exists so `btd` can answer a BLE passkey request without owning config. It must never be
@@ -1198,6 +1226,7 @@ impl Call {
             Call::RobotPose(_) => method::ROBOT_POSE,
             Call::RobotMouth(_) => method::ROBOT_MOUTH,
             Call::RobotSound(_) => method::ROBOT_SOUND,
+            Call::RobotVolume(_) => method::ROBOT_VOLUME,
             Call::RobotTheremin(_) => method::ROBOT_THEREMIN,
             Call::RobotChorale(_) => method::ROBOT_CHORALE,
             Call::ChoraleSubscribe => method::CHORALE_SUBSCRIBE,
@@ -1229,6 +1258,7 @@ impl Call {
             Call::SystemLogs(_) => method::SYSTEM_LOGS,
             Call::SystemSetName(_) => method::SYSTEM_SET_NAME,
             Call::SystemReboot => method::SYSTEM_REBOOT,
+            Call::SystemServiceAction(_) => method::SYSTEM_SERVICE_ACTION,
             Call::SystemPairingPin => method::SYSTEM_PAIRING_PIN,
             Call::SystemSetPairingPin(_) => method::SYSTEM_SET_PAIRING_PIN,
             Call::SystemAuthenticate(_) => method::SYSTEM_AUTHENTICATE,
@@ -1264,6 +1294,10 @@ impl Call {
                 | Call::NetForget(_)
                 | Call::SystemSetName(_)
                 | Call::SystemReboot
+                // Stopping a unit is a change to what this robot is running, exactly like a
+                // reboot is a change to whether anything is. `configd` is root and gates on this
+                // flag, so leaving it off would let any socket peer stop `padd`.
+                | Call::SystemServiceAction(_)
                 | Call::SystemSetPairingPin(_)
                 // Powering the machine off is at least as disruptive as rebooting it.
                 | Call::RobotShutdown
@@ -1381,6 +1415,9 @@ impl Call {
             | Call::RobotPose(_)
             | Call::RobotMouth(_)
             | Call::RobotSound(_)
+            // Reading or setting the codec's level. A pair of `amixer` calls, which is prompt —
+            // and must be, since the client moves a slider with it.
+            | Call::RobotVolume(_)
             | Call::RobotTheremin(_)
             | Call::RobotChorale(_)
             | Call::RobotSetMode(_)
@@ -1427,6 +1464,10 @@ impl Call {
             // for that long, which is what `Operation` is for — and why `net.status` must not be
             // queued behind them.
             Call::NetConnect(_) | Call::PadPair(_) => (Config, Operation),
+            // Stopping a unit waits for systemd to finish the job, which is not prompt and is
+            // not instant. It shares `Operation` with the two above for the same reason: the
+            // answer is a state, and `system.services` must not be queued behind it.
+            Call::SystemServiceAction(_) => (Config, Operation),
 
             // ── padd and tofd ───────────────────────────────────────────────
             //
@@ -1497,6 +1538,7 @@ impl Call {
             Call::PolicySearch(p) => encode(p),
             Call::AccountLogin(p) => encode(p),
             Call::RobotSound(p) => encode(p),
+            Call::RobotVolume(p) => encode(p),
             Call::RobotTheremin(p) => encode(p),
             Call::RobotChorale(p) => encode(p),
             Call::ChoraleBeaconSet(p) => encode(p),
@@ -1506,6 +1548,7 @@ impl Call {
             Call::NetForget(p) => encode(p),
             Call::SystemLogs(p) => encode(p),
             Call::SystemSetName(p) => encode(p),
+            Call::SystemServiceAction(p) => encode(p),
             Call::SystemSetPairingPin(p) => encode(p),
             Call::SystemAuthenticate(p) => encode(p),
             Call::PadPair(p) => encode(p),
@@ -1587,6 +1630,7 @@ impl Call {
             method::ROBOT_POSE => Call::RobotPose(decode(params)?),
             method::ROBOT_MOUTH => Call::RobotMouth(decode(params)?),
             method::ROBOT_SOUND => Call::RobotSound(decode(params)?),
+            method::ROBOT_VOLUME => Call::RobotVolume(decode(params)?),
             method::ROBOT_THEREMIN => Call::RobotTheremin(decode(params)?),
             method::ROBOT_CHORALE => Call::RobotChorale(decode(params)?),
             method::CHORALE_SUBSCRIBE => Call::ChoraleSubscribe,
@@ -1618,6 +1662,7 @@ impl Call {
             method::SYSTEM_LOGS => Call::SystemLogs(decode(params)?),
             method::SYSTEM_SET_NAME => Call::SystemSetName(decode(params)?),
             method::SYSTEM_REBOOT => Call::SystemReboot,
+            method::SYSTEM_SERVICE_ACTION => Call::SystemServiceAction(decode(params)?),
             method::SYSTEM_PAIRING_PIN => Call::SystemPairingPin,
             method::SYSTEM_SET_PAIRING_PIN => Call::SystemSetPairingPin(decode(params)?),
             method::SYSTEM_AUTHENTICATE => Call::SystemAuthenticate(decode(params)?),
@@ -1750,6 +1795,10 @@ pub mod test_support {
                 tag: SoundTag::Chirp,
                 hold: None,
             }),
+            Call::RobotVolume(VolumeParams {
+                percent: Some(60),
+                muted: Some(false),
+            }),
             Call::RobotShutdown,
             Call::RobotMode,
             Call::RobotPolicies,
@@ -1778,7 +1827,10 @@ pub mod test_support {
                 slot: Some("walk".into()),
                 path: Some("/var/lib/robot/policies/bouncy.onnx".into()),
             }),
-            Call::RobotSubscribe(SubscribeParams { hz: Some(10) }),
+            Call::RobotSubscribe(SubscribeParams {
+                hz: Some(10),
+                profile: Some(StateProfile::Phone),
+            }),
             Call::NetStatus,
             Call::NetScan,
             Call::NetConnect(NetConnectParams {
@@ -1800,6 +1852,10 @@ pub mod test_support {
                 name: "duck-01".into(),
             }),
             Call::SystemReboot,
+            Call::SystemServiceAction(ServiceActionParams {
+                unit: "padd".into(),
+                action: ServiceAction::Stop,
+            }),
             Call::SystemPairingPin,
             Call::SystemSetPairingPin(SetPairingPinParams {
                 pin: "042042".into(),
@@ -1888,6 +1944,25 @@ impl Request {
 
     /// Read a robot-state notification back.
     pub fn as_state(&self) -> Option<RobotState> {
+        if self.method != method::ROBOT_STATE {
+            return None;
+        }
+        serde_json::from_value(self.params.clone()?).ok()
+    }
+
+    /// A compact robot-state notification, for a subscriber that asked for
+    /// `profile: "phone"`. Same method name — it is one stream, and the profile chose the shape.
+    pub fn notify_phone_state(state: &PhoneState) -> Self {
+        Self {
+            jsonrpc: JSONRPC_VERSION.to_owned(),
+            id: None,
+            method: method::ROBOT_STATE.to_owned(),
+            params: Some(serde_json::to_value(state).unwrap_or(Value::Null)),
+        }
+    }
+
+    /// Read a compact robot-state notification back.
+    pub fn as_phone_state(&self) -> Option<PhoneState> {
         if self.method != method::ROBOT_STATE {
             return None;
         }
@@ -2216,6 +2291,30 @@ pub struct SoundParams {
     /// so a client that dies mid-ride does not leave the robot going "wheee" forever.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub hold: Option<bool>,
+}
+
+/// See [`method::ROBOT_VOLUME`].
+///
+/// Every field is optional, and `{}` is the read — the same shape the answer has, so a slider
+/// can be drawn from the reply to its own refresh. `percent: 0` is mute, which is also what
+/// duckphone's switch does; `muted` exists separately because a UI has a mute button that must
+/// not lose the level underneath it.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct VolumeParams {
+    /// 0–100. Above 100 is refused rather than clamped: a client sending 150 has a bug, and
+    /// silently giving it 100 hides it. (v41)
+    pub percent: Option<u8>,
+    /// The codec's line-output switch. (v41)
+    pub muted: Option<bool>,
+}
+
+/// Answer to [`Call::RobotVolume`] — what the codec ended up at. (v41)
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct VolumeResult {
+    /// 0–100, as read back from the codec rather than echoed from the request.
+    pub percent: u8,
+    pub muted: bool,
 }
 
 /// See [`method::ROBOT_THEREMIN`].
@@ -2757,6 +2856,54 @@ impl PolicySearchHit {
 pub struct SubscribeParams {
     /// Absent means every tick.
     pub hz: Option<u32>,
+    /// Which frame shape to stream. Absent is the full [`RobotState`], which is what every
+    /// existing client gets and must keep getting. (v41)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub profile: Option<StateProfile>,
+}
+
+/// The frame shapes [`method::ROBOT_SUBSCRIBE`] can ask for. (v41)
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum StateProfile {
+    /// [`PhoneState`] — about 300 bytes, which is what a BLE link can carry ten times a second.
+    ///
+    /// The full frame is ~3.9 KB: fifteen joint positions and targets, velocities, currents, the
+    /// skeleton, IMU and odometry. A phone rendering a joystick and a policy strip reads none of
+    /// it, and over a radio it would not fit between control writes.
+    Phone,
+}
+
+/// The compact `robot.state` a subscriber asks for with `profile: "phone"`. (v41)
+///
+/// **One frame per tick of the same broadcast** — the fields are copied from the full state the
+/// control loop already assembled, not measured again. What is left out is everything that only
+/// matters to a viewer: joints, targets, velocities, currents, odometry, skeleton, ToF and the
+/// theremin/chorale blocks.
+///
+/// `enabled`, `homed` and `sitting` are the three facts a driving UI gates on and the full frame
+/// has never carried: whether the policy is driving, whether the robot reached its home pose, and
+/// whether it is parked in its seat — which is the difference between `robot.init` and
+/// `robot.do sit_toggle` for the stand-up button. They are read from the daemon's own intent and
+/// latch state at send time.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct PhoneState {
+    /// Seconds since the daemon started — the same clock as [`RobotState::t`].
+    pub t: f64,
+    #[serde(rename = "move")]
+    pub movement: MoveState,
+    pub head: [f64; 4],
+    /// Which policy drove this tick: `walk`, `stand`, or `held`.
+    pub policy: String,
+    pub safety: SafetyState,
+    #[serde(rename = "loop")]
+    pub control_loop: LoopState,
+    /// The policy is driving, as opposed to standing or holding.
+    pub enabled: bool,
+    /// The robot has reached its home pose — what makes `robot.do` and `robot.enable` possible.
+    pub homed: bool,
+    /// The `sit_toggle` latch holds the robot in its seat.
+    pub sitting: bool,
 }
 
 /// Dedicated R17 raw connection: native control cadence, no input/mutation on this stream.
@@ -4189,6 +4336,42 @@ pub struct RebootResult {
     pub in_seconds: u64,
 }
 
+/// What [`method::SYSTEM_SERVICE_ACTION`] may do to a unit. (v41)
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ServiceAction {
+    Stop,
+    Start,
+}
+
+impl ServiceAction {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            ServiceAction::Stop => "stop",
+            ServiceAction::Start => "start",
+        }
+    }
+}
+
+/// See [`method::SYSTEM_SERVICE_ACTION`]. (v41)
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ServiceActionParams {
+    /// The only unit `configd` will act on is `"padd"`; anything else is refused by name, so a
+    /// client learns the whitelist rather than guessing at it.
+    pub unit: String,
+    pub action: ServiceAction,
+}
+
+/// Answer to [`Call::SystemServiceAction`]: what systemd says the unit is doing now. (v41)
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ServiceActionResult {
+    pub accepted: bool,
+    /// The state *after* the action, read back rather than predicted — a `stop` of a unit that
+    /// was already stopped is accepted and reports `inactive`.
+    pub state: UnitState,
+}
+
 // ── pad.* results ────────────────────────────────────────────────────────────
 
 /// A gamepad this robot knows about.
@@ -5610,7 +5793,7 @@ mod tests {
     fn every_call_covers_every_variant() {
         assert_eq!(
             every_call().len(),
-            67,
+            69,
             "a Call variant was added or removed — update every_call() and this count"
         );
     }
@@ -5837,6 +6020,9 @@ mod tests {
                 method::NET_FORGET,
                 method::SYSTEM_SET_NAME,
                 method::SYSTEM_REBOOT,
+                // Stopping a unit changes what this robot is running. `configd` is root and
+                // gates on this flag, so leaving it off would let any socket peer stop `padd`.
+                method::SYSTEM_SERVICE_ACTION,
                 method::SYSTEM_SET_PAIRING_PIN,
                 // Bonding a pad decides what may drive this robot. `pad.status` must stay off this
                 // list: reading which pads are paired is exactly the kind of inspection support
@@ -6246,6 +6432,78 @@ mod tests {
         let back: Request = serde_json::from_str(&line).unwrap();
         assert!(back.is_notification(), "state carries no id");
         assert_eq!(back.as_state().unwrap(), state);
+    }
+
+    /// The whole point of `profile: "phone"` is the byte budget: a frame that grew past a
+    /// couple of hundred bytes would stop fitting between control writes on the radio, and the
+    /// failure would look like a laggy UI rather than a protocol change.
+    #[test]
+    fn a_phone_frame_fits_the_radio_budget() {
+        let state = PhoneState {
+            t: 1234.567,
+            movement: MoveState {
+                requested: [0.25, -0.1, 0.8],
+                applied: [0.24, -0.1, 0.79],
+                limited_by: vec!["clamped".into()],
+            },
+            head: [-0.4, 0.35, -0.9, 0.2],
+            policy: "walk".into(),
+            safety: SafetyState {
+                fallen: false,
+                limp: false,
+                gravity: [0.01, 0.02, -0.99],
+                gain: Some(24),
+            },
+            control_loop: LoopState {
+                hz: 50.0,
+                missed: 123,
+            },
+            enabled: true,
+            homed: true,
+            sitting: false,
+        };
+
+        let line = serde_json::to_string(&Request::notify_phone_state(&state)).unwrap();
+        assert!(line.len() <= 400, "{} bytes: {line}", line.len());
+        assert!(line.contains(r#""method":"robot.state""#), "{line}");
+        for field in [
+            r#""t":"#,
+            r#""move":"#,
+            r#""head":"#,
+            r#""policy":"#,
+            r#""safety":"#,
+            r#""loop":"#,
+            r#""enabled":"#,
+            r#""homed":"#,
+            r#""sitting":"#,
+        ] {
+            assert!(line.contains(field), "{field} missing: {line}");
+        }
+        assert!(!line.contains("joints"), "{line}");
+        assert!(!line.contains("skeleton"), "{line}");
+
+        let back: Request = serde_json::from_str(&line).unwrap();
+        assert!(back.is_notification(), "state carries no id");
+        assert_eq!(back.as_phone_state().unwrap(), state);
+    }
+
+    /// A client that does not say `profile` gets the full frame, which is every client written
+    /// before v41 — and the omission has to parse, not be refused as a missing field.
+    #[test]
+    fn an_omitted_profile_means_the_full_frame() {
+        let request = Request {
+            jsonrpc: JSONRPC_VERSION.to_owned(),
+            id: Some(Id::Number(1)),
+            method: method::ROBOT_SUBSCRIBE.to_owned(),
+            params: Some(serde_json::json!({ "hz": 10 })),
+        };
+        assert_eq!(
+            request.as_call().unwrap(),
+            Call::RobotSubscribe(SubscribeParams {
+                hz: Some(10),
+                profile: None,
+            })
+        );
     }
 
     /// Velocity and load must reach the wire under the names the docs promise, and must

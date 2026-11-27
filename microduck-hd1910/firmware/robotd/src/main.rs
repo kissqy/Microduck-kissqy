@@ -37,6 +37,7 @@ mod sound;
 mod telemetry_geometry;
 mod telemetry_system;
 mod theremin;
+mod volume;
 
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -4430,6 +4431,9 @@ async fn handle(
     let mut beacons: Option<tokio::sync::broadcast::Receiver<proto::ChoraleAdvertise>> = None;
     let mut decimate = Duration::ZERO;
     let mut last_sent: Option<Instant> = None;
+    // Whether this subscriber asked for the compact frame. Set with the subscription and read on
+    // every frame, because the two shapes go out on the same `robot.state` method.
+    let mut phone_frames = false;
 
     loop {
         // Three things can happen: a request arrives, a state frame is due for a subscriber, or a
@@ -4488,7 +4492,7 @@ async fn handle(
                     }
                     received = rx.recv() => {
                         match received {
-                            Ok(state) => {
+                            Ok(frame) => {
                                 // Decimate per subscriber: a dashboard asking for 10 Hz
                                 // should not cost what a digital twin asking for 50 does.
                                 let due = last_sent
@@ -4496,8 +4500,33 @@ async fn handle(
                                     .unwrap_or(true);
                                 if due {
                                     last_sent = Some(Instant::now());
-                                    write_line(&mut write_half, &proto::Request::notify_state(&state))
+                                    if phone_frames {
+                                        // The compact frame a BLE link can carry. The same
+                                        // tick's state, with the three facts the full frame has
+                                        // never carried read from the intent and latch state.
+                                        let compact = proto::PhoneState {
+                                            t: frame.t,
+                                            movement: frame.movement.clone(),
+                                            head: frame.head,
+                                            policy: frame.policy.clone(),
+                                            safety: frame.safety,
+                                            control_loop: frame.control_loop,
+                                            enabled: intents.enabled(),
+                                            homed: state.homed.load(Ordering::Relaxed),
+                                            sitting: state.sitting.load(Ordering::Relaxed),
+                                        };
+                                        write_line(
+                                            &mut write_half,
+                                            &proto::Request::notify_phone_state(&compact),
+                                        )
                                         .await?;
+                                    } else {
+                                        write_line(
+                                            &mut write_half,
+                                            &proto::Request::notify_state(&frame),
+                                        )
+                                        .await?;
+                                    }
                                 }
                             }
                             // Lagged: the client fell behind and lost frames. That is the
@@ -4689,6 +4718,9 @@ async fn handle(
                 .filter(|hz| *hz > 0)
                 .map(|hz| Duration::from_secs_f64(1.0 / hz as f64))
                 .unwrap_or(Duration::ZERO);
+            // Which shape this connection is subscribed to. A client may switch by subscribing
+            // again, which is why this is read from the latest request rather than latched.
+            phone_frames = params.profile == Some(proto::StateProfile::Phone);
             // Subscribing again replaces the rate rather than opening a second stream.
             states = Some(state.state_tx.subscribe());
             last_sent = None;
@@ -5494,9 +5526,16 @@ fn dispatch(
             proto::Response::ok(Some(id), &result)
         }
 
-        // Sit, then power the machine off. Never refused for being inconvenient — a robot
-        // that cannot sit (no sitstand policy, not driving) cuts torque and powers off
-        // directly, which is still what was asked for.
+        // The codec's level and mute. Synchronous like everything else here: two `amixer`
+        // invocations are milliseconds, and the control loop is a separate thread that this does
+        // not touch. The reply is the codec read back, so a slider can be drawn from it.
+        proto::Call::RobotVolume(p) => match volume::Mixer::system().apply(p) {
+            Ok(result) => proto::Response::ok(Some(id), &result),
+            Err(e) => proto::Response::err(
+                Some(id),
+                proto::Error::new(proto::code::INTERNAL_ERROR, e),
+            ),
+        },
         proto::Call::RobotShutdown => {
             intents.request_shutdown();
             proto::Response::ok(Some(id), &proto::IntentResult::accepted())
@@ -8164,7 +8203,10 @@ mod tests {
             &s,
             &Intents::new(),
             proto::Id::Number(1),
-            &proto::Call::RobotSubscribe(proto::SubscribeParams { hz: Some(10) }),
+            &proto::Call::RobotSubscribe(proto::SubscribeParams {
+                hz: Some(10),
+                profile: None,
+            }),
         )
         .result_as()
         .expect("robot.subscribe must deserialize as SubscribeResult");

@@ -569,6 +569,46 @@ async fn dispatch(
             )
         }
 
+        // Stop or start the pad driver. **The whitelist is checked here, before anything is
+        // asked of systemd**, and the refusal names the one unit that would work — a client that
+        // guessed at `robotd.service` learns the rule rather than getting a generic failure.
+        //
+        // `is_mutating` has already made `may_mutate` run: `btd` is in `--allow-user` precisely
+        // so the phone's PIN-gated session can reach this, and nothing else on the socket can.
+        proto::Call::SystemServiceAction(params) => {
+            if !units::permitted_unit(&params.unit) {
+                return proto::Response::err(
+                    Some(id),
+                    proto::Error::new(
+                        proto::code::INVALID_PARAMS,
+                        format!(
+                            "system.serviceAction only acts on {} — not {:?}",
+                            units::PADD,
+                            params.unit
+                        ),
+                    ),
+                );
+            }
+            tracing::info!(
+                action = params.action.as_str(),
+                unit = units::PADD,
+                "unit action"
+            );
+            match units::perform(units::PADD, params.action).await {
+                Ok(state) => proto::Response::ok(
+                    Some(id),
+                    &proto::ServiceActionResult {
+                        accepted: true,
+                        state,
+                    },
+                ),
+                Err(e) => proto::Response::err(
+                    Some(id),
+                    proto::Error::new(proto::code::INTERNAL_ERROR, e),
+                ),
+            }
+        }
+
         // `update.*` is `updaterd`'s and `robot.*` is `robotd`'s. A client reaching here aimed at
         // the wrong socket, so say that rather than report a generic failure.
         other => proto::Response::err(

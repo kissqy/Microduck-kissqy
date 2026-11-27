@@ -1,9 +1,18 @@
 //! Which calls BLE may make, and which of a service's connections carries them.
 //!
 //! BLE exposes a **subset** of the robot API (`architecture.md` §4.1): provisioning, status,
-//! and the update commands with their progress. It is too slow and too constrained for the full
-//! surface, and — more to the point — a radio anybody within a few metres can talk to is not
-//! the transport over which to offer "reset this robot to factory state".
+//! the update commands with their progress, and — since the phone app — driving. It is too slow
+//! and too constrained for the full surface, and — more to the point — a radio anybody within a
+//! few metres can talk to is not the transport over which to offer "reset this robot to factory
+//! state".
+//!
+//! **What driving over BLE cost, and why it was affordable.** The old refusal here said a
+//! 20-byte notification budget and a link that does not exist for the first ~73 s of a boot is
+//! not a control transport. It still is not, at the old MTU: the design measures a no-response
+//! write at 3 ms and a response-required one at 541 ms, which is why the app writes control
+//! without acknowledgement, requests the largest MTU BlueZ will grant, and leans on `robotd`'s
+//! 500 ms deadman for the case where the radio simply stops. The measurement and the rest of the
+//! design are in `docs/design/duckphone-ble-plan.zh-CN.md` §4.
 //!
 //! **Two questions, and only one of them is BLE's.** *Which service answers a call, and how long
 //! answering holds a connection* is a property of the call, and lives in
@@ -188,6 +197,14 @@ fn permits(call: &proto::Call) -> bool {
         // Unlike `resetToGolden` it discards nothing.
         SystemReboot => true,
 
+        // Stopping `padd`, and starting it again. **Deliberately a single-entry method**: the
+        // unit is checked by `configd` against a whitelist, not by this file, so what this arm
+        // grants is the right to ask — not the right to stop anything one names. The case it
+        // exists for is two drivers fighting: a pad left connected while somebody drives from
+        // the phone, and no ssh on a phone to settle it. `start` is the way back, from the same
+        // screen, so the button cannot strand a robot with no pad driver.
+        SystemServiceAction(_) => true,
+
         // ── the gamepad ─────────────────────────────────────────────────────
         //
         // Pairing a controller from the phone, which is where it belongs: whoever is holding the
@@ -228,13 +245,19 @@ fn permits(call: &proto::Call) -> bool {
         // `safeToRestart` would learn nothing it could act on.
         RobotSafeToRestart | RobotModelApi | RobotRemoteSessionActive => false,
 
-        // Teleop. **Never over BLE**, which is what §4.1 means by a subset: BLE is too slow and
-        // too constrained for the full surface, and teleop belongs on WebRTC's datachannel
-        // (`docs/design/remote-webrtc.md` §2). A 20-byte notification budget and a link that does
-        // not exist for the first ~73s of a boot is not a control transport. The body pose and
-        // the mouth ride with it: all of these are a stream of small updates, and the argument is
-        // about the stream, not about any one of them.
-        RobotMove(_) | RobotHead(_) | RobotLook(_) | RobotPose(_) | RobotMouth(_) => false,
+        // Teleop, which this file refused for as long as BLE was a provisioning transport.
+        // **What changed is the client, not the radio.** The measurement that settles it is in
+        // `docs/design/duckphone-ble-plan.zh-CN.md`: with an MTU of 517 and a no-response write,
+        // one 20 Hz frame costs 3 ms on the air; with a response it costs 541 ms and the design
+        // would be impossible. So the app writes control without acknowledgement, sends the whole
+        // intent in one packet, and the deadman in `robotd` zeroes the twist 500 ms after the
+        // frames stop — which is what makes a lost write a stop rather than a runaway.
+        //
+        // Pose and mouth stay refused: the phone UI drives the twist and the head, and neither
+        // is on a screen this transport has been designed around yet. `robot.look` stays refused
+        // because it is gaze IK measured against the camera, and a phone has no view to point at.
+        RobotMove(_) | RobotHead(_) => true,
+        RobotLook(_) | RobotPose(_) | RobotMouth(_) => false,
 
         // **Not teleop either, and it sat in that group for the same reason a skill did**: it was
         // next to them in a match arm rather than because anybody argued it belonged. It is one
@@ -270,14 +293,22 @@ fn permits(call: &proto::Call) -> bool {
         // assuming a list; an unknown name is refused with the names it does know.
         RobotDo(_) => true,
 
-        // Harmless and rather charming from a phone — but it rides the same refusal as the
-        // rest of robot.* until the app path exists to want it: opening one call to the
-        // radio ahead of a client that can use it buys nothing and widens the surface.
+        // The robot's voice, now that there is a client for it — the phone app's sound panel is
+        // the duckphone panel, which has had these seven buttons since the web version.
         //
-        // The theremin sits here rather than with motor control even though it moves the
-        // mouth, because what it is is a sound: the mouth is following the note. Same
-        // refusal either way, and the same reason to lift it — an app that can play the duck.
-        RobotSound(_) | RobotTheremin(_) | RobotChorale(_) => false,
+        // The theremin stays refused: it is not a button but an instrument played against the
+        // ToF, and a phone has neither the sensor view nor a reason to hold one. The chorale stays
+        // refused for the reason on the arm below.
+        RobotSound(_) => true,
+
+        // Reading and setting the codec's level. Same argument as `robot.sound`, and it is the
+        // slider above those seven buttons. `robotd` answers it; the codec is the robot's own.
+        RobotVolume(_) => true,
+
+        // The theremin and the chorale: both still refused. The theremin is played against the
+        // ToF a phone cannot see, and the chorale is between robots over the radio — not a client
+        // surface at all.
+        RobotTheremin(_) | RobotChorale(_) => false,
 
         // The chorale's own namespace is between `btd` and `robotd` — it is how this daemon is told
         // what to advertise and how it reports what it heard. Not a client surface at all, so a
@@ -448,28 +479,33 @@ fn permits(call: &proto::Call) -> bool {
         // means whoever tapped it is looking at the robot.
         RobotRebootMotors(_) => true,
 
-        // **`relax` stays refused, and the asymmetry is the point.** Standing up is controlled:
-        // the joints go where they are told. Relaxing is a robot that was holding itself up and
-        // now is not, which on a phone is a button whose failure mode is the floor, and its
-        // whole purpose is to produce that fall — unlike the reboot above, which exists to
-        // recover a robot that has already stopped holding itself. `init` has no such mode, and
-        // a refusal that covered all three was treating "moves the joints" as the hazard when
-        // the hazard is "stops holding them for nothing in return".
-        RobotRelax => false,
+        // **`relax` is now routed, and the cost is stated rather than hidden.** It used to stay
+        // refused on the asymmetry above, and that reasoning is still right about what the call
+        // does: a robot holding itself up stops holding itself, and on a phone that is a button
+        // whose failure mode is the floor.
+        //
+        // What changed is that the phone app needs the pair — `robot.rebootMotors` is the way
+        // back from a latched servo, and `relax` is the only way to put a robot down deliberately
+        // after a test without reaching for the robot. So the call is routed and the guard moved
+        // to the client: the UI holds the button for a second and says "机器人会瘫下" before it
+        // sends. That is a deliberate departure from the original refusal, recorded here because
+        // the refusal was argued at length and the next reader deserves the other half.
+        RobotRelax => true,
 
-        // `robot.stop` deserves its own line, because refusing it looks wrong. An emergency stop
-        // in the app is exactly what someone reaches for, and §6 does say local should preempt
-        // remote — but a stop button that works over an unbonded, high-latency, sometimes-absent
-        // radio is worse than no button, because it *looks* like an e-stop and is not one. The
-        // deadman in `robotd` already stops the robot when intents stop arriving, which is the
-        // mechanism that does not depend on a phone being in range. A real e-stop is physical.
-        // Reconsider deliberately if the app ever needs it, with that caveat stated in the UI.
-        RobotStop => false,
+        // `robot.stop` is routed, with the caveat the old refusal named kept in the UI rather than
+        // in the routing table. The old argument was that a stop over an unbonded, high-latency,
+        // sometimes-absent radio *looks* like an e-stop and is not one. Both halves have moved:
+        // the link is PIN-bonded and measured at ~90 ms round trip, and the app's stop is what a
+        // person reaches for when the phone is the only control in their hand. It is still not a
+        // physical e-stop, and the UI says so; the deadman remains the mechanism that does not
+        // depend on a phone being in range.
+        RobotStop => true,
 
-        // High-rate telemetry. `robot.subscribe` streams state at up to the control rate; over
-        // BLE that is a firehose into a 20-byte pipe, and a client would get a decimated,
-        // unpredictably-lagged view it could not reason about. `robot.health` is the question an
-        // app actually has.
+        // Telemetry, now in the one shape a BLE link can carry. The full frame is ~3.9 KB and
+        // stays refused — a subscriber that does not name `profile: "phone"` is asking for a
+        // firehose into a 20-byte pipe, exactly as before. The compact frame is ~300 bytes and
+        // is what the phone app's 10 Hz strip is drawn from.
+        RobotSubscribe(p) if p.profile == Some(proto::StateProfile::Phone) => true,
         RobotSubscribe(_) => false,
 
         // The same objection as `robot.subscribe`, only more so: this is every evdev event the pad
@@ -594,6 +630,10 @@ mod tests {
                 proto::method::NET_FORGET,
                 proto::method::SYSTEM_SET_NAME,
                 proto::method::SYSTEM_REBOOT,
+                // Stopping `padd`, which is the one unit `configd` will act on. Mutating because
+                // it changes what the robot is running, and permitted because the alternative is
+                // an ssh session a phone does not have.
+                proto::method::SYSTEM_SERVICE_ACTION,
                 // Bonding a gamepad, which afterwards can enable the walking policy. Allowed for
                 // the same reason as provisioning: it takes a pad held in pairing mode next to the
                 // robot, so BLE's physical-presence claim (§4.2) is not being stretched — and the
@@ -756,18 +796,22 @@ mod tests {
         }
     }
 
-    /// **A phone can get a robot back on its feet, and cannot put it on the floor.**
+    /// **A phone can stand a robot up, put it down, and stop it.**
     ///
-    /// The asymmetry in one test, because the two arms only make sense read together: `init`
-    /// stands it up, `rebootMotors` clears a latched servo error so that `init` can — and
-    /// `relax` stays refused, since its only outcome is a robot that was holding itself up and
-    /// now is not. Making that one reachable should have to delete a line here and say why.
+    /// The three together, because they are the drives screen's first row: `init` stands it up,
+    /// `relax` puts it down deliberately, `stop` zeroes the twist without dropping the joints.
+    ///
+    /// `relax` is the one that reverses an earlier refusal, and the reasoning is on its arm: the
+    /// hazard did not change, the guard moved into the app's long press. It is pinned here so
+    /// that a future change which refuses it again has to say why.
     #[test]
-    fn a_phone_can_recover_a_robot_but_not_drop_it() {
+    fn a_phone_can_stand_a_robot_up_put_it_down_and_stop_it() {
         for call in [
             proto::Call::RobotInit,
             proto::Call::RobotRebootMotors(proto::RebootMotorsParams { ids: vec![] }),
             proto::Call::RobotRebootMotors(proto::RebootMotorsParams { ids: vec![3, 11] }),
+            proto::Call::RobotRelax,
+            proto::Call::RobotStop,
         ] {
             assert_eq!(
                 upstream_for(&call),
@@ -776,7 +820,6 @@ mod tests {
                 call.method()
             );
         }
-        assert_eq!(upstream_for(&proto::Call::RobotRelax), None);
     }
 
     /// **The Hub, from a phone.** What is out there, whether the official set has moved, and
@@ -805,18 +848,46 @@ mod tests {
         }
     }
 
-    /// **A skill is not teleop, and teleop is still refused.**
+    /// **Driving is now what this transport is for; the rest of the body is not.**
     ///
-    /// `robot.do` spent a while grouped with these, and the distinction is the whole reason it
-    /// could be opened: one request against a stream of fifty a second. If somebody ever moves
-    /// `robot.move` into that arm by widening a pattern, this is what says no.
+    /// `robot.do` spent a while grouped with these, and the distinction is what could be opened:
+    /// one request against a stream of fifty a second. `robot.move` and `robot.head` crossed the
+    /// other way when the phone app arrived, on the measurement in
+    /// `docs/design/duckphone-ble-plan.zh-CN.md` §4 — a no-response write of one whole intent is
+    /// 3 ms. These four stay refused for their own reasons, and this test is what says no if a
+    /// future widening reaches them by pattern.
     #[test]
-    fn teleop_stays_off_the_radio() {
+    fn the_body_beyond_the_drives_screen_stays_off_the_radio() {
+        for call in [
+            proto::Call::RobotLook(proto::LookParams {
+                x: 1.0,
+                y: 0.0,
+                z: 0.0,
+                neck_pitch: 0.0,
+            }),
+            proto::Call::RobotPose(proto::PoseParams {
+                z: 0.0,
+                roll: 0.0,
+                pitch: 0.0,
+                active: true,
+            }),
+            proto::Call::RobotMouth(proto::MouthParams { open: 0.0 }),
+        ] {
+            assert_eq!(upstream_for(&call), None, "{}", call.method());
+        }
+    }
+
+    /// Driving and head intents reach `robotd`, as notifications and as requests alike.
+    ///
+    /// The parameters are the point of the arm: `robot.move` is sent at 20 Hz without an `id`,
+    /// and the routing table must not care which framing a client chose.
+    #[test]
+    fn driving_reaches_the_control_loop() {
         for call in [
             proto::Call::RobotMove(proto::MoveParams {
-                vx: 0.0,
+                vx: 0.15,
                 vy: 0.0,
-                vyaw: 0.0,
+                vyaw: 0.2,
             }),
             proto::Call::RobotHead(proto::HeadParams {
                 neck_pitch: 0.0,
@@ -825,8 +896,71 @@ mod tests {
                 head_roll: 0.0,
             }),
         ] {
-            assert_eq!(upstream_for(&call), None, "{}", call.method());
+            assert_eq!(
+                upstream_for(&call),
+                Some(Upstream::Robot),
+                "{}",
+                call.method()
+            );
         }
+    }
+
+    /// Only the compact profile of the state stream is reachable; the full frame stays refused.
+    ///
+    /// The full frame is ~3.9 KB and the compact one ~300 B, which is the whole reason the
+    /// profile exists. A subscriber that does not name it is asking for what BLE refused before
+    /// the phone app existed, and must still be told no.
+    #[test]
+    fn only_the_phone_profile_of_the_state_stream_is_reachable() {
+        assert_eq!(
+            upstream_for(&proto::Call::RobotSubscribe(proto::SubscribeParams {
+                hz: Some(10),
+                profile: Some(proto::StateProfile::Phone),
+            })),
+            Some(Upstream::Robot)
+        );
+        assert_eq!(
+            upstream_for(&proto::Call::RobotSubscribe(proto::SubscribeParams {
+                hz: Some(10),
+                profile: None,
+            })),
+            None
+        );
+    }
+
+    /// The sound panel: seven buttons, and the slider above them.
+    #[test]
+    fn the_sound_panel_is_reachable() {
+        for call in [
+            proto::Call::RobotSound(proto::SoundParams {
+                tag: proto::SoundTag::Chirp,
+                hold: None,
+            }),
+            proto::Call::RobotVolume(proto::VolumeParams {
+                percent: Some(60),
+                muted: None,
+            }),
+        ] {
+            assert_eq!(
+                upstream_for(&call),
+                Some(Upstream::Robot),
+                "{}",
+                call.method()
+            );
+        }
+    }
+
+    /// Stopping the pad driver reaches `configd`, which is root and owns the unit whitelist.
+    #[test]
+    fn stopping_the_pad_driver_reaches_configd() {
+        let call = proto::Call::SystemServiceAction(proto::ServiceActionParams {
+            unit: "padd".into(),
+            action: proto::ServiceAction::Stop,
+        });
+        assert_eq!(
+            destination_for(&call),
+            Some((Upstream::Config, Lane::Operation))
+        );
     }
 
     /// **Starting the policy is not teleop either**, and it left that arm for the same reason
@@ -892,14 +1026,18 @@ mod tests {
         }
     }
 
-    /// The progress stream must be alone on its lane, which is a stronger claim than the test
-    /// above: a connection handed to `stream_progress` reads no further requests *ever*, so a
-    /// second call sharing it is not delayed but lost.
+    /// The two subscriptions are alone on their lane, which is a stronger claim than the test
+    /// above: a connection handed to a stream reads no further requests *ever*, so a second call
+    /// sharing it is not delayed but lost.
+    ///
+    /// Two of them now: the update progress stream, and the phone's state stream. They are
+    /// separate connections to separate services, so they do not share a lane — this asserts
+    /// that nothing *else* does, which is what would put a request on a socket nobody reads.
     #[test]
-    fn nothing_else_travels_on_the_stream_lane() {
+    fn only_the_subscriptions_travel_on_the_stream_lane() {
         let others: Vec<&str> = every_call()
             .iter()
-            .filter(|c| !matches!(c, proto::Call::Subscribe))
+            .filter(|c| !matches!(c, proto::Call::Subscribe | proto::Call::RobotSubscribe(_)))
             .filter(|c| destination_for(c).is_some_and(|(_, lane)| lane == Lane::Stream))
             .map(proto::Call::method)
             .collect();

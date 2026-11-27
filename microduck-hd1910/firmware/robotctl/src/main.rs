@@ -665,7 +665,10 @@ fn run_theremin(socket: &Path, off: bool) -> Result<(), Failure> {
     stream.hello()?;
     stream.send(&proto::Request::call(
         proto::Id::Number(1),
-        &proto::Call::RobotSubscribe(proto::SubscribeParams { hz: Some(15) }),
+        &proto::Call::RobotSubscribe(proto::SubscribeParams {
+            hz: Some(15),
+            profile: None,
+        }),
     ))?;
 
     let mut line = String::new();
@@ -767,7 +770,10 @@ fn run_chorale(socket: &Path, off: bool, piece: Option<u8>) -> Result<(), Failur
     stream.hello()?;
     stream.send(&proto::Request::call(
         proto::Id::Number(1),
-        &proto::Call::RobotSubscribe(proto::SubscribeParams { hz: Some(10) }),
+        &proto::Call::RobotSubscribe(proto::SubscribeParams {
+            hz: Some(10),
+            profile: None,
+        }),
     ))?;
 
     let mut part = None;
@@ -4606,6 +4612,7 @@ fn robot_skills(robot_socket: &Path) -> Option<Vec<String>> {
     let result = client
         .call(&proto::Call::RobotSubscribe(proto::SubscribeParams {
             hz: Some(1),
+            profile: None,
         }))
         .ok()?;
     let ack: proto::SubscribeResult = result.result_as().ok()?;

@@ -790,6 +790,7 @@ impl Server {
             | Call::RobotRebootMotors(_)
             | Call::RobotDo(_)
             | Call::RobotSound(_)
+            | Call::RobotVolume(_)
             | Call::RobotPose(_)
             | Call::RobotMouth(_)
             | Call::RobotTheremin(_)
@@ -824,6 +825,7 @@ impl Server {
             | Call::SystemLogs(_)
             | Call::SystemSetName(_)
             | Call::SystemReboot
+            | Call::SystemServiceAction(_)
             | Call::SystemPairingPin
             | Call::SystemSetPairingPin(_)
             // `pad.*` is `configd`'s for the same reason: pairing a gamepad is a root-only question

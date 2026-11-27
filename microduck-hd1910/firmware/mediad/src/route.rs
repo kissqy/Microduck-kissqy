@@ -65,6 +65,11 @@ fn permits(call: &proto::Call) -> bool {
         // may pick its instrument up too.
         RobotDo(_) | RobotSound(_) | RobotTheremin(_) => true,
 
+        // The codec's level and mute, which is the slider above the sounds. Same class as
+        // `robot.sound`: it changes what the robot emits, not what it does, and a console has
+        // had this control since the sound panel existed.
+        RobotVolume(_) => true,
+
         // The chorale is between robots, over BLE — a browser is neither in the room nor a duck.
         // Its daemon-to-daemon plumbing has even less business on a WebRTC channel.
         RobotChorale(_) | ChoraleSubscribe | ChoraleBeaconSet(_) | ChoraleHeard(_) => false,
@@ -231,6 +236,10 @@ fn permits(call: &proto::Call) -> bool {
         // Drops this session, and unlike an update leaves nothing mid-transition: the robot comes
         // back and the client reconnects. It is what you offer a confused robot.
         SystemReboot => true,
+        // Stopping the pad driver. Recoverable — `start` is the same call — and the console is a
+        // place somebody can see a pad and a phone fighting over the robot. The unit is
+        // whitelisted to `padd` inside `configd`, so this grants the request, not the target.
+        SystemServiceAction(_) => true,
         // Read-only network state. Useful for showing a remote operator why the link is poor.
         NetStatus | NetScan => true,
         PadStatus | PadForget(_) => true,
@@ -407,6 +416,10 @@ mod tests {
                 proto::method::SYSTEM_SET_NAME,
                 // Rebooting it, for `robot.shutdown`'s reason.
                 proto::method::SYSTEM_REBOOT,
+                // Stopping the pad driver, which is recoverable by the same call with `start`.
+                // The unit is whitelisted to `padd` inside `configd`, so routing it here grants
+                // the request rather than the target.
+                proto::method::SYSTEM_SERVICE_ACTION,
                 // Forgetting a gamepad. `pad.pair` is refused — it needs a pad in the room in a
                 // fifteen-second window, which a remote peer cannot satisfy — but unbonding one
                 // is a thing you do *because* the pad is not there.

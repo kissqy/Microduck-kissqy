@@ -1,0 +1,220 @@
+<!doctype html>
+<!--
+  ble-bridge.js 的浏览器内自测。不碰蓝牙：假的 DuckNative 代替 Kotlin。
+  运行：
+
+    google-chrome --headless=new --disable-gpu --no-sandbox \
+      --virtual-time-budget=20000 --dump-dom \
+      "file://$PWD/bridge_test.html?bleAddress=AA:BB:CC:DD:EE:FF&blePin=000000&strip=1"
+
+  输出里出现 FAIL 即失败；退出码由调用方 grep 判断。
+-->
+<meta charset="utf-8">
+<title>ble-bridge 自测</title>
+<pre id="out">running…</pre>
+<header id="topbar"></header>
+<div id="status"><div class="status-grid"><div class="s-card">
+  <div class="s-v" id="stConn">—</div><div class="s-d" id="stIp">—</div>
+</div></div></div>
+<script>
+  window.__calls = [];
+  window.__notifies = [];
+  window.__connected = null;
+  var callSeq = 0;
+
+  function responseFor(method, params) {
+    if (method === 'system.authenticate') return { authenticated: true, attempts_remaining: 5 };
+    if (method === 'robot.subscribe') return { accepted: true };
+    if (method === 'robot.health') {
+      return {
+        healthy: true,
+        battery: { percent: 82, volts: 7.9 },
+        motors: { hottest: 'left_knee', max_c: 41, mean_c: 33 },
+        cpu_temp_c: 52,
+      };
+    }
+    if (method === 'pad.status') return { pads: [], driver: 'inactive' };
+    if (method === 'net.status') {
+      return { state: 'connected', ssid: 'Home', signal: 80, ip4: '192.168.1.5' };
+    }
+    if (method === 'robot.policies') {
+      return {
+        mode: 'walk', enabled: true,
+        slots: [{ slot: 'walk', path: '/opt/robot/policies/walk.onnx' }],
+        skills: ['sit_toggle'], homed: true, sitting: false,
+      };
+    }
+    if (method === 'robot.volume') return { percent: 60, muted: false };
+    if (method === 'robot.init' || method === 'robot.stop' || method === 'robot.enable') {
+      return { accepted: true };
+    }
+    return {};
+  }
+
+  window.DuckNative = {
+    call: function (method, params) {
+      var id = ++callSeq;
+      window.__calls.push({ id: id, method: method, params: JSON.parse(params) });
+      if (window.__failHealth && method === 'robot.health') {
+        setTimeout(function () {
+          window.DuckNativeBridge.onResult(
+            id, false, JSON.stringify({ message: '请求超时：robot.health' }),
+          );
+        }, 0);
+        return id;
+      }
+      setTimeout(function () {
+        window.DuckNativeBridge.onResult(
+          id, true, JSON.stringify(responseFor(method, JSON.parse(params))),
+        );
+      }, 0);
+      return id;
+    },
+    notify: function (method, params) {
+      window.__notifies.push({ method: method, params: JSON.parse(params) });
+    },
+    scan: function () {},
+    connect: function (address) { window.__connected = address; window.__connects = (window.__connects || 0) + 1; },
+    disconnect: function () {},
+    info: function () { return JSON.stringify({ apiVersion: 41, mtu: 517 }); },
+    keepScreen: function () {},
+  };
+</script>
+<script src="../../assets/ble-bridge.js"></script>
+<script>
+(function () {
+  var results = [];
+  function check(name, ok, detail) {
+    results.push((ok ? 'PASS ' : 'FAIL ') + name + (ok || !detail ? '' : ' — ' + detail));
+  }
+  function wait(ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); }
+  function last(list) { return list[list.length - 1]; }
+
+  var socket = new WebSocket('ws://robot/ws');
+  var messages = [];
+  socket.addEventListener('message', function (event) {
+    messages.push(JSON.parse(event.data));
+  });
+
+  (async function () {
+    await wait(20);
+    check('connect 用了配置里的地址', window.__connected === 'AA:BB:CC:DD:EE:FF', String(window.__connected));
+
+    window.DuckNativeBridge.onLink('ready', 'api=41');
+    await wait(50);
+    var auth = window.__calls.find(function (c) { return c.method === 'system.authenticate'; });
+    check('ready 后先认证', !!auth && auth.params.pin === '000000', JSON.stringify(auth));
+    var sub = window.__calls.find(function (c) { return c.method === 'robot.subscribe'; });
+    check('订阅 phone 状态', !!sub && sub.params.profile === 'phone', JSON.stringify(sub));
+    check('认证后 socket 打开', socket.readyState === 1, String(socket.readyState));
+
+    socket.send(JSON.stringify({ t: 'hello', token: '', name: 'test' }));
+    await wait(10);
+    var hello = messages.filter(function (m) { return m.t === 'hello'; })[0];
+    check('hello 回 driver', !!hello && hello.ok && hello.role === 'driver', JSON.stringify(hello));
+
+    socket.send(JSON.stringify({ t: 'ping' }));
+    await wait(10);
+    check('ping 回 pong', messages.some(function (m) { return m.t === 'pong'; }));
+
+    socket.send(JSON.stringify({ t: 'drive', vx: 9, vyaw: -9 }));
+    await wait(10);
+    var drive = last(window.__notifies.filter(function (m) { return m.method === 'robot.move'; }));
+    check('摇杆被夹限', !!drive && drive.params.vx === 0.35 && drive.params.vyaw === -0.8,
+      JSON.stringify(drive));
+
+    socket.send(JSON.stringify({ t: 'head', neck_pitch: 0.1, head_pitch: 0.2, head_yaw: 0.3, head_roll: 0 }));
+    await wait(10);
+    check('头部是 robot.head 通知',
+      window.__notifies.some(function (m) { return m.method === 'robot.head'; }));
+
+    socket.send(JSON.stringify({ t: 'cmd', id: 41, name: 'init' }));
+    await wait(30);
+    var ack = messages.filter(function (m) { return m.t === 'ack' && m.id === 41; })[0];
+    check('cmd init 有 ack', !!ack && ack.ok === true, JSON.stringify(ack));
+
+    socket.send(JSON.stringify({ t: 'cmd', id: 42, name: 'volume', level: 60 }));
+    await wait(30);
+    var volume = messages.filter(function (m) { return m.t === 'ack' && m.id === 42; })[0];
+    check('音量回读', !!volume && volume.ok && volume.volume === 60, JSON.stringify(volume));
+
+    socket.send(JSON.stringify({ t: 'cmd', id: 43, name: 'policies', fresh: true }));
+    await wait(30);
+    var policies = messages.filter(function (m) { return m.t === 'policies'; })[0];
+    check('策略条有 chip', !!policies && policies.ok && policies.chips.length === 1,
+      JSON.stringify(policies));
+
+    window.DuckNativeBridge.onNotify(JSON.stringify({
+      jsonrpc: '2.0', method: 'robot.state',
+      params: {
+        t: 12.5, move: { requested: [0.1, 0, 0.2], applied: [0.1, 0, 0.2], limited_by: [] },
+        head: [0, 0, 0, 0], policy: 'walk',
+        safety: { fallen: false, limp: false, gravity: [0, 0, -1] },
+        loop: { hz: 50, missed: 2 }, enabled: true, homed: true, sitting: false,
+      },
+    }));
+    await wait(30);
+    var state = last(messages.filter(function (m) { return m.t === 'state'; }));
+    check('state 映射字段', !!state && state.pol === 'walk' && state.hz === 50 &&
+      Math.round(state.tilt) === 0, JSON.stringify(state));
+    check('state 合并健康数据', !!state && Array.isArray(state.bat) &&
+      state.bat[0] === 7.9 && state.bat[1] === 82 && state.temp === 41 &&
+      state.cpu === 52, JSON.stringify(state));
+
+    var stripEl = document.getElementById('bleLinkStrip');
+    check('双链路条已挂载', !!stripEl);
+    check('蓝牙 chip 显示已连接',
+      !!document.getElementById('bleChip') &&
+      document.getElementById('bleChip').textContent.indexOf('已连接') >= 0,
+      stripEl ? stripEl.textContent : '');
+    check('Wi-Fi chip 显示 ssid',
+      !!document.getElementById('wifiChip') &&
+      document.getElementById('wifiChip').textContent.indexOf('Home') >= 0,
+      stripEl ? stripEl.textContent : '');
+    check('状态里带机器人 Wi-Fi',
+      !!window.duckBle.state().wifi && window.duckBle.state().wifi.ssid === 'Home',
+      JSON.stringify(window.duckBle.state().wifi));
+
+    check('「连接」卡改写为手机蓝牙',
+      document.getElementById('stConn').textContent.indexOf('手机蓝牙') >= 0,
+      document.getElementById('stConn').textContent);
+    check('「连接」卡显示机器人 IP / API / MTU',
+      document.getElementById('stIp').textContent.indexOf('192.168.1.5') >= 0 &&
+      document.getElementById('stIp').textContent.indexOf('api 41') >= 0 &&
+      document.getElementById('stIp').textContent.indexOf('517') >= 0,
+      document.getElementById('stIp').textContent);
+
+    // 断线重连：页面收到 close 会切「未连接」浮层；重连成功必须再发一次 open。
+    var reopenCount = 0;
+    socket.addEventListener('open', function () { reopenCount += 1; });
+    window.DuckNativeBridge.onLink('down', '测试断开');
+    await wait(20);
+    check('断开后 socket 关闭', socket.readyState === 3, String(socket.readyState));
+    window.DuckNativeBridge.onLink('ready', 'api=41');
+    await wait(80);
+    check('重连后 socket 重新打开', socket.readyState === 1 && reopenCount === 1,
+      'readyState=' + socket.readyState + ' opens=' + reopenCount);
+
+    // 链路已就绪后页面再 new WebSocket（自愈后 app.js 的退避重连就是这条路）：
+    // open 必须异步发，否则页面挂监听时事件已经丢了，浮层永远关不掉。
+    var lateGotOpen = false;
+    var lateSocket = new WebSocket('ws://robot/ws');
+    lateSocket.addEventListener('open', function () { lateGotOpen = true; });
+    await wait(60);
+    check('链路就绪后新建的 socket 能收到 open', lateGotOpen && lateSocket.readyState === 1,
+      'open=' + lateGotOpen + ' state=' + lateSocket.readyState);
+
+    // 假连接：健康检查连续超时要主动断开重连，不能停在「已连接但全是超时」。
+    var connectsBefore = window.__connects || 0;
+    window.__failHealth = true;
+    await wait(6200);
+    window.__failHealth = false;
+    check('健康连续超时会强制重连', (window.__connects || 0) > connectsBefore,
+      'connects ' + connectsBefore + '→' + (window.__connects || 0));
+
+    var failures = results.filter(function (line) { return line.indexOf('FAIL') === 0; });
+    document.getElementById('out').textContent =
+      results.join('\n') + '\n' + (failures.length ? failures.length + ' FAILED' : 'ALL PASS');
+  })();
+})();
+</script>

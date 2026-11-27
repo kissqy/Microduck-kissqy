@@ -1,0 +1,57 @@
+/*
+ * duckphone-ble 的页面补丁样式（App 专用，不写回原网页版）。
+ *
+ * 页面副本由 `tools/sync-web.sh` 单向生成，改副本会在下次同步时被覆盖；BLE 专属的
+ * 差异一律放在这里，由 `ble-bridge.js` 在文档就绪后注入。
+ *
+ * 目前只有一件事：修状态抽屉的两列被挤扁。
+ * `.status-grid` 用 `1fr 1fr`，而 grid 轨道的自动最小尺寸是 min-content——卡片里一旦
+ * 出现不可断行的长串（`appassets.androidplatform.net`、`policy=held`），该列就会撑到
+ * 长串宽度，另一列被压到 130px 左右、内容截在屏幕外。改成 minmax(0,1fr) 并允许任意
+ * 位置换行后，两列始终等宽且不会溢出。
+ */
+.status-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.s-card {
+  min-width: 0;
+}
+.s-card .s-k,
+.s-card .s-v,
+.s-card .s-d {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* 告警详情：只在宽屏保持两栏。网页版在 max-width:760 已经切单列，这里的覆盖必须
+   带上同样的断点，否则手机上会被强行拉成两列，右栏「最近消息」被挤成一条。 */
+@media (min-width: 761px) {
+  .alert-layout {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  }
+  .alert-layout > * {
+    min-width: 0;
+  }
+}
+
+/* 极窄屏（<340px）状态卡放一列，总比两列都挤成条强。 */
+/* 设置抽屉底部那一行（说明 + 恢复默认/关闭/保存）在窄屏会把说明挤成 4px，
+   跟维护、声音抽屉一样改成「说明占整行，按钮自动靠右」。 */
+@media (max-width: 460px) {
+  #settings .row {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+  #settings .row .grow {
+    flex: 1 1 100%;
+  }
+  #settings .row > .mini {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 340px) {
+  .status-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

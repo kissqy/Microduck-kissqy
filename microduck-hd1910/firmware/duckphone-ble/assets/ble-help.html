@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14161A">
+<title>Duck 遥控 · 排障（蓝牙）</title>
+<style>
+  :root{
+    --bg:#14161A; --panel:#1D2026; --line:#2E3440;
+    --text:#F2F4F7; --muted:#9AA3AF; --dim:#5C6470;
+    --duck:#FFC53D; --ok:#3DDC97; --danger:#FF5A52;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:24px 20px 60px; background:var(--bg); color:var(--text);
+    font-family:system-ui,"HarmonyOS Sans SC","Noto Sans SC",sans-serif;
+    line-height:1.65; -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:640px; margin:0 auto;}
+  h1{font-size:22px; margin:0 0 6px;}
+  .sub{color:var(--muted); font-size:13px; margin:0 0 20px;}
+  h2{font-size:15px; margin:26px 0 8px; color:var(--duck);}
+  p,li{font-size:14px; color:var(--muted);}
+  ul{padding-left:20px; margin:8px 0;}
+  li{margin:5px 0;}
+  b{color:var(--text);}
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px;
+    background:#0D0F13; border:1px solid var(--line); border-radius:6px;
+    padding:2px 6px; color:var(--duck); word-break:break-all;
+  }
+  pre{
+    background:#0D0F13; border:1px solid var(--line); border-radius:10px;
+    padding:12px 14px; overflow:auto; font-size:12.5px; line-height:1.6; color:var(--muted);
+  }
+  pre code{background:none; border:0; padding:0; color:inherit;}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:12px 0;}
+  .quick{background:rgba(255,197,61,.08); border-color:rgba(255,197,61,.28);}
+  .quick ol{margin:8px 0 0; padding-left:22px;}
+  .quick li{color:var(--text);}
+  .note{font-size:12px; color:var(--dim);}
+  .back{display:block; width:100%; margin-top:26px; padding:13px 18px; border-radius:12px;
+        background:var(--duck); color:#221A00; font-weight:700; text-align:center;
+        text-decoration:none; border:0; font-size:15px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>连不上怎么办</h1>
+  <p class="sub">这个 App 只用<b>手机蓝牙</b>连机器人。机器人自己的 Wi-Fi 只影响网页版和 SSH，不影响驾驶，不用把手机连到同一个路由器。</p>
+
+  <div class="card quick">
+    <b>先试这三步</b>
+    <ol>
+      <li>手机蓝牙已开，App 有「附近的设备」权限。</li>
+      <li>机器人在 2 米内、已上电；连接页点「重新扫描」能看到 <code>duck-…</code>。</li>
+      <li>选中它点「连接」；还在转圈就回连接页再点一次。</li>
+    </ol>
+  </div>
+
+  <h2>1. 先看「未连接」浮层写了什么</h2>
+  <ul>
+    <li><b>设备</b>：上次连的是哪台。多台机器人时先确认没连错。</li>
+    <li><b>上次连接</b>：最后正常的时间、策略和电量；时间很旧说明断了一阵。</li>
+    <li><b>断开原因</b>：
+      <ul>
+        <li>「蓝牙连接中断」= 机器人断电、走远、或机器人上的蓝牙服务停了；</li>
+        <li>「PIN 不正确」= 去连接页重新输入六位 PIN；</li>
+        <li>「固件是 API …」= 机器人固件太旧，等新固件部署后再连。</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2>2. 扫不到机器人</h2>
+  <ul>
+    <li>机器人已上电，离手机 2 米内；金属、水、人体都会挡 2.4 GHz。</li>
+    <li>机器人上的蓝牙服务在跑：<code>systemctl is-active btd</code> 应为 <code>active</code>。</li>
+    <li>手机蓝牙里如果还残留旧的配对记录，先「忽略此设备」再扫描。</li>
+    <li>扫描一次约 5–10 秒；扫完没结果就点「重新扫描」，别一直等。</li>
+  </ul>
+
+  <h2>3. 提示 PIN 不正确</h2>
+  <ul>
+    <li>默认 PIN 是 <code>000000</code>；改过就用新的六位数字。</li>
+    <li>连续错 5 次会锁 60 秒，等提示的倒计时结束再试。</li>
+    <li>忘记 PIN 时在机器人上执行 <code>robotctl system set-pin</code> 重设。</li>
+  </ul>
+
+  <h2>4. 一直在「连接中…」或反复断开</h2>
+  <ul>
+    <li>退回连接页再点「连接」——会重开会话、重新认证和订阅。</li>
+    <li>页面显示「已连接」但数据不动：多半是机器人端 <code>btd</code> 重启过。
+      App 会在连续 5 次健康检查超时后自动断开重连，等 15–30 秒即可。</li>
+    <li>切到别的页面再回来时，会先显示上次的数据，几秒内自动转成实时值，这是正常的。</li>
+    <li>仍不行就按第 7 步重启机器人端服务。</li>
+  </ul>
+
+  <h2>5. 能连上但机器人不动</h2>
+  <ul>
+    <li><b>手柄服务在抢控制权。</b>顶部黄条会提示，点「详情」可以直接停掉它。</li>
+    <li>策略没接管：先点「站立」，等机身立正（倾角 ≤10°），再点「接管」。</li>
+    <li>看「状态」里的控制环频率，低于 45 Hz 说明板子忙或散热有问题。</li>
+    <li>看「未执行」提示里的原因：指令超时 = 摇杆没按住或蓝牙链路抖动。</li>
+  </ul>
+
+  <h2>6. 蓝牙和「机器人 Wi-Fi」是什么关系</h2>
+  <ul>
+    <li>控制、状态、配网全走蓝牙，手机连不连 Wi-Fi 都能开。</li>
+    <li>顶部「机器人 Wi-Fi」那一格只是显示<b>机器人自己</b>有没有连上路由器；
+      它断了不影响蓝牙驾驶，只影响网页版 <code>:8001</code> 和 SSH。</li>
+    <li>点那一格进网络页，是给机器人换 Wi-Fi 用的，不是在配手机。</li>
+  </ul>
+
+  <h2>7. 机器人端检查与重启</h2>
+  <pre><code>systemctl status robotd btd
+sudo systemctl restart btd     # 只重启蓝牙，不影响姿态
+sudo systemctl restart robotd  # 会重新回 HOME，机器人先扶稳</code></pre>
+  <p class="note">物理 HUB 上的电源开关是最后手段。</p>
+
+  <h2>8. 还不行</h2>
+  <ul>
+    <li>从最近任务里划掉 App 再打开，让蓝牙栈重新初始化。</li>
+    <li>手机关一次再开蓝牙（或开飞行模式 10 秒）。</li>
+    <li>把上面的现象和「设备 / 上次连接 / 断开原因」三行一起记下来，方便排查。</li>
+  </ul>
+
+  <button class="back" type="button" onclick="history.back()">← 回到遥控</button>
+</div>
+</body>
+</html>

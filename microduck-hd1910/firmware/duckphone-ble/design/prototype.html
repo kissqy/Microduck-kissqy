@@ -1,0 +1,1076 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Microduck 蓝牙版 · UI 原型</title>
+<style>
+  :root{
+    --bg:#14161A; --panel:#1D2026; --panel-hi:#232832; --line:#2E3440;
+    --text:#F2F4F7; --muted:#9AA3AF; --dim:#5C6470;
+    --duck:#FFC53D; --duck-soft:rgba(255,197,61,.16);
+    --ok:#3DDC97; --warn:#FFC53D; --danger:#FF5A52;
+    --danger-soft:rgba(255,90,82,.16); --info:#5AA9FF;
+    --r-btn:16px; --r-panel:20px; --r-sheet:24px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;margin:0}
+  body{
+    background:#0B0C0F;color:var(--text);
+    font-family:system-ui,"HarmonyOS Sans SC","Noto Sans SC","Source Han Sans SC",sans-serif;
+    font-variant-numeric:tabular-nums;overflow:hidden;
+  }
+  button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+  button:focus-visible{outline:2px solid var(--duck);outline-offset:2px}
+  .muted{color:var(--muted)} .dim{color:var(--dim)} .mono{font-variant-numeric:tabular-nums}
+  .hidden{display:none!important}
+
+  /* ── stage / phone ───────────────────────────────────── */
+  #stage{height:100%;display:flex;align-items:center;justify-content:center;gap:28px;padding:20px}
+  #jump{
+    width:230px;flex:0 0 auto;background:#111318;border:1px solid #242833;
+    border-radius:20px;padding:14px;max-height:860px;overflow:auto;
+  }
+  #jump h3{margin:0 0 10px;font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+  #jump button{
+    display:block;width:100%;text-align:left;padding:8px 10px;border-radius:10px;
+    font-size:12px;color:var(--muted);margin-bottom:2px;
+  }
+  #jump button:hover{background:#1B1F27;color:var(--text)}
+  #jump button.on{background:var(--duck-soft);color:var(--duck)}
+  #jump .sep{height:1px;background:#242833;margin:10px 0}
+
+  #phone{
+    width:414px;height:896px;max-height:calc(100vh - 40px);flex:0 0 auto;
+    background:var(--bg);border-radius:34px;overflow:hidden;position:relative;
+    box-shadow:0 24px 80px rgba(0,0,0,.65),0 0 0 1px #2A2F3A;
+  }
+  @media (max-width:760px){
+    #stage{padding:0;display:block}
+    #jump{display:none}
+    #phone{width:100%;height:100%;max-height:none;border-radius:0;box-shadow:none}
+  }
+
+  .statusbar{
+    height:26px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 18px;font-size:11px;color:var(--muted);background:var(--bg);
+    position:relative;z-index:5;
+  }
+  .statusbar .right{display:flex;gap:6px;align-items:center}
+  .sb-batt{width:18px;height:9px;border:1px solid var(--muted);border-radius:2px;position:relative}
+  .sb-batt::after{content:"";position:absolute;right:-3px;top:2px;width:2px;height:4px;background:var(--muted)}
+  .sb-batt i{position:absolute;inset:1px;width:65%;background:var(--muted);border-radius:1px}
+
+  #screens{position:absolute;inset:26px 0 0;overflow:hidden}
+  .screen{
+    position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg);
+    padding:0 max(0px,env(safe-area-inset-right)) max(0px,env(safe-area-inset-bottom)) max(0px,env(safe-area-inset-left));
+  }
+  .screen.active{display:flex}
+
+  /* ── common ─────────────────────────────────────────── */
+  .icon{width:18px;height:18px;display:inline-block;vertical-align:-4px;flex:0 0 auto}
+  .row{display:flex;align-items:center;gap:8px}
+  .grow{flex:1 1 auto;min-width:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-panel);padding:14px 16px}
+  .card h4{margin:0 0 10px;font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+  .card-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .card-title h4{margin:0}
+  .pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
+  .pill.walk{color:#0E1A14;background:var(--ok);border-color:var(--ok)}
+  .pill.home{color:#1A1406;background:var(--duck);border-color:var(--duck)}
+  .pill.limp{color:#1F0B0A;background:var(--danger);border-color:var(--danger)}
+  .pill.warn{color:#1A1406;background:var(--duck);border-color:var(--duck)}
+  .pill.info{color:#08131F;background:var(--info);border-color:var(--info)}
+  .mini{font-size:12px;font-weight:700;color:var(--text);border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:7px 10px;white-space:nowrap}
+  .mini.danger{color:var(--danger);border-color:rgba(255,90,82,.35);background:var(--danger-soft)}
+  .primary{background:var(--duck);color:#1A1406;border-radius:var(--r-btn);font-weight:700}
+  .ghost{border:1px solid var(--line);color:var(--text);border-radius:var(--r-btn);background:transparent}
+  .big{height:52px;padding:0 18px;font-size:15px}
+  .icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted);flex:0 0 auto}
+
+  /* signal bars */
+  .sig{display:inline-flex;align-items:flex-end;gap:2px;height:12px;flex:0 0 auto}
+  .sig i{width:3px;background:var(--line);border-radius:1px}
+  .sig i:nth-child(1){height:4px}.sig i:nth-child(2){height:6px}
+  .sig i:nth-child(3){height:9px}.sig i:nth-child(4){height:12px}
+  .sig.ok i{background:var(--ok)}
+  .sig.warn i:nth-child(-n+3){background:var(--warn)}
+  .sig.bad i:nth-child(-n+1){background:var(--danger)}
+  .sig.gray i{background:var(--line)}
+
+  /* ── connect ────────────────────────────────────────── */
+  .connect-wrap{flex:1;display:flex;flex-direction:column;padding:18px 20px 20px;overflow:auto}
+  .brand{display:flex;flex-direction:column;align-items:center;gap:8px;padding:26px 0 20px}
+  .duck-badge{width:66px;height:66px;border-radius:24px;background:var(--duck-soft);display:flex;align-items:center;justify-content:center;position:relative}
+  .duck-badge::after{content:"";position:absolute;inset:-14px;border:1px solid rgba(255,197,61,.18);border-radius:50%;animation:pulse 2s ease-out infinite}
+  @keyframes pulse{0%{transform:scale(.85);opacity:.9}100%{transform:scale(1.25);opacity:0}}
+  .brand h1{margin:0;font-size:26px;line-height:34px;font-weight:700}
+  .brand p{margin:0;font-size:13px;color:var(--muted)}
+  .scan-btn{height:54px;border-radius:var(--r-btn);background:var(--duck);color:#1A1406;font-weight:700;font-size:15px;margin-bottom:18px}
+  .list-label{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted);margin:2px 2px 8px}
+  .robot-row{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);background:var(--panel);border-radius:16px;margin-bottom:8px;text-align:left;width:100%}
+  .robot-row:hover{background:var(--panel-hi)}
+  .robot-ico{width:38px;height:38px;border-radius:12px;background:var(--duck-soft);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .robot-main{flex:1;min-width:0}
+  .robot-name{font-size:15px;font-weight:700;display:flex;align-items:center;gap:6px}
+  .robot-sub{font-size:11px;color:var(--muted);margin-top:2px}
+  .saved-tag{font-size:9px;font-weight:700;color:var(--duck);background:var(--duck-soft);border-radius:999px;padding:2px 6px}
+  .chev{color:var(--dim);font-size:20px;line-height:1}
+  .connect-foot{margin-top:auto;padding-top:18px;font-size:11px;line-height:18px;color:var(--dim);text-align:center}
+  .connect-foot b{color:var(--muted);font-weight:600}
+
+  /* ── connecting ─────────────────────────────────────── */
+  .connect-progress{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px}
+  .connect-progress h2{font-size:20px;margin:0 0 22px}
+  .steps{width:100%;max-width:300px}
+  .step{display:flex;align-items:center;gap:12px;height:40px;font-size:14px;color:var(--muted)}
+  .step .dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;flex:0 0 auto}
+  .step.done{color:var(--text)}
+  .step.done .dot{border-color:var(--ok);background:var(--ok);color:#0E1A14}
+  .step.now{color:var(--duck)}
+  .step.now .dot{border-color:var(--duck);border-top-color:transparent;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .connect-progress .ghost{margin-top:26px;width:120px}
+
+  /* ── drive ──────────────────────────────────────────── */
+  .topbar{padding:6px 10px 7px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#191C21,#15171B);flex:0 0 auto}
+  .tb1,.tb2{display:flex;align-items:center;gap:6px;min-width:0}
+  .tb1{margin-bottom:4px}
+  .robot-chip{display:flex;align-items:center;gap:7px;min-width:0;flex:1;padding:4px 6px;border-radius:10px;text-align:left}
+  .robot-chip:hover{background:rgba(255,255,255,.03)}
+  .robot-chip .duck-badge{width:28px;height:28px;border-radius:9px;background:var(--duck-soft)}
+  .robot-chip .duck-badge::after{display:none}
+  .robot-chip .name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
+  .top-status{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+  .metric{font-size:11px;color:var(--muted);white-space:nowrap}
+  .metric b{color:var(--text);font-size:12px}
+  .wifi-chip{display:flex;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-size:11px;color:var(--muted);max-width:180px}
+  .wifi-chip b{color:var(--text);font-weight:700;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .wifi-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--warn);flex:0 0 auto}
+  .detail-link{font-size:11px;color:var(--info);margin-left:auto;white-space:nowrap}
+
+  /* 两条链路：手机蓝牙 / 机器人 Wi-Fi */
+  .link-chip{display:flex;align-items:center;gap:6px;min-width:0;padding:4px 6px;border-radius:10px;text-align:left}
+  .link-chip:hover{background:rgba(255,255,255,.03)}
+  .link-chip .icon{width:16px;height:16px;color:var(--info)}
+  .link-chip .lc-label{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:.02em;white-space:nowrap}
+  .link-chip .lc-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:88px}
+  .link-chip.wifi .icon{color:var(--ok)}
+  .link-chip.wifi.off .icon{color:var(--warn)}
+  .link-chip.wifi.off .lc-name{color:var(--warn)}
+  .link-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .link-row:last-child{border-bottom:0}
+  .link-row b{display:block;font-size:13px}
+  .link-row .d{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+  .link-note{display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:10px;background:rgba(90,169,255,.08);border:1px solid rgba(90,169,255,.22);font-size:11px;color:var(--info)}
+
+  .banner{display:none;align-items:center;gap:8px;padding:7px 12px;font-size:12px;line-height:17px;background:rgba(255,197,61,.10);color:var(--duck);border-bottom:1px solid rgba(255,197,61,.22);flex:0 0 auto}
+  .banner.show{display:flex}
+  .banner.danger{background:rgba(255,90,82,.11);color:var(--danger);border-bottom-color:rgba(255,90,82,.25)}
+  .banner .fill{flex:1}
+  .banner button{color:inherit;font-weight:700;text-decoration:underline;font-size:12px}
+  #screen-drive.locked .policy-bar,#screen-drive.locked .drive-body{opacity:.42;pointer-events:none;filter:saturate(.6)}
+
+  .policy-bar{display:flex;gap:6px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--line);overflow-x:auto;flex:0 0 auto;scrollbar-width:none}
+  .policy-bar::-webkit-scrollbar{display:none}
+  .chip{flex:0 0 auto;font-size:11px;font-weight:700;color:var(--muted);border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 10px}
+  .chip.active{color:#0E1A14;background:var(--ok);border-color:var(--ok)}
+  .chip.home{color:#1A1406;background:var(--duck);border-color:var(--duck)}
+  .chip.more{color:var(--duck);border-color:rgba(255,197,61,.35);background:var(--duck-soft)}
+
+  .drive-body{flex:1;display:flex;flex-direction:column;min-height:0;padding:0 12px}
+  .stick-zone{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0}
+  .stick-mode{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px;margin-bottom:8px}
+  .stick-mode button{font-size:11px;font-weight:700;color:var(--muted);padding:5px 12px;border-radius:999px}
+  .stick-mode button.on{background:var(--duck);color:#1A1406}
+  .stick-guide{font-size:11px;color:var(--dim);margin-bottom:6px}
+  .stick-guide b{color:var(--muted)}
+  .stick-base{width:min(248px,62vw);aspect-ratio:1;border-radius:50%;border:1px solid #333A47;background:radial-gradient(circle at 50% 45%,#20242C,#171A20 68%);position:relative;display:flex;align-items:center;justify-content:center}
+  .stick-base::before{content:"";position:absolute;inset:16%;border:1px dashed #2B303A;border-radius:50%}
+  .stick-knob{width:34%;aspect-ratio:1;border-radius:50%;background:linear-gradient(180deg,#FFD466,#F0B62C);box-shadow:0 8px 18px rgba(0,0,0,.4);border:1px solid #E0A51C}
+  .stick-readout{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--muted);margin-top:8px}
+  .stick-readout b{color:var(--text);font-size:12px}
+  .bar{width:120px;height:5px;border-radius:999px;background:var(--line);overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--duck);border-radius:999px}
+  .bar.app i{background:var(--ok);width:70%}
+
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 0 10px;flex:0 0 auto}
+  .act{height:62px;border-radius:16px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:700}
+  .act small{display:block;font-size:9px;color:var(--dim);font-weight:500;margin-top:1px}
+  .act.stand{border-color:rgba(255,197,61,.35);color:var(--duck);background:var(--duck-soft)}
+  .act.enable{color:var(--ok);border-color:rgba(61,220,151,.3);background:rgba(61,220,151,.08)}
+  .act.stop{color:var(--danger);border-color:rgba(255,90,82,.35);background:var(--danger-soft)}
+  .act.relax{color:var(--danger)}
+  .footer{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding:7px 12px 9px;flex:0 0 auto}
+  .seg{display:flex;gap:2px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px}
+  .seg button{font-size:10px;font-weight:700;color:var(--muted);padding:5px 8px;border-radius:999px}
+  .seg button.on{background:var(--duck);color:#1A1406}
+  .tilt{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px}
+  .tilt b{color:var(--text)}
+  .foot-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+
+  /* ── hub ────────────────────────────────────────────── */
+  .hub-head{padding:8px 12px 0;border-bottom:1px solid var(--line);flex:0 0 auto;background:linear-gradient(180deg,#191C21,#15171B)}
+  .hub-top{display:flex;align-items:center;gap:8px;padding:4px 0 8px}
+  .back{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:20px}
+  .hub-title{font-size:16px;font-weight:700;flex:1}
+  .hub-robot{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);max-width:150px}
+  .hub-robot b{color:var(--text);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tabs{display:flex;gap:2px;padding:0 6px}
+  .tab{flex:1;height:42px;font-size:13px;font-weight:700;color:var(--muted);position:relative}
+  .tab.on{color:var(--duck)}
+  .tab.on::after{content:"";position:absolute;left:22%;right:22%;bottom:0;height:2px;background:var(--duck);border-radius:2px}
+  .hub-body{flex:1;overflow:auto;padding:14px 12px 24px;display:flex;flex-direction:column;gap:12px}
+  .kv{display:grid;grid-template-columns:88px 1fr;gap:6px 10px;font-size:12px}
+  .kv dt{color:var(--muted)}
+  .kv dd{margin:0;text-align:right;color:var(--text)}
+  .kv dd.mono{font-size:11px;word-break:break-all}
+  .list{display:flex;flex-direction:column}
+  .li{display:flex;align-items:center;gap:10px;min-height:54px;border-bottom:1px solid var(--line);text-align:left;width:100%}
+  .li:last-child{border-bottom:0}
+  .li .main{flex:1;min-width:0}
+  .li .t{display:block;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .li .d{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+  .li .right{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;flex:0 0 auto}
+  .lock{width:13px;height:13px;color:var(--dim)}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);flex:0 0 auto}
+  .status-dot.inactive{background:var(--dim);box-shadow:none}
+  .status-dot.failed{background:var(--danger);box-shadow:0 0 8px var(--danger)}
+  .status-dot.warn{background:var(--warn);box-shadow:0 0 8px var(--warn)}
+  .hero{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-panel);padding:16px}
+  .hero .state{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ok);font-weight:700}
+  .hero .ssid{font-size:24px;line-height:30px;font-weight:700;margin:8px 0 4px}
+  .hero .ip{font-size:18px;font-weight:700;color:var(--text)}
+  .hero .sub{font-size:11px;color:var(--muted);margin-top:4px}
+  .hero .actions-row{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+  .net-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+  .net-grid b{display:block;color:var(--text);font-size:12px;font-weight:700;margin-top:2px;word-break:break-all}
+  .console{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:10px;color:var(--dim)}
+  .console code{display:block;color:var(--info);font-size:11px;margin-top:4px;word-break:break-all}
+  .danger-row{display:flex;align-items:center;gap:10px;padding:14px 16px;border:1px solid rgba(255,90,82,.35);border-radius:16px;background:var(--danger-soft);color:var(--danger);font-weight:700;font-size:14px;width:100%;text-align:left}
+
+  /* ── logs ───────────────────────────────────────────── */
+  .log-wrap{flex:1;display:flex;flex-direction:column;padding:12px;gap:10px;min-height:0}
+  .unit-chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+  .unit-chips::-webkit-scrollbar{display:none}
+  .unit{flex:0 0 auto;font-size:11px;font-weight:700;padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--panel)}
+  .unit.on{color:#1A1406;background:var(--duck);border-color:var(--duck)}
+  .log-box{flex:1;min-height:0;background:#0F1115;border:1px solid var(--line);border-radius:12px;padding:10px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;line-height:17px;color:#C9D1D9;white-space:pre-wrap;word-break:break-all}
+  .log-note{font-size:10px;color:var(--dim)}
+
+  /* ── sheets ─────────────────────────────────────────── */
+  .overlay{position:absolute;inset:26px 0 0;background:rgba(0,0,0,.58);display:none;align-items:flex-end;z-index:20}
+  .overlay.show{display:flex}
+  .sheet{width:100%;max-height:84%;background:var(--panel);border-radius:var(--r-sheet) var(--r-sheet) 0 0;padding:8px 18px 24px;overflow:auto;box-shadow:0 -18px 50px rgba(0,0,0,.5)}
+  .grab{width:38px;height:4px;border-radius:999px;background:#3A4150;margin:4px auto 14px}
+  .sheet h2{font-size:19px;margin:0 0 4px}
+  .sheet .hint{font-size:11px;line-height:17px;color:var(--muted);margin:4px 0 14px}
+  .pin-boxes{display:flex;gap:7px;justify-content:center;margin:14px 0 10px}
+  .pin-boxes span{width:44px;height:52px;border-radius:12px;border:1px solid var(--line);background:var(--panel-hi);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700}
+  .pin-boxes span.focus{border-color:var(--duck);box-shadow:0 0 0 2px rgba(255,197,61,.14)}
+  .field{margin-bottom:12px}
+  .field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px}
+  .field input{width:100%;height:48px;border-radius:12px;border:1px solid var(--line);background:#14171C;color:var(--text);padding:0 12px;font-size:15px;font-family:inherit}
+  .field input.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px}
+  .field input:focus{outline:none;border-color:var(--duck)}
+  .field .err{font-size:10px;color:var(--danger);margin-top:4px}
+  .inline{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:8px 0}
+  .inline input{accent-color:var(--duck)}
+  .sheet-actions{display:flex;gap:8px;margin-top:18px}
+  .sheet-actions .big{flex:1}
+  .acc{border-top:1px solid var(--line);margin-top:6px;padding-top:10px}
+  .acc summary{list-style:none;font-size:13px;font-weight:700;color:var(--text);cursor:pointer;display:flex;justify-content:space-between}
+  .acc summary::after{content:"⌄";color:var(--muted)}
+  .acc[open] summary::after{content:"⌃"}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .toast{position:absolute;left:50%;top:40px;transform:translate(-50%,-12px);background:#262B34;border:1px solid #3A4150;color:var(--text);font-size:12px;padding:10px 14px;border-radius:12px;opacity:0;pointer-events:none;transition:.18s;z-index:40;max-width:86%;text-align:center}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .toast.ok{border-color:rgba(61,220,151,.4)}
+  .toast.warn{border-color:rgba(255,197,61,.4)}
+  .toast.err{border-color:rgba(255,90,82,.4)}
+
+  /* mobile-only jump */
+  #mobileJump{display:none;position:absolute;left:50%;top:3px;transform:translateX(-50%);z-index:50;background:#1B1F27;border:1px solid var(--line);border-radius:6px;color:var(--muted);font-size:9px;padding:2px 6px;opacity:.7}
+  @media (max-width:760px){#mobileJump{display:block}}
+  @media (max-width:400px){.metric.opt{display:none}}
+  @media (max-height:700px){
+    .stick-base{width:min(200px,54vw)}
+    .stick-guide{display:none}
+    .act{height:54px}
+    .footer{padding:5px 10px 6px}
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <aside id="jump">
+    <h3>原型状态直达</h3>
+    <button data-go="connect">01 扫描连接</button>
+    <button data-go="connecting">02 连接中</button>
+    <button data-go="drive">03 驾驶主页</button>
+    <button data-go="drive" data-banner="reconnect">04 重连中</button>
+    <button data-go="drive" data-banner="conflict">05 控制源冲突</button>
+    <div class="sep"></div>
+    <button data-go="hub-connection">06 机器人 · 连接</button>
+    <button data-go="hub-network">07 机器人 · 网络</button>
+    <button data-go="hub-system">08 机器人 · 系统</button>
+    <div class="sep"></div>
+    <button data-sheet="pin">09 PIN 输入</button>
+    <button data-sheet="wifi">10 连接 Wi-Fi</button>
+    <button data-sheet="forget">11 忘记网络</button>
+    <button data-sheet="reboot">12 重启确认</button>
+    <button data-sheet="status">13 状态详情</button>
+    <button data-sheet="sound">14 声音面板</button>
+    <button data-sheet="maint">15 维护面板</button>
+    <div class="sep"></div>
+    <button data-go="logs">16 日志</button>
+    <button data-go="offline">17 离线</button>
+    <button data-go="drive" data-banner="wifi-off">18 蓝牙已连 · 机器人未联网</button>
+    <button data-go="hub-network" data-off="1">19 网络 · 未联网</button>
+  </aside>
+
+  <div id="phone">
+    <div class="statusbar">
+      <span>9:41</span>
+      <span class="right"><span>BLE</span><span class="sb-batt"><i></i></span></span>
+    </div>
+
+    <div id="screens">
+      <!-- 01 扫描连接 -->
+      <section class="screen active" id="screen-connect">
+        <div class="connect-wrap">
+          <div class="brand">
+            <div class="duck-badge">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="none">
+                <path d="M5.2 13.4c0-2.7 2.1-4.7 4.8-4.7h1.3V7.2c0-1.4 1.1-2.5 2.5-2.5 1.2 0 2.2.8 2.4 1.9l2.5.9c.5.2.6.8.2 1.1l-1.7 1.2v.4c0 4-2.9 7-7 7-2.9 0-5-1.7-5-3.8Z" fill="#FFC53D"/>
+                <circle cx="14.2" cy="7.6" r=".8" fill="#1A1406"/>
+                <path d="M3.4 13.1c1.1.5 2.3.8 3.7.8" stroke="#FFC53D" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h1>连接 Microduck</h1>
+            <p>通过蓝牙直连，不需要 Wi-Fi</p>
+          </div>
+          <button class="scan-btn" onclick="scan()">扫描机器人</button>
+          <div class="list-label"><span>附近的机器人</span><span id="scanCount">2 台</span></div>
+          <button class="robot-row" onclick="openSheet('pin')">
+            <span class="robot-ico">🦆</span>
+            <span class="robot-main">
+              <span class="robot-name">duck-dillon <span class="saved-tag">已保存</span></span>
+              <span class="robot-sub">192.168.110.240 · 上次 11:02</span>
+            </span>
+            <span class="sig ok"><i></i><i></i><i></i><i></i></span>
+            <span class="chev">›</span>
+          </button>
+          <button class="robot-row" onclick="openSheet('pin')">
+            <span class="robot-ico">🦆</span>
+            <span class="robot-main">
+              <span class="robot-name">duck-5b21</span>
+              <span class="robot-sub">未广播地址</span>
+            </span>
+            <span class="sig warn"><i></i><i></i><i></i><i></i></span>
+            <span class="chev">›</span>
+          </button>
+          <div class="connect-foot">
+            <div>上次连接：<b>duck-dillon · 11:02</b></div>
+            <div style="margin-top:6px">找不到？确认蓝牙已打开，机器人在 10 米内。</div>
+            <div style="margin-top:6px">局域网网页版：<b>http://192.168.110.240:8001</b></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 连接中 -->
+      <section class="screen" id="screen-connecting">
+        <div class="connect-progress">
+          <div class="duck-badge" style="margin-bottom:16px">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+              <path d="M5.2 13.4c0-2.7 2.1-4.7 4.8-4.7h1.3V7.2c0-1.4 1.1-2.5 2.5-2.5 1.2 0 2.2.8 2.4 1.9l2.5.9c.5.2.6.8.2 1.1l-1.7 1.2v.4c0 4-2.9 7-7 7-2.9 0-5-1.7-5-3.8Z" fill="#FFC53D"/>
+            </svg>
+          </div>
+          <h2>连接中…</h2>
+          <div class="steps">
+            <div class="step done"><span class="dot">✓</span>找到 duck-dillon</div>
+            <div class="step done"><span class="dot">✓</span>蓝牙链路已建立</div>
+            <div class="step done"><span class="dot">✓</span>发现 Microduck 服务</div>
+            <div class="step now"><span class="dot"></span>正在验证 PIN</div>
+            <div class="step"><span class="dot"></span>订阅机器人状态</div>
+          </div>
+          <button class="ghost big" onclick="show('connect')">取消</button>
+        </div>
+      </section>
+
+      <!-- 03 驾驶主页 -->
+      <section class="screen" id="screen-drive">
+        <header class="topbar">
+          <div class="tb1">
+            <button class="link-chip ble" onclick="show('hub-connection')" title="手机与机器人的蓝牙连接">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M7 17L17 7"/><path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/></svg>
+              <span class="lc-label">蓝牙</span>
+              <span class="lc-name">duck-dillon</span>
+              <span class="sig ok"><i></i><i></i><i></i><i></i></span>
+            </button>
+            <span class="pill walk">行走</span>
+            <span class="pill warn">⚠ 2</span>
+            <button class="icon-btn" title="全屏">⛶</button>
+          </div>
+          <div class="tb2">
+            <button class="link-chip wifi" id="wifiChip" onclick="show('hub-network')" title="机器人自己的 Wi-Fi 网络">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4.5 9.5a12 12 0 0 1 15 0"/><path d="M7.5 13a8 8 0 0 1 9 0"/><path d="M10.5 16.4a4 4 0 0 1 3 0"/><circle cx="12" cy="19.2" r="1" fill="currentColor" stroke="none"/></svg>
+              <span class="lc-label">Wi-Fi</span>
+              <span class="lc-name" id="wifiName">大树下</span>
+              <span class="dot" id="wifiDot" style="width:6px;height:6px;border-radius:50%;background:var(--ok)"></span>
+              <span class="sig ok" id="wifiSig"><i></i><i></i><i></i><i></i></span>
+            </button>
+            <span class="metric">🔋 <b>61%</b></span>
+            <span class="metric"><b>50</b> Hz</span>
+            <span class="metric opt">电机 <b>30°</b></span>
+            <span class="metric opt">主控 <b>48°</b></span>
+            <button class="detail-link" onclick="openSheet('status')">详情 ›</button>
+          </div>
+        </header>
+
+        <div class="banner" id="driveBanner">
+          <span id="bannerText">手柄服务在运行，手机指令会被覆盖</span>
+          <span class="fill"></span>
+          <button onclick="bannerDetail()">详情 ▸</button>
+        </div>
+
+        <div class="policy-bar">
+          <span class="chip active">行走</span>
+          <span class="chip">起坐</span>
+          <span class="chip">捡取</span>
+          <span class="chip">左踢</span>
+          <span class="chip">右踢</span>
+          <span class="chip">前滚翻</span>
+          <span class="chip more">全部 ▾</span>
+        </div>
+
+        <div class="drive-body">
+          <div class="stick-zone">
+            <div class="stick-mode"><button class="on">行走</button><button>头部</button></div>
+            <div class="stick-guide"><b>按住拖动</b> · 松手即停</div>
+            <div class="stick-base"><div class="stick-knob"></div></div>
+            <div class="stick-readout">
+              <div><b>0.15</b> m/s · <b>0.20</b> rad/s</div>
+              <div class="row" style="gap:6px"><span>请求</span><span class="bar"><i style="width:58%"></i></span></div>
+              <div class="row" style="gap:6px"><span>实际</span><span class="bar app"><i></i></span></div>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="act stand">站立<small>上力回 HOME</small></button>
+            <button class="act enable">交还<small>策略待命</small></button>
+            <button class="act stop">停下<small>只归零速度</small></button>
+            <button class="act relax">卸力<small>长按 1.5 秒</small></button>
+          </div>
+        </div>
+
+        <footer class="footer">
+          <div class="seg"><button>0.1</button><button class="on">0.2</button><button>0.3</button></div>
+          <span class="tilt">倾角 <b>4.9°</b></span>
+          <span class="grow"></span>
+          <button class="foot-btn" title="声音" onclick="openSheet('sound')">🔊</button>
+          <button class="foot-btn" title="维护" onclick="openSheet('maint')">🛠</button>
+        </footer>
+      </section>
+
+      <!-- 06 机器人 · 连接 -->
+      <section class="screen" id="screen-hub-connection">
+        <div class="hub-head">
+          <div class="hub-top">
+            <button class="back" onclick="show('drive')">‹</button>
+            <span class="hub-title">机器人</span>
+            <span class="hub-robot"><b>duck-dillon</b><span class="sig ok"><i></i><i></i><i></i><i></i></span>61%</span>
+          </div>
+          <div class="tabs">
+            <button class="tab on" onclick="show('hub-connection')">连接</button>
+            <button class="tab" onclick="show('hub-network')">网络</button>
+            <button class="tab" onclick="show('hub-system')">系统</button>
+          </div>
+        </div>
+        <div class="hub-body">
+          <div class="card">
+            <div class="card-title"><h4>当前连接</h4><span class="pill walk">已连接</span></div>
+            <div style="font-size:19px;font-weight:700;margin-bottom:6px">duck-dillon</div>
+            <dl class="kv">
+              <dt>序列号</dt><dd class="mono">f0d0c3d72c1c40be</dd>
+              <dt>API</dt><dd>41</dd>
+              <dt>信号</dt><dd><span class="sig ok" style="vertical-align:-1px"><i></i><i></i><i></i><i></i></span> -38 dBm</dd>
+              <dt>延迟</dt><dd>90 ms</dd>
+              <dt>PIN</dt><dd style="color:var(--ok)">已验证</dd>
+              <dt>链路</dt><dd style="color:var(--warn)">未加密</dd>
+            </dl>
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button class="ghost big grow" onclick="toast('已断开连接','warn')">断开</button>
+              <button class="primary big grow" onclick="scan()">重新扫描</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><h4>机器人 Wi-Fi</h4><button class="mini" onclick="show('hub-network')">查看</button></div>
+            <div class="row" style="gap:8px"><span class="status-dot" id="connWifiDot"></span><b style="font-size:14px" id="connWifiName">大树下</b><span class="muted" style="font-size:11px">192.168.110.240</span></div>
+            <div class="muted" style="font-size:11px;line-height:16px;margin-top:6px">机器人自己的网络，与手机蓝牙无关；蓝牙连上不代表机器人有网。</div>
+          </div>
+          <div class="card">
+            <h4>已保存的机器人</h4>
+            <div class="list">
+              <div class="li">
+                <span class="status-dot"></span>
+                <span class="main"><span class="t">duck-dillon</span><span class="d">上次 11:02 · 已记住 PIN</span></span>
+                <button class="mini" onclick="toast('已忘记 duck-dillon','warn')">忘记</button>
+              </div>
+              <div class="li">
+                <span class="status-dot inactive"></span>
+                <span class="main"><span class="t">duck-5b21</span><span class="d">上次 昨天 · 未记住 PIN</span></span>
+                <button class="mini" onclick="toast('已忘记 duck-5b21','warn')">忘记</button>
+              </div>
+            </div>
+          </div>
+          <button class="primary big" onclick="show('connect')">扫描其他机器人</button>
+          <div class="hint muted" style="font-size:11px;line-height:17px">提示：蓝牙同时只服务一台手机。另一台手机连接时，本机会被断开。</div>
+        </div>
+      </section>
+
+      <!-- 07 机器人 · 网络 -->
+      <section class="screen" id="screen-hub-network">
+        <div class="hub-head">
+          <div class="hub-top">
+            <button class="back" onclick="show('drive')">‹</button>
+            <span class="hub-title">机器人</span>
+            <span class="hub-robot"><b>duck-dillon</b><span class="sig ok"><i></i><i></i><i></i><i></i></span>61%</span>
+          </div>
+          <div class="tabs">
+            <button class="tab" onclick="show('hub-connection')">连接</button>
+            <button class="tab on" onclick="show('hub-network')">网络</button>
+            <button class="tab" onclick="show('hub-system')">系统</button>
+          </div>
+        </div>
+        <div class="hub-body">
+          <div class="link-note"><span class="status-dot" id="netBleDot"></span><span id="netBleText">手机蓝牙已连接 · 这里只改机器人自己的 Wi-Fi</span></div>
+          <div class="hero" id="netHeroOn">
+            <div class="state"><span class="status-dot"></span>已连接</div>
+            <div class="ssid">大树下</div>
+            <div class="ip">192.168.110.240/23</div>
+            <div class="sub">地址来源 DHCP · 信号 77%</div>
+            <div class="net-grid">
+              <div>接口<b>wlan0</b></div>
+              <div>MAC<b class="mono">CC:C8:37:3C:BC:41</b></div>
+              <div>IPv4<b>192.168.110.240</b></div>
+              <div>IPv6<b>—</b></div>
+            </div>
+            <div class="console">控制台<code>http://192.168.110.240:8001</code></div>
+            <div class="actions-row">
+              <button class="mini" onclick="toast('状态已刷新','ok')">刷新状态</button>
+              <button class="mini" onclick="toast('已复制 IP','ok')">复制 IP</button>
+              <button class="mini" onclick="toast('已交给系统浏览器','ok')">打开</button>
+            </div>
+          </div>
+          <div class="hero hidden" id="netHeroOff">
+            <div class="state" style="color:var(--warn)"><span class="status-dot warn"></span>未连接</div>
+            <div class="ssid">机器人未联网</div>
+            <div class="sub">蓝牙仍然可用，可以直接在下面选择 Wi-Fi。</div>
+            <div class="actions-row"><button class="mini" onclick="toast('正在扫描…','warn')">扫描附近网络</button></div>
+          </div>
+
+          <div class="card-title" style="margin:2px 2px 0">
+            <h4 style="margin:0;font-size:13px;color:var(--muted)">附近的网络</h4>
+            <button class="mini" onclick="toast('正在扫描…','warn')">重新扫描</button>
+          </div>
+          <div class="card" style="padding:4px 14px">
+            <div class="list">
+              <button class="li" onclick="openSheet('wifi')">
+                <span class="main"><span class="t">大树下 <span class="saved-tag">已保存</span></span><span class="d">WPA2 · 77%</span></span>
+                <span class="sig ok"><i></i><i></i><i></i><i></i></span>
+                <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <span class="chev">›</span>
+              </button>
+              <button class="li" onclick="openSheet('wifi')">
+                <span class="main"><span class="t">TP-LINK_5G</span><span class="d">WPA2 · 62%</span></span>
+                <span class="sig ok"><i></i><i></i><i></i><i></i></span>
+                <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <span class="chev">›</span>
+              </button>
+              <button class="li" onclick="openSheet('wifi')">
+                <span class="main"><span class="t">Microduck-AP</span><span class="d">WPA2 · 41%</span></span>
+                <span class="sig warn"><i></i><i></i><i></i><i></i></span>
+                <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <span class="chev">›</span>
+              </button>
+              <button class="li" onclick="openSheet('wifi')">
+                <span class="main"><span class="t">Guest</span><span class="d">开放网络 · 22%</span></span>
+                <span class="sig bad"><i></i><i></i><i></i><i></i></span>
+                <span class="chev">›</span>
+              </button>
+            </div>
+          </div>
+          <button class="ghost big" onclick="openSheet('forget')">按 SSID 忘记</button>
+        </div>
+      </section>
+
+      <!-- 08 机器人 · 系统 -->
+      <section class="screen" id="screen-hub-system">
+        <div class="hub-head">
+          <div class="hub-top">
+            <button class="back" onclick="show('drive')">‹</button>
+            <span class="hub-title">机器人</span>
+            <span class="hub-robot"><b>duck-dillon</b><span class="sig ok"><i></i><i></i><i></i><i></i></span>61%</span>
+          </div>
+          <div class="tabs">
+            <button class="tab" onclick="show('hub-connection')">连接</button>
+            <button class="tab" onclick="show('hub-network')">网络</button>
+            <button class="tab on" onclick="show('hub-system')">系统</button>
+          </div>
+        </div>
+        <div class="hub-body">
+          <div class="card">
+            <div class="card-title"><h4>身份</h4><button class="mini" onclick="toast('改名面板（原型）','ok')">改名</button></div>
+            <dl class="kv">
+              <dt>名称</dt><dd>duck-dillon</dd>
+              <dt>序列号</dt><dd class="mono">f0d0c3d72c1c40be</dd>
+              <dt>运行</dt><dd>1 小时 14 分</dd>
+              <dt>版本</dt><dd>robotd 0.15.1 · btd 0.15.1</dd>
+              <dt>API</dt><dd>41</dd>
+            </dl>
+          </div>
+          <div class="card">
+            <h4>服务</h4>
+            <div class="list">
+              <div class="li"><span class="status-dot"></span><span class="main"><span class="t">robotd</span><span class="d">运动控制</span></span><span class="right">active</span><button class="mini" onclick="show('logs')">日志</button></div>
+              <div class="li"><span class="status-dot"></span><span class="main"><span class="t">btd</span><span class="d">蓝牙传输</span></span><span class="right">active</span><button class="mini" onclick="show('logs')">日志</button></div>
+              <div class="li"><span class="status-dot"></span><span class="main"><span class="t">configd</span><span class="d">网络与身份</span></span><span class="right">active</span><button class="mini" onclick="show('logs')">日志</button></div>
+              <div class="li"><span class="status-dot"></span><span class="main"><span class="t">padd</span><span class="d">实体手柄</span></span><span class="right">active</span><button class="mini" onclick="openSheet('conflict')">冲突</button></div>
+              <div class="li"><span class="status-dot inactive"></span><span class="main"><span class="t">mediad</span><span class="d">摄像头</span></span><span class="right">inactive</span><button class="mini" onclick="show('logs')">日志</button></div>
+            </div>
+          </div>
+          <button class="ghost big" onclick="show('logs')">查看全部日志</button>
+          <button class="danger-row" onclick="openSheet('reboot')">重启机器人…</button>
+          <div class="card">
+            <div class="card-title"><h4>高级诊断</h4><span class="dim">可选</span></div>
+            <div class="muted" style="font-size:11px;line-height:17px">发送 BLE 允许的方法，查看原始回答。默认不展开，避免误操作。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 16 日志 -->
+      <section class="screen" id="screen-logs">
+        <div class="hub-head">
+          <div class="hub-top">
+            <button class="back" onclick="show('hub-system')">‹</button>
+            <span class="hub-title">日志</span>
+          </div>
+        </div>
+        <div class="log-wrap">
+          <div class="unit-chips">
+            <button class="unit on">robotd</button><button class="unit">btd</button><button class="unit">configd</button><button class="unit">padd</button><button class="unit">蓝牙</button><button class="unit">NetworkManager</button>
+          </div>
+          <div class="row" style="justify-content:space-between">
+            <span class="muted" style="font-size:11px">行数 40</span>
+            <button class="mini" onclick="toast('已读取 40 行','ok')">读取</button>
+          </div>
+          <div class="log-box">2026-11-26T11:02:41.120Z INFO robotd: control loop 50.0 Hz, missed 12
+2026-11-26T11:02:41.240Z WARN duck_control::safety: intents went stale — velocity zeroed
+2026-11-26T11:02:42.001Z INFO robotd: subscriber attached (profile=phone, hz=10)
+2026-11-26T11:02:43.550Z INFO btd: session opened; mtu=517
+2026-11-26T11:02:43.601Z INFO btd: central subscribed
+2026-11-26T11:02:44.882Z INFO robotd: robot.enable accepted
+2026-11-26T11:02:45.310Z INFO robotd: policy walk active
+2026-11-26T11:02:46.004Z INFO robotd: move applied vx=0.15 vyaw=0.20
+2026-11-26T11:02:47.118Z WARN robotd: move limited_by=[deadman]
+2026-11-26T11:02:48.777Z INFO robotd: robot.stop accepted</div>
+          <div class="log-note">已截断（最多 200 行）</div>
+          <div class="row" style="gap:8px">
+            <button class="ghost big grow" onclick="toast('已复制（PIN/密码已隐藏）','ok')">复制</button>
+            <button class="ghost big grow" onclick="toast('已清空本机视图','warn')">清空</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 17 离线 -->
+      <section class="screen" id="screen-offline">
+        <div class="connect-progress">
+          <div style="font-size:44px;margin-bottom:10px">⛔</div>
+          <h2>蓝牙未连接</h2>
+          <div class="muted" style="font-size:12px;line-height:19px;text-align:center;max-width:280px">
+            蓝牙连接已断开。靠近机器人后点「重试连接」；<br>要换设备就返回连接页。
+          </div>
+          <!-- 上次连接谁、为什么断：这三行是排查的第一手信息 -->
+          <div class="card" style="width:100%;max-width:300px;margin-top:16px;text-align:left;font-size:12px;line-height:20px">
+            <div>设备 <b>duck-dillon · CC:C8:37:3C:BC:41</b></div>
+            <div>上次连接 <b>11:44:10</b> · 待命 · 85%</div>
+            <div class="muted" style="font-size:11px">断开原因：蓝牙连接中断（机器人断电、超出范围或蓝牙服务停了）</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:20px;width:100%;max-width:300px">
+            <button class="primary big grow" onclick="show('connecting');setTimeout(()=>show('drive'),1400)">重试连接</button>
+            <button class="ghost big grow" onclick="toast('打开系统蓝牙设置（原型）','warn')">蓝牙设置</button>
+          </div>
+          <button class="ghost big" style="margin-top:8px;width:100%;max-width:300px" onclick="toast('排障页（原型）','ok')">排障</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ── sheets ─────────────────────────────────────── -->
+    <div class="overlay" id="sheet-pin" data-sheet>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h2>连接 duck-dillon</h2>
+        <div class="hint">出厂 PIN 是 000000；改过请用 <b>robotctl system pin</b> 查看。</div>
+        <div class="pin-boxes">
+          <span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span class="focus"></span>
+        </div>
+        <label class="inline"><input type="checkbox" checked>记住这台机器人（PIN 加密保存）</label>
+        <div class="sheet-actions">
+          <button class="ghost big" onclick="closeSheets()">取消</button>
+          <button class="primary big" onclick="closeSheets();show('connecting');setTimeout(()=>{show('drive');toast('已连接 duck-dillon','ok')},1600)">连接</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="sheet-wifi" data-sheet>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h2>连接 大树下</h2>
+        <div class="hint">已记住这个网络的密码；可以直接连接，也可以改。</div>
+        <div class="field">
+          <label>密码</label>
+          <input class="mono" type="password" value="12345678">
+        </div>
+        <details class="acc">
+          <summary>固定 IP（可选）</summary>
+          <div class="field" style="margin-top:10px"><label>地址</label><input class="mono" placeholder="192.168.110.240"></div>
+          <div class="grid2">
+            <div class="field"><label>掩码</label><input class="mono" value="255.255.255.0"></div>
+            <div class="field"><label>网关</label><input class="mono" placeholder="192.168.110.1"></div>
+          </div>
+          <div class="field"><label>DNS</label><input class="mono" placeholder="192.168.110.1"></div>
+          <label class="inline"><input type="checkbox">连接时使用固定地址</label>
+        </details>
+        <div class="sheet-actions">
+          <button class="ghost big" onclick="closeSheets()">取消</button>
+          <button class="primary big" onclick="closeSheets();toast('正在连接 大树下…','warn');setTimeout(()=>toast('已连接 大树下 · 192.168.110.240','ok'),1400)">连接</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="sheet-forget" data-sheet>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h2>忘记 大树下？</h2>
+        <div class="hint">机器人会删除这个 Wi-Fi 的配置。本机记住的密码和固定 IP 也会一起删除。</div>
+        <div class="sheet-actions">
+          <button class="ghost big" onclick="closeSheets()">取消</button>
+          <button class="big" style="flex:1;background:var(--danger);color:#1F0B0A;font-weight:700;border-radius:16px" onclick="closeSheets();toast('已忘记 大树下','warn')">忘记</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="sheet-reboot" data-sheet>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h2>重启机器人？</h2>
+        <div class="hint">会断开蓝牙连接，并让关节卸力。请先让机器人坐下，或扶住它。</div>
+        <div class="sheet-actions">
+          <button class="ghost big" onclick="closeSheets()">取消</button>
+          <button class="big" style="flex:1;background:var(--danger);color:#1F0B0A;font-weight:700;border-radius:16px" onclick="closeSheets();toast('将在 3 秒后重启','warn');setTimeout(()=>show('offline'),1200)">重启</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="sheet-status" data-sheet>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h2>状态</h2>
+        <div class="hint">点顶部状态栏随时打开</div>
+        <div class="row" style="margin:10px 0 10px">
+          <span class="pill danger" style="font-size:11px">⚠ 1 项告警 · 电机 74°C</span>
+        </div>
+        <!-- 两列等宽：长串（policy=held、appassets…）不许把另一列挤扁 -->
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+          <div class="card" style="margin:0">
+            <div class="muted" style="font-size:11px">连接</div>
+            <div style="font-size:16px;font-weight:700;margin-top:2px">手机蓝牙 已连接</div>
+            <div class="muted" style="font-size:11px;line-height:15px;margin-top:2px;overflow-wrap:anywhere">192.168.110.240 · api 41 · MTU 517</div>
+          </div>
+          <div class="card" style="margin:0">
+            <div class="muted" style="font-size:11px">策略</div>
+            <div style="font-size:16px;font-weight:700;margin-top:2px">行走</div>
+            <div class="muted" style="font-size:11px;line-height:15px;margin-top:2px;overflow-wrap:anywhere">policy=walk · limp=false · fallen=false</div>
+          </div>
+          <div class="card" style="margin:0">
+            <div class="muted" style="font-size:11px">控制环</div>
+            <div style="font-size:16px;font-weight:700;margin-top:2px">50.0 Hz</div>
+            <div class="muted" style="font-size:11px;margin-top:2px">missed 12</div>
+          </div>
+          <div class="card" style="margin:0">
+            <div class="muted" style="font-size:11px">电源</div>
+            <div style="font-size:16px;font-weight:700;margin-top:2px">61%</div>
+            <div class="muted" style="font-size:11px;margin-top:2px">7.50 V</div>
+          </div>
+          <div class="card" style="margin:0;border-color:rgba(255,90,82,.4)">
+            <div class="muted" style="font-size:11px">温度</div>
+            <div style="font-size:16px;font-weight:700;margin-top:2px;color:var(--danger)">电机 74°C</div>
+            <div class="muted" style="font-size:11px;margin-top:2px">主控 78°C</div>
+          </div>
+          <div class="card" style="margin:0">
+            <div class="muted" style="font-size:11px">输入源</div>
+            <div style="font-size:16px;font-weight:700;margin-top:2px">仅手机</div>
+            <div class="muted" style="font-size:11px;margin-top:2px">无输入冲突</div>
+          </div>
+        </div>
+        <div class="muted" style="font-size:10px;line-height:15px;margin-top:10px">「连接」说的是手机蓝牙；机器人自己的 Wi-Fi 见顶部第二条链路。两者互不代表。</div>
+        <div class="row" style="justify-content:space-between;margin-top:14px">
+          <span class="muted" style="font-size:10px">robotd — · 蓝牙</span>
+          <button class="ghost mini" onclick="closeSheets()">关闭</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay" id="sheet-sound" data-sheet>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h2>声音</h2>
+        <div class="hint">7 个内置叫声 · 单次播放；长叫按住循环</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <button class="mini" style="height:56px" onclick="toast('播放 短叫','ok')">短叫</button>
+          <button class="mini" style="height:56px" onclick="toast('播放 打招呼','ok')">打招呼</button>
+          <button class="mini" style="height:56px" onclick="toast('播放 疑问','ok')">疑问</button>
+          <button class="mini" style="height:56px" onclick="toast('播放 咕咕','ok')">咕咕</button>
+          <button class="mini" style="height:56px" onclick="toast('播放 警戒','ok')">警戒</button>
+          <button class="mini" style="height:56px" onclick="toast('播放 啄食','ok')">啄食</button>
+          <button class="mini" style="height:56px;grid-column:span 3;color:var(--duck);border-color:rgba(255,197,61,.35);background:var(--duck-soft)" onclick="toast('长叫：按住持续','warn')">长叫（按住）</button>
+        </div>
+        <div class="row" style="margin-top:16px;gap:10px">
+          <span class="muted" style="font-size:11px">音量</span>
+          <input type="range" min="0" max="100" value="60" style="flex:1;accent-color:var(--duck)">
+          <b style="font-size:12px">60</b>
+          <button class="mini" onclick="toast('已静音','warn')">静音</button>
+        </div>
+        <button class="ghost big" style="width:100%;margin-top:16px" onclick="closeSheets()">关闭</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="sheet-maint" data-sheet>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h2>维护</h2>
+        <div class="hint">只放少用的恢复动作；驾驶中请先停下。</div>
+        <div class="card" style="margin-bottom:8px">
+          <div class="row" style="justify-content:space-between">
+            <div><div style="font-size:14px;font-weight:700">重启舵机</div><div class="muted" style="font-size:11px;margin-top:2px">过载锁死后使用。会先切力矩，机器人会倒。</div></div>
+            <button class="mini danger" onclick="openSheet('reboot')">重启舵机</button>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:8px">
+          <div class="row" style="justify-content:space-between">
+            <div><div style="font-size:14px;font-weight:700">网络</div><div class="muted" style="font-size:11px;margin-top:2px">大树下 · 192.168.110.240</div></div>
+            <button class="mini" onclick="closeSheets();show('hub-network')">打开</button>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:8px">
+          <div class="row" style="justify-content:space-between">
+            <div><div style="font-size:14px;font-weight:700">系统</div><div class="muted" style="font-size:11px;margin-top:2px">robotd 0.15.1 · btd 0.15.1</div></div>
+            <button class="mini" onclick="closeSheets();show('hub-system')">打开</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="row" style="justify-content:space-between">
+            <div><div style="font-size:14px;font-weight:700">输入源</div><div class="muted" style="font-size:11px;margin-top:2px">手柄服务运行时会覆盖手机指令。</div></div>
+            <span class="pill warn">padd 运行中</span>
+          </div>
+        </div>
+        <button class="ghost big" style="width:100%;margin-top:14px" onclick="closeSheets()">关闭</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="sheet-conflict" data-sheet>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h2>控制源冲突</h2>
+        <div class="hint">这个机器人现在同时有：手机蓝牙（本机）、实体手柄 padd、局域网网页中控。</div>
+        <div class="card" style="margin-bottom:8px;font-size:12px;line-height:19px;color:var(--muted)">
+          两边都会发 <b style="color:var(--text)">robot.move</b>，后到的覆盖先到的。请只保留一个驾驶源。
+        </div>
+        <div class="sheet-actions" style="flex-wrap:wrap">
+          <button class="ghost big" onclick="closeSheets();toast('已停止 padd（原型）','warn')">停用手柄服务</button>
+          <button class="ghost big" onclick="closeSheets();toast('已停止网页中控（原型）','warn')">停用网页中控</button>
+        </div>
+        <button class="primary big" style="width:100%;margin-top:8px" onclick="closeSheets()">知道了</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="sheet-reconnect" data-sheet>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h2>蓝牙断开</h2>
+        <div class="hint">正在自动重连（3/8）。机器人会在 500 ms 内归零速度，不会继续执行断链前的动作。</div>
+        <div class="sheet-actions">
+          <button class="ghost big" onclick="closeSheets();show('offline')">停止重连</button>
+          <button class="primary big" onclick="closeSheets();show('connecting');setTimeout(()=>show('drive'),1400)">立即重试</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="mobileJump" onclick="mobileJump()">原型跳转</button>
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<script>
+  const screens = [...document.querySelectorAll('.screen')];
+  const sheets = [...document.querySelectorAll('.overlay[data-sheet]')];
+  let bannerMode = '';
+
+  function show(id, banner){
+    screens.forEach(s => s.classList.toggle('active', s.id === 'screen-' + id));
+    closeSheets();
+    document.getElementById('screen-drive').classList.toggle('locked', id === 'drive' && banner === 'reconnect');
+    const b = document.getElementById('driveBanner');
+    const action = b.querySelector('button');
+    if (id === 'drive') {
+      if (banner === 'reconnect') {
+        b.classList.add('show');
+        b.classList.remove('danger');
+        document.getElementById('bannerText').textContent = '蓝牙断开，正在重连（3/8）…';
+        action.textContent = '详情 ▸';
+        bannerMode = 'reconnect';
+        setWifiOff(false);
+      } else if (banner === 'conflict') {
+        b.classList.add('show');
+        b.classList.remove('danger');
+        document.getElementById('bannerText').textContent = '手柄服务在运行，手机指令会被覆盖';
+        action.textContent = '详情 ▸';
+        bannerMode = 'conflict';
+        setWifiOff(false);
+      } else if (banner === 'wifi-off') {
+        b.classList.add('show');
+        b.classList.remove('danger');
+        document.getElementById('bannerText').textContent = '蓝牙已连接 · 机器人未联网，仍可驾驶和配置网络';
+        action.textContent = '去配置 ▸';
+        bannerMode = 'wifi-off';
+        setWifiOff(true);
+      } else if (bannerMode === 'reconnect') {
+        b.classList.remove('show');
+        setWifiOff(false);
+      } else if (bannerMode === 'conflict') {
+        b.classList.add('show');
+        action.textContent = '详情 ▸';
+        setWifiOff(false);
+      } else if (bannerMode === 'wifi-off') {
+        b.classList.add('show');
+        document.getElementById('bannerText').textContent = '蓝牙已连接 · 机器人未联网，仍可驾驶和配置网络';
+        action.textContent = '去配置 ▸';
+        setWifiOff(true);
+      } else {
+        b.classList.remove('show');
+        action.textContent = '详情 ▸';
+        setWifiOff(false);
+      }
+    }
+    document.querySelectorAll('#jump button').forEach(x => x.classList.remove('on'));
+  }
+
+  // 两条链路分开：手机蓝牙（上方 BLE chip）与机器人 Wi-Fi（下方 Wi-Fi chip）
+  function setWifiOff(off){
+    const chip = document.getElementById('wifiChip');
+    if (chip) chip.classList.toggle('off', off);
+    const name = document.getElementById('wifiName');
+    if (name) name.textContent = off ? '未联网' : '大树下';
+    const dot = document.getElementById('wifiDot');
+    if (dot) dot.style.background = off ? 'var(--warn)' : 'var(--ok)';
+    const sig = document.getElementById('wifiSig');
+    if (sig) sig.className = 'sig ' + (off ? 'gray' : 'ok');
+    const on = document.getElementById('netHeroOn');
+    const offHero = document.getElementById('netHeroOff');
+    if (on) on.classList.toggle('hidden', off);
+    if (offHero) offHero.classList.toggle('hidden', !off);
+    const connDot = document.getElementById('connWifiDot');
+    if (connDot) connDot.classList.toggle('warn', off);
+    const connName = document.getElementById('connWifiName');
+    if (connName) connName.textContent = off ? '未联网' : '大树下';
+    const pill = document.getElementById('statusWifiPill');
+    if (pill) { pill.textContent = off ? '未联网' : '已连接'; pill.className = 'pill ' + (off ? 'warn' : 'walk'); }
+    const statusDot = document.getElementById('statusWifiDot');
+    if (statusDot) statusDot.classList.toggle('warn', off);
+    const statusText = document.getElementById('statusWifiText');
+    if (statusText) statusText.textContent = off ? '机器人当前没有加入 Wi-Fi' : '大树下 · 192.168.110.240';
+  }
+
+  function openSheet(name){
+    sheets.forEach(s => s.classList.toggle('show', s.id === 'sheet-' + name));
+  }
+  function bannerDetail(){
+    if (bannerMode === 'wifi-off') { show('hub-network'); setWifiOff(true); return; }
+    openSheet(bannerMode === 'reconnect' ? 'reconnect' : 'conflict');
+  }
+  function closeSheets(){ sheets.forEach(s => s.classList.remove('show')); }
+  function toast(msg, kind='ok'){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + kind;
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.className = 'toast', 2400);
+  }
+  function scan(){
+    show('connect');
+    toast('正在扫描…','warn');
+    setTimeout(()=>toast('找到 2 台机器人','ok'), 1100);
+  }
+  function mobileJump(){
+    const names = [
+      ['01 扫描连接','connect'],['02 连接中','connecting'],['03 驾驶主页','drive'],
+      ['04 重连中','drive','reconnect'],['05 控制源冲突','drive','conflict'],
+      ['06 机器人 · 连接','hub-connection'],['07 机器人 · 网络','hub-network'],
+      ['08 机器人 · 系统','hub-system'],['16 日志','logs'],['17 离线','offline'],
+      ['18 蓝牙已连 · 机器人未联网','drive','wifi-off'],
+      ['19 网络 · 未联网','hub-network','off'],
+      ['13 状态详情','sheet:status'],['14 声音面板','sheet:sound'],['15 维护面板','sheet:maint']
+    ];
+    // simple cycling for the mobile button
+    if (!mobileJump.i) mobileJump.i = 0;
+    const n = names[mobileJump.i % names.length];
+    mobileJump.i++;
+    toast(n[0], 'ok');
+    if (n[1].startsWith('sheet:')) { show('drive'); openSheet(n[1].slice(6)); return; }
+    if (n[2] === 'off') { setWifiOff(true); show('hub-network'); return; }
+    setWifiOff(false);
+    show(n[1], n[2]);
+  }
+
+  document.querySelectorAll('#jump button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#jump button').forEach(x => x.classList.remove('on'));
+      btn.classList.add('on');
+      if (btn.dataset.off) { setWifiOff(true); show('hub-network'); return; }
+      setWifiOff(false);
+      if (btn.dataset.sheet) {
+        const name = btn.dataset.sheet;
+        const behind = { pin: 'connect', wifi: 'hub-network', forget: 'hub-network', reboot: 'hub-system' };
+        show(behind[name] || 'drive');
+        openSheet(name);
+        return;
+      }
+      show(btn.dataset.go, btn.dataset.banner);
+    });
+  });
+
+  // tapping the dim area closes a sheet
+  sheets.forEach(s => s.addEventListener('click', e => { if (e.target === s) closeSheets(); }));
+
+  // deep link for review: prototype.html#hub-network, #drive, #sheet-wifi
+  (function fromHash(){
+    const h = decodeURIComponent(location.hash.slice(1));
+    if (!h) return;
+    if (h === 'drive-reconnect') { show('drive', 'reconnect'); return; }
+    if (h === 'drive-conflict') { show('drive', 'conflict'); return; }
+    if (h === 'wifi-off') { show('drive', 'wifi-off'); return; }
+    if (h === 'hub-network-off') { show('hub-network'); setWifiOff(true); return; }
+    setWifiOff(false);
+    if (h.startsWith('sheet-')) {
+      const name = h.slice(6);
+      const behind = { pin: 'connect', wifi: 'hub-network', forget: 'hub-network', reboot: 'hub-system' };
+      show(behind[name] || 'drive');
+      openSheet(name);
+      return;
+    }
+    show(h);
+  })();
+</script>
+</body>
+</html>

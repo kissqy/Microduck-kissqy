@@ -1,0 +1,19 @@
+# Android 构建产物：android/.gitignore 已覆盖 .gradle/、build/、local.properties；
+# 这里补它没有覆盖的 Kotlin 会话缓存。
+android/.kotlin/
+
+# 发布签名材料，绝不入库。android/.gitignore 也列了同样的规则，这里写一份是为了
+# 从仓库根执行 `git add -A` 时也不会误加。
+android/keystore/
+android/keystore.properties
+*.jks
+*.keystore
+
+# APK / AAB 产物（正常都在 build/ 下，双保险）
+*.apk
+*.aab
+
+# 工具链的本地虚拟环境与字节码缓存
+tools/.venv-ble/
+__pycache__/
+*.pyc

@@ -1,0 +1,3 @@
+# PC 验收/部署脚本的 Python 依赖。
+# 与 ducknet/ 一致：bleak 自带 dbus-fast，不需要单独装。
+bleak>=3.1,<4

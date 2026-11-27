@@ -20,7 +20,17 @@ pub trait Net: Send + Sync {
     async fn status(&self) -> NetResult<proto::NetStatusResult>;
     async fn scan(&self) -> NetResult<proto::NetScanResult>;
     /// Join `ssid`, storing it so NM reconnects by itself next time.
-    async fn connect(&self, ssid: &str, psk: Option<&str>) -> NetResult<proto::ConnectResult>;
+    ///
+    /// `ipv4` asks for a fixed address instead of a DHCP lease. It is part of the saved profile,
+    /// so a robot provisioned this way comes back up on the same address after a reboot —
+    /// which is the whole point, and also the reason `configd` validates it before NM ever
+    /// writes it down.
+    async fn connect(
+        &self,
+        ssid: &str,
+        psk: Option<&str>,
+        ipv4: Option<&proto::Ipv4Config>,
+    ) -> NetResult<proto::ConnectResult>;
     async fn forget(&self, ssid: &str) -> NetResult<proto::ForgetResult>;
 }
 
@@ -81,7 +91,12 @@ impl Net for UnavailableNet {
 
     /// Joining *is* an error. Reporting success for a network it did not join would be a lie, and
     /// silently doing nothing is worse than saying what is wrong.
-    async fn connect(&self, _ssid: &str, _psk: Option<&str>) -> NetResult<proto::ConnectResult> {
+    async fn connect(
+        &self,
+        _ssid: &str,
+        _psk: Option<&str>,
+        _ipv4: Option<&proto::Ipv4Config>,
+    ) -> NetResult<proto::ConnectResult> {
         Err(self.reason.clone())
     }
 
@@ -192,7 +207,12 @@ impl Net for FakeNet {
         Ok(proto::NetScanResult { networks })
     }
 
-    async fn connect(&self, ssid: &str, psk: Option<&str>) -> NetResult<proto::ConnectResult> {
+    async fn connect(
+        &self,
+        ssid: &str,
+        psk: Option<&str>,
+        ipv4: Option<&proto::Ipv4Config>,
+    ) -> NetResult<proto::ConnectResult> {
         let mut state = self.inner.lock().await;
 
         let Some((network, wanted)) = state.visible.iter().find(|(n, _)| n.ssid == ssid).cloned()
@@ -228,7 +248,12 @@ impl Net for FakeNet {
         }
         Ok(proto::ConnectResult::Connected {
             ssid: ssid.to_owned(),
-            ip4: Some("192.168.50.63".into()),
+            // The address is what a fixed configuration asked for, so the fake reports it back:
+            // a test can then tell "static addressing was honoured" from "DHCP answered".
+            ip4: Some(
+                ipv4.map(|cfg| cfg.address.clone())
+                    .unwrap_or_else(|| "192.168.50.63".into()),
+            ),
         })
     }
 
@@ -264,7 +289,7 @@ mod tests {
         );
         assert!(net.scan().await.unwrap().networks.is_empty());
 
-        let err = net.connect("Pollen", Some("key")).await.unwrap_err();
+        let err = net.connect("Pollen", Some("key"), None).await.unwrap_err();
         assert!(err.contains("D-Bus"), "the reason has to travel: {err}");
         assert!(net.forget("Pollen").await.is_err());
     }
@@ -272,7 +297,7 @@ mod tests {
     #[tokio::test]
     async fn a_wrong_key_is_reported_as_a_wrong_key() {
         let net = FakeNet::new();
-        let result = net.connect("Pollen", Some("wrong")).await.unwrap();
+        let result = net.connect("Pollen", Some("wrong"), None).await.unwrap();
         assert!(matches!(
             result,
             proto::ConnectResult::Failed {
@@ -287,7 +312,7 @@ mod tests {
     #[tokio::test]
     async fn a_missing_key_is_not_a_wrong_key() {
         let net = FakeNet::new();
-        let result = net.connect("Pollen", None).await.unwrap();
+        let result = net.connect("Pollen", None, None).await.unwrap();
         assert!(matches!(
             result,
             proto::ConnectResult::Failed {
@@ -301,7 +326,7 @@ mod tests {
     async fn an_unknown_ssid_is_not_found() {
         let net = FakeNet::new();
         assert!(matches!(
-            net.connect("Nowhere", Some("k")).await.unwrap(),
+            net.connect("Nowhere", Some("k"), None).await.unwrap(),
             proto::ConnectResult::Failed {
                 reason: proto::ConnectFailure::NotFound,
                 ..
@@ -322,7 +347,7 @@ mod tests {
         let net = FakeNet::new();
 
         assert!(matches!(
-            net.connect("Pollen", Some("wrong")).await.unwrap(),
+            net.connect("Pollen", Some("wrong"), None).await.unwrap(),
             proto::ConnectResult::Failed {
                 reason: proto::ConnectFailure::BadKey,
                 ..
@@ -343,7 +368,9 @@ mod tests {
         );
 
         assert!(matches!(
-            net.connect("Pollen", Some("correct-key")).await.unwrap(),
+            net.connect("Pollen", Some("correct-key"), None)
+                .await
+                .unwrap(),
             proto::ConnectResult::Connected { .. }
         ));
 
@@ -360,7 +387,9 @@ mod tests {
         assert!(net.scan().await.unwrap().networks.iter().all(|n| !n.saved));
 
         assert!(matches!(
-            net.connect("Pollen", Some("correct-key")).await.unwrap(),
+            net.connect("Pollen", Some("correct-key"), None)
+                .await
+                .unwrap(),
             proto::ConnectResult::Connected { .. }
         ));
 
@@ -388,12 +417,36 @@ mod tests {
         assert!(!net.forget("Pollen").await.unwrap().removed);
     }
 
+    /// A fixed address comes back in the answer, so a client can tell "pinned as asked" from
+    /// "DHCP answered" without a second round trip.
+    #[tokio::test]
+    async fn a_fixed_address_is_reported_back() {
+        let net = FakeNet::new();
+        let cfg = proto::Ipv4Config {
+            address: "192.168.110.50".into(),
+            prefix: 24,
+            gateway: Some("192.168.110.1".into()),
+            dns: vec!["192.168.110.1".into()],
+        };
+
+        match net
+            .connect("Pollen", Some("correct-key"), Some(&cfg))
+            .await
+            .unwrap()
+        {
+            proto::ConnectResult::Connected { ip4, .. } => {
+                assert_eq!(ip4.as_deref(), Some("192.168.110.50"))
+            }
+            other => panic!("expected a connection, got {other:?}"),
+        }
+    }
+
     /// An open network needs no key, and asking with one is not an error either.
     #[tokio::test]
     async fn an_open_network_joins_without_a_key() {
         let net = FakeNet::new();
         assert!(matches!(
-            net.connect("Cafe", None).await.unwrap(),
+            net.connect("Cafe", None, None).await.unwrap(),
             proto::ConnectResult::Connected { .. }
         ));
     }

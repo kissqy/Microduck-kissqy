@@ -327,6 +327,8 @@ pub fn run(
             proto::Id::Number(SUBSCRIBE_ID),
             &proto::Call::RobotSubscribe(proto::SubscribeParams {
                 hz: (hz > 0).then_some(hz),
+                // `monitor` draws the full frame; the compact one drops joints and odometry.
+                profile: None,
             }),
         )
     };

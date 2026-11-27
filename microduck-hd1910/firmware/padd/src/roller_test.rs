@@ -156,6 +156,7 @@ fn run_stream(stream: UnixStream) -> Result<(), String> {
     let subscribed = client
         .call(proto::Call::RobotSubscribe(proto::SubscribeParams {
             hz: Some(50),
+            profile: None,
         }))?
         .result_as::<proto::SubscribeResult>()
         .map_err(|e| e.to_string())?;

@@ -1,0 +1,9 @@
+.gradle/
+build/
+local.properties
+*.iml
+.idea/
+captures/
+# 发布签名材料，不能进仓库
+keystore.properties
+keystore/

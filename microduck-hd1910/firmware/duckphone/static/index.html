@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#14161A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Microduck 局域网手机遥控">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="stylesheet" href="/style.css?v=14">
+<title>Duck 遥控</title>
+</head>
+<body>
+<div id="app" data-mode="driver">
+
+  <header id="topbar">
+    <button id="statusBtn" type="button" aria-label="打开状态详情">
+      <span class="s-item conn">
+        <span class="dot" id="connDot"></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M12 19.5h.01"/></svg>
+      </span>
+      <span class="s-pill policy walk" id="policyChip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13a6 6 0 0 1 12 0v3a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"/><path d="M18 12l4 2-4 2"/></svg>
+        <span id="policyText">行走</span>
+      </span>
+      <span class="s-item batt" id="battMetric">
+        <span class="batt-ico"><i id="battFill"></i></span>
+        <b id="battPct">61%</b>
+      </span>
+      <span class="s-item hz" id="hzMetric">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
+        <b id="hzVal">50</b><span class="unit">Hz</span>
+      </span>
+      <span class="s-item temp" id="tempMetric" title="电机最高温度">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.8V5a2 2 0 1 0-4 0v9.8a4 4 0 1 0 4 0Z"/></svg>
+        <span class="s-tag">电机</span><b id="tempVal">30°</b>
+      </span>
+      <span class="s-item cpu" id="cpuMetric" title="主控温度">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M9 3v2M12 3v2M15 3v2M9 19v2M12 19v2M15 19v2M3 9h2M3 12h2M3 15h2M19 9h2M19 12h2M19 15h2"/></svg>
+        <span class="s-tag">主控</span><b id="cpuVal">48°</b>
+      </span>
+      <span class="s-alarm hidden" id="alarmChip" title="当前告警数">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        <b id="alarmCount">0</b>
+      </span>
+      <span class="s-chev">›</span>
+    </button>
+    <button class="full" id="btnFull" type="button" title="全屏" aria-label="进入全屏">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5"/><path d="M16 3h5v5"/><path d="M8 21H3v-5"/><path d="M16 21h5v-5"/></svg>
+    </button>
+  </header>
+
+  <div id="banner" class="hidden" role="status">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    <span class="fill" id="bannerText">手柄服务 (padd) 在运行，会覆盖手机指令</span>
+    <button type="button" id="bannerAction" aria-label="查看当前提示的详情">详情 ▸</button>
+  </div>
+
+  <!-- 策略条：一排策略按钮，点一下执行一次；▾ 展开看全名 -->
+  <section id="policyBar" aria-label="策略" data-locked="true">
+    <div class="pb-row">
+      <span class="pb-key">策略</span>
+      <div class="pb-chips" id="policyChips" role="group" aria-label="执行策略"></div>
+      <button class="pb-more" id="policyToggle" type="button" aria-expanded="false"
+              aria-controls="policyPanel" aria-label="展开全部策略">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+    </div>
+    <div id="policyPanel" class="hidden" role="listbox" aria-label="全部策略"></div>
+  </section>
+
+  <main id="main">
+    <section id="stickZone" data-mode="drive" aria-label="驾驶摇杆区">
+      <div id="stickMode" role="group" aria-label="摇杆模式">
+        <button type="button" data-stick="drive" class="on" aria-pressed="true">行走</button>
+        <button type="button" data-stick="head" aria-pressed="false">头部</button>
+      </div>
+      <div class="guidance" id="stickGuide"><b>按住拖动</b> · 松手即停</div>
+      <div id="headAxes" aria-hidden="true">
+        <span class="ax-l">← 左转</span>
+        <span class="ax-r">右转 →</span>
+        <span class="ax-u">↑ 抬头</span>
+        <span class="ax-d">↓ 低头</span>
+      </div>
+      <div id="stickBase" aria-hidden="true">
+        <div class="cross"><i></i><i></i></div>
+        <div id="stickKnob"></div>
+      </div>
+      <div id="stickReadout">
+        <div><b id="roVx">0.00</b> m/s · <b id="roYaw">0.00</b> rad/s</div>
+        <div class="bars">
+          <span>请求</span><div class="bar"><i id="barReq"></i></div>
+          <span>实际</span><div class="bar app"><i id="barApp"></i></div>
+        </div>
+        <div id="roLimit" class="limit hidden">已限幅</div>
+      </div>
+      <div id="headReadout">
+        <div class="hr-req">请求 <b id="roHeadReq">+0° / +0°</b></div>
+        <div>实际 <b id="roHeadApp">+0° / +0°</b></div>
+        <div class="hint-mini">策略平滑后 · 松手即回正</div>
+        <button class="reset" id="btnHeadReset" type="button">头部回正</button>
+      </div>
+    </section>
+
+    <aside id="actions">
+      <button class="act stand" id="btnStand" type="button" aria-label="站立">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V6"/><path d="m6.5 11.5 5.5-6 5.5 6"/><path d="M5 21h14"/></svg>
+        </span>
+        <span class="txt"><b>站立</b><small>回 HOME</small></span>
+        <span class="led"></span>
+      </button>
+      <button class="act enable enabled" id="btnEnable" type="button" aria-label="交还策略">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v18"/><path d="m3.5 7.5 4.5-4.5 4.5 4.5"/><path d="M16 21V3"/><path d="m11.5 16.5 4.5 4.5 4.5-4.5"/></svg>
+        </span>
+        <span class="txt"><b id="enableLabel">交还</b><small id="enableSub">策略待命</small></span>
+        <span class="led"></span>
+      </button>
+      <button class="act stop" id="btnStop" type="button" aria-label="停下">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+        </span>
+        <span class="txt"><b>停下</b><small>仍站立</small></span>
+        <span class="led"></span>
+      </button>
+      <button class="act relax" id="btnRelax" type="button" aria-label="长按卸力">
+        <span class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v9"/><path d="M6.4 6.4a8 8 0 1 0 11.2 0"/></svg>
+        </span>
+        <span class="txt"><b>卸力</b><small>长按 1.5s</small></span>
+        <span class="led"></span>
+        <span class="hold-fill"></span>
+      </button>
+    </aside>
+  </main>
+
+  <footer id="footer">
+    <div class="speed">
+      <span class="label">速度</span>
+      <div class="seg" id="speedSeg" role="group" aria-label="速度档位">
+        <button data-speed="0.1" type="button">0.1</button>
+        <button data-speed="0.2" type="button" class="on">0.2</button>
+        <button data-speed="0.3" type="button">0.3</button>
+      </div>
+      <span class="unit">m/s</span>
+    </div>
+    <div class="tilt">
+      <div class="bubble" id="tiltBubble"><i id="tiltDot"></i></div>
+      <span>倾角 <b id="tiltVal" style="color:var(--text)">8.5°</b></span>
+    </div>
+    <button id="btnActions" type="button" aria-label="打开预设动作" title="预设动作">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.5v13l10-6.5Z"/><path d="M4 5.5v13"/></svg>
+      <span>动作</span>
+    </button>
+    <button id="btnSound" type="button" aria-label="打开声音面板" title="声音">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+    </button>
+    <button id="btnMaint" type="button" aria-label="打开维护面板">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+      维护
+    </button>
+  </footer>
+</div>
+
+<!-- 只读 -->
+<div id="readonly" class="overlay hidden">
+  <div class="sheet-card">
+    <div class="icon-round info">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+    </div>
+    <h1>另一台设备正在驾驶</h1>
+    <p><b class="ro-who" id="readonlyWho">另一台设备</b> 正在控制这只鸭子。你可以查看状态，但不能发送动作。</p>
+    <div class="sheet-actions">
+      <button class="big-btn primary" id="btnTakeover" type="button">请求接管</button>
+      <button class="big-btn ghost" id="btnReadonlyClose" type="button">只看状态</button>
+    </div>
+  </div>
+</div>
+
+<!-- 离线 -->
+<div id="offline" class="overlay hidden">
+  <div class="sheet-card">
+    <div class="icon-round">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l20 20"/><path d="M5.8 5.8A10 10 0 0 0 12 22a10 10 0 0 0 6.2-2.2"/><path d="M9.9 4.2A10 10 0 0 1 22 12a10 10 0 0 1-1.2 4.8"/><path d="M8.5 8.5a6 6 0 0 0 7 7"/><path d="M12 3a9 9 0 0 1 9 9"/></svg>
+    </div>
+    <h1>未连接</h1>
+    <p>页面已离线启动。遥控需要手机与鸭子在同一 Wi-Fi。</p>
+    <div class="last" id="offlineLast">还没有成功连接过</div>
+    <div class="sheet-actions">
+      <button class="big-btn primary" id="btnRetry" type="button">重试连接</button>
+      <button class="big-btn ghost" id="btnHelp" type="button">排障</button>
+    </div>
+  </div>
+</div>
+
+<!-- 状态详情（点顶部状态栏进入） -->
+<div id="status" class="overlay hidden">
+  <div class="drawer status-drawer">
+    <div class="grab"></div>
+    <div class="status-head">
+      <div>
+        <h2>状态</h2>
+        <div class="hint">点顶部状态栏随时打开</div>
+        <div class="status-alarms hidden" id="statusAlarms">⚠ 2 项告警</div>
+      </div>
+      <button class="x" id="btnStatusClose" type="button" aria-label="关闭状态">×</button>
+    </div>
+    <div class="status-grid">
+      <div class="s-card" id="stConnCard">
+        <span class="s-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M12 19.5h.01"/></svg>
+        </span>
+        <div class="s-k">连接</div>
+        <div class="s-v" id="stConn">已连接</div>
+        <div class="s-d" id="stIp">192.168.110.240</div>
+      </div>
+      <div class="s-card" id="stPolicyCard">
+        <span class="s-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13a6 6 0 0 1 12 0v3a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"/><path d="M18 12l4 2-4 2"/></svg>
+        </span>
+        <div class="s-k">策略</div>
+        <div class="s-v" id="stPolicy">行走</div>
+        <div class="s-d" id="stPolicyD">policy=walk · limp=false</div>
+      </div>
+      <div class="s-card" id="stHzCard">
+        <span class="s-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
+        </span>
+        <div class="s-k">控制环</div>
+        <div class="s-v" id="stHz">50.0 Hz</div>
+        <div class="s-d" id="stMissed">missed 12</div>
+      </div>
+      <div class="s-card" id="stBattCard">
+        <span class="s-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="17" height="10" rx="2"/><path d="M22 11v2"/></svg>
+        </span>
+        <div class="s-k">电源</div>
+        <div class="s-v" id="stBatt">61%</div>
+        <div class="s-d" id="stBattD">7.55 V</div>
+      </div>
+      <div class="s-card" id="stTempCard">
+        <span class="s-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.8V5a2 2 0 1 0-4 0v9.8a4 4 0 1 0 4 0Z"/></svg>
+        </span>
+        <div class="s-k">温度</div>
+        <div class="s-v">电机 <span id="stMotor">30°C</span></div>
+        <div class="s-d">主控 <span id="stCpu">48°C</span></div>
+      </div>
+      <div class="s-card" id="stInputCard" role="button" tabindex="0" aria-label="查看输入源详情">
+        <span class="s-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12a4 4 0 0 1 4 4v2a4 4 0 0 1-7 2.6L13 17h-2l-2-.4A4 4 0 0 1 2 14v-2a4 4 0 0 1 4-4Z"/><path d="M7 12h.01M17 12h.01"/></svg>
+        </span>
+        <div class="s-k">输入源</div>
+        <div class="s-v" id="stInput">padd 运行中</div>
+        <div class="s-d" id="stInputD">会覆盖手机指令 · 点此查看</div>
+      </div>
+    </div>
+    <div class="status-foot">
+      <span class="proto-note" id="stVersion">robotd — · duckphone</span>
+      <button class="mini" id="btnStatusClose2" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 警告详情（从黄色条幅的“查看”进入） -->
+<div id="alert" class="overlay hidden">
+  <div class="sheet-card alert-card">
+    <div class="alert-layout">
+      <div class="alert-main">
+        <div class="alert-head">
+          <span class="alert-ico" id="alertIco">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          </span>
+          <div class="alert-h">
+            <div class="kicker" id="alertKicker">输入源</div>
+            <h1 id="alertTitle">手柄服务正在运行</h1>
+          </div>
+        </div>
+        <p id="alertBody">padd 空杆时每 100 ms 仍会重发一次零速帧，会覆盖手机 20 Hz 的驾驶指令。</p>
+        <div class="alert-ev" id="alertEv"></div>
+        <div class="sheet-actions">
+          <button class="big-btn primary" id="alertPadd" type="button">停止手柄服务</button>
+          <button class="big-btn ghost" id="alertCopy" type="button">复制停止命令</button>
+          <button class="big-btn primary" id="alertStand" type="button">去站立</button>
+          <button class="big-btn ghost" id="alertOk" type="button">知道了</button>
+        </div>
+      </div>
+      <aside class="alert-side">
+        <div class="msg-head">
+          <div><b>最近消息</b><span id="msgCount">6 条</span></div>
+          <button class="mini hidden" id="alertBack" type="button">返回当前</button>
+        </div>
+        <div class="msg-list" id="msgList"></div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- 声音面板 -->
+<div id="sound" class="overlay hidden">
+  <div class="drawer">
+    <div class="grab"></div>
+    <h2>声音</h2>
+    <div class="hint">点一下叫一声；长按「长叫」持续、松开收尾。新声音会打断上一个。</div>
+
+    <div class="snd-grid" id="soundGrid">
+      <button class="snd" type="button" data-tag="chirp" data-label="短叫">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>短叫</b><small>最常见的回应</small></span>
+        <span class="snd-tag">chirp</span>
+      </button>
+      <button class="snd" type="button" data-tag="greet" data-label="打招呼">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>打招呼</b><small>开机同款</small></span>
+        <span class="snd-tag">greet</span>
+      </button>
+      <button class="snd" type="button" data-tag="inquire" data-label="疑问">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>疑问</b><small>尾音上扬</small></span>
+        <span class="snd-tag">inquire</span>
+      </button>
+      <button class="snd" type="button" data-tag="coo" data-label="咕咕">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>咕咕</b><small>慢、气声</small></span>
+        <span class="snd-tag">coo</span>
+      </button>
+      <button class="snd" type="button" data-tag="alarm" data-label="警戒">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>警戒</b><small>短促警告</small></span>
+        <span class="snd-tag">alarm</span>
+      </button>
+      <button class="snd" type="button" data-tag="peck" data-label="啄食">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>啄食</b><small>低频 + 咔哒</small></span>
+        <span class="snd-tag">peck</span>
+      </button>
+      <button class="snd wide" type="button" data-tag="wheee" data-label="长叫">
+        <span class="snd-dot"></span>
+        <span class="snd-txt"><b>长叫（按住）</b><small>按住持续，松开播结尾</small></span>
+        <span class="snd-tag">wheee</span>
+      </button>
+    </div>
+
+    <div class="vol">
+      <span class="label">音量</span>
+      <input id="volRange" type="range" min="0" max="100" step="1" value="60" aria-label="音量">
+      <b class="pct" id="volPct">—</b>
+      <button id="btnMute" type="button">静音</button>
+    </div>
+
+    <div class="dyn-sound">
+      <div class="dyn-head">
+        <div class="grow">
+          <div class="t">动态声音</div>
+          <div class="d" id="dynState">已关闭 · 只响应手动点播</div>
+        </div>
+        <button class="switch" id="btnDynSound" type="button" role="switch"
+                aria-checked="false" aria-label="动态声音"><span></span></button>
+      </div>
+      <div class="dyn-note" id="dynNote">接管后默认开启；首次空闲 30 s、之后每 5 分钟。</div>
+      <button class="dyn-link" id="btnDynSettings" type="button">设置</button>
+    </div>
+
+    <div class="row" style="border-top:0">
+      <div class="grow">
+        <div class="d">音量写声卡；音色由这台机器人在安装时生成，运行期不能切换。</div>
+      </div>
+      <button class="mini" id="btnSoundClose" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 预设动作 -->
+<div id="actionsSheet" class="overlay hidden">
+  <div class="drawer">
+    <div class="grab"></div>
+    <h2>预设动作</h2>
+    <div class="hint" id="actHint">站立或静止时可播放；播放中一碰摇杆就停。</div>
+    <div class="act-ro hidden" id="actReadonly">只读 · 不能播放</div>
+
+    <div class="act-grid" id="actGrid">
+      <button class="preset" type="button" data-act="look_up">
+        <span class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V7"/><path d="m7 12 5-5 5 5"/></svg></span>
+        <span class="p-txt"><b>抬头</b><small>抬头看一眼</small></span>
+        <span class="p-meta">1.2 s · 咕咕 ×2</span>
+        <span class="p-bar"><i></i></span>
+      </button>
+      <button class="preset" type="button" data-act="look_around">
+        <span class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 3 10 3-7 2 2h4"/></svg></span>
+        <span class="p-txt"><b>左右看</b><small>头转向两边</small></span>
+        <span class="p-meta">1.6 s · 疑问 ×3</span>
+        <span class="p-bar"><i></i></span>
+      </button>
+      <button class="preset" type="button" data-act="circle">
+        <span class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg></span>
+        <span class="p-txt"><b>画圈</b><small>头在空中画 3 圈</small></span>
+        <span class="p-meta">3.9 s · 打招呼 ×5</span>
+        <span class="p-bar"><i></i></span>
+      </button>
+      <button class="preset" type="button" data-act="quack">
+        <span class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h7l5-4v12l-5-4H4Z"/><path d="m19 9 2 3-2 3"/></svg></span>
+        <span class="p-txt"><b>张嘴</b><small>嘴开合 3 次</small></span>
+        <span class="p-meta">2.1 s · 短叫 ×3</span>
+        <span class="p-bar"><i></i></span>
+      </button>
+    </div>
+
+    <div class="row" style="border-top:0">
+      <div class="grow"><div class="d">动作由桥执行；结束回中，摇杆/停止/卸力/P0 告警会立即打断。</div></div>
+      <button class="mini" id="btnActStop" type="button" disabled>停止</button>
+      <button class="mini" id="btnActClose" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 动态声音设置 -->
+<div id="settings" class="overlay hidden">
+  <div class="drawer">
+    <div class="grab"></div>
+    <h2>设置 · 动态声音</h2>
+    <div class="hint" id="setHint">保存后立即生效；写入 /etc/duckphone/audio.json。总开关仍在声音抽屉。</div>
+
+    <div class="set-sec">空闲</div>
+    <div class="row">
+      <div class="grow"><div class="t">第一次空闲提示</div><div class="d">接管后多久没操作先叫一声。</div></div>
+      <div class="num"><input id="setIdleFirst" type="number" min="5" max="3600" step="5" value="30"><span>秒</span></div>
+    </div>
+    <div class="row">
+      <div class="grow"><div class="t">空闲重复间隔</div><div class="d">之后每隔多久再叫一次。</div></div>
+      <div class="num"><input id="setIdleRepeat" type="number" min="5" max="3600" step="5" value="300"><span>秒</span></div>
+    </div>
+    <div class="row">
+      <div class="grow"><div class="t">每小时上限</div><div class="d">空闲声音每小时最多几次。</div></div>
+      <div class="num"><input id="setIdleMax" type="number" min="1" max="60" step="1" value="12"><span>次</span></div>
+    </div>
+    <div class="row">
+      <div class="grow"><div class="t">空闲动作</div><div class="d">空闲时从下面的随机池里挑一个；关掉只发声、不动作。</div></div>
+      <button class="switch" data-set-toggle="gesture" type="button" role="switch"
+              aria-checked="true" aria-label="空闲动作"><span></span></button>
+    </div>
+    <div class="row">
+      <div class="grow">
+        <div class="t">随机池</div>
+        <div class="d">至少保留一个动作；空闲时随机挑一个。</div>
+        <div class="pool" id="idlePool">
+          <button class="pool-chip on" type="button" data-pool="look_up" aria-pressed="true">抬头</button>
+          <button class="pool-chip on" type="button" data-pool="look_around" aria-pressed="true">左右看</button>
+          <button class="pool-chip on" type="button" data-pool="circle" aria-pressed="true">画圈</button>
+          <button class="pool-chip on" type="button" data-pool="quack" aria-pressed="true">张嘴</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="set-sec">告警节奏</div>
+    <div class="set-grid">
+      <label class="set-num"><span>倒地重复</span><input id="setFallRepeat" type="number" min="2" max="30" step="1" value="5"><i>秒</i></label>
+      <label class="set-num"><span>倒地次数</span><input id="setFallMax" type="number" min="1" max="20" step="1" value="6"><i>次</i></label>
+      <label class="set-num"><span>倒地长间隔</span><input id="setFallTail" type="number" min="10" max="600" step="5" value="60"><i>秒</i></label>
+      <label class="set-num"><span>倾斜阈值</span><input id="setTiltDeg" type="number" min="10" max="60" step="1" value="30"><i>°</i></label>
+      <label class="set-num"><span>倾斜重复</span><input id="setTiltRepeat" type="number" min="5" max="120" step="1" value="10"><i>秒</i></label>
+    </div>
+
+    <div class="set-sec">动作反馈</div>
+    <div class="set-grid">
+      <div class="set-toggle"><span>接管 / 交还</span><button class="switch" data-set-toggle="takeover" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>技能开始 / 结束</span><button class="switch" data-set-toggle="skill" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>启用 / 关闭策略</span><button class="switch" data-set-toggle="enable" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>命令被拒绝</span><button class="switch" data-set-toggle="refusal" type="button" role="switch" aria-checked="true"><span></span></button></div>
+    </div>
+
+    <div class="set-sec">告警类别</div>
+    <div class="set-grid">
+      <div class="set-toggle"><span>倒地</span><button class="switch" data-set-toggle="fall" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>倾斜</span><button class="switch" data-set-toggle="tilt" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>电量</span><button class="switch" data-set-toggle="battery" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>电机温度</span><button class="switch" data-set-toggle="motor" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>主控温度</span><button class="switch" data-set-toggle="cpu" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>掉频</span><button class="switch" data-set-toggle="loop" type="button" role="switch" aria-checked="true"><span></span></button></div>
+      <div class="set-toggle"><span>总线</span><button class="switch" data-set-toggle="bus" type="button" role="switch" aria-checked="true"><span></span></button></div>
+    </div>
+
+    <div class="row" style="border-top:0">
+      <div class="grow"><div class="d" id="setReadonly">保存后立即生效；只读会话只能查看。</div></div>
+      <button class="mini" id="btnSettingsReset" type="button">恢复默认</button>
+      <button class="mini" id="btnSettingsClose" type="button">关闭</button>
+      <button class="mini" id="btnSettingsSave" type="button">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 维护 -->
+<div id="maint" class="overlay hidden">
+  <div class="drawer">
+    <div class="grab"></div>
+    <h2>维护</h2>
+    <div class="hint">只放少用的恢复动作；驾驶中请先停下。</div>
+
+    <div class="row">
+      <div class="grow">
+        <div class="t">重启舵机</div>
+        <div class="d">过载锁死后使用。会先切力矩，机器人会倒。</div>
+      </div>
+      <button class="mini danger" id="btnReboot" type="button">重启舵机</button>
+    </div>
+
+    <div class="row">
+      <div class="grow">
+        <div class="t">输入源</div>
+        <div class="d">手柄服务运行时会覆盖手机指令；解释与处理在“查看详情”里。</div>
+        <button class="mini" id="btnInputDetail" type="button" style="margin-top:8px;">查看详情</button>
+      </div>
+      <span class="v ok" id="paddState">运行中</span>
+    </div>
+
+    <div class="row">
+      <div class="grow">
+        <div class="t">版本与环路</div>
+        <div class="d" id="maintVersion">robotd — · 控制环 — Hz</div>
+      </div>
+      <span class="v" id="maintHz">50.0 Hz</span>
+    </div>
+
+    <div class="row">
+      <div class="grow">
+        <div class="t">温度</div>
+        <div class="d">主控 / 电机最热</div>
+      </div>
+      <span class="v" id="maintTemp">48°C / 30°C</span>
+    </div>
+
+    <div class="row">
+      <div class="grow">
+        <div class="t">排障</div>
+        <div class="d">连不上 8001：确认同一 Wi-Fi、板上 duckphone 在跑。</div>
+      </div>
+      <button class="mini" id="btnMaintClose" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- 机器人处于标定/只读模式（robotd --commissioning） -->
+<div id="romode" class="overlay hidden">
+  <div class="sheet-card">
+    <div class="icon-round warn">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.8V5a2 2 0 1 0-4 0v9.8a4 4 0 1 0 4 0Z"/><path d="M8 4h8"/></svg>
+    </div>
+    <h1>机器人处于标定模式</h1>
+    <p><code style="font-variant-numeric:tabular-nums">robotd</code> 现在带 <code>--commissioning</code> 启动，所有运动指令都会被拒绝。电量、温度、总线这些只读信息仍然可以看。</p>
+    <div class="last" id="roReason" style="margin:0 0 18px; padding:12px 14px; border-radius:12px; background:#121418; border:1px solid var(--line); font-size:12px; line-height:19px; color:var(--muted); word-break:break-all;">robotd is read-only</div>
+    <div class="sheet-actions">
+      <button class="big-btn primary" id="roRetry" type="button">重新检测</button>
+      <button class="big-btn ghost" id="roStatus" type="button">看状态</button>
+    </div>
+  </div>
+</div>
+
+<div id="swUpdate" class="hidden">
+  <span class="fill">有新版本，点此刷新</span>
+  <button type="button" id="swReload">刷新</button>
+</div>
+
+<div id="toasts" aria-live="polite"></div>
+
+<script src="/app.js?v=14"></script>
+</body>
+</html>

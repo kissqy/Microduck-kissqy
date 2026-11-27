@@ -7,8 +7,11 @@
 //! every unit a release manages.
 //!
 //! Asked of systemd rather than tracked: these are started, stopped and restarted by systemd, so
-//! systemd is the only thing that knows. `configd` deliberately holds no opinion — it does not start
-//! them, does not restart them, and reporting is the whole of its involvement.
+//! systemd is the only thing that knows. `configd` deliberately holds no opinion about most of
+//! them — it does not start them, does not restart them, and reporting is almost the whole of its
+//! involvement. The one exception is `padd`: `system.serviceAction` stops and starts it, because
+//! a phone driving the robot has no way to settle a fight with a gamepad otherwise. That call is
+//! whitelisted down to this one unit in [`permitted_unit`].
 //!
 //! ## Which release is running
 //!
@@ -27,6 +30,77 @@ use duck_ipc_proto as proto;
 
 /// The unit that turns a pad into intents.
 pub const PADD: &str = "padd.service";
+
+/// Whether `system.serviceAction` may act on this unit.
+///
+/// **A whitelist of one, and it is the security boundary of that method.** The client names a
+/// unit as a string, and this is the only thing between a phone and `systemctl stop` with
+/// whatever it liked. `padd` is on it because two drivers fighting is the case the call exists
+/// for — a gamepad left connected while somebody drives from the phone — and because the phone
+/// has no ssh to settle it. Returning here with a second entry should be a decision written
+/// down, not a pattern widened.
+pub fn permitted_unit(unit: &str) -> bool {
+    unit == PADD
+}
+
+/// Stop or start [`PADD`] through systemd, and answer with the state afterwards.
+///
+/// The job is queued by systemd, so an immediate read is a state in transition — which is why
+/// this waits for the target rather than racing it. Bounded, because a unit that refuses to
+/// stop must not hold the connection open: the caller gets the state it ended at either way.
+#[cfg(target_os = "linux")]
+pub async fn perform(unit: &str, action: proto::ServiceAction) -> Result<proto::UnitState, String> {
+    use std::time::{Duration, Instant};
+
+    let bus = zbus::Connection::system()
+        .await
+        .map_err(|e| format!("cannot reach the system bus ({e})"))?;
+    let method = match action {
+        proto::ServiceAction::Stop => "StopUnit",
+        proto::ServiceAction::Start => "StartUnit",
+    };
+    bus.call_method(
+        Some("org.freedesktop.systemd1"),
+        "/org/freedesktop/systemd1",
+        Some("org.freedesktop.systemd1.Manager"),
+        method,
+        // "replace": a queued start from a previous tap must not make this one a no-op.
+        &(unit, "replace"),
+    )
+    .await
+    .map_err(|e| format!("systemd refused {method} for {unit}: {e}"))?;
+
+    let wanted = match action {
+        proto::ServiceAction::Stop => proto::UnitState::Inactive,
+        proto::ServiceAction::Start => proto::UnitState::Active,
+    };
+    let deadline = Instant::now() + Duration::from_secs(3);
+    loop {
+        let now = state(unit).await;
+        if now == wanted
+            // A stop that ends in `failed` is the answer too — waiting out the rest of the
+            // deadline would tell the caller nothing new.
+            || (action == proto::ServiceAction::Stop
+                && matches!(now, proto::UnitState::Failed | proto::UnitState::Absent))
+            || Instant::now() >= deadline
+        {
+            return Ok(now);
+        }
+        tokio::time::sleep(Duration::from_millis(100)).await;
+    }
+}
+
+/// Off the board there is no systemd to act on, and pretending a unit stopped would be worse
+/// than saying so — the caller would show a phone a state nothing on this machine is in.
+#[cfg(not(target_os = "linux"))]
+pub async fn perform(
+    unit: &str,
+    _action: proto::ServiceAction,
+) -> Result<proto::UnitState, String> {
+    Err(format!(
+        "system.serviceAction needs systemd; {unit} cannot be changed on this machine"
+    ))
+}
 
 /// Every unit a daemon release manages, in the order a reader wants them: the update engine, then
 /// the robot, then the ones that depend on both.
@@ -252,5 +326,23 @@ mod tests {
             state_of("maintenance", "whatever", "robotd.service"),
             proto::UnitState::Unknown
         );
+    }
+
+    /// `system.serviceAction` acts on `padd` and nothing else — not even a unit this project
+    /// ships, and certainly not one a caller made up.
+    #[test]
+    fn only_the_pad_driver_may_be_stopped() {
+        assert!(permitted_unit("padd.service"));
+        for unit in [
+            "robotd.service",
+            "btd.service",
+            "updaterd.service",
+            "configd.service",
+            "ssh.service",
+            "padd",
+            "",
+        ] {
+            assert!(!permitted_unit(unit), "{unit}");
+        }
     }
 }

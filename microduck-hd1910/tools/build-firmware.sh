@@ -22,7 +22,7 @@ usage() {
 --help    显示本说明。
 
 输出：.build/firmware/bin/
-      robotd、robotctl、padd、sounds、gamesir-xboxd
+      robotd、robotctl、padd、sounds、gamesir-xboxd、btd、configd
       BUILD-LOCAL.json、SHA256SUMS
 
 环境：Linux / Windows WSL，Rust 1.99.0、cargo-zigbuild 0.23.4、Zig 0.15.1。
@@ -187,18 +187,18 @@ pkg-config --exists libudev
     --config 'profile.release.package.pet-detect.codegen-units=1' \
     --config 'profile.release.package.robotd.codegen-units=1' \
     zigbuild --locked --release \
-    --target "$ZIGBUILD_TARGET" -p robotd -p robotctl -p padd -p sounds
+    --target "$ZIGBUILD_TARGET" -p robotd -p robotctl -p padd -p sounds -p btd -p configd
 )
 "$ZIG_BIN" cc -target aarch64-linux-gnu.2.31 -O2 -Wall -Wextra -Werror \
   -std=gnu11 "$SOURCE_DIR/gamepad-r7/gamesir-xboxd.c" -o "$BUILD_DIR/bin/gamesir-xboxd"
-for program in robotd robotctl padd sounds; do
+for program in robotd robotctl padd sounds btd configd; do
   cp -- "$CARGO_TARGET_DIR/$RUST_TARGET/release/$program" "$BUILD_DIR/bin/$program"
 done
 
 "$PYTHON_BIN" - "$SOURCE_DIR" "$BUILD_DIR/bin" <<'PY'
 import datetime, hashlib, json, os, pathlib, re, subprocess, sys
 source, output = map(pathlib.Path, sys.argv[1:])
-programs = ["robotd", "robotctl", "padd", "sounds", "gamesir-xboxd"]
+programs = ["robotd", "robotctl", "padd", "sounds", "gamesir-xboxd", "btd", "configd"]
 records = {}
 for name in programs:
     path = output / name

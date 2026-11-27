@@ -20,6 +20,11 @@ export class ControlPanel {
     mouth.addEventListener('input',()=>{this.mouthDirty=true;root.querySelector('#control-mouth-value').textContent=Number(mouth.value).toFixed(0)+'%';});
     mouth.addEventListener('change',()=>this.applyPadSettings());
     for(const button of root.querySelectorAll('[data-head-amplitude]'))button.onclick=()=>{this.headRad=Number(button.dataset.headAmplitude);this.mouthDirty=true;this.applyPadSettings();};
+    // LB 在官方映射里是空的：这里给它一个与手机 App 共用的动态声音开关。
+    // 状态存在 duckphone 桥（8001），控制台只负责读写，不改机器人固件。
+    this.dynSound=null;this.dynBusy=false;this.dynButton=root.querySelector('[data-dynamic-sound]');
+    if(this.dynButton)this.dynButton.onclick=()=>this.toggleDynamicSound();
+    this.dynTimer=setInterval(()=>this.refreshDynamicSound(),5000);this.refreshDynamicSound();
     this.timer=setInterval(()=>this.tick(),100);
     for(const event of ['blur','pagehide'])window.addEventListener(event,()=>this.suspend());
     window.addEventListener('pagehide',()=>this.socket.close());
@@ -58,6 +63,38 @@ export class ControlPanel {
     try{const result=await this.post({action:'set_volume',volume:value});this.audio=result.audio;resend=Number(this.root.querySelector('#control-volume').value)!==value;this.volumeDirty=resend;showFeedback(this.feedback,`音量 ${result.volume}% 已回读确认并保存，重启后恢复`,'completed');}
     catch(e){showFeedback(this.feedback,e.message,'error');}
     finally{this.volumeBusy=false;this.paint();if(resend)this.applyVolume();}
+  }
+  dynamicSoundURL(){return `http://${location.hostname}:8001/api/dynamic-sound`;}
+  async refreshDynamicSound(){
+    if(!this.dynButton)return;
+    try{
+      const response=await fetch(this.dynamicSoundURL(),{cache:'no-store',signal:AbortSignal.timeout(2500)});
+      if(!response.ok)throw Error();
+      const result=await response.json();
+      this.dynSound=result.enabled===true;
+    }catch(_){this.dynSound=null;}
+    this.paintDynamicSound();
+  }
+  async toggleDynamicSound(){
+    if(!this.dynButton||this.dynBusy||this.dynSound===null)return;
+    this.dynBusy=true;this.paintDynamicSound();
+    try{
+      const response=await fetch(this.dynamicSoundURL(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enabled:!this.dynSound}),signal:AbortSignal.timeout(4000)});
+      const result=await response.json();
+      if(!response.ok||result.accepted!==true)throw Error(result.reason||'动态声音切换失败');
+      this.dynSound=result.enabled===true;
+      showFeedback(this.feedback,`动态声音已${this.dynSound?'开启':'关闭'}：与手机 App 共用同一开关，手机接管时会自动开启`,'completed');
+    }catch(e){showFeedback(this.feedback,'动态声音不可用：'+(e.name==='TimeoutError'?'手机桥 8001 无响应':e.message),'error');}
+    finally{this.dynBusy=false;this.paintDynamicSound();}
+  }
+  paintDynamicSound(){
+    const button=this.dynButton;if(!button)return;
+    const known=this.dynSound!==null;
+    button.disabled=!known||this.dynBusy;
+    button.classList.toggle('held',this.dynSound===true);
+    button.setAttribute('aria-pressed',String(this.dynSound===true));
+    button.textContent=known?`LB · 动态 ${this.dynSound?'开':'关'}`:'LB · 动态 —';
+    button.title=known?`LB：动态声音已${this.dynSound?'开启，点击关闭':'关闭，点击开启'}；与手机 App 共用开关，接管后默认开`:'LB：未连上手机桥（duckphone 8001）；启动手机服务后可切换动态声音';
   }
   async connect(){
     if(this.connecting||Date.now()<this.retry||this.servicePaused())return;this.connecting=true;const linkEpoch=this.linkEpoch;

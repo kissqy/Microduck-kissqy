@@ -1,0 +1,3 @@
+# 真机模式需要 BlueZ + bleak（bleak 自带 dbus-fast）。
+# --demo 与测试不需要它。
+bleak>=3.1,<4

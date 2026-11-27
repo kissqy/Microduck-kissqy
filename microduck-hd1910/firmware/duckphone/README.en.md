@@ -1,0 +1,162 @@
+[简体中文](README.md) | **English**
+
+# 📱 duckphone — driving the duck from a phone on the LAN
+
+Same Wi-Fi, then `http://<board-ip>:8001/` in the browser and you are driving. No app to install, no
+Bluetooth pairing, no cable. One portrait page: the policy bar at the top, a drive/head switch above
+the stick, four action buttons 2×2 below.
+
+No external dependencies: the board needs nothing but `python3` and its standard library, and the
+page needs no CDN, no `pip` and no internet.
+
+The reasoning — what it is allowed to decide and what it is not — is in
+[`docs/design/lan-phone-remote.md`](../docs/design/lan-phone-remote.md).
+
+## Why it exists
+
+There are already two ways to drive a duck here, and each costs something up front:
+
+| you want | you use | it costs |
+| --- | --- | --- |
+| the owner's phone, off the LAN, with video | the app — [`docs/design/mobile-app.md`](../docs/design/mobile-app.md) | installing it and signing in |
+| a gamepad on a laptop | `microduck-webpad` + `padd` | owning a gamepad |
+| **any phone already on the same wifi** | **this** | being on the wifi |
+
+`duckphone` is an **ordinary socket client**, in the same authority class as `padd` and `console`: it
+opens no device, asks for no root, and makes no decision `robotd` would not make for any other client.
+
+## What it does
+
+| | |
+| --- | --- |
+| Drive | virtual stick, `vx ∈ [-0.25, 0.35]`, `vyaw ∈ [-0.8, 0.8]` — narrower than the training envelope |
+| Head | the same stick in head mode: left/right yaw, up/down pitch; releasing or losing the link returns to neutral |
+| Sound | speaker button in the footer: seven bank tags; hold “wheee” for the long call |
+| Dynamic sound | on by default after takeover: actions, alarms and idle call automatically; switch at the bottom of the sound drawer; the console's LB is the same switch |
+| Sound settings | idle cadence and random-action pool, fall/tilt cadence, action feedback and alert categories; saved to `/etc/duckphone/audio.json` (version 3) and hot-applied |
+| Preset actions | footer 动作 drawer: look up, look around, circle, quack; playable while standing still, cancels on any stick input |
+| Idle actions | one action from the configured pool (four by default) with the idle sound; never the same twice in a row |
+| Volume / mute | volume is written to the codec with `amixer`, and persisted with `alsactl` when passwordless sudo is available |
+| Policy bar | lists the policies installed on this robot; one press runs one; `walk` is the resting state, everything else falls back to it |
+| Take over / hand back | one driver at a time, a second device is read-only; `policies` is served to read-only too |
+| Relax | long-press for 1.5 s, one step, no confirmation dialog |
+| Status page | link, policy, control loop, power, both temperatures, input source |
+| Alert detail | fallen/tilted, temperature, battery, control-loop drops, `padd` conflict — each with what to do |
+| Maintenance | reboot motors, input source, versions, troubleshooting commands |
+
+## Sound and head
+
+- Head mode is live only while `policy == walk`; the stick area dims in `held`, `limp` or fallen.
+- Stick head intents are clamped to ±0.8 rad; preset actions may use up to 1.2 rad (the circle uses
+  1.0), and robotd still applies the policy/joint limits. On this robot a
+  negative `head_pitch` looks up, so the page maps “up” to a negative value and inverts the readout.
+- `robotd` has no deadman for head. The bridge adds a 250 ms watchdog: releasing the stick, hiding the
+  page, losing the link, `/stop` and session end all return the head to neutral.
+- Sounds go through `robot.sound`; the PCM is single-client, so a new sound interrupts the previous.
+- `wheee`'s `hold` is a level. The page re-sends it at about 10 Hz while held; a single press would
+  decay and land after roughly 300 ms.
+- A read-only session can neither play nor change volume; `robotd --commissioning` refuses sounds.
+- Dynamic sound is decided in the bridge by `audio_director.py`, not in the firmware: takeover and
+  handback, skill start/end, refusals, fall/tilt/low battery/overtemperature/slow loop/bus errors,
+  and idle (first 30 s, then every 300 s). Off by default, auto-on when a phone takes the wheel.
+  The phone sends `dynamicSound` over the WebSocket; the console uses
+  `GET/POST http://<board-ip>:8001/api/dynamic-sound` — one shared state.
+- The settings drawer at the bottom of the sound drawer edits idle timing/action switch/random pool,
+  fall/tilt cadence, action feedback and alert categories. It saves to `/etc/duckphone/audio.json`
+  (validated, clamped, atomic write) and applies without a restart. Read-only sessions can view it
+  but not save. Phone WebSocket commands: `audioConfig`, `setAudioConfig`, `resetAudioConfig`;
+  console HTTP: `GET/POST /api/audio-config`.
+- Preset actions run in `actions.py`: look up 1.2 s, look around 1.6 s, circle 3.9 s, quack 2.1 s.
+  Phone WebSocket: `action {action:"circle"}` and `cancelAction`; state carries
+  `act`/`actIdle`, the ack carries `sound` (the motion still runs when the robot has no voice).
+  Any drive/head/command input, takeover, stop, relax, dynamic-sound off or P0 alarm cancels it;
+  it ends with head centred, mouth closed, gait zeroed and pose inactive.
+- The sound follows the whole action: look up coo ×2, look around inquire ×3, circle greet ×5,
+  quack chirp ×3 (one per mouth opening). The first beat is played by the manual/idle entry;
+  the action thread adds the rest, so a short call no longer leaves the action silent.
+- The circle is not a continuous 360° spin: `head_yaw` only has ±170° of travel, so the nose draws
+  three circles in the air (yaw ±1.0, pitch −0.20±0.25, roll ±0.08).
+- **Marching in place was removed**: the walk policy does not take a real step for short
+  alternating commands, so it needs a dedicated trained action/skill.
+- Idle picks one action from `idle.library` (four by default, never the same twice in a row); the
+  action supplies its own sound. If no action is available the idle sound still plays.
+  With `idle.gesture=false` the idle sound plays without moving.
+- Volume is 0–100 over `PCM Playback Volume` / `Line Playback Switch`; a failed `alsactl store` is
+  reported but does not undo the volume that is already in effect.
+
+## Install
+
+```bash
+# from a laptop
+./install.sh duck@<board-ip>
+
+# on the board itself (already the duck user)
+./install.sh
+```
+
+`install.sh` does three things: sync to `/opt/duckphone`, install `systemd/duckphone.service`, restart
+and print the address. It does not touch `robotd`'s configuration or the firmware. To remove it:
+
+```bash
+sudo systemctl disable --now duckphone
+sudo rm -rf /opt/duckphone /etc/duckphone
+```
+
+Run it by hand instead, without a unit:
+
+```bash
+python3 server.py --static ./static
+```
+
+| flag | default | |
+| --- | --- | --- |
+| `--port` | `8001` | |
+| `--robot-socket` | `/run/robotd.sock` | `robotd`'s unix socket |
+| `--token-file` | `/etc/duckphone/token` | read only under `--auth` |
+| `--auth` | off | six-digit pairing code; **off by default**, and the page does not ask for one |
+| `--no-padd-control` | off | the page cannot stop `padd` with one tap, only copy the command |
+| `--subscribe-hz` | `20` | state stream rate |
+
+## First use
+
+1. Put the phone on the same wifi as the board.
+2. Open `http://<board-ip>:8001/`.
+3. If the bar says read-only, press **take over**; the driver's bar says connected.
+4. Long-press **relax** at any time to let the joints go.
+
+The stick is live only while `robot.state.policy == walk`. Any other value means some other network
+is driving and a twist sent then would be ignored anyway.
+
+## Tests
+
+```bash
+python3 -m unittest discover -s verification
+```
+
+No robot needed: `verification/helpers.py` is a fake `robotd` speaking the same JSON-RPC on a unix
+socket, covering frame codec, watchdogs, the role gate, the policy bar and the end-to-end protocol.
+
+## Boundaries
+
+- Listens on the LAN only. **No TLS — do not port-forward it.** For outside access see
+  [`docs/design/remote-access-design.md`](../docs/design/remote-access-design.md).
+- The pairing code is **off by default**. When on it is six digits, five failures and a sixty-second
+  lock, stored in `/etc/duckphone/token` (`0600`).
+- `/stop` never asks for the code. The one command that must not fail is the one that stops the robot.
+- Four watchdogs: the page stops refreshing the stick for 250 ms and the bridge commands zero; a
+  session silent for 5 s is dropped; `robotd`'s own deadman is 500 ms; health is relayed at 1 Hz. The
+  bridge **never** re-sends the last non-zero sample on a timer — a repeated command is
+  indistinguishable from a held finger, which is the failure the deadman exists to catch.
+- The unit **deliberately omits** `NoNewPrivileges=yes`, because the one-tap interlock runs
+  `sudo -n systemctl stop padd`. Start with `--no-padd-control` and the hardening is free; the page
+  then copies the command instead of running it.
+
+## Known limits
+
+- Portrait only. `manifest.webmanifest` declares `orientation: portrait`; there is no landscape layout.
+- The service worker's cache is versioned by hand — `VERSION` in `static/sw.js`. Bump it with any
+  change to `app.js`, or a phone that already installed the page keeps the old bundle forever and it
+  looks like a server bug. `index.html` also references `app.js?v=7` / `style.css?v=7` as a second
+  cache-buster; bump those together with `VERSION`.
+- Not part of the release artifact. `install.sh` puts it in `/opt/duckphone`; nothing else on the
+  board refers to it.

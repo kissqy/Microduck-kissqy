@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Microduck 蓝牙配网
+Name[en]=Microduck BLE Network Setup
+Comment=通过蓝牙修改 Microduck 机器人的 Wi-Fi 配置
+Comment[en]=Configure a Microduck robot's Wi-Fi over Bluetooth LE
+Exec=ducknet
+Icon=bluetooth
+Terminal=false
+Categories=Network;
+Keywords=Microduck;Bluetooth;BLE;WiFi;Wi-Fi;网络;配网;
+StartupWMClass=ducknet

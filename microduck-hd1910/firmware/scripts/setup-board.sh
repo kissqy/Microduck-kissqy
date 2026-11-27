@@ -672,6 +672,10 @@ Before=robotd.service
 Type=oneshot
 ExecStart=/usr/local/bin/aic3104-init.sh
 RemainAfterExit=yes
+# The card probe can lose a race with the DKMS module. The script exits non-zero
+# when the card never appeared; retry instead of staying at power-on levels.
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target

@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>机器人 Wi-Fi</title>
+<style>
+  :root {
+    --bg:#101216; --card:#191d24; --line:#2a303a; --text:#e8ecf2; --muted:#8b95a5;
+    --accent:#ffc53d; --ok:#4ade80; --bad:#f87171; --warn:#fbbf24;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin:0; min-height:100vh; background:var(--bg); color:var(--text);
+    font:15px/1.5 -apple-system,"HarmonyOS Sans","PingFang SC","Noto Sans CJK SC",sans-serif;
+    padding: max(18px, env(safe-area-inset-top)) 18px max(20px, env(safe-area-inset-bottom));
+  }
+  a { color: var(--accent); text-decoration: none; }
+  h1 { font-size:19px; margin: 6px 0 2px; }
+  .sub { color:var(--muted); font-size:13px; margin-bottom:16px; }
+  .nav { display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:14px; }
+  .card h2 { font-size:13px; color:var(--muted); font-weight:500; margin:0 0 10px; }
+  .kv { display:flex; justify-content:space-between; gap:10px; padding:6px 0; font-size:14px; }
+  .kv span:first-child { color:var(--muted); }
+  .state { display:inline-flex; align-items:center; gap:6px; }
+  .dot { width:8px; height:8px; border-radius:50%; background:#6b7280; }
+  .dot.on { background:var(--ok); } .dot.warn { background:var(--warn); } .dot.bad { background:var(--bad); }
+  ul { list-style:none; margin:0; padding:0; }
+  li { display:flex; align-items:center; justify-content:space-between; gap:10px;
+       padding:11px 10px; border-radius:10px; border:1px solid transparent; }
+  li+li { margin-top:4px; }
+  li.saved { border-color:#2f3a2c; background:rgba(74,222,128,.05); }
+  li .name { font-size:15px; }
+  li .meta { color:var(--muted); font-size:12px; margin-top:2px; }
+  li .rssi { color:var(--muted); font-size:12px; white-space:nowrap; }
+  .empty { color:var(--muted); font-size:13px; padding:8px 2px; }
+  button { padding:12px 14px; font-size:14px; border-radius:10px; border:1px solid var(--line);
+           background:#222833; color:var(--text); }
+  button.primary { background:var(--accent); border-color:var(--accent); color:#221a00; font-weight:600; }
+  button:disabled { opacity:.45; }
+  .row { display:flex; gap:10px; margin-top:12px; }
+  .row > * { flex:1; }
+  label { display:block; font-size:12px; color:var(--muted); margin:10px 0 5px; }
+  input[type=password], input[type=text], input[type=number] {
+    width:100%; padding:11px 12px; font-size:15px; color:var(--text);
+    background:#0d0f13; border:1px solid var(--line); border-radius:10px;
+  }
+  input:focus { outline:none; border-color:var(--accent); }
+  .sheet-mask { position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; }
+  .sheet-mask.open { display:block; }
+  .sheet { position:fixed; left:0; right:0; bottom:0; background:var(--card);
+           border-top:1px solid var(--line); border-radius:16px 16px 0 0;
+           padding:18px 18px calc(18px + env(safe-area-inset-bottom)); }
+  .sheet h3 { margin:0 0 4px; font-size:17px; }
+  .sheet .hint { color:var(--muted); font-size:12px; }
+  .check { display:flex; align-items:center; gap:8px; margin-top:12px; font-size:13px; color:var(--muted); }
+  .check input { width:18px; height:18px; }
+  .msg { font-size:13px; min-height:18px; margin-top:10px; color:var(--muted); }
+  .msg.bad { color:var(--bad); } .msg.ok { color:var(--ok); }
+  code { color:var(--text); }
+  .hidden { display:none !important; }
+</style>
+</head>
+<body>
+  <div class="nav">
+    <a href="duckphone/index.html">‹ 返回驾驶</a>
+    <a href="ble-connect.html">连接页</a>
+  </div>
+  <h1>机器人 Wi-Fi</h1>
+  <div class="sub">这是机器人自己连路由器的那条链路；断开它不影响手机蓝牙驾驶。</div>
+
+  <div class="card">
+    <h2>当前网络</h2>
+    <div class="kv"><span>状态</span><span class="state"><i class="dot" id="stDot"></i><span id="stState">—</span></span></div>
+    <div class="kv"><span>SSID</span><span id="stSsid">—</span></div>
+    <div class="kv"><span>IP 地址</span><span id="stIp">—</span></div>
+    <div class="kv"><span>信号</span><span id="stSignal">—</span></div>
+    <div class="kv"><span>网卡</span><span id="stMac">—</span></div>
+    <div class="row">
+      <button id="refresh" disabled>刷新</button>
+      <button id="scan" disabled>扫描网络</button>
+    </div>
+    <div class="msg" id="statusMsg"></div>
+  </div>
+
+  <div class="card">
+    <h2>附近网络</h2>
+    <ul id="list"><li class="empty">点「扫描网络」开始。</li></ul>
+  </div>
+
+  <div class="card hidden" id="consoleCard">
+    <h2>网页中控</h2>
+    <div class="kv"><span>地址</span><code id="consoleUrl">—</code></div>
+    <div class="row"><button id="copy">复制地址</button></div>
+  </div>
+
+  <div class="sheet-mask" id="mask">
+    <div class="sheet">
+      <h3 id="sheetTitle">连接 Wi-Fi</h3>
+      <div class="hint" id="sheetHint">密码只经蓝牙发给机器人，不会写进日志。</div>
+
+      <div id="pskWrap">
+        <label for="psk">密码</label>
+        <input id="psk" type="password" autocomplete="off" placeholder="Wi-Fi 密码">
+      </div>
+
+      <label class="check"><input type="checkbox" id="fixedToggle"> 使用固定 IP</label>
+      <div id="fixedFields" class="hidden">
+        <label for="ip">地址（例如 192.168.110.50）</label>
+        <input id="ip" type="text" inputmode="decimal" placeholder="192.168.110.50">
+        <label for="prefix">前缀长度</label>
+        <input id="prefix" type="number" min="1" max="32" value="24">
+        <label for="gateway">网关（可留空）</label>
+        <input id="gateway" type="text" inputmode="decimal" placeholder="192.168.110.1">
+      </div>
+
+      <div class="msg" id="sheetMsg"></div>
+      <div class="row">
+        <button id="cancel">取消</button>
+        <button id="forget" class="hidden">忘记</button>
+        <button id="join" class="primary">连接</button>
+      </div>
+    </div>
+  </div>
+
+<script src="ble-bridge.js"></script>
+<script>
+(function () {
+  var STATUS_TEXT = {
+    connected: '已连接', connecting: '连接中…', disconnected: '未连接', unavailable: '无网络接口',
+  };
+  var SECURITY_TEXT = {
+    open: '开放', wpa_psk: 'WPA2', wpa3_sae: 'WPA3', wep: 'WEP', enterprise: '企业级',
+  };
+  var FAILURE_TEXT = {
+    bad_key: '密码不正确', not_found: '找不到这个网络', timeout: '连接超时（DHCP 没完成）',
+    unsupported: '这个网络不受支持', other: '连接失败',
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var networks = [];
+  var selected = null;
+  var ready = false;
+
+  function msg(el, text, kind) {
+    el.textContent = text || '';
+    el.className = 'msg' + (kind ? ' ' + kind : '');
+  }
+
+  function renderStatus(status) {
+    var state = status && status.state ? status.state : 'unavailable';
+    $('stState').textContent = STATUS_TEXT[state] || state;
+    $('stDot').className = 'dot ' + (state === 'connected' ? 'on' : state === 'connecting' ? 'warn' : '');
+    $('stSsid').textContent = status && status.ssid ? status.ssid : '—';
+    $('stIp').textContent = status && status.ip4 ? status.ip4 : '—';
+    $('stSignal').textContent = status && typeof status.signal === 'number' ? status.signal + '%' : '—';
+    $('stMac').textContent = status && status.iface
+      ? status.iface + (status.mac ? ' · ' + status.mac : '') : '—';
+
+    var url = status && status.ip4 ? 'http://' + status.ip4 + ':8001' : '';
+    $('consoleCard').classList.toggle('hidden', !url);
+    if (url) $('consoleUrl').textContent = url;
+  }
+
+  function renderList() {
+    var list = $('list');
+    list.innerHTML = '';
+    if (!networks.length) {
+      var empty = document.createElement('li');
+      empty.className = 'empty';
+      empty.textContent = '没有扫到网络。确认机器人离路由器不远。';
+      list.appendChild(empty);
+      return;
+    }
+    networks.forEach(function (net) {
+      var item = document.createElement('li');
+      if (net.saved) item.className = 'saved';
+      var left = document.createElement('div');
+      var name = document.createElement('div');
+      name.className = 'name';
+      name.textContent = net.ssid;
+      var meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = (SECURITY_TEXT[net.security] || net.security) + (net.saved ? ' · 已保存' : '');
+      left.appendChild(name);
+      left.appendChild(meta);
+      var right = document.createElement('div');
+      right.className = 'rssi';
+      right.textContent = (typeof net.signal === 'number' ? net.signal + '%' : '');
+      item.appendChild(left);
+      item.appendChild(right);
+      item.addEventListener('click', function () { openSheet(net); });
+      list.appendChild(item);
+    });
+  }
+
+  async function refreshStatus() {
+    try {
+      renderStatus(await window.duckBle.call('net.status', {}, 0));
+    } catch (e) {
+      renderStatus(null);
+      msg($('statusMsg'), '读取网络状态失败：' + e.message, 'bad');
+    }
+  }
+
+  async function doScan() {
+    msg($('statusMsg'), '扫描中…（约 5–10 秒）', '');
+    try {
+      var result = await window.duckBle.call('net.scan', {}, 30000);
+      networks = (result && result.networks) || [];
+      renderList();
+      msg($('statusMsg'), networks.length ? '' : '没有扫到网络', networks.length ? '' : 'bad');
+    } catch (e) {
+      msg($('statusMsg'), '扫描失败：' + e.message, 'bad');
+    }
+  }
+
+  function openSheet(net) {
+    selected = net;
+    var secured = net.security && net.security !== 'open';
+    $('sheetTitle').textContent = net.ssid;
+    $('sheetHint').textContent = net.saved
+      ? '已保存过这个网络，直接连接即可；密码可以留空。'
+      : '密码只经蓝牙发给机器人，不会写进日志。';
+    $('pskWrap').classList.toggle('hidden', !secured);
+    $('psk').value = '';
+    $('fixedToggle').checked = false;
+    $('fixedFields').classList.add('hidden');
+    $('forget').classList.toggle('hidden', !net.saved);
+    msg($('sheetMsg'), '', '');
+    $('mask').classList.add('open');
+  }
+
+  function closeSheet() {
+    $('mask').classList.remove('open');
+    selected = null;
+  }
+
+  async function join() {
+    if (!selected) return;
+    var params = { ssid: selected.ssid };
+    var secured = selected.security && selected.security !== 'open';
+    var psk = $('psk').value;
+    if (secured && psk) params.psk = psk;
+    if (secured && !psk && !selected.saved) {
+      msg($('sheetMsg'), '这个网络需要密码', 'bad');
+      return;
+    }
+    if ($('fixedToggle').checked) {
+      var address = $('ip').value.trim();
+      if (!/^\d+\.\d+\.\d+\.\d+$/.test(address)) {
+        msg($('sheetMsg'), '固定 IP 地址格式不对', 'bad');
+        return;
+      }
+      var prefix = Number($('prefix').value || 24);
+      if (!(prefix >= 1 && prefix <= 32)) {
+        msg($('sheetMsg'), '前缀长度要在 1–32', 'bad');
+        return;
+      }
+      params.ipv4 = { address: address, prefix: prefix };
+      var gateway = $('gateway').value.trim();
+      if (gateway) params.ipv4.gateway = gateway;
+    }
+
+    $('join').disabled = true;
+    msg($('sheetMsg'), '连接中…（最长约 45 秒）', '');
+    try {
+      var result = await window.duckBle.call('net.connect', params, 60000);
+      if (result && result.outcome === 'connected') {
+        msg($('sheetMsg'), '已连接' + (result.ip4 ? ' · ' + result.ip4 : '') , 'ok');
+        await refreshStatus();
+        setTimeout(closeSheet, 600);
+      } else {
+        var reason = result && result.reason;
+        msg($('sheetMsg'), FAILURE_TEXT[reason] || ('连接失败：' + (reason || '未知')), 'bad');
+      }
+    } catch (e) {
+      msg($('sheetMsg'), '连接失败：' + e.message, 'bad');
+    } finally {
+      $('join').disabled = false;
+    }
+  }
+
+  async function forget() {
+    if (!selected) return;
+    $('forget').disabled = true;
+    try {
+      var result = await window.duckBle.call('net.forget', { ssid: selected.ssid }, 10000);
+      msg($('sheetMsg'), result && result.removed ? '已忘记这个网络' : '本来就没有保存', 'ok');
+      selected.saved = false;
+      $('forget').classList.add('hidden');
+      await refreshStatus();
+    } catch (e) {
+      msg($('sheetMsg'), '忘记失败：' + e.message, 'bad');
+    } finally {
+      $('forget').disabled = false;
+    }
+  }
+
+  function onReady() {
+    ready = true;
+    $('scan').disabled = false;
+    $('refresh').disabled = false;
+    refreshStatus();
+  }
+
+  if (!window.duckBle || !window.duckBle.config().address) {
+    msg($('statusMsg'), '还没有配过机器人：先回连接页连一次。', 'bad');
+  } else {
+    window.duckBle.onLink = function (state, detail) {
+      if (state === 'ready') onReady();
+      else if (state === 'down') {
+        ready = false;
+        msg($('statusMsg'), '蓝牙未连接：' + (detail || '未知原因'), 'bad');
+      }
+    };
+    // 先渲染上次的快照（切换页面时网络信息基本没变），再走一次真实刷新。
+    var cached = window.duckBle.state();
+    if (cached && cached.wifi) renderStatus(cached.wifi);
+    if (cached && cached.link === 'ready') onReady();
+    else window.duckBle.connect();
+  }
+
+  $('refresh').addEventListener('click', refreshStatus);
+  $('scan').addEventListener('click', doScan);
+  $('cancel').addEventListener('click', closeSheet);
+  $('join').addEventListener('click', join);
+  $('forget').addEventListener('click', forget);
+  $('mask').addEventListener('click', function (event) {
+    if (event.target === $('mask')) closeSheet();
+  });
+  $('fixedToggle').addEventListener('change', function () {
+    $('fixedFields').classList.toggle('hidden', !$('fixedToggle').checked);
+  });
+  $('copy').addEventListener('click', function () {
+    var text = $('consoleUrl').textContent;
+    if (!text || text === '—') return;
+    if (navigator.clipboard) navigator.clipboard.writeText(text);
+  });
+})();
+</script>
+</body>
+</html>

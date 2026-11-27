@@ -18,6 +18,9 @@ from pathlib import Path
 from urllib.parse import urlparse, unquote, parse_qs
 
 from telemetry import BASELINE, VERSION, HOME, IDS, NAMES, LABELS, Store
+from system_watch import SystemWatch
+import sound_test
+import units
 from controls import Controller, ControlError
 from ssh_connect import normalize_target, ssh_command, ssh_process_options, SSHConnectError
 from process_lifecycle import retire_process, spawn_process, close_owned_processes
@@ -139,7 +142,7 @@ def handler_for(store, config, controller=None, service_controller=None, connect
                 self.send_header("X-Frame-Options", "DENY")
                 self.send_header("Referrer-Policy", "no-referrer")
                 self.send_header("Cross-Origin-Resource-Policy", "same-origin")
-                self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' ws: wss:; media-src 'self' blob:; img-src 'self' data: blob:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'")
+                self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' ws: wss: http://*:8001; media-src 'self' blob:; img-src 'self' data: blob:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'")
                 if attachment:
                     self.send_header("Content-Disposition", 'attachment; filename="' + attachment + '"')
                 self.end_headers()
@@ -234,6 +237,13 @@ def handler_for(store, config, controller=None, service_controller=None, connect
                         if calibration is not None and sent_aux.get('calibration') is not calibration:
                             extra['calibration'] = calibration
                             sent_aux['calibration'] = calibration
+                        # Sampled by SystemWatch, not robotd: send it when the seq
+                        # moves rather than on every raw frame.
+                        units_data = store.data.get('units')
+                        units_key = (units_data or {}).get('seq') if units_data else None
+                        if units_data is not None and sent_aux.get('units') != units_key:
+                            extra['units'] = units_data
+                            sent_aux['units'] = units_key
                     return {**extra,
                             'control':controller.status(snapshot) if controller else {'available':False,'connected':False},
                             'service_control':service_controller.status(snapshot) if service_controller else {'available':False},
@@ -300,7 +310,8 @@ def main(argv=None):
     modes.add_argument("--dashboard", action="store_true", help="直接打开中控，在页面填写 SSH 地址和密码连接")
     parser.add_argument("--feetech", action="store_true", help="HD1910 + FT6 正式 robotd 服务；不直接占用串口")
     parser.add_argument("--robotd-socket", default="/run/robotd.sock")
-    parser.add_argument("--tofd-socket", default="/run/tofd/tof.sock")
+    parser.add_argument("--tofd-socket", default="",
+                        help="tofd 的 Unix socket；留空（默认）表示不采集 ToF，中控不会连接 tofd")
     parser.add_argument("--camera-host", default="duck-10e4.local")
     parser.add_argument("--camera-port", type=int, default=8443)
     parser.add_argument("--hz", type=int, choices=range(1, 51), default=50,
@@ -334,6 +345,10 @@ def main(argv=None):
               "mode": mode, "hz": args.hz, "control_enabled": control_enabled,
               "ssh_target": args.ssh,
               "service_enabled": mode == "service",
+              "tof_enabled": bool(args.tofd_socket),
+              "units": units.unit_meta(), "hardware": units.hardware_meta(),
+              "sound": {"tags": [{"tag": tag, "name": sound_test.NAMES[tag]} for tag in sound_test.TAGS],
+                        "names": dict(sound_test.NAMES)},
               "control_token": secrets.token_urlsafe(32) if control_enabled else ""}
     agent_config = {"robotd_socket": args.robotd_socket, "tofd_socket": args.tofd_socket,
                     "hz": args.hz, "service": mode == "service"}
@@ -366,6 +381,13 @@ def main(argv=None):
             if args.ssh: connection.handle({'action':'connect','target':args.ssh})
         else:
             threading.Thread(target=agent.run, args=(agent_config, store.ingest, stop), daemon=True).start()
+        # Service and hardware state has no channel of its own in robotd's
+        # telemetry, and in --feetech mode agent.py never runs; sample it here
+        # so both modes read the same way.
+        watch = SystemWatch(store, units.UNIT_NAMES,
+                            transport=(lambda: service_controller.transport) if service_controller else None,
+                            log=getattr(store, 'system_log', None))
+        watch.start(stop)
         if mode != "service" and not connection: threading.Thread(target=record, daemon=True).start()
         print(f"Microduck Console {VERSION} / {mode.upper()} / {access}\n{url}\n基线 {BASELINE}\n启动不发送动作；实机操作需在页面手动触发。Ctrl+C 退出。", flush=True)
         if args.open:

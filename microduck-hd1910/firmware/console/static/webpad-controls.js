@@ -43,11 +43,12 @@ export class PadControls {
   reset(){
     this.inputs.clear();this.axes=initial();this.buttons.clear();
     for(const dot of this.root.querySelectorAll('[data-stick] i'))dot.style.transform='translate(0,0)';
-    for(const b of this.root.querySelectorAll('.held')){b.classList.remove('held');b.setAttribute('aria-pressed','false');}
+    for(const b of this.root.querySelectorAll('.held:not([data-dynamic-sound])')){b.classList.remove('held');b.setAttribute('aria-pressed','false');}
     for(const input of this.root.querySelectorAll('[data-axis]'))input.value=0;
   }
   paint(){
-    for(const button of this.root.querySelectorAll('button'))button.disabled=this.panel.disabled||button.dataset.unavailable==='true';
+    // 动态声音读的是手机桥，不是运动服务：不能跟着整块手柄一起禁用。
+    for(const button of this.root.querySelectorAll('button:not([data-dynamic-sound])'))button.disabled=this.panel.disabled||button.dataset.unavailable==='true';
     for(const input of this.root.querySelectorAll('input'))input.disabled=this.panel.disabled;
     for(const stick of this.root.querySelectorAll('[data-stick]'))stick.setAttribute('aria-disabled',String(this.panel.disabled));
   }

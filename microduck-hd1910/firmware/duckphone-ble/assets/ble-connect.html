@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>连接 Microduck</title>
+<style>
+  :root {
+    --bg: #101216; --card: #191d24; --line: #2a303a; --text: #e8ecf2;
+    --muted: #8b95a5; --accent: #ffc53d; --ok: #4ade80; --bad: #f87171;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+    font: 15px/1.5 -apple-system, "HarmonyOS Sans", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+    padding: max(20px, env(safe-area-inset-top)) 18px max(20px, env(safe-area-inset-bottom));
+  }
+  h1 { font-size: 20px; margin: 4px 0 2px; letter-spacing: .5px; }
+  .sub { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+  .chips { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px;
+    border: 1px solid var(--line); border-radius: 999px; font-size: 12px; color: var(--muted);
+  }
+  .chip i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+  .chip.on i { background: var(--ok); } .chip.warn i { background: var(--accent); }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px; margin-bottom: 14px;
+  }
+  .card h2 { font-size: 13px; color: var(--muted); font-weight: 500; margin: 0 0 10px; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 12px 10px; border-radius: 10px; border: 1px solid transparent;
+  }
+  li + li { margin-top: 4px; }
+  li.sel { border-color: var(--accent); background: rgba(255, 197, 61, .08); }
+  li .name { font-size: 15px; }
+  li .meta { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  li .rssi { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .empty { color: var(--muted); font-size: 13px; padding: 8px 2px; }
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  input[type=password], input[type=tel] {
+    width: 100%; padding: 12px 14px; font-size: 20px; letter-spacing: 6px;
+    color: var(--text); background: #0d0f13; border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  input:focus { outline: none; border-color: var(--accent); }
+  .row { display: flex; gap: 10px; margin-top: 12px; }
+  button {
+    flex: 1; padding: 13px 16px; font-size: 15px; border-radius: 10px; border: 1px solid var(--line);
+    background: #222833; color: var(--text);
+  }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #221a00; font-weight: 600; }
+  button:disabled { opacity: .45; }
+  .status { font-size: 13px; min-height: 20px; margin-top: 10px; color: var(--muted); }
+  .status.bad { color: var(--bad); } .status.ok { color: var(--ok); }
+  .foot { color: var(--muted); font-size: 12px; margin-top: 18px; line-height: 1.7; }
+  code { color: var(--text); }
+</style>
+</head>
+<body>
+  <h1>连接 Microduck</h1>
+  <div class="sub">手机通过蓝牙直连机器人；这与机器人自己的 Wi-Fi 是两条链路。</div>
+
+  <div class="chips">
+    <span class="chip" id="chipBle"><i></i><span>手机蓝牙</span></span>
+    <span class="chip" id="chipWifi"><i></i><span>机器人 Wi-Fi</span></span>
+  </div>
+
+  <div class="card">
+    <h2>附近可连接的机器人</h2>
+    <ul id="list"><li class="empty">正在扫描…</li></ul>
+    <div class="row">
+      <button id="rescan">重新扫描</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>配对 PIN</h2>
+    <label for="pin">默认 000000；改过就填新的六位数字</label>
+    <input id="pin" type="tel" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000">
+    <div class="row">
+      <button class="primary" id="connect" disabled>连接</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="foot">
+    停住驾驶前不要离开本页。连接后进入驾驶页；返回键回到这里重新选机器人。<br>
+    找不到机器人：确认它已上电、<code>systemctl is-active btd</code> 为 active，并已授予本 App 的蓝牙权限。
+  </div>
+
+<script src="ble-bridge.js"></script>
+<script>
+(function () {
+  var listEl = document.getElementById('list');
+  var pinEl = document.getElementById('pin');
+  var statusEl = document.getElementById('status');
+  var connectBtn = document.getElementById('connect');
+  var rescanBtn = document.getElementById('rescan');
+  var chipBle = document.getElementById('chipBle');
+  var chipWifi = document.getElementById('chipWifi');
+
+  var robots = Object.create(null);
+  var selected = null;
+  var navigating = false;
+  // 状态行当前显示的是「上次连接 …」这条提示；扫到目标设备时才允许改写它。
+  var hint = false;
+  var configured = window.duckBle ? window.duckBle.config() : { address: '', pinSet: false };
+
+  // 有记住的地址就只预选、等用户点「连接」；PIN 已保存时显示占位符，改过 PIN 才需要重新输入。
+  if (configured.pinSet) pinEl.value = '******';
+
+  function setStatus(text, kind) {
+    statusEl.textContent = text || '';
+    statusEl.className = 'status' + (kind ? ' ' + kind : '');
+    hint = false;
+  }
+
+  function setBleChip(state) {
+    chipBle.className = 'chip' + (state === 'ready' ? ' on' : state === 'down' ? '' : ' warn');
+    chipBle.querySelector('span').textContent =
+      state === 'ready' ? '手机蓝牙 已连接'
+        : state === 'down' ? '手机蓝牙 未连接'
+        : '手机蓝牙 连接中…';
+  }
+
+  function render() {
+    var entries = Object.keys(robots).map(function (key) { return robots[key]; });
+    entries.sort(function (a, b) { return (b.rssi || -999) - (a.rssi || -999); });
+    listEl.innerHTML = '';
+    if (!entries.length) {
+      var empty = document.createElement('li');
+      empty.className = 'empty';
+      empty.textContent = '没有扫到机器人；确认它已上电并在广播。';
+      listEl.appendChild(empty);
+      return;
+    }
+    entries.forEach(function (robot) {
+      var item = document.createElement('li');
+      if (selected === robot.address) item.className = 'sel';
+      var left = document.createElement('div');
+      var name = document.createElement('div');
+      name.className = 'name';
+      name.textContent = robot.name || robot.address;
+      var meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = robot.address + (robot.ipv4 ? ' · ' + robot.ipv4 : ' · 无 Wi-Fi');
+      left.appendChild(name);
+      left.appendChild(meta);
+      var rssi = document.createElement('div');
+      rssi.className = 'rssi';
+      rssi.textContent = (robot.rssi === null || robot.rssi === undefined) ? '' : robot.rssi + ' dBm';
+      item.appendChild(left);
+      item.appendChild(rssi);
+      item.addEventListener('click', function () {
+        selected = robot.address;
+        connectBtn.disabled = false;
+        render();
+      });
+      listEl.appendChild(item);
+    });
+  }
+
+  var scanTimer = 0;
+
+  function startScan() {
+    robots = Object.create(null);
+    selected = null;
+    connectBtn.disabled = true;
+    render();
+    if (!window.duckBle) { setStatus('原生桥不可用：请从 App 打开本页', 'bad'); return; }
+    setStatus('正在扫描…', '');
+    window.duckBle.scan();
+    clearTimeout(scanTimer);
+    scanTimer = setTimeout(function () {
+      if (!Object.keys(robots).length) setStatus('扫描结束，没有发现机器人', 'bad');
+    }, 9000);
+  }
+
+  function connect() {
+    if (!window.duckBle) return;
+    var pin = pinEl.value === '******' ? null : pinEl.value.trim();
+    if (pin !== null && !/^\d{6}$/.test(pin)) {
+      setStatus('PIN 是六位数字', 'bad');
+      return;
+    }
+    if (!selected && !configured.address) {
+      setStatus('先选一台机器人', 'bad');
+      return;
+    }
+    connectBtn.disabled = true;
+    rescanBtn.disabled = true;
+    setStatus('正在连接…', '');
+    setBleChip('connecting');
+    // `pin === null` 表示输入框里是上次记住的占位符，不再改写配置。
+    // 名字一并交给桥：离线浮层和状态卡要显示「duck-dillon · CC:C8:…」。
+    var picked = robots[selected];
+    window.duckBle.connect(
+      selected || configured.address,
+      pin === null ? undefined : pin,
+      picked && picked.name ? picked.name : undefined
+    );
+  }
+
+  if (window.duckBle) {
+    window.duckBle.onScan = function (robot) {
+      robots[robot.address] = robot;
+      if (!selected) selected = robot.address;
+      connectBtn.disabled = false;
+      render();
+      // 广播地址偶尔会变（机器人蓝牙服务重启后），名字不变就仍算「上次那台」。
+      var sameSaved = configured.address && robot.address === configured.address;
+      var sameName = configured.name && robot.name === configured.name;
+      if (sameSaved || sameName) {
+        showLastHint();
+      } else if ((statusEl.textContent || '').indexOf('扫描') >= 0) {
+        // 扫到别的机器人也算扫描有结果，别把「正在扫描…」一直挂着。
+        setStatus('发现 ' + Object.keys(robots).length + ' 台，点选后连接', '');
+      }
+    };
+    window.duckBle.onLink = function (state, detail) {
+      setBleChip(state);
+      if (state === 'ready' && !navigating) {
+        navigating = true;
+        setStatus('已连接，正在进入驾驶页…', 'ok');
+        setTimeout(function () {
+          // 不要在这里断开：Activity 与 GATT 都还活着，驾驶页会直接接管这条连接。
+          // 早先断开再重连，切一次页要多等 1–3 秒。
+          location.href = 'duckphone/index.html';
+        }, 250);
+        return;
+      }
+      if (state === 'down') {
+        connectBtn.disabled = false;
+        rescanBtn.disabled = false;
+        if (!navigating) setStatus('连接失败：' + (detail || '未知原因'), 'bad');
+      } else if (state === 'connecting' || state === 'authenticating') {
+        setStatus(state === 'authenticating' ? '正在验证 PIN…' : '正在连接…', '');
+      }
+    };
+  }
+
+  connectBtn.addEventListener('click', connect);
+  rescanBtn.addEventListener('click', startScan);
+
+  if (configured.address) {
+    selected = configured.address;
+    connectBtn.disabled = false;
+    showLastHint();
+  }
+
+  // 从驾驶页/网络页返回时，GATT 通常还活着。先按上次快照把顶部两颗灯点亮，
+  // 别让人看到一瞬间的「未连接」；原生回报会很快把状态改成真实值。
+  if (window.duckBle) {
+    var st = window.duckBle.state();
+    if (st) setBleChip(st.shownLink || 'down');
+  }
+
+  // 名字只有扫描结果里才有；扫到目标设备后把「上次连接」这行补全成
+  // 「duck-dillon · CC:C8:…」。正在连接/失败提示时不动那行。
+  function showLastHint() {
+    var hit = robots[configured.address];
+    if (!hit && configured.name) {
+      // 地址变了就按名字找同一台，提示里显示这次的地址。
+      var keys = Object.keys(robots);
+      for (var i = 0; i < keys.length; i += 1) {
+        if (robots[keys[i]].name === configured.name) { hit = robots[keys[i]]; break; }
+      }
+    }
+    var name = (hit && hit.name) || configured.name;
+    var address = (hit && hit.address) || configured.address;
+    setStatus('上次连接 ' + (name ? name + ' · ' : '') + address
+      + '，点「连接」继续', '');
+    hint = true;
+  }
+  startScan();
+})();
+</script>
+</body>
+</html>

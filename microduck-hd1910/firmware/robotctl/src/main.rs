@@ -411,6 +411,22 @@ enum NetCommand {
         /// Read the passphrase from stdin instead, so it never reaches the process list.
         #[arg(long)]
         psk_stdin: bool,
+        /// Ask for this address instead of a DHCP lease, e.g. `192.168.110.50`.
+        ///
+        /// The address is stored in the NetworkManager profile, so the robot comes back on it
+        /// after a reboot without anyone re-running this — which is why a bad one is worth
+        /// avoiding: it is undone with `robotctl net connect <ssid> --psk-stdin` and no `--ipv4`.
+        #[arg(long, value_name = "ADDRESS")]
+        ipv4: Option<String>,
+        /// Prefix length for `--ipv4`. Defaults to 24.
+        #[arg(long, value_name = "1-32", requires = "ipv4")]
+        prefix: Option<u8>,
+        /// Default gateway for `--ipv4`.
+        #[arg(long, value_name = "ADDRESS", requires = "ipv4")]
+        gateway: Option<String>,
+        /// Resolver for `--ipv4`, repeatable.
+        #[arg(long = "dns", value_name = "ADDRESS", requires = "ipv4")]
+        dns: Vec<String>,
         #[arg(long)]
         json: bool,
     },
@@ -649,7 +665,10 @@ fn run_theremin(socket: &Path, off: bool) -> Result<(), Failure> {
     stream.hello()?;
     stream.send(&proto::Request::call(
         proto::Id::Number(1),
-        &proto::Call::RobotSubscribe(proto::SubscribeParams { hz: Some(15) }),
+        &proto::Call::RobotSubscribe(proto::SubscribeParams {
+            hz: Some(15),
+            profile: None,
+        }),
     ))?;
 
     let mut line = String::new();
@@ -751,7 +770,10 @@ fn run_chorale(socket: &Path, off: bool, piece: Option<u8>) -> Result<(), Failur
     stream.hello()?;
     stream.send(&proto::Request::call(
         proto::Id::Number(1),
-        &proto::Call::RobotSubscribe(proto::SubscribeParams { hz: Some(10) }),
+        &proto::Call::RobotSubscribe(proto::SubscribeParams {
+            hz: Some(10),
+            profile: None,
+        }),
     ))?;
 
     let mut part = None;
@@ -3016,6 +3038,10 @@ fn run_net(socket: &Path, command: NetCommand) -> Result<(), Failure> {
             ssid,
             psk,
             psk_stdin,
+            ipv4,
+            prefix,
+            gateway,
+            dns,
             json,
         } => {
             let psk = if *psk_stdin {
@@ -3023,10 +3049,17 @@ fn run_net(socket: &Path, command: NetCommand) -> Result<(), Failure> {
             } else {
                 psk.clone()
             };
+            let ipv4 = ipv4.as_ref().map(|address| proto::Ipv4Config {
+                address: address.clone(),
+                prefix: prefix.unwrap_or(24),
+                gateway: gateway.clone(),
+                dns: dns.clone(),
+            });
             (
                 proto::Call::NetConnect(proto::NetConnectParams {
                     ssid: ssid.clone(),
                     psk,
+                    ipv4,
                 }),
                 *json,
             )
@@ -4579,6 +4612,7 @@ fn robot_skills(robot_socket: &Path) -> Option<Vec<String>> {
     let result = client
         .call(&proto::Call::RobotSubscribe(proto::SubscribeParams {
             hz: Some(1),
+            profile: None,
         }))
         .ok()?;
     let ack: proto::SubscribeResult = result.result_as().ok()?;

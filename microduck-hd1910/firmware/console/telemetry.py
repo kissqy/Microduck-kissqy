@@ -15,7 +15,7 @@ NAMES = ["left_hip_yaw", "left_hip_roll", "left_hip_pitch", "left_knee", "left_a
 LABELS = ["左髋旋转", "左髋侧摆", "左髋俯仰", "左膝", "左踝", "颈部俯仰", "头部俯仰",
           "头部转向", "头部侧倾", "嘴巴", "右髋旋转", "右髋侧摆", "右髋俯仰", "右膝", "右踝"]
 HOME = [0, -.0873, -.4579, -.0049, .4530, .3491, .3491, 0, 0, 0, 0, .0873, .4579, .0049, -.4530]
-TTL = {"state": 1.5, "health": 5, "tof": 2, "system": 7, "capabilities": 20, "bus": 1.5, "calibration": float("inf"), "startup": float("inf")}
+TTL = {"state": 1.5, "health": 5, "tof": 2, "system": 7, "capabilities": 20, "bus": 1.5, "calibration": float("inf"), "startup": float("inf"), "units": 6}
 
 
 def number(value):
@@ -190,6 +190,7 @@ class Store:
                       "startup": copy.deepcopy(self.data.get("startup", {})),
                       "capabilities": copy.deepcopy(self.data.get("capabilities", {})),
                       "tof": copy.deepcopy(self.data.get("tof", {})), "servos": servos,
+                      "units": copy.deepcopy(self.data.get("units", {})),
                       "system": copy.deepcopy(self.data.get("system", {})), "events": list(self.events),
                       "extended": extension.get("schema") == "microduck-observer/v1",
                       "pose_calibrated": True}

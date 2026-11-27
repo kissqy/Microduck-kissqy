@@ -738,6 +738,87 @@ class DynamicSoundTest(BridgeTestCase):
         self.assertTrue(self.h.httpd.bridge.dynamic_sound)
 
 
+class ActionCommandTest(BridgeTestCase):
+    """v3 预设动作：驱动者播放、状态带 act、只读/待命拒绝。"""
+
+    def setUp(self):
+        super().setUp()
+        self.client = self.connect()
+        self.assertTrue(self.h.fake.wait_for_client())
+        for _ in range(8):
+            self.h.fake.push_state(
+                policy="walk",
+                safety={"fallen": False, "limp": False, "gravity": [0.0, 0.0, -1.0]},
+            )
+            time.sleep(0.02)
+        self.h.fake.reset()
+
+    def wait_state(self, predicate, timeout: float = 3.0) -> dict:
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            # The bridge only emits a snapshot when robotd sends a state frame;
+            # idle tests have to keep the fake stream alive.
+            self.h.fake.push_state(
+                policy="walk",
+                safety={"fallen": False, "limp": False, "gravity": [0.0, 0.0, -1.0]},
+            )
+            try:
+                state = self.client.wait_for("state", timeout=0.4)
+            except AssertionError:
+                continue
+            if predicate(state):
+                return state
+        raise AssertionError("没有等到目标 state")
+
+    def test_quack_moves_the_mouth_and_can_be_cancelled(self):
+        # `name` is the command; `action` carries the preset name.
+        self.client.send({"t": "cmd", "id": 1, "name": "action", "action": "quack"})
+        ack = self.client.wait_for("ack")
+        self.assertTrue(ack["ok"], ack)
+        state = self.wait_state(lambda s: s.get("act") == "quack")
+        self.assertTrue(state["actIdle"] is False)
+
+        deadline = time.monotonic() + 2.0
+        while time.monotonic() < deadline and not self.h.fake.calls("robot.mouth"):
+            time.sleep(0.02)
+        mouths = self.h.fake.calls("robot.mouth")
+        self.assertTrue(mouths, "张嘴动作没有下发 robot.mouth")
+        self.assertTrue(any(m["params"]["open"] > 0.8 for m in mouths), mouths)
+
+        self.client.send({"t": "cmd", "id": 2, "name": "cancelAction"})
+        self.assertTrue(self.client.wait_for("ack")["ok"])
+        deadline = time.monotonic() + 1.0
+        while time.monotonic() < deadline:
+            mouths = self.h.fake.calls("robot.mouth")
+            if mouths and mouths[-1]["params"]["open"] == 0.0:
+                break
+            time.sleep(0.02)
+        self.assertEqual(mouths[-1]["params"]["open"], 0.0)
+
+    def test_readonly_cannot_play(self):
+        ro = self.h.client()
+        self.clients.append(ro)
+        ro.send({"t": "hello", "name": "iPad"})
+        self.assertEqual(ro.wait_for("hello")["role"], "readonly")
+        ro.send({"t": "cmd", "id": 3, "name": "action", "action": "circle"})
+        ack = ro.wait_for("ack")
+        self.assertFalse(ack["ok"])
+        self.assertEqual(ack["reason"], "readonly")
+        self.assertEqual(self.h.fake.calls("robot.head"), [])
+
+    def test_action_is_refused_when_not_walking(self):
+        self.h.fake.push_state(
+            policy="held",
+            safety={"fallen": False, "limp": False, "gravity": [0.0, 0.0, -1.0]},
+        )
+        time.sleep(0.1)
+        self.client.send({"t": "cmd", "id": 4, "name": "action", "action": "look_up"})
+        ack = self.client.wait_for("ack")
+        self.assertFalse(ack["ok"])
+        self.assertIn("未站立", ack["reason"] or "")
+        self.assertEqual(self.h.fake.calls("robot.head"), [])
+
+
 class IdleGestureTest(unittest.TestCase):
     """The idle sound must also move the head; the bridge sends robot.head frames."""
 
@@ -756,7 +837,8 @@ class IdleGestureTest(unittest.TestCase):
         client.send({"t": "hello", "name": "Mate 40 Pro"})
         self.assertEqual(client.wait_for("hello")["role"], "driver")
         self.h.httpd.audio_settings.update(
-            {"idle": {"after_s": 5.0, "repeat_s": 30.0, "gesture": True}})
+            {"idle": {"after_s": 5.0, "repeat_s": 30.0, "gesture": True,
+                      "library": ["look_up"]}})
         self.h.fake.reset()
 
         def stream() -> None:

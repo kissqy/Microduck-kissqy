@@ -489,6 +489,84 @@
     font-size:13px; color:var(--muted); padding:7px 10px; border-radius:10px;
   }
   #btnMaint:hover{background:var(--panel); color:var(--text);}
+  #btnActions{
+    flex:0 0 auto;
+    display:flex; align-items:center; gap:7px;
+    font-size:13px; color:var(--muted); padding:7px 10px; border-radius:10px;
+  }
+  #btnActions:hover{background:var(--panel); color:var(--text);}
+  #btnActions.active{color:var(--duck); background:rgba(255,197,61,.09);}
+
+  /* ── 预设动作 ─────────────────────────────────────────── */
+  #actionsSheet{
+    align-items:flex-end; justify-content:center; background:rgba(0,0,0,.58);
+    padding:0;
+  }
+  #actionsSheet .drawer{
+    width:min(720px,100%); max-height:86%; overflow:auto;
+    background:linear-gradient(180deg,#20242C,#171A20);
+    border:1px solid #313845; border-bottom:0;
+    border-radius:24px 24px 0 0; padding:10px 22px 32px;
+    animation:up .18s ease-out;
+  }
+  .act-ro{
+    margin:0 0 12px; padding:9px 12px; border-radius:10px;
+    border:1px solid rgba(90,169,255,.3); background:rgba(90,169,255,.08);
+    color:var(--info); font-size:12px; font-weight:600;
+  }
+  .act-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
+  .preset{
+    position:relative; display:flex; flex-direction:column; align-items:flex-start;
+    gap:7px; min-height:112px; padding:13px 13px 16px; text-align:left;
+    border:1px solid #2A303A; border-radius:16px; background:#20242B;
+    transition:border-color .12s, background .12s, transform .08s;
+    overflow:hidden;
+  }
+  .preset:hover{border-color:#3C4655; background:#252A33;}
+  .preset:active{transform:scale(.99);}
+  .preset:disabled{opacity:.42; cursor:not-allowed;}
+  .preset .p-ico{
+    width:34px; height:34px; border-radius:11px 5px 11px 5px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--muted); background:linear-gradient(180deg,#2E3541,#232833);
+    border:1px solid #3B4350;
+  }
+  .preset .p-ico svg{width:19px; height:19px;}
+  .preset .p-txt{display:flex; flex-direction:column; gap:1px; min-width:0;}
+  .preset .p-txt b{font-size:16px; font-weight:700; color:var(--text);}
+  .preset .p-txt small{font-size:11px; line-height:15px; color:var(--muted);}
+  .preset .p-meta{
+    margin-top:auto; font-size:10px; color:var(--dim);
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .preset .p-bar{
+    position:absolute; left:0; right:0; bottom:0; height:3px; background:#111318;
+  }
+  .preset .p-bar i{display:block; width:0; height:100%; background:var(--duck);}
+  .preset.wide{grid-column:1 / -1; min-height:92px;}
+  .preset.playing{
+    border-color:rgba(255,197,61,.6); background:rgba(255,197,61,.08);
+  }
+  .preset.playing .p-ico{color:var(--duck); border-color:rgba(255,197,61,.45);}
+  .preset .p-badge{
+    position:absolute; right:10px; top:10px; padding:2px 7px; border-radius:999px;
+    background:rgba(90,169,255,.14); border:1px solid rgba(90,169,255,.35);
+    color:var(--info); font-size:9px; font-weight:700;
+  }
+  .pool{display:flex; flex-wrap:wrap; gap:7px; margin-top:9px;}
+  .pool-chip{
+    padding:7px 11px; border-radius:999px; border:1px solid var(--line);
+    background:#171A20; color:var(--muted); font-size:12px; font-weight:600;
+  }
+  .pool-chip.on{
+    color:var(--duck); border-color:rgba(255,197,61,.5);
+    background:rgba(255,197,61,.1);
+  }
+  @media (max-width:460px){
+    #btnActions span{display:none;}
+    #btnActions{padding:7px;}
+    #actionsSheet .drawer{padding:10px 14px 28px;}
+  }
 
   /* ── 覆盖层 ───────────────────────────────────────────── */
   .overlay{
@@ -1029,6 +1107,10 @@
       <div class="bubble" id="tiltBubble"><i id="tiltDot"></i></div>
       <span>倾角 <b id="tiltVal" style="color:var(--text)">8.5°</b></span>
     </div>
+    <button id="btnActions" type="button" aria-label="打开预设动作" title="预设动作">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.5v13l10-6.5Z"/><path d="M4 5.5v13"/></svg>
+      <span>动作</span>
+    </button>
     <button id="btnSound" type="button" aria-label="打开声音面板" title="声音">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
     </button>
@@ -1245,6 +1327,49 @@
   </div>
 </div>
 
+<!-- 预设动作 -->
+<div id="actionsSheet" class="overlay hidden">
+  <div class="drawer">
+    <div class="grab"></div>
+    <h2>预设动作</h2>
+    <div class="hint" id="actHint">站立或静止时可播放；播放中一碰摇杆就停。</div>
+    <div class="act-ro hidden" id="actReadonly">只读 · 不能播放</div>
+
+    <div class="act-grid" id="actGrid">
+      <button class="preset" type="button" data-act="look_up">
+        <span class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V7"/><path d="m7 12 5-5 5 5"/></svg></span>
+        <span class="p-txt"><b>抬头</b><small>抬头看一眼</small></span>
+        <span class="p-meta">1.2 s · 咕咕 ×2</span>
+        <span class="p-bar"><i></i></span>
+      </button>
+      <button class="preset" type="button" data-act="look_around">
+        <span class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 3 10 3-7 2 2h4"/></svg></span>
+        <span class="p-txt"><b>左右看</b><small>头转向两边</small></span>
+        <span class="p-meta">1.6 s · 疑问 ×3</span>
+        <span class="p-bar"><i></i></span>
+      </button>
+      <button class="preset" type="button" data-act="circle">
+        <span class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg></span>
+        <span class="p-txt"><b>画圈</b><small>头在空中画 3 圈</small></span>
+        <span class="p-meta">3.9 s · 打招呼 ×5</span>
+        <span class="p-bar"><i></i></span>
+      </button>
+      <button class="preset" type="button" data-act="quack">
+        <span class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h7l5-4v12l-5-4H4Z"/><path d="m19 9 2 3-2 3"/></svg></span>
+        <span class="p-txt"><b>张嘴</b><small>嘴开合 3 次</small></span>
+        <span class="p-meta">2.1 s · 短叫 ×3</span>
+        <span class="p-bar"><i></i></span>
+      </button>
+    </div>
+
+    <div class="row" style="border-top:0">
+      <div class="grow"><div class="d">动作由桥执行；结束回中，摇杆/停止/卸力/P0 告警会立即打断。</div></div>
+      <button class="mini" id="btnActStop" type="button" disabled>停止</button>
+      <button class="mini" id="btnActClose" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+
 <!-- 设置：动态声音（v1 只做开关，时间项下个版本接入） -->
 <div id="settings" class="overlay hidden">
   <div class="drawer">
@@ -1266,9 +1391,21 @@
       <div class="num"><input id="setIdleMax" type="number" min="1" max="60" step="1" value="12"><span>次</span></div>
     </div>
     <div class="row">
-      <div class="grow"><div class="t">空闲头部动作</div><div class="d">第一次抬头，之后左右看。</div></div>
+      <div class="grow"><div class="t">空闲动作</div><div class="d">空闲时从下面的随机池里挑一个；关掉只发声、不动作。</div></div>
       <button class="switch" data-set-toggle="gesture" type="button" role="switch"
-              aria-checked="true" aria-label="空闲头部动作"><span></span></button>
+              aria-checked="true" aria-label="空闲动作"><span></span></button>
+    </div>
+    <div class="row">
+      <div class="grow">
+        <div class="t">随机池</div>
+        <div class="d">至少保留一个动作；空闲时随机挑一个。</div>
+        <div class="pool" id="idlePool">
+          <button class="pool-chip on" type="button" data-pool="look_up" aria-pressed="true">抬头</button>
+          <button class="pool-chip on" type="button" data-pool="look_around" aria-pressed="true">左右看</button>
+          <button class="pool-chip on" type="button" data-pool="circle" aria-pressed="true">画圈</button>
+          <button class="pool-chip on" type="button" data-pool="quack" aria-pressed="true">张嘴</button>
+        </div>
+      </div>
     </div>
 
     <div class="set-sec">告警节奏</div>
@@ -1368,6 +1505,9 @@
   <button type="button" data-h="sound">声音面板 · 动态开</button>
   <button type="button" data-h="sound-off">声音面板 · 动态关</button>
   <button type="button" data-h="settings">设置 · 动态声音</button>
+  <button type="button" data-h="actions">预设动作 · 可播放</button>
+  <button type="button" data-h="actions-idle">预设动作 · 空闲播放</button>
+  <button type="button" data-h="actions-disabled">预设动作 · 待命禁用</button>
   <button type="button" data-h="home">主界面 · 待命</button>
   <button type="button" data-h="limp">主界面 · 卸力</button>
   <button type="button" data-h="limit">限幅进行中</button>
@@ -1412,6 +1552,7 @@
   function defaultSettings(){
     return {
       idleFirst: 30, idleRepeat: 300, idleMax: 12, idleGesture: true,
+      idlePool: ['look_up', 'look_around', 'circle', 'quack'],
       fallRepeat: 5, fallMax: 6, fallTail: 60, tiltDeg: 30, tiltRepeat: 10,
       actions: { takeover: true, skill: true, enable: true, refusal: true },
       alerts: { fall: true, tilt: true, battery: true, motor: true, cpu: true, loop: true, bus: true },
@@ -1437,6 +1578,10 @@
     headApp: { yaw: 0, pitch: 0 },
     sound: { volume: 60, mute: false, prevVolume: 60, playing: null, wheee: false },
     dyn: true,                 // 动态声音；手机接管后默认开
+    act: null,                 // 正在播放的预设动作名
+    actIdle: false,            // 是否空闲自动触发
+    actStarted: 0,
+    actDur: 0,
     ...defaultSettings(),      // v2 设置页字段，保存后写入 audio.json
     padd: true,
     demoLimit: false,
@@ -1484,6 +1629,10 @@
     roVx: $('#roVx'), roYaw: $('#roYaw'), barReq: $('#barReq'), barApp: $('#barApp'),
     roLimit: $('#roLimit'), stickGuide: $('#stickGuide'), stickMode: $('#stickMode'),
     roHeadReq: $('#roHeadReq'), roHeadApp: $('#roHeadApp'), btnHeadReset: $('#btnHeadReset'),
+    btnActions: $('#btnActions'), actionsSheet: $('#actionsSheet'), actGrid: $('#actGrid'),
+    actHint: $('#actHint'), actReadonly: $('#actReadonly'),
+    btnActStop: $('#btnActStop'), btnActClose: $('#btnActClose'),
+    idlePool: $('#idlePool'),
     btnSound: $('#btnSound'), sound: $('#sound'), soundGrid: $('#soundGrid'),
     volRange: $('#volRange'), volPct: $('#volPct'), btnMute: $('#btnMute'),
     btnDynSound: $('#btnDynSound'), dynState: $('#dynState'), dynNote: $('#dynNote'),
@@ -1519,6 +1668,14 @@
 
   /* ── 基础渲染 ─────────────────────────────────────────── */
   const POLICY = { held:'待命', walk:'行走', home:'HOME', limp:'卸力' };
+
+  // 与 dynamic-sound.md §11.2 的动作库一致；原型只演时长和进度。
+  const PRESETS = {
+    look_up:     { label:'抬头',   dur:1.2 },
+    look_around: { label:'左右看', dur:1.6 },
+    circle:      { label:'画圈',   dur:3.9 },
+    quack:       { label:'张嘴',   dur:2.1 },
+  };
 
   /* ── 告警判定 ─────────────────────────────────────────── */
   function alarmState(){
@@ -1654,6 +1811,7 @@
 
   function setStickMode(mode){
     if (mode !== 'drive' && mode !== 'head') return;
+    cancelAction('切换头部模式');
     S.stickMode = mode;
     S.req = [0,0,0];
     S.head = { yaw: 0, pitch: 0 };
@@ -1688,6 +1846,110 @@
     return S.mode === 'driver';
   }
 
+  /* ── 预设动作 ─────────────────────────────────────────── */
+  function canPresetAct(){
+    return S.mode === 'driver' && !S.limp && !S.fallen && S.policy === 'walk'
+      && !S.act && !(S.req[0] || S.req[2]);
+  }
+  function presetBlockedReason(){
+    if (S.mode === 'readonly') return '只读会话不能播放';
+    if (S.mode === 'offline') return '未连接';
+    if (S.limp) return '机器人已卸力，先站立';
+    if (S.fallen) return '机器人倒地，先站起';
+    if (S.policy !== 'walk') return '先站立并接管行走策略';
+    if (S.req[0] || S.req[2]) return '机器人正在移动，先松开摇杆';
+    if (S.act) return `还有动作在播放：${PRESETS[S.act]?.label || S.act}`;
+    return '';
+  }
+  function updateActUI(){
+    if (!el.actionsSheet) return;
+    const readonly = S.mode === 'readonly';
+    if (el.actReadonly) el.actReadonly.classList.toggle('hidden', !readonly);
+    el.btnActions.disabled = S.mode === 'offline';
+    el.btnActions.classList.toggle('active', !el.actionsSheet.classList.contains('hidden'));
+    if (el.actHint) {
+      el.actHint.textContent = S.act
+        ? `${S.actIdle ? '空闲动作' : '正在播放'}：${PRESETS[S.act]?.label || S.act}`
+        : (readonly ? '只读 · 可以看，不能播放' : '站立或静止时可播放；播放中一碰摇杆就停。');
+    }
+    const p = S.act && S.actDur ? clamp((performance.now() - S.actStarted) / (S.actDur * 1000), 0, 1) : 0;
+    for (const b of $$('.preset', el.actGrid)) {
+      const name = b.dataset.act;
+      const playing = S.act === name;
+      const blocked = !playing && !canPresetAct();
+      b.disabled = blocked || readonly;
+      b.classList.toggle('playing', playing);
+      b.style.setProperty('--p', playing ? p : 0);
+      const bar = b.querySelector('.p-bar i');
+      if (bar) bar.style.width = playing ? `${Math.round(p * 100)}%` : '0';
+      let badge = b.querySelector('.p-badge');
+      if (playing && S.actIdle) {
+        if (!badge) {
+          badge = document.createElement('span');
+          badge.className = 'p-badge';
+          badge.textContent = '空闲动作';
+          b.appendChild(badge);
+        }
+      } else if (badge) badge.remove();
+    }
+    if (el.btnActStop) el.btnActStop.disabled = !S.act;
+  }
+  function openActions(){
+    closeAlert(); closeMaint(); closeStatus(); closeSound(); closeSettings();
+    S.req = [0,0,0]; S.app = [0,0,0]; S.head = { yaw:0, pitch:0 };
+    updateActUI();
+    el.actionsSheet.classList.remove('hidden');
+    el.btnActions.classList.add('active');
+    render();
+  }
+  function closeActions(){
+    el.actionsSheet.classList.add('hidden');
+    el.btnActions.classList.remove('active');
+  }
+  function startPreset(name){
+    if (!PRESETS[name]) return;
+    if (!canPresetAct()) { toast(presetBlockedReason() || '现在不能播放', 'warn'); return; }
+    S.act = name;
+    S.actIdle = false;
+    S.actStarted = performance.now();
+    S.actDur = PRESETS[name].dur;
+    pushEvent('action','ok',`播放预设：${PRESETS[name].label}`,`${name} · ${S.actDur.toFixed(1)} s`);
+    toast(`播放 ${PRESETS[name].label} · ${S.actDur.toFixed(1)} s（原型）`);
+    vibrate(10);
+    render();
+  }
+  function finishAction(reason){
+    if (!S.act) return;
+    const name = S.act;
+    S.act = null;
+    S.actIdle = false;
+    S.actStarted = 0;
+    S.actDur = 0;
+    if (reason) toast(`${PRESETS[name]?.label || name}已停止：${reason}`, 'warn');
+    else toast(`${PRESETS[name]?.label || name}结束 · 已回中`);
+    render();
+  }
+  function cancelAction(reason){
+    if (!S.act) return;
+    finishAction(reason || '被打断');
+  }
+  function tickAction(){
+    if (!S.act) return;
+    if (performance.now() - S.actStarted >= S.actDur * 1000) finishAction('');
+    else updateActUI();
+  }
+  function readPool(){
+    return $$('.pool-chip', el.idlePool).filter((b) => b.classList.contains('on')).map((b) => b.dataset.pool);
+  }
+  function fillPool(pool){
+    const set = new Set(Array.isArray(pool) && pool.length ? pool : defaultSettings().idlePool);
+    for (const b of $$('.pool-chip', el.idlePool)) {
+      const on = set.has(b.dataset.pool);
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', String(on));
+    }
+  }
+
   function updateActions(){
     const drive = canDrive();
     el.stickZone.classList.toggle('disabled', !drive);
@@ -1706,7 +1968,7 @@
 
   function render(){
     updateTopbar(); updateStatus(); updateStatusPage(); updateBanner(); updateActions();
-    updateStickModeUI(); syncPolicyGate();
+    updateStickModeUI(); syncPolicyGate(); updateActUI();
     el.app.dataset.demo = S.demoLimit ? '1' : '0';
     el.app.dataset.padd = S.padd ? '1' : '0';
     el.app.dataset.lim = S.limited.join(',');
@@ -1736,6 +1998,7 @@
 
   el.btnStand.addEventListener('click', () => {
     if (!canAct()) return;
+    cancelAction('站立');
     const wasLimp = S.limp;
     S.mode = 'standing';
     setPolicy('home');
@@ -1752,6 +2015,7 @@
 
   el.btnEnable.addEventListener('click', () => {
     if (!canAct()) return;
+    cancelAction('启用/交还策略');
     if (S.limp) { toast('请先站立，再接管策略', 'warn'); return; }
     if (S.policy === 'walk') { setPolicy('held'); pushEvent('enable','ok','已交还策略','机器人待命'); toast('已交还策略，机器人待命'); }
     else { setPolicy('walk'); pushEvent('takeover','ok','已接管行走策略','手机开始控制'); toast('已接管行走策略'); }
@@ -1759,6 +2023,7 @@
 
   el.btnStop.addEventListener('click', () => {
     if (S.mode === 'offline') return;
+    cancelAction('停止');
     S.req = [0,0,0]; S.app = [0,0,0];
     render(); vibrate(40);
     pushEvent('stop','ok','已停止','仍站立 · 指令已归零');
@@ -1806,6 +2071,7 @@
 
   function doRelax(){
     closeAlert(); closeMaint(); closeStatus();
+    cancelAction('卸力');
     S.req = [0,0,0]; S.app = [0,0,0];
     setPolicy('limp');
     logLast();
@@ -1895,6 +2161,7 @@
   function switchPolicy(p){
     if (!p || p.state === 'missing') return;
     if (!policyGateOpen()) { toast('先点「接管」让策略驱动，再切策略', 'warn'); return; }
+    cancelAction('执行策略');
     if (p.state !== 'active') {
       currentPolicy().state = 'installed';
       p.state = 'active';
@@ -2004,6 +2271,7 @@
   el.stickZone.addEventListener('pointerdown', (e) => {
     if (!canDrive()) return;
     if (e.target.closest('button')) return;
+    cancelAction('摇杆输入');
     const r = el.stickZone.getBoundingClientRect();
     stick.active = true; stick.id = e.pointerId;
     stick.cx = e.clientX - r.left; stick.cy = e.clientY - r.top;
@@ -2365,7 +2633,7 @@
   el.maint.addEventListener('click', (e) => { if (e.target === el.maint) closeMaint(); });
 
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closeAlert(); closeMaint(); closeStatus(); closeSound(); closeSettings(); }
+    if (e.key === 'Escape') { closeAlert(); closeMaint(); closeStatus(); closeSound(); closeSettings(); closeActions(); }
   });
 
   /* ── 动态声音 / 设置 ─────────────────────────────────── */
@@ -2390,7 +2658,7 @@
   function idleNoteText(){
     const rep = S.idleRepeat % 60 === 0 && S.idleRepeat >= 60
       ? `${S.idleRepeat / 60} 分钟` : `${S.idleRepeat} 秒`;
-    return `接管后默认开启；首次空闲 ${S.idleFirst} s、之后每 ${rep}${S.idleGesture ? '，带抬头/左右看' : ''}。`;
+    return `接管后默认开启；首次空闲 ${S.idleFirst} s、之后每 ${rep}${S.idleGesture ? `，从 ${S.idlePool.length} 个动作里随机` : ''}。`;
   }
   function setDyn(on, quiet){
     if (!dynAllowed()) { toast('接管后才能开启动态声音', 'warn'); return; }
@@ -2414,6 +2682,7 @@
     for (const b of $$('[data-set-toggle]')) {
       b.setAttribute('aria-checked', String(state[b.dataset.setToggle] === true));
     }
+    fillPool(cfg.idlePool);
   }
   function readToggle(name){ const b = $(`[data-set-toggle="${name}"]`); return b?.getAttribute('aria-checked') === 'true'; }
   function saveSettings(){
@@ -2424,6 +2693,7 @@
     S.idleFirst = first; S.idleRepeat = repeat;
     S.idleMax = num(el.setIdleMax, 12, 1, 60);
     S.idleGesture = readToggle('gesture');
+    S.idlePool = readPool().length ? readPool() : defaultSettings().idlePool;
     S.fallRepeat = num(el.setFallRepeat, 5, 2, 30);
     S.fallMax = num(el.setFallMax, 6, 1, 20);
     S.fallTail = num(el.setFallTail, 60, 10, 600);
@@ -2435,7 +2705,7 @@
                  motor: readToggle('motor'), cpu: readToggle('cpu'), loop: readToggle('loop'), bus: readToggle('bus') };
     fillSettingsForm(S);
     updateDynUI();
-    toast(`设置已保存：首次 ${first}s · 间隔 ${repeat}s${S.idleGesture ? ' · 带头部动作' : ''}（原型演示）`, 'ok', 3200);
+    toast(`设置已保存：首次 ${first}s · 间隔 ${repeat}s${S.idleGesture ? ` · 随机 ${S.idlePool.length} 个动作` : ''}（原型演示）`, 'ok', 3200);
   }
   function resetSettings(){
     fillSettingsForm(defaultSettings());
@@ -2485,6 +2755,24 @@
     if (b) b.classList.remove('playing');
     toast('长叫收尾');
   }
+
+  el.btnActions.addEventListener('click', openActions);
+  el.btnActClose.addEventListener('click', closeActions);
+  el.actionsSheet.addEventListener('click', (e) => { if (e.target === el.actionsSheet) closeActions(); });
+  el.actGrid.addEventListener('click', (e) => {
+    const b = e.target.closest('.preset');
+    if (!b || b.disabled) return;
+    startPreset(b.dataset.act);
+  });
+  el.btnActStop.addEventListener('click', () => cancelAction('手动停止'));
+  el.idlePool.addEventListener('click', (e) => {
+    const b = e.target.closest('.pool-chip');
+    if (!b) return;
+    const on = !b.classList.contains('on');
+    if (!on && readPool().length <= 1) { toast('随机池至少保留一个动作', 'warn'); return; }
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', String(on));
+  });
 
   el.btnSound.addEventListener('click', openSound);
   $('#btnSoundClose').addEventListener('click', closeSound);
@@ -2647,12 +2935,14 @@
     if (S.head.yaw === 0 && Math.abs(S.headApp.yaw) < 0.004) S.headApp.yaw = 0;
     if (S.head.pitch === 0 && Math.abs(S.headApp.pitch) < 0.004) S.headApp.pitch = 0;
     S.limited = S.demoLimit ? ['deadman'] : [];
+    tickAction();
     render();
   }, 100);
 
   /* ── 页面隐藏即停 ─────────────────────────────────────── */
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
+      cancelAction('页面隐藏');
       endStick(); S.req = [0,0,0]; S.app = [0,0,0];
       S.head = { yaw:0, pitch:0 };
       stopWheee();
@@ -2661,6 +2951,7 @@
     }
   });
   window.addEventListener('pagehide', () => {
+    cancelAction('页面关闭');
     S.req = [0,0,0];
     S.head = { yaw:0, pitch:0 };
     stopWheee();
@@ -2670,13 +2961,14 @@
   /* ── hash 路由（评审直达） ────────────────────────────── */
   function applyHash(){
     const h = (location.hash || '#main').slice(1);
-    closeMaint(); closeAlert(); closeStatus(); closePolicyBar(); closeSound(); closeSettings();
+    closeMaint(); closeAlert(); closeStatus(); closePolicyBar(); closeSound(); closeSettings(); closeActions();
     el.readonly.classList.add('hidden'); el.offline.classList.add('hidden');
     S.mode = 'driver'; S.limp = false; S.fallen = false;
     S.dyn = true; Object.assign(S, defaultSettings());
     S.req = [0,0,0]; S.app = [0,0,0];
     S.stickMode = 'drive'; S.head = { yaw:0, pitch:0 }; S.headApp = { yaw:0, pitch:0 };
     S.sound.wheee = false; S.sound.playing = null;
+    S.act = null; S.actIdle = false; S.actStarted = 0; S.actDur = 0;
     S.policy = 'walk'; S.padd = true; S.demoLimit = false;
     S.limited = [];
     S.temp = 30; S.cpu = 48; S.hz = 50; S.missed = 12;
@@ -2689,6 +2981,14 @@
     else if (h === 'sound') { S.mode = 'driver'; render(); openSound(); }
     else if (h === 'sound-off') { S.mode = 'driver'; S.dyn = false; render(); openSound(); }
     else if (h === 'settings') { S.mode = 'driver'; render(); openSettings(); }
+    else if (h === 'actions') { S.mode = 'driver'; render(); openActions(); }
+    else if (h === 'actions-idle') {
+      S.mode = 'driver'; render(); openActions();
+      S.act = 'circle'; S.actIdle = true;
+      S.actStarted = performance.now() - 1200; S.actDur = PRESETS.circle.dur;
+      render();
+    }
+    else if (h === 'actions-disabled') { S.mode = 'driver'; S.policy = 'held'; render(); openActions(); }
     else if (h === 'head') { S.mode = 'driver'; render(); setStickMode('head'); }
     else if (h === 'head-held') { S.mode = 'driver'; S.policy = 'held'; render(); setStickMode('head'); }
     else if (h === 'policy') { S.mode = 'driver'; render(); openPolicyBar(); }
@@ -2736,7 +3036,7 @@
   logLast();
 
   // 评审/自动化用：只读内部状态
-  window.__duck = { S, applyHash, openAlert, openSound, setStickMode };
+  window.__duck = { S, applyHash, openAlert, openSound, openActions, setStickMode };
 })();
 </script>
 </body>

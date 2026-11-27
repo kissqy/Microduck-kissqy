@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import copy
+import random
 import sys
 import time
 import unittest
@@ -30,10 +31,12 @@ def state(**overrides) -> dict:
 
 
 class Harness:
-    def __init__(self, *, enabled: bool = True, driver: bool = True) -> None:
+    def __init__(self, *, enabled: bool = True, driver: bool = True,
+                 use_actions: bool = False) -> None:
         self.now = 1000.0
         self.plays: list[str] = []
         self.gestures: list[str] = []
+        self.actions: list[tuple[str, bool]] = []
         self.cancelled = 0
         self.enabled = enabled
         self.driver = driver
@@ -45,7 +48,10 @@ class Harness:
             settings=lambda: self.cfg,
             gesture=self.gesture,
             cancel_gesture=self.cancel,
+            action=self.action if use_actions else None,
+            cancel_action=self.cancel,
             clock=lambda: self.now,
+            rng=random.Random(1234),
         )
         self.d.start()
 
@@ -56,6 +62,10 @@ class Harness:
     def gesture(self, name: str) -> bool:
         self.gestures.append(name)
         return True
+
+    def action(self, name: str, *, idle: bool = False) -> tuple[bool, str]:
+        self.actions.append((name, idle))
+        return True, ""
 
     def cancel(self) -> None:
         self.cancelled += 1
@@ -68,6 +78,12 @@ class Harness:
         while time.monotonic() < deadline and len(self.plays) < count:
             time.sleep(0.01)
         return list(self.plays)
+
+    def wait_actions(self, count: int, timeout: float = 1.5) -> list[tuple[str, bool]]:
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline and len(self.actions) < count:
+            time.sleep(0.01)
+        return list(self.actions)
 
     def quiet(self, seconds: float = 0.15) -> list[str]:
         time.sleep(seconds)
@@ -231,6 +247,46 @@ class IdleTest(unittest.TestCase):
         self.h.d.on_state(state())
         self.assertEqual(self.h.wait(1), ["coo"])
         self.assertEqual(self.h.gestures, [])
+
+
+class IdleActionTest(unittest.TestCase):
+    """v3：空闲从动作库随机挑一个，声音和动作一起。"""
+
+    def setUp(self):
+        self.h = Harness(use_actions=True)
+
+    def tearDown(self):
+        self.h.close()
+
+    def test_idle_action_uses_its_own_sound(self):
+        self.h.cfg["idle"].update({"after_s": 10, "library": ["circle"]})
+        self.h.d.on_state(state())
+        self.h.advance(10.5)
+        self.h.d.on_state(state())
+        self.assertEqual(self.h.wait(1), ["greet"])
+        self.assertEqual(self.h.wait_actions(1), [("circle", True)])
+
+    def test_idle_action_never_repeats_the_last_choice(self):
+        self.h.cfg["idle"].update({"after_s": 10, "repeat_s": 15,
+                                   "library": ["look_up", "look_around"]})
+        self.h.d.on_state(state())
+        self.h.advance(10.5)
+        self.h.d.on_state(state())
+        self.assertTrue(self.h.wait_actions(1))
+        self.h.advance(15.5)
+        self.h.d.on_state(state())
+        names = [name for name, _ in self.h.wait_actions(2)]
+        self.assertEqual(len(names), 2)
+        self.assertNotEqual(names[0], names[1])
+
+    def test_gesture_off_keeps_the_old_sound_only_cadence(self):
+        self.h.cfg["idle"].update({"after_s": 10, "gesture": False,
+                                   "library": ["circle"]})
+        self.h.d.on_state(state())
+        self.h.advance(10.5)
+        self.h.d.on_state(state())
+        self.assertEqual(self.h.wait(1), ["coo"])
+        self.assertEqual(self.h.actions, [])
 
 
 class AlarmTest(unittest.TestCase):

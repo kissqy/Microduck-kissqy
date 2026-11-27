@@ -16,15 +16,18 @@ import tempfile
 import threading
 from pathlib import Path
 
+from actions import IDLE_ACTION_NAMES
+
 LOG = logging.getLogger("duckphone.audio.settings")
 
 DEFAULTS = {
-    "version": 2,
+    "version": 3,
     "idle": {
         "after_s": 30,
         "repeat_s": 300,
         "max_per_hour": 12,
         "gesture": True,
+        "library": list(IDLE_ACTION_NAMES),
     },
     "fall": {
         "repeat_s": 5,
@@ -113,6 +116,15 @@ def _number(value, default, cast, low, high):
     return max(low, min(high, number))
 
 
+def _library(value) -> list[str]:
+    """Keep known action names, in protocol order, without duplicates."""
+    if not isinstance(value, (list, tuple)):
+        return list(IDLE_ACTION_NAMES)
+    known = set(IDLE_ACTION_NAMES)
+    picked = {name for name in value if isinstance(name, str) and name in known}
+    return [name for name in IDLE_ACTION_NAMES if name in picked] or list(IDLE_ACTION_NAMES)
+
+
 class AudioSettings:
     """Load, validate, save and hand out a snapshot of the audio config."""
 
@@ -158,7 +170,7 @@ class AudioSettings:
 
     def _merge(self, base: dict, patch: dict) -> dict:
         out = copy.deepcopy(base)
-        out["version"] = 2
+        out["version"] = 3
         for section, keys in NUMBERS.items():
             incoming = patch.get(section)
             if not isinstance(incoming, dict):
@@ -173,6 +185,9 @@ class AudioSettings:
             for key in keys:
                 if key in incoming and isinstance(incoming[key], bool):
                     out[section][key] = incoming[key]
+        incoming = patch.get("idle")
+        if isinstance(incoming, dict) and "library" in incoming:
+            out["idle"]["library"] = _library(incoming["library"])
         # A repeat shorter than the first prompt would make the cadence collapse.
         out["idle"]["repeat_s"] = max(out["idle"]["repeat_s"], out["idle"]["after_s"])
         return out

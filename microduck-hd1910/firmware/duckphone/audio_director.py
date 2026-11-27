@@ -14,10 +14,12 @@ from __future__ import annotations
 
 import copy
 import logging
+import random
 import threading
 import time
 from dataclasses import dataclass
 
+from actions import ACTIONS, action_sound
 from audio_settings import DEFAULTS
 
 LOG = logging.getLogger("duckphone.audio")
@@ -34,6 +36,7 @@ class _Play:
     tag: str
     trigger: str
     priority: int
+    action: str | None = None
 
 
 class AudioDirector:
@@ -53,7 +56,10 @@ class AudioDirector:
         settings=None,
         gesture=None,
         cancel_gesture=None,
+        action=None,
+        cancel_action=None,
         clock=time.monotonic,
+        rng=None,
     ) -> None:
         self._play = play
         self._enabled = enabled
@@ -61,7 +67,10 @@ class AudioDirector:
         self._settings = settings or (lambda: copy.deepcopy(DEFAULTS))
         self._gesture = gesture
         self._cancel_gesture = cancel_gesture
+        self._action = action
+        self._cancel_action = cancel_action
         self._clock = clock
+        self._rng = rng or random.Random()
 
         self._cv = threading.Condition()
         self._pending: _Play | None = None
@@ -77,6 +86,7 @@ class AudioDirector:
         self._idle_sent = False
         self._idle_next = 0.0
         self._idle_times: list[float] = []
+        self._last_idle_action: str | None = None
 
         self._last_policy = ""
         self._fall = False
@@ -110,9 +120,11 @@ class AudioDirector:
         self._last_input = self._clock()
         self._idle_sent = False
         self._idle_next = 0.0
-        # A user input always wins over a cute idle head movement.
+        # A user input always wins over a cute idle movement.
         if self._cancel_gesture:
             self._cancel_gesture()
+        if self._cancel_action:
+            self._cancel_action()
 
     def note_manual(self) -> None:
         """A manual sound was just requested; give it the floor."""
@@ -154,6 +166,8 @@ class AudioDirector:
                     self._pending = None
                 if self._cancel_gesture:
                     self._cancel_gesture()
+                if self._cancel_action:
+                    self._cancel_action()
         if not on or s.get("ro"):
             return
 
@@ -276,6 +290,35 @@ class AudioDirector:
         if alerts["bus"] and isinstance(err, (int, float)) and err >= advanced["bus_error_count"]:
             self._submit("alarm", "E8", P0, cooldown=30.0, cfg=cfg)
 
+    def _pick_idle_action(self, cfg: dict, policy: str) -> str | None:
+        names = [name for name in cfg["idle"]["library"] if name in ACTIONS]
+        if not names:
+            names = list(ACTIONS)
+        names = [name for name in names
+                 if not ACTIONS[name].get("requires_walk") or policy == "walk"]
+        if not names:
+            return None
+        # Do not repeat the same action twice in a row when there is a choice.
+        if len(names) > 1 and self._last_idle_action in names:
+            names = [name for name in names if name != self._last_idle_action]
+        name = self._rng.choice(names)
+        self._last_idle_action = name
+        return name
+
+    def _submit_idle(self, cfg: dict, policy: str, *, first: bool) -> None:
+        if cfg["idle"]["gesture"] and self._action:
+            name = self._pick_idle_action(cfg, policy)
+            if name:
+                LOG.info("空闲动作选择 %s（库 %s，policy=%s）",
+                         name, cfg["idle"]["library"], policy)
+                self._submit(action_sound(name) or "coo", f"IA:{name}", P2,
+                             cooldown=0.0, cfg=cfg, action=name)
+                return
+        # No action available (gesture off, or policy not walk): keep the v2
+        # sound-only cadence.
+        self._submit("coo" if first else "inquire", "I1" if first else "I2",
+                     P2, cooldown=0.0, cfg=cfg)
+
     def _check_idle(self, s: dict, now: float, cfg: dict) -> None:
         idle_cfg = cfg["idle"]
         policy = str(s.get("pol") or "")
@@ -293,38 +336,46 @@ class AudioDirector:
         idle = now - self._last_input
         if not self._idle_sent:
             if idle >= idle_cfg["after_s"]:
+                LOG.info("空闲达到阈值：idle=%.1fs policy=%s", idle, policy)
                 self._idle_sent = True
                 self._idle_next = now + idle_cfg["repeat_s"]
                 self._idle_times = [t for t in self._idle_times if now - t < 3600.0]
                 if len(self._idle_times) < idle_cfg["max_per_hour"]:
                     self._idle_times.append(now)
-                    self._submit("coo", "I1", P2, cooldown=0.0, cfg=cfg)
+                    self._submit_idle(cfg, policy, first=True)
         elif now >= self._idle_next:
             self._idle_next = now + idle_cfg["repeat_s"]
             self._idle_times = [t for t in self._idle_times if now - t < 3600.0]
             if len(self._idle_times) < idle_cfg["max_per_hour"]:
                 self._idle_times.append(now)
-                self._submit("inquire", "I2", P2, cooldown=0.0, cfg=cfg)
+                self._submit_idle(cfg, policy, first=False)
 
     # ── playback queue: one worker, latest wins ──────────────────────────
     def _submit(self, tag: str, trigger: str, priority: int, *, cooldown: float,
-                cfg: dict | None = None) -> None:
+                cfg: dict | None = None, action: str | None = None) -> None:
         now = self._clock()
         cfg = cfg or self._settings()
         if not self._enabled():
             return
         if priority > P0 and now < self._manual_until:
+            if trigger.startswith("IA:"):
+                LOG.info("空闲动作被手动声音抑制")
             return
         last = self._last_trigger.get(trigger)
         if cooldown and last is not None and now - last < cooldown:
             return
         if priority >= P1 and now - self._last_play < cfg["advanced"]["min_gap_s"]:
+            if trigger.startswith("IA:"):
+                LOG.info("空闲动作被节流：距上次声音 %.1fs", now - self._last_play)
             return
         self._last_trigger[trigger] = now
-        if priority == P0 and self._cancel_gesture:
-            # A safety alarm should not be accompanied by a cute head movement.
-            self._cancel_gesture()
-        req = _Play(tag, trigger, priority)
+        if priority == P0:
+            # A safety alarm should not be accompanied by a cute movement.
+            if self._cancel_gesture:
+                self._cancel_gesture()
+            if self._cancel_action:
+                self._cancel_action()
+        req = _Play(tag, trigger, priority, action)
         with self._cv:
             if self._pending is None or priority <= self._pending.priority:
                 self._pending = req
@@ -349,7 +400,11 @@ class AudioDirector:
                 if accepted:
                     self._last_play = self._clock()
                     LOG.info("动态声音 %s（%s，P%d）", req.tag, req.trigger, req.priority)
-                    if req.trigger in ("I1", "I2") and self._gesture:
+                    if req.action and self._action:
+                        ok, reason = self._action(req.action, idle=True)
+                        if not ok:
+                            LOG.info("空闲动作 %s 未执行：%s", req.action, reason)
+                    elif req.trigger in ("I1", "I2") and self._gesture:
                         if self._settings()["idle"]["gesture"]:
                             self._gesture(req.trigger)
                 else:

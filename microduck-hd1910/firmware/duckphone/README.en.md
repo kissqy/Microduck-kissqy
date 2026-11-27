@@ -33,8 +33,9 @@ opens no device, asks for no root, and makes no decision `robotd` would not make
 | Head | the same stick in head mode: left/right yaw, up/down pitch; releasing or losing the link returns to neutral |
 | Sound | speaker button in the footer: seven bank tags; hold “wheee” for the long call |
 | Dynamic sound | on by default after takeover: actions, alarms and idle call automatically; switch at the bottom of the sound drawer; the console's LB is the same switch |
-| Sound settings | idle cadence, fall/tilt cadence, action feedback and alert categories; saved to `/etc/duckphone/audio.json` and hot-applied |
-| Idle head gesture | first idle looks up for 1.2 s, later idles look left/right for 1.6 s; stops on any user input |
+| Sound settings | idle cadence and random-action pool, fall/tilt cadence, action feedback and alert categories; saved to `/etc/duckphone/audio.json` (version 3) and hot-applied |
+| Preset actions | footer 动作 drawer: look up, look around, circle, quack; playable while standing still, cancels on any stick input |
+| Idle actions | one action from the configured pool (four by default) with the idle sound; never the same twice in a row |
 | Volume / mute | volume is written to the codec with `amixer`, and persisted with `alsactl` when passwordless sudo is available |
 | Policy bar | lists the policies installed on this robot; one press runs one; `walk` is the resting state, everything else falls back to it |
 | Take over / hand back | one driver at a time, a second device is read-only; `policies` is served to read-only too |
@@ -46,8 +47,8 @@ opens no device, asks for no root, and makes no decision `robotd` would not make
 ## Sound and head
 
 - Head mode is live only while `policy == walk`; the stick area dims in `held`, `limp` or fallen.
-- Head intents are clamped to ±0.8 rad, deliberately larger than `padd`'s default 0.5 rad; robotd
-  still applies the policy/joint limits. On this robot a
+- Stick head intents are clamped to ±0.8 rad; preset actions may use up to 1.2 rad (the circle uses
+  1.0), and robotd still applies the policy/joint limits. On this robot a
   negative `head_pitch` looks up, so the page maps “up” to a negative value and inverts the readout.
 - `robotd` has no deadman for head. The bridge adds a 250 ms watchdog: releasing the stick, hiding the
   page, losing the link, `/stop` and session end all return the head to neutral.
@@ -60,15 +61,26 @@ opens no device, asks for no root, and makes no decision `robotd` would not make
   and idle (first 30 s, then every 300 s). Off by default, auto-on when a phone takes the wheel.
   The phone sends `dynamicSound` over the WebSocket; the console uses
   `GET/POST http://<board-ip>:8001/api/dynamic-sound` — one shared state.
-- The settings drawer at the bottom of the sound drawer edits idle timing/head gesture, fall/tilt
-  cadence, action feedback and alert categories. It saves to `/etc/duckphone/audio.json`
+- The settings drawer at the bottom of the sound drawer edits idle timing/action switch/random pool,
+  fall/tilt cadence, action feedback and alert categories. It saves to `/etc/duckphone/audio.json`
   (validated, clamped, atomic write) and applies without a restart. Read-only sessions can view it
   but not save. Phone WebSocket commands: `audioConfig`, `setAudioConfig`, `resetAudioConfig`;
   console HTTP: `GET/POST /api/audio-config`.
-- Idle head gesture: I1 looks up (`head_pitch=-0.30`) for 1.2 s, I2 looks left/right
-  (`head_yaw=±0.30`) for 1.6 s, refreshed at 10 Hz so the 250 ms watchdog does not zero it.
-  Any drive/head/command input, takeover, dynamic-sound off or P0 alarm cancels it; it ends at
-  neutral. With `idle.gesture=false` the idle sound plays without moving the head.
+- Preset actions run in `actions.py`: look up 1.2 s, look around 1.6 s, circle 3.9 s, quack 2.1 s.
+  Phone WebSocket: `action {action:"circle"}` and `cancelAction`; state carries
+  `act`/`actIdle`, the ack carries `sound` (the motion still runs when the robot has no voice).
+  Any drive/head/command input, takeover, stop, relax, dynamic-sound off or P0 alarm cancels it;
+  it ends with head centred, mouth closed, gait zeroed and pose inactive.
+- The sound follows the whole action: look up coo ×2, look around inquire ×3, circle greet ×5,
+  quack chirp ×3 (one per mouth opening). The first beat is played by the manual/idle entry;
+  the action thread adds the rest, so a short call no longer leaves the action silent.
+- The circle is not a continuous 360° spin: `head_yaw` only has ±170° of travel, so the nose draws
+  three circles in the air (yaw ±1.0, pitch −0.20±0.25, roll ±0.08).
+- **Marching in place was removed**: the walk policy does not take a real step for short
+  alternating commands, so it needs a dedicated trained action/skill.
+- Idle picks one action from `idle.library` (four by default, never the same twice in a row); the
+  action supplies its own sound. If no action is available the idle sound still plays.
+  With `idle.gesture=false` the idle sound plays without moving.
 - Volume is 0–100 over `PCM Playback Volume` / `Line Playback Switch`; a failed `alsactl store` is
   reported but does not undo the volume that is already in effect.
 

@@ -24,6 +24,13 @@
   const HEAD_MAX = 0.8;
   const HEAD_REFRESH_MS = 60;
   const SOUND_TAGS = ['chirp', 'greet', 'inquire', 'coo', 'alarm', 'peck', 'wheee'];
+  // Mirrors actions.py; the bridge is the source of truth for the actual frames.
+  const PRESETS = {
+    look_up:     { label: '抬头',   dur: 1.2 },
+    look_around: { label: '左右看', dur: 1.6 },
+    circle:      { label: '画圈',   dur: 3.9 },
+    quack:       { label: '张嘴',   dur: 2.1 },
+  };
   const TOKEN_KEY = 'duck.token';
   const SPEED_KEY = 'duck.speed';
   const NAME_KEY = 'duck.name';
@@ -32,7 +39,8 @@
   // Mirrors audio_settings.py; used before the bridge sends its config and for
   // the "restore defaults" button. The bridge remains the source of truth.
   const AUDIO_DEFAULTS = {
-    idle: { after_s: 30, repeat_s: 300, max_per_hour: 12, gesture: true },
+    idle: { after_s: 30, repeat_s: 300, max_per_hour: 12, gesture: true,
+            library: ['look_up', 'look_around', 'circle', 'quack'] },
     fall: { repeat_s: 5, max_repeats: 6, tail_s: 60 },
     tilt: { deg: 30, repeat_s: 10 },
     actions: { takeover: true, handback: true, skill_start: true, skill_end: true,
@@ -61,6 +69,10 @@
     sound: { volume: null, mute: false, prev: 60, wheee: false },
     dyn: false,            // 桥接层动态声音总开关；接管后默认开
     audio: null,           // 桥接层动态声音配置；hello/audioConfig 下发
+    act: null,             // 正在播放的预设动作名
+    actIdle: false,        // 是否空闲自动触发
+    actStarted: 0,
+    actDur: 0,
     limited: [],
     hz: 0,
     missed: 0,
@@ -134,6 +146,10 @@
     tiltBubble: $('#tiltBubble'),
     tiltDot: $('#tiltDot'),
     tiltVal: $('#tiltVal'),
+    btnActions: $('#btnActions'), actionsSheet: $('#actionsSheet'), actGrid: $('#actGrid'),
+    actHint: $('#actHint'), actReadonly: $('#actReadonly'),
+    btnActStop: $('#btnActStop'), btnActClose: $('#btnActClose'),
+    idlePool: $('#idlePool'),
     btnSound: $('#btnSound'),
     btnMaint: $('#btnMaint'),
 
@@ -418,6 +434,16 @@
     S.tilt = Number(msg.tilt) || 0;
     S.padd = !!msg.padd;
     if (typeof msg.dyn === 'boolean') S.dyn = msg.dyn;
+    const wasAct = S.act;
+    S.act = typeof msg.act === 'string' && msg.act ? msg.act : null;
+    S.actIdle = !!msg.actIdle;
+    if (S.act && S.act !== wasAct) {
+      S.actStarted = performance.now();
+      S.actDur = PRESETS[S.act]?.dur || 0;
+    } else if (!S.act) {
+      S.actStarted = 0;
+      S.actDur = 0;
+    }
     if (typeof msg.paddCanStop === 'boolean') S.paddCanStop = msg.paddCanStop;
     if (msg.robotd) S.robotd = msg.robotd;
     const wasRo = S.ro;
@@ -475,6 +501,7 @@
         ok: !!msg.ok, reason: msg.reason || '', policies: msg.policies,
         volume: msg.volume, muted: msg.muted, saved: msg.saved, message: msg.message,
         enabled: msg.enabled, config: msg.config,
+        action: msg.action, sound: msg.sound,
       });
     }
     if (typeof msg.padd === 'boolean') S.padd = msg.padd;
@@ -628,6 +655,7 @@
     updateStickModeUI();
     renderPolicyBar();
     updateDynUI();
+    updateActUI();
   }
 
   function updateTopbar() {
@@ -760,6 +788,142 @@
     // 只有 walk 网络在驱动时才接受速度指令。跑技能时（roulade / kick_left…）
     // robotd 的优先级链是 skill > walk，推摇杆也不会动，所以这里直接禁用。
     return canAct() && !S.limp && !S.fallen && S.policy === 'walk';
+  }
+
+  // ── 预设动作 ───────────────────────────────────────────────────────────
+  function canPresetAct() {
+    return canAct() && !S.limp && !S.fallen && S.policy === 'walk'
+      && !S.padd && !S.act && !(S.req[0] || S.req[2]);
+  }
+
+  function presetBlockedReason() {
+    if (S.link !== 'online') return '未连接';
+    if (S.role !== 'driver') return '只读会话不能播放';
+    if (S.ro) return '机器人处于标定模式';
+    if (S.limp) return '机器人已卸力，先站立';
+    if (S.fallen) return '机器人倒地，先站起';
+    if (S.policy !== 'walk') return '先站立并接管行走策略';
+    if (S.padd) return '手柄服务正在运行，先停止它';
+    if (S.req[0] || S.req[2]) return '机器人正在移动，先松开摇杆';
+    if (S.act) return `还有动作在播放：${PRESETS[S.act]?.label || S.act}`;
+    return '';
+  }
+
+  function updateActUI() {
+    if (!el.actionsSheet) return;
+    const readonly = S.link === 'online' && S.role !== 'driver';
+    el.btnActions.disabled = S.link !== 'online';
+    el.btnActions.classList.toggle('active', !el.actionsSheet.classList.contains('hidden'));
+    if (el.actReadonly) el.actReadonly.classList.toggle('hidden', !readonly);
+
+    if (el.actHint) {
+      if (S.act) {
+        el.actHint.textContent = `${S.actIdle ? '空闲动作' : '正在播放'}：${PRESETS[S.act]?.label || S.act}`;
+      } else if (readonly) {
+        el.actHint.textContent = '只读 · 可以看，不能播放';
+      } else if (!canPresetAct()) {
+        el.actHint.textContent = presetBlockedReason() || '现在不能播放';
+      } else {
+        el.actHint.textContent = '站立或静止时可播放；播放中一碰摇杆就停。';
+      }
+    }
+
+    const p = S.act && S.actDur
+      ? clamp((performance.now() - S.actStarted) / (S.actDur * 1000), 0, 1)
+      : 0;
+    for (const b of el.actGrid.querySelectorAll('.preset')) {
+      const name = b.dataset.act;
+      const playing = S.act === name;
+      b.disabled = !playing && (!canPresetAct() || readonly);
+      b.classList.toggle('playing', playing);
+      const bar = b.querySelector('.p-bar i');
+      if (bar) bar.style.width = playing ? `${Math.round(p * 100)}%` : '0';
+      let badge = b.querySelector('.p-badge');
+      if (playing && S.actIdle) {
+        if (!badge) {
+          badge = document.createElement('span');
+          badge.className = 'p-badge';
+          badge.textContent = '空闲动作';
+          b.appendChild(badge);
+        }
+      } else if (badge) {
+        badge.remove();
+      }
+    }
+    if (el.btnActStop) el.btnActStop.disabled = !S.act;
+  }
+
+  function openActions() {
+    hideSheets();
+    stopStick();
+    render();
+    el.actionsSheet.classList.remove('hidden');
+    el.btnActions.classList.add('active');
+    pushSheet();
+  }
+
+  function closeActions() {
+    el.actionsSheet.classList.add('hidden');
+    el.btnActions.classList.remove('active');
+    dropSheet();
+  }
+
+  async function startAction(name) {
+    if (!PRESETS[name]) return;
+    if (!canPresetAct()) { toast(presetBlockedReason() || '现在不能播放', 'warn'); return; }
+    const res = await cmd('action', { action: name });
+    if (!res.ok) { toast(res.reason || '动作被拒绝', 'err'); return; }
+    S.act = name;
+    S.actIdle = false;
+    S.actStarted = performance.now();
+    S.actDur = PRESETS[name].dur;
+    if (res.sound === false) toast('动作已开始，但机器人没有发声', 'warn', 3200);
+    else toast(`播放 ${PRESETS[name].label} · ${PRESETS[name].dur.toFixed(1)} s`);
+    pushEvent('action', 'ok', `播放预设：${PRESETS[name].label}`, `${name} · ${PRESETS[name].dur.toFixed(1)} s`);
+    render();
+  }
+
+  async function cancelAction() {
+    if (!S.act) return;
+    const name = S.act;
+    S.act = null;
+    S.actIdle = false;
+    S.actStarted = 0;
+    S.actDur = 0;
+    render();
+    const res = await cmd('cancelAction');
+    if (!res.ok) toast(res.reason || '停止动作失败', 'err');
+    else toast(`已停止 ${PRESETS[name]?.label || name}`);
+  }
+
+  function tickAction() {
+    if (!S.act) return;
+    if (S.actDur && performance.now() - S.actStarted > S.actDur * 1000 + 800) {
+      S.act = null;
+      S.actIdle = false;
+      S.actStarted = 0;
+      S.actDur = 0;
+      render();
+      return;
+    }
+    updateActUI();
+  }
+
+  function readPool() {
+    if (!el.idlePool) return [];
+    return [...el.idlePool.querySelectorAll('.pool-chip')]
+      .filter((b) => b.classList.contains('on')).map((b) => b.dataset.pool);
+  }
+
+  function fillPool(pool) {
+    if (!el.idlePool) return;
+    const set = new Set(Array.isArray(pool) && pool.length ? pool : AUDIO_DEFAULTS.idle.library);
+    for (const b of el.idlePool.querySelectorAll('.pool-chip')) {
+      const on = set.has(b.dataset.pool);
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', String(on));
+      b.disabled = !settingsCanEdit();
+    }
   }
 
   let stickModeSig = '';
@@ -1213,7 +1377,9 @@
     el.maint.classList.add('hidden');
     el.sound.classList.add('hidden');
     el.settings.classList.add('hidden');
+    el.actionsSheet.classList.add('hidden');
     el.btnSound.classList.remove('active');
+    el.btnActions.classList.remove('active');
   }
 
   function dismissSheets() {
@@ -1306,8 +1472,9 @@
     const idle = audioCfg().idle;
     const rep = idle.repeat_s % 60 === 0 && idle.repeat_s >= 60
       ? `${idle.repeat_s / 60} 分钟` : `${idle.repeat_s} 秒`;
+    const pool = Array.isArray(idle.library) ? idle.library.length : 0;
     return `接管后默认开启；首次空闲 ${idle.after_s} s、之后每 ${rep}`
-      + `${idle.gesture ? '，带抬头/左右看' : ''}。`;
+      + `${idle.gesture && pool ? `，从 ${pool} 个动作里随机` : ''}。`;
   }
 
   function updateDynUI() {
@@ -1354,9 +1521,11 @@
     for (const b of $$('[data-set-toggle]')) {
       b.setAttribute('aria-checked', String(state[b.dataset.setToggle] === true));
     }
+    fillPool(cfg.idle.library);
     const can = settingsCanEdit();
     for (const input of el.settings.querySelectorAll('input')) input.disabled = !can;
     for (const b of $$('[data-set-toggle]')) b.disabled = !can;
+    for (const b of el.idlePool?.querySelectorAll('.pool-chip') || []) b.disabled = !can;
     el.btnSettingsSave.disabled = !can;
     el.btnSettingsReset.disabled = !can;
     el.setHint.textContent = can
@@ -1384,6 +1553,7 @@
         repeat_s: repeat,
         max_per_hour: num(el.setIdleMax, 12, 1, 60),
         gesture: readSetToggle('gesture'),
+        library: readPool().length ? readPool() : AUDIO_DEFAULTS.idle.library,
       },
       fall: {
         repeat_s: num(el.setFallRepeat, 5, 2, 30),
@@ -1491,6 +1661,26 @@
     if (b) b.classList.remove('playing');
     if (canAct()) cmd('sound', { tag: 'wheee', hold: false });
   }
+
+  el.btnActions.addEventListener('click', openActions);
+  el.btnActClose.addEventListener('click', closeActions);
+  el.actionsSheet.addEventListener('click', (e) => {
+    if (e.target === el.actionsSheet) closeActions();
+  });
+  el.actGrid.addEventListener('click', (e) => {
+    const b = e.target.closest('.preset');
+    if (!b || b.disabled) return;
+    startAction(b.dataset.act);
+  });
+  el.btnActStop.addEventListener('click', () => cancelAction());
+  el.idlePool.addEventListener('click', (e) => {
+    const b = e.target.closest('.pool-chip');
+    if (!b || b.disabled) return;
+    const on = !b.classList.contains('on');
+    if (!on && readPool().length <= 1) { toast('随机池至少保留一个动作', 'warn'); return; }
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', String(on));
+  });
 
   el.btnSound.addEventListener('click', openSound);
   el.btnSoundClose.addEventListener('click', dismissSheets);
@@ -1998,6 +2188,10 @@
     if (document.visibilityState === 'hidden') {
       S.req = [0, 0, 0];
       S.headReq = { yaw: 0, pitch: 0 };
+      S.act = null;
+      S.actIdle = false;
+      S.actStarted = 0;
+      S.actDur = 0;
       sendDrive();
       if (canAct()) sendHeadZero();
       stopWheee();
@@ -2011,6 +2205,10 @@
   window.addEventListener('pagehide', () => {
     S.req = [0, 0, 0];
     S.headReq = { yaw: 0, pitch: 0 };
+    S.act = null;
+    S.actIdle = false;
+    S.actStarted = 0;
+    S.actDur = 0;
     if (canAct()) sendHeadZero();
     stopWheee();
     try { navigator.sendBeacon('/stop', '{}'); } catch (_) {}
@@ -2067,6 +2265,7 @@
   }
   setInterval(rememberLast, 5000);
   setInterval(maybeRefreshPolicies, 5000);
+  setInterval(tickAction, 100);
 
   // ── Service Worker ─────────────────────────────────────────────────────
   let swReg = null;

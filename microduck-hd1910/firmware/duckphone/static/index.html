@@ -11,7 +11,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/icon-192.png">
-<link rel="stylesheet" href="/style.css?v=13">
+<link rel="stylesheet" href="/style.css?v=14">
 <title>Duck 遥控</title>
 </head>
 <body>
@@ -153,6 +153,10 @@
       <div class="bubble" id="tiltBubble"><i id="tiltDot"></i></div>
       <span>倾角 <b id="tiltVal" style="color:var(--text)">8.5°</b></span>
     </div>
+    <button id="btnActions" type="button" aria-label="打开预设动作" title="预设动作">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5.5v13l10-6.5Z"/><path d="M4 5.5v13"/></svg>
+      <span>动作</span>
+    </button>
     <button id="btnSound" type="button" aria-label="打开声音面板" title="声音">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
     </button>
@@ -371,6 +375,49 @@
   </div>
 </div>
 
+<!-- 预设动作 -->
+<div id="actionsSheet" class="overlay hidden">
+  <div class="drawer">
+    <div class="grab"></div>
+    <h2>预设动作</h2>
+    <div class="hint" id="actHint">站立或静止时可播放；播放中一碰摇杆就停。</div>
+    <div class="act-ro hidden" id="actReadonly">只读 · 不能播放</div>
+
+    <div class="act-grid" id="actGrid">
+      <button class="preset" type="button" data-act="look_up">
+        <span class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V7"/><path d="m7 12 5-5 5 5"/></svg></span>
+        <span class="p-txt"><b>抬头</b><small>抬头看一眼</small></span>
+        <span class="p-meta">1.2 s · 咕咕 ×2</span>
+        <span class="p-bar"><i></i></span>
+      </button>
+      <button class="preset" type="button" data-act="look_around">
+        <span class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 3 10 3-7 2 2h4"/></svg></span>
+        <span class="p-txt"><b>左右看</b><small>头转向两边</small></span>
+        <span class="p-meta">1.6 s · 疑问 ×3</span>
+        <span class="p-bar"><i></i></span>
+      </button>
+      <button class="preset" type="button" data-act="circle">
+        <span class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg></span>
+        <span class="p-txt"><b>画圈</b><small>头在空中画 3 圈</small></span>
+        <span class="p-meta">3.9 s · 打招呼 ×5</span>
+        <span class="p-bar"><i></i></span>
+      </button>
+      <button class="preset" type="button" data-act="quack">
+        <span class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h7l5-4v12l-5-4H4Z"/><path d="m19 9 2 3-2 3"/></svg></span>
+        <span class="p-txt"><b>张嘴</b><small>嘴开合 3 次</small></span>
+        <span class="p-meta">2.1 s · 短叫 ×3</span>
+        <span class="p-bar"><i></i></span>
+      </button>
+    </div>
+
+    <div class="row" style="border-top:0">
+      <div class="grow"><div class="d">动作由桥执行；结束回中，摇杆/停止/卸力/P0 告警会立即打断。</div></div>
+      <button class="mini" id="btnActStop" type="button" disabled>停止</button>
+      <button class="mini" id="btnActClose" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+
 <!-- 动态声音设置 -->
 <div id="settings" class="overlay hidden">
   <div class="drawer">
@@ -392,9 +439,21 @@
       <div class="num"><input id="setIdleMax" type="number" min="1" max="60" step="1" value="12"><span>次</span></div>
     </div>
     <div class="row">
-      <div class="grow"><div class="t">空闲头部动作</div><div class="d">第一次抬头，之后左右看。</div></div>
+      <div class="grow"><div class="t">空闲动作</div><div class="d">空闲时从下面的随机池里挑一个；关掉只发声、不动作。</div></div>
       <button class="switch" data-set-toggle="gesture" type="button" role="switch"
-              aria-checked="true" aria-label="空闲头部动作"><span></span></button>
+              aria-checked="true" aria-label="空闲动作"><span></span></button>
+    </div>
+    <div class="row">
+      <div class="grow">
+        <div class="t">随机池</div>
+        <div class="d">至少保留一个动作；空闲时随机挑一个。</div>
+        <div class="pool" id="idlePool">
+          <button class="pool-chip on" type="button" data-pool="look_up" aria-pressed="true">抬头</button>
+          <button class="pool-chip on" type="button" data-pool="look_around" aria-pressed="true">左右看</button>
+          <button class="pool-chip on" type="button" data-pool="circle" aria-pressed="true">画圈</button>
+          <button class="pool-chip on" type="button" data-pool="quack" aria-pressed="true">张嘴</button>
+        </div>
+      </div>
     </div>
 
     <div class="set-sec">告警节奏</div>
@@ -508,6 +567,6 @@
 
 <div id="toasts" aria-live="polite"></div>
 
-<script src="/app.js?v=13"></script>
+<script src="/app.js?v=14"></script>
 </body>
 </html>

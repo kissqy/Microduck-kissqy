@@ -89,9 +89,31 @@ class AudioSettingsTest(unittest.TestCase):
         s = self.settings()
         s.update({"actions": {"refusal": False}})
         raw = json.loads(self.path.read_text(encoding="utf-8"))
-        self.assertEqual(raw["version"], 2)
+        self.assertEqual(raw["version"], 3)
         self.assertFalse(raw["actions"]["refusal"])
         self.assertIn("advanced", raw)
+        self.assertEqual(raw["idle"]["library"], DEFAULTS["idle"]["library"])
+
+    def test_idle_library_keeps_known_actions_once(self):
+        s = self.settings()
+        cfg = s.update({"idle": {"library": ["quack", "nope", "circle", "quack"]}})
+        self.assertEqual(cfg["idle"]["library"], ["circle", "quack"])
+
+    def test_empty_idle_library_falls_back(self):
+        s = self.settings()
+        cfg = s.update({"idle": {"library": []}})
+        self.assertEqual(cfg["idle"]["library"], DEFAULTS["idle"]["library"])
+
+    def test_v2_file_gets_the_default_library(self):
+        self.path.write_text(json.dumps({
+            "version": 2,
+            "idle": {"after_s": 40, "repeat_s": 120, "max_per_hour": 6, "gesture": False},
+        }), encoding="utf-8")
+        cfg = self.settings().snapshot()
+        self.assertEqual(cfg["version"], 3)
+        self.assertEqual(cfg["idle"]["after_s"], 40)
+        self.assertFalse(cfg["idle"]["gesture"])
+        self.assertEqual(cfg["idle"]["library"], DEFAULTS["idle"]["library"])
 
 
 if __name__ == "__main__":

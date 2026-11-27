@@ -271,12 +271,30 @@ class RobotRPC:
             "head_yaw": head_yaw, "head_roll": head_roll,
         })
 
+    def mouth(self, open: float) -> None:
+        """Continuous mouth intent; 0 closed, 1 fully open."""
+        level = min(1.0, max(0.0, float(open)))
+        self.notify("robot.mouth", {"open": level})
+
+    def pose(self, z: float, roll: float, pitch: float, active: bool = True) -> None:
+        """Standing body-pose offsets, clamped to the trained envelope."""
+        self.notify("robot.pose", {
+            "z": min(0.010, max(-0.025, float(z))),
+            "roll": min(0.26, max(-0.26, float(roll))),
+            "pitch": min(0.26, max(-0.26, float(pitch))),
+            "active": bool(active),
+        })
+
     def sound(self, tag: str, hold: bool | None = None) -> dict:
         """Play one voice-bank tag. `hold` is only meaningful for `wheee`."""
         params: dict[str, Any] = {"tag": tag}
         if hold is not None:
             params["hold"] = bool(hold)
         return self.request("robot.sound", params, timeout=3.0)
+
+    def sound_async(self, tag: str) -> None:
+        """Fire-and-forget beat for an action; never blocks the 20 Hz loop."""
+        self.notify("robot.sound", {"tag": tag})
 
     def stop(self) -> dict:
         return self.request("robot.stop", None, timeout=2.0)

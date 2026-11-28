@@ -853,11 +853,20 @@ sudo robotctl net connect <ssid> --psk-stdin
 ```
 
 ```
+sudo robotctl net connect <ssid> --psk-stdin --ipv4 192.168.110.50 --prefix 24 --gateway 192.168.110.1
+```
+
+```
 sudo robotctl net forget <ssid>
 ```
 
 `--psk-stdin` keeps the passphrase out of `ps`, which shows a `--psk` argument to every user on the
 box for the lifetime of the command. Prefer it on anything shared.
+
+`--ipv4` (with `--prefix`, `--gateway`, `--dns`) pins the address instead of taking a lease. It is
+stored in the NetworkManager profile, so the robot comes back on it after a reboot — which also means
+a wrong address is undone over BLE or a serial console, not over the network you just lost. To go back
+to DHCP, run the same command without the `--ipv4` group.
 
 Joining a network **disconnects the robot from the one it is on**, so an ssh session over wifi will
 drop. That is the operation working. A scan takes a few seconds — it waits for the radio to sweep

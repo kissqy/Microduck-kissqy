@@ -651,6 +651,7 @@ mod tests {
             proto::Call::NetConnect(proto::NetConnectParams {
                 ssid: "Home".into(),
                 psk: None,
+                ipv4: None,
             }),
             proto::Call::NetForget(proto::NetForgetParams {
                 ssid: "Home".into(),
@@ -935,6 +936,7 @@ mod tests {
             proto::Call::NetConnect(proto::NetConnectParams {
                 ssid: "Home".into(),
                 psk: None,
+                ipv4: None,
             }),
             proto::Call::PadPair(proto::PadPairParams::default()),
         ] {

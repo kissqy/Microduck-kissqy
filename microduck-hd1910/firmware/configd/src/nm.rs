@@ -64,6 +64,11 @@ mod ids {
 /// slow one, short enough that a phone gets an answer instead of a spinner — and a `Timeout` is
 /// a reportable outcome rather than a hang, which is the point.
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(45);
+
+/// 换配置前等网卡真的停下来要多久。
+///
+/// 正常只要几百毫秒；这个上限只是保证「网卡卡住」不会把配网也卡住。
+const DISCONNECT_TIMEOUT: Duration = Duration::from_secs(10);
 /// How long to wait for a requested scan to complete before answering with what NM already has.
 ///
 /// A sweep of both bands takes a few seconds on this radio. The cap matters because a client is
@@ -368,6 +373,104 @@ fn failure_of(state: u32, reason: u32) -> (proto::ConnectFailure, Option<String>
     (failure, detail)
 }
 
+/// Dotted quad → the big-endian `u32` NM's settings carry.
+///
+/// Strict on purpose. `192.168.110.256` read leniently becomes `192.168.110.0`, and a profile
+/// holding that is a robot that boots onto an address nobody is looking for — with BLE as the
+/// only way back in.
+fn parse_ipv4(text: &str) -> Option<u32> {
+    let parts: Vec<&str> = text.trim().split('.').collect();
+    if parts.len() != 4 {
+        return None;
+    }
+    let mut value: u32 = 0;
+    for part in parts {
+        if part.is_empty() || part.len() > 3 || !part.bytes().all(|b| b.is_ascii_digit()) {
+            return None;
+        }
+        let octet: u32 = part.parse().ok()?;
+        if octet > 255 {
+            return None;
+        }
+        value = (value << 8) | octet;
+    }
+    Some(value)
+}
+
+/// Back to the canonical dotted form, so a gateway typed as `192.168.110.001` still reads
+/// `192.168.110.1` in the `nmcli` output a support call asks for.
+fn dotted(value: u32) -> String {
+    format!(
+        "{}.{}.{}.{}",
+        value >> 24,
+        (value >> 16) & 0xff,
+        (value >> 8) & 0xff,
+        value & 0xff
+    )
+}
+
+/// The `ipv4` half of an NM settings dictionary, or the reason the configuration is unusable.
+///
+/// Validated before NM sees it because NM writes what it is given into a root-only profile that
+/// `autoconnect` then uses on every boot: a bad address is not a failed call, it is a robot that
+/// comes up unreachable.
+fn static_ipv4(cfg: &proto::Ipv4Config) -> Result<HashMap<&'static str, Value<'static>>, String> {
+    let address = parse_ipv4(&cfg.address)
+        .ok_or_else(|| format!("`{}` is not an IPv4 address", cfg.address))?;
+    if !(1..=32).contains(&cfg.prefix) {
+        return Err(format!("the prefix {} is outside 1-32", cfg.prefix));
+    }
+
+    let mut settings: HashMap<&'static str, Value<'static>> = HashMap::new();
+    settings.insert("method", Value::from("manual"));
+
+    // `address-data` and not the older `addresses`, whose tuple also carries a per-address
+    // gateway that `gateway` below states once. The type is `aa{sv}` — a list of vardicts, each
+    // with `address` and `prefix` — and getting that wrong is not a rejected *property*: NM
+    // fails to parse the whole settings dictionary, `802-11-wireless` included, and reports
+    // `A 'wireless' setting is required if no AP path was given` from the device. That is how
+    // this was found, on a board, after the profile it replaced had already been deleted.
+    let mut entry: HashMap<&'static str, Value<'static>> = HashMap::new();
+    entry.insert("address", Value::from(dotted(address)));
+    entry.insert("prefix", Value::from(u32::from(cfg.prefix)));
+    settings.insert("address-data", Value::from(vec![entry]));
+
+    if let Some(gateway) = cfg
+        .gateway
+        .as_deref()
+        .map(str::trim)
+        .filter(|g| !g.is_empty())
+    {
+        let gateway =
+            parse_ipv4(gateway).ok_or_else(|| format!("`{gateway}` is not an IPv4 gateway"))?;
+        settings.insert("gateway", Value::from(dotted(gateway)));
+    }
+
+    // `dns` (`au`) rather than the newer `dns-data` (`as`): NM 1.40 and later accept both, older
+    // ones accept only this, and this daemon ships to boards that are not all the same vintage.
+    //
+    // The u32 is **native-endian**, not the big-endian value the dotted quad reads as. NM stores
+    // the address bytes in a `guint32` and hands `nm_inet4_ntop` a pointer to them, so the value
+    // has to have those bytes in memory: sending `0xC0A86E01` for 192.168.110.1 lands in the
+    // profile as `1.110.168.192`. Corrected on a board, against NM 1.52, after seeing exactly
+    // that.
+    let mut dns: Vec<u32> = Vec::new();
+    for entry in &cfg.dns {
+        let entry = entry.trim();
+        if entry.is_empty() {
+            continue;
+        }
+        let parsed =
+            parse_ipv4(entry).ok_or_else(|| format!("`{entry}` is not an IPv4 resolver"))?;
+        dns.push(u32::from_ne_bytes(parsed.to_be_bytes()));
+    }
+    if !dns.is_empty() {
+        settings.insert("dns", Value::from(dns));
+    }
+
+    Ok(settings)
+}
+
 #[async_trait]
 impl Net for NetworkManager {
     async fn status(&self) -> NetResult<proto::NetStatusResult> {
@@ -547,7 +650,12 @@ impl Net for NetworkManager {
         Ok(proto::NetScanResult { networks })
     }
 
-    async fn connect(&self, ssid: &str, psk: Option<&str>) -> NetResult<proto::ConnectResult> {
+    async fn connect(
+        &self,
+        ssid: &str,
+        psk: Option<&str>,
+        ipv4: Option<&proto::Ipv4Config>,
+    ) -> NetResult<proto::ConnectResult> {
         let Some(device_path) = self.wifi_device().await? else {
             return Ok(proto::ConnectResult::Failed {
                 reason: proto::ConnectFailure::Unsupported,
@@ -606,6 +714,23 @@ impl Net for NetworkManager {
             }
         }
 
+        // A fixed configuration is validated here, not by NetworkManager: NM takes the settings
+        // dictionary as gospel, writes it root-only, and autoconnects with it on every boot. A
+        // typo that NM stores would therefore survive the reboot that BLE is the only way out of.
+        // Refusing before the profile is replaced also leaves the robot on whatever it is using.
+        let static_v4 = match ipv4 {
+            None => None,
+            Some(cfg) => match static_ipv4(cfg) {
+                Ok(settings) => Some(settings),
+                Err(detail) => {
+                    return Ok(proto::ConnectResult::Failed {
+                        reason: proto::ConnectFailure::Unsupported,
+                        detail: Some(detail),
+                    });
+                }
+            },
+        };
+
         // Replace any profile this SSID already has, rather than adding a second one.
         //
         // `AddAndActivateConnection` always *adds*, and NM allows two profiles with the same id. The
@@ -628,6 +753,36 @@ impl Net for NetworkManager {
             // Not fatal. A stale profile is a problem for the *next* boot; refusing to connect at
             // all is a problem right now, and a robot in a new place needs to get online.
             Err(e) => tracing::warn!(ssid, error = %e, "could not remove the saved profile(s)"),
+        }
+
+        // 等网卡从「上一个配置」里退干净，再开新的 activation。
+        //
+        // 不等就会撞上 NetworkManager 1.52 自己的一处崩溃：旧 activation 还在 deactivating 时
+        // 开始新的，`nm-l3cfg.c` 里 `_l3_acd_defend_type_to_nacd` 会拿一个还没初始化的 ACD
+        // defend type 去查表，default 分支是 `nm_assert(0)`，整个 NM 进程 ABRT。在板上复现过
+        // （删掉正在用的 profile → 立刻 add+activate），journal 里是
+        // `nm:ERROR:../src/core/nm-l3cfg.c:459: assertion failed`，随后 systemd 重启 NM，
+        // 客户端只看到一个 45 秒的 timeout。换配置本来就要断开，先等干净是免费的。
+        //
+        // 有上限而不死等：网卡真卡住时，让后面的 activation 自己去超时、报出原因。
+        if let Ok(proxy) = DeviceProxy::builder(&self.bus)
+            .path(&device_path)
+            .map_err(bus_err)?
+            .build()
+            .await
+        {
+            let deadline = tokio::time::Instant::now() + DISCONNECT_TIMEOUT;
+            loop {
+                let state = proxy.state().await.unwrap_or(ids::STATE_DISCONNECTED);
+                if state == ids::STATE_DISCONNECTED || state == ids::STATE_UNAVAILABLE {
+                    break;
+                }
+                if tokio::time::Instant::now() >= deadline {
+                    tracing::warn!(ssid, state, "device still busy; activating anyway");
+                    break;
+                }
+                tokio::time::sleep(Duration::from_millis(100)).await;
+            }
         }
 
         let manager = ManagerProxy::new(&self.bus).await.map_err(bus_err)?;
@@ -655,6 +810,13 @@ impl Net for NetworkManager {
             security.insert("key-mgmt", Value::from("wpa-psk"));
             security.insert("psk", Value::from(psk));
             settings.insert("802-11-wireless-security", security);
+        }
+
+        // Static addressing lives in the profile with everything else, so `autoconnect` keeps the
+        // robot on the address it was provisioned with — no client, no BLE session, no DHCP lease
+        // needed for the robot to come back where the client expects it.
+        if let Some(ipv4_settings) = static_v4 {
+            settings.insert("ipv4", ipv4_settings);
         }
 
         let root = zbus::zvariant::ObjectPath::try_from("/").map_err(bus_err)?;
@@ -841,6 +1003,131 @@ mod tests {
             ),
             proto::Security::Enterprise
         );
+    }
+
+    /// Strict parsing is the difference between "one failed call" and "a profile that boots the
+    /// robot onto an address nobody is looking for".
+    #[test]
+    fn addresses_parse_strictly() {
+        assert_eq!(parse_ipv4("192.168.110.50"), Some(0xC0A8_6E32));
+        assert_eq!(parse_ipv4(" 0.0.0.0 "), Some(0));
+        assert_eq!(dotted(0xC0A8_6E32), "192.168.110.50");
+
+        for bad in [
+            "192.168.110",
+            "192.168.110.50.1",
+            "192.168.110.256",
+            "192.168..1",
+            "192.168.110.-1",
+            "192.168.110.1o",
+            "",
+        ] {
+            assert_eq!(parse_ipv4(bad), None, "{bad} should not parse");
+        }
+    }
+
+    /// The `ipv4` settings NM is handed, and the refusals that keep a typo out of a saved profile.
+    #[test]
+    fn a_fixed_configuration_becomes_nm_settings() {
+        let cfg = proto::Ipv4Config {
+            address: "192.168.110.50".into(),
+            prefix: 24,
+            gateway: Some("192.168.110.001".into()),
+            dns: vec!["192.168.110.1".into(), " ".into()],
+        };
+        let settings = static_ipv4(&cfg).unwrap();
+        assert_eq!(settings.get("method").unwrap(), &Value::from("manual"));
+        assert_eq!(
+            settings.get("gateway").unwrap(),
+            &Value::from("192.168.110.1"),
+            "a gateway is normalised, not echoed"
+        );
+        assert!(
+            settings.contains_key("dns"),
+            "the blank resolver is dropped"
+        );
+
+        // The signature is the test. `aau` here — the older `addresses` shape, which is what a
+        // reasonable person reaches for — makes NM reject the *entire* settings dictionary and
+        // answer from the device with "a 'wireless' setting is required if no AP path was
+        // given", which reads like a bug in the wifi half of this function and is not.
+        let address_data = settings.get("address-data").unwrap();
+        assert_eq!(address_data.value_signature().to_string(), "aa{sv}");
+        let mut expected: HashMap<&str, Value<'_>> = HashMap::new();
+        expected.insert("address", Value::from("192.168.110.50"));
+        // The prefix is a uint32, not a string NM would have to parse.
+        expected.insert("prefix", Value::from(24u32));
+        assert_eq!(address_data, &Value::from(vec![expected]));
+
+        // No gateway and no DNS is a link with no router, which is legal — just an address.
+        let bare = proto::Ipv4Config {
+            address: "10.0.0.2".into(),
+            prefix: 8,
+            gateway: None,
+            dns: Vec::new(),
+        };
+        let settings = static_ipv4(&bare).unwrap();
+        assert!(!settings.contains_key("gateway"));
+        assert!(!settings.contains_key("dns"));
+
+        // A resolver is sent native-endian, so that the value's *memory* is the address: NM
+        // prints the u32 through `inet4_ntop`, and the big-endian integer comes out reversed
+        // (`1.110.168.192`). Pinned because that bug is invisible until the profile is read back.
+        let dns = static_ipv4(&proto::Ipv4Config {
+            address: "192.168.110.50".into(),
+            prefix: 24,
+            gateway: None,
+            dns: vec!["192.168.110.1".into()],
+        })
+        .unwrap();
+        assert_eq!(
+            dns.get("dns").unwrap(),
+            &Value::from(vec![u32::from_ne_bytes([192, 168, 110, 1])])
+        );
+
+        // Every one of these is refused with a message a client can act on, before the profile
+        // currently in use is replaced.
+        let broken = [
+            (
+                proto::Ipv4Config {
+                    address: "192.168.110.300".into(),
+                    ..bare.clone()
+                },
+                "address",
+            ),
+            (
+                proto::Ipv4Config {
+                    prefix: 0,
+                    ..bare.clone()
+                },
+                "prefix",
+            ),
+            (
+                proto::Ipv4Config {
+                    prefix: 33,
+                    ..bare.clone()
+                },
+                "prefix",
+            ),
+            (
+                proto::Ipv4Config {
+                    gateway: Some("192.168.110".into()),
+                    ..bare.clone()
+                },
+                "gateway",
+            ),
+            (
+                proto::Ipv4Config {
+                    dns: vec!["name.local".into()],
+                    ..bare.clone()
+                },
+                "resolver",
+            ),
+        ];
+        for (cfg, needle) in broken {
+            let err = static_ipv4(&cfg).unwrap_err();
+            assert!(err.contains(needle), "{err} should mention {needle}");
+        }
     }
 
     /// The reason mapping is why NetworkManager was chosen over netplan, so the one that matters

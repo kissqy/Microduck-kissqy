@@ -34,6 +34,8 @@ pub const READ: u8 = 2;
 pub const WRITE: u8 = 3;
 pub const SYNC_READ: u8 = 0x82;
 pub const SYNC_WRITE: u8 = 0x83;
+/// HD1910 CAL instruction: current physical position becomes 2048.
+pub const CALIBRATE: u8 = 0x0B;
 /// Budget for one complete 50 Hz telemetry transaction.
 /// Setup/torque verification and explicit read-only diagnostics keep their own budget.
 pub const TELEMETRY_DEADLINE_MS: u64 = 20;
@@ -332,6 +334,12 @@ impl Bus {
         let mut params = vec![address];
         params.extend_from_slice(data);
         self.exchange(id, WRITE, &params, 0).map(|_| ())
+    }
+
+    /// CAL makes the current physical pose 2048 and rewrites offset 31.
+    /// The caller must unlock EEPROM (register 55) and keep torque off.
+    pub fn calibrate(&mut self, id: u8) -> Result<()> {
+        self.exchange(id, CALIBRATE, &[], 0).map(|_| ())
     }
 
     /// A broadcast has NO acknowledgement. Success here means sent, not confirmed.
@@ -2176,6 +2184,13 @@ mod tests {
         let status = valid.into_iter().find_map(|b| d.push(b)).unwrap();
         assert_eq!(status.id, 2);
         assert_eq!(status.data, [7]);
+    }
+    #[test]
+    fn cal_packet_is_native_cal_instruction() {
+        assert_eq!(
+            packet(20, CALIBRATE, &[]).unwrap(),
+            [255, 255, 20, 2, CALIBRATE, 0xDE]
+        );
     }
     #[test]
     fn fifteen_joint_sync_fits_single_native_packet() {

@@ -1784,6 +1784,7 @@ pub mod test_support {
             Call::NetConnect(NetConnectParams {
                 ssid: "Pollen Guest".into(),
                 psk: Some("hunter2 with spaces".into()),
+                ipv4: None,
             }),
             Call::NetForget(NetForgetParams {
                 ssid: "Old Network".into(),
@@ -2931,6 +2932,32 @@ pub struct ShowParams {
     pub run: Option<u64>,
 }
 
+/// Fixed addressing for the network being joined.
+///
+/// `net.connect` only ever asked NetworkManager for DHCP, and a robot that must be *found* at a
+/// known address — a fleet, a port forward, a bookmarked console URL — had no way to say so over
+/// BLE. This is the missing half: the same call, with the profile pinned to an address instead of
+/// a lease.
+///
+/// Everything here is client-supplied and therefore validated by `configd` before it reaches
+/// NetworkManager; a bad address in a saved profile is a robot that comes back from a reboot
+/// unreachable over wifi, with BLE as the only way to undo it.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Ipv4Config {
+    /// Dotted quad, e.g. `192.168.110.50`.
+    pub address: String,
+    /// Prefix length, `1..=32` — `24` for a `255.255.255.0` netmask.
+    pub prefix: u8,
+    /// `None` leaves the profile without a default route, which only makes sense on a link with
+    /// no router; the usual value is the network's gateway.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub gateway: Option<String>,
+    /// Resolvers in dotted-quad form. Empty means "whatever the robot already uses".
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub dns: Vec<String>,
+}
+
 /// Join a wifi network.
 ///
 /// [`Debug`] is hand-written to redact `psk`, and that is the point of the type. Every other
@@ -2946,6 +2973,9 @@ pub struct NetConnectParams {
     /// NetworkManager accepts both and we pass it through unexamined.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub psk: Option<String>,
+    /// `None` keeps the profile on DHCP, which is what every robot did before this existed.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ipv4: Option<Ipv4Config>,
 }
 
 impl std::fmt::Debug for NetConnectParams {
@@ -2963,6 +2993,7 @@ impl std::fmt::Debug for NetConnectParams {
                     &"<none>"
                 },
             )
+            .field("ipv4", &self.ipv4)
             .finish()
     }
 }
@@ -6483,6 +6514,7 @@ mod tests {
         let params = NetConnectParams {
             ssid: "Home".into(),
             psk: Some(secret.into()),
+            ipv4: None,
         };
 
         let debug = format!("{params:?}");
@@ -6497,6 +6529,7 @@ mod tests {
         let open = NetConnectParams {
             ssid: "Cafe".into(),
             psk: None,
+            ipv4: None,
         };
         assert!(format!("{open:?}").contains("none"), "{open:?}");
     }
@@ -6524,6 +6557,7 @@ mod tests {
         let params = NetConnectParams {
             ssid: "Home".into(),
             psk: Some("s3cret".into()),
+            ipv4: None,
         };
         let line = serde_json::to_string(&params).unwrap();
         assert!(line.contains("s3cret"), "{line}");
@@ -6537,8 +6571,57 @@ mod tests {
         let open = NetConnectParams {
             ssid: "Cafe".into(),
             psk: None,
+            ipv4: None,
         };
         assert!(!serde_json::to_string(&open).unwrap().contains("psk"));
+    }
+
+    /// A fixed address must survive the wire with every part intact: `configd` writes it into
+    /// the profile NM autoconnects with, so a dropped `dns` or a rounded prefix is a robot that
+    /// comes back from a reboot on the wrong configuration — with BLE as the only way to fix it.
+    #[test]
+    fn a_fixed_address_round_trips() {
+        let params = NetConnectParams {
+            ssid: "Pollen".into(),
+            psk: None,
+            ipv4: Some(Ipv4Config {
+                address: "192.168.110.50".into(),
+                prefix: 24,
+                gateway: Some("192.168.110.1".into()),
+                dns: vec!["192.168.110.1".into(), "1.1.1.1".into()],
+            }),
+        };
+        let line = serde_json::to_string(&params).unwrap();
+        // Spelled out, because this JSON is the contract with the app and with `btd`, not a
+        // detail free to change when someone adjusts a derive.
+        assert!(
+            line.contains(r#""ipv4":{"address":"192.168.110.50","prefix":24"#),
+            "{line}"
+        );
+        assert_eq!(
+            serde_json::from_str::<NetConnectParams>(&line).unwrap(),
+            params
+        );
+
+        // DHCP stays the absent case rather than an explicit null, so an older `configd` that
+        // has never heard of `ipv4` keeps working against a newer client.
+        assert!(
+            !serde_json::to_string(&NetConnectParams {
+                ssid: "Pollen".into(),
+                psk: None,
+                ipv4: None,
+            })
+            .unwrap()
+            .contains("ipv4")
+        );
+
+        // The gateway and resolvers are optional: an address with no router is legal.
+        let bare: NetConnectParams =
+            serde_json::from_str(r#"{"ssid":"Pollen","ipv4":{"address":"10.0.0.2","prefix":8}}"#)
+                .unwrap();
+        let cfg = bare.ipv4.unwrap();
+        assert_eq!(cfg.gateway, None);
+        assert!(cfg.dns.is_empty());
     }
 
     /// `Target` must survive the wire in all five forms, and the three that carry data must

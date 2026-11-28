@@ -3,12 +3,18 @@ let sshConnection;
 import {ServicePanel} from './service.js';
 import {SystemLogPanel} from './system-log.js';
 let servicePanel;
+let processPanel;
+let soundPanel;
 import {Camera} from './camera.js';
 import {ControlPanel} from './control.js';
 import {messageZh,tofView} from './messages.js';
 import {officialStandingDegrees,modelJointLimits,referenceAngle} from './joint-reference.js';
 import {jointDirection} from './joint-direction.js';
 import {loopHz} from './metrics.js';
+import {batteryCaption} from './battery.js';
+import {alarmClass,alarmLabel,alarmReason,limitText} from './alarms.js';
+import {ProcessPanel} from './processes.js';
+import {SoundPanel} from './sound-test.js';
 import {historyFrame} from './history-frame.js';
 import {RawTelemetry} from './raw-telemetry.js';
 import {CalibrationViewPanel} from './calibration-view.js';
@@ -26,6 +32,18 @@ let controls,cfg,latest,shown,duck,selected=0,selectedId=20,group='all',history=
 let apiOkay=true,polling=false;
 const colors=['#c1f577','#7caedd','#ed9890'];
 const statusNames={live:'实时',stale:'数据过期',error:'连接异常',waiting:'等待',unavailable:'未提供'};
+// Why WebGL is missing, in the words that help: an embedded browser usually runs
+// with the GPU switched off, which no amount of reloading will change.
+function webglUnavailable(){
+  try{
+    if(document.createElement('canvas').getContext('webgl2')||document.createElement('canvas').getContext('webgl'))return '';
+  }catch(e){return '创建上下文时抛错：'+e.message;}
+  const ua=navigator.userAgent||'';
+  if(/Electron|Code\//.test(ua))return 'VS Code 内置浏览器/Electron 通常禁用 GPU';
+  if(/HeadlessChrome/.test(ua))return '无头浏览器（无 GPU）';
+  return '浏览器禁用了硬件加速或 WebGL';
+}
+
 function badge(id,status,label){const el=$(id);el.className='badge '+(status==='live'?'':status==='error'?'bad':status==='stale'?'warn':'neutral');el.textContent=label||statusNames[status]||'未知';}
 function notify(message){text('toast',message);$('toast').hidden=false;clearTimeout(notify.timer);notify.timer=setTimeout(()=>$('toast').hidden=true,3600);}
 function valueCell(v,d=1){return finite(v)?fmt(v,d):'<span class="na" title="数据源未提供，或样本已过期">—</span>';}
@@ -72,11 +90,13 @@ function modeDisplay(s){
 function render(s,addHistory=true){
   shown=s;modeDisplay(s);sshConnection?.render(s);controls?.render(s,{replay:!!replay});
   servicePanel?.render(s,{replay:!!replay,offline:!apiOkay||cfg.connection_ui&&!s.connection?.active});
+  processPanel?.render(s,{replay:!!replay,offline:!apiOkay||cfg.connection_ui&&!s.connection?.active});
+  soundPanel?.render(s,{replay:!!replay,offline:!apiOkay||cfg.connection_ui&&!s.connection?.active});
   if(addHistory){history.push(historyFrame(s));const cutoff=s.at-60;while(history.length>650||history[0]?.at<cutoff)history.shift();}
   const hs=sourceLive(s,'health'),ss=sourceLive(s,'state'),sy=sourceLive(s,'system');
   const h=hs?s.health:{},st=ss?s.state:{};
   text('robot-name',s.system?.hostname||'duck-10e4');
-  text('metric-zero-temp',sy?fmt(s.system?.cpu_temp_c):'—');text('zero-temp-caption',sy?'ZERO 主板 CPU 实测':'等待主板温度回读');
+  text('metric-zero-temp',sy?fmt(s.system?.cpu_temp_c):'—');
   text('last-update',`${replay?'记录 · ':''}${new Date(s.at*1000).toLocaleTimeString('zh-CN',{hour12:false})}`);
   const service=s.mode==='service',bus=sourceLive(s,'bus')?s.bus:{};
   const hz=loopHz(s);
@@ -88,10 +108,34 @@ function render(s,addHistory=true){
   text('joint-caption',online===15?'15 个关节均有有效反馈':`实测角度反馈 ${online}/15 · 非总线 Ping 结果`);
   if(service){text('metric-joints',sourceLive(s,'bus')?online:'—');text('joint-caption',`已标定 ${s.calibrated_count||0}/15`);}
   $('joint-dots').replaceChildren(...s.servos.slice(0,15).map(r=>{const i=document.createElement('i');i.className=r.status==='live'?'on':'';i.title=`ID ${r.id} ${statusNames[r.status]}`;return i;}));
-  const br=s.servos.filter(x=>x.status==='live');const volts=br.map(x=>x.voltage_v).filter(finite),temps=br.map(x=>x.temperature_c).filter(finite);
-  text('metric-volts',fmt(h.battery?.volts,2));text('metric-temp',fmt(h.motors?.max_c));
-  text('temp-caption',h.motors?`${h.motors.hottest} · 平均 ${fmt(h.motors.mean_c)} °C`:'等待 robot.health · 非逐颗温度');
-  if(service){text('metric-volts',fmt(volts.length?Math.min(...volts):null,2));text('metric-temp',fmt(temps.length?Math.max(...temps):null));text('temp-caption','舵机实测最高温度');}
+  const br=s.servos.filter(x=>x.status==='live'),temps=br.map(x=>x.temperature_c).filter(finite);
+  const batteryPct=hs?h.battery?.percent:null,batteryVolts=hs?h.battery?.volts:null,busVolts=br.map(x=>x.voltage_v).filter(finite);
+  const batteryMin=busVolts.length?Math.min(...busVolts):null;
+  // Charge and pack voltage are both first-class: a full-looking percentage with a
+  // sagging rail is exactly the case the voltage is there to show.
+  text('metric-battery',fmt(batteryPct,0));
+  text('metric-volts',fmt(batteryVolts,2));
+  $('battery-metric').className=hs?alarmClass('battery',batteryPct):'metric';
+  text('battery-caption',batteryCaption(batteryPct,batteryVolts,batteryMin));
+  $('battery-metric').title=`满 8.2 V = 100%，空 6.6 V = 0%（robotd 唯一映射）；告警线：${limitText('battery')}；非 2S 直供电时百分比不适用。`+(busVolts.length?'最低母线电压取自 15 颗舵机自报供电。':'');
+  const servoPeak=service?(temps.length?Math.max(...temps):null):h.motors?.max_c;
+  text('metric-temp',fmt(servoPeak));
+  $('thermal-metric').className=alarmClass('servo',servoPeak);
+  const servoReason=alarmReason('servo',servoPeak);
+  text('temp-caption',servoReason?`${servoReason} · 先停手等降温`
+    :h.motors?`${h.motors.hottest} · 平均 ${fmt(h.motors.mean_c)} °C`:'等待 robot.health · 非逐颗温度');
+  if(service&&!servoReason)text('temp-caption','舵机实测最高温度');
+  $('thermal-metric').title=`告警线：${limitText('servo')}`;
+  const zeroTemp=sy?s.system?.cpu_temp_c:null;
+  $('zero-metric').className=alarmClass('cpu',zeroTemp);
+  const zeroReason=alarmReason('cpu',zeroTemp);
+  text('zero-temp-caption',zeroReason?`${zeroReason} · RK3566 85 °C 起降频`:sy?'ZERO 主板 CPU 实测':'等待主板温度回读');
+  $('zero-metric').title=`告警线：${limitText('cpu')}`;
+  // The alarm word goes next to the title so a red number is unambiguous at a glance.
+  const alarmWord=(kind,value)=>{const label=alarmLabel(kind,value);return label?`<span class="alarm-tag">${label}</span>`:'';};
+  $('battery-metric').querySelector('.metric-title').innerHTML='电池电量 <span class="muted">BATTERY</span>'+alarmWord('battery',hs?batteryPct:null);
+  $('thermal-metric').querySelector('.metric-title').innerHTML='最高舵机温度 <span class="muted">THERMAL</span>'+alarmWord('servo',servoPeak);
+  $('zero-metric').querySelector('.metric-title').innerHTML='ZERO 温度 <span class="muted">CPU</span>'+alarmWord('cpu',zeroTemp);
   const gravity=s.imu?.gravity,imuLive=s.imu?.status==='live',canTilt=imuLive&&Array.isArray(gravity);
   text('hud-roll',`${fmt(canTilt?s.imu.roll_deg:null)}°`);text('hud-pitch',`${fmt(canTilt?s.imu.pitch_deg:null)}°`);
   text('imu-roll',`${fmt(canTilt?s.imu.roll_deg:null)}°`);text('imu-pitch',`${fmt(canTilt?s.imu.pitch_deg:null)}°`);
@@ -120,7 +164,7 @@ function render(s,addHistory=true){
   }else if(apiOkay)cb.hidden=true;
 }
 function renderTof(s){
-  const view=tofView(s),live=view.status==='live',f=s.tof||{},grid=$('tof-grid');
+  const view=tofView(s,cfg?.tof_enabled!==false),live=view.status==='live',f=s.tof||{},grid=$('tof-grid');
   const validShape=view.validFrame;
   badge('tof-badge',view.status,view.label);
   text('tof-message',view.detail);
@@ -221,8 +265,8 @@ function choose(id){
 }
 function renderDiagnostics(s){
   const names={state:'robotd / 姿态状态',health:'robotd / 健康指标',tof:'tofd / 深度矩阵',system:'Zero / 系统信息',capabilities:'robotd / 可用动作'};
-  names.bus='robotd / 舵机总线';names.calibration='robotd / 已保存标定';
-  const tof=tofView(s);
+  names.bus='robotd / 舵机总线';names.calibration='robotd / 已保存标定';names.units='Zero / 服务与硬件';
+  const tof=tofView(s,cfg?.tof_enabled!==false);
   $('channel-list').innerHTML=Object.entries(s.channels).filter(([k])=>k!=='bench'&&(s.mode==='service'?(s.bus?.mode!=='commissioning'||!['state','capabilities'].includes(k)):!['bus','calibration'].includes(k))).map(([k,c])=>{
     const status=k==='tof'?tof.status:c.status,label=k==='tof'?tof.label:statusNames[status];
     const detail=k==='tof'?tof.detail:messageZh(c.error);
@@ -238,7 +282,7 @@ function renderDiagnostics(s){
 }
 function drawHistory(){
   plot('mini-loop',[{values:history.map(loopHz)}],{mini:true,range:[30,60]});
-  plot('mini-volts',[{values:history.map(s=>sourceLive(s,'health')?s.health.battery?.volts:null)}],{mini:true,range:[4,8]});
+  plot('mini-battery',[{values:history.map(s=>sourceLive(s,'health')?s.health.battery?.percent:null)}],{mini:true,range:[0,100]});
   plot('mini-temp',[{values:history.map(s=>sourceLive(s,'health')?s.health.motors?.max_c:null),color:'#d6b16e'}],{mini:true});
   plot('gravity-chart',[0,1,2].map((i)=>({values:history.map(s=>s.imu?.status==='live'?s.imu.gravity?.[i]:null),color:['#ed9890','#c1f577','#7caedd'][i]})),{range:[-1.15,1.15]});
   const option=$('plot-field').value,fields={raw:['position_raw','goal_position_raw'],angle:['angle_deg','target_deg'],current:['current_ma'],temperature:['temperature_c'],velocity:['velocity_rpm'],error:['error_deg']}[option];
@@ -269,6 +313,8 @@ function validateRecording(data){
 function telemetryError(){
   controls?.suspend();servicePanel?.suspend();apiOkay=false;
   if(latest)servicePanel?.render(latest,{replay:!!replay,offline:true});
+  if(latest)processPanel?.render(latest,{replay:!!replay,offline:true});
+  if(latest)soundPanel?.render(latest,{replay:!!replay,offline:true});
   if(!replay){
     $('connection-banner').hidden=false;$('connection-banner').className='banner warning';text('connection-banner','本地采集后端已断开；当前数值为旧样本。请检查启动终端。');
     if(latest){const stale=structuredClone(latest);for(const c of Object.values(stale.channels))c.status='error';for(const row of stale.servos)row.status='stale';stale.imu.status='error';render(stale,false);}
@@ -295,13 +341,13 @@ async function poll(){
     const r=await fetch('/api/snapshot',{signal:AbortSignal.timeout(2500)});if(!r.ok)throw Error(`HTTP ${r.status}`);
     latest=await r.json();apiOkay=true;if(!replay)render(latest);
   }catch(e){
-    controls?.suspend();servicePanel?.suspend();apiOkay=false;if(latest){servicePanel?.render(latest,{replay:!!replay,offline:true});}if(!replay){$('connection-banner').hidden=false;$('connection-banner').className='banner warning';text('connection-banner','本地采集后端已断开；当前数值为旧样本。请检查启动终端。');
+    controls?.suspend();servicePanel?.suspend();apiOkay=false;if(latest){servicePanel?.render(latest,{replay:!!replay,offline:true});processPanel?.render(latest,{replay:!!replay,offline:true});soundPanel?.render(latest,{replay:!!replay,offline:true});}if(!replay){$('connection-banner').hidden=false;$('connection-banner').className='banner warning';text('connection-banner','本地采集后端已断开；当前数值为旧样本。请检查启动终端。');
       if(latest){const stale=structuredClone(latest);for(const c of Object.values(stale.channels))c.status='error';for(const row of stale.servos)row.status='stale';stale.imu.status='error';render(stale,false);}
     }
   }finally{polling=false;setTimeout(poll,100);}
 }
 async function init(){
-  const r=await fetch('/api/config');cfg=await r.json();text('console-version',`Console v${cfg.version} · 本地运行`);controls=new ControlPanel(cfg,$('control-panel'));servicePanel=new ServicePanel(cfg,choose);new SystemLogPanel();document.querySelector('main footer').before($('diagnostics'));refreshCameraAddress();text('settings-mode',cfg.mode);
+  const r=await fetch('/api/config');cfg=await r.json();text('console-version',`Console v${cfg.version} · 本地运行`);controls=new ControlPanel(cfg,$('control-panel'));servicePanel=new ServicePanel(cfg,choose);processPanel=new ProcessPanel(cfg);soundPanel=new SoundPanel(cfg);new SystemLogPanel();document.querySelector('main footer').before($('diagnostics'));refreshCameraAddress();text('settings-mode',cfg.mode);
   sshConnection=new SSHConnection(cfg,()=>{
     controls.suspend();controls.connected=false;controls.linkEpoch++;controls.socket.close();
     controls.options={...controls.options,offline:true};camera.disconnect();
@@ -344,7 +390,17 @@ async function init(){
   else poll();
   // Isolate renderer failure: the rest of the diagnostics must remain useful without WebGL.
   try{const {DuckView}=await import('./duck.js');duck=await new DuckView().init($('duck-canvas'),cfg.home,i=>choose(cfg.ids[i]));new CalibrationViewPanel(duck);duck.selectJoint(selected);if(shown)duck.update(shown);}
-  catch(e){$('model-error').hidden=false;text('model-error',`3D 视图不可用：${e.message}。其他数据面板仍可使用。`);console.warn('Duck view:',e);}
+  catch(e){
+    // webglUnavailable() names the cause and the fix; anything else is a real bug
+    // and keeps its own message.
+    const hint=webglUnavailable();
+    const box=$('model-error');
+    box.hidden=false;
+    text('model-error',hint
+      ?`3D 视图需要 WebGL，但当前浏览器没有可用的 WebGL（${hint}）。${e.message}。换成 Chrome / Edge / Firefox 打开，或在 VS Code 内置浏览器里改用普通浏览器窗口。其他数据面板仍可使用。`
+      :`3D 视图不可用：${e.message}。其他数据面板仍可使用。`);
+    console.warn('Duck view:',e);
+  }
 }
 window.addEventListener('pagehide',()=>camera.disconnect(false));
 window.addEventListener('beforeunload',()=>{rawTelemetry?.close();camera.disconnect(false);});

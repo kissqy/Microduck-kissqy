@@ -40,9 +40,10 @@ export function messageZh(value, fallback='服务返回了异常，具体报文�
   return fallback;
 }
 
-export function tofView(snapshot) {
+export function tofView(snapshot,enabled=true) {
   const c=snapshot.channels?.tof||{},f=snapshot.tof||{},sub=f.subscription;
   const validFrame=Number.isInteger(f.rows)&&Number.isInteger(f.cols)&&f.rows>0&&f.cols>0&&f.rows*f.cols<=256&&Array.isArray(f.distance_mm)&&f.distance_mm.length===f.rows*f.cols&&Array.isArray(f.status)&&f.status.length===f.rows*f.cols;
+  if(f.disabled||(!enabled&&!validFrame))return {validFrame,status:'waiting',label:'已关闭',detail:'ToF 采集已在启动参数中关闭（--tofd-socket 为空），不会连接 tofd 服务。'};
   if(c.status==='error')return {validFrame,status:'error',label:'连接异常',detail:messageZh(c.error)||'测距数据连接异常，正在重试。'};
   if(validFrame&&c.status==='live')return {validFrame,status:'live',label:`${f.rows}×${f.cols} · 实时`,detail:'正在接收有效测距帧。'};
   const reason=messageZh(sub?.unavailable,'测距传感器未就绪，具体原因可在“查看 JSON”中查看。');

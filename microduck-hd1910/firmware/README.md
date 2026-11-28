@@ -81,7 +81,9 @@ It also sits, kicks a ball, rolls forward on command, and quacks in a voice that
 |---|---|
 | [Cheat sheet](docs/robot/cheatsheet.md) | Every `robotctl` command: drive, configure, voice, chorale, theremin, wifi, updates, logs. Start here. |
 | [Gamepad](docs/robot/cheatsheet.md#gamepad-configd) | The full button mapping, and pairing a pad — [once per pad](docs/robot/pair-a-gamepad.md), plus what to do when it will not bond. |
+| [Phone, no app](duckphone/README.md) | Same wifi, `http://<board>:8001/` in a browser: touch stick, the policy bar, status and maintenance. [`lan-phone-remote.md`](docs/design/lan-phone-remote.md) is why it is shaped that way. |
 | [`duckctl`](docs/robot/duckctl.md) | The robot from a laptop over Bluetooth, with no network and no ssh. |
+| [Wifi, no network](ducknet/README.md) | A Linux desktop app for the same radio: scan, join, forget — and pin a fixed address so the robot comes back to it after a reboot. [`ble-provisioning-app.md`](docs/design/ble-provisioning-app.md) is why. |
 | [Updates](docs/robot/cheatsheet.md#updates-updaterd) | Install, roll back, pin. Every update is verified, health-gated and reversible. |
 
 ### You are building on it

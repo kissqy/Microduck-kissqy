@@ -36,9 +36,9 @@
     <section class="metrics" aria-label="总体健康指标">
       <article class="metric"><div class="metric-title">控制循环 <span id="loop-badge" class="micro-badge">—</span></div><div class="metric-value"><span id="metric-hz">—</span><small>Hz</small></div><div class="metric-caption" id="loop-caption">目标 50 Hz · 等待数据</div><canvas class="metric-line" id="mini-loop" title="实际控制频率 · 固定 30–60 Hz 刻度" aria-label="实际控制频率，固定三十到六十 Hz 刻度"></canvas></article>
       <article class="metric"><div class="metric-title">关节反馈 <span class="muted">JOINTS</span></div><div class="metric-value"><span id="metric-joints">—</span><small>/ 15</small></div><div class="metric-caption" id="joint-caption">未知不等于离线</div><div id="joint-dots" class="joint-dots"></div></article>
-      <article class="metric"><div class="metric-title">舵机总线电压 <span class="muted">SUPPLY</span></div><div class="metric-value"><span id="metric-volts">—</span><small>V</small></div><div class="metric-caption">舵机端实测 · 曲线 4–8 V</div><canvas class="metric-line" id="mini-volts" title="舵机端实测电压 · 固定 4–8 V 刻度" aria-label="舵机端电压，固定四到八 V 刻度"></canvas></article>
-      <article class="metric"><div class="metric-title">最高舵机温度 <span class="muted">THERMAL</span></div><div class="metric-value"><span id="metric-temp">—</span><small>°C</small></div><div class="metric-caption" id="temp-caption">等待 robot.health</div><canvas class="metric-line warm" id="mini-temp"></canvas></article>
-      <article class="metric"><div class="metric-title">ZERO 温度 <span class="muted">CPU</span></div><div class="metric-value"><span id="metric-zero-temp">—</span><small>°C</small></div><div class="metric-caption" id="zero-temp-caption">等待主板温度回读</div></article>
+      <article class="metric" id="battery-metric"><div class="metric-title">电池电量 <span class="muted">BATTERY</span></div><div class="metric-value metric-dual"><span id="metric-battery">—</span><small>%</small><span class="metric-volts" id="metric-volts">—</span><small>V</small></div><div class="metric-caption" id="battery-caption" title="百分比由 robotd 按 8.2 V 满、6.6 V 空线性映射；非 2S 直供电时百分比不适用">等待 robot.health</div><canvas class="metric-line" id="mini-battery" title="电池电量 · 固定 0–100% 刻度" aria-label="电池电量，固定零到一百百分比刻度"></canvas></article>
+      <article class="metric" id="thermal-metric"><div class="metric-title">最高舵机温度 <span class="muted">THERMAL</span></div><div class="metric-value"><span id="metric-temp">—</span><small>°C</small></div><div class="metric-caption" id="temp-caption">等待 robot.health</div><canvas class="metric-line warm" id="mini-temp"></canvas></article>
+      <article class="metric" id="zero-metric"><div class="metric-title">ZERO 温度 <span class="muted">CPU</span></div><div class="metric-value"><span id="metric-zero-temp">—</span><small>°C</small></div><div class="metric-caption" id="zero-temp-caption">等待主板温度回读</div></article>
     </section>
     <div id="connection-notices">
     <div id="mode-banner" class="banner" hidden></div>
@@ -93,6 +93,25 @@
       <details class="register-details"><summary>查看选中舵机的寄存器详情 <span class="muted">· 台架只读模式提供</span></summary><dl id="joint-registers" class="register-grid"></dl></details>
       <div class="panel-note important">“电流占限值”＝|实测电流| / 读取到的 Current Limit，不是实测扭矩或机械负载百分比。逐颗电压、PWM、限值及故障寄存器在台架模式提供；原版未导出项显示「—」。</div>
     </section>
+    <div class="service-grid">
+      <section class="panel process-panel" id="process-panel">
+        <div class="panel-head"><div><span class="section-index">09</span><h2>机器人进程与服务</h2><span id="process-summary" class="muted tiny">等待服务状态</span></div><span class="badge neutral">systemd</span></div>
+        <div class="process-legend"><span><i class="status-dot live"></i>运行</span><span><i class="status-dot warn"></i>已屏蔽 / 过渡</span><span><i class="status-dot bad"></i>失败</span><span class="muted">硬件：● 在 · ○ 不在 · ◌ 未验证</span></div>
+        <div class="process-list" id="process-list"><p class="tiny muted">等待 Zero 上的 systemd 状态（每 2 秒一次；若中控刚重启，请刷新页面）。</p></div>
+        <p id="process-error" class="tiny red" hidden></p>
+        <div id="process-feedback" class="panel-note service-job" role="status" aria-live="polite"></div>
+        <div class="panel-note">可手动启停目录列出的服务并单独管理开机自启。停止 robotd 不会卸力；只有在新鲜反馈、策略关闭且扭矩确认 OFF 时才允许停止。codec 初始化是一次性服务，只提供启动。</div>
+      </section>
+      <section class="panel sound-panel" id="sound-panel">
+        <div class="panel-head"><div><span class="section-index">10</span><h2>声音测试</h2><span id="sound-volume" class="muted tiny">音量未回读</span></div><span class="badge neutral">robot.sound</span></div>
+        <p class="tiny muted" id="sound-bank">音库等待回读</p>
+        <div class="sound-buttons" id="sound-buttons"></div>
+        <p class="tiny muted" id="sound-status" role="status">点击试听；实际发声由 robotd 走官方意图</p>
+        <div class="sound-tools"><button class="button" type="button" id="sound-refresh">重新读取音库</button></div>
+        <div id="sound-feedback" class="panel-note service-job" role="status" aria-live="polite"></div>
+        <div class="panel-note">与手柄 LT / RT、嘴部动作走同一条官方通道；不经过 aplay。标定模式下 robotd 会拒绝发声，切到运动模式后再试。</div>
+      </section>
+    </div>
     <div class="diagnostics-grid" id="diagnostics"><section class="panel"><div class="panel-head"><div><span class="section-index">07</span><h2>链路与安全状态</h2></div><span id="health-badge" class="badge neutral">未知</span></div><div id="channel-list" class="channel-list"></div><div class="health-detail" id="health-detail">等待官方健康响应。</div><div class="intent-grid"><div><span>请求速度 · m/s, rad/s</span><code id="move-request">—</code></div><div><span>实际采用速度</span><code id="move-applied">—</code></div></div><div class="panel-note" id="move-limits">没有收到状态前，不判断安全限制。</div></section><section class="panel system-log-card" id="system-log"><div class="panel-head"><div><span class="section-index">08</span><h2>系统日志</h2></div><a class="text-button" href="/api/system-log/download" download>下载完整日志 ↓</a></div><div class="system-log-tools"><button class="button" id="system-log-copy">复制显示</button><label><input type="checkbox" id="system-log-follow" checked>自动滚动</label></div><p id="system-log-status" class="tiny muted" role="status">等待系统日志。</p><pre id="system-log-output" tabindex="0">尚无执行记录。</pre><section class="maintenance-events" id="maintenance-events"><h3>事件与原始报文</h3><div class="maintenance-streams"><div><h4>事件</h4><div id="events" class="events"><div class="muted">连接事件将在这里出现</div></div></div><div><h4>原始报文</h4><pre id="raw-json" tabindex="0"></pre></div></div></section></section></div>
     <footer><span>MICRODUCK / HARDWARE CONSOLE</span><span>模型 © Pollen Robotics</span></footer>
   </main>
